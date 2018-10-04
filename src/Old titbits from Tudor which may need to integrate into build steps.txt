@@ -1,0 +1,13 @@
+After etching, edit SD card:
+
+config.txt > uncomment lcd_rotate=2
+wpa_supplicant.txt > enter network details
+
+From command line:
+
+sudo apt-get update
+sudo apt-get install python2-kivypie python3-kivypie python-kivypie-examples
+sudo apt-get install python-pip
+sudo pip install docutils
+apt-get install libmtdev1
+sudo chmod +x /etc/rc.local

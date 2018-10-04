@@ -1,0 +1,543 @@
+'''
+Created on 31 Jan 2018
+
+@author: Ed
+'''
+from kivy.config import Config
+Config.set('graphics', 'maxfps', '0')
+Config.write()
+
+import serial, sys, time, string
+from os import listdir
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
+    popup_job_done
+import re
+from functools import partial
+
+
+GRBL_BLOCK_SIZE = 35
+RX_BUFFER_SIZE = 256
+BAUD_RATE = 115200
+ENABLE_STATUS_REPORTS = True
+GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01
+
+
+class SerialConnection(object):
+
+    STATUS_INTERVAL = 0.04 # How often to poll general status to update UI
+
+    s = None    # Serial comms object
+    sm = None   # Screen manager object
+    
+    def __init__(self, machine, screen_manager):
+
+        self.sm = screen_manager
+        self.m = machine    # should probably be using super() but module errors means this is a workaround - this is the object which calls the serial connection so can be referenced to do machine moves from Alarm popup
+    
+    def establish_connection(self, win_port):
+
+        # Parameter 'win'port' only used for windows dev e.g. "COM4"
+        if sys.platform == "win32": 
+            try:
+                self.s = serial.Serial(win_port, BAUD_RATE) 
+                return True  
+            except:
+                return False
+        else:
+            try: 
+                filesForDevice = listdir('/dev/') # put all device files into list[]
+                for line in filesForDevice: # run through all files
+                    if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE) # assign
+                        return True
+            except:
+                return False
+
+   
+    def is_connected(self):
+        
+        if self.s: return True 
+        else: return False
+
+    
+    def initialise_grbl(self):
+
+        if self.is_connected():
+            self.write_command("\r\n\r\n", show_in_sys=False, show_in_console=False)    # Wakes grbl
+            Clock.schedule_once(self.start_services, 3) # Delay for grbl to initialize 
+
+
+    def start_services(self, dt):
+        
+        self.s.flushInput()  # Flush startup text in serial input
+        Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
+        
+        grbl_settings = [
+#                     '$0=10',    #Step pulse, microseconds
+#                     '$1=25',    #Step idle delay, milliseconds
+#                     '$2=0',           #Step port invert, mask
+#                     '$3=1',           #Direction port invert, mask
+#                     '$4=0',           #Step enable invert, boolean
+#                     '$5=1',           #Limit pins invert, boolean
+#                     '$6=0',           #Probe pin invert, boolean
+#                     '$10=3',          #Status report, mask <----------------------
+#                     '$11=0.010',      #Junction deviation, mm
+#                     '$12=0.002',      #Arc tolerance, mm
+#                     '$13=0',          #Report inches, boolean
+#                     '$20=0',          #Soft limits, boolean <-------------------
+#                     '$21=0',          #Hard limits, boolean <------------------
+#                     '$22=0',          #Homing cycle, boolean <------------------------
+#                     '$23=3',          #Homing dir invert, mask
+#                     '$24=500.0',     #Homing feed, mm/min
+#                     '$25=10000.0',    #Homing seek, mm/min
+#                     '$26=250',        #Homing debounce, milliseconds
+#                     '$27=2.000',      #Homing pull-off, mm
+#                     '$30=1000.0',      #Max spindle speed, RPM
+#                     '$31=0.0',         #Min spindle speed, RPM
+#                     '$32=0',           #Laser mode, boolean
+#                     '$100=62.954',   #X steps/mm
+#                     '$101=68.075',   #Y steps/mm
+#                     '$102=1066.667',   #Z steps/mm
+#                     '$110=10000.0',   #X Max rate, mm/min
+#                     '$111=10000.0',   #Y Max rate, mm/min
+#                     '$112=2000.0',   #Z Max rate, mm/min
+#                     '$120=500.0',    #X Acceleration, mm/sec^2
+#                     '$121=500.0',    #Y Acceleration, mm/sec^2
+#                     '$122=100.0',    #Z Acceleration, mm/sec^2
+#                     '$130=1220.0',   #X Max travel, mm TODO: Link to a settings object
+#                     '$131=2440.0',   #Y Max travel, mm
+#                     '$132=150.0',   #Z Max travel, mm
+                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                    '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+                    ]
+        
+        self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+        if ENABLE_STATUS_REPORTS:
+            Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
+
+
+    def poll_status(self, dt):
+        
+        self.write_realtime('?', show_in_sys=False, show_in_console=False)
+            
+
+
+######## Scanner: listens for responses from Grbl
+
+    VERBOSE_ALL_PUSH_MESSAGES = False         # Push is for messages (e.g. status)
+    VERBOSE_ALL_RESPONSE = False     # Response is for stream_file counting (sending g-code file)
+    VERBOSE_STATUS = False
+
+    def grbl_scanner(self, dt):
+
+        # If there's a message received, deal with depending on type
+        if self.s.inWaiting():
+            rec_temp = self.s.readline().strip() # Usually blocking, hence need for .inWaiting()
+
+            # Update the gcode monitor (may not be initialised) and console
+            try:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
+            except:
+                pass
+            if self.VERBOSE_ALL_RESPONSE: print rec_temp
+            
+            # If RESPONSE message (used in streaming, counting processed gcode lines)
+            if rec_temp.startswith(('ok', 'error')):                
+                self.process_grbl_response(rec_temp)
+            
+            # If PUSH message
+            else:   
+                self.process_grbl_push(rec_temp)
+            
+        # if we're streaming, check to see if the buffer can be filled
+        if self.is_job_streaming:
+            if self.is_stream_lines_remaining:
+                self.stuff_buffer()
+            else: self.end_stream()
+
+                
+        Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)   # Loop this method
+
+
+######### Streaming    
+
+    
+    # streaming variables
+    is_job_streaming = False
+    is_stream_lines_remaining = False
+
+    g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
+    l_count = 0 # lines sent to grbl
+    c_line = [] # char count of blocks in grbl serial buffer
+        
+    file_to_stream = None
+    lines_to_stream_from_file = []
+    stream_start_time = 0
+    stream_end_time = 0
+    
+    GRBL_BLOCK_SIZE = 35
+    RX_BUFFER_SIZE = 256
+    
+    def stream_file(self, job_file_path):
+
+        self.m.zUp() # Move head out of the way before moving to the job datum in XY.
+        Clock.schedule_once(self._load_stream_file, 1) # Delay to make sure that the ok has been read back from grbl from z-move to ensure "ok" counting in streaming is ok.
+        print 'Streaming ' + job_file_path
+        self.file_to_stream = open(job_file_path,'r')
+
+
+    def _load_stream_file(self, dt):
+
+        self.lines_to_stream_from_file = [] # Ensure purged
+
+        for line in self.file_to_stream:
+            
+            # Refine GCode
+            l_block = re.sub('\s|\(.*?\)','',line).upper() # Strip comments/spaces/new line and capitalize
+            
+            # Drop undesirable lines
+            if l_block.find('%') >= 0: continue # drop lines with % in them
+            if l_block.find('M6') >= 0: continue # drop lines with % in them
+            
+            if l_block != '': self.lines_to_stream_from_file.append(l_block)
+            
+        self._initialise_regular_stream_parameters()
+        
+    def _initialise_regular_stream_parameters(self):    
+        
+        # for the buffer stuffing style streaming
+        
+        self.is_stream_lines_remaining = True
+
+        self.file_to_stream.close()
+        self.s.flushInput()
+
+        # Reset counters & flags
+        self.l_count = 0 # lines sent to grbl
+        self.g_count = 0 # gcodes processed by grbl (gcodes may not get processed immediately after being sent)
+        self.c_line = []
+        self.stream_start_time = time.time();
+        
+        self.is_job_streaming = True  # allow grbl_scanner() to start stuffing buffer
+
+
+    def process_grbl_response(self, message):
+        
+        # This is a special condition, used only at startup to set EEPROM settings
+        if self.is_sequential_streaming:
+            self._send_next_sequential_stream()
+
+        elif self.is_job_streaming:
+            self.g_count += 1 # Iterate g-code counter
+            del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
+
+        if message.startswith('error'): 
+            print ('ERROR from GRBL: ', message)
+            popup_error.PopupError(self.m, self.sm, message)
+
+    def stuff_buffer(self):
+        line_to_go = self.lines_to_stream_from_file[self.l_count]
+        serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+        if (len(line_to_go)+1) <= serial_space:
+            self.c_line.append(len(line_to_go)+1) # Track number of characters in grbl serial read buffer
+            self.l_count += 1 # lines sent to grbl
+            self.write_command(line_to_go, show_in_sys=True, show_in_console=True) # Send g-code block to grbl
+
+            if self.l_count == len(self.lines_to_stream_from_file):
+                self.is_stream_lines_remaining = False
+    
+    def end_stream(self):
+        # After streaming is completed
+        
+        if self.l_count == self.g_count: # ... and machine has completed the last command in the grbl buffer (job is truely done)
+            self.is_job_streaming = False
+            self.is_stream_lines_remaining = False
+
+            print "\nG-code streaming finished!"
+            self.stream_end_time = time.time()
+            time_taken_seconds = int(self.stream_end_time-self.stream_start_time)
+            time_take_minutes = int(time_taken_seconds/60)
+            print " Time elapsed: ", time_taken_seconds, " seconds\n"
+            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
+
+
+
+    def cancel_stream(self):
+        self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
+        self.is_stream_lines_remaining = False
+        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+
+        print "\nG-code streaming cancelled!"
+        
+        # Flush
+        self.lines_to_stream_from_file = []
+        self.s.flushInput()
+
+
+######### PUSH message handling
+
+    m_state = 'Unknown'
+ 
+    m_x = '0.0' # Machine co-ordinates
+    m_y = '0.0'
+    m_z = '0.0'
+    
+    w_x = '0.0' # Work co-ordinates
+    w_y = '0.0'
+    w_z = '0.0'
+        
+    wco_x = '0.0' # Work co-ordinate offset
+    wco_y = '0.0'
+    wco_z = '0.0'
+    
+    g28_x = '0.0'
+    g28_y = '0.0'
+    g28_z = '0.0'
+    
+    serial_blocks_available = GRBL_BLOCK_SIZE
+    serial_chars_available = RX_BUFFER_SIZE
+    
+    buffer_limit_has_been_read = False
+    buffer_limit = 0
+    
+    expecting_probe_result = False
+
+    def process_grbl_push(self, message):
+        
+        if self.VERBOSE_ALL_PUSH_MESSAGES: print message
+        
+        # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
+        if message.startswith('<'): 
+            status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
+            
+            # Get machine's status
+            self.m_state = status_parts[0]
+            for part in status_parts:
+                
+                # Get machine's position (may not be displayed, depending on mask)
+                if part.startswith('MPos:'): 
+                    pos = part[5:].split(',')
+                    self.m_x = pos[0]
+                    self.m_y = pos[1]
+                    self.m_z = pos[2]
+                
+                # Get work's position (may not be displayed, depending on mask)
+                elif part.startswith('WPos:'): 
+                    pos = part[5:].split(',')
+                    self.w_x = pos[0]
+                    self.w_y = pos[1]
+                    self.w_z = pos[2]
+                
+                # Get Work Co-ordinate Offset
+                elif part.startswith('WCO:'): 
+                    pos = part[4:].split(',')
+                    self.wco_x = pos[0]
+                    self.wco_y = pos[1]
+                    self.wco_z = pos[2]
+                
+                # Get grbl's buffer status
+                elif part.startswith('Bf:'): 
+                    buffer_info = part[3:].split(',')
+                    self.serial_blocks_available = buffer_info[0]
+                    self.serial_chars_available = buffer_info[1]
+                    if self.buffer_limit_has_been_read == False:
+                        self.buffer_limit = buffer_info[0]
+                
+                else:
+                    continue
+            
+            if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z, 
+                                           self.serial_blocks_available, self.serial_chars_available)
+
+        elif message.startswith('ALARM:'): 
+            print ('ALARM from GRBL: ', message)
+            popup_alarm_general.PopupAlarm(self.m, self.sm, message)
+
+
+        elif message.startswith('$'):
+            setting_and_value = message.split("=")
+            setting = setting_and_value[0]
+            value = float(setting_and_value[1])
+            
+            # Detect setting and update value in software
+            # '$$' is called to yield the report from grbl
+            # It is called at init, at end of "start_sequential_stream" function - this forces sw to be in sync with grbl settings
+                        
+            if setting == '$0': pass  # Step pulse, microseconds
+            elif setting == '$1': pass  # Step idle delay, milliseconds
+            elif setting == '$2': pass  # Step port invert, mask
+            elif setting == '$3': pass  # Direction port invert, mask
+            elif setting == '$4': pass  # Step enable invert, boolean
+            elif setting == '$5': pass  # Limit pins invert, boolean
+            elif setting == '$6': pass  # Probe pin invert, boolean
+            elif setting == '$10': pass  # Status report, mask
+            elif setting == '$11': pass  # Junction deviation, mm
+            elif setting == '$12': pass  # Arc tolerance, mm
+            elif setting == '$13': pass  # Report inches, boolean
+            elif setting == '$20': pass  # Soft limits, boolean
+            elif setting == '$21': pass  # Hard limits, boolean
+            elif setting == '$22': pass  # Homing cycle, boolean
+            elif setting == '$23': pass  # Homing dir invert, mask
+            elif setting == '$24': pass  # Homing feed, mm/min
+            elif setting == '$25': pass  # Homing seek, mm/min
+            elif setting == '$26': pass  # Homing debounce, milliseconds
+            elif setting == '$27': pass  # Homing pull-off, mm
+            elif setting == '$30': pass  # Max spindle speed, RPM
+            elif setting == '$31': pass  # Min spindle speed, RPM
+            elif setting == '$32': pass  # Laser mode, boolean
+            elif setting == '$100': pass  # X steps/mm
+            elif setting == '$101': pass  # Y steps/mm
+            elif setting == '$102': pass  # Z steps/mm
+            elif setting == '$110': # X Max rate, mm/min
+                self.sm.get_screen('home').common_move_widget.fast_x_speed = value
+                self.sm.get_screen('home').common_move_widget.set_jog_speeds()
+            elif setting == '$111': # Y Max rate, mm/min
+                self.sm.get_screen('home').common_move_widget.fast_y_speed = value
+                self.sm.get_screen('home').common_move_widget.set_jog_speeds()
+            elif setting == '$112': # Z Max rate, mm/min
+                self.sm.get_screen('home').common_move_widget.fast_z_speed = value
+                self.sm.get_screen('home').common_move_widget.set_jog_speeds()
+            elif setting == '$120': pass  # X Acceleration, mm/sec^2
+            elif setting == '$121': pass  # Y Acceleration, mm/sec^2
+            elif setting == '$122': pass  # Z Acceleration, mm/sec^2
+            elif setting == '$130': 
+                self.m.grbl_x_max_travel = value  # X Max travel, mm
+                self.m.set_jog_limits()
+            elif setting == '$131':
+                self.m.grbl_y_max_travel = value  # Y Max travel, mm
+                self.m.set_jog_limits()
+            elif setting == '$132': 
+                self.m.grbl_z_max_travel = value  # Z Max travel, mm
+                self.m.set_jog_limits()
+
+            
+
+        # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
+        elif message.startswith('['): 
+            stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
+                
+            if stripped_message.startswith('G28:'): 
+                
+                pos = stripped_message[4:].split(',')
+                self.g28_x = pos[0]
+                self.g28_y = pos[1]
+                self.g28_z = pos[2]
+            
+            # Process a successful probing op [PRB:0.000,0.000,0.000:0]
+            elif self.expecting_probe_result and stripped_message.startswith('PRB'):
+                
+                successful_probe = stripped_message.split(':')[2]
+                if successful_probe:
+                    self.m.probe_z_detection_event()
+                    Clock.schedule_once(self.m.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
+                    
+                self.expecting_probe_result = False # clear flag
+    
+
+                    
+
+        
+######## Write  
+    
+    def write_command(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):  
+        
+        # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+
+        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+        try:
+            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+            if show_in_sys and altDisplayText==None: print serialCommand          
+            if altDisplayText != None: print altDisplayText
+
+            # Print to console in the UI
+            if show_in_console  and altDisplayText == None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+            if altDisplayText != None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+            
+        except:
+            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+
+        # Finally issue the command
+        if self.s: 
+            try:
+                self.s.write(serialCommand + '\n')
+            except:
+                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")" 
+
+
+
+    def write_realtime(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):  
+        
+        # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
+
+        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+        try:
+            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+            if show_in_sys and altDisplayText==None: print serialCommand          
+            if altDisplayText != None: print altDisplayText
+
+            # Print to console in the UI
+            if show_in_console  and altDisplayText == None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+            if altDisplayText != None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+            
+        except:
+            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+
+        # Finally issue the command
+        if self.s: 
+            try:
+                self.s.write(serialCommand)
+            except:
+                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            
+    monitor_text_buffer = ""
+
+
+######## Sequential streaming
+
+    _sequential_stream_buffer = []
+    _reset_grbl_after_stream = False
+
+    def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
+        
+        # This stream_file method waits for an 'ok' before sending the next setting
+        # It does not stuff the grbl buffer
+        # It is ideal for:
+          # EEPROM settings require special attention, due to writing of values
+          # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
+        # WARNING: this function is not blocking, and as of yet there is no way to indicate it has finished
+
+        self._sequential_stream_buffer = list_to_stream
+        self._reset_grbl_after_stream = reset_grbl_after_stream
+
+        
+        if self._sequential_stream_buffer:
+            self.is_sequential_streaming = True
+            self.write_command(self._sequential_stream_buffer[0])
+            del self._sequential_stream_buffer[0]
+        else:
+            self.is_sequential_streaming = False
+            if self._reset_grbl_after_stream:
+                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
+
+    def _send_next_sequential_stream(self):
+        
+        if self._sequential_stream_buffer:
+            self.is_sequential_streaming = True
+            self.write_command(self._sequential_stream_buffer[0])
+            del self._sequential_stream_buffer[0]
+        else:
+            self.is_sequential_streaming = False
+            if self._reset_grbl_after_stream:
+                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
+
+
+
+
