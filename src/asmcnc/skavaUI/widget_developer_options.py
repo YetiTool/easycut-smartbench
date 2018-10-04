@@ -102,4 +102,4 @@ class DevOptions(Widget):
         self.sw_version_label.text = data
     
     def get_sw_update(self):
-        os.system("cd /home/sysop/asmcnc_skava_ui/ && git pull")
+        os.system("cd /home/pi/easycut-smartbench/ && git pull")
