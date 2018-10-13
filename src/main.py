@@ -72,11 +72,6 @@ from asmcnc.skavaUI import screen_template
 from asmcnc.skavaUI import screen_lobby
 
 
-
-Builder.load_string("""
-
-""")
-
 class SkavaUI(App):
 
     def build(self):
@@ -85,10 +80,9 @@ class SkavaUI(App):
         sm = ScreenManager(transition=NoTransition())
         
         # Initialise 'm'achine object
-        # m = router_machine.RouterMachine('COM5', sm)
         m = router_machine.RouterMachine('COM4', sm)
 
-#         initial_screen = screen_inital.InitialScreen(name='initial', screen_manager = sm, machine = m)
+        # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
@@ -97,7 +91,7 @@ class SkavaUI(App):
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m)
         template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
 
-#         sm.add_widget(initial_screen)
+        # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)
         sm.add_widget(local_filechooser)
@@ -106,7 +100,7 @@ class SkavaUI(App):
         sm.add_widget(go_screen)
         sm.add_widget(template_screen)
 
-#         sm.current = 'initial'
+        # set screen to start on
         sm.current = 'lobby'
  
         return sm
