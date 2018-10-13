@@ -1,19 +1,16 @@
 '''
 Created on 31 Jan 2018
-
 @author: Ed
+This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
 from asmcnc.comms import serial_connection
 from kivy.clock import Clock
 
-# "Reset" refers to a soft-reset
-# On soft-reset, grbl is locked - that means it won't do anything until homed
-# ... unless it is unlocked
 
 class RouterMachine(object):
     
-    s = None 
+    s = None # serial object
     is_machine_homed = False # status on powerup
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
@@ -21,28 +18,35 @@ class RouterMachine(object):
     grbl_y_max_travel = 3000.0 # measured from true home
     grbl_z_max_travel = 300.0 # measured from true home
     
-    limit_switch_safety_distance = 1.0 # note this an internal UI setting, it is NOT grbl pulloff ($27)
-
+    # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
+    # note this an internal UI setting, it is NOT grbl pulloff ($27)
+    limit_switch_safety_distance = 1.0 
+    
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.65
 
-    is_squaring_XY_needed_after_homing = True # assuming XY squaring needed after powerup
+    is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     
             
     def __init__(self, win_serial_port, screen_manager):
 
         self.sm = screen_manager
         self.set_jog_limits()
+
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.s.establish_connection(win_serial_port)
         print "Serial connection status:", self.s.is_connected()
         self.s.initialise_grbl()
-#         Clock.schedule_interval(self.set_led_state, 0.25)
 
+        # Clock.schedule_interval(self.set_led_state, 0.25)
 
+# SETUP
+
+    # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):
+
         # XY home end
         self.x_min_jog_abs_limit = -self.grbl_x_max_travel + self.limit_switch_safety_distance
         self.y_min_jog_abs_limit = -self.grbl_y_max_travel + self.limit_switch_safety_distance
@@ -56,14 +60,17 @@ class RouterMachine(object):
         self.z_min_jog_abs_limit = -self.grbl_z_max_travel       
 
 
-    def probe_z(self):
+# HOMING
 
-        # 'G92 Zn' # DO NOT USE - not persistent and is to be deprecated from Gcode
+    # Home the Z axis by moving the cutter down until it touches the probe.
+    # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
+    def probe_z(self):
+        
         self.s.expecting_probe_result = True
         probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
         self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
         self.s.write_command('G90')
-    
+   
         # Serial module then looks for probe detection
         # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
         # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
@@ -71,8 +78,6 @@ class RouterMachine(object):
 
     def probe_z_detection_event(self):
         
-#         self.s.write_command('G92 Z' + str(self.z_touch_plate_thickness))
-#         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
 
             
@@ -87,40 +92,6 @@ class RouterMachine(object):
         else:
             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
 
-
-    def set_led_state(self, dt):
-        # Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
-        
-        # Don't poll if in run, economise on comms
-        if self.state().startswith('Idle'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Hold'):
-            pass # Once on hold, can't hear command
-        elif self.state().startswith('Jog'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Door'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)        
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Sleep'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Alarm'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Unknown'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Home'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-
-
-    is_squaring_XY_needed_after_homing = True # assuming XY squaring needed after powerup
 
     def home_all(self): 
         
@@ -139,7 +110,7 @@ class RouterMachine(object):
             
         self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again 
  
-        # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach found in the serial module.
+        # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
  
         homing_sequence_part_1 =  [
@@ -152,7 +123,7 @@ class RouterMachine(object):
                                   ]
         self.s.start_sequential_stream(homing_sequence_part_1)
 
-        self.idle_state_count_for_XY_square_post_ops = 0 # resetting count to detect when to do post_operatons
+        self.idle_state_count_for_XY_square_post_ops = 0 # resetting count to detect when to do post_operatons (see 'set_XY_square_post_operations' function)
         self.square_post_op_event = Clock.schedule_interval(self.set_XY_square_post_operations, 0.5)
  
          
@@ -174,10 +145,14 @@ class RouterMachine(object):
                 self.s.start_sequential_stream(homing_sequence_part_2)
                 self.set_state('Home') # Since homing op is part of seq stream_file, can't call regular function which would normally force the idle state (grbl not very good at setting the 'home' state)
 
-            
+
+# STATUS            
         
     def is_connected(self):
         return self.s.is_connected()
+    
+    def is_job_streaming(self):
+        return self.s.is_job_streaming
     
     def state(self):
         return self.s.m_state
@@ -187,11 +162,8 @@ class RouterMachine(object):
         if temp_state in grbl_state_words:
             self.s.m_state = temp_state
     
-    def soft_reset(self):
-        if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
-        self.s.write_realtime("\x18", show_in_sys=False, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
-        print '>>> GRBL RESET'
-            
+    # 'Machine position'/mpos is the absolute position of the tooltip, wrt home
+    
     def mpos_x(self):
         return float(self.s.m_x)
     
@@ -201,8 +173,19 @@ class RouterMachine(object):
     def mpos_z(self):
         return float(self.s.m_z)
     
+    def x_pos_str(self):
+        return self.s.m_x
+    
+    def y_pos_str(self):
+        return self.s.m_y
+    
+    def z_pos_str(self):
+        return self.s.m_z
+    
+
+    
+    # 'Work position'/wpos is the position of the tooltip relative to the datum position set for the job
     # WPos = MPos - WCO.
-                
     def wpos_x(self):
         return float(self.s.m_x) - self.x_wco()
     
@@ -212,7 +195,8 @@ class RouterMachine(object):
     def wpos_z(self):
         return float(self.s.m_z) - self.z_wco()
     
-    
+    # 'Work Co-ordinate offset'/wco is the definition of the datum position set for the job, wrt home
+    # WPos = MPos - WCO
     def x_wco(self):
         return float(self.s.wco_x)
     
@@ -222,6 +206,8 @@ class RouterMachine(object):
     def z_wco(self):
         return float(self.s.wco_z)
     
+    # The G28 command moves the tooltip to an intermediate parking position. 
+    # Potentially useful if you want the tool to go to a specific position before and after a job (for example to reload a part for batch work)
     def g28_x(self):
         return float(self.s.g28_x)
     
@@ -231,14 +217,16 @@ class RouterMachine(object):
     def g28_z(self):
         return float(self.s.g28_z)
     
-    def x_pos_str(self):
-        return self.s.m_x
-    
-    def y_pos_str(self):
-        return self.s.m_y
-    
-    def z_pos_str(self):
-        return self.s.m_z
+
+# ACTION
+
+    # "Reset" refers to a soft-reset
+    # On soft-reset, grbl is locked - that means it won't do anything until homed
+    # ... unless it is unlocked
+    def soft_reset(self):
+        if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
+        self.s.write_realtime("\x18", show_in_sys=False, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
+        print '>>> GRBL RESET'
     
     def jog_absolute_single_axis(self, axis, target, speed):
         self.s.write_command('$J=G53 ' + axis + str(target) + ' F' + str(speed))
@@ -254,13 +242,8 @@ class RouterMachine(object):
 
     def hold(self):
         self.door()
-#         self.s.write_realtime('!')       
-#         if self.s.is_job_streaming:
-#             self.toggle_spindle_off_overide(0)
     
     def resume(self):
-#         if self.s.is_job_streaming:
-#             self.toggle_spindle_off_overide(0)
         self.s.write_realtime('~')       
     
     def spindle_on(self):
@@ -306,9 +289,6 @@ class RouterMachine(object):
         self.s.write_command('G10 L20 P1 Z0')
         self.get_grbl_status()
 
-    def is_job_streaming(self):
-        return self.s.is_job_streaming
-
     def test(self):
         print 'test'
         
@@ -316,7 +296,7 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))        
 
     def led_ring_off(self):
-#         self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        # self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
         pass
     
     def stream_file(self, job_file_path):
@@ -360,21 +340,43 @@ class RouterMachine(object):
  
     def go_y_datum(self):
         self.s.write_command('G0 G54 Y0')
- 
-#     is_spindle_stop_mode_enabled = False
-#  
-#     def enable_spindle_off_overide(self):
-#         if self.is_spindle_stop_mode_enabled == False: 
-#             self.s.write_realtime('\x9E', altDisplayText = 'Spindle stop override ON')
-#             self.is_spindle_stop_mode_enabled = True 
-#         
-#     def disable_spindle_off_overide(self):
-#         if self.is_spindle_stop_mode_enabled == True: 
-#             self.s.write_realtime('\x9E', altDisplayText = 'Spindle stop override OFF')
-#             self.is_spindle_stop_mode_enabled == False
         
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
 
     def door(self):
         self.s.write_realtime('\x84', altDisplayText = 'Door')
+
+
+# LIGHTING
+
+    def set_led_state(self, dt):
+        # Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
+        
+        # Don't poll if in run, economise on comms
+        if self.state().startswith('Idle'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+        elif self.state().startswith('Hold'):
+            pass # Once on hold, can't hear command
+        elif self.state().startswith('Jog'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
+        elif self.state().startswith('Door'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)        
+            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
+        elif self.state().startswith('Sleep'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        elif self.state().startswith('Alarm'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+        elif self.state().startswith('Unknown'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+        elif self.state().startswith('Home'):
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)

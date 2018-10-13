@@ -1,8 +1,10 @@
 '''
 Created on 16 Nov 2017
-v2
 @author: Ed
+YetiTool's UI for SmartBench
+www.yetitool.com
 '''
+
 # config
 from kivy.config import Config
 from asmcnc.comms.serial_connection import SerialConnection
