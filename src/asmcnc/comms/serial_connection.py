@@ -1,9 +1,13 @@
 '''
 Created on 31 Jan 2018
-
 @author: Ed
+Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
+
 from kivy.config import Config
+
+# Set the Kivy "Clock" to tick at its fastest. 
+# Clock usually used to establish consistent framerate for animations, but we need it to tick much faster (e.g. than 25fps) for serial refreshing
 Config.set('graphics', 'maxfps', '0')
 Config.write()
 
@@ -17,25 +21,28 @@ import re
 from functools import partial
 
 
-GRBL_BLOCK_SIZE = 35
-RX_BUFFER_SIZE = 256
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
-GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01
+GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
 
 
 class SerialConnection(object):
 
-    STATUS_INTERVAL = 0.04 # How often to poll general status to update UI
+    STATUS_INTERVAL = 0.04 # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None    # Serial comms object
     sm = None   # Screen manager object
     
+    
     def __init__(self, machine, screen_manager):
 
         self.sm = screen_manager
-        self.m = machine    # should probably be using super() but module errors means this is a workaround - this is the object which calls the serial connection so can be referenced to do machine moves from Alarm popup
-    
+        
+        # This is the object which calls the serial connection so can be referenced to do machine moves from Alarm popup
+        # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...
+        self.m = machine    
+        
+        
     def establish_connection(self, win_port):
 
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
@@ -56,7 +63,8 @@ class SerialConnection(object):
             except:
                 return False
 
-   
+
+    # is serial port connected?
     def is_connected(self):
         
         if self.s: return True 
@@ -75,6 +83,11 @@ class SerialConnection(object):
         self.s.flushInput()  # Flush startup text in serial input
         Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
         
+        # Enter any initial settings into this list
+        # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
+        # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR. 
+        # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost. 
+        # Sequential streaming handles this
         grbl_settings = [
 #                     '$0=10',    #Step pulse, microseconds
 #                     '$1=25',    #Step idle delay, milliseconds
@@ -115,6 +128,7 @@ class SerialConnection(object):
                     ]
         
         self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+        
         if ENABLE_STATUS_REPORTS:
             Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
@@ -125,15 +139,20 @@ class SerialConnection(object):
             
 
 
-######## Scanner: listens for responses from Grbl
+# SCANNER: listens for responses from Grbl
 
-    VERBOSE_ALL_PUSH_MESSAGES = False         # Push is for messages (e.g. status)
-    VERBOSE_ALL_RESPONSE = False     # Response is for stream_file counting (sending g-code file)
+    # "Response" is a message from GRBL saying how a line of gcode went (either 'ok', or 'error') when it was loaded from the serial buffer into the line buffer
+    # When streaming, monitoring the response from GRBL is essential for EasyCut to know when to send the next line
+    
+    # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
+    
+    VERBOSE_ALL_PUSH_MESSAGES = False         
+    VERBOSE_ALL_RESPONSE = False     
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, dt):
 
-        # If there's a message received, deal with depending on type
+        # If there's a message received, deal with it depending on type
         if self.s.inWaiting():
             rec_temp = self.s.readline().strip() # Usually blocking, hence need for .inWaiting()
 
@@ -158,36 +177,43 @@ class SerialConnection(object):
                 self.stuff_buffer()
             else: self.end_stream()
 
-                
-        Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)   # Loop this method
+        # Loop this method
+        Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)  
 
 
-######### Streaming    
 
-    
+# STREAMING: sending gcode, using character counting protocol described here:
+# https://github.com/gnea/grbl/wiki/Grbl-v1.1-Interface
+
+
     # streaming variables
+    GRBL_BLOCK_SIZE = 35    # max number of gcode lines which GRBL can put in its 'BLOCK' or look ahead buffer
+    RX_BUFFER_SIZE = 256    # serial buffer which gets filled by EasyCut. GRBL grabs from this when there is block space
+    
     is_job_streaming = False
     is_stream_lines_remaining = False
 
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
-    c_line = [] # char count of blocks in grbl serial buffer
+    c_line = [] # char count of blocks/lines in grbl's serial buffer
         
     file_to_stream = None
     lines_to_stream_from_file = []
     stream_start_time = 0
     stream_end_time = 0
-    
-    GRBL_BLOCK_SIZE = 35
-    RX_BUFFER_SIZE = 256
+
     
     def stream_file(self, job_file_path):
 
-        self.m.zUp() # Move head out of the way before moving to the job datum in XY.
-        Clock.schedule_once(self._load_stream_file, 1) # Delay to make sure that the ok has been read back from grbl from z-move to ensure "ok" counting in streaming is ok.
-        print 'Streaming ' + job_file_path
-        self.file_to_stream = open(job_file_path,'r')
+        # Move head out of the way before moving to the job datum in XY.
+        self.m.zUp() 
 
+        print 'Opening ' + job_file_path
+        self.file_to_stream = open(job_file_path,'r') # TODO: move to _load_stream_file method.
+
+        # Delay to make sure that the grbl-response ('ok') from z-move has been received before beginning to counting for grbl responses.
+        Clock.schedule_once(self._load_stream_file, 1) 
+        
 
     def _load_stream_file(self, dt):
 
@@ -205,25 +231,44 @@ class SerialConnection(object):
             if l_block != '': self.lines_to_stream_from_file.append(l_block)
             
         self._initialise_regular_stream_parameters()
+
         
     def _initialise_regular_stream_parameters(self):    
         
         # for the buffer stuffing style streaming
         
         self.is_stream_lines_remaining = True
-
         self.file_to_stream.close()
         self.s.flushInput()
 
         # Reset counters & flags
-        self.l_count = 0 # lines sent to grbl
-        self.g_count = 0 # gcodes processed by grbl (gcodes may not get processed immediately after being sent)
+        self.l_count = 0
+        self.g_count = 0
         self.c_line = []
         self.stream_start_time = time.time();
         
-        self.is_job_streaming = True  # allow grbl_scanner() to start stuffing buffer
+        # allow grbl_scanner() to start stuffing buffer
+        self.is_job_streaming = True  
 
 
+    # attempt to fill GRBLS's serial buffer, if there's room
+    def stuff_buffer(self):
+        
+        line_to_go = self.lines_to_stream_from_file[self.l_count]
+        serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+
+        # if there's room in the serial buffer, send the line
+        if (len(line_to_go)+1) <= serial_space:
+            self.c_line.append(len(line_to_go)+1) # Track number of characters in grbl serial read buffer
+            self.l_count += 1 # lines sent to grbl
+            self.write_command(line_to_go, show_in_sys=True, show_in_console=True) # Send g-code block to grbl
+
+            # set flag if we've reached the end of the file
+            if self.l_count == len(self.lines_to_stream_from_file):
+                self.is_stream_lines_remaining = False
+
+
+    # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
         
         # This is a special condition, used only at startup to set EEPROM settings
@@ -237,20 +282,10 @@ class SerialConnection(object):
         if message.startswith('error'): 
             print ('ERROR from GRBL: ', message)
             popup_error.PopupError(self.m, self.sm, message)
-
-    def stuff_buffer(self):
-        line_to_go = self.lines_to_stream_from_file[self.l_count]
-        serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-        if (len(line_to_go)+1) <= serial_space:
-            self.c_line.append(len(line_to_go)+1) # Track number of characters in grbl serial read buffer
-            self.l_count += 1 # lines sent to grbl
-            self.write_command(line_to_go, show_in_sys=True, show_in_console=True) # Send g-code block to grbl
-
-            if self.l_count == len(self.lines_to_stream_from_file):
-                self.is_stream_lines_remaining = False
     
+
+    # After streaming is completed
     def end_stream(self):
-        # After streaming is completed
         
         if self.l_count == self.g_count: # ... and machine has completed the last command in the grbl buffer (job is truely done)
             self.is_job_streaming = False
@@ -278,25 +313,31 @@ class SerialConnection(object):
         self.s.flushInput()
 
 
-######### PUSH message handling
 
+# PUSH MESSAGE HANDLING
+    
     m_state = 'Unknown'
- 
-    m_x = '0.0' # Machine co-ordinates
+
+    # Machine co-ordinates
+    m_x = '0.0'
     m_y = '0.0'
     m_z = '0.0'
     
-    w_x = '0.0' # Work co-ordinates
+    # Work co-ordinates
+    w_x = '0.0' 
     w_y = '0.0'
     w_z = '0.0'
         
-    wco_x = '0.0' # Work co-ordinate offset
+    # Work co-ordinate offset
+    wco_x = '0.0' 
     wco_y = '0.0'
     wco_z = '0.0'
     
+    # G28 position
     g28_x = '0.0'
     g28_y = '0.0'
     g28_z = '0.0'
+    
     
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -306,6 +347,7 @@ class SerialConnection(object):
     
     expecting_probe_result = False
 
+    
     def process_grbl_push(self, message):
         
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -352,6 +394,7 @@ class SerialConnection(object):
             
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z, 
                                            self.serial_blocks_available, self.serial_chars_available)
+
 
         elif message.startswith('ALARM:'): 
             print ('ALARM from GRBL: ', message)
@@ -415,8 +458,8 @@ class SerialConnection(object):
                 self.m.set_jog_limits()
 
             
-
-        # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
+        # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:], 
+        # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
         elif message.startswith('['): 
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
                 
@@ -441,7 +484,7 @@ class SerialConnection(object):
                     
 
         
-######## Write  
+# WRITE
     
     def write_command(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):  
         
@@ -500,7 +543,8 @@ class SerialConnection(object):
     monitor_text_buffer = ""
 
 
-######## Sequential streaming
+
+# SEQUENTIAL STREAMING
 
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
@@ -509,7 +553,7 @@ class SerialConnection(object):
         
         # This stream_file method waits for an 'ok' before sending the next setting
         # It does not stuff the grbl buffer
-        # It is ideal for:
+        # It is for:
           # EEPROM settings require special attention, due to writing of values
           # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
         # WARNING: this function is not blocking, and as of yet there is no way to indicate it has finished
