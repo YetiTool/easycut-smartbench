@@ -89,7 +89,6 @@ class SkavaUI(App):
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
-        help_screen = screen_help.HelpScreen(name='help', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m)
         template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
 
@@ -98,7 +97,6 @@ class SkavaUI(App):
         sm.add_widget(home_screen)
         sm.add_widget(local_filechooser)
         sm.add_widget(usb_filechooser)
-        sm.add_widget(help_screen)
         sm.add_widget(go_screen)
         sm.add_widget(template_screen)
 
