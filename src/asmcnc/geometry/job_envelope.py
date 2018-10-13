@@ -1,4 +1,8 @@
-
+'''
+Created on 3 Feb 2018
+@author: Ed
+TODO: This all looks a bit lonely. Reintegrate back with the other UI widgets e.g. widget_virtual_bed?
+'''
 
 class BoundingBox(object):
 
