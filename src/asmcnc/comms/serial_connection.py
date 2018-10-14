@@ -341,12 +341,14 @@ class SerialConnection(object):
     
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
-    
-    buffer_limit_has_been_read = False
-    buffer_limit = 0
+    print_buffer_status = True
+    buffer_monitor_file = open("buffer_log.txt", "w")
+
     
     expecting_probe_result = False
 
+    
+    
     
     def process_grbl_push(self, message):
         
@@ -384,10 +386,16 @@ class SerialConnection(object):
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'): 
                     buffer_info = part[3:].split(',')
-                    self.serial_blocks_available = buffer_info[0]
-                    self.serial_chars_available = buffer_info[1]
-                    if self.buffer_limit_has_been_read == False:
-                        self.buffer_limit = buffer_info[0]
+                    if self.serial_blocks_available != buffer_info[0]:
+                        self.serial_blocks_available = buffer_info[0]
+                        self.print_buffer_status = True
+                    if self.serial_chars_available != buffer_info[1]:
+                        self.serial_chars_available = buffer_info[1]
+                        self.print_buffer_status = True
+                    if self.print_buffer_status == True:
+                        self.print_buffer_status = False
+                        print self.serial_blocks_available + " " + self.serial_chars_available
+                        self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
                 
                 else:
                     continue
