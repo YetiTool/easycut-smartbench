@@ -335,8 +335,8 @@ class HomeScreen(Screen):
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         self.network_container.add_widget(widget_network_setup.NetworkSetup(machine=self.m, screen_manager=self.sm))
-        self.developer_container.add_widget(widget_developer_options.DevOptions(machine=self.m, screen_manager=self.sm))
-        
+        self.developer_widget = widget_developer_options.DevOptions(machine=self.m, screen_manager=self.sm)
+        self.developer_container.add_widget(self.developer_widget)
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 

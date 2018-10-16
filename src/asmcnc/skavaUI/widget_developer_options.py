@@ -21,6 +21,7 @@ Builder.load_string("""
 
     sw_version_label:sw_version_label
 
+
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -47,6 +48,18 @@ Builder.load_string("""
                 text: 'GRBL gcode check'
                 font_size: 18
                 color: 0,0,0,1
+        ToggleButton:
+            state: root.buffer_log_mode
+            text: 'Buffer Log'
+            on_state: 
+                root.buffer_log_mode = self.state 
+                print root.buffer_log_mode
+        ToggleButton:
+            state: root.virtual_hw_mode
+            text: 'Virtual HW'
+            on_state: 
+                root.virtual_hw_mode = self.state 
+                root.virtual_hw_toggled()
         Label:
             text: ''
             font_size: 18
@@ -69,6 +82,9 @@ import sys, os
 
 class DevOptions(Widget):
 
+    buffer_log_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
+    virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
+
     def __init__(self, **kwargs):
     
         super(DevOptions, self).__init__(**kwargs)
@@ -76,7 +92,21 @@ class DevOptions(Widget):
         self.sm=kwargs['screen_manager']
         self.refresh_sw_version_label()
 
+    def virtual_hw_toggled(self):
+        if self.virtual_hw_mode == 'normal': # virtual hw mode OFF
+            #turn soft limits, hard limts and homing cycle ON
+            print 'Virtual HW mode OFF: switching soft limits, hard limts and homing cycle on'
+            settings = ['$22=1','$21=1','$20=1']
+            self.m.s.start_sequential_stream(settings)
+        if self.virtual_hw_mode == 'down': # virtual hw mode ON
+            #turn soft limits, hard limts and homing cycle OFF
+            print 'Virtual HW mode ON: switching soft limits, hard limts and homing cycle off'
+            settings = ['$22=0','$20=0','$21=0']
+            self.m.s.start_sequential_stream(settings)
+
+    
     def reboot(self):
+        
         if sys.platform != "win32": 
             sudoPassword = 'posys'
             command = 'sudo reboot'
