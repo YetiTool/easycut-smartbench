@@ -305,16 +305,18 @@ class SerialConnection(object):
             print " Time elapsed: ", time_taken_seconds, " seconds\n"
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
-            self.buffer_monitor_file.close()
-            self.buffer_monitor_file = None
+            if self.buffer_monitor_file != None:
+                self.buffer_monitor_file.close()
+                self.buffer_monitor_file = None
 
 
     def cancel_stream(self):
         self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
         self.is_stream_lines_remaining = False
         self.sm.get_screen('go').reset_go_screen_after_job_finished()
-        self.buffer_monitor_file.close()
-        self.buffer_monitor_file = None
+        if self.buffer_monitor_file != None:
+            self.buffer_monitor_file.close()
+            self.buffer_monitor_file = None
 
         print "\nG-code streaming cancelled!"
         
