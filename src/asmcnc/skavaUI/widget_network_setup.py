@@ -103,10 +103,82 @@ class NetworkSetup(Widget):
         if sys.platform != "win32": 
             network = self.networkTextEntry.text
             password = self.passwordTextEntry.text
-            print network, '  ', password
             
-            sudoPassword = 'posys'
-            command = 'sudo pipaos-setwifi '+ network + ' ' + password
-            p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+            print 'Changing wireless credentials...'
+            success=set_wireless_auth(network, password)
+            if success:
+                print 'done!'
+            else:
+                print 'failed :('
+        
+            sys.exit(success == 0)
 
 
+    
+    # Wireless credential files in pipaOS stretch and jessie
+    file_wpa='/boot/wpa_supplicant.txt'
+    file_interfaces='/boot/interfaces.txt'
+    
+    
+    def set_wireless_auth(essid, psk):
+        '''
+        Adapted code from  https://github.com/pipaos/pipaos-tools/blob/master/src/pipaos-setwifi - thanks!
+        Sets the wireless credentials on the interfaces file (debian jessie)
+        Or the wpa supplicant file (debian stretch)
+        This wrapper is provided to support legacy pipaOS jessie.
+        '''
+        changed=False
+    
+        if os.path.isfile(file_wpa):
+            changed = set_credentials(essid, psk, file_wpa)
+    
+        if os.path.isfile(file_interfaces):
+            changed = set_credentials(essid, psk, file_interfaces)
+    
+        return changed
+    
+    
+        def set_credentials(essid, psk, conffile):
+            '''
+            Parses Debian interfaces configuration to replace ssid and psk
+            '''
+            changed=False
+            ssid=None
+            passphrase=None
+        
+            # open settings file
+            with open(conffile, 'r') as f:
+                settings=f.readlines()
+        
+            # replace connection details
+            for j,line in enumerate(settings):
+                idx=line.find('wpa-ssid')
+                if idx != -1:
+                    settings[j]='  wpa-ssid: {}\n'.format(essid)
+                    changed=True
+                    continue
+        
+                idx=line.find('wpa-psk')
+                if idx != -1:
+                    settings[j]='  wpa-psk: {}\n'.format(psk)
+                    changed=True
+                    continue
+        
+                idx=line.find('ssid=')
+                if idx != -1:
+                    settings[j]='  ssid="{}"\n'.format(essid)
+                    changed=True
+                    continue
+        
+                idx=line.find('psk=')
+                if idx != -1:
+                    settings[j]='  psk="{}"\n'.format(psk)
+                    changed=True
+                    continue
+        
+        
+            with open(conffile, 'w') as f:
+                f.writelines(settings)
+        
+            return changed
+ 
