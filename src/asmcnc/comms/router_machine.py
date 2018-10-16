@@ -255,9 +255,6 @@ class RouterMachine(object):
     def buffer_capacity(self):
         return self.s.serial_blocks_available
     
-    def buffer_limit(self):
-        return self.s.buffer_limit
-    
     def set_workzone_to_pos_xy(self):
         self.s.write_command('G10 L20 P1 X0 Y0')
 

@@ -203,9 +203,13 @@ class SerialConnection(object):
     lines_to_stream_from_file = []
     stream_start_time = 0
     stream_end_time = 0
+    buffer_monitor_file = None
 
     
     def stream_file(self, job_file_path):
+        
+        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+            self.buffer_monitor_file = open("buffer_log.txt", "w")
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp() 
@@ -301,13 +305,16 @@ class SerialConnection(object):
             print " Time elapsed: ", time_taken_seconds, " seconds\n"
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
-
+            self.buffer_monitor_file.close()
+            self.buffer_monitor_file = None
 
 
     def cancel_stream(self):
         self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
         self.is_stream_lines_remaining = False
         self.sm.get_screen('go').reset_go_screen_after_job_finished()
+        self.buffer_monitor_file.close()
+        self.buffer_monitor_file = None
 
         print "\nG-code streaming cancelled!"
         
@@ -344,9 +351,8 @@ class SerialConnection(object):
     
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
-    
-    buffer_limit_has_been_read = False
-    buffer_limit = 0
+    print_buffer_status = True
+
     
     expecting_probe_result = False
 
@@ -387,11 +393,25 @@ class SerialConnection(object):
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'): 
                     buffer_info = part[3:].split(',')
-                    self.serial_blocks_available = buffer_info[0]
-                    self.serial_chars_available = buffer_info[1]
-                    if self.buffer_limit_has_been_read == False:
-                        self.buffer_limit = buffer_info[0]
-                
+                    
+                    # if different from last check
+                    if self.serial_chars_available != buffer_info[1]:
+                        self.serial_chars_available = buffer_info[1]
+                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "C: " + self.serial_chars_available
+                        self.print_buffer_status = True # flag to print
+                    
+                    if self.serial_blocks_available != buffer_info[0]:
+                        self.serial_blocks_available = buffer_info[0]
+                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "L: " + self.serial_blocks_available
+                        self.print_buffer_status = True # flag to print
+                    
+                    # print if change flagged                   
+                    if self.print_buffer_status == True:
+                        self.print_buffer_status = False
+                        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+                            print self.serial_blocks_available + " " + self.serial_chars_available
+                            if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
+                    
                 else:
                     continue
             

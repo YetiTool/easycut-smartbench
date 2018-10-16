@@ -24,6 +24,8 @@ from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar,\
     widget_network_setup, widget_z_height, popup_stop_press,\
     widget_feed_override
 from asmcnc.geometry import job_envelope
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
+
 
 # from asmcnc.skavaUI import widget_tabbed_panel
 
@@ -40,6 +42,8 @@ Builder.load_string("""
     gcode_path_container:gcode_path_container
     feed_override_container:feed_override_container
     start_stop_button_image:start_stop_button_image
+    grbl_serial_char_capacity:grbl_serial_char_capacity
+    grbl_serial_line_capacity:grbl_serial_line_capacity
 
     BoxLayout:
         padding: 0
@@ -156,19 +160,39 @@ Builder.load_string("""
         
                             id: gcode_path_container                
                         
-                    
                 BoxLayout:
-                    padding: 20
-                    size_hint_x: 0.15 
+                    orientation: 'vertical'
+                    size_hint_x: 0.15
+                    padding: 00
+                    spacing: 20
+                    
+                    BoxLayout:
+                        padding: 20
+                        size_hint_y: 0.95
 
-                    canvas:
-                        Color: 
-                            rgba: hex('#FFFFFFFF')
-                        RoundedRectangle: 
-                            size: self.size
-                            pos: self.pos
+                        canvas:
+                            Color: 
+                                rgba: hex('#FFFFFFFF')
+                            RoundedRectangle: 
+                                size: self.size
+                                pos: self.pos
+    
+                        id: z_height_container     
 
-                    id: z_height_container                
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: 0.05
+                        padding: 00
+                        spacing: 00 
+                        Label:
+                            id: grbl_serial_char_capacity
+                            text: 'A'
+                            color: 0,0,0,1
+                        Label:
+                            id: grbl_serial_line_capacity
+                            text: 'B'
+                            color: 0,0,0,1
+
                 
         BoxLayout:
             size_hint_y: 0.08 
@@ -182,11 +206,13 @@ class GoScreen(Screen):
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
 
+    test_property = 0
+   
+
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
 
-        
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         
@@ -196,9 +222,10 @@ class GoScreen(Screen):
         
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))        
-
+        
     start_stop_button_press_counter = 0
 
+            
     def start_stop_button_press(self):
         
         self.start_stop_button_press_counter += 1

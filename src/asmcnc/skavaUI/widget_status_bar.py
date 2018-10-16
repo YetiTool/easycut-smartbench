@@ -160,8 +160,7 @@ class StatusBar(Widget):
             self.grbl_xw_label.text = 'wX: ' + str(self.m.wpos_x())
             self.grbl_yw_label.text = 'wY: ' + str(self.m.wpos_y())
             self.grbl_zw_label.text = 'wZ: ' + str(self.m.wpos_z())
-#             self.buffer_status_label.text = ('Buffer: ' + str(self.m.buffer_capacity()) +
-#                                              '/' + str(self.m.buffer_limit()))
+
         else: 
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
    
