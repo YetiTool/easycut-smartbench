@@ -143,12 +143,14 @@ class SerialConnection(object):
 
     # "Response" is a message from GRBL saying how a line of gcode went (either 'ok', or 'error') when it was loaded from the serial buffer into the line buffer
     # When streaming, monitoring the response from GRBL is essential for EasyCut to know when to send the next line
+    # Full docs: https://github.com/gnea/grbl/wiki/Grbl-v1.1-Interface
     
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
     
     VERBOSE_ALL_PUSH_MESSAGES = False         
     VERBOSE_ALL_RESPONSE = False     
     VERBOSE_STATUS = False
+
 
     def grbl_scanner(self, dt):
 
@@ -219,6 +221,7 @@ class SerialConnection(object):
 
         self.lines_to_stream_from_file = [] # Ensure purged
 
+        # clean the lines to stream
         for line in self.file_to_stream:
             
             # Refine GCode
