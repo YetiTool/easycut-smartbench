@@ -128,11 +128,11 @@ class NetworkSetup(Widget):
         '''
         changed=False
     
-        if os.path.isfile(file_wpa):
-            changed = set_credentials(essid, psk, file_wpa)
+        if os.path.isfile(self.file_wpa):
+            changed = set_credentials(essid, psk, self.file_wpa)
     
-        if os.path.isfile(file_interfaces):
-            changed = set_credentials(essid, psk, file_interfaces)
+        if os.path.isfile(self.file_interfaces):
+            changed = set_credentials(essid, psk, self.file_interfaces)
     
         return changed
     
