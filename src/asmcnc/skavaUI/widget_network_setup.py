@@ -105,13 +105,12 @@ class NetworkSetup(Widget):
             password = self.passwordTextEntry.text
             
             print 'Changing wireless credentials...'
-            success=set_wireless_auth(network, password)
+            success=self.set_wireless_auth(network, password)
             if success:
                 print 'done!'
             else:
                 print 'failed :('
         
-            sys.exit(success == 0)
 
 
     
