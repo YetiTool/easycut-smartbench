@@ -42,7 +42,7 @@ Builder.load_string("""
             size: self.size
 
     BoxLayout:
-        padding: 6
+        padding: 1
         spacing: 6
         orientation: "horizontal"
         size: self.parent.size
@@ -50,86 +50,86 @@ Builder.load_string("""
 
         Image:
             id: serial_image
-            size_hint_x: 0.05 
+            size_hint_x: 0.05
             source: "./asmcnc/skavaUI/img/serial_on.png"
             center_x: self.parent.center_x
             y: self.parent.y
             size: self.parent.width, self.parent.height
-            allow_stretch: True              
+            allow_stretch: True
         Image:
             id: wifi_image
-            size_hint_x: 0.05 
+            size_hint_x: 0.05
             source: "./asmcnc/skavaUI/img/wifi_on.png"
             center_x: self.parent.center_x
             y: self.parent.y
             size: self.parent.width, self.parent.height
-            allow_stretch: True              
+            allow_stretch: True
         Label:
             size_hint_x: 0.2
             id: ip_status_label
             text_size: self.size
             halign: 'left'
             valign: 'middle'
-            text: 'IP: 0.0.0.0.0' 
-    
+            text: 'IP 255.255.255.255'
+
 #         Label:
-#             size_hint_x: 0.1 
-   
+#             size_hint_x: 0.1
+
         Label:
-            size_hint_x: 0.2 
+            size_hint_x: 0.1
             id: grbl_xm_label
-            text: 'mX: Pos'
+            text: 'mX:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
-            size_hint_x: 0.2
+            size_hint_x: 0.1
             id: grbl_ym_label
-            text: 'mY: Pos'
+            text: 'mY:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
-            size_hint_x: 0.2 
+            size_hint_x: 0.1
             id: grbl_zm_label
-            text: 'mZ: Pos'
+            text: 'mZ:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
 
- 
+
         Label:
-            size_hint_x: 0.2 
+            size_hint_x: 0.1
             id: grbl_xw_label
-            text: 'wX: Pos'
+            text: 'wX:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
-            size_hint_x: 0.2
+            size_hint_x: 0.1
             id: grbl_yw_label
-            text: 'wY: Pos'
+            text: 'wY:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
-            size_hint_x: 0.2 
+            size_hint_x: 0.1
             id: grbl_zw_label
-            text: 'wZ: Pos'
+            text: 'wZ:\\n-9999.999'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
-            
+
         Label:
-            size_hint_x: 0.1 
+            size_hint_x: 0.1
             id: grbl_status_label
             text: 'Status'
             text_size: self.size
             halign: 'right'
             valign: 'middle'
-        
+
 """)
-    
+
 
 
 class StatusBar(Widget):
@@ -138,7 +138,7 @@ class StatusBar(Widget):
     IP_REPORT_INTERVAL = 2
 
     def __init__(self, **kwargs):
-    
+
         super(StatusBar, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
@@ -149,37 +149,37 @@ class StatusBar(Widget):
     def on_enter(self):
         self.refresh_ip_label_value()
 
-    
+
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
             self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX: ' + str(self.m.mpos_x())
-            self.grbl_ym_label.text = 'mY: ' + str(self.m.mpos_y())
-            self.grbl_zm_label.text = 'mZ: ' + str(self.m.mpos_z())
-            self.grbl_xw_label.text = 'wX: ' + str(self.m.wpos_x())
-            self.grbl_yw_label.text = 'wY: ' + str(self.m.wpos_y())
-            self.grbl_zw_label.text = 'wZ: ' + str(self.m.wpos_z())
+            self.grbl_xm_label.text = 'mX:\n' + str(self.m.mpos_x())
+            self.grbl_ym_label.text = 'mY:\n' + str(self.m.mpos_y())
+            self.grbl_zm_label.text = 'mZ:\n' + str(self.m.mpos_z())
+            self.grbl_xw_label.text = 'wX:\n' + str(self.m.wpos_x())
+            self.grbl_yw_label.text = 'wY:\n' + str(self.m.wpos_y())
+            self.grbl_zw_label.text = 'wZ:\n' + str(self.m.wpos_z())
 
-        else: 
+        else:
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
-   
+
     def refresh_ip_label_value(self, dt):
-        
+
         ip_address = ''
         self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
 
 
-        if sys.platform == "win32": 
+        if sys.platform == "win32":
             try:
-                hostname=socket.gethostname()   
+                hostname=socket.gethostname()
                 IPAddr=socket.gethostbyname(hostname)
                 ip_address = str(IPAddr)
                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
             except:
                 ip_address = ''
                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-        else: 
+        else:
             try:
                 f = os.popen('hostname -I')
                 first_info = f.read().strip().split(' ')[0]
@@ -188,9 +188,9 @@ class StatusBar(Widget):
                     self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
                 else:
                     ip_address = ''
-                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"                    
+                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
             except:
                 ip_address = ''
                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-        
+
         self.ip_status_label.text = ip_address
