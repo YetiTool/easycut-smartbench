@@ -44,6 +44,7 @@ Builder.load_string("""
     start_stop_button_image:start_stop_button_image
     grbl_serial_char_capacity:grbl_serial_char_capacity
     grbl_serial_line_capacity:grbl_serial_line_capacity
+    btn_back: btn_back
 
     BoxLayout:
         padding: 0
@@ -51,47 +52,48 @@ Builder.load_string("""
         orientation: "vertical"
 
         BoxLayout:
-            size_hint_y: 0.9 
+            size_hint_y: 0.9
             padding: 0
             spacing: 10
             orientation: "horizontal"
 
             BoxLayout:
-                size_hint_x: 0.9 
+                size_hint_x: 0.9
                 padding: 20
                 spacing: 20
                 orientation: "horizontal"
-    
+
                 canvas:
-                    Color: 
+                    Color:
                         rgba: hex('#E5E5E5FF')
-                    Rectangle: 
+                    Rectangle:
                         size: self.size
                         pos: self.pos
-                
+
                 BoxLayout:
                     orientation: 'vertical'
-                    size_hint_x: 0.8 
+                    size_hint_x: 0.8
                     spacing: 20
-                    
+
                     BoxLayout:
-                        size_hint_y: 0.3 
+                        size_hint_y: 0.3
                         padding: 20
                         canvas:
-                            Color: 
+                            Color:
                                 rgba: hex('#FFFFFFFF')
-                            RoundedRectangle: 
+                            RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
                             Button:
+                                id: btn_back
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
-                                on_release: 
+                                on_release:
                                     root.manager.current = 'home'
                                     self.background_color = hex('#F4433600')
-                                on_press: 
+                                on_press:
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
@@ -102,22 +104,22 @@ Builder.load_string("""
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
-                                        allow_stretch: True    
+                                        allow_stretch: True
                             Label:
                                 size_hint_x: 5
                                 color: 0,0,0,1
-                                markup: True 
+                                markup: True
                                 text: 'Load a file...'
                                 halign: 'left'
-                                id: file_data_label 
+                                id: file_data_label
                                 text: 'Data'
                             Button:
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
-                                on_release: 
+                                on_release:
                                     root.start_stop_button_press()
                                     self.background_color = hex('#F4433600')
-                                on_press: 
+                                on_press:
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
@@ -129,61 +131,61 @@ Builder.load_string("""
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
-                                        allow_stretch: True 
-                    
+                                        allow_stretch: True
+
                     BoxLayout:
                         orientation: 'horizontal'
-                        size_hint_y: 0.7 
+                        size_hint_y: 0.7
                         padding: 00
                         spacing: 20
-                        
+
                         BoxLayout:
                             padding: 0
                             size_hint_x: 0.2
                             canvas:
-                                Color: 
+                                Color:
                                     rgba: hex('#FFFFFFFF')
-                                RoundedRectangle: 
+                                RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
-        
-                            id: feed_override_container 
+
+                            id: feed_override_container
 
                         BoxLayout:
                             padding: 0
                             canvas:
-                                Color: 
+                                Color:
                                     rgba: hex('#FFFFFFFF')
-                                RoundedRectangle: 
+                                RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
-        
-                            id: gcode_path_container                
-                        
+
+                            id: gcode_path_container
+
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.15
                     padding: 00
                     spacing: 20
-                    
+
                     BoxLayout:
                         padding: 20
                         size_hint_y: 0.95
 
                         canvas:
-                            Color: 
+                            Color:
                                 rgba: hex('#FFFFFFFF')
-                            RoundedRectangle: 
+                            RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
-    
-                        id: z_height_container     
+
+                        id: z_height_container
 
                     BoxLayout:
                         orientation: 'horizontal'
                         size_hint_y: 0.05
                         padding: 00
-                        spacing: 00 
+                        spacing: 00
                         Label:
                             id: grbl_serial_char_capacity
                             text: 'A'
@@ -193,9 +195,9 @@ Builder.load_string("""
                             text: 'B'
                             color: 0,0,0,1
 
-                
+
         BoxLayout:
-            size_hint_y: 0.08 
+            size_hint_y: 0.08
             id: status_container
 
 """)
@@ -207,7 +209,7 @@ class GoScreen(Screen):
     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
 
     test_property = 0
-   
+    btn_back = ObjectProperty()
 
     def __init__(self, **kwargs):
 
@@ -215,50 +217,54 @@ class GoScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        
+
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
         self.feed_override_container.add_widget(widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm))
-        
+
         # Status bar
-        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))        
-        
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
+
     start_stop_button_press_counter = 0
 
-            
+
     def start_stop_button_press(self):
-        
+
         self.start_stop_button_press_counter += 1
-        
+
         if self.start_stop_button_press_counter == 1:
             self.stream_file()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
-        else: 
-            self.m.hold()        
+            #Hide back button
+            self.btn_back.size_hint_y = None
+            self.btn_back.height = '0dp'
+        else:
+            self.m.hold()
             popup_stop_press.PopupStop(self.m, self.sm)
-    
+
 
     def reset_go_screen_after_job_finished(self):
 
         self.start_stop_button_press_counter = 0
         self.start_stop_button_image.source = "./asmcnc/skavaUI/img/go.png"
+        #Show back button
+        self.btn_back.size_hint_y = 1
 
 
-        
     def stream_file(self):
-        
+
         #### Scan for files in Q, and update info panels
-        
+
         files_in_q = os.listdir(self.job_q_dir)
         filename = ''
 
         if files_in_q:
-   
+
             # Search for nc file in Q dir and process
             for filename in files_in_q:
-                   
-                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')): 
-                       
+
+                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+
                     try:
                         self.m.stream_file(self.job_q_dir + filename)
                     except:
