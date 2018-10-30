@@ -78,21 +78,21 @@ Builder.load_string("""
         Label:
             size_hint_x: 0.1
             id: grbl_xm_label
-            text: 'mX:\\n-9999.999'
+            text: 'mX:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
-            text: 'mY:\\n-9999.999'
+            text: 'mY:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
-            text: 'mZ:\\n-9999.999'
+            text: 'mZ:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
@@ -101,21 +101,21 @@ Builder.load_string("""
         Label:
             size_hint_x: 0.1
             id: grbl_xw_label
-            text: 'wX:\\n-9999.999'
+            text: 'wX:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
             size_hint_x: 0.1
             id: grbl_yw_label
-            text: 'wY:\\n-9999.999'
+            text: 'wY:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
         Label:
             size_hint_x: 0.1
             id: grbl_zw_label
-            text: 'wZ:\\n-9999.999'
+            text: 'wZ:\\n-9999.99'
             text_size: self.size
             halign: 'left'
             valign: 'middle'
@@ -154,12 +154,12 @@ class StatusBar(Widget):
         if self.m.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
             self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX:\n' + str(self.m.mpos_x())
-            self.grbl_ym_label.text = 'mY:\n' + str(self.m.mpos_y())
-            self.grbl_zm_label.text = 'mZ:\n' + str(self.m.mpos_z())
-            self.grbl_xw_label.text = 'wX:\n' + str(self.m.wpos_x())
-            self.grbl_yw_label.text = 'wY:\n' + str(self.m.wpos_y())
-            self.grbl_zw_label.text = 'wZ:\n' + str(self.m.wpos_z())
+            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
+            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
+            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
+            self.grbl_xw_label.text = 'wX:\n' + str(round(self.m.wpos_x(), 2))
+            self.grbl_yw_label.text = 'wY:\n' + str(round(self.m.wpos_y(), 2))
+            self.grbl_zw_label.text = 'wZ:\n' + str(round(self.m.wpos_z(), 2))
 
         else:
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
