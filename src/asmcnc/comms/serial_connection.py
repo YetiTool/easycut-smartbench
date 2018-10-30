@@ -83,9 +83,9 @@ class SerialConnection(object):
 
         self.s.flushInput()  # Flush startup text in serial input
         # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
-	t = threading.Thread(target=self.grbl_scanner)
-	t.daemon = True
-	t.start()
+        t = threading.Thread(target=self.grbl_scanner)
+        t.daemon = True
+        t.start()
 
         # Enter any initial settings into this list
         # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
