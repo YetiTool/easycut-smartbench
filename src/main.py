@@ -61,7 +61,7 @@ import time
 from kivy.graphics import Line
 from kivy.uix.slider import Slider
 from kivy.cache import Cache
-    
+
 from kivy.graphics.vertex_instructions import (Rectangle, Ellipse, Line)
 from kivy.graphics.context_instructions import Color  # @UnresolvedImport (for Eclipse users)
 from asmcnc.comms import router_machine
@@ -78,9 +78,10 @@ class SkavaUI(App):
 
     def build(self):
 
+        print("Starting " + time.strftime('%H:%M:%S'))
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
-        
+
         # Initialise 'm'achine object
         m = router_machine.RouterMachine('COM4', sm)
 
@@ -102,10 +103,9 @@ class SkavaUI(App):
 
         # set screen to start on
         sm.current = 'lobby'
- 
         return sm
 
 
 if __name__ == '__main__':
-    
+
     SkavaUI().run()
