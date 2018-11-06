@@ -240,13 +240,13 @@ class InitialScreen(Screen):
     
     def go_to_home_screen(self):
         self.video.state = 'stop'
-        self.sm.transition = SlideTransition()
-        self.sm.transition.direction = 'up'
+        #self.sm.transition = SlideTransition()
+        #self.sm.transition.direction = 'up'
         self.sm.current = 'home'         
 
     def go_to_lobby(self, dt):
         self.video.state = 'stop'
-        self.sm.transition = FadeTransition()
+        #self.sm.transition = FadeTransition()
         self.sm.current = 'lobby'         
 
         

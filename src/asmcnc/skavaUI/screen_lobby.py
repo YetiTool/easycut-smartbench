@@ -390,12 +390,12 @@ class LobbyScreen(Screen):
  
 
     def quit_to_home(self):
-        self.sm.transition = SlideTransition()
-        self.sm.transition.direction = 'up' 
+        #self.sm.transition = SlideTransition()
+        #self.sm.transition.direction = 'up' 
         self.sm.current = 'home'
     
     
     def go_to_initial_screen(self, dt):
-        self.sm.transition = NoTransition()
+        #self.sm.transition = NoTransition()
         self.sm.current = 'initial'   
         

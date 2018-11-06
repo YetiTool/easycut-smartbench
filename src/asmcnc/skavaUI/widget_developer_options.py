@@ -121,8 +121,8 @@ class DevOptions(Widget):
         self.m.home_all()
         
     def return_to_lobby(self):
-        self.sm.transition = SlideTransition()
-        self.sm.transition.direction = 'up'
+        #self.sm.transition = SlideTransition()
+        #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
     # check path definition        

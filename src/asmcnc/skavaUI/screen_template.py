@@ -269,5 +269,5 @@ class TemplateScreen(Screen):
     def quit_to_home(self):
 
         self.manager.current = 'home'
-        self.manager.transition.direction = 'up'   
+        #self.manager.transition.direction = 'up'   
         

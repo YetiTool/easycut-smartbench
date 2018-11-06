@@ -254,7 +254,7 @@ class LocalFileChooser(Screen):
     def open_USB(self):
 
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-        self.manager.transition.direction = 'down'
+        #self.manager.transition.direction = 'down'
         self.manager.current = 'usb_filechooser'
         
 
@@ -359,5 +359,5 @@ class LocalFileChooser(Screen):
     def quit_to_home(self):
 
         self.manager.current = 'home'
-        self.manager.transition.direction = 'up'   
+        #self.manager.transition.direction = 'up'   
         

@@ -271,9 +271,9 @@ class USBFileChooser(Screen):
 
     def quit_to_local(self):
         self.manager.current = 'local_filechooser'
-        self.manager.transition.direction = 'up' 
+        #self.manager.transition.direction = 'up' 
   
         
     def quit_to_home(self):
         self.manager.current = 'home'
-        self.manager.transition.direction = 'up'
+        #self.manager.transition.direction = 'up'

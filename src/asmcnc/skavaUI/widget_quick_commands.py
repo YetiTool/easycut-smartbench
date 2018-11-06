@@ -181,7 +181,7 @@ class QuickCommands(Widget):
         # Before going to the GO screen, we are going to check the GCOde file really well
         
         
-        self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
+        #self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
         errorfound = 0
                 
         #check if we've homed

@@ -91,5 +91,5 @@ class HelpScreen(Screen):
         
         self.video_player.state = 'stop'
         self.sm.current = 'home'
-        self.sm.transition.direction = 'up' 
+        #self.sm.transition.direction = 'up' 
         
