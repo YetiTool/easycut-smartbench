@@ -63,6 +63,7 @@ Builder.load_string("""
                         background_color: hex('#FFFFFF00')
                         on_release: 
 #                             root.go_to_initial_screen(1)
+                            root.quit_to_home()
                             self.background_color = hex('#FFFFFF00')
                         on_press:
                             self.background_color = hex('#FFFFFF00')
@@ -73,6 +74,7 @@ Builder.load_string("""
                             Image:
                                 id: image_select
                                 source: "./asmcnc/skavaUI/img/lobby_app_freecut.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_expert.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -94,6 +96,7 @@ Builder.load_string("""
                         background_color: hex('#FFFFFF00')
                         on_release: 
 #                             root.go_to_initial_screen(1)
+                            root.manager.current = 'template'
                             self.background_color = hex('#FFFFFF00')
                         on_press:
                             self.background_color = hex('#FFFFFF00')
@@ -283,45 +286,45 @@ Builder.load_string("""
             Label:
                 size_hint_y: 1
 
-            Button:
-                id: load_button
-                disabled: False
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    root.quit_to_home()
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFF00')
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_select
-                        source: "./asmcnc/skavaUI/img/lobby_expert.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+#             Button:
+#                 id: load_button
+#                 disabled: False
+#                 size_hint_y: 1
+#                 background_color: hex('#FFFFFF00')
+#                 on_release: 
+#                     root.quit_to_home()
+#                     self.background_color = hex('#FFFFFF00')
+#                 on_press:
+#                     self.background_color = hex('#FFFFFF00')
+#                 BoxLayout:
+#                     size: self.parent.size
+#                     pos: self.parent.pos
+#                     Image:
+#                         id: image_select
+#                         source: "./asmcnc/skavaUI/img/lobby_expert.png"
+#                         center_x: self.parent.center_x
+#                         y: self.parent.y
+#                         size: self.parent.width, self.parent.height
+#                         allow_stretch: True 
 
-            Button:
-                disabled: False
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFF00')
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_cancel
-                        source: "./asmcnc/skavaUI/img/lobby_settings.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+#             Button:
+#                 disabled: False
+#                 size_hint_y: 1
+#                 background_color: hex('#FFFFFF00')
+#                 on_release: 
+#                     self.background_color = hex('#FFFFFF00')
+#                 on_press:
+#                     self.background_color = hex('#FFFFFF00')
+#                 BoxLayout:
+#                     size: self.parent.size
+#                     pos: self.parent.pos
+#                     Image:
+#                         id: image_cancel
+#                         source: "./asmcnc/skavaUI/img/lobby_settings.png"
+#                         center_x: self.parent.center_x
+#                         y: self.parent.y
+#                         size: self.parent.width, self.parent.height
+#                         allow_stretch: True 
 
             Button:
                 disabled: False

@@ -9,7 +9,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty  # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -18,7 +18,6 @@ import sys, os
 from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
-
 
 Builder.load_string("""
 
@@ -205,7 +204,8 @@ Builder.load_string("""
                     size_hint_y: 1
                     background_color: hex('#FFFFFF00')
                     on_release: 
-                        root.quit_to_home()
+#                        root.quit_to_home()
+                        root.manager.current = 'lobby'
                         self.background_color = hex('#FFFFFF00')
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
@@ -226,7 +226,7 @@ Builder.load_string("""
                     size_hint_y: 1
                     background_color: hex('#FFFFFF00')
                     on_release: 
-                        root.load_file(filechooser.selection[0])
+#                        root.load_file(filechooser.selection[0])
                         self.background_color = hex('#FFFFFF00')
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
@@ -245,29 +245,26 @@ Builder.load_string("""
                 
 """)
 
-
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files are FTP'd to
+
 
 class TemplateScreen(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
     
-    
     def __init__(self, **kwargs):
 
         super(TemplateScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-
+        self.sm = kwargs['screen_manager']
         
     def on_enter(self):
 
         pass
- 
 
     def quit_to_home(self):
 
         self.manager.current = 'home'
-        #self.manager.transition.direction = 'up'   
+        #self.manager.transition.direction = 'up'
         
