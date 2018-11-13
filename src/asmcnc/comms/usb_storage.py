@@ -79,31 +79,33 @@ class USB_storage(object):
         # Polled by Clock to enable button if USB storage device is present, if so, mount or unmount as necessary
         # Linux
         if sys.platform != "win32":
-            files_in_usb_dir = os.listdir(self.linux_usb_path)
-            
-            # If files are in directory
-            if files_in_usb_dir: 
-                self.is_usb_mounted_flag = True
-                if self.IS_USB_VERBOSE: print 'USB: OK'
+            try:
+                files_in_usb_dir = os.listdir(self.linux_usb_path)
+                
+                # If files are in directory
+                if files_in_usb_dir:
+                    self.is_usb_mounted_flag = True
+                    if self.IS_USB_VERBOSE: print 'USB: OK'
 
-            # If directory is empty
-            else:
-                if self.IS_USB_VERBOSE: print 'USB: NONE'
-                
-                # UNmount the usb if: it is mounted but not present (since the directory is empty)
-                if self.is_usb_mounted_flag:
-                    self.unmount_linux_usb()
-                
-                # IF not mounted and location empty, scan for device
+                # If directory is empty
                 else:
-                    # read devices dir
-                    devices = os.listdir('/dev/')
-                    for device in devices:
-                        if device == 'sda': # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
-                            self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
-                            if self.IS_USB_VERBOSE: print 'Stopped polling'
-                            Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
+                    if self.IS_USB_VERBOSE: print 'USB: NONE'
 
+                    # UNmount the usb if: it is mounted but not present (since the directory is empty)
+                    if self.is_usb_mounted_flag:
+                        self.unmount_linux_usb()
+                    
+                    # IF not mounted and location empty, scan for device
+                    else:
+                        # read devices dir
+                        devices = os.listdir('/dev/')
+                        for device in devices:
+                            if device == 'sda': # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
+                                self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
+                                if self.IS_USB_VERBOSE: print 'Stopped polling'
+                                Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
+            except (OSError):
+                pass
 
     def unmount_linux_usb(self):
 
