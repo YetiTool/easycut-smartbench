@@ -13,7 +13,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @Unr
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from __builtin__ import file
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 
 
 import os, sys
@@ -243,6 +243,7 @@ class GoScreen(Screen):
             popup_stop_press.PopupStop(self.m, self.sm)
 
 
+    @mainthread
     def reset_go_screen_after_job_finished(self):
 
         self.start_stop_button_press_counter = 0
