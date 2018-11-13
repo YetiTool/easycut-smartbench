@@ -65,55 +65,56 @@ class RouterMachine(object):
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
     def probe_z(self):
-        
+
         self.s.expecting_probe_result = True
         probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
         self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
         self.s.write_command('G90')
-   
+
         # Serial module then looks for probe detection
         # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
         # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
 
     def probe_z_detection_event(self):
-        
+
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
 
-            
+
     def probe_z_post_operation(self, dt):
-        
+
         # Retract:
         # if deep enough to retract fully
         if self.mpos_z() + self.z_lift_after_probing < -self.limit_switch_safety_distance:
             self.s.write_command('G0 G54 Z' + str(self.z_lift_after_probing))
-        
+
         # if to close to limit, only go to limit
         else:
             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
 
 
-    def home_all(self): 
-        
-        self.s.write_command('$H') # HOME
+    def home_all(self):
+
         self.set_state('Home') # (grbl not very good at setting the 'home' state)
         self.is_machine_homed = True # status on powerup
         if self.is_squaring_XY_needed_after_homing: self.set_XY_square()
-        
+        else: self.s.write_command('$H') # HOME
+
 
     def set_XY_square(self):
-         
+
         # This function is designed to square the machine's X&Y axes
         # It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
         # The steppers will stall out, but the X frame will square against the mechanical deadstops.
         # Intended use is first home after power-up only, or the stalling noise will get annoying!
-            
+
         self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again 
- 
+
         # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
- 
+
         homing_sequence_part_1 =  [
+                                  '$H',
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
                                   'G91', # relative coords
@@ -125,13 +126,13 @@ class RouterMachine(object):
 
         self.idle_state_count_for_XY_square_post_ops = 0 # resetting count to detect when to do post_operatons (see 'set_XY_square_post_operations' function)
         self.square_post_op_event = Clock.schedule_interval(self.set_XY_square_post_operations, 0.5)
- 
-         
+
+
     def set_XY_square_post_operations(self, dt):
-        
+
         # Make sure the machine is idle before re-homing (grbl wont listen to $ commands when running)
         # The state can ping into idle very briefly during, so we're setting a threshold detection with 'idle_state_count_for_XY_square_post_ops'
-                
+
         if self.state() == "Idle":
             self.idle_state_count_for_XY_square_post_ops += 1
 
