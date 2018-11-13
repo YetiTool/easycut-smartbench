@@ -160,7 +160,10 @@ class SerialConnection(object):
         # If there's a message received, deal with it depending on type
         # if self.s.inWaiting():
         while True:
-            rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
+            try:
+                rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
+            except Exception as e:
+                print ('serial.readline exception:\n' + str(e))
             #time.sleep(1)
             #print 'RX line length: ', len(rec_temp)
             if len(rec_temp):
@@ -312,10 +315,15 @@ class SerialConnection(object):
             print "\nG-code streaming finished!"
             self.stream_end_time = time.time()
             time_taken_seconds = int(self.stream_end_time-self.stream_start_time)
-            time_take_minutes = int(time_taken_seconds/60)
+            hours = int(time_taken_seconds / (60 * 60))
+            seconds_remainder = time_taken_seconds % (60 * 60)
+            minutes = int(seconds_remainder / 60)
+            seconds = int(seconds_remainder % 60)
+            #time_take_minutes = int(time_taken_seconds/60)
             print " Time elapsed: ", time_taken_seconds, " seconds\n"
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
-            popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
+            #popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
+            popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h "+ str(minutes) + "m " + str(seconds) + "s")
             if self.buffer_monitor_file != None:
                 self.buffer_monitor_file.close()
                 self.buffer_monitor_file = None
