@@ -73,8 +73,8 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_freecut.png"
-#                                source: "./asmcnc/skavaUI/img/lobby_expert.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_app_freecut.png"
+                                source: "./asmcnc/skavaUI/img/lobby_pro.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -82,7 +82,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Free Cut'
+                        text: 'CAD / CAM'
                         
                 BoxLayout:
                     orientation: 'vertical'
@@ -137,7 +137,8 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
+                                source: "./asmcnc/skavaUI/img/lobby_door_hole_driller.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -145,7 +146,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'CAD / CAM'
+                        text: 'Door Holer'
                         
             # Carousel pane 2
         
@@ -175,7 +176,8 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_signwriter.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_app_signwriter.png"
+                                source: "./asmcnc/skavaUI/img/lobby_sign_writer.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -206,7 +208,8 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_pillardrill.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_app_pillardrill.png"
+                                source: "./asmcnc/skavaUI/img/lobby_jointer.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -214,7 +217,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Pillar Drill'
+                        text: 'Jointer'
                         
                 BoxLayout:
                     orientation: 'vertical'
@@ -237,7 +240,8 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_counterwiz.png"
+#                                source: "./asmcnc/skavaUI/img/lobby_app_counterwiz.png"
+                                source: "./asmcnc/skavaUI/img/lobby_counter_wiz.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
