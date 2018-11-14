@@ -65,12 +65,12 @@ class StencilBox(StencilView, BoxLayout):
 
 class GCodeView(Widget):
 
-    min_x = 999999
-    max_x = -999999
-    min_y = 999999
-    max_y = -999999
-    min_z = 999999
-    max_z = -999999
+    min_x = 0
+    max_x = 0
+    min_y = 0
+    max_y = 0
+    min_z = 0
+    max_z = 0
 
     g0_move_colour = get_color_from_hex('#f4433655')
     feed_move_colour = get_color_from_hex('#2196f355')
@@ -255,6 +255,13 @@ class GCodeView(Widget):
             original_gcode.append(line.strip())
         original_file.close()
         log('< get_non_modal_gcode: append loop')
+
+        self.min_x = 999999
+        self.max_x = -999999
+        self.min_y = 999999
+        self.max_y = -999999
+        self.min_z = 999999
+        self.max_z = -999999
 
         # mode defaults
         last_x, last_y, last_z = '0', '0', '0'
