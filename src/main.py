@@ -72,6 +72,7 @@ from asmcnc.skavaUI import screen_usb_filechooser
 from asmcnc.skavaUI import screen_go
 from asmcnc.skavaUI import screen_template
 from asmcnc.skavaUI import screen_lobby
+from asmcnc.skavaUI import screen_vj_polygon
 
 
 class SkavaUI(App):
@@ -92,6 +93,7 @@ class SkavaUI(App):
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m)
         template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
+        vj_polygon_screen = screen_vj_polygon.ScreenVJPolygon(name='vj_polygon', screen_manager = sm)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -100,6 +102,7 @@ class SkavaUI(App):
         sm.add_widget(usb_filechooser)
         sm.add_widget(go_screen)
         sm.add_widget(template_screen)
+        sm.add_widget(vj_polygon_screen)
 
         # set screen to start on
         sm.current = 'lobby'

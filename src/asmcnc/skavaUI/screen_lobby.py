@@ -96,7 +96,8 @@ Builder.load_string("""
                         background_color: hex('#FFFFFF00')
                         on_release: 
 #                             root.go_to_initial_screen(1)
-                            root.manager.current = 'template'
+#                            root.manager.current = 'template'
+                            root.manager.current = 'vj_polygon'
                             self.background_color = hex('#FFFFFF00')
                         on_press:
                             self.background_color = hex('#FFFFFF00')

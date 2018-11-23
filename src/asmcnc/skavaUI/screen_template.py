@@ -183,8 +183,9 @@ Builder.load_string("""
                     size_hint_y: 1
                     background_color: hex('#FFFFFF00')
                     on_release: 
-                        carousel.load_previous()
+#                        carousel.load_previous()
                         self.background_color = hex('#FFFFFF00')
+                        root.manager.current = 'vj_polygon'
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
