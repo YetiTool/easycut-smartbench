@@ -1,12 +1,10 @@
-import os
-os.environ['KIVY_GL_BACKEND'] = 'sdl2'
-
-import math
 import kivy
-from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty, ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, ListProperty
+from kivy.clock import Clock
+
+from asmcnc.geometry import geometry
 
 Builder.load_string("""
 
@@ -14,7 +12,8 @@ Builder.load_string("""
 
 <PolygonVJ>:
 
-    sides_textinput_: sides_textinput
+    sides_textinput2 : sides_textinput
+    rad_textinput2 : rad_textinput
 
     BoxLayout:
         padding: 20
@@ -75,26 +74,29 @@ Builder.load_string("""
                 on_text: root.on_sides_textinput()
 
             Label:
-                text: 'A:'
+                text: 'Rad:'
                 size_hint_x: 1
                 font_size:20
                 color: 0,0,0,.8
             TextInput:
-                id: a_textinput
+                id: rad_textinput
+                text: "80"
                 size_hint_x: 1
                 font_size:24
                 multiline: False
+                on_touch_up: self.select_all()
+                on_text: root.on_sides_textinput()
 
-            Label:
-                text: 'B:'
-                size_hint_x: 1
-                font_size:20
-                color: 0,0,0,.8
-            TextInput:
-                id: b_textinput
-                size_hint_x: 1
-                font_size:24
-                multiline: False
+#             Label:
+#                 text: 'B:'
+#                 size_hint_x: 1
+#                 font_size:20
+#                 color: 0,0,0,.8
+#             TextInput:
+#                 id: b_textinput
+#                 size_hint_x: 1
+#                 font_size:24
+#                 multiline: False
         
         BoxLayout:
             size_hint_y: 5
@@ -126,7 +128,7 @@ Builder.load_string("""
             StackLayout:
                 #size_hint_x: 1
                 orientation: 'bt-lr'
-                #spacing: 10
+                spacing: 10
 
                 canvas:
                     Color: 
@@ -182,60 +184,95 @@ Builder.load_string("""
                             #size: self.parent.width, self.parent.height
                             #allow_stretch: True 
 
+                Button:
+                    id: left_button
+                    disabled: False
+                    size_hint_y: 0.25
+                    background_color: hex('#FFFFFF00')
+                    on_release:
+#                        carousel.load_previous()
+#                        root.manager.current = 'template'
+                        root.sm.current = 'template'
+                        self.background_color = hex('#FFFFFF00')
+                    on_press:
+                        self.background_color = hex('#FFFFFFFF')
+                    BoxLayout:
+                        padding: 10
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_select
+                            source: "./asmcnc/skavaUI/img/xy_arrow_left.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+                Button:
+                    id: right_button
+                    disabled: False
+                    size_hint_y: 0.25
+                    background_color: hex('#FFFFFF00')
+                    on_release:
+#                        carousel.load_next(mode='next')
+                        root.sm.current = 'template'
+                        self.background_color = hex('#FFFFFF00')
+                    on_press:
+                        self.background_color = hex('#FFFFFFFF')
+                    BoxLayout:
+                        padding: 10
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_cancel
+                            source: "./asmcnc/skavaUI/img/xy_arrow_right.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True 
 """)
 
 
 class PolygonVJ(Widget):
 
-    sides_textinput_ = ObjectProperty()
+    sm = None
+    sides_textinput2 = ObjectProperty()
+    rad_textinput2 = ObjectProperty()
     points = ListProperty([])
     # points = ListProperty([500, 500, 300, 300, 500, 300, 500, 400, 600, 400])
 
 
     def __init__(self, **kwargs):
         super(PolygonVJ, self).__init__(**kwargs)
-        # self.add_widget(Label(text='Poop'))
-        print ("__init__ " + self.sides_textinput_.text)
-        
-        polygon_vertices = self.compute_polygon_points()
+
+#        self.sm = kwargs['screen_manager']
+
+        # More kivy hacky crap:  Ensure self ObjectProperties's are set before accessing them. No Widget event that fires after Widget rendered.
+        Clock.schedule_once(self.my_callback, 0)
+
+
+    def my_callback(self, dt):
+        polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
         self.plot_ploygon(polygon_vertices)
-        # print ("POINTS")
-        # print (self.points)
 
 
     def on_sides_textinput(self):
-        print ("on_sides_textinput " + str(self.sides_textinput_.text))
-        if self.sides_textinput_.text and float(self.sides_textinput_.text) > 2:
-            polygon_vertices = self.compute_polygon_points()
+        if self.sides_textinput2.text and float(self.sides_textinput2.text) > 2:
+            print ("on_sides_textinput " + str(self.sides_textinput2.text))
+            polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
+            self.plot_ploygon(polygon_vertices)
+
+
+    def on_rad_textinput(self):
+        if self.rad_textinput2.text and float(self.rad_textinput2.text) > 0:
+            print ("on_rad_textinput " + str(self.rad_textinput2.text))
+            polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
 
 #    def on_sides_textinput_(self, instance, value):
 #        print ("on_sides_textinput_aa ", value)
-#        #self.compute_polygon()
-
-
-    def compute_polygon_points(self):
-        print ("compute_polygon")
-        polygon_vertices = []
-        # https://stackoverflow.com/questions/21690008/how-to-generate-random-vertices-to-form-a-convex-polygon-in-c
-        x0 = 300
-        y0 = 300
-        r = 80
-        sides = float(self.sides_textinput_.text)
-        angle_delta_r = (math.pi / 180) * 360.0 / sides
-        print ("angle_delta_r ", angle_delta_r)
-
-        angle_r = 0
-        while angle_r < 2.0 * math.pi:
-            x = x0 + (r * math.cos(angle_r))
-            y = y0 + (r * math.sin(angle_r))
-            print("{} {}".format(x, y))
-            polygon_vertices.append([x, y])
-            angle_r += angle_delta_r
-
-        print(polygon_vertices)
-        return polygon_vertices
+#        #geometry.compute_polygon(float(self.sides_textinput_.text), float(self.rad_textinput_.text))
 
 
     def plot_ploygon(self, polygon_vertices):
@@ -249,21 +286,8 @@ class PolygonVJ(Widget):
         pass
 
 
-
-
-
-
-
-
-
-
-
-class MyApp(App):
-
-    def build(self):
-        print ("MyApp")
-        return PolygonVJ()
-
-
-if __name__ == '__main__':
-    MyApp().run()
+    def on_touch_up(self, touch):
+        #Hack to fix nasty event behaviour reported 2 years ago
+        # https://gitlab.com/kivymd/KivyMD/issues/45
+        if self.collide_point(touch.x, touch.y):
+            return True
