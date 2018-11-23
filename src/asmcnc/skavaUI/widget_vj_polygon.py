@@ -168,7 +168,8 @@ Builder.load_string("""
                     #size: [50,50]
                     background_color: hex('#FFFFFF00')
                     on_release:
-                        root.manager.current = 'lobby'
+#                        root.manager.current = 'lobby'
+                        root.sm.current = 'lobby'
                         self.background_color = hex('#FFFFFF00')
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
