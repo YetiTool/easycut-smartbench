@@ -477,7 +477,7 @@ class RouterMachine(object):
             self.led_state += 1
             if self.led_state == len(self.led_states):
                 self.led_state = 0
-            Clock.schedule_once(self.update_led_state, 0.2)
+        Clock.schedule_once(self.update_led_state, 0.1)
 
 
     def set_led(self, command):
