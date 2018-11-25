@@ -41,6 +41,7 @@ class RouterMachine(object):
         self.s.initialise_grbl()
 
         # Clock.schedule_interval(self.set_led_state, 0.25)
+        Clock.schedule_once(self.update_led_state, 4)
 
 # SETUP
 
@@ -378,3 +379,106 @@ class RouterMachine(object):
             self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+
+
+    led_state = 0
+    led_states = [
+        # Red bright > dim
+        'R1',
+        'R2',
+        'R3',
+        'R4',
+        'R5',
+        'R6',
+        'R7',
+        'R8',
+        'R9',
+        'R8',
+        'R7',
+        'R6',
+        'R5',
+        'R4',
+        'R3',
+        'R2',
+        'R1',
+        'R0',
+        
+        # Green bright > dim
+        'G1',
+        'G2',
+        'G3',
+        'G4',
+        'G5',
+        'G6',
+        'G7',
+        'G8',
+        'G9',
+        'G8',
+        'G7',
+        'G6',
+        'G5',
+        'G4',
+        'G3',
+        'G2',
+        'G1',
+        'G0',
+        
+        # Blue bright > dim
+        'B1',
+        'B2',
+        'B3',
+        'B4',
+        'B5',
+        'B6',
+        'B7',
+        'B8',
+        'B9',
+        'B8',
+        'B7',
+        'B6',
+        'B5',
+        'B4',
+        'B3',
+        'B2',
+        'B1',
+        'B0',
+        
+        # Red and green bright > dim
+        'R1 G1',
+        'R2 G2',
+        'R3 G3',
+        'R4 G4',
+        'R5 G5',
+        'R6 G6',
+        'R7 G7',
+        'R8 G8',
+        'R9 G9',
+        'R8 G8',
+        'R7 G7',
+        'R6 G6',
+        'R5 G5',
+        'R4 G4',
+        'R3 G3',
+        'R2 G2',
+        'R1 G1',
+        'R0 G0',
+        
+        # Loops back to start
+        ]
+
+
+    def update_led_state(self, dt):
+
+        if self.state().startswith('Idle'):
+            led_commands = self.led_states[self.led_state].split(' ')
+            for led_command in led_commands:
+                self.set_led(led_command)
+
+            self.led_state += 1
+            if self.led_state == len(self.led_states):
+                self.led_state = 0
+            Clock.schedule_once(self.update_led_state, 0.2)
+
+
+    def set_led(self, command):
+        self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
