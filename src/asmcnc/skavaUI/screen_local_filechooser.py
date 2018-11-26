@@ -49,7 +49,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             spacing: 10
-            FileChooserIconView:
+            FileChooserListView:
                 size_hint_x: 5
                 id: filechooser
                 rootpath: './jobCache/'
