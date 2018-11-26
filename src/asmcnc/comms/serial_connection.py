@@ -179,13 +179,15 @@ class SerialConnection(object):
                     pass
                 if self.VERBOSE_ALL_RESPONSE: print rec_temp
 
-                # If RESPONSE message (used in streaming, counting processed gcode lines)
-                if rec_temp.startswith(('ok', 'error')):
-                    self.process_grbl_response(rec_temp)
-
-                # If PUSH message
-                else:
-                    self.process_grbl_push(rec_temp)
+                try:
+                    # If RESPONSE message (used in streaming, counting processed gcode lines)
+                    if rec_temp.startswith(('ok', 'error')):
+                        self.process_grbl_response(rec_temp)
+                    # If PUSH message
+                    else:
+                        self.process_grbl_push(rec_temp)
+                except Exception as e:
+                    print ('Process response exception:\n' + str(e))
 
                 # if we're streaming, check to see if the buffer can be filled
                 if self.is_job_streaming:
@@ -279,14 +281,18 @@ class SerialConnection(object):
         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
         # if there's room in the serial buffer, send the line
-        if (len(line_to_go)+1) <= serial_space:
-            self.c_line.append(len(line_to_go)+1) # Track number of characters in grbl serial read buffer
+        while len(line_to_go) + 1 <= serial_space:
+            self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
             self.l_count += 1 # lines sent to grbl
             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
 
             # set flag if we've reached the end of the file
             if self.l_count == len(self.lines_to_stream_from_file):
                 self.is_stream_lines_remaining = False
+                break
+
+            line_to_go = self.lines_to_stream_from_file[self.l_count]
+            serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
 
     # if 'ok' or 'error' rec'd from GRBL
