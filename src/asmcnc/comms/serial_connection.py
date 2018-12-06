@@ -313,7 +313,7 @@ class SerialConnection(object):
             self.is_job_streaming = False
             self.is_stream_lines_remaining = False
 
-            print "\nG-code streaming finished!"
+            log("G-code streaming finished!")
             self.stream_end_time = time.time()
             time_taken_seconds = int(self.stream_end_time-self.stream_start_time)
             hours = int(time_taken_seconds / (60 * 60))
@@ -321,7 +321,7 @@ class SerialConnection(object):
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             #time_take_minutes = int(time_taken_seconds/60)
-            print " Time elapsed: ", time_taken_seconds, " seconds\n"
+            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             #popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
             popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h "+ str(minutes) + "m " + str(seconds) + "s")
