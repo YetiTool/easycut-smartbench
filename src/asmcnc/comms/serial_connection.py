@@ -606,6 +606,7 @@ class SerialConnection(object):
           # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
         # WARNING: this function is not blocking, and as of yet there is no way to indicate it has finished
 
+        log("start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
 
@@ -620,7 +621,7 @@ class SerialConnection(object):
                 self.write_realtime("\x18", show_in_sys=True, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
 
     def _send_next_sequential_stream(self):
-
+        log("_send_next_sequential_stream")
         if self._sequential_stream_buffer:
             self.is_sequential_streaming = True
             self.write_command(self._sequential_stream_buffer[0])
