@@ -135,19 +135,22 @@ class RouterMachine(object):
 
         # Make sure the machine is idle before re-homing (grbl wont listen to $ commands when running)
         # The state can ping into idle very briefly during, so we're setting a threshold detection with 'idle_state_count_for_XY_square_post_ops'
+        print("set_XY_square_post_operations")
+        if not self.s.is_sequential_streaming:
+            print("Not streaming")
+            if self.state() == "Idle":
+                print("Idle")
+                self.idle_state_count_for_XY_square_post_ops += 1
 
-        if self.state() == "Idle":
-            self.idle_state_count_for_XY_square_post_ops += 1
-
-            if self.idle_state_count_for_XY_square_post_ops >= 2:
-                self.square_post_op_event.cancel()
-                homing_sequence_part_2 =  [
-                                          '$21=1', # soft limits on
-                                          '$20=1', # soft limits off
-                                          '$H' # home
-                                          ]
-                self.s.start_sequential_stream(homing_sequence_part_2)
-                self.set_state('Home') # Since homing op is part of seq stream_file, can't call regular function which would normally force the idle state (grbl not very good at setting the 'home' state)
+                if self.idle_state_count_for_XY_square_post_ops >= 1:
+                    self.square_post_op_event.cancel()
+                    homing_sequence_part_2 =  [
+                                              '$21=1', # soft limits on
+                                              '$20=1', # soft limits off
+                                              '$H' # home
+                                              ]
+                    self.s.start_sequential_stream(homing_sequence_part_2)
+                    self.set_state('Home') # Since homing op is part of seq stream_file, can't call regular function which would normally force the idle state (grbl not very good at setting the 'home' state)
 
 
 # STATUS            
