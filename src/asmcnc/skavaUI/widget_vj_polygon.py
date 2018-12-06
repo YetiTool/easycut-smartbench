@@ -5,6 +5,7 @@ from kivy.properties import ObjectProperty, ListProperty
 from kivy.clock import Clock
 
 from asmcnc.geometry import geometry
+from asmcnc.gcode_writer import GcodeWriter
 
 Builder.load_string("""
 
@@ -146,6 +147,7 @@ Builder.load_string("""
                     background_color: hex('#FFFFFF00')
                     on_release:
                         self.background_color = hex('#FFFFFF00')
+                        root.on_ok()
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
@@ -276,15 +278,23 @@ class PolygonVJ(Widget):
 #        #geometry.compute_polygon(float(self.sides_textinput_.text), float(self.rad_textinput_.text))
 
 
+    def on_ok(self):
+        print ("on_ok")
+        self.generate_gcode()
+
+
+    def generate_gcode(self):
+        my_gcode_writer = GcodeWriter()
+        layers_points = []
+        layers_points.append(self.points)
+        my_gcode_writer.write_gcode("ae_test.nc", layers_points, bit_width = 3, depth_increment = 0.1, feedrate = 1000)
+
+
     def plot_ploygon(self, polygon_vertices):
         self.points = []
         for point in polygon_vertices:
             self.points.append(point[0])
             self.points.append(point[1])
-
-
-    def generate_gcode(self):
-        pass
 
 
     def on_touch_up(self, touch):
