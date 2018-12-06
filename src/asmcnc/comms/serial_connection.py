@@ -12,6 +12,7 @@ Config.set('graphics', 'maxfps', '30')
 Config.write()
 
 import serial, sys, time, string, threading
+from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
 
@@ -25,10 +26,13 @@ BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
 GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class SerialConnection(object):
 
-    STATUS_INTERVAL = 0.2 # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
+    STATUS_INTERVAL = 0.1 # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None    # Serial comms object
     sm = None   # Screen manager object
@@ -163,14 +167,15 @@ class SerialConnection(object):
             try:
                 rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
             except Exception as e:
-                print ('serial.readline exception:\n' + str(e))
+                log('serial.readline exception:\n' + str(e))
             #time.sleep(1)
             #print 'RX line length: ', len(rec_temp)
             if len(rec_temp):
                 #print 'RX line: ', rec_temp
                 #HACK send every line received to console
-                if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-                    print '< ' + rec_temp
+                #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
+                if True:
+                    log('< ' + rec_temp)
 
                 # Update the gcode monitor (may not be initialised) and console
                 try:
@@ -187,7 +192,8 @@ class SerialConnection(object):
                     else:
                         self.process_grbl_push(rec_temp)
                 except Exception as e:
-                    print ('Process response exception:\n' + str(e))
+                    log('Process response exception:\n' + str(e))
+                    raise # HACK allow error to cause serial comms thread to exit
 
                 # if we're streaming, check to see if the buffer can be filled
                 if self.is_job_streaming:
@@ -302,7 +308,7 @@ class SerialConnection(object):
             del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
         if message.startswith('error'):
-            print ('ERROR from GRBL: ', message)
+            log('ERROR from GRBL: ', message)
             popup_error.PopupError(self.m, self.sm, message)
 
 
@@ -338,7 +344,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
-        print "\nG-code streaming cancelled!"
+        log("\nG-code streaming cancelled!")
 
         # Flush
         self.lines_to_stream_from_file = []
@@ -442,7 +448,7 @@ class SerialConnection(object):
 
 
         elif message.startswith('ALARM:'):
-            print ('ALARM from GRBL: ', message)
+            log('ALARM from GRBL: ', message)
             popup_alarm_general.PopupAlarm(self.m, self.sm, message)
 
 
@@ -539,7 +545,7 @@ class SerialConnection(object):
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
             #if show_in_sys and altDisplayText==None: print serialCommand
-            print '> ' + serialCommand
+            log('> ' + serialCommand)
             if altDisplayText != None: print altDisplayText
 
             # Print to console in the UI
@@ -569,7 +575,7 @@ class SerialConnection(object):
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
             #if show_in_sys and altDisplayText==None: print serialCommand
             if not serialCommand.startswith('?'):
-                print '> ' + serialCommand
+                log('> ' + serialCommand)
             if altDisplayText != None: print altDisplayText
 
             # Print to console in the UI
