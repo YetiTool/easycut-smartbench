@@ -43,7 +43,7 @@ class RouterMachine(object):
         self.s.initialise_grbl()
 
         # Clock.schedule_interval(self.set_led_state, 0.25)
-        Clock.schedule_once(self.update_led_state, 4)
+        #Clock.schedule_once(self.update_led_state, 4)
 
 # SETUP
 
