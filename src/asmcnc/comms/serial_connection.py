@@ -391,15 +391,51 @@ class SerialConnection(object):
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
+            # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ>
+            # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|WCO:-166.126,-213.609,-21.822>
+            # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|Ov:100,100,100>
+
+#            self.validate_status_message(message)
+
+            validMessage = True
+
+            commasCnt = message.count(",")
+            if (commasCnt != 4 and commasCnt != 6):
+                validMessage = False
+                log("ERROR status parse: comma count fail: " + message)
+                return
+
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
+
+            if (status_parts[0] != "Idle" and
+                status_parts[0] != "Run" and
+                status_parts[0] != "Hold" and
+                status_parts[0] != "Jog" and
+                status_parts[0] != "Alarm" and
+                status_parts[0] != "Door" and
+                status_parts[0] != "Check" and
+                status_parts[0] != "Home" and
+                status_parts[0] != "Sleep"):
+                validMessage = False
+                log("ERROR status parse: Status invalid: " + message)
+                return
 
             # Get machine's status
             self.m_state = status_parts[0]
+
             for part in status_parts:
 
                 # Get machine's position (may not be displayed, depending on mask)
                 if part.startswith('MPos:'):
                     pos = part[5:].split(',')
+                    try:
+                        float(pos[0])
+                        float(pos[1])
+                        float(pos[2])
+                    except:
+                        log("ERROR status parse: Position invalid: " + message)
+                        return
+
                     self.m_x = pos[0]
                     self.m_y = pos[1]
                     self.m_z = pos[2]
@@ -407,6 +443,13 @@ class SerialConnection(object):
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
                     pos = part[5:].split(',')
+                    try:
+                        float(pos[0])
+                        float(pos[1])
+                        float(pos[2])
+                    except:
+                        log("ERROR status parse: Position invalid: " + message)
+                        return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
                     self.w_z = pos[2]
@@ -414,6 +457,13 @@ class SerialConnection(object):
                 # Get Work Co-ordinate Offset
                 elif part.startswith('WCO:'):
                     pos = part[4:].split(',')
+                    try:
+                        float(pos[0])
+                        float(pos[1])
+                        float(pos[2])
+                    except:
+                        log("ERROR status parse: Position invalid: " + message)
+                        return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
                     self.wco_z = pos[2]
@@ -421,6 +471,13 @@ class SerialConnection(object):
                 # Get grbl's buffer status
                 elif part.startswith('Bf:'):
                     buffer_info = part[3:].split(',')
+
+                    try:
+                        int(buffer_info[0])
+                        int(buffer_info[1])
+                    except:
+                        log("ERROR status parse: Buffer status invalid: " + message)
+                        return
 
                     # if different from last check
                     if self.serial_chars_available != buffer_info[1]:
@@ -530,8 +587,6 @@ class SerialConnection(object):
                     Clock.schedule_once(self.m.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
 
                 self.expecting_probe_result = False # clear flag
-
-
 
 
 
