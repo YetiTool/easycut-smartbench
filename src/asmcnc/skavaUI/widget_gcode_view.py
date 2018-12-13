@@ -243,18 +243,9 @@ class GCodeView(Widget):
             Color(0, 1, 0, 1)
 
 
-    def get_non_modal_gcode(self, file_to_draw):
+    def get_non_modal_gcode(self, job_file_gcode):
 
-        original_gcode = []
         xy_preview_gcode = []
-
-        # load and clean file into list
-        log('> get_non_modal_gcode: append loop')
-        original_file = open(file_to_draw, 'r')
-        for line in original_file:
-            original_gcode.append(line.strip())
-        original_file.close()
-        log('< get_non_modal_gcode: append loop')
 
         self.min_x = 999999
         self.max_x = -999999
@@ -270,7 +261,7 @@ class GCodeView(Widget):
         feed_rate = 0
         line_number = 0
         log('> get_non_modal_gcode: process loop')
-        for line in original_gcode:
+        for line in job_file_gcode:
 
             line_number += 1
 
@@ -315,15 +306,15 @@ class GCodeView(Widget):
                 elif start == 'K': k = bit[1:]
 
             if move == 'G0':
-                processed_line = plane+' '+move+' X'+last_x+' Y'+last_y+' Z'+last_z
+                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z
                 xy_preview_gcode.append(processed_line)
             elif move == 'G1':
-                processed_line = plane+' '+move+' X'+last_x+' Y'+last_y+' Z'+last_z+' F'+feed_rate
+                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z + ' F' + feed_rate
                 xy_preview_gcode.append(processed_line)
             elif move == 'G2' or move == 'G3':
-                processed_line = plane+' '+move+' X'+last_x+' Y'+last_y+' Z'+last_z+' I'+i+' J'+j+' K'+k+' F'+feed_rate
+                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z + ' I' + i + ' J' + j + ' K' + k + ' F' + feed_rate
                 xy_preview_gcode.append(processed_line)
-            else: print 'Line not for preview ('+str(line_number)+move+'): ' + line
+            else: print 'Line not for preview (' + str(line_number) + move + '): ' + line
 
         log('< get_non_modal_gcode: process loop')
         return xy_preview_gcode

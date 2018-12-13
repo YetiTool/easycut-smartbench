@@ -210,6 +210,8 @@ Builder.load_string("""
                                     background_color: hex('#F4433600')
                                     on_release:
                                         #root.manager.transition.direction = 'down'
+                                        # Cause re-load of job file
+                                        root.m.job_file_gcode = []
                                         root.manager.current = 'local_filechooser'
                                         self.background_color = hex('#F4433600')
                                     on_press:
@@ -308,6 +310,7 @@ class HomeScreen(Screen):
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
 
+
     def __init__(self, **kwargs):
 
         super(HomeScreen, self).__init__(**kwargs)
@@ -350,6 +353,13 @@ class HomeScreen(Screen):
 
     def on_enter(self):
 
+        if not self.m.job_file_gcode:
+            self.file_data_label.text = "Loading job file, please wait..."
+            Clock.schedule_once(self.preview_job_file, 0.1)
+
+
+    def preview_job_file(self, dt):
+
         #### Scan for files in Q, and update info panels
 
         files_in_q = os.listdir(self.job_q_dir)
@@ -370,34 +380,11 @@ class HomeScreen(Screen):
 
                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
 
-                    # Set label to include filename
-                    self.file_data_label.text = '[b]'+ filename + '[/b]'
-
-                    # Search for tool listings and show
-                    job_file = open(self.job_q_dir + filename, 'r')
-                    for line in job_file:
-                        if line.find('(T') >= 0:
-                            self.file_data_label.text += '\n' + line.strip()
-                            break
-                    job_file.close()
-
-                    # Refresh bounding box object
-#                    try:
-#                        log ('> Refresh bounding box object')
-#                        self.job_box.set_job_envelope(self.job_q_dir + filename)
-#                        self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
-#                                                     "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
-#                                                     "\nZ: " + str(self.job_box.range_z[0]))
-#                        log ('< Refresh bounding box object')
-#                    except:
-#                        print 'Fail: set job envelope'
-
-
-#                    self.gcode_preview_widget.draw_file_in_xy_plane(self.job_q_dir + filename)
+                    if not self.m.job_file_gcode:
+                        self.m.job_file_gcode = self.load_job_file(self.job_q_dir + filename)
 
                     #t = threading.Thread(target=self.load_gcode_list, args=[filename])
                     #t.daemon = True
-
 
                     ### Threading load Gcode list
 #                    manager = Manager()
@@ -412,12 +399,11 @@ class HomeScreen(Screen):
 #                        gcode_list.append(line)
                     ###
 
-
                     ### No threading
 #                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
 
                     log('> get_non_modal_gcode')
-                    gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
+                    gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.m.job_file_gcode)
                     log('< get_non_modal_gcode ' + str(len(gcode_list)))
                     ###
 
@@ -429,6 +415,7 @@ class HomeScreen(Screen):
                     except:
                         print 'Unable to draw gcode'
 
+                    # TODO tidy this up, possibly make a job class to hold extents extents and the job data
                     self.job_box.range_x[0] = self.gcode_preview_widget.min_x
                     self.job_box.range_x[1] = self.gcode_preview_widget.max_x
                     self.job_box.range_y[0] = self.gcode_preview_widget.min_y
@@ -439,11 +426,33 @@ class HomeScreen(Screen):
                     self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
                                                  "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
                                                  "\nZ: " + str(self.job_box.range_z[0]))
+
+                    # Set label to include filename
+                    self.file_data_label.text = '[b]' + filename + '[/b]'
+
+                    # Search for tool listings and show
+                    for line in self.m.job_file_gcode:
+                        if line.find('(T') >= 0:
+                            self.file_data_label.text += '\n' + line.strip()
+                            break
+
                     log('DONE')
                     break
 
                 else:
                     self.file_data_label.text = 'Load a file...'
+
+
+    def load_job_file(self, job_file_path):
+
+        log('> load_job_file')
+        job_file_gcode = []
+        job_file = open(job_file_path, 'r')
+        for line in job_file:
+            job_file_gcode.append(line.strip())
+        job_file.close()
+        log('< load_job_file')
+        return job_file_gcode
 
 
     def load_gcode_list(self, filename, gcode_mgr_list):

@@ -215,7 +215,6 @@ class SerialConnection(object):
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
 
-    file_to_stream = None
     lines_to_stream_from_file = []
     stream_start_time = 0
     stream_end_time = 0
@@ -230,9 +229,6 @@ class SerialConnection(object):
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()
 
-        print 'Opening ' + job_file_path
-        self.file_to_stream = open(job_file_path,'r') # TODO: move to _load_stream_file method.
-
         # Delay to make sure that the grbl-response ('ok') from z-move has been received before beginning to counting for grbl responses.
         Clock.schedule_once(self._load_stream_file, 1)
 
@@ -242,10 +238,10 @@ class SerialConnection(object):
         self.lines_to_stream_from_file = [] # Ensure purged
 
         # clean the lines to stream
-        for line in self.file_to_stream:
+        for line in self.m.job_file_gcode:
 
             # Refine GCode
-            l_block = re.sub('\s|\(.*?\)','',line).upper() # Strip comments/spaces/new line and capitalize
+            l_block = re.sub('\s|\(.*?\)', '', line).upper() # Strip comments/spaces/new line and capitalize
 
             # Drop undesirable lines
             if l_block.find('%') >= 0: continue # drop lines with % in them
@@ -261,7 +257,6 @@ class SerialConnection(object):
         # for the buffer stuffing style streaming
 
         self.is_stream_lines_remaining = True
-        self.file_to_stream.close()
         self.s.flushInput()
 
         # Reset counters & flags
