@@ -74,7 +74,7 @@ class GCodeView(Widget):
 
     g0_move_colour = get_color_from_hex('#f4433655')
     feed_move_colour = get_color_from_hex('#2196f355')
-    line_width = 1.1
+    line_width = 1
 
 #     def __init__(self, **kwargs):
 #         super(GCodeView, self).__init__(**kwargs)
