@@ -308,7 +308,7 @@ class SerialConnection(object):
             del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
         if message.startswith('error'):
-            log('ERROR from GRBL: ', message)
+            log('ERROR from GRBL: ' + message)
             popup_error.PopupError(self.m, self.sm, message)
 
 
@@ -344,7 +344,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
-        log("\nG-code streaming cancelled!")
+        log("G-code streaming cancelled!")
 
         # Flush
         self.lines_to_stream_from_file = []
