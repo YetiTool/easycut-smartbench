@@ -40,7 +40,7 @@ Builder.load_string("""
             pos: self.parent.pos             
             Button:
                 id:home_button
-                size_hint: None, None            
+#                size_hint: None, None
                 center: self.parent.center
     
                 background_color: hex('#F4433600')
@@ -158,7 +158,8 @@ class QuickCommands(Widget):
 
 #         anim = Animation(size=(30, 30),t='in_out_sine',center=self.parent.center) + Animation(size=(10, 10),t='in_out_sine',center=self.parent.center)
         anim.repeat = True
-        anim.start(self.home_button)
+#        anim.start(self.home_button)
+
             
     def home(self):
         Animation.stop_all(self.home_button)
