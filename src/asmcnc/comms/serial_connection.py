@@ -221,7 +221,6 @@ class SerialConnection(object):
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
 
-    lines_to_stream_from_file = []
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
@@ -241,25 +240,6 @@ class SerialConnection(object):
 
     def _load_stream_file(self, dt):
 
-        self.lines_to_stream_from_file = [] # Ensure purged
-
-        # clean the lines to stream
-        for line in self.m.job_file_gcode:
-
-            # Refine GCode
-            l_block = re.sub('\s|\(.*?\)', '', line).upper() # Strip comments/spaces/new line and capitalize
-
-            # Drop undesirable lines
-            if l_block.find('%') >= 0: continue # drop lines with % in them
-            if l_block.find('M6') >= 0: continue # drop lines with % in them
-
-            if l_block != '': self.lines_to_stream_from_file.append(l_block)
-
-        self._initialise_regular_stream_parameters()
-
-
-    def _initialise_regular_stream_parameters(self):
-
         # for the buffer stuffing style streaming
 
         self.is_stream_lines_remaining = True
@@ -278,7 +258,8 @@ class SerialConnection(object):
     # attempt to fill GRBLS's serial buffer, if there's room
     def stuff_buffer(self):
 
-        line_to_go = self.lines_to_stream_from_file[self.l_count]
+        line_to_go = self.get_next_line(self.m.job_file_gcode)
+
         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
         # if there's room in the serial buffer, send the line
@@ -287,13 +268,30 @@ class SerialConnection(object):
             self.l_count += 1 # lines sent to grbl
             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
 
-            # set flag if we've reached the end of the file
-            if self.l_count == len(self.lines_to_stream_from_file):
+            line_to_go = self.get_next_line(self.m.job_file_gcode)
+            if line_to_go == None:
                 self.is_stream_lines_remaining = False
                 break
 
-            line_to_go = self.lines_to_stream_from_file[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+
+
+    def get_next_line(self, job_file_gcode):
+
+        line = None
+        while True:
+            if self.l_count >= len(job_file_gcode):
+                break
+            # Refine GCode
+            l_block = re.sub('\s|\(.*?\)', '', job_file_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
+            # Drop undesirable lines
+            if l_block.find('%') == -1 and l_block.find('M6') == -1:
+                line = l_block
+                break;
+            # Throw current line away, loop again
+            self.l_count += 1
+
+        return line
 
 
     # if 'ok' or 'error' rec'd from GRBL
@@ -315,25 +313,24 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
-        if self.l_count == self.g_count: # ... and machine has completed the last command in the grbl buffer (job is truely done)
-            self.is_job_streaming = False
-            self.is_stream_lines_remaining = False
+        self.is_job_streaming = False
+        self.is_stream_lines_remaining = False
 
-            log("G-code streaming finished!")
-            self.stream_end_time = time.time()
-            time_taken_seconds = int(self.stream_end_time-self.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
-            #time_take_minutes = int(time_taken_seconds/60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
-            #popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
-            popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h "+ str(minutes) + "m " + str(seconds) + "s")
-            if self.buffer_monitor_file != None:
-                self.buffer_monitor_file.close()
-                self.buffer_monitor_file = None
+        log("G-code streaming finished!")
+        self.stream_end_time = time.time()
+        time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
+        hours = int(time_taken_seconds / (60 * 60))
+        seconds_remainder = time_taken_seconds % (60 * 60)
+        minutes = int(seconds_remainder / 60)
+        seconds = int(seconds_remainder % 60)
+        #time_take_minutes = int(time_taken_seconds/60)
+        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+        #popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
+        popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+        if self.buffer_monitor_file != None:
+            self.buffer_monitor_file.close()
+            self.buffer_monitor_file = None
 
 
     def cancel_stream(self):
@@ -347,7 +344,6 @@ class SerialConnection(object):
         log("G-code streaming cancelled!")
 
         # Flush
-        self.lines_to_stream_from_file = []
         self.s.flushInput()
 
 
