@@ -61,7 +61,13 @@ class SerialConnection(object):
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
                 for line in filesForDevice: # run through all files
-                    if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+
+                    # EITHER: USB Comms harware
+                    # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+
+                    # OR: UART Comms hardware
+                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
+                    
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE) # assign
                         return True
