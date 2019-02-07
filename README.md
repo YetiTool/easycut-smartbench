@@ -29,8 +29,8 @@ Setup of tools that allow you to play with & test out the UI with ease.
 
 ### 1. Install Java Runtime Environment
 
-From [here]( 
-https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
+Get JRE from [here]( 
+https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html).
 
 I downloaded and ran jre-8u202-windows-x64.exe. 
 
