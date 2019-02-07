@@ -17,10 +17,10 @@ Virtual HW:
 - After clicking play button to enter the go screen, ignore popup errors and click on 'continue anyway'
 
 
-#Build Steps
+# Build Steps
 Setup of tools that allow you to play with & test out the UI with ease. 
 
-##Important notes: 
+## Important notes: 
 * The following set-up is done on Windows.
   * Make sure you are consistent in whether you choose to install x86 or x64 software, otherwise the different programs will fail to find each other (e.g. Eclipse and Java). 
   * I have used x64 throughout this example. 
@@ -114,7 +114,7 @@ Watch some text scroll before your eyes. Bam. You're sorted.
 
 Open Eclipse (if you closed it). Go to the toolbar, and select Window > Preferences. Then, on the side-menu in Preferences, go to PyDev > Interpreters > Python. 
 
-Click on ìBrowse for python/pypy exeî, and find your python.exe file, in the folder you installed it.
+Click on ‚ÄúBrowse for python/pypy exe‚Äù, and find your python.exe file, in the folder you installed it.
 
 All of Kivy's libraries should automatically be loaded into Eclipse as well. 
 
