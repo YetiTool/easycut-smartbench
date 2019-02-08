@@ -146,6 +146,6 @@ That should be you done! easycut-smartbench will show up under Git Repositorie.
 
 Make sure you can also see Package Explorer in Eclipse - if you can't just go to Window > Show View > Package Explorer. 
 
-If you want to try running the UI, Open "main.py" and click Run (the green play button). And off you go :kissingheart:.
+If you want to try running the UI, Open "main.py" and click Run (the green play button). And off you go ;).
 
 
