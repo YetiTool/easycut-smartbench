@@ -94,7 +94,7 @@ Then, use "cd" (which stands for "change directory") to jump to the relevant fol
 
 For example, if you've installed Python in Yeti\Python27, you will want to enter:
 
-cd Yeti\Python27/
+cd Yeti\Python27
 
 Once you're in the same folder as your Python installation, you can follow the instructions on [Kivy's website](https://kivy.org/doc/stable/installation/installation-windows.html). 
 
