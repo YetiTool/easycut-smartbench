@@ -62,8 +62,8 @@ class SerialConnection(object):
                 filesForDevice = listdir('/dev/') # put all device files into list[]
                 for line in filesForDevice: # run through all files
 
-                    # EITHER: USB Comms harware
-                    # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+                    # EITHER: USB Comms hardware
+                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
@@ -401,11 +401,12 @@ class SerialConnection(object):
 
             validMessage = True
 
-            commasCnt = message.count(",")
-            if (commasCnt != 4 and commasCnt != 6):
-                validMessage = False
-                log("ERROR status parse: comma count fail: " + message)
-                return
+# Error checking from Skippy, but DANGEROUS bc it gets rid of other (more user-useful) errors. 
+#             commasCnt = message.count(",")
+#             if (commasCnt != 4 and commasCnt != 6):
+#                 validMessage = False
+#                 log("ERROR status parse: comma count fail: " + message)
+#                 return
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
@@ -507,7 +508,7 @@ class SerialConnection(object):
 
 
         elif message.startswith('ALARM:'):
-            log('ALARM from GRBL: ', message)
+            log('ALARM from GRBL: ' + message)
             popup_alarm_general.PopupAlarm(self.m, self.sm, message)
 
 
