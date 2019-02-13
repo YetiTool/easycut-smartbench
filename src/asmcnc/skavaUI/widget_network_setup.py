@@ -78,7 +78,7 @@ class NetworkSetup(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
-    def connectWiFI(self):
+    def connectWifi(self):
     
         self.netname = self.networkTextEntry
         self.password = self.passwordTextEntry
