@@ -82,13 +82,14 @@ class NetworkSetup(Widget):
     
         self.netname = self.networkTextEntry.text
         print self.netname 
-        self.password = self.passwordTextEntry
+        self.password = self.passwordTextEntry.text
         print self.password 
         
-        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' > //tmp//wpa_supplicant.conf'
+        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' > /tmp/wpa_supplicant.conf'
         print self.wpanetpass
         
         os.system(self.wpanetpass)
         
-        
+        os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" >> /tmp/wpa_supplicant.conf')
+        os.system('echo "update_config=1" >> /tmp/wpa_supplicant.conf')
         
