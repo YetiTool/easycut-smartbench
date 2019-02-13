@@ -78,106 +78,20 @@ class NetworkSetup(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
-    def detectIP(self):
-        
-        if sys.platform == "win32": 
-            try:
-                hostname=socket.gethostname()   
-                IPAddr=socket.gethostbyname(hostname)
-                self.ipLabel.text = 'This device IP is: ' + IPAddr
-                self.netNameLabel.text = 'It is known on the network as: ' + hostname
-            except:
-                self.ipLabel.text = 'Network not found'
-                self.netNameLabel.text = ''
-        else:
-            try: 
-                f = os.popen('hostname -I')
-                self.ipLabel.text = 'This device IP is: ' + f.read().strip().split(' ')[0]
-                self.netNameLabel.text = ''
-            except:
-                self.ipLabel.text = 'Network not found'
-                self.netNameLabel.text = ''
-                
-
     def connectWifi(self):
-        if sys.platform != "win32": 
-            network = self.networkTextEntry.text
-            password = self.passwordTextEntry.text
-            
-            print 'Changing wireless credentials...'
-            success=self.set_wireless_auth(network, password)
-            if success:
-                print 'done!'
-            else:
-                print 'failed :('
+
+        # get network name and password from text entered (widget)
+        self.netname = self.networkTextEntry.text
+        self.password = self.passwordTextEntry.text
+
+        # pass credentials to wpa_supplicant file
+        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+        print self.wpanetpass
+
+        # put the credentials and the necessary appendages into the wpa file
+        os.system(self.wpanetpass)
+        os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('sudo reboot')
+
         
-
-
-    
-    # Wireless credential files in pipaOS stretch and jessie
-    file_wpa='/boot/wpa_supplicant.txt'
-    file_interfaces='/boot/interfaces.txt'
-    
-    
-    def set_wireless_auth(self, essid, psk):
-        '''
-        Adapted code from  https://github.com/pipaos/pipaos-tools/blob/master/src/pipaos-setwifi - thanks!
-        Sets the wireless credentials on the interfaces file (debian jessie)
-        Or the wpa supplicant file (debian stretch)
-        This wrapper is provided to support legacy pipaOS jessie.
-        '''
-        changed=False
-    
-        if os.path.isfile(self.file_wpa):
-            changed = set_credentials(essid, psk, self.file_wpa)
-    
-        if os.path.isfile(self.file_interfaces):
-            changed = set_credentials(essid, psk, self.file_interfaces)
-    
-        return changed
-    
-    
-    def set_credentials(self, essid, psk, conffile):
-        '''
-        Parses Debian interfaces configuration to replace ssid and psk
-        '''
-        changed=False
-        ssid=None
-        passphrase=None
-    
-        # open settings file
-        with open(conffile, 'r') as f:
-            settings=f.readlines()
-    
-        # replace connection details
-        for j,line in enumerate(settings):
-            idx=line.find('wpa-ssid')
-            if idx != -1:
-                settings[j]='  wpa-ssid: {}\n'.format(essid)
-                changed=True
-                continue
-    
-            idx=line.find('wpa-psk')
-            if idx != -1:
-                settings[j]='  wpa-psk: {}\n'.format(psk)
-                changed=True
-                continue
-    
-            idx=line.find('ssid=')
-            if idx != -1:
-                settings[j]='  ssid="{}"\n'.format(essid)
-                changed=True
-                continue
-    
-            idx=line.find('psk=')
-            if idx != -1:
-                settings[j]='  psk="{}"\n'.format(psk)
-                changed=True
-                continue
-    
-    
-        with open(conffile, 'w') as f:
-            f.writelines(settings)
-    
-        return changed
-    
