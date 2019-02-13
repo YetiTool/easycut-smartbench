@@ -92,6 +92,6 @@ class NetworkSetup(Widget):
         os.system(self.wpanetpass)
         os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
         os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
-        os.system('sudo restart')
+        os.system('sudo reboot')
 
         
