@@ -80,10 +80,12 @@ class NetworkSetup(Widget):
 
     def connectWifi(self):
     
-        self.netname = self.networkTextEntry
+        self.netname = self.networkTextEntry.text
+        print self.netname 
         self.password = self.passwordTextEntry
+        print self.password 
         
-        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' +self.password + ' > /tmp/wpa_supplicant.conf'
+        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' > //tmp//wpa_supplicant.conf'
         print self.wpanetpass
         
         os.system(self.wpanetpass)
