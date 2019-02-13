@@ -80,16 +80,17 @@ class NetworkSetup(Widget):
 
     def connectWifi(self):
     
+        # get network name and password from text entered (widget) 
         self.netname = self.networkTextEntry.text
-        print self.netname 
         self.password = self.passwordTextEntry.text
-        print self.password 
         
-        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' > /tmp/wpa_supplicant.conf'
+        # pass credentials to wpa_supplicant file
+        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' > /etc/wpa_supplicant/wpa_supplicant.conf'
         print self.wpanetpass
         
+        # put the credentials and the necessary appendages into the wpa file
         os.system(self.wpanetpass)
-        
-        os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" >> /tmp/wpa_supplicant.conf')
-        os.system('echo "update_config=1" >> /tmp/wpa_supplicant.conf')
+        os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" >> /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('sudo systemctl restart networking.service')
         
