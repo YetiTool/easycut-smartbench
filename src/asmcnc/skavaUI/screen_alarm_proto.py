@@ -77,8 +77,8 @@ Builder.load_string("""
                     Image: 
                         id: image_alarming
                         #source: root.alarm_image
-                        source: "./asmcnc/skavaUI/img/popup_alarm_visual2.png"
-                        #source: "./asmcnc/skavaUI/img/lobby_pro.png"
+                        #source: "./asmcnc/skavaUI/img/popup_alarm_visual2.png"
+                        source: "./asmcnc/skavaUI/img/lobby_pro.png"
                         center_x: self.parent.center_x
                         center_y: self.parent.center_y
                         #size: self.parent.width, self.parent.height
