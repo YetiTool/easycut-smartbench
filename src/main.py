@@ -20,7 +20,9 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.comms import router_machine
+from asmcnc.comms import router_machine 
+# NB: router_machine imports serial_connection
+
 from asmcnc.skavaUI import screen_inital, screen_help
 from asmcnc.skavaUI import screen_home
 from asmcnc.skavaUI import screen_local_filechooser
@@ -30,6 +32,7 @@ from asmcnc.skavaUI import screen_template
 from asmcnc.skavaUI import screen_lobby
 from asmcnc.skavaUI import screen_vj_polygon
 
+Cmport = 'COM3'
 
 class SkavaUI(App):
 
@@ -40,7 +43,7 @@ class SkavaUI(App):
         sm = ScreenManager(transition=NoTransition())
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine('COM4', sm)
+        m = router_machine.RouterMachine(Cmport, sm)
 
         # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m)

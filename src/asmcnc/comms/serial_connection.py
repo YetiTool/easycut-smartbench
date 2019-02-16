@@ -18,6 +18,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
     popup_job_done
+from asmcnc.skavaUI import screen_alarm_proto
 import re
 from functools import partial
 
@@ -42,9 +43,9 @@ class SerialConnection(object):
         self.sm = screen_manager
 
         # This is the object which calls the serial connection so can be referenced to do machine moves from Alarm popup
-        # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...
+        # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...       
         self.m = machine
-
+        
     def __del__(self):
         print 'Destructor'
 
@@ -509,7 +510,14 @@ class SerialConnection(object):
 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            popup_alarm_general.PopupAlarm(self.m, self.sm, message)
+            #Does it make most sense to initialise the alarm screen here? I'm going to and we'll see. 
+            alarm_screen = screen_alarm_proto.AlarmScreenClass(name='alarmScreen', screen_manager = self.sm, machine = self.m, alarmmsg = message)
+            self.sm.add_widget(alarm_screen)
+            self.sm.current = 'alarmScreen'
+            
+            # Pop up that was used before screen replaced it.
+            # popup_alarm_general.PopupAlarm(self.m, self.sm, message)
+            
 
 
         elif message.startswith('$'):
