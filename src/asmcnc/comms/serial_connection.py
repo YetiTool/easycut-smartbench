@@ -19,6 +19,7 @@ from kivy.clock import Clock
 from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
     popup_job_done
 from asmcnc.skavaUI import screen_alarm_proto
+from asmcnc.skavaUI import screen_error_proto
 import re
 from functools import partial
 
@@ -314,7 +315,11 @@ class SerialConnection(object):
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            popup_error.PopupError(self.m, self.sm, message)
+            # popup_error.PopupError(self.m, self.sm, message)
+            
+            error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
+            self.sm.add_widget(error_screen)
+            self.sm.current = 'errorScreen'
 
 
     # After streaming is completed

@@ -61,7 +61,7 @@ Builder.load_string("""
             Label:
                 size_hint_y: 1
                 font_size: '40sp'
-                text: '[b]Stop![/b]'
+                text: '[b]STOP! ALARM![/b]'
                 markup: True
  
             Label:
@@ -88,7 +88,7 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     disabled: False
-                    background_color: hex('d60000FF')
+                    background_color: hex('#a80000FF')
                     on_release: 
                         root.quit_to_home()
                         
@@ -151,14 +151,4 @@ class AlarmScreenClass(Screen):
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()
         self.sm.current = 'initial'   
-
-  
-# from popup_alarm_general
-
-# so I think this might need to be implemented as a widget??
-# where are pop-ups coming from atm?
-
-#alarm_description = ALARM_CODES.get(message, "")
-
-
-        
+      
