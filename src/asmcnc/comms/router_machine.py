@@ -254,7 +254,7 @@ class RouterMachine(object):
         self.s.write_realtime('~')       
     
     def spindle_on(self):
-        self.s.write_command('M3 S12000')
+        self.s.write_command('M3 S25000')
     
     def spindle_off(self):
         self.s.write_command('M5')
