@@ -9,7 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 # from kivy.uix.popup import Popup
-# from kivy.uix.widget import Widget
+from kivy.uix.widget import Widget
 # from kivy.clock import Clock
 
 
@@ -64,7 +64,7 @@ Builder.load_string("""
  
             Label:
                 text_size: self.size
-                font_size: '22sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.alarm_description 
