@@ -75,14 +75,14 @@ Builder.load_string("""
                 text_size: self.size
                 font_size: '18sp'
                 halign: 'center'
-                valign: 'top'
+                valign: 'middle'
                 text: 'Ensure that the machine is clear.'
             Label:
                 text_size: self.size
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'Then, to clear the alarm state reset and unlock the machine.'
+                text: 'To clear the alarm state RESET and UNLOCK the machine.'
                 
             BoxLayout:
                 orientation: 'horizontal'
