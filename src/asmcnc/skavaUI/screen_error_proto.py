@@ -89,7 +89,7 @@ Builder.load_string("""
                 text_size: self.size
                 font_size: '22sp'
                 halign: 'center'
-                valign: 'top'
+                valign: 'bottom'
                 text: root.error_description 
                 
             Label:
