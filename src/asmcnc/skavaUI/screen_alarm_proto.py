@@ -76,7 +76,7 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'middle'
-                text: 'Ensure that the machine is clear.'
+                text: 'ENSURE THAT THE MACHINE IS CLEAR.'
             Label:
                 text_size: self.size
                 font_size: '18sp'
