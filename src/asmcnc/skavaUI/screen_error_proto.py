@@ -9,10 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from kivy.clock import Clock
-
 
 import sys, os
 from os.path import expanduser
@@ -126,31 +123,14 @@ Builder.load_string("""
                             font_size: '20sp'
                             text: 'Return to the home screen'
                         
-                    
-#                     Image: 
-#                         id: image_error
-#                         #source: root.alarm_image
-#                         #source: "./asmcnc/skavaUI/img/popup_alarm_visual2.png"
-#                         source: "./asmcnc/skavaUI/img/lobby_pro.png"
-#                         center_x: self.parent.center_x
-#                         center_y: self.parent.center_y
-#                         #size: self.parent.width, self.parent.height
-#                         allow_stretch: False
-#                         keep_ratio: True
-#                         opacity: 1
-
-    
+  
             
 """)
 
-#Python functionality:
-
 class ErrorScreenClass(Screen):
 
-    # define alarm description to make kivy happy
+    # define error description to make kivy happy
     error_description = StringProperty()
-    #alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_error_visual.png')
-
     
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
@@ -158,14 +138,9 @@ class ErrorScreenClass(Screen):
         self.m=kwargs['machine']
         message =kwargs['errormsg']
     
-        # use the message to get the alarm description
+        # use the message to get the error description
         self.error_description = ERROR_CODES.get(message, "")
 
     def quit_to_home(self):
-        #self.sm.transition = SlideTransition()
-        #self.sm.transition.direction = 'up' 
         self.sm.current = 'home'
   
-    def go_to_initial_screen(self, dt):
-        #self.sm.transition = NoTransition()
-        self.sm.current = 'initial'   
