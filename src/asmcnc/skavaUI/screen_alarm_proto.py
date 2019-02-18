@@ -76,7 +76,7 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'Proceed with caution. Ensure that the machine is clear. Then, to clear the alarm state reset and unlock the machine.'
+                text: 'Ensure that the machine is clear. Then, to clear the alarm state reset and unlock the machine.'
                 
             BoxLayout:
                 orientation: 'horizontal'
