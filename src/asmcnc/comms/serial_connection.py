@@ -315,8 +315,6 @@ class SerialConnection(object):
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            # popup_error.PopupError(self.m, self.sm, message)
-            
             error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
             self.sm.add_widget(error_screen)
             self.sm.current = 'errorScreen'
@@ -515,15 +513,12 @@ class SerialConnection(object):
 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            #Does it make most sense to initialise the alarm screen here? I'm going to and we'll see. 
             alarm_screen = screen_alarm_proto.AlarmScreenClass(name='alarmScreen', screen_manager = self.sm, machine = self.m, alarmmsg = message)
             self.sm.add_widget(alarm_screen)
             self.sm.current = 'alarmScreen'
-            
             # Pop up that was used before screen replaced it.
             # popup_alarm_general.PopupAlarm(self.m, self.sm, message)
             
-
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")
