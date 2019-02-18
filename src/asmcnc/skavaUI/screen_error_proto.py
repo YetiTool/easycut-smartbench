@@ -90,7 +90,7 @@ Builder.load_string("""
  
             Label:
                 text_size: self.size
-                font_size: '20sp'
+                font_size: '22sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.error_description 
