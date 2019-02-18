@@ -99,7 +99,7 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'To clear the error state...?'
+                text: 'Grbl did not recognize that command! Fix the error in the G-code, THEN continue.'
                 
             BoxLayout:
                 orientation: 'horizontal'
