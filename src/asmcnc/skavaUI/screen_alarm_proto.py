@@ -3,16 +3,14 @@ Created on 12 Feb 2019
 
 @author: Letty
 '''
-# import png
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
+# from kivy.uix.popup import Popup
+# from kivy.uix.widget import Widget
+# from kivy.clock import Clock
 
 
 import sys, os
@@ -66,7 +64,7 @@ Builder.load_string("""
  
             Label:
                 text_size: self.size
-                font_size: '20sp'
+                font_size: '22sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.alarm_description 
@@ -109,7 +107,7 @@ Builder.load_string("""
                             font_size: '20sp'
                             text: 'Return to the home screen'
                         
-                    
+# This is code from when the alarm screen contained an image.                     
 #                     Image: 
 #                         id: image_alarming
 #                         #source: root.alarm_image
@@ -126,8 +124,6 @@ Builder.load_string("""
             
 """)
 
-#Python functionality:
-
 class AlarmScreenClass(Screen):
 
     # define alarm description to make kivy happy
@@ -143,12 +139,6 @@ class AlarmScreenClass(Screen):
     
         # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(message, "")
-
-    
-    
-    # ???
-#     def on_enter(self):
-#         pass
  
     def quit_to_home(self):
         #self.sm.transition = SlideTransition()
