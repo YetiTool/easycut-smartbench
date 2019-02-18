@@ -8,10 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-# from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-# from kivy.clock import Clock
-
 
 import sys, os
 from os.path import expanduser
@@ -107,7 +104,7 @@ Builder.load_string("""
                             font_size: '20sp'
                             text: 'Return to the home screen'
                         
-# This is code from when the alarm screen contained an image.                     
+# This is code from when the alarm screen contained an image. It's broken, but might want to come back to it:                     
 #                     Image: 
 #                         id: image_alarming
 #                         #source: root.alarm_image
@@ -128,7 +125,7 @@ class AlarmScreenClass(Screen):
 
     # define alarm description to make kivy happy
     alarm_description = StringProperty()
-    #alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
+    # alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
 
     
     def __init__(self, **kwargs):
@@ -141,11 +138,6 @@ class AlarmScreenClass(Screen):
         self.alarm_description = ALARM_CODES.get(message, "")
  
     def quit_to_home(self):
-        #self.sm.transition = SlideTransition()
-        #self.sm.transition.direction = 'up' 
         self.sm.current = 'home'
-  
-    def go_to_initial_screen(self, dt):
-        #self.sm.transition = NoTransition()
-        self.sm.current = 'initial'   
+ 
       
