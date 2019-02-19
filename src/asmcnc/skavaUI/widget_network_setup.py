@@ -93,9 +93,10 @@ class NetworkSetup(Widget):
         self.country = self.countryTextEntry.text 
 
         # pass credentials to wpa_supplicant file
-        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf 2>/dev/null'
-        self.wpanetpasswlan0 = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf 2>/dev/null'
-        print self.wpanetpass
+        self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+        self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+        
+        #if wpanetpass.startswith('network={'):       
 
         # put the credentials and the necessary appendages into the wpa file
         os.system(self.wpanetpass)
@@ -109,5 +110,7 @@ class NetworkSetup(Widget):
         os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
         
         os.system('sudo reboot')
+        
+    
 
         
