@@ -46,20 +46,23 @@ Builder.load_string("""
             id: countryTextEntry
             size_hint_y: None
             height: '32dp'
-            text: 'Country code...'
+            text: 'GB'
             focus: False
+            multiline: False
         TextInput:
             id: networkTextEntry
             size_hint_y: None
             height: '32dp'
             text: 'Network name...'
             focus: False
+            multiline: False
         TextInput:
             id: passwordTextEntry
             size_hint_y: None
             height: '32dp'
             text: 'Network password...'
             focus: False
+            multiline: False
         Label:
             id: ipLabel
             text: 'IP address info here'
