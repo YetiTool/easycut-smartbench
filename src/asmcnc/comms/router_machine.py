@@ -488,3 +488,7 @@ class RouterMachine(object):
 
     def set_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
+        
+    def set_led_blue(self):
+        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+
