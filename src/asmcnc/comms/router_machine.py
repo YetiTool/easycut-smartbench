@@ -232,7 +232,6 @@ class RouterMachine(object):
     # ... unless it is unlocked
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
         self.s.write_realtime("\x18", show_in_sys=False, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
         print '>>> GRBL RESET'
     
@@ -279,6 +278,8 @@ class RouterMachine(object):
         self.s.write_command(gcode)
 
     def unlock_after_alarm(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
         self.s.write_command('$X')
     
     def go_to_jobstart_xy(self):
