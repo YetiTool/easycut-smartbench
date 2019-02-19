@@ -394,7 +394,7 @@ class LobbyScreen(Screen):
  
         
     def on_enter(self):
-        pass
+        self.m.set_led_blue()
  
 
     def quit_to_home(self):
