@@ -23,6 +23,7 @@ Builder.load_string("""
     passwordTextEntry:passwordTextEntry
     ipLabel:ipLabel
     netNameLabel:netNameLabel
+    countryTextEntry:countryTextEntry
 
     BoxLayout:
     
@@ -41,6 +42,12 @@ Builder.load_string("""
         Button:
             text: 'Refresh status...'
             on_release: root.detectIP()
+        TextInput:
+            id: countryTextEntry
+            size_hint_y: None
+            height: '32dp'
+            text: 'Country code...'
+            focus: False
         TextInput:
             id: networkTextEntry
             size_hint_y: None
@@ -83,15 +90,27 @@ class NetworkSetup(Widget):
         # get network name and password from text entered (widget)
         self.netname = self.networkTextEntry.text
         self.password = self.passwordTextEntry.text
+        self.country = self.countryTextEntry.text 
 
         # pass credentials to wpa_supplicant file
-        self.wpanetpass = 'wpa_passphrase ' + self.netname + ' ' + self.password + ' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
-        print self.wpanetpass
+        self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+        self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+        
+        #if wpanetpass.startswith('network={'):       
 
         # put the credentials and the necessary appendages into the wpa file
         os.system(self.wpanetpass)
         os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
         os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+   
+        os.system(self.wpanetpasswlan0)
+        os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+        os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+        os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+        
         os.system('sudo reboot')
+        
+    
 
         
