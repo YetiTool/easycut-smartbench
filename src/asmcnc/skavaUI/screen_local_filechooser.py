@@ -17,7 +17,9 @@ from kivy.clock import Clock
 import sys, os
 from os.path import expanduser
 from shutil import copy
+
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import screen_file_loading
 
 
 Builder.load_string("""
@@ -190,7 +192,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.load_file(filechooser.selection[0])
+                    root.go_to_loading_screen(filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -216,8 +218,7 @@ ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files 
 
 class LocalFileChooser(Screen):
 
-    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
-    
+    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
     
     def __init__(self, **kwargs):
 
@@ -318,28 +319,39 @@ class LocalFileChooser(Screen):
         original_file.close()       
 
 
-    def load_file(self, file_selection):
+    def go_to_loading_screen(self, file_selection):
         
-        # Move over the nc file
-        if os.path.isfile(file_selection):
-            
-            # ... to Q
-            files_in_q = os.listdir(job_q_dir) # clean Q
-            if files_in_q:
-                for file in files_in_q:
-                    os.remove(job_q_dir+file)
-            copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
-
-        # Move over the preview image
-        if self.preview_image_path:
-            if os.path.isfile(self.preview_image_path):
-                
-                # ... to Q
-                copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
+# NEW ------------------------------------------------------ DONE
+        # Pass the selected file to the new screen wait no
+        loading_screen = screen_file_loading.LoadingScreen(name='loading', screen_manager = self.sm, loadingfilename = file_selection)
+        self.sm.add_widget(loading_screen)
+        self.manager.current = 'loading'
         
-        self.quit_to_home()    
+        # does it break here? is this the thing that is not allowed?
+        
+# ---------------------------------------------------------- DONE
+        
+        # Replace this with move to the file_loading screen
+# --------------------------------------------------------------- OLD       
+#         # Move over the nc file
+#         if os.path.isfile(file_selection):
+#             
+#             # ... to Q
+#             files_in_q = os.listdir(job_q_dir) # clean Q
+#             if files_in_q:
+#                 for file in files_in_q:
+#                     os.remove(job_q_dir+file)
+#             copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
+# 
+#         # Move over the preview image
+#         if self.preview_image_path:
+#             if os.path.isfile(self.preview_image_path):
+#                 
+#                 # ... to Q
+#                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
+#-------------------------------------------------------------------
 
-    
+
     def delete_selected(self, filename):
         
         if os.path.isfile(filename):

@@ -211,7 +211,7 @@ Builder.load_string("""
                                     on_release:
                                         #root.manager.transition.direction = 'down'
                                         # Cause re-load of job file
-                                        root.m.job_file_gcode = []
+                                        root.m.job_file_gcode = [] # empties g-code object
                                         root.manager.current = 'local_filechooser'
                                         self.background_color = hex('#F4433600')
                                     on_press:
@@ -350,14 +350,15 @@ class HomeScreen(Screen):
 
     job_box = job_envelope.BoundingBox()
 
+# Kill this function -----------------------------------------------------------------
+#     def on_enter(self): 
+# 
+#         if not self.m.job_file_gcode: # I think it's saying if "empty", essentially
+#             self.file_data_label.text = "Loading job file, please wait..."
+#             Clock.schedule_once(self.preview_job_file, 0.1) #all the loading happens in preview
+#-------------------------------------------------------------------------------------
 
-    def on_enter(self):
-
-        if not self.m.job_file_gcode:
-            self.file_data_label.text = "Loading job file, please wait..."
-            Clock.schedule_once(self.preview_job_file, 0.1)
-
-
+# Work out exactly what this does: 
     def preview_job_file(self, dt):
 
         #### Scan for files in Q, and update info panels
@@ -441,7 +442,7 @@ class HomeScreen(Screen):
 
                 else:
                     self.file_data_label.text = 'Load a file...'
-
+# --------------------------------------------------------------------------
 
     def load_job_file(self, job_file_path):
 

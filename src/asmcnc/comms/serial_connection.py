@@ -42,8 +42,6 @@ class SerialConnection(object):
     def __init__(self, machine, screen_manager):
 
         self.sm = screen_manager
-
-        # This is the object which calls the serial connection so can be referenced to do machine moves from Alarm popup
         # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...       
         self.m = machine
         
@@ -283,14 +281,14 @@ class SerialConnection(object):
 
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
-
+# FLAG G CODE MOD
     def get_next_line(self, job_file_gcode):
 
         line = None
         while True:
-            if self.l_count >= len(job_file_gcode):
+            if self.l_count >= len(job_file_gcode): #l_count defined & iterated outside 
                 break
-            # Refine GCode
+            # Refine GCode NB: THIS HAS BEEN STOLEN
             l_block = re.sub('\s|\(.*?\)', '', job_file_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
             # Drop undesirable lines
             if l_block.find('%') == -1 and l_block.find('M6') == -1:
@@ -580,6 +578,7 @@ class SerialConnection(object):
         # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:],
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
         elif message.startswith('['):
+                      
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
 
             if stripped_message.startswith('G28:'):

@@ -33,7 +33,7 @@ ALARM_CODES = {
 Builder.load_string("""
 
 <AlarmScreenClass>:
-#make a blue screen - done. 
+
     canvas:
         Color: 
             #rgba: hex('#0d47a1FF')
