@@ -281,7 +281,7 @@ class SerialConnection(object):
 
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
-# FLAG G CODE MOD
+
     def get_next_line(self, job_file_gcode):
 
         line = None
