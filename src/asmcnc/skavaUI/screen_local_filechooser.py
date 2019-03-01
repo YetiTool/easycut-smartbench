@@ -323,10 +323,8 @@ class LocalFileChooser(Screen):
         
 # NEW ------------------------------------------------------ DONE
         # Pass the selected file to the new screen wait no
-        loading_screen = screen_file_loading.LoadingScreen(name='loading', screen_manager = self.sm, loadingfilename = file_selection)
-        self.sm.add_widget(loading_screen)
+        self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
-        
         # does it break here? is this the thing that is not allowed?
         
 # ---------------------------------------------------------- DONE

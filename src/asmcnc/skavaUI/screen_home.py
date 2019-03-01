@@ -211,7 +211,7 @@ Builder.load_string("""
                                     on_release:
                                         #root.manager.transition.direction = 'down'
                                         # Cause re-load of job file
-                                        root.m.job_file_gcode = [] # empties g-code object
+                                        # root.m.job_gcode = [] # empties g-code object
                                         root.manager.current = 'local_filechooser'
                                         self.background_color = hex('#F4433600')
                                     on_press:
@@ -318,6 +318,7 @@ class HomeScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.job_gcode = kwargs['job']
 
         # Job tab
         self.gcode_preview_widget = widget_gcode_view.GCodeView()
@@ -351,7 +352,8 @@ class HomeScreen(Screen):
     job_box = job_envelope.BoundingBox()
 
 # Kill this function -----------------------------------------------------------------
-#     def on_enter(self): 
+    def on_enter(self): 
+         print(self.job_gcode)
 # 
 #         if not self.m.job_file_gcode: # I think it's saying if "empty", essentially
 #             self.file_data_label.text = "Loading job file, please wait..."
@@ -377,12 +379,14 @@ class HomeScreen(Screen):
                     self.home_image_preview.source = self.no_image_preview_path
 
             # Search for nc file in Q dir and process
+            
+            # HERE'S THE THING. Good grief what a mess. 
             for filename in files_in_q:
 
                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
 
-                    if not self.m.job_file_gcode:
-                        self.m.job_file_gcode = self.load_job_file(self.job_q_dir + filename)
+#                     if not job_file_gcode:
+#                         job_file_gcode = self.load_job_file(self.job_q_dir + filename)
 
                     #t = threading.Thread(target=self.load_gcode_list, args=[filename])
                     #t.daemon = True
@@ -404,7 +408,7 @@ class HomeScreen(Screen):
 #                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
 
                     log('> get_non_modal_gcode')
-                    gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.m.job_file_gcode)
+                    gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
                     log('< get_non_modal_gcode ' + str(len(gcode_list)))
                     ###
 
@@ -432,7 +436,7 @@ class HomeScreen(Screen):
                     self.file_data_label.text = '[b]' + filename + '[/b]'
 
                     # Search for tool listings and show
-                    for line in self.m.job_file_gcode:
+                    for line in self.job_gcode:
                         if line.find('(T') >= 0:
                             self.file_data_label.text += '\n' + line.strip()
                             break
@@ -447,13 +451,13 @@ class HomeScreen(Screen):
     def load_job_file(self, job_file_path):
 
         log('> load_job_file')
-        job_file_gcode = []
+        job_gcode = []
         job_file = open(job_file_path, 'r')
         for line in job_file:
-            job_file_gcode.append(line.strip())
+            job_gcode.append(line.strip())
         job_file.close()
         log('< load_job_file')
-        return job_file_gcode
+        return job_gcode
 
 
     def load_gcode_list(self, filename, gcode_mgr_list):

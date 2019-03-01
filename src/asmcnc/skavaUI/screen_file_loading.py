@@ -18,6 +18,7 @@ from shutil import copy
 from datetime import datetime
 import re
 
+from asmcnc.comms import serial_connection
 from asmcnc.comms import usb_storage
 #from asmcnc.skavaUI import screen_home
 
@@ -115,14 +116,21 @@ class LoadingScreen(Screen):
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.loading_file_name =kwargs['loadingfilename']
+        self.m=kwargs['machine']
+        self.job_gcode=kwargs['job']
+        self.s = serial_connection.SerialConnection(self, self.sm)
+        loading_file_name=[]
         
     def on_enter(self):    
                
         # CAD file processing sequence
+        self.job_gcode = []
         objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)
         self.check_grbl_stream(objectifile)
-        self.write_file_to_JobQ(objectifile)
+        self.job_gcode = objectifile
+        print self.job_gcode
+        # self.m.s.stream_file()
+     #   self.write_file_to_JobQ(objectifile)
         
      #   self.preview(objectifile)   # LEAVE OUT
      
@@ -130,6 +138,7 @@ class LoadingScreen(Screen):
         self.quit_to_home()
 
     def quit_to_home(self):
+        self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.current = 'home'
         print('home')
 
@@ -138,7 +147,7 @@ class LoadingScreen(Screen):
 
         log('> load_job_file')
         
-        job_file_gcode = []
+        preloaded_job_gcode = []
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
         
@@ -148,12 +157,12 @@ class LoadingScreen(Screen):
             l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
             
             if l_block.find('%') == -1 and l_block.find('M6') == -1:    # Drop undesirable lines
-                job_file_gcode.append(l_block)  #append cleaned up gcode to object
+                preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
         
         log('< load_job_file')
-        return job_file_gcode        # a.k.a. objectifile
+        return preloaded_job_gcode        # a.k.a. objectifile
 
 # NO LONGER REQUIRED -------------------------------------------------------------------------------------  
 #     def clean_up_objectifile(self, objectifile):
@@ -206,11 +215,11 @@ class LoadingScreen(Screen):
                 # ... to Q
 #             copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
         
-    def preview(self, objectifile):
-        
-        # can I pass the preview back to the screen_home preview widget? 
-        log(' preview')
-        pass
+#     def preview(self, objectifile):
+#         
+#         # can I pass the preview back to the screen_home preview widget? 
+#         log(' preview')
+#         pass
 
 
 # this might be necessary but I don't know what it does yet.
@@ -233,6 +242,26 @@ class LoadingScreen(Screen):
         return gcode_list
     
     
+# OLD ----------------------------------
+    
+    def stream_file(self):
+
+    #### Scan for files in Q, and update info panels
+
+        files_in_q = os.listdir(self.job_q_dir)
+        filename = ''
+    
+        if files_in_q:
+    
+            # Search for nc file in Q dir and process
+            for filename in files_in_q:
+    
+                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+    
+                    try:
+                        self.m.stream_file(self.job_q_dir + filename)
+                    except:
+                        print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
 # ----------------------------------
         
 # Questions: where does this object need to go? Where do we put it/keep it?

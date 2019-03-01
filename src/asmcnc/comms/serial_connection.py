@@ -18,8 +18,6 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
     popup_job_done
-from asmcnc.skavaUI import screen_alarm_proto
-from asmcnc.skavaUI import screen_error_proto
 import re
 from functools import partial
 
@@ -232,8 +230,10 @@ class SerialConnection(object):
     buffer_monitor_file = None
 
 
-    def stream_file(self, job_file_path):
+    def stream_file(self, job_gcode):
 
+        print(job_gcode)
+        
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w")
 
@@ -264,7 +264,8 @@ class SerialConnection(object):
     # attempt to fill GRBLS's serial buffer, if there's room
     def stuff_buffer(self):
 
-        line_to_go = self.get_next_line(self.m.job_file_gcode)
+        # This gets a cleaned up line from a machine file ???? 
+        line_to_go = self.get_next_line(job_gcode) # This can die
 
         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
@@ -274,22 +275,22 @@ class SerialConnection(object):
             self.l_count += 1 # lines sent to grbl
             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
 
-            line_to_go = self.get_next_line(self.m.job_file_gcode)
+            line_to_go = self.get_next_line(job_gcode)
             if line_to_go == None:
                 self.is_stream_lines_remaining = False
                 break
 
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
 
-
-    def get_next_line(self, job_file_gcode):
+# this can die
+    def get_next_line(self, job_gcode):
 
         line = None
         while True:
-            if self.l_count >= len(job_file_gcode): #l_count defined & iterated outside 
+            if self.l_count >= len(job_gcode): #l_count defined & iterated outside 
                 break
             # Refine GCode NB: THIS HAS BEEN STOLEN
-            l_block = re.sub('\s|\(.*?\)', '', job_file_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
+            l_block = re.sub('\s|\(.*?\)', '', job_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
             # Drop undesirable lines
             if l_block.find('%') == -1 and l_block.find('M6') == -1:
                 line = l_block
@@ -313,8 +314,7 @@ class SerialConnection(object):
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
-            self.sm.add_widget(error_screen)
+            self.sm.get_screen('errorScreen').message = message
             self.sm.current = 'errorScreen'
 
 
@@ -510,9 +510,8 @@ class SerialConnection(object):
 
 
         elif message.startswith('ALARM:'):
-            log('ALARM from GRBL: ' + message)
-            alarm_screen = screen_alarm_proto.AlarmScreenClass(name='alarmScreen', screen_manager = self.sm, machine = self.m, alarmmsg = message)
-            self.sm.add_widget(alarm_screen)
+            log('ALARM from GRBL: ' + message)        
+            self.sm.get_screen('alarmScreen').message = message
             self.sm.current = 'alarmScreen'
             # Pop up that was used before screen replaced it.
             # popup_alarm_general.PopupAlarm(self.m, self.sm, message)
