@@ -132,10 +132,10 @@ class AlarmScreenClass(Screen):
         super(AlarmScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.message=kwargs['alarmmsg']
+        message=kwargs['alarmmsg']
     
         # use the message to get the alarm description
-        self.alarm_description = ALARM_CODES.get(self.message, "")
+        self.alarm_description = ALARM_CODES.get(message, "")
  
     def quit_to_home(self):
         self.sm.current = 'home'

@@ -18,6 +18,8 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
     popup_job_done
+from asmcnc.skavaUI import screen_alarm_proto
+from asmcnc.skavaUI import screen_error_proto
 import re
 from functools import partial
 
@@ -314,7 +316,9 @@ class SerialConnection(object):
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            self.sm.get_screen('errorScreen').message = message
+            error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
+            self.sm.add_widget(error_screen)
+            # self.sm.get_screen('errorScreen').message = message
             self.sm.current = 'errorScreen'
 
 
@@ -510,8 +514,10 @@ class SerialConnection(object):
 
 
         elif message.startswith('ALARM:'):
-            log('ALARM from GRBL: ' + message)        
-            self.sm.get_screen('alarmScreen').message = message
+            log('ALARM from GRBL: ' + message)
+            alarm_screen = screen_alarm_proto.AlarmScreenClass(name='alarmScreen', screen_manager = self.sm, machine = self.m, alarmmsg=message)
+            self.sm.add_widget(alarm_screen)
+            # self.sm.get_screen('alarmScreen').message = message
             self.sm.current = 'alarmScreen'
             # Pop up that was used before screen replaced it.
             # popup_alarm_general.PopupAlarm(self.m, self.sm, message)

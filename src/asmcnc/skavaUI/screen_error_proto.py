@@ -136,10 +136,10 @@ class ErrorScreenClass(Screen):
         super(ErrorScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.message =kwargs['errormsg']
+        message =kwargs['errormsg']
     
         # use the message to get the error description
-        self.error_description = ERROR_CODES.get(self.message, "")
+        self.error_description = ERROR_CODES.get(message, "")
 
     def quit_to_home(self):
         self.sm.current = 'home'
