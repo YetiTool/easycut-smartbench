@@ -233,11 +233,12 @@ class SerialConnection(object):
 
 
     def stream_file(self, job_gcode):
-
+        
+        print('streaming')
         print(job_gcode)
         
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
-            self.buffer_monitor_file = open("buffer_log.txt", "w")
+            self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()

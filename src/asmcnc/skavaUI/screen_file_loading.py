@@ -127,13 +127,7 @@ class LoadingScreen(Screen):
         self.job_gcode = []
         objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)
         self.check_grbl_stream(objectifile)
-        self.job_gcode = objectifile
-        print self.job_gcode
-        # self.m.s.stream_file()
-     #   self.write_file_to_JobQ(objectifile)
-        
-     #   self.preview(objectifile)   # LEAVE OUT
-     
+        self.job_gcode = objectifile    
      # Instead pass file back to home:
         self.quit_to_home()
 
@@ -163,6 +157,16 @@ class LoadingScreen(Screen):
         
         log('< load_job_file')
         return preloaded_job_gcode        # a.k.a. objectifile
+    
+    
+    def check_grbl_stream(self, objectifile):
+       self.m.s.write_command('$C')
+       self.m.s.stream_file(objectifile)
+       # Currently doesn't seem to be noticing if there's a code problem, but that might also be because the arduino is being dumb. 
+       # Where are log files being stored in stream_file?? 
+       # If it doesn't work, need to break it somehow.
+       self.m.s.write_command('$C')
+       return objectifile
 
 # NO LONGER REQUIRED -------------------------------------------------------------------------------------  
 #     def clean_up_objectifile(self, objectifile):
@@ -183,85 +187,77 @@ class LoadingScreen(Screen):
 #                 clean_objectifile.append(l_block)
 #          # ----------------------------------------
 #         new_file.close()
-#         return objectifile
-# ------------------------------------------------------------------------------------------------------
- 
-    def check_grbl_stream(self, objectifile):
-       
-       # steal from router
-       
-       # If it doesn't work, need to break it somehow. 
-       return objectifile
+#         return objectifile  
    
         
-    def write_file_to_JobQ(self, objectifile):
-        
-        files_in_q = os.listdir(job_q_dir) # clean Q
-        if files_in_q:
-            for file in files_in_q:
-                os.remove(job_q_dir+file)
-
-        # write cleaned up g-code to new file
-        new_file = open(job_q_dir+'LoadedGCode.nc','w')
-        for line in objectifile:
-            new_file.write(line)
-            new_file.write('\n')
-        new_file.close()
-
-        # Move over the preview image (??)
-#         if self.preview_image_path:
-#             if os.path.isfile(self.preview_image_path):
-                
-                # ... to Q
-#             copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
-        
-#     def preview(self, objectifile):
+#     def write_file_to_JobQ(self, objectifile):
 #         
-#         # can I pass the preview back to the screen_home preview widget? 
-#         log(' preview')
-#         pass
-
-
-# this might be necessary but I don't know what it does yet.
-    def load_gcode_list(self, filename, gcode_mgr_list):
-        
-        log ('> get_non_modal_gcode thread')
-        #time.sleep(2)
-        #for x in range(10000000):
-        #    x = x + 1
-            #if x % 10000 == 0:
-            #    sleep(0.0001)
-        #log ('counted')
-
-        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
-
-        for line in gcode_list:
-            gcode_mgr_list.append(line)
-
-        log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
-        return gcode_list
-    
-    
-# OLD ----------------------------------
-    
-    def stream_file(self):
-
-    #### Scan for files in Q, and update info panels
-
-        files_in_q = os.listdir(self.job_q_dir)
-        filename = ''
-    
-        if files_in_q:
-    
-            # Search for nc file in Q dir and process
-            for filename in files_in_q:
-    
-                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
-    
-                    try:
-                        self.m.stream_file(self.job_q_dir + filename)
-                    except:
-                        print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
+#         files_in_q = os.listdir(job_q_dir) # clean Q
+#         if files_in_q:
+#             for file in files_in_q:
+#                 os.remove(job_q_dir+file)
+# 
+#         # write cleaned up g-code to new file
+#         new_file = open(job_q_dir+'LoadedGCode.nc','w')
+#         for line in objectifile:
+#             new_file.write(line)
+#             new_file.write('\n')
+#         new_file.close()
+# 
+#         # Move over the preview image (??)
+# #         if self.preview_image_path:
+# #             if os.path.isfile(self.preview_image_path):
+#                 
+#                 # ... to Q
+# #             copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
+#         
+# #     def preview(self, objectifile):
+# #         
+# #         # can I pass the preview back to the screen_home preview widget? 
+# #         log(' preview')
+# #         pass
+# 
+# 
+# # this might be necessary but I don't know what it does yet.
+#     def load_gcode_list(self, filename, gcode_mgr_list):
+#         
+#         log ('> get_non_modal_gcode thread')
+#         #time.sleep(2)
+#         #for x in range(10000000):
+#         #    x = x + 1
+#             #if x % 10000 == 0:
+#             #    sleep(0.0001)
+#         #log ('counted')
+# 
+#         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
+# 
+#         for line in gcode_list:
+#             gcode_mgr_list.append(line)
+# 
+#         log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
+#         return gcode_list
+#     
+#     
+# # OLD ----------------------------------
+#     
+#     def stream_file(self):
+# 
+#     #### Scan for files in Q, and update info panels
+# 
+#         files_in_q = os.listdir(self.job_q_dir)
+#         filename = ''
+#     
+#         if files_in_q:
+#     
+#             # Search for nc file in Q dir and process
+#             for filename in files_in_q:
+#     
+#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+#     
+#                     try:
+#                         self.m.stream_file(self.job_q_dir + filename)
+#                     except:
+#                         print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
 # ----------------------------------
         
 # Questions: where does this object need to go? Where do we put it/keep it?
