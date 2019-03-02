@@ -392,9 +392,10 @@ class LobbyScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
  
-        
+# FLAG
     def on_enter(self):
-        self.m.set_led_blue()
+        if not sys.platform == "win32":
+            self.m.set_led_blue()
  
 
     def quit_to_home(self):

@@ -32,12 +32,15 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
+
 class SerialConnection(object):
 
     STATUS_INTERVAL = 0.1 # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None    # Serial comms object
     sm = None   # Screen manager object
+    grbl_out = []
+    job_gcode = []
 
     def __init__(self, machine, screen_manager):
 
@@ -49,11 +52,12 @@ class SerialConnection(object):
         print 'Destructor'
 
     def establish_connection(self, win_port):
-
+        print('start establish')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE)
+                print('self.s. done')
                 return True
             except:
                 return False
@@ -62,8 +66,9 @@ class SerialConnection(object):
                 filesForDevice = listdir('/dev/') # put all device files into list[]
                 for line in filesForDevice: # run through all files
 
+# FLAG: This if statement is only relevant in linux environment. 
                     # EITHER: USB Comms hardware
-                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+                    # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
@@ -85,6 +90,7 @@ class SerialConnection(object):
     def initialise_grbl(self):
 
         if self.is_connected():
+            print('initialise_grbl')
             self.write_command("\r\n\r\n", show_in_sys=False, show_in_console=False)    # Wakes grbl
             Clock.schedule_once(self.start_services, 3) # Delay for grbl to initialize
 
@@ -172,12 +178,15 @@ class SerialConnection(object):
         while True:
             try:
                 rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
+                self.grbl_out = rec_temp;
+                # print self.grbl_out
             except Exception as e:
                 log('serial.readline exception:\n' + str(e))
             #time.sleep(1)
             #print 'RX line length: ', len(rec_temp)
             if len(rec_temp):
                 #print 'RX line: ', rec_temp
+                # return rec_temp
                 #HACK send every line received to console
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if True:
@@ -206,7 +215,7 @@ class SerialConnection(object):
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: self.end_stream()
-
+            
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 
@@ -222,6 +231,7 @@ class SerialConnection(object):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
+    is_job_finished = False
 
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
@@ -231,68 +241,107 @@ class SerialConnection(object):
     stream_end_time = 0
     buffer_monitor_file = None
 
+    def run_job(self, job_object):
+        
+        self.is_job_finished = False
+        
+        # TAKE IN THE FILE
+        self.job_gcode = job_object
+        log('I am running: ')
+        print job_object
+        
+        # SET UP FOR BUFFER STUFFING ONLY AT PRESENT: 
+        # (if not initialised - come back to this one later w/ pausing functionality)
+        if self.initialise_job() and self.job_gcode:
+            log('Job starting...')
+            self.is_stream_lines_remaining = True
+            self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
+                                       
+        elif not self.job_gcode:
+            log('Could not start job: File empty')
+            
 
-    def stream_file(self, job_gcode):
+                    
+
+    def initialise_job(self):
         
-        print('streaming')
-        print(job_gcode)
-        
+        timeout = time.time() + 1  # CHECK THIS TIMEOUT - is it too long/too short?? 
+                
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()
-
+    
+        while True:
+            if (self.grbl_out == 'ok'): # WHEN OK RECEIVED FROM GRBL, RUN START JOB SEQUENCE
+                
+                # for the buffer stuffing style streaming
+                self.s.flushInput()
+        
+                # Reset counters & flags
+                self.l_count = 0
+                self.g_count = 0
+                self.c_line = []
+                self.stream_start_time = time.time();
+                return True
+                # break           
+            else:
+                if self.grbl_out.startswith('error') or time.time() > timeout:
+                    log('Job could not be initialised. OK never received from GRBL')
+                    return False
+                    # break
+        
         # Delay to make sure that the grbl-response ('ok') from z-move has been received before beginning to counting for grbl responses.
-        Clock.schedule_once(self._load_stream_file, 1)
+        # I do not think this does what you think it does?? 
+        # Clock.schedule_once(self._load_stream_file, 1)
 
-
-    def _load_stream_file(self, dt):
-
-        # for the buffer stuffing style streaming
-
-        self.is_stream_lines_remaining = True
-        self.s.flushInput()
-
-        # Reset counters & flags
-        self.l_count = 0
-        self.g_count = 0
-        self.c_line = []
-        self.stream_start_time = time.time();
-
-        # allow grbl_scanner() to start stuffing buffer
-        self.is_job_streaming = True
-
+#     def _load_stream_file(self, dt):
 
     # attempt to fill GRBLS's serial buffer, if there's room
     def stuff_buffer(self):
 
-        # This gets a cleaned up line from a machine file ???? 
-        line_to_go = self.get_next_line(job_gcode) # This can die
-
+# OLD:----------------------------------------------------------
+        line_to_go = self.get_next_line(self.job_gcode) 
+         
         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-
-        # if there's room in the serial buffer, send the line
+     
+            # if there's room in the serial buffer, send the line
         while len(line_to_go) + 1 <= serial_space:
             self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
             self.l_count += 1 # lines sent to grbl
             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
-
-            line_to_go = self.get_next_line(job_gcode)
+ 
+            line_to_go = self.get_next_line(self.job_gcode)
             if line_to_go == None:
                 self.is_stream_lines_remaining = False
                 break
-
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+# --------------------------------------------------------------
 
-# this can die
+# # This doesn't work - old worked better -------------------------------------------
+#         for line_to_go in self.job_gcode:
+# 
+#             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+#     
+#             # if there's room in the serial buffer, send the line
+#             if len(line_to_go) + 1 <= serial_space:
+#                 self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
+#                 self.l_count += 1 # lines sent to grbl
+#                 self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
+#     
+#                 serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+# 
+#         self.is_stream_lines_remaining = False
+# --------------------------------------------------------------------------
+
+# OLD -------------------------------------
     def get_next_line(self, job_gcode):
-
+ 
         line = None
         while True:
             if self.l_count >= len(job_gcode): #l_count defined & iterated outside 
                 break
-            # Refine GCode NB: THIS HAS BEEN STOLEN
             l_block = re.sub('\s|\(.*?\)', '', job_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
             # Drop undesirable lines
             if l_block.find('%') == -1 and l_block.find('M6') == -1:
@@ -300,8 +349,9 @@ class SerialConnection(object):
                 break;
             # Throw current line away, loop again
             self.l_count += 1
-
+ 
         return line
+# --------------------------------------------------------------------------------------
 
 
     # if 'ok' or 'error' rec'd from GRBL
@@ -311,6 +361,7 @@ class SerialConnection(object):
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
 
+# There is an intermittent issue here, and I do not understand it. 
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
             del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
@@ -344,6 +395,8 @@ class SerialConnection(object):
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
+        self.is_job_finished = True
+
 
 
     def cancel_stream(self):
@@ -609,9 +662,7 @@ class SerialConnection(object):
 # WRITE
 
     def write_command(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):
-
         # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -632,9 +683,9 @@ class SerialConnection(object):
         if self.s:
             try:
                 self.s.write(serialCommand + '\n')
+                
             except:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-
 
 
     def write_realtime(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):

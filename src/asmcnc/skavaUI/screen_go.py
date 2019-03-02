@@ -262,7 +262,7 @@ class GoScreen(Screen):
         if self.job_gcode:
           
             try:
-                self.m.s.stream_file(self.job_gcode)
+                self.m.s.run_job(self.job_gcode)
                 print('Streaming')
                 print(self.job_gcode)
             except:

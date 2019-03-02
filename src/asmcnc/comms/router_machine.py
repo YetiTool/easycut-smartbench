@@ -299,7 +299,7 @@ class RouterMachine(object):
         print 'test'
         
     def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))        
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
 
     def led_ring_off(self):
         # self.s.write_command('AL0', show_in_sys=False, show_in_console=False)

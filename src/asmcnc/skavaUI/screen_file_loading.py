@@ -134,8 +134,6 @@ class LoadingScreen(Screen):
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.current = 'home'
-        print('home')
-
  
     def objectifiled(self, job_file_path):
 
@@ -160,13 +158,20 @@ class LoadingScreen(Screen):
     
     
     def check_grbl_stream(self, objectifile):
-       self.m.s.write_command('$C')
-       self.m.s.stream_file(objectifile)
-       # Currently doesn't seem to be noticing if there's a code problem, but that might also be because the arduino is being dumb. 
-       # Where are log files being stored in stream_file?? 
-       # If it doesn't work, need to break it somehow.
-       self.m.s.write_command('$C')
-       return objectifile
+        check_objectifile = []
+        check_objectifile.append('$C')
+        check_objectifile.extend(objectifile)
+        # self.m.s.write_command('$C')
+        # check_objectifile.append('$C')
+#        self.m.s.stream_file(objectifile)
+#        # Currently doesn't seem to be noticing if there's a code problem, but that might also be because the arduino is being dumb. 
+#        # Where are log files being stored in stream_file?? 
+#        # If it doesn't work, need to break it somehow.
+
+        self.m.s.run_job(check_objectifile)
+        
+        # self.m.s.write_command('$C')
+        log('File has been checked!')
 
 # NO LONGER REQUIRED -------------------------------------------------------------------------------------  
 #     def clean_up_objectifile(self, objectifile):
