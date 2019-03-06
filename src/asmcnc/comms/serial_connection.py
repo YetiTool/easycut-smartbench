@@ -41,6 +41,8 @@ class SerialConnection(object):
     sm = None   # Screen manager object
     grbl_out = ""
     job_gcode = []
+    response_log = []
+    suppress_error_screens = False
 
     def __init__(self, machine, screen_manager):
 
@@ -158,7 +160,6 @@ class SerialConnection(object):
         self.write_realtime('?', show_in_sys=False, show_in_console=False)
 
 
-
 # SCANNER: listens for responses from Grbl
 
     # "Response" is a message from GRBL saying how a line of gcode went (either 'ok', or 'error') when it was loaded from the serial buffer into the line buffer
@@ -240,7 +241,29 @@ class SerialConnection(object):
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
-
+    
+    def check_job(self, job_object):
+        
+        log('Checking job...')
+        # Add $C both ends to toggle GRBL checking
+        object_to_check = ['$C'] + job_object + ['$C']
+        
+        # Set up error logging
+        self.suppress_error_screens = True
+        self.response_log = []
+        
+        print(len(object_to_check))
+        
+        # Start sequential stream
+        self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
+        
+        # Wait until job has been fully checked before returning:
+        while len(self.response_log) < len(job_object)+2:
+            continue
+        
+        # Return list of GRBL responses
+        return self.response_log
+        
     def run_job(self, job_object):
         
         self.is_job_finished = False
@@ -261,9 +284,7 @@ class SerialConnection(object):
             log('Could not start job: File empty')
             
         return
-            
-
-                    
+          
 
     def initialise_job(self):
         
@@ -297,18 +318,10 @@ class SerialConnection(object):
                     log('Job could not be initialised. OK never received from GRBL')
                     return False
                     # break
-    
-# OLD ---------------------------------------------------    
-        # Delay to make sure that the grbl-response ('ok') from z-move has been received before beginning to counting for grbl responses.
-        # I do not think this does what you think it does?? 
-        # Clock.schedule_once(self._load_stream_file, 1)
-
-#     def _load_stream_file(self, dt):
-# -------------------------------------------------------
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
-#       NEW: --------------------------------------------------------------
+
         while self.l_count < len(self.job_gcode):
             
             line_to_go = self.job_gcode[self.l_count]
@@ -323,44 +336,6 @@ class SerialConnection(object):
                 return
  
         self.is_stream_lines_remaining = False
-# --------------------------------------------------------------------------
-
-#       OLD:----------------------------------------------------------
-#         line_to_go = self.get_next_line(self.job_gcode) 
-#          
-#         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-#      
-#             # if there's room in the serial buffer, send the line
-#         while len(line_to_go) + 1 <= serial_space:
-#             self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
-#             self.l_count += 1 # lines sent to grbl
-#             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
-#  
-#             line_to_go = self.get_next_line(self.job_gcode)
-#             if line_to_go == None:
-#                 self.is_stream_lines_remaining = False
-#                 break
-#             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-            
-
-
-# OLD -------------------------------------
-#     def get_next_line(self, job_gcode):
-#  
-#         line = None
-#         while True:
-#             if self.l_count >= len(job_gcode): #l_count defined & iterated outside 
-#                 break
-#             l_block = re.sub('\s|\(.*?\)', '', job_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
-#             # Drop undesirable lines
-#             if l_block.find('%') == -1 and l_block.find('M6') == -1:
-#                 line = l_block
-#                 break;
-#             # Throw current line away, loop again
-#             self.l_count += 1
-#  
-#         return line
-# --------------------------------------------------------------------------------------
 
 
     # if 'ok' or 'error' rec'd from GRBL
@@ -369,7 +344,10 @@ class SerialConnection(object):
         # This is a special condition, used only at startup to set EEPROM settings
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
-
+            
+            if self.suppress_error_screens == True:
+                self.response_log.append(message)
+            
 # There is an intermittent issue here, and I do not understand it. ???
 # What was the intermittent issue???
         elif self.is_job_streaming:
@@ -378,10 +356,13 @@ class SerialConnection(object):
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
-            error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
-            self.sm.add_widget(error_screen)
-            # self.sm.get_screen('errorScreen').message = message
-            self.sm.current = 'errorScreen'
+            
+            if self.suppress_error_screens == False:
+                error_screen = screen_error_proto.ErrorScreenClass(name='errorScreen', screen_manager = self.sm, machine = self.m, errormsg = message)
+                self.sm.add_widget(error_screen)
+                # self.sm.get_screen('errorScreen').message = message
+                self.sm.current = 'errorScreen'
+
 
 
     # After streaming is completed
@@ -743,21 +724,23 @@ class SerialConnection(object):
           # EEPROM settings require special attention, due to writing of values
           # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
         # WARNING: this function is not blocking, and as of yet there is no way to indicate it has finished
-
+        
         log("start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
 
+        self._send_next_sequential_stream()
 
-        if self._sequential_stream_buffer:
-            self.is_sequential_streaming = True
-            self.write_command(self._sequential_stream_buffer[0])
-            del self._sequential_stream_buffer[0]
-        else:
-            self.is_sequential_streaming = False
-            if self._reset_grbl_after_stream:
-                # Soft-reset. This forces the need to home when the controller starts up
-                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) 
+# Think this is exactly the same as contents of next function? 
+#         if self._sequential_stream_buffer:
+#             self.is_sequential_streaming = True
+#             self.write_command(self._sequential_stream_buffer[0])
+#             del self._sequential_stream_buffer[0]
+#         else:
+#             self.is_sequential_streaming = False
+#             if self._reset_grbl_after_stream:
+#                 # Soft-reset. This forces the need to home when the controller starts up
+#                 self.write_realtime("\x18", show_in_sys=True, show_in_console=False) 
                 
     def _send_next_sequential_stream(self):
         log("_send_next_sequential_stream")
