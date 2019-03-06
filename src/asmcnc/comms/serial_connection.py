@@ -39,7 +39,7 @@ class SerialConnection(object):
 
     s = None    # Serial comms object
     sm = None   # Screen manager object
-    grbl_out = []
+    grbl_out = ""
     job_gcode = []
 
     def __init__(self, machine, screen_manager):
@@ -250,8 +250,8 @@ class SerialConnection(object):
         log('I am running: ')
         print job_object
         
-        # SET UP FOR BUFFER STUFFING ONLY AT PRESENT: 
-        # (if not initialised - come back to this one later w/ pausing functionality)
+        # SET UP FOR BUFFER STUFFING ONLY: 
+        ### (if not initialised - come back to this one later w/ pausing functionality)
         if self.initialise_job() and self.job_gcode:
             log('Job starting...')
             self.is_stream_lines_remaining = True
@@ -259,6 +259,8 @@ class SerialConnection(object):
                                        
         elif not self.job_gcode:
             log('Could not start job: File empty')
+            
+        return
             
 
                     
@@ -272,9 +274,13 @@ class SerialConnection(object):
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()
-    
+        
+        # When head moved out of the way, should get 'ok' come back from grbl. 
+        # Once this happens can continue with other instructions:  
+        print self.grbl_out
+        
         while True:
-            if (self.grbl_out == 'ok'): # WHEN OK RECEIVED FROM GRBL, RUN START JOB SEQUENCE
+            if (self.grbl_out == 'ok'): 
                 
                 # for the buffer stuffing style streaming
                 self.s.flushInput()
@@ -291,66 +297,69 @@ class SerialConnection(object):
                     log('Job could not be initialised. OK never received from GRBL')
                     return False
                     # break
-        
+    
+# OLD ---------------------------------------------------    
         # Delay to make sure that the grbl-response ('ok') from z-move has been received before beginning to counting for grbl responses.
         # I do not think this does what you think it does?? 
         # Clock.schedule_once(self._load_stream_file, 1)
 
 #     def _load_stream_file(self, dt):
+# -------------------------------------------------------
 
-    # attempt to fill GRBLS's serial buffer, if there's room
-    def stuff_buffer(self):
-
-# OLD:----------------------------------------------------------
-        line_to_go = self.get_next_line(self.job_gcode) 
-         
-        serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-     
-            # if there's room in the serial buffer, send the line
-        while len(line_to_go) + 1 <= serial_space:
-            self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
-            self.l_count += 1 # lines sent to grbl
-            self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
- 
-            line_to_go = self.get_next_line(self.job_gcode)
-            if line_to_go == None:
-                self.is_stream_lines_remaining = False
-                break
+    
+    def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
+#       NEW: --------------------------------------------------------------
+        while self.l_count < len(self.job_gcode):
+            
+            line_to_go = self.job_gcode[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-# --------------------------------------------------------------
-
-# # This doesn't work - old worked better -------------------------------------------
-#         for line_to_go in self.job_gcode:
-# 
-#             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-#     
-#             # if there's room in the serial buffer, send the line
-#             if len(line_to_go) + 1 <= serial_space:
-#                 self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
-#                 self.l_count += 1 # lines sent to grbl
-#                 self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
-#     
-#                 serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
-# 
-#         self.is_stream_lines_remaining = False
+    
+            # if there's room in the serial buffer, send the line
+            if len(line_to_go) + 1 <= serial_space:
+                self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
+                self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
+                self.l_count += 1 # lines sent to grbl           
+            else:
+                return
+ 
+        self.is_stream_lines_remaining = False
 # --------------------------------------------------------------------------
 
+#       OLD:----------------------------------------------------------
+#         line_to_go = self.get_next_line(self.job_gcode) 
+#          
+#         serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+#      
+#             # if there's room in the serial buffer, send the line
+#         while len(line_to_go) + 1 <= serial_space:
+#             self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
+#             self.l_count += 1 # lines sent to grbl
+#             self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
+#  
+#             line_to_go = self.get_next_line(self.job_gcode)
+#             if line_to_go == None:
+#                 self.is_stream_lines_remaining = False
+#                 break
+#             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
+            
+
+
 # OLD -------------------------------------
-    def get_next_line(self, job_gcode):
- 
-        line = None
-        while True:
-            if self.l_count >= len(job_gcode): #l_count defined & iterated outside 
-                break
-            l_block = re.sub('\s|\(.*?\)', '', job_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
-            # Drop undesirable lines
-            if l_block.find('%') == -1 and l_block.find('M6') == -1:
-                line = l_block
-                break;
-            # Throw current line away, loop again
-            self.l_count += 1
- 
-        return line
+#     def get_next_line(self, job_gcode):
+#  
+#         line = None
+#         while True:
+#             if self.l_count >= len(job_gcode): #l_count defined & iterated outside 
+#                 break
+#             l_block = re.sub('\s|\(.*?\)', '', job_gcode[self.l_count]).upper() # Strip comments/spaces/new line and capitalize
+#             # Drop undesirable lines
+#             if l_block.find('%') == -1 and l_block.find('M6') == -1:
+#                 line = l_block
+#                 break;
+#             # Throw current line away, loop again
+#             self.l_count += 1
+#  
+#         return line
 # --------------------------------------------------------------------------------------
 
 
@@ -361,7 +370,8 @@ class SerialConnection(object):
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
 
-# There is an intermittent issue here, and I do not understand it. 
+# There is an intermittent issue here, and I do not understand it. ???
+# What was the intermittent issue???
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
             del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
@@ -746,8 +756,9 @@ class SerialConnection(object):
         else:
             self.is_sequential_streaming = False
             if self._reset_grbl_after_stream:
-                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
-
+                # Soft-reset. This forces the need to home when the controller starts up
+                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) 
+                
     def _send_next_sequential_stream(self):
         log("_send_next_sequential_stream")
         if self._sequential_stream_buffer:

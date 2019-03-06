@@ -126,7 +126,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)
-        self.check_grbl_stream(objectifile)
+        # self.check_grbl_stream(objectifile)
         self.job_gcode = objectifile    
      # Instead pass file back to home:
         self.quit_to_home()
@@ -158,9 +158,9 @@ class LoadingScreen(Screen):
     
     
     def check_grbl_stream(self, objectifile):
-        check_objectifile = []
-        check_objectifile.append('$C')
-        check_objectifile.extend(objectifile)
+        # check_objectifile = []
+        # check_objectifile.append('$C')
+        # check_objectifile.extend(objectifile)
         # self.m.s.write_command('$C')
         # check_objectifile.append('$C')
 #        self.m.s.stream_file(objectifile)
@@ -168,7 +168,7 @@ class LoadingScreen(Screen):
 #        # Where are log files being stored in stream_file?? 
 #        # If it doesn't work, need to break it somehow.
 
-        self.m.s.run_job(check_objectifile)
+        self.m.s.run_job(objectifile)
         
         # self.m.s.write_command('$C')
         log('File has been checked!')
