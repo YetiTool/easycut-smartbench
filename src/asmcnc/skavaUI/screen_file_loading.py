@@ -9,8 +9,10 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
+from kivy.uix.progressbar import ProgressBar
 from __builtin__ import file
 from kivy.clock import Clock
+
 
 import sys, os
 from os.path import expanduser
@@ -30,6 +32,7 @@ Builder.load_string("""
 
     load_button:load_button
 
+
     canvas:
         Color: 
             rgba: hex('#0d47a1')
@@ -46,37 +49,32 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            spacing: 20
+            spacing: 10
              
             Label:
                 size_hint_y: 1
                 font_size: '40sp'
-                text: '[b]Loading File...[/b]'
+                text: root.job_loading_loaded
                 markup: True
  
+            Label:
+                text_size: self.size
+                font_size: '15sp'
+                halign: 'center'
+                valign: 'center'
+                text: root.loading_file_name
+                
             Label:
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'Something about the file loading; file-name maybe'
-                
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                text: 'ENSURE THAT THE MACHINE IS CLEAR.'
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'top'
-                text: 'More text'
-                
+                text: 'We recommend error-checking your job before it goes to the machine.\\nWould you like us to check your job now?'
+            
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 130, 0
+                padding: 10, 0
+                spacing: 50
             
                 Button:
                     size_hint_y:0.9
@@ -85,10 +83,9 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     disabled: False
-                    background_color: hex('#a80000FF')
+                    background_color: hex('#0d47a1')
 #                    on_release: 
                         #root.load_file()
-
                         
                     BoxLayout:
                         padding: 5
@@ -97,8 +94,29 @@ Builder.load_string("""
                         
                         Label:
                             #size_hint_y: 1
-                            font_size: '20sp'
-                            text: 'Load File'
+                            font_size: '18sp'
+                            text: 'Yes please, check my file for errors'
+                        
+                Button:
+                    size_hint_y:0.9
+                    id: load_button
+                    size: self.texture_size
+                    valign: 'top'
+                    halign: 'center'
+                    disabled: False
+                    background_color: hex('#0d47a1')
+                    on_release: 
+                        root.quit_to_home()
+
+                    BoxLayout:
+                        padding: 5
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        
+                        Label:
+                            #size_hint_y: 1
+                            font_size: '18sp'
+                            text: 'No thanks, quit to home'
                             
 """)
 
@@ -111,7 +129,12 @@ def log(message):
 
 class LoadingScreen(Screen):  
           
-# Right lets get this working first and then just shove everything in the File Chooser probably      
+# Right lets get this working first and then just shove everything in the File Chooser probably   
+    load_value = NumericProperty()
+    loading_file_name = StringProperty()
+    job_loading_loaded = StringProperty()
+    
+       
 
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -119,17 +142,26 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
         self.s = serial_connection.SerialConnection(self, self.sm)
-        loading_file_name=[]
+
         
     def on_enter(self):    
                
+        self.job_loading_loaded = '[b]Loading Job...[/b]'
+        self.load_value = 0
+        
         # CAD file processing sequence
         self.job_gcode = []
-        objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)
+        objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        self.job_loading_loaded = '[b]Job Loaded[/b]'
+        
+        # Take this out and moooooveee
         self.check_grbl_stream(objectifile)
+        self.load_value = 3
+        
         self.job_gcode = objectifile    
+        self.load_value = 4
      # Instead pass file back to home:
-        self.quit_to_home()
+        # self.quit_to_home()
 
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
@@ -142,7 +174,7 @@ class LoadingScreen(Screen):
         preloaded_job_gcode = []
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
-        
+        self.load_value = 1
         # clean up code as it's copied into the object
         for line in job_file:
             # Strip comments/spaces/new line and capitalize:
@@ -152,21 +184,13 @@ class LoadingScreen(Screen):
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
-        
+        self.load_value = 2
+
         log('< load_job_file')
         return preloaded_job_gcode        # a.k.a. objectifile
     
     
     def check_grbl_stream(self, objectifile):
-        # check_objectifile = []
-        # check_objectifile.append('$C')
-        # check_objectifile.extend(objectifile)
-        # self.m.s.write_command('$C')
-        # check_objectifile.append('$C')
-#        self.m.s.stream_file(objectifile)
-#        # Currently doesn't seem to be noticing if there's a code problem, but that might also be because the arduino is being dumb. 
-#        # Where are log files being stored in stream_file?? 
-#        # If it doesn't work, need to break it somehow.
 
         error_log = self.m.s.check_job(objectifile)
         
@@ -279,3 +303,15 @@ class LoadingScreen(Screen):
 # Possible: 
 #    - Global persistent object that is used instead.
 #    - Write to new jobQ file that's all cleaned up and ready to go. << Gonna do this for now.
+
+
+#--------------------------
+                
+#             ProgressBar:
+#                 id: PB
+#                 max: 5
+#                 value: root.load_value
+                
+#             BoxLayout:
+#                 orientation: 'horizontal'
+#                 padding: 0, 0
