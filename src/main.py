@@ -32,6 +32,7 @@ from asmcnc.skavaUI import screen_template
 from asmcnc.skavaUI import screen_lobby
 from asmcnc.skavaUI import screen_vj_polygon
 from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import screen_check_job
 
 
 Cmport = 'COM3'
@@ -58,7 +59,7 @@ class SkavaUI(App):
         template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
         vj_polygon_screen = screen_vj_polygon.ScreenVJPolygon(name='vj_polygon', screen_manager = sm)
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
-        
+        checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
            
         
         # add the screens to screen manager
@@ -70,6 +71,7 @@ class SkavaUI(App):
         sm.add_widget(template_screen)
         sm.add_widget(vj_polygon_screen)
         sm.add_widget(loading_screen)
+        sm.add_widget(checking_screen)
 
 
         # set screen to start on

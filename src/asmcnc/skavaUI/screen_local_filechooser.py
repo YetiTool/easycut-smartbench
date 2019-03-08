@@ -2,6 +2,8 @@
 Created on 19 Aug 2017
 
 @author: Ed
+
+Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 '''
 # config
 
@@ -190,7 +192,6 @@ Builder.load_string("""
                 id: load_button
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
                 on_release: 
                     root.go_to_loading_screen(filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
@@ -322,10 +323,9 @@ class LocalFileChooser(Screen):
     def go_to_loading_screen(self, file_selection):
         
 # NEW ------------------------------------------------------ DONE
-        # Pass the selected file to the new screen wait no
+        # Pass the selected file to the new screen
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
-        # does it break here? is this the thing that is not allowed?
         
 # ---------------------------------------------------------- DONE
         

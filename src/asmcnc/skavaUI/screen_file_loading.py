@@ -2,7 +2,13 @@
 Created on 25 Feb 2019
 
 @author: Letty
+
+This screen does three things: 
+- Reads a file from filechooser into an object passed throughout easycut.
+- Prevents the user from clicking on things while a file is loading or being checked. 
+- Asks the user to check their file before sending it to the machine
 '''
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -21,8 +27,7 @@ from datetime import datetime
 import re
 
 from asmcnc.comms import serial_connection
-from asmcnc.comms import usb_storage
-#from asmcnc.skavaUI import screen_home
+# from asmcnc.comms import usb_storage
 
 
 # Kivy UI builder:
@@ -84,8 +89,8 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#0d47a1')
-#                    on_release: 
-                        #root.load_file()
+                    on_release: 
+                        root.go_to_check_job()
                         
                     BoxLayout:
                         padding: 5
@@ -95,7 +100,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'Yes please, check my file for errors'
+                            text: 'Yes please, check my job for errors'
                         
                 Button:
                     size_hint_y:0.9
@@ -128,14 +133,12 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class LoadingScreen(Screen):  
-          
-# Right lets get this working first and then just shove everything in the File Chooser probably   
+ 
     load_value = NumericProperty()
     loading_file_name = StringProperty()
     job_loading_loaded = StringProperty()
+    objectifile = None
     
-       
-
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -151,14 +154,14 @@ class LoadingScreen(Screen):
         
         # CAD file processing sequence
         self.job_gcode = []
-        objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        self.objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
         self.job_loading_loaded = '[b]Job Loaded[/b]'
         
         # Take this out and moooooveee
-        self.check_grbl_stream(objectifile)
+        # self.check_grbl_stream(self.objectifile)
         self.load_value = 3
         
-        self.job_gcode = objectifile    
+        self.job_gcode = self.objectifile    
         self.load_value = 4
      # Instead pass file back to home:
         # self.quit_to_home()
@@ -166,7 +169,12 @@ class LoadingScreen(Screen):
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.current = 'home'
- 
+        
+    def go_to_check_job(self):
+        self.sm.get_screen('check_job').checking_file_name = self.loading_file_name
+        self.sm.get_screen('check_job').job_gcode = self.objectifile
+        self.sm.current = 'check_job'
+        
     def objectifiled(self, job_file_path):
 
         log('> load_job_file')
@@ -192,18 +200,22 @@ class LoadingScreen(Screen):
     
     def check_grbl_stream(self, objectifile):
 
-        error_log = self.m.s.check_job(objectifile)
-        
-        # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
-        del error_log[0]
-        del error_log[(len(error_log)-1)]
-        
-        # If 'error' is found in the error log, show the error log on screen. 
-        if any('error' in listitem for listitem in error_log):
-            print('ERROR FOUND IN G-CODE CHECK')
-
-        # self.m.s.write_command('$C')
-        log('File has been checked!')
+        if self.m.is_connected():
+            error_log = self.m.s.check_job(objectifile)
+            
+            # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
+            del error_log[0]
+            del error_log[(len(error_log)-1)]
+            
+            # If 'error' is found in the error log, show the error log on screen. 
+            if any('error' in listitem for listitem in error_log):
+                print('ERROR FOUND IN G-CODE CHECK')
+    
+            # self.m.s.write_command('$C')
+            log('File has been checked!')
+            
+        else:
+            log('Cannot check file: no serial connection. Please ensure your machine is connected, and re-load the file.')
 
 # NO LONGER REQUIRED -------------------------------------------------------------------------------------  
 #     def clean_up_objectifile(self, objectifile):
@@ -226,7 +238,7 @@ class LoadingScreen(Screen):
 #         new_file.close()
 #         return objectifile  
    
-        
+# THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
 #     def write_file_to_JobQ(self, objectifile):
 #         
 #         files_in_q = os.listdir(job_q_dir) # clean Q
@@ -241,6 +253,8 @@ class LoadingScreen(Screen):
 #             new_file.write('\n')
 #         new_file.close()
 # 
+
+#-----------------------------------------------------------------------------------
 #         # Move over the preview image (??)
 # #         if self.preview_image_path:
 # #             if os.path.isfile(self.preview_image_path):

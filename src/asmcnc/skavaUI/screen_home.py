@@ -357,6 +357,8 @@ class HomeScreen(Screen):
 # 
 #         if not self.m.job_file_gcode: # I think it's saying if "empty", essentially
 #             self.file_data_label.text = "Loading job file, please wait..."
+
+# Still need to use the preview: 
 #             Clock.schedule_once(self.preview_job_file, 0.1) #all the loading happens in preview
 #-------------------------------------------------------------------------------------
 
@@ -380,7 +382,7 @@ class HomeScreen(Screen):
 
             # Search for nc file in Q dir and process
             
-            # HERE'S THE THING. Good grief what a mess. 
+
             for filename in files_in_q:
 
                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
@@ -447,18 +449,19 @@ class HomeScreen(Screen):
                 else:
                     self.file_data_label.text = 'Load a file...'
 # --------------------------------------------------------------------------
+# OLD:
+#     def load_job_file(self, job_file_path):
+# 
+#         log('> load_job_file')
+#         job_gcode = []
+#         job_file = open(job_file_path, 'r')
+#         for line in job_file:
+#             job_gcode.append(line.strip())
+#         job_file.close()
+#         log('< load_job_file')
+#         return job_gcode
 
-    def load_job_file(self, job_file_path):
-
-        log('> load_job_file')
-        job_gcode = []
-        job_file = open(job_file_path, 'r')
-        for line in job_file:
-            job_gcode.append(line.strip())
-        job_file.close()
-        log('< load_job_file')
-        return job_gcode
-
+# ------------------------------------------------------------------------------------
 
     def load_gcode_list(self, filename, gcode_mgr_list):
         log ('> get_non_modal_gcode thread')
