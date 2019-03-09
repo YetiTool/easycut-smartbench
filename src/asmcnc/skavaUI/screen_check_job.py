@@ -7,12 +7,15 @@ This screen checks the users job, and allows them to review any errors
 '''
 
 import kivy
+import docutils
+import pandas as pd
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
+from kivy.uix.scrollview import ScrollView
 from __builtin__ import file
 from kivy.clock import Clock
 
@@ -71,7 +74,7 @@ Builder.load_string("""
                 
             Label:
                 text_size: self.size
-                font_size: '20sp'
+                font_size: '17sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.check_outcome
@@ -81,26 +84,26 @@ Builder.load_string("""
                 padding: 10, 0
                 spacing: 50
             
-                Button:
-                    size_hint_y:0.9
-                    id: load_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_color: hex('#0d47a1')
-#                    on_release: 
-                        #root.load_file()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '18sp'
-                            text: 'Dummy button, ignore me for now :)'
+#                 Button:
+#                     size_hint_y:0.9
+#                     id: load_button
+#                     size: self.texture_size
+#                     valign: 'top'
+#                     halign: 'center'
+#                     disabled: False
+#                     background_color: hex('#0d47a1')
+# #                    on_release: 
+#                         #root.load_file()
+#                         
+#                     BoxLayout:
+#                         padding: 5
+#                         size: self.parent.size
+#                         pos: self.parent.pos
+#                         
+#                         Label:
+#                             #size_hint_y: 1
+#                             font_size: '18sp'
+#                             text: 'Dummy button, ignore me for now :)'
                         
                 Button:
                     size_hint_y:0.9
@@ -121,9 +124,20 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'Finish job set-up, quit to home'
+                            text: 'Finish'
                             
-                            
+        ScrollView:
+            size_hint: 0.8, 1
+#            size: 500, 320
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            do_scroll_x: True
+            do_scroll_y: True
+            
+            RstDocument:
+                size_hint: 2, 5
+                text: root.display_output
+                background_color: hex('#0d47a1')
+
         
                             
 """)
@@ -138,6 +152,8 @@ class CheckingScreen(Screen):
     checking_file_name = StringProperty()
     job_checking_checked = StringProperty()
     check_outcome = StringProperty()
+    display_output = StringProperty()
+    job_ok = False
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -146,10 +162,16 @@ class CheckingScreen(Screen):
         self.job_gcode=kwargs['job']
         self.s = serial_connection.SerialConnection(self, self.sm)
         
+        # Scrollable widget showing line : ok/error status
+        # self.error_log_container.addWidget()
+        
     def on_enter(self):
         self.job_checking_checked = '[b]Checking Job...[/b]'
         self.check_outcome = ' Looking for errors'
-        self.check_grbl_stream(self.job_gcode)
+        error_log = self.check_grbl_stream(self.job_gcode)
+        self.write_output(error_log)
+        if self.job_ok == False:
+            self.job_gcode = []
         self.job_checking_checked = '[b]Job Checked[/b]'
     
     def quit_to_home(self): 
@@ -167,14 +189,36 @@ class CheckingScreen(Screen):
             
             # If 'error' is found in the error log, show the error log on screen. 
             if any('error' in listitem for listitem in error_log):
-                self.check_outcome = 'ERROR FOUND IN G-CODE CHECK'
+                self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                job_ok = False
             else:
                 self.check_outcome = 'No errors found. You\'re good to go!'
+                self.job_ok = True
     
             # self.m.s.write_command('$C')
             log('File has been checked!')
+            
+            return error_log
             
         else:
             self.check_outcome = 'Cannot check file: no serial connection. Please ensure your machine is connected, and re-load the file.'
 
  
+    def write_output(self, error_log):   
+        self.display_output = '\n\n'.join('[color=#FFFFFF][b]%s[/b]..........\t%s[/color]' % t for t in zip(error_log, self.job_gcode))
+        
+#         tablist = ['\n']*len(error_log)
+#     
+#         maxlen = len(max(self.job_gcode, key=len))
+#         padded_gcode = [line.ljust(maxlen,'.') for line in self.job_gcode]
+#         
+# #         if  maxlen < 22:
+# #             padded_gcode = [line.ljust(maxlen,'.') for line in self.job_gcode]
+# #             
+# #         else: 
+# #             maxlen = 20
+# #             padded_gcode = [line.ljust(maxlen,'\t') for line in self.job_gcode]
+#         
+#         # df = (pd.DataFrame(zip(self.job_gcode, error_log, tablist), columns = ['','','']))
+#         # self.display_output = str(df.to_string())
+        

@@ -197,25 +197,25 @@ class LoadingScreen(Screen):
         log('< load_job_file')
         return preloaded_job_gcode        # a.k.a. objectifile
     
-    
-    def check_grbl_stream(self, objectifile):
-
-        if self.m.is_connected():
-            error_log = self.m.s.check_job(objectifile)
-            
-            # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
-            del error_log[0]
-            del error_log[(len(error_log)-1)]
-            
-            # If 'error' is found in the error log, show the error log on screen. 
-            if any('error' in listitem for listitem in error_log):
-                print('ERROR FOUND IN G-CODE CHECK')
-    
-            # self.m.s.write_command('$C')
-            log('File has been checked!')
-            
-        else:
-            log('Cannot check file: no serial connection. Please ensure your machine is connected, and re-load the file.')
+# MOVED TO SCREEN_CHECK_JOB--------------------------------------------------------------    
+#     def check_grbl_stream(self, objectifile):
+# 
+#         if self.m.is_connected():
+#             error_log = self.m.s.check_job(objectifile)
+#             
+#             # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
+#             del error_log[0]
+#             del error_log[(len(error_log)-1)]
+#             
+#             # If 'error' is found in the error log, show the error log on screen. 
+#             if any('error' in listitem for listitem in error_log):
+#                 print('ERROR FOUND IN G-CODE CHECK')
+#     
+#             # self.m.s.write_command('$C')
+#             log('File has been checked!')
+#             
+#         else:
+#             log('Cannot check file: no serial connection. Please ensure your machine is connected, and re-load the file.')
 
 # NO LONGER REQUIRED -------------------------------------------------------------------------------------  
 #     def clean_up_objectifile(self, objectifile):
