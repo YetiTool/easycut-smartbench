@@ -77,7 +77,7 @@ Builder.load_string("""
          
 """)
 
-import sys, os
+import sys, os, subprocess
 
 
 class DevOptions(Widget):
@@ -127,8 +127,7 @@ class DevOptions(Widget):
 
     # check path definition        
     def refresh_sw_version_label(self):
-        with open("./version/sw_version", 'r') as myfile:
-            data = myfile.read() 
+        data = subprocess.check_output(["git", "describe", "--always"]).strip()
         self.sw_version_label.text = data
     
     def get_sw_update(self):
