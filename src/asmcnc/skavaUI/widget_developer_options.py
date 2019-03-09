@@ -3,6 +3,8 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
+import sys, os, subprocess
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -75,8 +77,6 @@ Builder.load_string("""
             id: sw_version_label
 """)
 
-import sys, os, subprocess
-
 
 class DevOptions(Widget):
 
@@ -101,7 +101,6 @@ class DevOptions(Widget):
             print 'Virtual HW mode ON: switching soft limits, hard limts and homing cycle off'
             settings = ['$22=0','$20=0','$21=0']
             self.m.s.start_sequential_stream(settings)
-
 
     def reboot(self):
 
