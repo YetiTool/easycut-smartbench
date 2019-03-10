@@ -353,7 +353,7 @@ class HomeScreen(Screen):
 
 # Kill this function -----------------------------------------------------------------
     def on_enter(self): 
-         print(self.job_gcode)
+        print(self.job_gcode)
 # 
 #         if not self.m.job_file_gcode: # I think it's saying if "empty", essentially
 #             self.file_data_label.text = "Loading job file, please wait..."
@@ -367,7 +367,6 @@ class HomeScreen(Screen):
 
         #### Scan for files in Q, and update info panels
 
-        files_in_q = os.listdir(self.job_q_dir)
         filename = ''
 
         if files_in_q:

@@ -45,6 +45,7 @@ Builder.load_string("""
     grbl_serial_char_capacity:grbl_serial_char_capacity
     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
+    stop_start:stop_start
 
     BoxLayout:
         padding: 0
@@ -114,7 +115,9 @@ Builder.load_string("""
                                 id: file_data_label
                                 text: 'Data'
                             Button:
+                                id: stop_start
                                 size_hint_x: 1
+                                disabled: True
                                 background_color: hex('#F4433600')
                                 on_release:
                                     root.start_stop_button_press()
@@ -210,6 +213,7 @@ class GoScreen(Screen):
 
     test_property = 0
     btn_back = ObjectProperty()
+    no_job = True
 
 
     def __init__(self, **kwargs):
@@ -227,12 +231,23 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
-     #   self.job_gcode = self.sm.get_screen('home').job_gcode
+        # self.job_gcode = self.sm.get_screen('home').job_gcode       
+        
+    def on_enter(self, *args):
+        self.job_gcode = self.sm.get_screen('home').job_gcode
+        
+                        
+        if self.job_gcode:
+            print('Yo')
+            print self.no_job
+            self.no_job = False
+            print self.no_job
+            self.stop_start.disabled = False
 
     start_stop_button_press_counter = 0
 
     def start_stop_button_press(self):
-
+       
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
@@ -256,9 +271,7 @@ class GoScreen(Screen):
 
 
     def stream_job(self):
-        
-        self.job_gcode = self.sm.get_screen('home').job_gcode
-        
+                
         if self.job_gcode:
           
             try:

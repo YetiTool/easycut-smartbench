@@ -16,7 +16,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
-from __builtin__ import file
+from __builtin__ import file, False
 from kivy.clock import Clock
 
 
@@ -26,7 +26,6 @@ from shutil import copy
 from datetime import datetime
 import re
 
-from asmcnc.comms import serial_connection
 # from asmcnc.comms import usb_storage
 
 
@@ -35,7 +34,8 @@ Builder.load_string("""
 
 <LoadingScreen>:
 
-    load_button:load_button
+    check_button:check_button
+    home_button:home_button
 
 
     canvas:
@@ -83,11 +83,11 @@ Builder.load_string("""
             
                 Button:
                     size_hint_y:0.9
-                    id: load_button
+                    id: check_button
                     size: self.texture_size
                     valign: 'top'
                     halign: 'center'
-                    disabled: False
+                    disabled: True
                     background_color: hex('#0d47a1')
                     on_release: 
                         root.go_to_check_job()
@@ -104,11 +104,11 @@ Builder.load_string("""
                         
                 Button:
                     size_hint_y:0.9
-                    id: load_button
+                    id: home_button
                     size: self.texture_size
                     valign: 'top'
                     halign: 'center'
-                    disabled: False
+                    disabled: True
                     background_color: hex('#0d47a1')
                     on_release: 
                         root.quit_to_home()
@@ -144,8 +144,6 @@ class LoadingScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
-        self.s = serial_connection.SerialConnection(self, self.sm)
-
         
     def on_enter(self):    
                
@@ -154,25 +152,19 @@ class LoadingScreen(Screen):
         
         # CAD file processing sequence
         self.job_gcode = []
-        self.objectifile = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
         self.job_loading_loaded = '[b]Job Loaded[/b]'
-        
-        # Take this out and moooooveee
-        # self.check_grbl_stream(self.objectifile)
-        self.load_value = 3
-        
-        self.job_gcode = self.objectifile    
-        self.load_value = 4
-     # Instead pass file back to home:
-        # self.quit_to_home()
-
+        self.home_button.disabled = False
+        self.check_button.disabled = False
+    
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.current = 'home'
         
     def go_to_check_job(self):
         self.sm.get_screen('check_job').checking_file_name = self.loading_file_name
-        self.sm.get_screen('check_job').job_gcode = self.objectifile
+        self.sm.get_screen('check_job').job_gcode = self.job_gcode
+        self.sm.get_screen('home').job_gcode = []
         self.sm.current = 'check_job'
         
     def objectifiled(self, job_file_path):
@@ -196,47 +188,6 @@ class LoadingScreen(Screen):
 
         log('< load_job_file')
         return preloaded_job_gcode        # a.k.a. objectifile
-    
-# MOVED TO SCREEN_CHECK_JOB--------------------------------------------------------------    
-#     def check_grbl_stream(self, objectifile):
-# 
-#         if self.m.is_connected():
-#             error_log = self.m.s.check_job(objectifile)
-#             
-#             # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
-#             del error_log[0]
-#             del error_log[(len(error_log)-1)]
-#             
-#             # If 'error' is found in the error log, show the error log on screen. 
-#             if any('error' in listitem for listitem in error_log):
-#                 print('ERROR FOUND IN G-CODE CHECK')
-#     
-#             # self.m.s.write_command('$C')
-#             log('File has been checked!')
-#             
-#         else:
-#             log('Cannot check file: no serial connection. Please ensure your machine is connected, and re-load the file.')
-
-# NO LONGER REQUIRED -------------------------------------------------------------------------------------  
-#     def clean_up_objectifile(self, objectifile):
-#         
-#         # write cleaned up GRBL to a new file
-#         new_file = open(job_q_dir+'LoadedGCode.nc','w')
-#         clean_objectifile = []
-#         
-#         for line in objectifile:
-#         # stolen from serial -----------------------
-# 
-#             # Refine GCode
-#             l_block = re.sub('\s|\(.*?\)', '', line.upper()) # Strip comments/spaces/new line and capitalize
-#             print(line)
-# 
-#             if l_block.find('%') == -1 and l_block.find('M6') == -1:  # Drop undesirable lines
-#                 new_file.write(l_block)
-#                 clean_objectifile.append(l_block)
-#          # ----------------------------------------
-#         new_file.close()
-#         return objectifile  
    
 # THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
 #     def write_file_to_JobQ(self, objectifile):
@@ -287,45 +238,4 @@ class LoadingScreen(Screen):
 # 
 #         log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
 #         return gcode_list
-#     
-#     
-# # OLD ----------------------------------
-#     
-#     def stream_file(self):
-# 
-#     #### Scan for files in Q, and update info panels
-# 
-#         files_in_q = os.listdir(self.job_q_dir)
-#         filename = ''
-#     
-#         if files_in_q:
-#     
-#             # Search for nc file in Q dir and process
-#             for filename in files_in_q:
-#     
-#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
-#     
-#                     try:
-#                         self.m.stream_file(self.job_q_dir + filename)
-#                     except:
-#                         print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
-# ----------------------------------
-        
-# Questions: where does this object need to go? Where do we put it/keep it?
-# A: At the moment we don't -> we just move the file and use that explicitly in jobQ I bet.
 
-# Possible: 
-#    - Global persistent object that is used instead.
-#    - Write to new jobQ file that's all cleaned up and ready to go. << Gonna do this for now.
-
-
-#--------------------------
-                
-#             ProgressBar:
-#                 id: PB
-#                 max: 5
-#                 value: root.load_value
-                
-#             BoxLayout:
-#                 orientation: 'horizontal'
-#                 padding: 0, 0
