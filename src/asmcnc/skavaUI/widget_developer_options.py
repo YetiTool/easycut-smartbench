@@ -22,7 +22,7 @@ Builder.load_string("""
 <DevOptions>:
 
     sw_version_label:sw_version_label
-
+    sw_branch_label:sw_branch_label
 
     GridLayout:
         size: self.parent.size
@@ -62,18 +62,19 @@ Builder.load_string("""
             on_state:
                 root.virtual_hw_mode = self.state
                 root.virtual_hw_toggled()
-        Label:
-            text: ''
-            font_size: 18
-            color: 0,0,0,1
-
         Button:
             text: 'Get SW update'
             on_release: root.get_sw_update()
         Label:
+            test: 'Repository Branch'
+            font_size: 18
+            color: 0,0,0,1
+            id: sw_branch_label
+        Label:
             text: 'SW VER'
             font_size: 18
             color: 0,0,0,1
+            id: sw_branch_label
             id: sw_version_label
 """)
 
@@ -88,6 +89,7 @@ class DevOptions(Widget):
         super(DevOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.refresh_sw_branch_label()
         self.refresh_sw_version_label()
 
     def virtual_hw_toggled(self):
@@ -122,7 +124,10 @@ class DevOptions(Widget):
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    # check path definition
+    def refresh_sw_branch_label(self):
+        data = subprocess.check_output(["git", "symbolic-ref", "--short", "HEAD"]).strip()
+        self.sw_branch_label.text = data
+
     def refresh_sw_version_label(self):
         data = subprocess.check_output(["git", "describe", "--always"]).strip()
         self.sw_version_label.text = data
