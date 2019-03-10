@@ -28,7 +28,6 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         cols: 2
-#         rows: 2
 
         Button:
             text: 'Reboot'
