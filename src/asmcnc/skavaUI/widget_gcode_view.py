@@ -11,7 +11,7 @@ from datetime import datetime
 from kivy.uix.widget import Widget
 from kivy.uix.stencilview import StencilView
 from kivy.uix.boxlayout import BoxLayout
-
+import re
 
 
 Builder.load_string("""
@@ -283,7 +283,23 @@ class GCodeView(Widget):
                 elif line.startswith('G19'): plane = 'G19' # 'yz'
 
             # Check every position for position information
-            for bit in line.split(' '):
+            # for bit in line.split(' '): # I suspect this no longer works because spaces were stripped out. 
+            
+            # Hackiest way ever to make up for the space loss...
+            dummyline = re.sub('Y', ' YY', line)
+            dummyline = re.sub('X', ' XX', dummyline)
+            dummyline = re.sub('Z', ' ZZ', dummyline)
+            dummyline = re.sub('F', ' FF', dummyline)
+            dummyline = re.sub('I', ' II', dummyline)
+            dummyline = re.sub('J', ' JJ', dummyline)
+            dummyline = re.sub('K', ' KK', dummyline)
+            dummyline = re.sub('G', ' GG', dummyline)
+                      
+            for bit in re.split('( X| Y| Z| F| I| J| K| G)', dummyline):
+
+                if bit == '':
+                    continue
+                
                 start = bit[0]
                 if start == 'X':
                     last_x = float(bit[1:])

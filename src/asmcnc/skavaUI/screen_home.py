@@ -359,94 +359,95 @@ class HomeScreen(Screen):
 #             self.file_data_label.text = "Loading job file, please wait..."
 
 # Still need to use the preview: 
-#             Clock.schedule_once(self.preview_job_file, 0.1) #all the loading happens in preview
+        if self.job_gcode:
+            Clock.schedule_once(self.preview_job_file, 0.1) #all the loading happens in preview
 #-------------------------------------------------------------------------------------
 
 # Work out exactly what this does: 
     def preview_job_file(self, dt):
 
-        #### Scan for files in Q, and update info panels
+#         #### Scan for files in Q, and update info panels
+# 
+#         filename = ''
+# 
+#         if files_in_q:
+# 
+#             # Search for preview image in Q dir and show
+#             for filename in files_in_q:
+#                 if filename.split('.')[1] == 'png':
+#                     self.home_image_preview.source = self.job_q_dir + filename
+#                     break
+#                 else:
+#                     self.home_image_preview.source = self.no_image_preview_path
+# 
+#             # Search for nc file in Q dir and process
+#             
+# 
+#             for filename in files_in_q:
+# 
+#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+# 
+# #                     if not job_file_gcode:
+# #                         job_file_gcode = self.load_job_file(self.job_q_dir + filename)
+# 
+#                     #t = threading.Thread(target=self.load_gcode_list, args=[filename])
+#                     #t.daemon = True
+# 
+#                     ### Threading load Gcode list
+# #                    manager = Manager()
+# #                    gcode_mgr_list = manager.list()
+# #                    t = Process(target=self.load_gcode_list, args=(filename, gcode_mgr_list))
+# #                    t.start()
+# #                    t.join()
+# #                    log ('Joined ' + str(len(gcode_mgr_list)))
+# 
+# #                    gcode_list = []
+# #                    for line in gcode_mgr_list:
+# #                        gcode_list.append(line)
+#                     ###
+# 
+#                     ### No threading
+# #                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
 
-        filename = ''
+        log('> get_non_modal_gcode')
+        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
+        log('< get_non_modal_gcode ' + str(len(gcode_list)))
+        ###
 
-        if files_in_q:
+        # Draw gcode preview
+        try:
+            log ('> draw_file_in_xy_plane')
+            self.gcode_preview_widget.draw_file_in_xy_plane(gcode_list)
+            log ('< draw_file_in_xy_plane')
+        except:
+            print 'Unable to draw gcode'
 
-            # Search for preview image in Q dir and show
-            for filename in files_in_q:
-                if filename.split('.')[1] == 'png':
-                    self.home_image_preview.source = self.job_q_dir + filename
-                    break
-                else:
-                    self.home_image_preview.source = self.no_image_preview_path
+        # TODO tidy this up, possibly make a job class to hold extents extents and the job data
+        self.job_box.range_x[0] = self.gcode_preview_widget.min_x
+        self.job_box.range_x[1] = self.gcode_preview_widget.max_x
+        self.job_box.range_y[0] = self.gcode_preview_widget.min_y
+        self.job_box.range_y[1] = self.gcode_preview_widget.max_y
+        self.job_box.range_z[0] = self.gcode_preview_widget.min_z
+        self.job_box.range_z[1] = self.gcode_preview_widget.max_z
 
-            # Search for nc file in Q dir and process
-            
+        self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
+                                     "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
+                                     "\nZ: " + str(self.job_box.range_z[0]))
 
-            for filename in files_in_q:
+        # Set label to include filename
+        # self.file_data_label.text = '[b]' + filename + '[/b]'
 
-                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+        # Search for tool listings and show
+        for line in self.job_gcode:
+            if line.find('(T') >= 0:
+                self.file_data_label.text += '\n' + line.strip()
+                break
 
-#                     if not job_file_gcode:
-#                         job_file_gcode = self.load_job_file(self.job_q_dir + filename)
+        log('DONE')
+        # break
 
-                    #t = threading.Thread(target=self.load_gcode_list, args=[filename])
-                    #t.daemon = True
-
-                    ### Threading load Gcode list
-#                    manager = Manager()
-#                    gcode_mgr_list = manager.list()
-#                    t = Process(target=self.load_gcode_list, args=(filename, gcode_mgr_list))
-#                    t.start()
-#                    t.join()
-#                    log ('Joined ' + str(len(gcode_mgr_list)))
-
-#                    gcode_list = []
-#                    for line in gcode_mgr_list:
-#                        gcode_list.append(line)
-                    ###
-
-                    ### No threading
-#                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
-
-                    log('> get_non_modal_gcode')
-                    gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
-                    log('< get_non_modal_gcode ' + str(len(gcode_list)))
-                    ###
-
-                    # Draw gcode preview
-                    try:
-                        log ('> draw_file_in_xy_plane')
-                        self.gcode_preview_widget.draw_file_in_xy_plane(gcode_list)
-                        log ('< draw_file_in_xy_plane')
-                    except:
-                        print 'Unable to draw gcode'
-
-                    # TODO tidy this up, possibly make a job class to hold extents extents and the job data
-                    self.job_box.range_x[0] = self.gcode_preview_widget.min_x
-                    self.job_box.range_x[1] = self.gcode_preview_widget.max_x
-                    self.job_box.range_y[0] = self.gcode_preview_widget.min_y
-                    self.job_box.range_y[1] = self.gcode_preview_widget.max_y
-                    self.job_box.range_z[0] = self.gcode_preview_widget.min_z
-                    self.job_box.range_z[1] = self.gcode_preview_widget.max_z
-
-                    self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
-                                                 "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
-                                                 "\nZ: " + str(self.job_box.range_z[0]))
-
-                    # Set label to include filename
-                    self.file_data_label.text = '[b]' + filename + '[/b]'
-
-                    # Search for tool listings and show
-                    for line in self.job_gcode:
-                        if line.find('(T') >= 0:
-                            self.file_data_label.text += '\n' + line.strip()
-                            break
-
-                    log('DONE')
-                    break
-
-                else:
-                    self.file_data_label.text = 'Load a file...'
+#                 else:
+#                     self.file_data_label.text = 'Load a file...'
 # --------------------------------------------------------------------------
 # OLD:
 #     def load_job_file(self, job_file_path):
