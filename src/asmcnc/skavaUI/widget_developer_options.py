@@ -124,11 +124,11 @@ class DevOptions(Widget):
         self.sm.current = 'lobby'
 
     def refresh_sw_branch_label(self):
-        data = subprocess.check_output(["git", "symbolic-ref", "--short", "HEAD"]).strip()
+        data = os.popen("git symbolic-ref --short HEAD").read()
         self.sw_branch_label.text = data
 
     def refresh_sw_version_label(self):
-        data = subprocess.check_output(["git", "describe", "--always"]).strip()
+        data = os.popen("git describe --always").read()
         self.sw_version_label.text = data
 
     def get_sw_update(self):
