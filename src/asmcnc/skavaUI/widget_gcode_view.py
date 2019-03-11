@@ -261,7 +261,21 @@ class GCodeView(Widget):
         feed_rate = 0
         line_number = 0
         log('> get_non_modal_gcode: process loop')
-        for line in job_file_gcode:
+        
+        for draw_line in job_file_gcode:
+
+            # Prevent any weird behaviour
+            line = draw_line
+            
+            # Hackiest way ever to make up for the space loss...
+            line = re.sub('Y', ' YY', line)
+            line = re.sub('X', ' XX', line)
+            line = re.sub('Z', ' ZZ', line)
+            line = re.sub('F', ' FF', line)
+            line = re.sub('I', ' II', line)
+            line = re.sub('J', ' JJ', line)
+            line = re.sub('K', ' KK', line)
+            line = re.sub('G', ' GG', line)
 
             line_number += 1
 
@@ -270,37 +284,45 @@ class GCodeView(Widget):
 
             if line.startswith('(') == True: continue   # skip any lines with comments
             elif len(line) <= 1: continue
-            elif line.startswith('G') == True:
-                # find move
-                if line.startswith('G2 '): move = 'G2' # CW arc
-                elif line.startswith('G3 '): move = 'G3' # CCW arc
-                elif line.startswith('G0 '): move = 'G0' # Fast move, straight
-                elif line.startswith('G1 '): move = 'G1' # Feed move, straight
-
-                # find plane
-                elif line.startswith('G17'): plane = 'G17' # 'xy'
-                elif line.startswith('G18'): plane = 'G18' # 'zx'
-                elif line.startswith('G19'): plane = 'G19' # 'yz'
-
-            # Check every position for position information
-            # for bit in line.split(' '): # I suspect this no longer works because spaces were stripped out. 
             
-            # Hackiest way ever to make up for the space loss...
-            dummyline = re.sub('Y', ' YY', line)
-            dummyline = re.sub('X', ' XX', dummyline)
-            dummyline = re.sub('Z', ' ZZ', dummyline)
-            dummyline = re.sub('F', ' FF', dummyline)
-            dummyline = re.sub('I', ' II', dummyline)
-            dummyline = re.sub('J', ' JJ', dummyline)
-            dummyline = re.sub('K', ' KK', dummyline)
-            dummyline = re.sub('G', ' GG', dummyline)
-                      
-            for bit in re.split('( X| Y| Z| F| I| J| K| G)', dummyline):
+### -------------------------------------------------------------------------------------  
+### ONLY WORKS IF G-CODE IS SPACED: 
+#          
+#             elif line.startswith('G') == True:
+#                 # find move
+#                 if line.startswith('G2 '): move = 'G2' # CW arc
+#                 elif line.startswith('G3 '): move = 'G3' # CCW arc
+#                 elif line.startswith('G0 '): move = 'G0' # Fast move, straight              
+#                 elif line.startswith('G1 '): move = 'G1' # Feed move, straight
+# 
+#                 # find plane
+#                 elif line.startswith('G17'): plane = 'G17' # 'xy'
+#                 elif line.startswith('G18'): plane = 'G18' # 'zx'
+#                 elif line.startswith('G19'): plane = 'G19' # 'yz'
 
+#             # Check every position for position information
+#             for bit in line.split(' '): # This no longer works because spaces were stripped out. 
+# ------------------------------------------------------------------------------------------------
+                                  
+            for idx, bit in enumerate(re.split('( X| Y| Z| F| I| J| K| G)', line)):
+                
                 if bit == '':
                     continue
                 
-                start = bit[0]
+                if idx == 2:
+                    
+                    if bit == 'G2': move = 'G2'
+                    elif bit == 'G3': move = 'G3' # CCW arc
+                    elif bit == 'G0': move = 'G0' # Fast move, straight              
+                    elif bit == 'G1': move = 'G1' # Feed move, straight
+
+                    # find plane
+                    elif bit == 'G17': plane = 'G17' # 'xy'
+                    elif bit == 'G18': plane = 'G18' # 'zx'
+                    elif bit == 'G19': plane = 'G19' # 'yz'  
+                    
+                start = bit[0]             
+
                 if start == 'X':
                     last_x = float(bit[1:])
                     if last_x > self.max_x: self.max_x = last_x

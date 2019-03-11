@@ -246,13 +246,15 @@ Builder.load_string("""
                                             allow_stretch: True
 
                                 Label:
+                                    id: file_data_label
                                     size_hint_x: 4
+                                    text_size: self.size
                                     color: 0,0,0,1
                                     markup: True
                                     text: 'Load a file...'
-                                    halign: 'left'
-                                    id: file_data_label
-                                    text: 'Data'
+                                    halign: 'center'
+                                    valign: 'middle'
+                                    # text: 'Data'
 
 
                             BoxLayout:
@@ -309,7 +311,7 @@ class HomeScreen(Screen):
 
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
-
+    job_filename = ''
 
     def __init__(self, **kwargs):
 
@@ -353,19 +355,21 @@ class HomeScreen(Screen):
 
 # Kill this function -----------------------------------------------------------------
     def on_enter(self): 
+        print('Job loaded:')
         print(self.job_gcode)
-# 
-#         if not self.m.job_file_gcode: # I think it's saying if "empty", essentially
-#             self.file_data_label.text = "Loading job file, please wait..."
 
-# Still need to use the preview: 
-        if self.job_gcode:
-            Clock.schedule_once(self.preview_job_file, 0.1) #all the loading happens in preview
-#-------------------------------------------------------------------------------------
-
-# Work out exactly what this does: 
+        # File label at the top
+        if self.job_gcode != []:
+            self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
+        else:
+            self.file_data_label.text = '[b]Load a file...[/b]'
+            self.job_filename = ''
+        
+        # Preview file
+        Clock.schedule_once(self.preview_job_file, 0.1)
+ 
     def preview_job_file(self, dt):
-
+# OLD ------------------------------------------------------------------------------
 #         #### Scan for files in Q, and update info panels
 # 
 #         filename = ''
@@ -408,7 +412,9 @@ class HomeScreen(Screen):
 # 
 #                     ### No threading
 # #                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
-
+# -------------------------------------------------------------------------------------------------
+        
+        
         log('> get_non_modal_gcode')
         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
         log('< get_non_modal_gcode ' + str(len(gcode_list)))
@@ -434,9 +440,6 @@ class HomeScreen(Screen):
                                      "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
                                      "\nZ: " + str(self.job_box.range_z[0]))
 
-        # Set label to include filename
-        # self.file_data_label.text = '[b]' + filename + '[/b]'
-
         # Search for tool listings and show
         for line in self.job_gcode:
             if line.find('(T') >= 0:
@@ -446,8 +449,6 @@ class HomeScreen(Screen):
         log('DONE')
         # break
 
-#                 else:
-#                     self.file_data_label.text = 'Load a file...'
 # --------------------------------------------------------------------------
 # OLD:
 #     def load_job_file(self, job_file_path):
@@ -462,20 +463,21 @@ class HomeScreen(Screen):
 #         return job_gcode
 
 # ------------------------------------------------------------------------------------
+# USED IN THREADING SECTION: 
 
-    def load_gcode_list(self, filename, gcode_mgr_list):
-        log ('> get_non_modal_gcode thread')
-        #time.sleep(2)
-        #for x in range(10000000):
-        #    x = x + 1
-            #if x % 10000 == 0:
-            #    sleep(0.0001)
-        #log ('counted')
-
-        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
-
-        for line in gcode_list:
-            gcode_mgr_list.append(line)
-
-        log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
-        return gcode_list
+#     def load_gcode_list(self, filename, gcode_mgr_list):
+#         log ('> get_non_modal_gcode thread')
+#         #time.sleep(2)
+#         #for x in range(10000000):
+#         #    x = x + 1
+#             #if x % 10000 == 0:
+#             #    sleep(0.0001)
+#         #log ('counted')
+# 
+#         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
+# 
+#         for line in gcode_list:
+#             gcode_mgr_list.append(line)
+# 
+#         log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
+#         return gcode_list

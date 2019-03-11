@@ -197,6 +197,7 @@ class CheckingScreen(Screen):
     
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode
+        self.sm.get_screen('home').job_filename = self.checking_file_name
         self.sm.current = 'home'
     
         

@@ -237,12 +237,15 @@ class GoScreen(Screen):
         self.job_gcode = self.sm.get_screen('home').job_gcode
         
                         
-        if self.job_gcode:
+        if self.job_gcode != []:
             print('Yo')
             print self.no_job
             self.no_job = False
             print self.no_job
             self.stop_start.disabled = False
+            
+        else:
+            self.stop_start.disabled = True
 
     start_stop_button_press_counter = 0
 

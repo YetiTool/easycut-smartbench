@@ -64,10 +64,17 @@ Builder.load_string("""
  
             Label:
                 text_size: self.size
-                font_size: '15sp'
+                font_size: '16sp'
                 halign: 'center'
-                valign: 'center'
+                valign: 'bottom'
                 text: root.loading_file_name
+                
+            Label:
+                text_size: self.size
+                font_size: '22sp'
+                halign: 'center'
+                valign: 'bottom'
+                text: 'WARNING:'
                 
             Label:
                 text_size: self.size
@@ -159,6 +166,7 @@ class LoadingScreen(Screen):
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
+        self.sm.get_screen('home').job_filename = self.loading_file_name
         self.sm.current = 'home'
         
     def go_to_check_job(self):
@@ -187,7 +195,7 @@ class LoadingScreen(Screen):
         self.load_value = 2
 
         log('< load_job_file')
-        return preloaded_job_gcode        # a.k.a. objectifile
+        return preloaded_job_gcode
    
 # THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
 #     def write_file_to_JobQ(self, objectifile):
@@ -203,39 +211,4 @@ class LoadingScreen(Screen):
 #             new_file.write(line)
 #             new_file.write('\n')
 #         new_file.close()
-# 
-
-#-----------------------------------------------------------------------------------
-#         # Move over the preview image (??)
-# #         if self.preview_image_path:
-# #             if os.path.isfile(self.preview_image_path):
-#                 
-#                 # ... to Q
-# #             copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
-#         
-# #     def preview(self, objectifile):
-# #         
-# #         # can I pass the preview back to the screen_home preview widget? 
-# #         log(' preview')
-# #         pass
-# 
-# 
-# # this might be necessary but I don't know what it does yet.
-#     def load_gcode_list(self, filename, gcode_mgr_list):
-#         
-#         log ('> get_non_modal_gcode thread')
-#         #time.sleep(2)
-#         #for x in range(10000000):
-#         #    x = x + 1
-#             #if x % 10000 == 0:
-#             #    sleep(0.0001)
-#         #log ('counted')
-# 
-#         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
-# 
-#         for line in gcode_list:
-#             gcode_mgr_list.append(line)
-# 
-#         log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
-#         return gcode_list
 
