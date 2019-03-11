@@ -3,7 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import sys, os, subprocess
+import sys, os
 
 import kivy
 from kivy.lang import Builder
