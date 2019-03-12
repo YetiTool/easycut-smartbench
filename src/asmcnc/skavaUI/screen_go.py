@@ -87,6 +87,7 @@ Builder.load_string("""
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
+                            padding: 10
                             Button:
                                 id: btn_back
                                 size_hint_x: 1
@@ -108,12 +109,14 @@ Builder.load_string("""
                                         allow_stretch: True
                             Label:
                                 size_hint_x: 5
+                                text_size: self.size
                                 color: 0,0,0,1
                                 markup: True
                                 text: 'Load a file...'
-                                halign: 'left'
+                                halign: 'center'
+                                valign: 'middle'
                                 id: file_data_label
-                                text: 'Data'
+                                text: root.job_filename
                             Button:
                                 id: stop_start
                                 size_hint_x: 1
@@ -214,7 +217,7 @@ class GoScreen(Screen):
     test_property = 0
     btn_back = ObjectProperty()
     no_job = True
-
+    job_filename = StringProperty()
 
     def __init__(self, **kwargs):
 
@@ -235,7 +238,7 @@ class GoScreen(Screen):
         
     def on_enter(self, *args):
         self.job_gcode = self.sm.get_screen('home').job_gcode
-        
+        self.job_filename = self.sm.get_screen('home').job_filename
                         
         if self.job_gcode != []:
             print('Yo')
