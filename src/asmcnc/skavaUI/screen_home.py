@@ -361,12 +361,14 @@ class HomeScreen(Screen):
         # File label at the top
         if self.job_gcode != []:
             self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
+            # Preview file
+            Clock.schedule_once(self.preview_job_file, 0.1)
+            
         else:
             self.file_data_label.text = '[b]Load a file...[/b]'
             self.job_filename = ''
         
-        # Preview file
-        Clock.schedule_once(self.preview_job_file, 0.1)
+
  
     def preview_job_file(self, dt):
 # OLD ------------------------------------------------------------------------------
