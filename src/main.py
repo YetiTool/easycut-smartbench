@@ -23,7 +23,7 @@ from kivy.core.window import Window
 from asmcnc.comms import router_machine 
 # NB: router_machine imports serial_connection
 
-from asmcnc.skavaUI import screen_inital, screen_help
+from asmcnc.skavaUI import screen_initial, screen_help
 from asmcnc.skavaUI import screen_home
 from asmcnc.skavaUI import screen_local_filechooser
 from asmcnc.skavaUI import screen_usb_filechooser

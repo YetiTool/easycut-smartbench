@@ -3,6 +3,8 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
+import sys, os
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -20,13 +22,12 @@ Builder.load_string("""
 <DevOptions>:
 
     sw_version_label:sw_version_label
-
+    sw_branch_label:sw_branch_label
 
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
         cols: 2
-#         rows: 2
 
         Button:
             text: 'Reboot'
@@ -51,33 +52,30 @@ Builder.load_string("""
         ToggleButton:
             state: root.buffer_log_mode
             text: 'Buffer Log'
-            on_state: 
-                root.buffer_log_mode = self.state 
+            on_state:
+                root.buffer_log_mode = self.state
                 print root.buffer_log_mode
         ToggleButton:
             state: root.virtual_hw_mode
             text: 'Virtual HW'
-            on_state: 
-                root.virtual_hw_mode = self.state 
+            on_state:
+                root.virtual_hw_mode = self.state
                 root.virtual_hw_toggled()
-        Label:
-            text: ''
-            font_size: 18
-            color: 0,0,0,1
-
         Button:
             text: 'Get SW update'
             on_release: root.get_sw_update()
         Label:
+            test: 'Repository Branch'
+            font_size: 18
+            color: 0,0,0,1
+            id: sw_branch_label
+        Label:
             text: 'SW VER'
             font_size: 18
             color: 0,0,0,1
+            id: sw_branch_label
             id: sw_version_label
-          
-         
 """)
-
-import sys, os
 
 
 class DevOptions(Widget):
@@ -86,10 +84,11 @@ class DevOptions(Widget):
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
 
     def __init__(self, **kwargs):
-    
+
         super(DevOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.refresh_sw_branch_label()
         self.refresh_sw_version_label()
 
     def virtual_hw_toggled(self):
@@ -104,14 +103,13 @@ class DevOptions(Widget):
             settings = ['$22=0','$20=0','$21=0']
             self.m.s.start_sequential_stream(settings)
 
-    
     def reboot(self):
-        
-        if sys.platform != "win32": 
+
+        if sys.platform != "win32":
             sudoPassword = 'posys'
             command = 'sudo reboot'
             p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
-    
+
     def quit_to_console(self):
         print 'Bye!'
         sys.exit()
@@ -119,17 +117,19 @@ class DevOptions(Widget):
     def square_axes(self):
         self.m.is_squaring_XY_needed_after_homing = True
         self.m.home_all()
-        
+
     def return_to_lobby(self):
         #self.sm.transition = SlideTransition()
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    # check path definition        
+    def refresh_sw_branch_label(self):
+        data = os.popen("git symbolic-ref --short HEAD").read()
+        self.sw_branch_label.text = data
+
     def refresh_sw_version_label(self):
-        with open("./version/sw_version", 'r') as myfile:
-            data = myfile.read() 
+        data = os.popen("git describe --always").read()
         self.sw_version_label.text = data
-    
+
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull")
