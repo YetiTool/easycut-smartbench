@@ -5,6 +5,7 @@ Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino 
 '''
 
 from kivy.config import Config
+from __builtin__ import True
 
 # Set the Kivy "Clock" to tick at its fastest.
 # Clock usually used to establish consistent framerate for animations, but we need it to tick much faster (e.g. than 25fps) for serial refreshing
@@ -258,11 +259,29 @@ class SerialConnection(object):
         self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
         
         # Wait until job has been fully checked before returning:
+        
+        # Kill this while loop - Kivy won't like it. 
         while len(self.response_log) < len(job_object)+2:
-            continue
+           continue
+        
+#         # Replace with: 
+#         Clock.schedule_interval(partial(self.is_log_finished,job_object), 1/30)
         
         # Return list of GRBL responses
+        
+        print self.response_log
         return self.response_log
+    
+    def is_log_finished(self, job):
+        if len(self.response_log) < len(job)+1:
+            print('checking job...')
+            # Clock.schedule_once(self.is_log_finished(job))
+        else:
+            return False
+            print('job check complete')
+            print self.response_log
+        
+            return self.response_log
         
     def run_job(self, job_object):
         

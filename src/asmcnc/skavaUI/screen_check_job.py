@@ -176,12 +176,13 @@ class CheckingScreen(Screen):
             
             if self.m.state() == "Idle":
                 self.job_checking_checked = '[b]Checking Job...[/b]'
-                self.check_outcome = ' Looking for errors'
-                error_log = self.check_grbl_stream(self.job_gcode)
-                self.write_output(error_log)
-                if self.job_ok == False:
-                    self.job_gcode = []
-                self.job_checking_checked = '[b]Job Checked[/b]'
+                self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
+                Clock.schedule_once(self.get_error_log, 1.5)
+#                 error_log = self.check_grbl_stream(self.job_gcode)
+#                 self.write_output(error_log)
+#                 if self.job_ok == False:
+#                     self.job_gcode = []
+#                 self.job_checking_checked = '[b]Job Checked[/b]'
             else: 
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
@@ -195,6 +196,13 @@ class CheckingScreen(Screen):
         
         self.quit_button.disabled = False
     
+    def get_error_log(self, dt):
+        error_log = self.check_grbl_stream(self.job_gcode)
+        self.write_output(error_log)
+        if self.job_ok == False:
+            self.job_gcode = []
+        self.job_checking_checked = '[b]Job Checked[/b]'
+
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
