@@ -260,28 +260,13 @@ class SerialConnection(object):
         
         # Wait until job has been fully checked before returning:
         
-        # Kill this while loop - Kivy won't like it. 
+        # This while loop is safe as long as no screen building is happening at the same time. 
         while len(self.response_log) < len(job_object)+2:
            continue
         
-#         # Replace with: 
-#         Clock.schedule_interval(partial(self.is_log_finished,job_object), 1/30)
-        
         # Return list of GRBL responses
-        
-        print self.response_log
         return self.response_log
-    
-    def is_log_finished(self, job):
-        if len(self.response_log) < len(job)+1:
-            print('checking job...')
-            # Clock.schedule_once(self.is_log_finished(job))
-        else:
-            return False
-            print('job check complete')
-            print self.response_log
-        
-            return self.response_log
+
         
     def run_job(self, job_object):
         

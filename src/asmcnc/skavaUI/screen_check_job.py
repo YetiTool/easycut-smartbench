@@ -179,12 +179,10 @@ class CheckingScreen(Screen):
             if self.m.state() == "Idle":
                 self.job_checking_checked = '[b]Checking Job...[/b]'
                 self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
+                
+                # This clock gives kivy time to build the screen before the pi has to do any serious legwork
                 Clock.schedule_once(self.get_error_log, 1.5)
-#                 error_log = self.check_grbl_stream(self.job_gcode)
-#                 self.write_output(error_log)
-#                 if self.job_ok == False:
-#                     self.job_gcode = []
-#                 self.job_checking_checked = '[b]Job Checked[/b]'
+
             else: 
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
@@ -200,7 +198,7 @@ class CheckingScreen(Screen):
     
     def get_error_log(self, dt):
         error_log = self.check_grbl_stream(self.job_gcode)
-        self.write_output(error_log)
+        self.display_output = Clock.schedule_once(partial(self.write_output, error_log),1)
         if self.job_ok == False:
             self.job_gcode = []
         self.job_checking_checked = '[b]Job Checked[/b]'
@@ -249,9 +247,11 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         # Put everything into a giant string for the ReStructed Text object        
-        self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
+        output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
         '\n\n'.join(map(str,error_summary)) + \
         '\n\n[color=#FFFFFF]---------------------------------------------------\n\n[color=#FFFFFF]' \
         '[b]GRBL RESPONSE LOG[/b][/color]\n\n' + \
         ('\n\n'.join('[color=#FFFFFF]' + str(idx).rjust(3,'\t') + \
-        '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))        
+        '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
+        
+        return output       
