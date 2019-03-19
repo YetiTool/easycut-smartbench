@@ -174,6 +174,8 @@ class CheckingScreen(Screen):
 
         if self.m.is_connected():
             
+            self.display_output = ''
+            
             if self.m.state() == "Idle":
                 self.job_checking_checked = '[b]Checking Job...[/b]'
                 self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
