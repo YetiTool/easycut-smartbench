@@ -142,9 +142,9 @@ Builder.load_string("""
             pos_hint: {'center_x': .5, 'center_y': .5}
             do_scroll_x: True
             do_scroll_y: True
+            scroll_type: ['content']
             
             RstDocument:
-                size_hint: 2, 5
                 text: root.display_output
                 background_color: hex('#0d47a1')
 
@@ -211,6 +211,7 @@ class CheckingScreen(Screen):
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
+        self.job_gcode = []
         self.sm.current = 'home'
     
         
@@ -251,12 +252,17 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]' + (f[0].replace(':',' ')).capitalize() + ': ' + error_description + '[/color]' +'\n\n')
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
+        if error_summary == []:
+            error_summary.append('[color=#FFFFFF]There\'s nothing here. Excellent.[/color]')
+        
         # Put everything into a giant string for the ReStructed Text object        
         output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
-        '\n\n'.join(map(str,error_summary)) + \
-        '\n\n[color=#FFFFFF]---------------------------------------------------\n\n[color=#FFFFFF]' \
-        '[b]GRBL RESPONSE LOG[/b][/color]\n\n' + \
-        ('\n\n'.join('[color=#FFFFFF]' + str(idx).rjust(3,'\t') + \
-        '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
+        '\n\n'.join(map(str,error_summary))
+        
+#         + \
+#         '\n\n[color=#FFFFFF]---------------------------------------------------\n\n[color=#FFFFFF]' \
+#         '[b]GRBL RESPONSE LOG[/b][/color]\n\n' + \
+#         ('\n\n'.join('[color=#FFFFFF]' + str(idx).rjust(3,'\t') + \
+#         '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
         
         return output       
