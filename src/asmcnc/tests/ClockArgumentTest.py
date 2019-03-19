@@ -6,11 +6,10 @@ from kivy.clock import Clock
 
 from functools import partial
 
-from kivy.config import Config
-
 # Set the Kivy "Clock" fps.
 # Clock usually used to establish consistent framerate for animations
 # Note that *app needs restarting* before config.write (fps value) takes effect
+from kivy.config import Config
 Config.set('graphics', 'maxfps', '30')
 Config.write()
 
