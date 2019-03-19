@@ -6,6 +6,13 @@ from kivy.clock import Clock
 
 from functools import partial
 
+from kivy.config import Config
+
+# Set the Kivy "Clock" fps.
+# Clock usually used to establish consistent framerate for animations
+# Note that *app needs restarting* before config.write (fps value) takes effect
+Config.set('graphics', 'maxfps', '30')
+Config.write()
 
 Builder.load_string("""
 
@@ -17,7 +24,7 @@ Builder.load_string("""
 
         Button:
             id: button
-            text: 'dog.jpg'
+            text: 'dog'
             pos_hint: {'center_x':0.5, 'center_y': .5}
             size_hint: None, None            
             height: 200
@@ -28,15 +35,18 @@ Builder.load_string("""
 
 class ClockArgTest(Screen):
 
-    other = "poo"
+    class_variable = "poo"
+    count = 0
 
     def __init__(self, **kwargs):
         super(ClockArgTest, self).__init__(**kwargs)
-        Clock.schedule_once(partial(self.change_name, 'cat', self.other), 2)
+        Clock.schedule_once(partial(self.change_text, 'cat', self.class_variable), 3)
 
         
-    def change_name(self, animal, other_variable, *largs):
-        self.button.text = other_variable
+    def change_text(self, local_variable, class_var, *largs):
+        self.button.text = local_variable + " " + class_var + "\n" + str(self.count)
+        self.count += 1
+        Clock.schedule_once(partial(self.change_text, 'cat', self.class_variable), 0) #unnecessary sending of object, just to demonstrate loop
 
 
 runTouchApp(ClockArgTest())
