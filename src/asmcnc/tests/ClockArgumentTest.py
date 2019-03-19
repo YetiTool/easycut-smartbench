@@ -41,7 +41,6 @@ class ClockArgTest(Screen):
         super(ClockArgTest, self).__init__(**kwargs)
         Clock.schedule_once(partial(self.change_text, 'cat', self.class_variable), 3)
 
-        
     def change_text(self, local_variable, class_var, *largs):
         self.button.text = local_variable + " " + class_var + "\n" + str(self.count)
         self.count += 1
