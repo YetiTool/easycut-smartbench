@@ -201,6 +201,7 @@ class CheckingScreen(Screen):
         error_log = self.check_grbl_stream(self.job_gcode)
         
         self.job_checking_checked = '[b]Job Checked[/b]'
+        Clock.usleep(1)
         self.display_output = self.write_output(error_log)
         Clock.usleep(1)
         if self.job_ok == False:
