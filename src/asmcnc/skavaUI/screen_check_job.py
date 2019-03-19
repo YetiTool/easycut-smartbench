@@ -17,6 +17,7 @@ from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
 from __builtin__ import file
 from kivy.clock import Clock
+from functools import partial
 
 
 import sys, os
@@ -198,10 +199,13 @@ class CheckingScreen(Screen):
     
     def get_error_log(self, dt):
         error_log = self.check_grbl_stream(self.job_gcode)
-        self.display_output = Clock.schedule_once(partial(self.write_output, error_log),1)
+        
+        self.job_checking_checked = '[b]Job Checked[/b]'
+        self.display_output = self.write_output(error_log)
+        Clock.usleep(1)
         if self.job_ok == False:
             self.job_gcode = []
-        self.job_checking_checked = '[b]Job Checked[/b]'
+
 
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode
