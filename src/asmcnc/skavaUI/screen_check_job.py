@@ -182,7 +182,7 @@ class CheckingScreen(Screen):
                 self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
                 
                 # This clock gives kivy time to build the screen before the pi has to do any serious legwork
-                Clock.schedule_once(self.get_error_log, 1.5)
+                Clock.schedule_once(self.get_error_log, 2)
 
             else: 
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
