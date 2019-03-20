@@ -18,13 +18,12 @@ from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
 from __builtin__ import file
 from kivy.clock import Clock
-from functools import partial
-
 
 import sys, os
 from os.path import expanduser
 from shutil import copy
 from datetime import datetime
+from functools import partial
 import re
 
 ERROR_CODES = {
@@ -164,6 +163,7 @@ class CheckingScreen(Screen):
     check_outcome = StringProperty()
     display_output = StringProperty()
     job_ok = False
+    error_log = []
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -182,7 +182,7 @@ class CheckingScreen(Screen):
                 self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
-                Clock.schedule_once(self.get_error_log, 3) # have a delay of at least 2 seconds.
+                Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 2) # have a delay of at least 2 seconds.
 
             else: 
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
@@ -196,60 +196,41 @@ class CheckingScreen(Screen):
             self.job_gcode = []
         
         self.quit_button.disabled = False
-        
-    def on_leave(self, *args):
-        self.job_gcode = []
-        self.checking_file_name = ''
-        self.job_checking_checked = ''
-        self.check_outcome = ''
-        self.display_output = ''
-        self.job_ok = False
-    
-    
-    def get_error_log(self, dt):
-        
-        error_log = self.check_grbl_stream(self.job_gcode)
-  
-        self.job_checking_checked = '[b]Job Checked[/b]'
-        Clock.usleep(1)
-        self.display_output = self.write_output(error_log)
-        Clock.usleep(1)
-        if self.job_ok == False:
-            self.job_gcode = []
-
-
-    def quit_to_home(self): 
-        self.sm.get_screen('home').job_gcode = self.job_gcode
-        self.sm.get_screen('home').job_filename = self.checking_file_name
-        self.sm.current = 'home'
-    
-        
-    def check_grbl_stream(self, objectifile):
+            
+    def check_grbl_stream(self, objectifile, dt):
 
         #utilise check_job from serial_conn
-        starttime = time.time()
-        error_log = self.m.s.check_job(objectifile)
-        endtime = time.time()
-        duration = endtime - starttime
+        self.m.s.check_job(objectifile)
         
-        # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
-        del error_log[0]
-        del error_log[(len(error_log)-1)]
-        
-        # If 'error' is found in the error log, tell the user
-        if any('error' in listitem for listitem in error_log):
-            self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
-            self.job_ok = False
-        else:
-            self.check_outcome = 'No errors found. You\'re good to go!'
-            self.job_ok = True
-
-        log('File has been checked!')
-        print duration
-        return error_log
+        # display the error log when it's filled - setting up the event makes it easy to unschedule
+        self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
+    
+    def get_error_log(self, dt):  
+    
+        if self.error_log != []:
+                
+            # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
+            del self.error_log[0]
+            del self.error_log[(len(self.error_log)-1)]
             
+            # If 'error' is found in the error log, tell the user
+            if any('error' in listitem for listitem in self.error_log):
+                self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                self.job_ok = False
+            else:
+                self.check_outcome = 'No errors found. You\'re good to go!'
+                self.job_ok = True
+    
+            self.job_checking_checked = '[b]Job Checked[/b]'
+            self.write_output(self.error_log)
+            
+            if self.job_ok == False:
+                self.job_gcode = []
+    
+            log('File has been checked!')
+            Clock.unschedule(self.error_out_event)
 
- 
+
     def write_output(self, error_log):
         
         error_summary = []
@@ -257,7 +238,7 @@ class CheckingScreen(Screen):
         # Zip error log and GRBL commands together, and remove any lines with no gcode
         no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.job_gcode)))
 
-        # Read out which error codes flagged up, and put into an "error summary2 with descriptions
+        # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
                 error_description = ERROR_CODES.get(f[0], "")
@@ -269,13 +250,26 @@ class CheckingScreen(Screen):
             error_summary.append('[color=#FFFFFF]There\'s nothing here. Excellent.[/color]')
         
         # Put everything into a giant string for the ReStructed Text object        
-        output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
+        self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
         '\n\n'.join(map(str,error_summary))
         
+#        # If want to print all the lines of the file and oks:
 #         + \
 #         '\n\n[color=#FFFFFF]---------------------------------------------------\n\n[color=#FFFFFF]' \
 #         '[b]GRBL RESPONSE LOG[/b][/color]\n\n' + \
 #         ('\n\n'.join('[color=#FFFFFF]' + str(idx).rjust(3,'\t') + \
 #         '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
-        
-        return output       
+
+    def quit_to_home(self): 
+        self.sm.get_screen('home').job_gcode = self.job_gcode
+        self.sm.get_screen('home').job_filename = self.checking_file_name
+        self.sm.current = 'home'
+    
+    def on_leave(self, *args):
+        self.job_gcode = []
+        self.checking_file_name = ''
+        self.job_checking_checked = ''
+        self.check_outcome = ''
+        self.display_output = ''
+        self.job_ok = False
+        self.error_log = []

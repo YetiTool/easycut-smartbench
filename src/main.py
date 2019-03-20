@@ -11,9 +11,13 @@ www.yetitool.com
 import time
 
 from kivy.config import Config
+from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+Config.set('graphics', 'maxfps', '10000')
+Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
+Config.write()
 
 import kivy
 from kivy.app import App
@@ -61,7 +65,6 @@ class SkavaUI(App):
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
            
-        
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)

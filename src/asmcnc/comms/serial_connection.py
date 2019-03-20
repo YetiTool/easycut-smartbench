@@ -253,20 +253,23 @@ class SerialConnection(object):
         self.suppress_error_screens = True
         self.response_log = []
         
-        print(len(object_to_check))
-        
         # Start sequential stream
         self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
         
-        # Wait until job has been fully checked before returning:
+        # Sequential stream runs
         
         # This while loop is safe as long as no screen building is happening at the same time. 
-        while len(self.response_log) < len(job_object)+2:
-           continue
-        
-        # Return list of GRBL responses
-        return self.response_log
+#         while len(self.response_log) < len(job_object)+2:
+#            continue
 
+        # get error log back to the checking screen when it's ready
+        Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.05)
+        
+            
+    def return_check_outcome(self, job_object,dt):
+        if len(self.response_log) >= len(job_object) + 2:
+            self.sm.get_screen('check_job').error_log = self.response_log
+            return False
         
     def run_job(self, job_object):
         
@@ -352,8 +355,6 @@ class SerialConnection(object):
             if self.suppress_error_screens == True:
                 self.response_log.append(message)
             
-# There is an intermittent issue here, and I do not understand it. ???
-# What was the intermittent issue???
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
             del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
