@@ -26,6 +26,8 @@ from shutil import copy
 from datetime import datetime
 import re
 
+from asmcnc.skavaUI import screen_check_job
+
 # from asmcnc.comms import usb_storage
 
 
@@ -170,6 +172,10 @@ class LoadingScreen(Screen):
         self.sm.current = 'home'
         
     def go_to_check_job(self):
+        
+        checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = self.sm, machine = self.m, job = self.job_gcode)
+        self.sm.add_widget(checking_screen)
+        
         self.sm.get_screen('check_job').checking_file_name = self.loading_file_name
         self.sm.get_screen('check_job').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_gcode = []

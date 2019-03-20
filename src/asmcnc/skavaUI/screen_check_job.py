@@ -159,7 +159,6 @@ def log(message):
 
 class CheckingScreen(Screen):
     
-    check_value = NumericProperty()
     checking_file_name = StringProperty()
     job_checking_checked = StringProperty()
     check_outcome = StringProperty()
