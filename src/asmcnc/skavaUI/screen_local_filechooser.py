@@ -294,10 +294,10 @@ class LocalFileChooser(Screen):
 
         if sys.platform != "win32":
             ftp_files = os.listdir(ftp_file_dir)
-#             if ftp_files:
-#                 for file in ftp_files:
-#                     copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
-#                     os.remove(ftp_file_dir + file) # clean original space
+            if ftp_files:
+                for file in ftp_files:
+                    copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
+                    os.remove(ftp_file_dir + file) # clean original space
 
         
     def detect_preview_image(self, nc_file_path):
