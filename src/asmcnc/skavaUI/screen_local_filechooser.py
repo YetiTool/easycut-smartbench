@@ -110,7 +110,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.get_FTP_files()
+                    # root.get_FTP_files()
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
