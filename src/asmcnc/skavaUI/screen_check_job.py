@@ -195,7 +195,7 @@ class CheckingScreen(Screen):
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
         
-        self.quit_button.disabled = False
+
             
     def check_grbl_stream(self, objectifile, dt):
 
@@ -229,6 +229,7 @@ class CheckingScreen(Screen):
     
             log('File has been checked!')
             Clock.unschedule(self.error_out_event)
+            self.quit_button.disabled = False
 
 
     def write_output(self, error_log):
@@ -266,6 +267,7 @@ class CheckingScreen(Screen):
         self.sm.current = 'home'
     
     def on_leave(self, *args):
+        self.quit_button.disabled = True
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''

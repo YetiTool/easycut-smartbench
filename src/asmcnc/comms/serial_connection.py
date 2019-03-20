@@ -368,8 +368,6 @@ class SerialConnection(object):
                 # self.sm.get_screen('errorScreen').message = message
                 self.sm.current = 'errorScreen'
 
-
-
     # After streaming is completed
     def end_stream(self):
 
@@ -394,7 +392,6 @@ class SerialConnection(object):
         self.is_job_finished = True
 
 
-
     def cancel_stream(self):
         self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
         self.is_stream_lines_remaining = False
@@ -407,8 +404,6 @@ class SerialConnection(object):
 
         # Flush
         self.s.flushInput()
-
-
 
 # PUSH MESSAGE HANDLING
 
@@ -733,7 +728,6 @@ class SerialConnection(object):
         log("start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
-
         self._send_next_sequential_stream()
 
 # Think this is exactly the same as contents of next function? 
