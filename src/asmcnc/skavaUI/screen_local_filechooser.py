@@ -110,7 +110,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    # root.get_FTP_files()
+                    root.get_FTP_files()
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
@@ -220,6 +220,7 @@ ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files 
 class LocalFileChooser(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
+    preview_image_path = None
     
     def __init__(self, **kwargs):
 
@@ -293,14 +294,12 @@ class LocalFileChooser(Screen):
 
         if sys.platform != "win32":
             ftp_files = os.listdir(ftp_file_dir)
-            if ftp_files:
-                for file in ftp_files:
-                    copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
-                    os.remove(ftp_file_dir + file) # clean original space
+#             if ftp_files:
+#                 for file in ftp_files:
+#                     copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
+#                     os.remove(ftp_file_dir + file) # clean original space
 
-    
-    preview_image_path = None
-    
+        
     def detect_preview_image(self, nc_file_path):
         
         # Assume there is no image preview to be found, so set image to default preview
