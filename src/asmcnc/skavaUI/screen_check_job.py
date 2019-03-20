@@ -196,6 +196,15 @@ class CheckingScreen(Screen):
             self.job_gcode = []
         
         self.quit_button.disabled = False
+        
+    def on_leave(self, *args):
+        self.job_gcode = []
+        self.checking_file_name = ''
+        self.job_checking_checked = ''
+        self.check_outcome = ''
+        self.display_output = ''
+        self.job_ok = False
+    
     
     def get_error_log(self, dt):
         error_log = self.check_grbl_stream(self.job_gcode)
@@ -211,7 +220,6 @@ class CheckingScreen(Screen):
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
-        self.job_gcode = []
         self.sm.current = 'home'
     
         
