@@ -149,3 +149,15 @@ Make sure you can also see Package Explorer in Eclipse - if you can't just go to
 If you want to try running the UI, Open "main.py" and click Run (the green play button). And off you go ;).
 
 
+### Basic hardware test (optional)
+
+If you have and Arduino Mega 2560, you can test comms right away by putting a basic grbl-Mega image onto the Arduino.
+
+*Note: Due to lack of end switches, and therefore an inability to "home", some functionality will be unavailable, and EasyCut may crash unexpectedly.
+*Note: Currently points to standard grbl-Mega, not YetiGrbl
+
+* Follow compilation instructions [here](https://github.com/grbl/grbl/wiki/Compiling-Grbl), with one modification:
+** When prompted to "Click the Download ZIP button on the Grbl home page" [download from grbl-Mega instead](https://github.com/gnea/grbl-Mega)
+* Once compliled, determine which COM port the arduino sits on and ammed that value in "main.py"
+* Run "main.py" :-)
+
