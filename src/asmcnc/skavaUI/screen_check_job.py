@@ -188,12 +188,14 @@ class CheckingScreen(Screen):
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
+                self.quit_button.disabled = False
 
             
         else:
             self.job_checking_checked = '[b]Cannot Check Job[/b]'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
+            self.quit_button.disabled = False
         
 
             
