@@ -215,11 +215,12 @@ Builder.load_string("""
 
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
-ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files are FTP'd to
+ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
 
 class LocalFileChooser(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
+    preview_image_path = None
     
     def __init__(self, **kwargs):
 
@@ -298,9 +299,7 @@ class LocalFileChooser(Screen):
                     copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
                     os.remove(ftp_file_dir + file) # clean original space
 
-    
-    preview_image_path = None
-    
+        
     def detect_preview_image(self, nc_file_path):
         
         # Assume there is no image preview to be found, so set image to default preview
