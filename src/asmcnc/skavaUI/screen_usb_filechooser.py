@@ -171,19 +171,16 @@ class USBFileChooser(Screen):
 
 
     def __init__(self, **kwargs):
-
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.usb_stick = usb_storage.USB_storage()
 
     
     def on_enter(self):
-
         self.refresh_filechooser()
     
     
-    def set_USB_path(self, usb_path):
-        
+    def set_USB_path(self, usb_path):      
         self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
@@ -266,7 +263,7 @@ class USBFileChooser(Screen):
                 if self.cut_usb_files_switch.active:
                     os.remove(self.preview_image_path) # clean original space
             
-        self.quit_to_home()
+        self.go_to_loading_screen(file_selection)
         
 
     def quit_to_local(self):
@@ -277,3 +274,8 @@ class USBFileChooser(Screen):
     def quit_to_home(self):
         self.manager.current = 'home'
         #self.manager.transition.direction = 'up'
+        
+    def go_to_loading_screen(self, file_selection):
+
+        self.manager.get_screen('loading').loading_file_name = file_selection
+        self.manager.current = 'loading'
