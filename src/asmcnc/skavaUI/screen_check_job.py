@@ -8,6 +8,7 @@ This screen checks the users job, and allows them to review any errors
 
 import kivy
 import docutils
+import time
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -207,8 +208,9 @@ class CheckingScreen(Screen):
     
     
     def get_error_log(self, dt):
-        error_log = self.check_grbl_stream(self.job_gcode)
         
+        error_log = self.check_grbl_stream(self.job_gcode)
+  
         self.job_checking_checked = '[b]Job Checked[/b]'
         Clock.usleep(1)
         self.display_output = self.write_output(error_log)
@@ -226,7 +228,10 @@ class CheckingScreen(Screen):
     def check_grbl_stream(self, objectifile):
 
         #utilise check_job from serial_conn
+        starttime = time.time()
         error_log = self.m.s.check_job(objectifile)
+        endtime = time.time()
+        duration = endtime - starttime
         
         # There is a $C on each end of the objectifile; these two lines just strip of the associated 'ok's        
         del error_log[0]
@@ -241,6 +246,7 @@ class CheckingScreen(Screen):
             self.job_ok = True
 
         log('File has been checked!')
+        print duration
         return error_log
             
 
