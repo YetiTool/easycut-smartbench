@@ -320,8 +320,7 @@ class LocalFileChooser(Screen):
 
 
     def go_to_loading_screen(self, file_selection):
-# NEW ------------------------------------------------------ DONE
-        # Pass the selected file to the new screen
+
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
         
