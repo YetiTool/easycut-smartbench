@@ -238,13 +238,6 @@ class USBFileChooser(Screen):
             # ... to cache
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination
             
-#             # ... to Q
-#             files_in_q = os.listdir(job_q_dir) # clean Q
-#             if files_in_q:
-#                 for file in files_in_q:
-#                     os.remove(job_q_dir+file)
-#             copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
-
             # Clean USB
             if self.cut_usb_files_switch.active:
                 os.remove(file_selection) # clean original space       
@@ -256,9 +249,6 @@ class USBFileChooser(Screen):
                 # ... to cache
                 copy(self.preview_image_path, job_cache_dir) # "copy" overwrites same-name file at destination
                 
-#                 # ... to Q
-#                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
-
                 # Clean USB
                 if self.cut_usb_files_switch.active:
                     os.remove(self.preview_image_path) # clean original space
