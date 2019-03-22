@@ -8,9 +8,9 @@ from kivy.config import Config
 from __builtin__ import True
 
 # Set the Kivy "Clock" to tick at its fastest.
-# Clock usually used to establish consistent framerate for animations, but we need it to tick much faster (e.g. than 25fps) for serial refreshing
-Config.set('graphics', 'maxfps', '30')
-Config.write()
+# # Clock usually used to establish consistent framerate for animations, but we need it to tick much faster (e.g. than 25fps) for serial refreshing
+# Config.set('graphics', 'maxfps', '30')
+# Config.write()
 
 import serial, sys, time, string, threading
 from datetime import datetime
@@ -177,6 +177,7 @@ class SerialConnection(object):
     def grbl_scanner(self):
         # If there's a message received, deal with it depending on type
         # if self.s.inWaiting():
+                
         while True:
             try:
                 rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
@@ -184,6 +185,7 @@ class SerialConnection(object):
                 # print self.grbl_out
             except Exception as e:
                 log('serial.readline exception:\n' + str(e))
+                rec_temp = ''
             #time.sleep(1)
             #print 'RX line length: ', len(rec_temp)
             if len(rec_temp):
@@ -193,14 +195,14 @@ class SerialConnection(object):
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if True:
                     log('< ' + rec_temp)
-
+    
                 # Update the gcode monitor (may not be initialised) and console
                 try:
                     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
                 except:
                     pass
                 if self.VERBOSE_ALL_RESPONSE: print rec_temp
-
+    
                 try:
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
@@ -211,7 +213,7 @@ class SerialConnection(object):
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     raise # HACK allow error to cause serial comms thread to exit
-
+    
                 # if we're streaming, check to see if the buffer can be filled
                 if self.is_job_streaming:
                     if self.is_stream_lines_remaining:
