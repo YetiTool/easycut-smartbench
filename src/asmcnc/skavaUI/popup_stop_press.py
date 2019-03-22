@@ -54,7 +54,8 @@ class PopupStop(Widget):
     
     def machine_reset(self, *args):
         self.m.soft_reset() # soft-reset
-        self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!   
+        self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!
+        # BUT it may have lost the file? Cancel stream flushes the input, so even if machine remembers where it is, easycut probably doesn't.  
 
         
     def machine_resume(self, *args):

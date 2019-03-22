@@ -171,19 +171,16 @@ class USBFileChooser(Screen):
 
 
     def __init__(self, **kwargs):
-
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.usb_stick = usb_storage.USB_storage()
 
     
     def on_enter(self):
-
         self.refresh_filechooser()
     
     
-    def set_USB_path(self, usb_path):
-        
+    def set_USB_path(self, usb_path):      
         self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
@@ -241,13 +238,6 @@ class USBFileChooser(Screen):
             # ... to cache
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination
             
-            # ... to Q
-            files_in_q = os.listdir(job_q_dir) # clean Q
-            if files_in_q:
-                for file in files_in_q:
-                    os.remove(job_q_dir+file)
-            copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
-
             # Clean USB
             if self.cut_usb_files_switch.active:
                 os.remove(file_selection) # clean original space       
@@ -259,14 +249,11 @@ class USBFileChooser(Screen):
                 # ... to cache
                 copy(self.preview_image_path, job_cache_dir) # "copy" overwrites same-name file at destination
                 
-                # ... to Q
-                copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
-                
                 # Clean USB
                 if self.cut_usb_files_switch.active:
                     os.remove(self.preview_image_path) # clean original space
             
-        self.quit_to_home()
+        self.go_to_loading_screen(file_selection)
         
 
     def quit_to_local(self):
@@ -277,3 +264,8 @@ class USBFileChooser(Screen):
     def quit_to_home(self):
         self.manager.current = 'home'
         #self.manager.transition.direction = 'up'
+        
+    def go_to_loading_screen(self, file_selection):
+
+        self.manager.get_screen('loading').loading_file_name = file_selection
+        self.manager.current = 'loading'

@@ -181,10 +181,11 @@ class QuickCommands(Widget):
         
         # Before going to the GO screen, we are going to check the GCOde file really well
         
+        # POPUP FLAG - these are annoying as heck.
         
         #self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
         errorfound = 0
-                
+               
         #check if we've homed
         if self.m.is_machine_homed == False:
             popup_prestream_check.PopupPrestream(self.m, self.sm, "You haven't homed the machine yet!")
@@ -203,8 +204,7 @@ class QuickCommands(Widget):
         else:  
 #             self.m.enable_check_mode()
             
-             
-            self.sm.current = 'go'
+             self.sm.current = 'go'
             
 
         

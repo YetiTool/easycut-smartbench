@@ -133,3 +133,4 @@ class DevOptions(Widget):
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull")
+        self.reboot()

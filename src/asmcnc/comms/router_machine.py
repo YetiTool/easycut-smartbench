@@ -28,7 +28,7 @@ class RouterMachine(object):
 
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     
-    job_file_gcode = []
+#     job_file_gcode = []
 
             
     def __init__(self, win_serial_port, screen_manager):
@@ -299,14 +299,14 @@ class RouterMachine(object):
         print 'test'
         
     def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))        
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
 
     def led_ring_off(self):
         # self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
         pass
     
-    def stream_file(self, job_file_path):
-        self.s.stream_file(job_file_path)
+#     def stream_file(self, job_file_path):
+#         self.s.stream_file(job_file_path)
 
     def vac_on(self):
         self.s.write_command('AE')

@@ -11,9 +11,13 @@ www.yetitool.com
 import time
 
 from kivy.config import Config
+from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+Config.set('graphics', 'maxfps', '10000')
+Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
+Config.write()
 
 import kivy
 from kivy.app import App
@@ -31,6 +35,9 @@ from asmcnc.skavaUI import screen_go
 from asmcnc.skavaUI import screen_template
 from asmcnc.skavaUI import screen_lobby
 from asmcnc.skavaUI import screen_vj_polygon
+from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import screen_check_job
+
 
 Cmport = 'COM3'
 
@@ -44,16 +51,20 @@ class SkavaUI(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm)
-
+        
+        job_gcode = []  # declare g-code object
+        
         # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m)
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode)
         template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
         vj_polygon_screen = screen_vj_polygon.ScreenVJPolygon(name='vj_polygon', screen_manager = sm)
-
+        loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
+        checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
+           
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)
@@ -62,6 +73,9 @@ class SkavaUI(App):
         sm.add_widget(go_screen)
         sm.add_widget(template_screen)
         sm.add_widget(vj_polygon_screen)
+        sm.add_widget(loading_screen)
+        sm.add_widget(checking_screen)
+
 
         # set screen to start on
         sm.current = 'lobby'

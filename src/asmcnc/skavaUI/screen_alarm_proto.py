@@ -33,7 +33,7 @@ ALARM_CODES = {
 Builder.load_string("""
 
 <AlarmScreenClass>:
-#make a blue screen - done. 
+
     canvas:
         Color: 
             #rgba: hex('#0d47a1FF')
@@ -132,7 +132,7 @@ class AlarmScreenClass(Screen):
         super(AlarmScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        message =kwargs['alarmmsg']
+        message=kwargs['alarmmsg']
     
         # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(message, "")

@@ -45,6 +45,7 @@ Builder.load_string("""
     grbl_serial_char_capacity:grbl_serial_char_capacity
     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
+    stop_start:stop_start
 
     BoxLayout:
         padding: 0
@@ -86,6 +87,7 @@ Builder.load_string("""
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
+                            padding: 10
                             Button:
                                 id: btn_back
                                 size_hint_x: 1
@@ -107,14 +109,18 @@ Builder.load_string("""
                                         allow_stretch: True
                             Label:
                                 size_hint_x: 5
+                                text_size: self.size
                                 color: 0,0,0,1
                                 markup: True
                                 text: 'Load a file...'
-                                halign: 'left'
+                                halign: 'center'
+                                valign: 'middle'
                                 id: file_data_label
-                                text: 'Data'
+                                text: root.job_filename
                             Button:
+                                id: stop_start
                                 size_hint_x: 1
+                                disabled: True
                                 background_color: hex('#F4433600')
                                 on_release:
                                     root.start_stop_button_press()
@@ -210,6 +216,8 @@ class GoScreen(Screen):
 
     test_property = 0
     btn_back = ObjectProperty()
+    no_job = True
+    job_filename = StringProperty()
 
     def __init__(self, **kwargs):
 
@@ -217,6 +225,7 @@ class GoScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.job_gcode=kwargs['job']
 
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
@@ -225,22 +234,37 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
+        # self.job_gcode = self.sm.get_screen('home').job_gcode       
+        
+    def on_enter(self, *args):
+        self.job_gcode = self.sm.get_screen('home').job_gcode
+        self.job_filename = self.sm.get_screen('home').job_filename
+                        
+        if self.job_gcode != []:
+            print('Yo')
+            print self.no_job
+            self.no_job = False
+            print self.no_job
+            self.stop_start.disabled = False
+            
+        else:
+            self.stop_start.disabled = True
+
     start_stop_button_press_counter = 0
 
-
     def start_stop_button_press(self):
-
+       
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
-            self.stream_file()
+            self.stream_job()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
             #Hide back button
             self.btn_back.size_hint_y = None
             self.btn_back.height = '0dp'
         else:
             self.m.hold()
-            popup_stop_press.PopupStop(self.m, self.sm)
+            popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
 
     @mainthread
@@ -252,21 +276,32 @@ class GoScreen(Screen):
         self.btn_back.size_hint_y = 1
 
 
-    def stream_file(self):
-
-        #### Scan for files in Q, and update info panels
-
-        files_in_q = os.listdir(self.job_q_dir)
-        filename = ''
-
-        if files_in_q:
-
-            # Search for nc file in Q dir and process
-            for filename in files_in_q:
-
-                if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
-
-                    try:
-                        self.m.stream_file(self.job_q_dir + filename)
-                    except:
-                        print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
+    def stream_job(self):
+                
+        if self.job_gcode:
+          
+            try:
+                self.m.s.run_job(self.job_gcode)
+                print('Streaming')
+                print(self.job_gcode)
+            except:
+                print('Stream failed')
+                print self.job_gcode
+        else:
+            print('No file loaded')
+#         #### Scan for files in Q, and update info panels
+# 
+#         files_in_q = os.listdir(self.job_q_dir)
+#         filename = ''
+# 
+#         if files_in_q:
+# 
+#             # Search for nc file in Q dir and process
+#             for filename in files_in_q:
+# 
+#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
+# 
+#                     try:
+#                         self.m.s.stream_file(self.job_q_dir + filename)
+#                     except:
+#                         print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)

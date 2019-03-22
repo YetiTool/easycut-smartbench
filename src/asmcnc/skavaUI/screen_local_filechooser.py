@@ -2,6 +2,8 @@
 Created on 19 Aug 2017
 
 @author: Ed
+
+Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 '''
 # config
 
@@ -17,7 +19,9 @@ from kivy.clock import Clock
 import sys, os
 from os.path import expanduser
 from shutil import copy
+
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import screen_file_loading
 
 
 Builder.load_string("""
@@ -188,9 +192,8 @@ Builder.load_string("""
                 id: load_button
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.load_file(filechooser.selection[0])
+                    root.go_to_loading_screen(filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -212,12 +215,12 @@ Builder.load_string("""
 
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
-ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files are FTP'd to
+ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
 
 class LocalFileChooser(Screen):
 
-    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
-    
+    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
+    preview_image_path = None
     
     def __init__(self, **kwargs):
 
@@ -296,9 +299,7 @@ class LocalFileChooser(Screen):
                     copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
                     os.remove(ftp_file_dir + file) # clean original space
 
-    
-    preview_image_path = None
-    
+        
     def detect_preview_image(self, nc_file_path):
         
         # Assume there is no image preview to be found, so set image to default preview
@@ -318,28 +319,34 @@ class LocalFileChooser(Screen):
         original_file.close()       
 
 
-    def load_file(self, file_selection):
-        
-        # Move over the nc file
-        if os.path.isfile(file_selection):
-            
-            # ... to Q
-            files_in_q = os.listdir(job_q_dir) # clean Q
-            if files_in_q:
-                for file in files_in_q:
-                    os.remove(job_q_dir+file)
-            copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
+    def go_to_loading_screen(self, file_selection):
 
-        # Move over the preview image
-        if self.preview_image_path:
-            if os.path.isfile(self.preview_image_path):
-                
-                # ... to Q
-                copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
+        self.manager.get_screen('loading').loading_file_name = file_selection
+        self.manager.current = 'loading'
         
-        self.quit_to_home()    
+# ---------------------------------------------------------- DONE
+        
+        # Replace this with move to the file_loading screen
+# --------------------------------------------------------------- OLD       
+#         # Move over the nc file
+#         if os.path.isfile(file_selection):
+#             
+#             # ... to Q
+#             files_in_q = os.listdir(job_q_dir) # clean Q
+#             if files_in_q:
+#                 for file in files_in_q:
+#                     os.remove(job_q_dir+file)
+#             copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
+# 
+#         # Move over the preview image
+#         if self.preview_image_path:
+#             if os.path.isfile(self.preview_image_path):
+#                 
+#                 # ... to Q
+#                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
+#-------------------------------------------------------------------
 
-    
+
     def delete_selected(self, filename):
         
         if os.path.isfile(filename):
