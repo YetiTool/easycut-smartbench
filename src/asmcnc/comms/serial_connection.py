@@ -263,12 +263,15 @@ class SerialConnection(object):
 #            continue
 
         # get error log back to the checking screen when it's ready
-        Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.05)
-        
+        Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.005)
+    
+    mycount = 0    
             
     def return_check_outcome(self, job_object,dt):
         if len(self.response_log) >= len(job_object) + 2:
             self.sm.get_screen('check_job').error_log = self.response_log
+            log(str(self.mycount))
+            self.mycount += 1
             return False
         
     def run_job(self, job_object):
