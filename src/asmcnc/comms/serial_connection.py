@@ -265,6 +265,7 @@ class SerialConnection(object):
 
     def return_check_outcome(self, job_object,dt):
         if len(self.response_log) >= len(job_object) + 2:
+            self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
         
