@@ -19,8 +19,6 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
     popup_job_done
-# from asmcnc.skavaUI import screen_alarm_proto
-# from asmcnc.skavaUI import screen_error_proto
 import re
 from functools import partial
 
