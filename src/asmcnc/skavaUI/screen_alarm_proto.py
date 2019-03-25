@@ -125,6 +125,7 @@ class AlarmScreenClass(Screen):
 
     # define alarm description to make kivy happy
     alarm_description = StringProperty()
+    message = StringProperty()
     # alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
 
     
@@ -132,10 +133,10 @@ class AlarmScreenClass(Screen):
         super(AlarmScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        message=kwargs['alarmmsg']
     
+    def on_enter(self):
         # use the message to get the alarm description
-        self.alarm_description = ALARM_CODES.get(message, "")
+        self.alarm_description = ALARM_CODES.get(self.message, "")
  
     def quit_to_home(self):
         self.sm.current = 'home'

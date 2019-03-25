@@ -131,15 +131,16 @@ class ErrorScreenClass(Screen):
 
     # define error description to make kivy happy
     error_description = StringProperty()
+    message = StringProperty()
     
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        message =kwargs['errormsg']
-    
-        # use the message to get the error description
-        self.error_description = ERROR_CODES.get(message, "")
+        self.m=kwargs['machine']  
+
+    def on_enter(self):
+        # use the message to get the error description        
+        self.error_description = ERROR_CODES.get(self.message, "")
 
     def quit_to_home(self):
         self.sm.current = 'home'
