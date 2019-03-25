@@ -186,6 +186,8 @@ class SerialConnection(object):
             except Exception as e:
                 log('serial.readline exception:\n' + str(e))
                 rec_temp = ''
+                # should something be here to save the GUI? 
+                
             #time.sleep(1)
             #print 'RX line length: ', len(rec_temp)
             if len(rec_temp):
@@ -213,6 +215,9 @@ class SerialConnection(object):
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
                     raise # HACK allow error to cause serial comms thread to exit
+                    # What happens here? 
+                        # - this bit grinds to a halt presumably
+                        # - need to send instructions to the GUI (prior to raise?) 
     
                 # if we're streaming, check to see if the buffer can be filled
                 if self.is_job_streaming:
@@ -665,16 +670,18 @@ class SerialConnection(object):
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
-        except:
+        except AssertionError as consoleDisplayError:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            log('Console display error: ' + str(consoleDisplayError))
 
         # Finally issue the command
         if self.s:
             try:
                 self.s.write(serialCommand + '\n')
                 
-            except:
+            except AssertionError as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+                log('Serial Error: ' + str(serialError))
 
 
     def write_realtime(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):
@@ -695,21 +702,21 @@ class SerialConnection(object):
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
-        except:
+        except AssertionError as consoleDisplayError:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            log('Console display error: ' + str(consoleDisplayError))
 
         # Finally issue the command
         if self.s:
             try:
                 self.s.write(serialCommand)
-            except:
+            except AssertionError as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+                log('Serial Error: ' + str(serialError))
 
     monitor_text_buffer = ""
 
-
-
-# SEQUENTIAL STREAMING
+## SEQUENTIAL STREAMING
 
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
@@ -727,17 +734,6 @@ class SerialConnection(object):
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._send_next_sequential_stream()
-
-# Think this is exactly the same as contents of next function? 
-#         if self._sequential_stream_buffer:
-#             self.is_sequential_streaming = True
-#             self.write_command(self._sequential_stream_buffer[0])
-#             del self._sequential_stream_buffer[0]
-#         else:
-#             self.is_sequential_streaming = False
-#             if self._reset_grbl_after_stream:
-#                 # Soft-reset. This forces the need to home when the controller starts up
-#                 self.write_realtime("\x18", show_in_sys=True, show_in_console=False) 
                 
     def _send_next_sequential_stream(self):
         log("_send_next_sequential_stream")
