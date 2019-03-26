@@ -18,11 +18,10 @@ from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from __builtin__ import file, False
 from kivy.clock import Clock
+from functools import partial
 
 
 import sys, os
-from os.path import expanduser
-from shutil import copy
 from datetime import datetime
 import re
 
@@ -88,7 +87,7 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 padding: 10, 0
-                spacing: 50
+                spacing: 10
             
                 Button:
                     size_hint_y:0.9
@@ -158,18 +157,23 @@ class LoadingScreen(Screen):
                
         self.job_loading_loaded = '[b]Loading Job...[/b]'
         self.load_value = 0
-        
+        self.check_button.disabled = True
+        Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
-        self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
-        self.job_loading_loaded = '[b]Job Loaded[/b]'
-        self.home_button.disabled = False
-        self.check_button.disabled = False
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),1)
+        
+        #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        #self.job_loading_loaded = '[b]Job Loaded[/b]'     
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.loading_file_name
         self.sm.current = 'home'
+        
+    def return_to_filechooser(self):
+        self.job_gcode = []
+        self.sm.current = 'local_filechooser'
         
     def go_to_check_job(self):
                
@@ -178,7 +182,7 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').job_gcode = []
         self.sm.current = 'check_job'
         
-    def objectifiled(self, job_file_path):
+    def objectifiled(self, job_file_path, dt):
 
         log('> load_job_file')
         
@@ -198,8 +202,15 @@ class LoadingScreen(Screen):
         self.load_value = 2
 
         log('< load_job_file')
-        return preloaded_job_gcode
+
+        self.job_gcode = preloaded_job_gcode
    
+        self.job_loading_loaded = '[b]Job Loaded[/b]'
+        self.check_button.disabled = False
+        self.home_button.disabled = False
+        
+        
+        
 # THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
 #     def write_file_to_JobQ(self, objectifile):
 #         
