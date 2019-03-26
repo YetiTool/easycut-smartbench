@@ -297,7 +297,7 @@ class SerialConnection(object):
 
     def initialise_job(self):
         
-        timeout = time.time() + 1  # CHECK THIS TIMEOUT - is it too long/too short?? 
+        timeout = time.time() + 10  # CHECK THIS TIMEOUT - is it too long/too short?? 
                 
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
