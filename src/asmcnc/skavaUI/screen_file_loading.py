@@ -161,7 +161,7 @@ class LoadingScreen(Screen):
         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),1)
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
         
         #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
         #self.job_loading_loaded = '[b]Job Loaded[/b]'     

@@ -12,9 +12,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 
 import sys, os
-from os.path import expanduser
-from shutil import copy
-from asmcnc.comms import usb_storage
+
 
 ERROR_CODES = {
 

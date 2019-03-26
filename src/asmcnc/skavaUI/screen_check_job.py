@@ -182,7 +182,7 @@ class CheckingScreen(Screen):
                 self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
-                Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 1)
+                Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
                 self.job_checking_checked = '[b]Cannot Check Job[/b]' 
