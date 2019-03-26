@@ -672,10 +672,9 @@ class SerialConnection(object):
             try:
                 self.s.write(serialCommand + '\n')
                 
-
             except SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                #log('Serial Error: ' + str(serialError))
+                log('Serial Error: ' + str(serialError))
 
 
     def write_realtime(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):
@@ -707,7 +706,7 @@ class SerialConnection(object):
 
                 except SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                #log('Serial Error: ' + str(serialError))
+                log('Serial Error: ' + str(serialError))
 
     monitor_text_buffer = ""
 
