@@ -703,7 +703,8 @@ class SerialConnection(object):
         if self.s:
             try:
                 self.s.write(serialCommand)
-            except SerialException as serialError:
+
+                except SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 log('Serial Error: ' + str(serialError))
 
