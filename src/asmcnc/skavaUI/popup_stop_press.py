@@ -45,7 +45,7 @@ class PopupStop(Widget):
                       auto_dismiss= False)
         
         cancel_button.bind(on_release=self.machine_reset)
-        cancel_button.bind(on_release=popup.dismiss)        
+        cancel_button.bind(on_release=popup.dismiss)
         resume_button.bind(on_release=self.machine_resume)
         resume_button.bind(on_release=popup.dismiss)
         
@@ -53,11 +53,14 @@ class PopupStop(Widget):
 
     
     def machine_reset(self, *args):
+        self.m.s.is_job_streaming = True
         self.m.soft_reset() # soft-reset
         self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!
         # BUT it may have lost the file? Cancel stream flushes the input, so even if machine remembers where it is, easycut probably doesn't.  
-
         
     def machine_resume(self, *args):
         self.m.resume()
-
+        self.m.s.is_job_streaming = True
+        
+        if self.sm.get_screen('go').paused == True:
+            self.sm.get_screen('go').play_pause_button_press()

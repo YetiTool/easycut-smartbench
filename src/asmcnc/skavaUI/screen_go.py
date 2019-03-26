@@ -12,7 +12,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file
+from __builtin__ import file, True
 from kivy.clock import Clock, mainthread
 
 
@@ -46,6 +46,8 @@ Builder.load_string("""
     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
+    btn_pause_play: btn_pause_play
+    play_pause_button_image: play_pause_button_image
 
     BoxLayout:
         padding: 0
@@ -107,6 +109,7 @@ Builder.load_string("""
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
+                            
                             Label:
                                 size_hint_x: 5
                                 text_size: self.size
@@ -117,6 +120,27 @@ Builder.load_string("""
                                 valign: 'middle'
                                 id: file_data_label
                                 text: root.job_filename
+                                
+                            Button:
+                                id: btn_pause_play
+                                size_hint_x: 1
+                                background_color: hex('#F4433600')
+                                on_release:
+                                    root.play_pause_button_press()
+                                    self.background_color = hex('#F4433600')
+                                on_press:
+                                    self.background_color = hex('#F44336FF')
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        id: play_pause_button_image
+                                        source: "./asmcnc/skavaUI/img/pause.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
                             Button:
                                 id: stop_start
                                 size_hint_x: 1
@@ -218,6 +242,11 @@ class GoScreen(Screen):
     btn_back = ObjectProperty()
     no_job = True
     job_filename = StringProperty()
+    start_stop_button_press_counter = 0
+    paused = False
+    started = False
+    stopped = False
+    
 
     def __init__(self, **kwargs):
 
@@ -239,6 +268,9 @@ class GoScreen(Screen):
     def on_enter(self, *args):
         self.job_gcode = self.sm.get_screen('home').job_gcode
         self.job_filename = self.sm.get_screen('home').job_filename
+        self.btn_pause_play.size_hint_y = None
+        self.btn_pause_play.height = '0dp'
+        self.paused = False
                         
         if self.job_gcode != []:
             print('Yo')
@@ -250,11 +282,12 @@ class GoScreen(Screen):
         else:
             self.stop_start.disabled = True
 
-    start_stop_button_press_counter = 0
 
+    
     def start_stop_button_press(self):
        
         self.start_stop_button_press_counter += 1
+        # self.started = not self.started
 
         if self.start_stop_button_press_counter == 1:
             self.stream_job()
@@ -262,9 +295,29 @@ class GoScreen(Screen):
             #Hide back button
             self.btn_back.size_hint_y = None
             self.btn_back.height = '0dp'
+            self.btn_pause_play.size_hint_y = 1
+            
         else:
-            self.m.hold()
+            
+            if self.paused == False:
+                self.m.hold()
+            
+            self.m.s.is_job_streaming = False
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
+
+    def play_pause_button_press(self):
+        
+        self.paused = not self.paused
+        
+        if self.paused == True:
+            self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
+            self.m.hold()
+            self.m.s.is_job_streaming = False
+            
+        if self.paused == False: 
+            self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+            self.m.resume()
+            self.m.s.is_job_streaming = True
 
 
     @mainthread
@@ -272,8 +325,11 @@ class GoScreen(Screen):
 
         self.start_stop_button_press_counter = 0
         self.start_stop_button_image.source = "./asmcnc/skavaUI/img/go.png"
+        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         #Show back button
         self.btn_back.size_hint_y = 1
+        self.btn_pause_play.size_hint_y = None
+        self.btn_pause_play.height = '0dp'
 
 
     def stream_job(self):
@@ -289,19 +345,3 @@ class GoScreen(Screen):
                 print self.job_gcode
         else:
             print('No file loaded')
-#         #### Scan for files in Q, and update info panels
-# 
-#         files_in_q = os.listdir(self.job_q_dir)
-#         filename = ''
-# 
-#         if files_in_q:
-# 
-#             # Search for nc file in Q dir and process
-#             for filename in files_in_q:
-# 
-#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
-# 
-#                     try:
-#                         self.m.s.stream_file(self.job_q_dir + filename)
-#                     except:
-#                         print 'Fail: could not stream_file ' + str(self.job_q_dir + filename)
