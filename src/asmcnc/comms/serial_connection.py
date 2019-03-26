@@ -21,6 +21,7 @@ from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,
     popup_job_done
 import re
 from functools import partial
+from serial.serialutil import SerialException
 
 
 BAUD_RATE = 115200
@@ -57,7 +58,7 @@ class SerialConnection(object):
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
-                self.s = serial.Serial(win_port, BAUD_RATE)
+                self.s = serial.Serial(win_port, BAUD_RATE, writeTimeout = 0)
                 print('self.s. done')
                 return True
             except:
@@ -75,7 +76,7 @@ class SerialConnection(object):
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE) # assign
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, writeTimeout = 0) # assign
                         return True
             except:
                 return False
@@ -662,7 +663,7 @@ class SerialConnection(object):
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
-        except AssertionError as consoleDisplayError:
+        except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
             log('Console display error: ' + str(consoleDisplayError))
 
@@ -671,7 +672,7 @@ class SerialConnection(object):
             try:
                 self.s.write(serialCommand + '\n')
                 
-            except AssertionError as serialError:
+            except SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 log('Serial Error: ' + str(serialError))
 
@@ -694,7 +695,7 @@ class SerialConnection(object):
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
-        except AssertionError as consoleDisplayError:
+        except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
             log('Console display error: ' + str(consoleDisplayError))
 
@@ -702,7 +703,7 @@ class SerialConnection(object):
         if self.s:
             try:
                 self.s.write(serialCommand)
-            except AssertionError as serialError:
+            except SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 log('Serial Error: ' + str(serialError))
 
