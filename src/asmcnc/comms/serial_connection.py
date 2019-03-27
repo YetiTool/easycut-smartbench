@@ -27,7 +27,6 @@ from serial.serialutil import SerialException
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
 GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
-# next_poll_time = None
 
 def log(message):
     timestamp = datetime.now()
@@ -60,7 +59,6 @@ class SerialConnection(object):
     def __del__(self):
         print 'Destructor'
 
-## FLAG: Need to update writeTimeout
 
     def establish_connection(self, win_port):
         print('start establish')
@@ -68,7 +66,6 @@ class SerialConnection(object):
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6)
-                # writeTimeout = 0
                 print('self.s. done')
                 return True
             except:
@@ -87,7 +84,6 @@ class SerialConnection(object):
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6) # assign
-                        #  writeTimeout = 0
                         return True
             except:
                 return False
@@ -167,9 +163,9 @@ class SerialConnection(object):
             # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
 
-    def poll_status(self, dt):
-
-        self.write_realtime('?', show_in_sys=False, show_in_console=False)
+#     def poll_status(self, dt):
+# 
+#         self.write_realtime('?', show_in_sys=False, show_in_console=False)
 
 
 # SCANNER: listens for responses from Grbl
@@ -194,8 +190,8 @@ class SerialConnection(object):
                 self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
             
-            # Add in something to yell at the user if this hasn't read anything in a while
-            # Add timeout for readline()
+            # FLAG: Add in something to yell at the user if this hasn't read anything in a while
+
             
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
