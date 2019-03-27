@@ -280,7 +280,6 @@ class SerialConnection(object):
         # TAKE IN THE FILE
         self.job_gcode = job_object
         log('I am running: ')
-        print job_object
         
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)

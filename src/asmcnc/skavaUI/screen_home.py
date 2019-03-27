@@ -353,10 +353,9 @@ class HomeScreen(Screen):
 
     job_box = job_envelope.BoundingBox()
 
-# Kill this function -----------------------------------------------------------------
+
     def on_enter(self): 
-        print('Job loaded:')
-        print(self.job_gcode)
+        log('Job loaded:')
 
         # File label at the top
         if self.job_gcode != []:

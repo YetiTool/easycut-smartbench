@@ -374,9 +374,9 @@ class GoScreen(Screen):
             try:
                 self.m.s.run_job(self.job_gcode)
                 print('Streaming')
-                print(self.job_gcode)
+
             except:
                 print('Stream failed')
-                print self.job_gcode
+
         else:
             print('No file loaded')
