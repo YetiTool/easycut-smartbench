@@ -325,6 +325,7 @@ class SerialConnection(object):
             else:
                 if self.grbl_out.startswith('error') or time.time() > timeout:
                     log('Job could not be initialised. OK never received from GRBL')
+                    # Add some GUI commands here
                     return False
                     # break
 
