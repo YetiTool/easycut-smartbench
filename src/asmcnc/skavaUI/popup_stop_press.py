@@ -50,7 +50,6 @@ class PopupStop(Widget):
         resume_button.bind(on_release=popup.dismiss)
         
         popup.open()
-
     
     def machine_reset(self, *args):
         self.m.s.is_job_streaming = True

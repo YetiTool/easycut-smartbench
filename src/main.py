@@ -5,7 +5,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 
-# config
+#config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
 import time
