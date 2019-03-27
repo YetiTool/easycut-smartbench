@@ -96,6 +96,7 @@ class GCodeView(Widget):
         max_lines_to_read = 1000
 
         log('> for line in gcode_list')
+        
         for line in gcode_list:
 
             lines_read += 1
@@ -263,6 +264,9 @@ class GCodeView(Widget):
         log('> get_non_modal_gcode: process loop')
         
         for draw_line in job_file_gcode:
+             
+            if line_number > 1000:
+                break
 
             # Prevent any weird behaviour
             line = draw_line
