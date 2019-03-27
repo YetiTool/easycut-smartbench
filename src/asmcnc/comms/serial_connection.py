@@ -39,10 +39,16 @@ class SerialConnection(object):
 
     s = None    # Serial comms object
     sm = None   # Screen manager object
+
     grbl_out = ""
     job_gcode = []
     response_log = []
     suppress_error_screens = False
+    
+    write_command_buffer = []
+    write_realtime_buffer = []
+    
+    monitor_text_buffer = ""
 
     def __init__(self, machine, screen_manager):
 
@@ -53,12 +59,13 @@ class SerialConnection(object):
     def __del__(self):
         print 'Destructor'
 
+
     def establish_connection(self, win_port):
         print('start establish')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
-                self.s = serial.Serial(win_port, BAUD_RATE, writeTimeout = 0)
+                self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6)
                 print('self.s. done')
                 return True
             except:
@@ -76,7 +83,7 @@ class SerialConnection(object):
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, writeTimeout = 0) # assign
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6) # assign
                         return True
             except:
                 return False
@@ -93,7 +100,7 @@ class SerialConnection(object):
 
         if self.is_connected():
             print('initialise_grbl')
-            self.write_command("\r\n\r\n", show_in_sys=False, show_in_console=False)    # Wakes grbl
+            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
             Clock.schedule_once(self.start_services, 3) # Delay for grbl to initialize
 
 
@@ -101,6 +108,7 @@ class SerialConnection(object):
 
         self.s.flushInput()  # Flush startup text in serial input
         # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
+        self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
         t.start()
@@ -151,13 +159,13 @@ class SerialConnection(object):
 
         self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
-        if ENABLE_STATUS_REPORTS:
-            Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
+        # if ENABLE_STATUS_REPORTS:
+            # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
 
-    def poll_status(self, dt):
-
-        self.write_realtime('?', show_in_sys=False, show_in_console=False)
+#     def poll_status(self, dt):
+# 
+#         self.write_realtime('?', show_in_sys=False, show_in_console=False)
 
 
 # SCANNER: listens for responses from Grbl
@@ -174,36 +182,55 @@ class SerialConnection(object):
 
 
     def grbl_scanner(self):
-        # If there's a message received, deal with it depending on type
-        # if self.s.inWaiting():
-                
+
         while True:
-            try:
-                rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-                self.grbl_out = rec_temp;
-                # print self.grbl_out
-            except Exception as e:
-                log('serial.readline exception:\n' + str(e))
+            
+            # Polling 
+            if self.next_poll_time < time.time():
+                self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
+                self.next_poll_time = time.time() + self.STATUS_INTERVAL
+            
+            # FLAG: Add in something to yell at the user if this hasn't read anything in a while
+
+            
+            # If there's a message received, deal with it depending on type:
+            if self.s.inWaiting():
+                # Read line in from serial buffer
+                try:
+                    rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
+                    self.grbl_out = rec_temp;
+                    # print self.grbl_out
+                except Exception as e:
+                    log('serial.readline exception:\n' + str(e))
+                    rec_temp = ''
+                    # should something be here to save the GUI?
+            else: 
                 rec_temp = ''
-                # should something be here to save the GUI? 
-                
-            #time.sleep(1)
-            #print 'RX line length: ', len(rec_temp)
-            if len(rec_temp):
+##---------------------------------------------------           
+#             time.sleep(1)
+#             print 'RX line length: ', len(rec_temp)
+##---------------------------------------------------
+            # If something received from serial buffer, process it. 
+            if len(rec_temp):  
+##---------------------------------------------------
                 #print 'RX line: ', rec_temp
                 # return rec_temp
                 #HACK send every line received to console
+##---------------------------------------------------                
+
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if True:
                     log('< ' + rec_temp)
     
-                # Update the gcode monitor (may not be initialised) and console
+                # Update the gcode monitor (may not be initialised) and console:
                 try:
                     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
                 except:
                     pass
                 if self.VERBOSE_ALL_RESPONSE: print rec_temp
     
+                # Process the GRBL response:
+                # NB: Sequential streaming is controlled through process_grbl_response
                 try:
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
@@ -218,12 +245,28 @@ class SerialConnection(object):
                         # - this bit grinds to a halt presumably
                         # - need to send instructions to the GUI (prior to raise?) 
     
-                # if we're streaming, check to see if the buffer can be filled
+                # Job streaming: stuff butter
                 if self.is_job_streaming:
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: self.end_stream()
+                    
+            # Process anything in the write_command and write_realtime lists,
+            # i.e. everything else.
+            command_counter = 0
+            for command in self.write_command_buffer:
+                self.write_direct(*command)
+                command_counter += 1
+                
+            del self.write_command_buffer[0:(command_counter+1)]
             
+            realtime_counter = 0
+            for realtime_command in self.write_realtime_buffer:
+                self.write_direct(*realtime_command, realtime = True)
+                realtime_counter += 1
+                
+            del self.write_realtime_buffer[0:(realtime_counter+1)]
+
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 
@@ -292,7 +335,6 @@ class SerialConnection(object):
             log('Could not start job: File empty')
             
         return
-          
 
     def initialise_job(self):
         
@@ -328,7 +370,6 @@ class SerialConnection(object):
                     return False
                     # break
 
-    
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.job_gcode):
@@ -339,13 +380,12 @@ class SerialConnection(object):
             # if there's room in the serial buffer, send the line
             if len(line_to_go) + 1 <= serial_space:
                 self.c_line.append(len(line_to_go) + 1) # Track number of characters in grbl serial read buffer
-                self.write_command(line_to_go, show_in_sys=True, show_in_console=False) # Send g-code block to grbl
+                self.write_direct(line_to_go, show_in_sys = True, show_in_console = False) # Send g-code block to grbl
                 self.l_count += 1 # lines sent to grbl           
             else:
                 return
  
         self.is_stream_lines_remaining = False
-
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
@@ -644,72 +684,6 @@ class SerialConnection(object):
 
                 self.expecting_probe_result = False # clear flag
 
-
-
-# WRITE
-
-    def write_command(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):
-        # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
-        try:
-            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-            #if show_in_sys and altDisplayText==None: print serialCommand
-            log('> ' + serialCommand)
-            if altDisplayText != None: print altDisplayText
-
-            # Print to console in the UI
-            if show_in_console  and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-            if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-
-        except:
-            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-            log('Console display error: ' + str(consoleDisplayError))
-
-        # Finally issue the command
-        if self.s:
-            try:
-                self.s.write(serialCommand + '\n')
-                
-            except SerialException as serialError:
-                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                log('Serial Error: ' + str(serialError))
-
-
-    def write_realtime(self, serialCommand, show_in_sys=True, show_in_console=True, altDisplayText=None):
-
-        # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
-
-        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
-        try:
-            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-            #if show_in_sys and altDisplayText==None: print serialCommand
-            if not serialCommand.startswith('?'):
-                log('> ' + serialCommand)
-            if altDisplayText != None: print altDisplayText
-
-            # Print to console in the UI
-            if show_in_console  and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-            if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-
-        except:
-            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-            log('Console display error: ' + str(consoleDisplayError))
-
-        # Finally issue the command
-        if self.s:
-            try:
-                self.s.write(serialCommand)
-
-            except SerialException as serialError:
-                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                log('Serial Error: ' + str(serialError))
-
-    monitor_text_buffer = ""
-
 ## SEQUENTIAL STREAMING
 
     _sequential_stream_buffer = []
@@ -733,12 +707,125 @@ class SerialConnection(object):
         log("_send_next_sequential_stream")
         if self._sequential_stream_buffer:
             self.is_sequential_streaming = True
-            self.write_command(self._sequential_stream_buffer[0])
+            self.write_direct(self._sequential_stream_buffer[0])
             del self._sequential_stream_buffer[0]
         else:
             self.is_sequential_streaming = False
             if self._reset_grbl_after_stream:
-                self.write_realtime("\x18", show_in_sys=True, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
+                self.write_direct("\x18", realtime = True, show_in_sys = True, show_in_console = False) # Soft-reset. This forces the need to home when the controller starts up
+
+
+
+
+## WRITE-----------------------------------------------------------------------------
+
+
+    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
+
+        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+        try:
+            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+            #if show_in_sys and altDisplayText==None: print serialCommand
+            if not serialCommand.startswith('?'):
+                log('> ' + serialCommand)
+            if altDisplayText != None: print altDisplayText
+
+            # Print to console in the UI
+            if show_in_console == True and altDisplayText == None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+            if altDisplayText != None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+
+        except:
+            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            # log('Console display error: ' + str(consoleDisplayError))
+
+        # Finally issue the command 
+        if self.s:
+            try:
+                
+                if realtime == False:
+                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+                    self.s.write(serialCommand + '\n')
+                
+                elif realtime == True:
+                    # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
+                    self.s.write(serialCommand)
+                
+            except:
+#                  SerialException as serialError:
+                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+#                 log('Serial Error: ' + str(serialError))
+        
+
+    def write_command(self, serialCommand, **kwargs):
+        
+        
+        self.write_command_buffer.append([serialCommand, kwargs])        
+## OLD --------------------------------------------------------------------------------------------
+#         # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+#         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+#         try:
+#             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+#             #if show_in_sys and altDisplayText==None: print serialCommand
+#             log('> ' + serialCommand)
+#             if altDisplayText != None: print altDisplayText
+# 
+#             # Print to console in the UI
+#             if show_in_console  and altDisplayText == None:
+#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+#             if altDisplayText != None:
+#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+# 
+#         except:
+#             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+#             log('Console display error: ' + str(consoleDisplayError))
+# 
+#         # Finally issue the command
+#         if self.s:
+#             try:
+#                 self.s.write(serialCommand + '\n')
+#                 
+#             except SerialException as serialError:
+#                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+#                 log('Serial Error: ' + str(serialError))
+## -----------------------------------------------------------------------------------------------------
+
+
+    def write_realtime(self, serialCommand, **kwargs):
+        print kwargs
+        self.write_realtime_buffer.append([serialCommand, kwargs])
+        
+## OLD -------------------------------------------------------------------------------------------------
+#         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
+# 
+#         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+#         try:
+#             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+#             #if show_in_sys and altDisplayText==None: print serialCommand
+#             if not serialCommand.startswith('?'):
+#                 log('> ' + serialCommand)
+#             if altDisplayText != None: print altDisplayText
+# 
+#             # Print to console in the UI
+#             if show_in_console and altDisplayText == None:
+#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+#             if altDisplayText != None:
+#                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+# 
+#         except:
+#             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+#             log('Console display error: ' + str(consoleDisplayError))
+# 
+#         # Finally issue the command
+#         if self.s:
+#             try:
+#                 self.s.write(serialCommand)
+# 
+#             except SerialException as serialError:
+#                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+#                 log('Serial Error: ' + str(serialError))
+## --------------------------------------------------------------------------------------------------------
 
 
 
