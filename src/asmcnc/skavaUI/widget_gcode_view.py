@@ -265,9 +265,6 @@ class GCodeView(Widget):
         
         for draw_line in job_file_gcode:
              
-            if line_number > 1000:
-                break
-
             # Prevent any weird behaviour
             line = draw_line
             
