@@ -17,13 +17,13 @@ import sys, os
 ERROR_CODES = {
 
     "error:1"  : "G-code words consist of a letter and a value. Letter was not found.",
-    "error:2"  : "Numeric value format is not valid or missing an expected value.",
+    "error:2"  : "Numeric value format is not valid or is missing an expected value.",
     "error:3"  : "Grbl '$' system command was not recognized or supported.",
     "error:4"  : "Negative value received for an expected positive value.",
     "error:5"  : "Homing cycle is not enabled via settings.",
     "error:6"  : "Minimum step pulse time must be greater than 3usec",
     "error:7"  : "EEPROM read failed. Reset and restored to default values.",
-    "error:8"  : "Grbl '$' command cannot be used unless Grbl is IDLE. Ensures smooth operation during a job.",
+    "error:8"  : "Grbl '$' command cannot be used unless Grbl is IDLE. This ensures smooth operation during a job.",
     "error:9"  : "G-code locked out during alarm or jog grbl_state",
     "error:10" : "Soft limits cannot be enabled without homing also enabled.",
     "error:11" : "Max characters per line exceeded. Line was not processed and executed.",
@@ -58,7 +58,9 @@ ERROR_CODES = {
 Builder.load_string("""
 
 <ErrorScreenClass>:
-#make a blue screen - done. 
+
+    getout_button:getout_button
+
     canvas:
         Color: 
             rgba: hex('#ebbc00FF')
@@ -68,8 +70,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding: 60
+        spacing: 30
         size_hint_x: 1
 
         BoxLayout:
@@ -78,23 +80,29 @@ Builder.load_string("""
             spacing: 20
              
             Label:
-                size_hint_y: 1
-                font_size: '40sp'
-                text: '[b]ERROR[/b]'
+                size_hint_y: 0.8
+                text_size: self.size
+                font_size: '24sp'
+                text: '[b]ERROR[/b]\\nSmartBench could not process the last command:'
                 markup: True
+                halign: 'left'
+                vallign: 'top'
  
             Label:
+                size_hint_y: 1.2
                 text_size: self.size
                 font_size: '22sp'
-                halign: 'center'
+                halign: 'left'
                 valign: 'middle'
                 text: root.error_description 
                 
             Label:
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'top'
-                text: 'Grbl did not recognize that command! Fix the error in the G-code, THEN continue.'
+                size_hint_y: 0.6
+                font_size: '22sp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                text: root.user_instruction
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -108,8 +116,8 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#e6c300FF')
-                    on_release: 
-                        root.quit_to_home()
+                    on_release:
+                        root.button_press()
                         
                     BoxLayout:
                         padding: 5
@@ -119,7 +127,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'Return to the home screen'
+                            text: 'Return to EasyCut'
                         
   
             
@@ -130,6 +138,10 @@ class ErrorScreenClass(Screen):
     # define error description to make kivy happy
     error_description = StringProperty()
     message = StringProperty()
+    button_text = StringProperty()
+    getout_button = ObjectProperty()
+    user_instruction = StringProperty()
+    button_function = StringProperty()
     
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
@@ -139,7 +151,25 @@ class ErrorScreenClass(Screen):
     def on_enter(self):
         # use the message to get the error description        
         self.error_description = ERROR_CODES.get(self.message, "")
+        
+        if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
+            self.sm.get_screen('go').pause_job()
+            self.user_instruction = 'Job has been paused.'
+            self.button_function = 'go'
+        else:
+            self.m.hold()
+            self.user_instruction = 'Streaming to Smartbench has been paused. Returning to EasyCut will resume stream.'
+            self.button_function = 'home'
+    
+    def button_press(self):
+        
+        if self.button_function == 'go':
+            self.sm.current = 'go'
+            
+        elif self.button_function == 'home':
+            self.m.resume()
+            self.sm.current = 'home'             
 
-    def quit_to_home(self):
-        self.sm.current = 'home'
+        
+         
   

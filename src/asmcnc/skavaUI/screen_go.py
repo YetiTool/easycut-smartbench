@@ -243,10 +243,8 @@ class GoScreen(Screen):
     no_job = True
     job_filename = StringProperty()
     start_stop_button_press_counter = 0
-    paused = False
-    started = False
-    stopped = False
-    
+    paused = False    
+    job_in_progress = None
 
     def __init__(self, **kwargs):
 
@@ -263,31 +261,48 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
-        # self.job_gcode = self.sm.get_screen('home').job_gcode       
+        # self.job_gcode = self.sm.get_screen('home').job_gcode  
+        self.job_in_progress = False     
         
     def on_enter(self, *args):
+        
         self.job_gcode = self.sm.get_screen('home').job_gcode
         self.job_filename = self.sm.get_screen('home').job_filename
-        self.btn_pause_play.size_hint_y = None
-        self.btn_pause_play.height = '0dp'
-        self.paused = False
-                        
-        if self.job_gcode != []:
-            print('Yo')
-            print self.no_job
+        
+        if self.job_in_progress == True and self.job_gcode != []:
             self.no_job = False
-            print self.no_job
+            self.stop_start.disabled = False
+            # If job is in progress
+        
+        elif self.job_in_progress == False and self.job_gcode != []:
+            # If job is not in progress, but a job is loaded and ready to go
+            # 
+            self.reset_go_screen_after_job_finished()
+            self.no_job = False
             self.stop_start.disabled = False
             
-        else:
+        elif self.job_in_progress == False and self.job_gcode == []:
+            # if job has not been loaded
             self.stop_start.disabled = True
+            self.btn_pause_play.size_hint_y = None
+            self.btn_pause_play.height = '0dp'
+            
+        
 
-
-    
+#         self.btn_pause_play.size_hint_y = None
+#         self.btn_pause_play.height = '0dp'
+#         self.paused = False
+                        
+#         if self.job_gcode != []:
+#             self.no_job = False
+#             self.stop_start.disabled = False
+#             
+#         else:
+#             self.stop_start.disabled = True
+   
     def start_stop_button_press(self):
        
         self.start_stop_button_press_counter += 1
-        # self.started = not self.started
 
         if self.start_stop_button_press_counter == 1:
             self.stream_job()
@@ -310,26 +325,46 @@ class GoScreen(Screen):
         self.paused = not self.paused
         
         if self.paused == True:
-            self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-            self.m.hold()
-            self.m.s.is_job_streaming = False
+            self.pause_job()
             
         if self.paused == False: 
-            self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-            self.m.resume()
-            self.m.s.is_job_streaming = True
+            self.resume_job()
+            
+    def pause_job(self):
+        self.paused = True
+        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
+        self.m.hold()
+        self.m.s.is_job_streaming = False
+        self.job_in_progress = True
+        
+    def resume_job(self):
+        self.paused = False
+        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        self.m.resume()
+        self.m.s.is_job_streaming = True
+        self.job_in_progress = True
 
 
     @mainthread
     def reset_go_screen_after_job_finished(self):
 
+        # Reset counter and flags
         self.start_stop_button_press_counter = 0
+        self.job_in_progress == False
+        self.paused = False
+        
+        # Update images
         self.start_stop_button_image.source = "./asmcnc/skavaUI/img/go.png"
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        
         #Show back button
         self.btn_back.size_hint_y = 1
+        
+        # Hide play/pause button
         self.btn_pause_play.size_hint_y = None
         self.btn_pause_play.height = '0dp'
+        
+        
 
 
     def stream_job(self):
