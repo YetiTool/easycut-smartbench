@@ -197,6 +197,22 @@ class SerialConnection(object):
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
+
+            # Process anything in the write_command and write_realtime lists,
+            # i.e. everything else.
+            command_counter = 0
+            for command in self.write_command_buffer:
+                self.write_direct(*command)
+                command_counter += 1
+                
+            del self.write_command_buffer[0:(command_counter+1)]
+            
+            realtime_counter = 0
+            for realtime_command in self.write_realtime_buffer:
+                self.write_direct(*realtime_command, realtime = True)
+                realtime_counter += 1
+                
+            del self.write_realtime_buffer[0:(realtime_counter+1)]
             
             # FLAG: Add in something to yell at the user if this hasn't read anything in a while
 
@@ -263,21 +279,7 @@ class SerialConnection(object):
                         self.stuff_buffer()
                     else: self.end_stream()
                     
-            # Process anything in the write_command and write_realtime lists,
-            # i.e. everything else.
-            command_counter = 0
-            for command in self.write_command_buffer:
-                self.write_direct(*command)
-                command_counter += 1
-                
-            del self.write_command_buffer[0:(command_counter+1)]
-            
-            realtime_counter = 0
-            for realtime_command in self.write_realtime_buffer:
-                self.write_direct(*realtime_command, realtime = True)
-                realtime_counter += 1
-                
-            del self.write_realtime_buffer[0:(realtime_counter+1)]
+
 
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
@@ -361,24 +363,17 @@ class SerialConnection(object):
         # When head moved out of the way, should get 'ok' come back from grbl. 
         # Once this happens can continue with other instructions:  
          
-        while True:
-            if (self.grbl_out == 'ok'): 
                 
-                # for the buffer stuffing style streaming
-                self.s.flushInput()
+        # for the buffer stuffing style streaming
+        self.s.flushInput()
         
-                # Reset counters & flags
-                self.l_count = 0
-                self.g_count = 0
-                self.c_line = []
-                self.stream_start_time = time.time();
-                return True
-                # break           
-            else:
-                if self.grbl_out.startswith('error') or time.time() > timeout:
-                    log('Job could not be initialised. OK never received from GRBL')
-                    self.get_serial_screen('Job could not be initialised. OK never received from GRBL')
-                    return False
+        # Reset counters & flags
+        self.l_count = 0
+        self.g_count = 0
+        self.c_line = []
+        self.stream_start_time = time.time();
+        return True
+
 
 
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -410,7 +405,8 @@ class SerialConnection(object):
             
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
-            del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
+            if self.c_line != []:
+                del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
