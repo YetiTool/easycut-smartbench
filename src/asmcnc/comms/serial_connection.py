@@ -59,6 +59,10 @@ class SerialConnection(object):
     def __del__(self):
         print 'Destructor'
 
+    def get_serial_screen(self, serial_error):
+        if self.sm.current != 'serialScreen':
+            self.sm.get_screen('serialScreen').error_description = serial_error
+            self.sm.current = 'serialScreen' 
 
     def establish_connection(self, win_port):
         print('start establish')
@@ -69,7 +73,9 @@ class SerialConnection(object):
                 print('self.s. done')
                 return True
             except:
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
                 return False
+
         else:
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
@@ -86,14 +92,16 @@ class SerialConnection(object):
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6) # assign
                         return True
             except:
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
                 return False
-
 
     # is serial port connected?
     def is_connected(self):
 
         if self.s: return True
-        else: return False
+        else: 
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not find serial connection.'), 3)
+            return False
 
 
     def initialise_grbl(self):
@@ -203,7 +211,7 @@ class SerialConnection(object):
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
-                    # should something be here to save the GUI?
+                    self.get_serial_screen('Could not read line from serial buffer.')
             else: 
                 rec_temp = ''
 ##---------------------------------------------------           
@@ -240,6 +248,7 @@ class SerialConnection(object):
                         self.process_grbl_push(rec_temp)
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
+                    self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
                         # - this bit grinds to a halt presumably
@@ -755,6 +764,7 @@ class SerialConnection(object):
             except:
 #                  SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+                self.get_serial_screen('Could not write last command to serial buffer.')
 #                 log('Serial Error: ' + str(serialError))
         
 
