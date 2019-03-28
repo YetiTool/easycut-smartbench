@@ -50,12 +50,12 @@ Builder.load_string("""
                 markup: True
                 font_size: '40sp'   
                 valign: 'bottom'     
-#             Label: 
-#                 size_hint_y: 0.2
-#                 text: 'Please wait...'
-#                 markup: True
-#                 font_size: '20sp' 
-#                 valign: 'top'
+            Label: 
+                size_hint_y: 0.2
+                text: 'Squaring the axes will cause the machine to make a stalling noise. This is normal.'
+                markup: True
+                font_size: '20sp' 
+                valign: 'top'
 """)
 
 class HomingScreen(Screen):
