@@ -40,6 +40,7 @@ from asmcnc.skavaUI import screen_check_job
 from asmcnc.skavaUI import screen_alarm
 from asmcnc.skavaUI import screen_error
 from asmcnc.skavaUI import screen_serial_failure
+from asmcnc.skavaUI import screen_homing
 
 Cmport = 'COM3'
 
@@ -69,6 +70,8 @@ class SkavaUI(App):
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
         alarm_screen = screen_alarm.AlarmScreenClass(name='alarmScreen', screen_manager = sm, machine = m)
         serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
+        homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
+
         
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -83,6 +86,7 @@ class SkavaUI(App):
         sm.add_widget(error_screen)
         sm.add_widget(alarm_screen)
         sm.add_widget(serial_screen)
+        sm.add_widget(homing_screen)
 
         # set screen to start on
         sm.current = 'lobby'
