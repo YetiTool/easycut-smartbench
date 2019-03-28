@@ -331,18 +331,18 @@ class SerialConnection(object):
         
         # TAKE IN THE FILE
         self.job_gcode = job_object
-        log('I am running: ')
-        
+        log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
         if self.initialise_job() and self.job_gcode:
-            log('Job starting...')
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
+            log('Job running')
                                        
         elif not self.job_gcode:
             log('Could not start job: File empty')
-            
+            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            self.is_job_finished = True
         return
 
     def initialise_job(self):
@@ -357,8 +357,7 @@ class SerialConnection(object):
         
         # When head moved out of the way, should get 'ok' come back from grbl. 
         # Once this happens can continue with other instructions:  
-        print self.grbl_out
-        
+         
         while True:
             if (self.grbl_out == 'ok'): 
                 
@@ -375,9 +374,9 @@ class SerialConnection(object):
             else:
                 if self.grbl_out.startswith('error') or time.time() > timeout:
                     log('Job could not be initialised. OK never received from GRBL')
-                    # Add some GUI commands here
+                    self.get_serial_screen('Job could not be initialised. OK never received from GRBL')
                     return False
-                    # break
+
 
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
