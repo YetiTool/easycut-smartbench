@@ -163,8 +163,8 @@ class QuickCommands(Widget):
             
     def home(self):
         Animation.stop_all(self.home_button)
-        self.m.home_all()
-        
+        self.sm.current = 'homing'
+        self.m.home_all()        
 
     def unlock(self):
         self.m.unlock_after_alarm()

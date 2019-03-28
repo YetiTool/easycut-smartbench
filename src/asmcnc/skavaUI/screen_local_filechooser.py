@@ -238,11 +238,9 @@ class LocalFileChooser(Screen):
     
     
     def on_leave(self):
-        
         self.poll_USB.cancel()
 #         self.usb_stick.disable()
 
-    
     def check_USB_status(self, dt):
         
         if self.usb_stick.is_available():
