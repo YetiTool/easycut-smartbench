@@ -72,7 +72,6 @@ class SkavaUI(App):
         serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
         homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
 
-        
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)

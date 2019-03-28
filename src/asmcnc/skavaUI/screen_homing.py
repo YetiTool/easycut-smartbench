@@ -66,7 +66,7 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
-        self.m.s.suppress_error_screens = True
+        # self.m.s.suppress_error_screens = True
         self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 1)
         
     def check_machine_status(self, dt):
@@ -75,7 +75,7 @@ class HomingScreen(Screen):
             Clock.schedule_once(self.suppress_errors_false, 0.2)          
 
     def suppress_errors_false(self, dt):
-        self.m.s.suppress_error_screens = False
+        # self.m.s.suppress_error_screens = False
         self.quit_to_home()
  
     def quit_to_home(self):

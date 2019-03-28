@@ -124,6 +124,7 @@ class RouterMachine(object):
                                   'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y25', # re-enter work area
                                   'G90', # abs coords
+                                  'G4 P5'
                                   ]
         self.s.start_sequential_stream(homing_sequence_part_1)
 
