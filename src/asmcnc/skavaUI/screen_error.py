@@ -1,6 +1,10 @@
 '''
 Created on 19 Feb 2019
 
+Screen to show user GRBL errors. Called in serial_connection.
+
+Pauses streaming until user returns (and if they are in Go stream until they resume Job). 
+
 @author: Letty
 '''
 
