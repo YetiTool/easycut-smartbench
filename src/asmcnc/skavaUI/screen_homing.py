@@ -67,12 +67,12 @@ class HomingScreen(Screen):
     
     def on_enter(self):
         self.m.s.suppress_error_screens = True
-        Clock.schedule_interval(self.check_machine_status, 0.05)
+        self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 1)
         
     def check_machine_status(self, dt):
         if self.m.s.grbl_out.startswith('<Idle'):
-            Clock.schedule_once(self.suppress_errors_false, 0.5)          
-            
+            Clock.unschedule(self.poll_machine_status)
+            Clock.schedule_once(self.suppress_errors_false, 0.2)          
 
     def suppress_errors_false(self, dt):
         self.m.s.suppress_error_screens = False

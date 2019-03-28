@@ -71,6 +71,7 @@ class PopupAlarmHome(Widget):
         print "USER ANSWER: " , repr(answer)
         if answer == 'rehome':
             self.m.home_all()
+            self.sm.current = 'homing'
         if answer == 'cancel':
             self.m.unlock_after_alarm()        
         self.popup.dismiss()
