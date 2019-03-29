@@ -59,8 +59,6 @@ Builder.load_string("""
 """)
 
 class HomingScreen(Screen):
-    
-    state_tracker = 0
 
     def __init__(self, **kwargs):
         super(HomingScreen, self).__init__(**kwargs)
@@ -68,7 +66,7 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
-        self.m.s.suppress_error_screens = True
+        # self.m.s.suppress_error_screens = True
         self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 1)
         
     def check_machine_status(self, dt):
@@ -80,8 +78,5 @@ class HomingScreen(Screen):
 
     def exit_sequence(self, dt):
         Clock.unschedule(self.poll_machine_status)
-        self.m.s.suppress_error_screens = False
-        self.quit_to_home()
- 
-    def quit_to_home(self):
+        # self.m.s.suppress_error_screens = False
         self.sm.current = 'home'
