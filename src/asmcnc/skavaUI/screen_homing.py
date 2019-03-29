@@ -70,13 +70,13 @@ class HomingScreen(Screen):
         self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 1)
         
     def check_machine_status(self, dt):
-        if self.m.s.grbl_out.startswith('<Idle'):
-            Clock.unschedule(self.poll_machine_status)
-            Clock.schedule_once(self.suppress_errors_false, 0.2)          
+        
+        if self.m.state() == "Idle":
+                # Because there's a GRBL pause in the homing sequence, will take an extra 5 seconds for anything
+                # else to happen. Hence delay here too. 
+                Clock.schedule_once(self.exit_sequence, 5.5)
 
-    def suppress_errors_false(self, dt):
+    def exit_sequence(self, dt):
+        Clock.unschedule(self.poll_machine_status)
         # self.m.s.suppress_error_screens = False
-        self.quit_to_home()
- 
-    def quit_to_home(self):
         self.sm.current = 'home'
