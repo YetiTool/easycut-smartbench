@@ -69,7 +69,7 @@ class SerialConnection(object):
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
-                self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6)
+                self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 print('self.s. done')
                 return True
             except:
@@ -89,7 +89,7 @@ class SerialConnection(object):
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6) # assign
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                         return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
@@ -109,7 +109,7 @@ class SerialConnection(object):
         if self.is_connected():
             print('initialise_grbl')
             self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
-            Clock.schedule_once(self.start_services, 3) # Delay for grbl to initialize
+            Clock.schedule_once(self.start_services, 5) # Delay for grbl to initialize
 
 
     def start_services(self, dt):
