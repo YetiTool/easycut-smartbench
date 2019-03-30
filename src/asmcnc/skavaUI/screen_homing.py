@@ -74,10 +74,11 @@ class HomingScreen(Screen):
                 # Because there's a GRBL pause in the homing sequence, will take an extra 5 seconds for anything
                 # else to happen. Hence delay here too. 
                 Clock.unschedule(self.poll_machine_status)
-                Clock.schedule_interval(self.exit_sequence, 0.5)
+                self.wait_for_homing_finished = Clock.schedule_interval(self.exit_sequence, 0.5)
 
     def exit_sequence(self, dt):
         if not self.m.s.is_sequential_streaming:
             # self.m.s.suppress_error_screens = False
+            Clock.unschedule(self.wait_for_homing_finished)
             self.m.homing_stage_counter = 0
             self.sm.current = 'home'
