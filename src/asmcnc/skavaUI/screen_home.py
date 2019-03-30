@@ -226,24 +226,24 @@ Builder.load_string("""
                                             y: self.parent.y
                                             size: self.parent.width, self.parent.height
                                             allow_stretch: True
-                                Button:
-                                    size_hint_x: 1
-                                    background_color: hex('#F4433600')
-                                    on_release:
-                                        root.manager.current = 'template'
-                                        self.background_color = hex('#F4433600')
-                                    on_press:
-                                        self.background_color = hex('#F44336FF')
-                                    BoxLayout:
-                                        padding: 0
-                                        size: self.parent.size
-                                        pos: self.parent.pos
-                                        Image:
-                                            source: "./asmcnc/skavaUI/img/template.png"
-                                            center_x: self.parent.center_x
-                                            y: self.parent.y
-                                            size: self.parent.width, self.parent.height
-                                            allow_stretch: True
+#                                 Button:
+#                                     size_hint_x: 1
+#                                     background_color: hex('#F4433600')
+#                                     on_release:
+#                                         root.manager.current = 'template'
+#                                         self.background_color = hex('#F4433600')
+#                                     on_press:
+#                                         self.background_color = hex('#F44336FF')
+#                                     BoxLayout:
+#                                         padding: 0
+#                                         size: self.parent.size
+#                                         pos: self.parent.pos
+#                                         Image:
+#                                             source: "./asmcnc/skavaUI/img/template.png"
+#                                             center_x: self.parent.center_x
+#                                             y: self.parent.y
+#                                             size: self.parent.width, self.parent.height
+#                                             allow_stretch: True
 
                                 Label:
                                     id: file_data_label
