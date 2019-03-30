@@ -91,13 +91,13 @@ Builder.load_string("""
                                             
                     Button:
                         id: load_button
-                        disabled: False
+                        disabled: True
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
                         on_release: 
 #                             root.go_to_initial_screen(1)
 #                            root.manager.current = 'template'
-                            root.manager.current = 'vj_polygon'
+#                            root.manager.current = 'vj_polygon'
                             self.background_color = hex('#FFFFFF00')
                         on_press:
                             self.background_color = hex('#FFFFFF00')
@@ -107,7 +107,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_virtualjig.png"
+                                source: "./asmcnc/skavaUI/img/lobby_app_virtualjig_comingsoon.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -124,7 +124,7 @@ Builder.load_string("""
 
                     Button:
                         id: load_button
-                        disabled: False
+                        disabled: True
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -139,7 +139,7 @@ Builder.load_string("""
                             Image:
                                 id: image_select
 #                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
-                                source: "./asmcnc/skavaUI/img/lobby_door_hole_driller.png"
+                                source: "./asmcnc/skavaUI/img/lobby_door_hole_driller_comingsoon.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
