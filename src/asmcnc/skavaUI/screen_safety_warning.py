@@ -27,22 +27,34 @@ Builder.load_string("""
         Rectangle: 
             size: self.size
             pos: self.pos
-             
+            
     BoxLayout:
         orientation: 'horizontal'
-        padding: 60
-        spacing: 0
+        padding: 50
         size_hint_x: 1
-
+        size: self.parent.size
+        pos: self.parent.pos
+        
         BoxLayout:
             orientation: 'vertical'
-            size_hint_x: 1
-            
+            spacing: 5
+            # size_hint_x: 2
+            size: self.parent.size
+            pos: self.parent.pos
+        
             Label:
                 size_hint_y: 0.2
-                text: '[color=000000][b]Safety Warning[/b][/color]'
+                text: '[color=000000]Safety Warning![/color]'
                 markup: True
                 font_size: '40sp' 
+                valign: 'top'
+                
+            Label:
+                size_hint_y: 0.1
+                text: '[color=616161]\\nUsing SmartBench is a risky business. Heed these warnings.[/color]'
+                markup: True
+                font_size: '16sp' 
+                valign: 'bottom'
             
             BoxLayout:
                 orientation: 'vertical'
@@ -52,6 +64,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         spacing:0
                         Image:
+                            orientation: 'right'
                             size_hint_x: 0.15
                             keep_ratio: True
                             allow_stretch: True                           
@@ -63,6 +76,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         spacing:0
                         Image:
+                            orientation: 'right'
                             size_hint_x: 0.15
                             keep_ratio: True
                             allow_stretch: True                           
@@ -71,7 +85,7 @@ Builder.load_string("""
                             text: '[color=000000]What needs to go here?[/color]'
                             markup: True    
                             halign: 'left'     
-
+        
                 BoxLayout:
                     orientation: 'horizontal'
                     BoxLayout:
@@ -96,7 +110,7 @@ Builder.load_string("""
                         Label:
                             text: '[color=000000]What needs to go here?[/color]'
                             markup: True      
-
+        
                 BoxLayout:
                     orientation: 'horizontal'
                     BoxLayout:
@@ -119,17 +133,30 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
-                            text: '[color=000000]What needs to go here?[/color]'
+                            text: '[color=000000]Mac, help![/color]'
                             markup: True
-                           
-            Button:
+            
+            BoxLayout:
+                orientation: 'horizontal'
+                pos: self.pos
                 size_hint_y: 0.2
-                size_hint_x: 0.5
-                halign: 'right'
-                on_release:
-                    root.quit_to_lobby()
+                AnchorLayout:               
+                    Button:
+                        size_hint_x: 0.7
+                        pos: self.pos
+                        halign: 'right'
+                        background_normal: ''
+                        background_color: hex('#0d47a1')
+                        on_release:
+                            root.quit_to_lobby()
+                        Label:
+                            text: '[color=FFFFFF][b]I have read and understand the safety warnings (??)[/b][/color]'
+                            font_size: '20sp'
+                            markup: True
+                            size: self.parent.size
+                            pos: self.parent.pos
 
-                      
+              
 
 """)
 
