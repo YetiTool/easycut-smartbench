@@ -99,7 +99,7 @@ class FeedOverride(Widget):
         
     def feed_norm(self):
         self.feed_override_percentage = 100
-        self.feed_rate_label.text = "100%"
+        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
         self.m.feed_override_reset()
                 
     def feed_down(self):

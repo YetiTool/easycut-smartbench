@@ -95,6 +95,7 @@ class RouterMachine(object):
         else:
             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
 
+        self.zUp()
 
     def home_all(self):
 
