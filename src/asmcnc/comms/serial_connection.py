@@ -447,10 +447,8 @@ class SerialConnection(object):
 
 
     def cancel_stream(self):
-        self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
+        self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
-        
-        self.m.zUp()
         
         self.sm.get_screen('go').reset_go_screen_after_job_finished()
         if self.buffer_monitor_file != None:
@@ -461,6 +459,9 @@ class SerialConnection(object):
 
         # Flush
         self.s.flushInput()
+        
+        # Move head up        
+        self.m.zUp()
 
 # PUSH MESSAGE HANDLING
 
