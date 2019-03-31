@@ -31,7 +31,6 @@ class RouterMachine(object):
 #     job_file_gcode = []
 
             
-    def __init__(self, win_serial_port, screen_manager):
 
         self.sm = screen_manager
         self.set_jog_limits()
@@ -95,6 +94,7 @@ class RouterMachine(object):
         else:
             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
 
+        self.m.zUp()
 
     def home_all(self):
 
