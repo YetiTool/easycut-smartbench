@@ -418,9 +418,14 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
+        # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
+        self.is_job_finished = True
+        
+        self.m.zUp()
 
+        # Tell user the job has finished
         log("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
@@ -430,18 +435,23 @@ class SerialConnection(object):
         seconds = int(seconds_remainder % 60)
         #time_take_minutes = int(time_taken_seconds/60)
         log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-        self.sm.get_screen('go').reset_go_screen_after_job_finished()
-        #popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(time_take_minutes) + " minutes.")
+
         popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+        
+        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+        
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
-        self.is_job_finished = True
+
 
 
     def cancel_stream(self):
         self.is_job_streaming = False  # allow grbl_scanner() to start stuffing buffer
         self.is_stream_lines_remaining = False
+        
+        self.m.zUp()
+        
         self.sm.get_screen('go').reset_go_screen_after_job_finished()
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
