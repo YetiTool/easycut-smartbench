@@ -342,11 +342,13 @@ class RouterMachine(object):
         self.s.write_command('G10 L20 P1 Y0')
         
     def go_x_datum(self):
-        self.zUp()
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P1')
         self.s.write_command('G0 G54 X0')
  
     def go_y_datum(self):
-        self.zUp()
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P1')
         self.s.write_command('G0 G54 Y0')
         
     def toggle_spindle_off_overide(self, dt):
