@@ -259,13 +259,13 @@ class GoScreen(Screen):
         self.feed_override_container.add_widget(widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm))
         
         
-        self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
+      #  self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
         # self.job_gcode = self.sm.get_screen('home').job_gcode  
-        self.job_in_progress = False     
+        self.job_in_progress = False
         
     def on_enter(self, *args):
         
@@ -367,7 +367,7 @@ class GoScreen(Screen):
         self.btn_pause_play.size_hint_y = None
         self.btn_pause_play.height = '0dp'
         
-        
+        #self.ids.feed_override_container.widget_feed_override.ids.feed_rate_label.text = "100%"
 #         self.my_widget.feed_override_percentage = 100
 #         self.my_widget.feed_rate_label.text = '100%'
 #         self.m.feed_override_reset()

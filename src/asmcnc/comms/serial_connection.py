@@ -461,7 +461,7 @@ class SerialConnection(object):
         self.s.flushInput()
         
         # Move head up        
-        self.m.zUp()
+        Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
 
 # PUSH MESSAGE HANDLING
 
