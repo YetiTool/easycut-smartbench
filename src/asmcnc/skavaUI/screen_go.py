@@ -253,13 +253,15 @@ class GoScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.job_gcode=kwargs['job']
+        
+        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
-        self.feed_override_container.add_widget(widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm))
+        self.feed_override_container.add_widget(self.feedOverride)
         
         
-      #  self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
+        #self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
@@ -290,6 +292,9 @@ class GoScreen(Screen):
             self.btn_pause_play.size_hint_y = None
             self.btn_pause_play.height = '0dp'
             
+            
+        self.feedOverride.feed_norm()
+
         
 
 #         self.btn_pause_play.size_hint_y = None
@@ -367,10 +372,8 @@ class GoScreen(Screen):
         self.btn_pause_play.size_hint_y = None
         self.btn_pause_play.height = '0dp'
         
-        #self.ids.feed_override_container.widget_feed_override.ids.feed_rate_label.text = "100%"
-#         self.my_widget.feed_override_percentage = 100
-#         self.my_widget.feed_rate_label.text = '100%'
-#         self.m.feed_override_reset()
+        self.feedOverride.feed_norm()
+
 
     def stream_job(self):
                 

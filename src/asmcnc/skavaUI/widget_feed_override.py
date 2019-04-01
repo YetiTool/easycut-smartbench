@@ -85,12 +85,13 @@ Builder.load_string("""
 
 class FeedOverride(Widget):
 
+    feed_override_percentage = NumericProperty()
+    feed_rate_label = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-
-    feed_override_percentage = 100
+        self.sm=kwargs['screen_manager']     
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 10
