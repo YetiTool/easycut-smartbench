@@ -283,9 +283,15 @@ class RouterMachine(object):
         self.s.write_command('$X')
     
     def go_to_jobstart_xy(self):
+        print("Me too!")
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P1')
         self.s.write_command('G0 G54 X0 Y0')
     
     def go_to_standby(self):
+        print("Yup I'm the right one")
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P1')
         self.s.write_command('G28')
     
     def go_to_jobstart_z(self):
