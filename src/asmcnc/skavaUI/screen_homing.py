@@ -50,15 +50,41 @@ Builder.load_string("""
                 markup: True
                 font_size: '40sp'   
                 valign: 'bottom'     
+            AnchorLayout: 
+                Button:
+                    size_hint_x: 0.25
+                    size_hint_y: 0.35
+                    halign: 'center'
+                    valign: 'middle'
+                    background_normal: ''
+                    background_color: hex('#1E88E5')
+                    on_release: 
+                        root.cancel_homing()
+                    
+                    Label:
+                        #size: self.texture_size
+                        text: '[b]Cancel Homing[/b]'
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        text_size: self.size
+                        valign: 'middle'
+                        halign: 'center'
+                        font_size: '22sp'
+                        markup: True
             Label: 
                 size_hint_y: 0.2
                 text: 'Squaring the axes will cause the machine to make a stalling noise. This is normal.'
                 markup: True
                 font_size: '20sp' 
                 valign: 'top'
+                
+
 """)
 
 class HomingScreen(Screen):
+    
+    wait_for_homing_finished = None
+    poll_machine_status = None
 
     def __init__(self, **kwargs):
         super(HomingScreen, self).__init__(**kwargs)
@@ -66,8 +92,14 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
-        # self.m.s.suppress_error_screens = True
-        self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 2)
+        self.m.s.suppress_error_screens = True
+        
+        if self.m.is_squaring_XY_needed_after_homing:
+            self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 2)           
+            self.m.home_all()
+        else:
+            self.m.home_all()
+            self.wait_for_homing_finished = Clock.schedule_interval(self.exit_sequence, 0.5)
         
     def check_machine_status(self, dt):
         if self.m.homing_stage_counter == 2:
@@ -77,8 +109,18 @@ class HomingScreen(Screen):
                 self.wait_for_homing_finished = Clock.schedule_interval(self.exit_sequence, 0.5)
 
     def exit_sequence(self, dt):
-        if not self.m.s.is_sequential_streaming:
-            # self.m.s.suppress_error_screens = False
-            Clock.unschedule(self.wait_for_homing_finished)
+        if not self.m.s.is_sequential_streaming and self.m.state().startswith('Idle'):
+            self.m.s.suppress_error_screens = False
+            if self.wait_for_homing_finished != None: Clock.unschedule(self.wait_for_homing_finished)
             self.m.homing_stage_counter = 0
             self.sm.current = 'home'
+            
+    def cancel_homing(self):
+        if self.poll_machine_status != None: Clock.unschedule(self.poll_machine_status)
+        if self.wait_for_homing_finished != None: Clock.unschedule(self.wait_for_homing_finished)
+        self.m.s.is_sequential_streaming = False
+        self.m.s.write_direct("\x18", realtime = True, show_in_sys = True, show_in_console = False) # Soft-reset. This forces the need to home when the controller starts up
+        print('Homing Cancelled')
+        self.m.homing_stage_counter = 0
+        self.sm.current = 'home'
+        
