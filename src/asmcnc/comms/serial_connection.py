@@ -241,11 +241,11 @@ class SerialConnection(object):
 ##---------------------------------------------------                
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-#                 if True:
-#                     if rec_temp.startswith('<'):
-#                         log(rec_temp)
-#                     else:
-#                         log('< ' + rec_temp)
+                if True:
+                    if rec_temp.startswith('<'):
+                        log(rec_temp)
+                    else:
+                        log('< ' + rec_temp)
     
                 # Update the gcode monitor (may not be initialised) and console:
                 try:
