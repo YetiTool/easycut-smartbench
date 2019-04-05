@@ -43,7 +43,7 @@ from asmcnc.skavaUI import screen_serial_failure
 from asmcnc.skavaUI import screen_homing
 from asmcnc.skavaUI import screen_safety_warning
 
-Cmport = 'COM3'
+Cmport = 'COM5'
 
 class SkavaUI(App):
 

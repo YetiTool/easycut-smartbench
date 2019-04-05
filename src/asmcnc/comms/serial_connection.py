@@ -171,9 +171,6 @@ class SerialConnection(object):
             # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
 
-#     def poll_status(self, dt):
-# 
-#         self.write_realtime('?', show_in_sys=False, show_in_console=False)
 
 
 # SCANNER: listens for responses from Grbl
@@ -209,7 +206,8 @@ class SerialConnection(object):
             
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
-                self.write_direct(*realtime_command, realtime = True)
+                print "WRITE: ", realtime_command[0], realtime_command[1], " ... END WRITE"
+                self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
                 
             del self.write_realtime_buffer[0:(realtime_counter+1)]
@@ -243,11 +241,11 @@ class SerialConnection(object):
 ##---------------------------------------------------                
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-                if True:
-                    if rec_temp.startswith('<'):
-                        log(rec_temp)
-                    else:
-                        log('< ' + rec_temp)
+#                 if True:
+#                     if rec_temp.startswith('<'):
+#                         log(rec_temp)
+#                     else:
+#                         log('< ' + rec_temp)
     
                 # Update the gcode monitor (may not be initialised) and console:
                 try:
@@ -740,6 +738,7 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
+#         print "Write in console = ", show_in_console
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -777,8 +776,8 @@ class SerialConnection(object):
 #                 log('Serial Error: ' + str(serialError))
         
 
+    # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
-        
         
         self.write_command_buffer.append([serialCommand, kwargs])        
 ## OLD --------------------------------------------------------------------------------------------
@@ -810,11 +809,12 @@ class SerialConnection(object):
 #                 log('Serial Error: ' + str(serialError))
 ## -----------------------------------------------------------------------------------------------------
 
-
-    def write_realtime(self, serialCommand, **kwargs):
-        print kwargs
-        self.write_realtime_buffer.append([serialCommand, kwargs])
+    # Many realtime commands are non-printables, and cause the gcode console to crash. 
+    # GCode console with therefore print 'altDisplayText' arg instead
+    def write_realtime(self, serialCommand, altDisplayText = None):
         
+        self.write_realtime_buffer.append([serialCommand, altDisplayText])
+
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
 # 

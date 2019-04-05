@@ -166,9 +166,9 @@ class DevOptions(Widget):
                     '$100=56.649',   #X steps/mm
                     '$101=56.623',   #Y steps/mm
                     '$102=1066.667',   #Z steps/mm
-                    '$110=15000.0',   #X Max rate, mm/min
-                    '$111=15000.0',   #Y Max rate, mm/min
-                    '$112=2000.0',   #Z Max rate, mm/min
+                    '$110=6000.0',   #X Max rate, mm/min
+                    '$111=6000.0',   #Y Max rate, mm/min
+                    '$112=750.0',   #Z Max rate, mm/min
                     '$120=500.0',    #X Acceleration, mm/sec^2
                     '$121=200.0',    #Y Acceleration, mm/sec^2
                     '$122=200.0',    #Z Acceleration, mm/sec^2
