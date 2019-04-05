@@ -232,8 +232,7 @@ class RouterMachine(object):
     # ... unless it is unlocked
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
-        self.s.write_realtime("\x18", show_in_sys=False, show_in_console=False) # Soft-reset. This forces the need to home when the controller starts up
-        print '>>> GRBL RESET'
+        self.s.write_realtime("\x18", altDisplayText = 'Soft reset') # Soft-reset. This forces the need to home when the controller starts up
     
     def jog_absolute_single_axis(self, axis, target, speed):
         self.s.write_command('$J=G53 ' + axis + str(target) + ' F' + str(speed))
@@ -245,13 +244,13 @@ class RouterMachine(object):
         self.s.write_command('$J=G91 ' + axis + str(dist) + ' F' + str(speed))
     
     def quit_jog(self):
-        self.s.write_realtime('\x85', show_in_console=False)       
+        self.s.write_realtime('\x85', altDisplayText = 'Quit jog')       
 
     def hold(self):
         self.door()
     
     def resume(self):
-        self.s.write_realtime('~')       
+        self.s.write_realtime('~', altDisplayText = 'Resume')       
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')
@@ -321,7 +320,7 @@ class RouterMachine(object):
         self.s.write_command('AF')
 
     def feed_override_reset(self):
-        self.s.write_realtime('\x90', altDisplayText='Feed override RESET')
+        self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
     def feed_override_up_10(self, final_percentage=''):
         self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
