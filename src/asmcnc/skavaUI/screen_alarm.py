@@ -62,19 +62,27 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'top'
                 text: root.alarm_description 
-                
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                text: 'ENSURE THAT THE MACHINE IS CLEAR.'
+
             Label:
                 text_size: self.size
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'To clear the alarm state RESET and UNLOCK the machine.'
+                text: 'To clear the alarm state:'
+              
+            Label:
+                text_size: self.size
+                font_size: '18sp'
+                halign: 'center'
+                valign: 'middle'
+                text: 'If the axes are near limit switches, de-power the machine and move the axes off the switches.'
+
+            Label:
+                text_size: self.size
+                font_size: '18sp'
+                halign: 'center'
+                valign: 'middle'
+                text: 'If the axes are away from the limit switches, RESET and UNLOCK.'
                 
             BoxLayout:
                 orientation: 'horizontal'
