@@ -126,7 +126,7 @@ class RouterMachine(object):
                                   'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y25', # re-enter work area
                                   'G90', # abs coords
-                                  'G4 P1' # delay
+                                  'G4 P1', # delay
                                   '$21=1', # soft limits on
                                   '$20=1', # soft limits off
                                   '$H' # home
