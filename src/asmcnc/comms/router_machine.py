@@ -103,10 +103,7 @@ class RouterMachine(object):
         self.is_machine_homed = True # status on powerup
         if self.is_squaring_XY_needed_after_homing: self.set_XY_square()
         else: 
-            
             self.s.write_command('$H') # HOME
-            
-        
 
 
     def set_XY_square(self):
@@ -121,7 +118,7 @@ class RouterMachine(object):
         # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
 
-        homing_sequence_part_1 =  [
+        square_homing_sequence =  [
                                   '$H',
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
@@ -129,34 +126,13 @@ class RouterMachine(object):
                                   'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y25', # re-enter work area
                                   'G90', # abs coords
-                                  'G4 P5'
+                                  'G4 P1' # delay
+                                  '$21=1', # soft limits on
+                                  '$20=1', # soft limits off
+                                  '$H' # home
                                   ]
-        self.s.start_sequential_stream(homing_sequence_part_1)
+        self.s.start_sequential_stream(square_homing_sequence)
 
-        self.homing_stage_counter = 0 # resetting count to detect when to do post_operatons (see 'set_XY_square_post_operations' function)
-        self.square_post_op_event = Clock.schedule_interval(self.set_XY_square_post_operations, 0.5)
-
-
-    def set_XY_square_post_operations(self, dt):
-
-        # Make sure the machine is idle before re-homing (grbl wont listen to $ commands when running)
-        # The state can ping into idle very briefly during, so we're setting a threshold detection with 'homing_stage_counter'
-        print("set_XY_square_post_operations")
-        if not self.s.is_sequential_streaming:
-            print("Not streaming")
-            if self.state() == "Idle":
-                print("Idle")
-                homing_sequence_part_2 =  [
-                                          '$21=1', # soft limits on
-                                          '$20=1', # soft limits off
-                                          '$H' # home
-                                          ]
-                self.homing_stage_counter += 1               
-                if self.homing_stage_counter >= 1:
-                    self.square_post_op_event.cancel()
-                    self.s.start_sequential_stream(homing_sequence_part_2)
-                    self.set_state('Home') # Since homing op is part of seq stream_file, can't call regular function which would normally force the idle state (grbl not very good at setting the 'home' state)
-                    self.homing_stage_counter += 1
 # STATUS            
         
     def is_connected(self):
