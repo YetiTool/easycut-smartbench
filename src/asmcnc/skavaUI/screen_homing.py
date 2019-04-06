@@ -92,7 +92,7 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
-        self.m.s.suppress_error_screens = True
+        # self.m.s.suppress_error_screens = True
         
         if self.m.is_squaring_XY_needed_after_homing:
             self.poll_machine_status = Clock.schedule_interval(self.check_machine_status, 2)           
@@ -110,7 +110,7 @@ class HomingScreen(Screen):
 
     def exit_sequence(self, dt):
         if not self.m.s.is_sequential_streaming and self.m.state().startswith('Idle'):
-            self.m.s.suppress_error_screens = False
+            # self.m.s.suppress_error_screens = False
             if self.wait_for_homing_finished != None: Clock.unschedule(self.wait_for_homing_finished)
             self.m.homing_stage_counter = 0
             self.sm.current = 'home'

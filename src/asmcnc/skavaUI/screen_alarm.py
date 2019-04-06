@@ -144,7 +144,8 @@ class AlarmScreenClass(Screen):
         # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(self.message, "")
 #        self.alarm_description = ALARM_CODES.get("ALARM:4", "") (just for testing)  
-        
+        self.m.set_state('Alarm')
+
     def quit_to_home(self):
         self.sm.current = 'home'
  
