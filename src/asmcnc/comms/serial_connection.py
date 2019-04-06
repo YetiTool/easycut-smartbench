@@ -717,6 +717,7 @@ class SerialConnection(object):
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._send_next_sequential_stream()
+        
                 
     def _send_next_sequential_stream(self):
         log("_send_next_sequential_stream")
@@ -727,9 +728,14 @@ class SerialConnection(object):
         else:
             self.is_sequential_streaming = False
             if self._reset_grbl_after_stream:
-                self.m.soft_reset() # Soft-reset. This forces the need to home when the controller starts up
+                self.m.soft_reset()
 
 
+    def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
+        self.is_sequential_streaming = False
+        _sequential_stream_buffer = []
+        if reset_grbl_after_cancel:
+            self.m.soft_reset()
 
 
 ## WRITE-----------------------------------------------------------------------------

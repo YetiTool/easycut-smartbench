@@ -99,39 +99,8 @@ class RouterMachine(object):
 
     def home_all(self):
 
-        self.set_state('Home') # (grbl not very good at setting the 'home' state)
-        self.is_machine_homed = True # status on powerup
-        if self.is_squaring_XY_needed_after_homing: self.set_XY_square()
-        else: 
-            self.s.write_command('$H') # HOME
+        self.sm.current = 'homing'
 
-
-    def set_XY_square(self):
-
-        # This function is designed to square the machine's X&Y axes
-        # It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
-        # The steppers will stall out, but the X frame will square against the mechanical deadstops.
-        # Intended use is first home after power-up only, or the stalling noise will get annoying!
-
-        self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again 
-
-        # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
-        # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
-
-        square_homing_sequence =  [
-                                  '$H',
-                                  '$20=0', # soft limits off
-                                  '$21=0', # hard limits off
-                                  'G91', # relative coords
-                                  'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
-                                  'G1 Y25', # re-enter work area
-                                  'G90', # abs coords
-                                  'G4 P1', # delay
-                                  '$21=1', # soft limits on
-                                  '$20=1', # soft limits off
-                                  '$H' # home
-                                  ]
-        self.s.start_sequential_stream(square_homing_sequence)
 
 # STATUS            
         

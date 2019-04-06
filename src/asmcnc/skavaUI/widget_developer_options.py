@@ -118,8 +118,7 @@ class DevOptions(Widget):
         sys.exit()
 
     def square_axes(self):
-        self.m.is_squaring_XY_needed_after_homing = True
-#         self.sm.current = 'homing'
+#         self.sm.get_screen('homing').is_squaring_XY_needed_after_homing = True
         self.m.home_all()
 
     def return_to_lobby(self):
