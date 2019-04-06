@@ -175,7 +175,7 @@ Builder.load_string("""
                             size_hint_x: 0.2
                             keep_ratio: True
                             allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/danger_clipart.png"
+                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                             halign: 'left'
                             size:self.texture_size
                         Label:
