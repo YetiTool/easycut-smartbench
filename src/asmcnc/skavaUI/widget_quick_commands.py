@@ -141,7 +141,6 @@ Builder.load_string("""
     
 # Valid states types: Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
 
-from kivy.animation import Animation
 
 
 class QuickCommands(Widget):
@@ -153,18 +152,12 @@ class QuickCommands(Widget):
         super(QuickCommands, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        
-        anim = Animation(height=80, width=80, t='in_out_sine') + Animation(height=60, width=60, t='in_out_sine')
-
-#         anim = Animation(size=(30, 30),t='in_out_sine',center=self.parent.center) + Animation(size=(10, 10),t='in_out_sine',center=self.parent.center)
-        anim.repeat = True
-#        anim.start(self.home_button)
+      
 
             
     def home(self):
-        Animation.stop_all(self.home_button)
-        self.sm.current = 'homing'
-    
+#         self.sm.current = 'homing'
+        self.m.home_all()
 
     def unlock(self):
         self.m.unlock_after_alarm()
