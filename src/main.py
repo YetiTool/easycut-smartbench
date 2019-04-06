@@ -92,7 +92,7 @@ class SkavaUI(App):
         sm.add_widget(safety_screen)
 
         # set screen to start on
-        sm.current = 'alarmScreen'
+        sm.current = 'safety'
         return sm
 
 
