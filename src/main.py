@@ -43,7 +43,7 @@ from asmcnc.skavaUI import screen_serial_failure
 from asmcnc.skavaUI import screen_homing
 from asmcnc.skavaUI import screen_safety_warning
 
-Cmport = 'COM5'
+Cmport = 'COM3'
 
 class SkavaUI(App):
 
@@ -92,7 +92,7 @@ class SkavaUI(App):
         sm.add_widget(safety_screen)
 
         # set screen to start on
-        sm.current = 'safety'
+        sm.current = 'alarmScreen'
         return sm
 
 
