@@ -156,14 +156,13 @@ class HomingScreen(Screen):
         
     def check_for_successful_completion(self, dt):
 
-        # if alarm state happens to prevent homing from completing, stop the success checking
+        # if alarm state is triggered which prevents homing from completing, stop checking for success
         if self.m.state == 'Alarm':
             print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
 
-        # if sequential_stream completes
+        # if sequential_stream completes successfully
         elif self.m.s.is_sequential_streaming == False:
-            # Success!
             print "Homing success!"
             self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
 
