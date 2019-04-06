@@ -109,7 +109,7 @@ class HomingScreen(Screen):
         self.m.set_state('Home') 
 
         # monitor sequential stream status for completion
-        self.poll_machine_status = Clock.schedule_interval(self.check_for_completion, 1)           
+        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
 
 
     def home_normally(self):
@@ -119,8 +119,6 @@ class HomingScreen(Screen):
 
 
     def home_with_squaring(self):
-
-        self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again 
 
         # This function is designed to square the machine's X&Y axes
         # It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
@@ -156,19 +154,26 @@ class HomingScreen(Screen):
         self.m.s.start_sequential_stream(square_homing_sequence)
 
         
-    def check_for_completion(self, dt):
+    def check_for_successful_completion(self, dt):
 
-        if self.m.s.is_sequential_streaming == False:
-           
+        # if alarm state happens to prevent homing from completing, stop the success checking
+        if self.m.state == 'Alarm':
+            Clock.unschedule(self.poll_for_success)
+
+        # if sequential_stream completes
+        elif self.m.s.is_sequential_streaming == False:
             # Success!
+            print "Homing success!"
+            self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
+
             self.m.is_machine_homed = True # status on powerup
-            Clock.unschedule(self.poll_machine_status)
+            Clock.unschedule(self.poll_for_success)
             self.sm.current = 'home'
 
     def cancel_homing(self):
 
         print('Cancelling homing...')
-        Clock.unschedule(self.poll_machine_status) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
 
         self.m.soft_reset()
