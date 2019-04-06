@@ -119,7 +119,7 @@ class DevOptions(Widget):
 
     def square_axes(self):
         self.m.is_squaring_XY_needed_after_homing = True
-        self.sm.current = 'homing'
+#         self.sm.current = 'homing'
         self.m.home_all()
 
     def return_to_lobby(self):
