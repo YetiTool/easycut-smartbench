@@ -206,7 +206,6 @@ class SerialConnection(object):
             
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
-                print "WRITE: ", realtime_command[0], realtime_command[1], " ... END WRITE"
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
                 
@@ -727,8 +726,10 @@ class SerialConnection(object):
             del self._sequential_stream_buffer[0]
         else:
             self.is_sequential_streaming = False
+            log("sequential stream ended")
             if self._reset_grbl_after_stream:
                 self.m.soft_reset()
+                print "GRBL Reset after sequential stream ended"
 
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
@@ -736,6 +737,7 @@ class SerialConnection(object):
         _sequential_stream_buffer = []
         if reset_grbl_after_cancel:
             self.m.soft_reset()
+            print "GRBL Reset after sequential stream cancelled"
 
 
 ## WRITE-----------------------------------------------------------------------------

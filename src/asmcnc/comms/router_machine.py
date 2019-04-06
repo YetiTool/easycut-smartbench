@@ -181,6 +181,7 @@ class RouterMachine(object):
     # ... unless it is unlocked
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
+        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset') # Soft-reset. This forces the need to home when the controller starts up
     
     def jog_absolute_single_axis(self, axis, target, speed):

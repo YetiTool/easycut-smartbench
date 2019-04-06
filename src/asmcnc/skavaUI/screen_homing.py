@@ -115,7 +115,7 @@ class HomingScreen(Screen):
     def home_normally(self):
         
         normal_homing_sequence = ['$H']
-        self.s.start_sequential_stream(normal_homing_sequence)
+        self.m.s.start_sequential_stream(normal_homing_sequence)
 
 
     def home_with_squaring(self):
@@ -153,7 +153,7 @@ class HomingScreen(Screen):
                                   '$H' # home - which also issues a "blocking ok" response
                                   ]
 
-        self.s.start_sequential_stream(square_homing_sequence)
+        self.m.s.start_sequential_stream(square_homing_sequence)
 
         
     def check_for_completion(self, dt):
@@ -171,7 +171,7 @@ class HomingScreen(Screen):
         print('Homing Cancelled')
         Clock.unschedule(self.poll_machine_status) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        exit_homing()
+        self.exit_homing()
 
 
     def exit_homing(self):

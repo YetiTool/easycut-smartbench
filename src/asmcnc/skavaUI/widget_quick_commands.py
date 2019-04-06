@@ -156,7 +156,6 @@ class QuickCommands(Widget):
 
             
     def home(self):
-#         self.sm.current = 'homing'
         self.m.home_all()
 
     def unlock(self):
