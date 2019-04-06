@@ -158,6 +158,7 @@ class HomingScreen(Screen):
 
         # if alarm state happens to prevent homing from completing, stop the success checking
         if self.m.state == 'Alarm':
+            print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
 
         # if sequential_stream completes
