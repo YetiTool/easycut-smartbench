@@ -702,18 +702,17 @@ class SerialConnection(object):
 
 ## SEQUENTIAL STREAMING
 
+    # This stream_file method waits for an 'ok' before sending the next setting
+    # It does not stuff the grbl buffer
+    # It is for:
+      # Anything sending EEPROM settings (which require special attention, due to writing of values)
+      # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
+    # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
+
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
-
-        # This stream_file method waits for an 'ok' before sending the next setting
-        # It does not stuff the grbl buffer
-        # It is for:
-          # EEPROM settings require special attention, due to writing of values
-          # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
-        # WARNING: this function is not blocking, and as of yet there is no way to indicate it has finished
-        
         log("start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
@@ -728,7 +727,7 @@ class SerialConnection(object):
         else:
             self.is_sequential_streaming = False
             if self._reset_grbl_after_stream:
-                self.write_direct("\x18", realtime = True, show_in_sys = True, show_in_console = False) # Soft-reset. This forces the need to home when the controller starts up
+                self.m.soft_reset() # Soft-reset. This forces the need to home when the controller starts up
 
 
 
