@@ -46,7 +46,7 @@ Builder.load_string("""
                 
             Label: 
                 size_hint_y: 0.5
-                text: '[b]Homing. Please wait...[/b]'
+                text: root.homing_text
                 markup: True
                 font_size: '40sp'   
                 valign: 'bottom'     
@@ -88,6 +88,7 @@ class HomingScreen(Screen):
     
     
     is_squaring_XY_needed_after_homing = True
+    homing_text = StringProperty()
 
     
     def __init__(self, **kwargs):
@@ -99,17 +100,28 @@ class HomingScreen(Screen):
     
     def on_enter(self):
         
-        # Is this first time since power cycling?
-        if self.is_squaring_XY_needed_after_homing: 
-            self.home_with_squaring()
-        else: 
-            self.home_normally()
+        
+        if self.m.state().startswith('Idle'):
+            self.homing_text = '[b]Homing. Please wait...[/b]'
+        
+            # Is this first time since power cycling?
+            if self.is_squaring_XY_needed_after_homing: 
+                self.home_with_squaring()
+            else: 
+                self.home_normally()
+    
+            # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
+            self.m.set_state('Home') 
+    
+            # monitor sequential stream status for completion
+            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
 
-        # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-        self.m.set_state('Home') 
-
-        # monitor sequential stream status for completion
-        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
+        elif self.m.state().startswith('Alarm'):    
+            self.homing_text = '[b]Machine is not Idle. Please clear the alarm state before re-attempting to Home.[/b]'
+            
+        else:
+            self.homing_text = '[b]Machine is not Idle. Please ensure machine is in an idle state before re-attempting to Home.[/b]'
+            
 
 
     def home_normally(self):
@@ -160,6 +172,7 @@ class HomingScreen(Screen):
         if self.m.state == 'Alarm':
             print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
+            self.homing_text = '[b]Homing unsuccessful.[/b]'
 
         # if sequential_stream completes successfully
         elif self.m.s.is_sequential_streaming == False:
