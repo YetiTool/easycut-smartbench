@@ -199,19 +199,18 @@ class HomingScreen(Screen):
 
         print('Cancelling homing...')
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
-        self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
 
-        if self.quit_home:
-            self.quit_home = False
+        if self.quit_home == True:
             self.sm.current = 'home'
             
         else:
+            self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
         # ... will trigger an alarm screen
         
         
-        
-
+    def on_leave(self):
+        self.quit_home = False
 
 
         
