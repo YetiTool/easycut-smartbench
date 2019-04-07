@@ -202,7 +202,9 @@ class HomingScreen(Screen):
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
 
         if self.quit_home:
+            self.quit_home = False
             self.sm.current = 'home'
+            
         else:
             self.m.soft_reset()
         # ... will trigger an alarm screen
