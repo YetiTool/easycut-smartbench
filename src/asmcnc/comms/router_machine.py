@@ -6,6 +6,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection
 from kivy.clock import Clock
+import sys
 
 
 class RouterMachine(object):
