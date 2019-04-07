@@ -99,64 +99,9 @@ class RouterMachine(object):
 
     def home_all(self):
 
-        self.set_state('Home') # (grbl not very good at setting the 'home' state)
-        self.is_machine_homed = True # status on powerup
-        if self.is_squaring_XY_needed_after_homing: self.set_XY_square()
-        else: 
-            
-            self.s.write_command('$H') # HOME
-            
-        
+        self.sm.current = 'homing'
 
 
-    def set_XY_square(self):
-
-        # This function is designed to square the machine's X&Y axes
-        # It does this by killing the limit switches and driving the X frame into mechanical deadstops at the end of the Y axis.
-        # The steppers will stall out, but the X frame will square against the mechanical deadstops.
-        # Intended use is first home after power-up only, or the stalling noise will get annoying!
-
-        self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again 
-
-        # Because we're setting grbl configs (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
-        # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
-
-        homing_sequence_part_1 =  [
-                                  '$H',
-                                  '$20=0', # soft limits off
-                                  '$21=0', # hard limits off
-                                  'G91', # relative coords
-                                  'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
-                                  'G1 Y25', # re-enter work area
-                                  'G90', # abs coords
-                                  'G4 P5'
-                                  ]
-        self.s.start_sequential_stream(homing_sequence_part_1)
-
-        self.homing_stage_counter = 0 # resetting count to detect when to do post_operatons (see 'set_XY_square_post_operations' function)
-        self.square_post_op_event = Clock.schedule_interval(self.set_XY_square_post_operations, 0.5)
-
-
-    def set_XY_square_post_operations(self, dt):
-
-        # Make sure the machine is idle before re-homing (grbl wont listen to $ commands when running)
-        # The state can ping into idle very briefly during, so we're setting a threshold detection with 'homing_stage_counter'
-        print("set_XY_square_post_operations")
-        if not self.s.is_sequential_streaming:
-            print("Not streaming")
-            if self.state() == "Idle":
-                print("Idle")
-                homing_sequence_part_2 =  [
-                                          '$21=1', # soft limits on
-                                          '$20=1', # soft limits off
-                                          '$H' # home
-                                          ]
-                self.homing_stage_counter += 1               
-                if self.homing_stage_counter >= 1:
-                    self.square_post_op_event.cancel()
-                    self.s.start_sequential_stream(homing_sequence_part_2)
-                    self.set_state('Home') # Since homing op is part of seq stream_file, can't call regular function which would normally force the idle state (grbl not very good at setting the 'home' state)
-                    self.homing_stage_counter += 1
 # STATUS            
         
     def is_connected(self):
@@ -236,6 +181,7 @@ class RouterMachine(object):
     # ... unless it is unlocked
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
+        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset') # Soft-reset. This forces the need to home when the controller starts up
     
     def jog_absolute_single_axis(self, axis, target, speed):

@@ -22,7 +22,7 @@ ALARM_CODES = {
     "ALARM:6" : "Homing fail. Reset during active homing cycle.",
     "ALARM:7" : "Homing fail. Safety door was opened during active homing cycle.",
     "ALARM:8" : "Homing fail. Cycle failed to clear limit switch when pulling off. Try increasing pull-off setting or check wiring.",
-    "ALARM:9" : "Homing fail. Could not find limit switch within search distance. Defined as 1.5 * max_travel on search and 5 * pulloff on locate phases.",
+    "ALARM:9" : "Homing fail. Could not find limit switch within search distance. Defined as 1.5 * max_travel on search and 5 * pull-off on locate phases.",
 
 }
 
@@ -41,7 +41,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
+        padding: 50
         spacing: 70
         size_hint_x: 1
 
@@ -52,29 +52,38 @@ Builder.load_string("""
              
             Label:
                 size_hint_y: 1
-                font_size: '40sp'
+                font_size: '35sp'
                 text: '[b]STOP! ALARM![/b]'
                 markup: True
  
             Label:
+                size_hint_y: 1.6
                 text_size: self.size
                 font_size: '20sp'
-                halign: 'center'
+                halign: 'left'
                 valign: 'top'
                 text: root.alarm_description 
-                
+
+#             Label:
+#                 text_size: self.size
+#                 font_size: '18sp'
+#                 halign: 'center'
+#                 valign: 'top'
+#                 text: 'To clear the alarm state:'
+              
             Label:
                 text_size: self.size
                 font_size: '18sp'
-                halign: 'center'
+                halign: 'left'
                 valign: 'middle'
-                text: 'ENSURE THAT THE MACHINE IS CLEAR.'
+                text: 'If the axes are near limit switches, de-power the machine and move the axes off the switches.'
+
             Label:
                 text_size: self.size
                 font_size: '18sp'
-                halign: 'center'
-                valign: 'top'
-                text: 'To clear the alarm state RESET and UNLOCK the machine.'
+                halign: 'left'
+                valign: 'middle'
+                text: 'If the axes are away from the limit switches, RESET and UNLOCK the machine.'
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -134,7 +143,9 @@ class AlarmScreenClass(Screen):
     def on_enter(self):
         # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(self.message, "")
- 
+#        self.alarm_description = ALARM_CODES.get("ALARM:4", "") (just for testing)  
+        self.m.set_state('Alarm')
+
     def quit_to_home(self):
         self.sm.current = 'home'
  
