@@ -134,7 +134,7 @@ Builder.load_string("""
                     size: self.texture_size
                     valign: 'top'
                     halign: 'center'
-                    disabled: True
+                    disabled: False
                     background_color: hex('#0d47a1')
                     on_release: 
                         root.quit_to_home()
@@ -147,7 +147,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'Finish'
+                            text: root.exit_label
         
         BoxLayout:
             orientation: 'vertical'
@@ -171,6 +171,8 @@ Builder.load_string("""
                 Button:
                     id: load_file_now_button
                     background_color: hex('#0d47a1')
+                    on_release:
+                        root.load_file_now()
                    
                     Label:
                         id: load_file_now_label
@@ -206,6 +208,8 @@ class CheckingScreen(Screen):
     job_checking_checked = StringProperty()
     check_outcome = StringProperty()
     display_output = StringProperty()
+    exit_label = StringProperty()
+    
     job_ok = False
     error_log = []
     
@@ -225,6 +229,7 @@ class CheckingScreen(Screen):
     def on_enter(self):
  
         self.job_checking_checked = '[b]Checking Job...[/b]'  
+        self.exit_label = 'Cancel'
         
         if self.entry_screen == 'file_loading':        
             self.boundary_check()
@@ -251,7 +256,7 @@ class CheckingScreen(Screen):
         if self.is_job_within_bounds():
             # update screen
             self.check_outcome = 'Job is within bounds.'
-            self.check_gcode()
+            Clock.schedule_once(lambda dt: self.check_gcode(), 0.4)
             # auto check g-code? Yeah, why not.
 
         else:
@@ -365,14 +370,14 @@ class CheckingScreen(Screen):
                 self.job_checking_checked = '[b]Cannot Check G-Code[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
-                self.quit_button.disabled = False
+                # self.quit_button.disabled = False
 
             
         else:
             self.job_checking_checked = '[b]Cannot Check G-Code[/b]'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
-            self.quit_button.disabled = False
+            # self.quit_button.disabled = False
  
      
     def check_grbl_stream(self, objectifile, dt):
@@ -386,7 +391,8 @@ class CheckingScreen(Screen):
     def get_error_log(self, dt):  
     
         if self.error_log != []:
-                
+            Clock.unschedule(self.error_out_event)
+
             # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
             del self.error_log[0]
             del self.error_log[(len(self.error_log)-1)]
@@ -409,8 +415,8 @@ class CheckingScreen(Screen):
                 self.job_gcode = []
     
             log('File has been checked!')
-            Clock.unschedule(self.error_out_event)
-            self.quit_button.disabled = False
+            self.exit_label = 'Finish'
+            # self.quit_button.disabled = False
 
 
     def write_error_output(self, error_log):
@@ -446,12 +452,28 @@ class CheckingScreen(Screen):
 ## EXITING SCREEN
 
     def quit_to_home(self): 
+        if self.job_ok:
+            self.sm.get_screen('home').job_gcode = self.job_gcode
+            self.sm.get_screen('home').job_filename = self.checking_file_name
+            self.sm.current = 'home'
+            
+        else: 
+            
+            if self.m.s.is_sequential_streaming:
+                self.m.s.cancel_sequential_stream()
+            
+            if self.m.state().startswith('Check'):
+                self.m.s.write_command('$C', altDisplayText = 'Check mode OFF')
+                
+            self.sm.current = 'home'
+            
+    def load_file_now(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
-        self.sm.current = 'home'
+        self.sm.current = 'home'       
     
     def on_leave(self, *args):
-        self.quit_button.disabled = True
+        # self.quit_button.disabled = True
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''

@@ -367,15 +367,27 @@ class HomeScreen(Screen):
         else:
             self.file_data_label.text = '[b]Load a file...[/b]'
             self.job_filename = ''
-        
-
+  
+            self.job_box.range_x[0] = 0
+            self.job_box.range_x[1] = 0
+            self.job_box.range_y[0] = 0
+            self.job_box.range_y[1] = 0
+            self.job_box.range_z[0] = 0
+            self.job_box.range_z[1] = 0      
+            try:            
+                self.gcode_preview_widget.draw_file_in_xy_plane([])
+                self.gcode_preview_widget.get_non_modal_gcode([])
+            except:
+                print 'No G-code loaded.'
  
     def preview_job_file(self, dt):
         
         # Might leave this here for now - might change if you move datums etc.?      
         log('> get_non_modal_gcode')
         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
+
         log('< get_non_modal_gcode ' + str(len(gcode_list)))
+
         ###
 
         # Draw gcode preview
