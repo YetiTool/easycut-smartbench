@@ -204,8 +204,7 @@ class RouterMachine(object):
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
         if sys.platform != "win32":
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+            self.s.write_realtime('&', altDisplayText = 'LED restore')
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')
