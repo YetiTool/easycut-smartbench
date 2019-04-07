@@ -239,12 +239,12 @@ class RouterMachine(object):
     
     def go_to_jobstart_xy(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
-        self.s.write_command('G4 P1')
+        self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0 Y0')
     
     def go_to_standby(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
-        self.s.write_command('G4 P1')
+        self.s.write_command('G4 P0.1')
         self.s.write_command('G28')
     
     def go_to_jobstart_z(self):
@@ -302,12 +302,12 @@ class RouterMachine(object):
         
     def go_x_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
-        self.s.write_command('G4 P1')
+        self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0')
  
     def go_y_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
-        self.s.write_command('G4 P1')
+        self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
         
     def toggle_spindle_off_overide(self, dt):
