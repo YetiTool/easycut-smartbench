@@ -19,6 +19,10 @@ from kivy.uix.scrollview import ScrollView
 from __builtin__ import file
 from kivy.clock import Clock
 
+from asmcnc.geometry import job_envelope
+from asmcnc.skavaUI import widget_gcode_view
+
+
 import sys, os
 from os.path import expanduser
 from shutil import copy
@@ -72,6 +76,10 @@ Builder.load_string("""
 <CheckingScreen>:
     
     quit_button:quit_button
+    load_file_now_button:load_file_now_button
+    load_file_now_label:load_file_now_label
+    check_gcode_button:check_gcode_button
+    check_gcode_label:check_gcode_label
 
     canvas:
         Color: 
@@ -96,6 +104,7 @@ Builder.load_string("""
                 font_size: '40sp'
                 text: root.job_checking_checked
                 markup: True
+                valign: 'top'
  
             Label:
                 text_size: self.size
@@ -105,20 +114,23 @@ Builder.load_string("""
                 text: root.checking_file_name
                 
             Label:
+                size_hint_y: 1.7
                 text_size: self.size
                 font_size: '15sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.check_outcome
+                markup: True
                 
             BoxLayout:
                 orientation: 'horizontal'
                 padding: 10, 0
-                spacing: 50
+                #spacing: 50
                                     
                 Button:
                     id: quit_button
-                    size_hint_y:0.9
+                    size_hint_y:0.8
+                    size_hint_x: 0.6
                     size: self.texture_size
                     valign: 'top'
                     halign: 'center'
@@ -136,20 +148,52 @@ Builder.load_string("""
                             #size_hint_y: 1
                             font_size: '18sp'
                             text: 'Finish'
-                            
-        ScrollView:
-            size_hint: 1.2, 1
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            do_scroll_x: True
-            do_scroll_y: True
-            scroll_type: ['content']
-            
-            RstDocument:
-                text: root.display_output
-                background_color: hex('#0d47a1')
-
         
+        BoxLayout:
+            orientation: 'vertical'
                             
+            ScrollView:
+                size_hint: 1.2, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: True
+                do_scroll_y: True
+                scroll_type: ['content']
+                
+                RstDocument:
+                    text: root.display_output
+                    background_color: hex('#0d47a1')
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 0.15
+                spacing: 20
+                
+                Button:
+                    id: load_file_now_button
+                    background_color: hex('#0d47a1')
+                   
+                    Label:
+                        id: load_file_now_label
+                        text: ''
+                        markup: True
+                        #text_size: self.size
+                        size: self.parent.size
+                        pos: self.parent.pos
+                    
+                Button:
+                    id: check_gcode_button
+                    background_color: hex('#0d47a1')
+                    on_release:
+                        root.check_gcode()
+                    
+                    Label:
+                        id: check_gcode_label
+                        text: ''
+                        markup: True
+                        #text_size: self.size
+                        size: self.parent.size
+                        pos: self.parent.pos
+                             
 """)
 
 def log(message):
@@ -165,14 +209,147 @@ class CheckingScreen(Screen):
     job_ok = False
     error_log = []
     
+    entry_screen = StringProperty()
+    job_box = job_envelope.BoundingBox()
+    
+#     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
+    
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
         
+        self.gcode_preview_widget = widget_gcode_view.GCodeView()
+        
     def on_enter(self):
+ 
+        self.job_checking_checked = '[b]Checking Job...[/b]'  
+        
+        if self.entry_screen == 'file_loading':        
+            self.boundary_check()
+        
+        else:
+            self.check_gcode()
+        
+        
+    def boundary_check(self):
+        
+        # get non modal g-code
+        self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
+        
+        # update limits            
+        self.job_box.range_x[0] = self.gcode_preview_widget.min_x
+        self.job_box.range_x[1] = self.gcode_preview_widget.max_x
+        self.job_box.range_y[0] = self.gcode_preview_widget.min_y
+        self.job_box.range_y[1] = self.gcode_preview_widget.max_y
+        self.job_box.range_z[0] = self.gcode_preview_widget.min_z
+        self.job_box.range_z[1] = self.gcode_preview_widget.max_z
+             
+        
+        # check limits
+        if self.is_job_within_bounds():
+            # update screen
+            self.check_outcome = 'Job is within bounds.'
+            self.check_gcode()
+            # auto check g-code? Yeah, why not.
 
+        else:
+            self.toggle_boundary_buttons(False)
+            self.check_outcome = 'WARNING: Job is not within machine bounds!' + \
+            '\n\nChecking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.'
+            self.write_boundary_output()
+
+
+## BOUNDARY CHECK:
+
+    def is_job_within_bounds(self):
+
+        errorfound = 0
+        job_box = self.sm.get_screen('home').job_box
+        
+        # Mins
+        
+        if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too close to the X home position. The job will crash into the home position.")
+            errorfound += 1 
+        if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too close to the Y home position. The job will crash into the home position.")
+            errorfound += 1 
+        if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too far from the Z home position. The router will not reach that far.")
+            errorfound += 1 
+            
+        # Maxs
+
+        if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too far from the X home position. The router will not reach that far.")
+            errorfound += 1 
+        if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too far from the Y home position. The router will not reach that far.")
+            errorfound += 1 
+        if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too close to the Z home position. The job will crash into the home position.")
+            errorfound += 1 
+
+        if errorfound > 0: return False
+        else: return True  
+  
+    def write_boundary_output(self):
+        
+        self.display_output = '[color=#FFFFFF][b]BOUNDARY CONFLICT[/b]\n\n' + \
+        '\n\n[color=#FFFFFF]It looks like your job is outside the bounds of the machine.\n\n' + \
+        '[color=#FFFFFF]To fix this, load the job now and set the datum to an appropriate location.\n\n' + \
+        '[color=#FFFFFF]You will still be prompted to check your G-code before running your job.\n\n' + \
+        '[color=#FFFFFF]If you have already tried to set the datum, or if the graphics on the virtual' + \
+        '[color=#FFFFFF] machine don\'t look right, your G-code may be corrupt.\n\n' + \
+        '[color=#FFFFFF]If this is the case, please check your G-code now. \n\n'
+
+    def toggle_boundary_buttons(self, hide_boundary_buttons):
+        
+        if hide_boundary_buttons:
+            self.check_gcode_label.text = ''
+            self.check_gcode_button.disabled = True
+            self.check_gcode_button.opacity = 0
+            self.check_gcode_button.size_hint_y = None
+            self.check_gcode_button.size_hint_x = None 
+            self.check_gcode_button.height = '0dp'
+            self.check_gcode_button.width = '0dp'
+    
+            
+            self.load_file_now_label.text = ''
+            self.load_file_now_button.disabled = True
+            self.load_file_now_button.opacity = 0
+            self.load_file_now_button.size_hint_y = None 
+            self.load_file_now_button.size_hint_x = None       
+            self.load_file_now_button.height = '0dp' 
+            self.load_file_now_button.width = '0dp'
+            
+        else:
+            self.check_gcode_label.text = 'Check G-code'
+            self.check_gcode_button.disabled = False
+            self.check_gcode_button.opacity = 1
+            self.check_gcode_button.size_hint_y = 1
+            self.check_gcode_button.size_hint_x = 1
+            self.check_gcode_button.height = '0dp'
+            self.check_gcode_button.width = '0dp'
+    
+            
+            self.load_file_now_label.text = 'Load job now'
+            self.load_file_now_button.disabled = False
+            self.load_file_now_button.opacity = 1
+            self.load_file_now_button.size_hint_y = 1 
+            self.load_file_now_button.size_hint_x = 1       
+            self.load_file_now_button.height = '0dp' 
+            self.load_file_now_button.width = '0dp'            
+
+
+## GRBL CHECK:     
+
+    def check_gcode(self):
+        
+        self.toggle_boundary_buttons(True)
+        
         if self.m.is_connected():
             
             self.display_output = ''
@@ -185,20 +362,19 @@ class CheckingScreen(Screen):
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
-                self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+                self.job_checking_checked = '[b]Cannot Check G-Code[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
                 self.quit_button.disabled = False
 
             
         else:
-            self.job_checking_checked = '[b]Cannot Check Job[/b]'
+            self.job_checking_checked = '[b]Cannot Check G-Code[/b]'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
             self.quit_button.disabled = False
-        
-
-            
+ 
+     
     def check_grbl_stream(self, objectifile, dt):
 
         #utilise check_job from serial_conn
@@ -220,11 +396,14 @@ class CheckingScreen(Screen):
                 self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
                 self.job_ok = False
             else:
-                self.check_outcome = 'No errors found. You\'re good to go!'
+                self.check_outcome =  'No errors found. You\'re good to go!'
                 self.job_ok = True
+                
+                # add job checked already flag here
+                self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
     
             self.job_checking_checked = '[b]Job Checked[/b]'
-            self.write_output(self.error_log)
+            self.write_error_output(self.error_log)
             
             if self.job_ok == False:
                 self.job_gcode = []
@@ -234,7 +413,7 @@ class CheckingScreen(Screen):
             self.quit_button.disabled = False
 
 
-    def write_output(self, error_log):
+    def write_error_output(self, error_log):
         
         error_summary = []
         
@@ -262,6 +441,9 @@ class CheckingScreen(Screen):
 #         '[b]GRBL RESPONSE LOG[/b][/color]\n\n' + \
 #         ('\n\n'.join('[color=#FFFFFF]' + str(idx).rjust(3,'\t') + \
 #         '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
+
+
+## EXITING SCREEN
 
     def quit_to_home(self): 
         self.sm.get_screen('home').job_gcode = self.job_gcode

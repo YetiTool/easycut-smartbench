@@ -193,10 +193,19 @@ class QuickCommands(Widget):
             errorfound += 1 
         
         if errorfound > 0: return # if we find errors, don't proceed to check
-        else:  
-#             self.m.enable_check_mode()
-            
-             self.sm.current = 'go'
+        
+        else: 
+            if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
+                print('Hi??')
+                self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
+                self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
+                self.sm.get_screen('check_job').entry_screen = 'home'
+                self.sm.current = 'check_job'
+    
+            else:  
+                # this actually does nothing bc all functionality is in the damn pop ups -_-
+    #             self.m.enable_check_mode()
+                self.sm.current = 'go'
             
 
         

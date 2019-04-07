@@ -156,6 +156,7 @@ class LoadingScreen(Screen):
     def on_enter(self):    
                
         self.job_loading_loaded = '[b]Loading Job...[/b]'
+        self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
         self.load_value = 0
         self.check_button.disabled = True
         Clock.usleep(1)
@@ -179,6 +180,7 @@ class LoadingScreen(Screen):
                
         self.sm.get_screen('check_job').checking_file_name = self.loading_file_name
         self.sm.get_screen('check_job').job_gcode = self.job_gcode
+        self.sm.get_screen('check_job').entry_screen = 'file_loading'
         self.sm.get_screen('home').job_gcode = []
         self.sm.current = 'check_job'
         
