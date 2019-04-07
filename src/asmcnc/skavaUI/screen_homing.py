@@ -19,6 +19,8 @@ Builder.load_string("""
 
 <HomingScreen>:
 
+    homing_label:homing_label
+
     canvas:
         Color: 
             rgba: hex('#0D47A1')
@@ -44,12 +46,16 @@ Builder.load_string("""
                 allow_stretch: True
                 source: "./asmcnc/skavaUI/img/home_big.png"
                 
-            Label: 
+            Label:
+                id: homing_label
+                text_size: self.size
                 size_hint_y: 0.5
                 text: root.homing_text
                 markup: True
                 font_size: '40sp'   
-                valign: 'bottom'     
+                valign: 'bottom'
+                halign: 'center'
+                
             AnchorLayout: 
                 Button:
                     size_hint_x: 0.25
@@ -89,7 +95,9 @@ class HomingScreen(Screen):
     
     is_squaring_XY_needed_after_homing = True
     homing_text = StringProperty()
-
+    quit_home = False
+    homing_label = ObjectProperty()
+    poll_for_success = None
     
     def __init__(self, **kwargs):
     
@@ -116,11 +124,15 @@ class HomingScreen(Screen):
             # monitor sequential stream status for completion
             self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
 
-        elif self.m.state().startswith('Alarm'):    
-            self.homing_text = '[b]Machine is not Idle. Please clear the alarm state before re-attempting to Home.[/b]'
+        elif self.m.state().startswith('Alarm'):
+            self.homing_label.font_size =  '20sp'
+            self.homing_text = 'Machine is not Idle. Please clear the alarm state before re-attempting to Home.'
+            self.quit_home = True
             
         else:
-            self.homing_text = '[b]Machine is not Idle. Please ensure machine is in an idle state before re-attempting to Home.[/b]'
+            self.homing_label.font_size =  '20sp'
+            self.homing_text = 'Machine is not Idle. Please ensure machine is in an idle state before re-attempting to Home.'
+            self.quit_home = True
             
 
 
@@ -186,12 +198,17 @@ class HomingScreen(Screen):
     def cancel_homing(self):
 
         print('Cancelling homing...')
-        Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
 
-        self.m.soft_reset()
+        if self.quit_home:
+            self.sm.current = 'home'
+        else:
+            self.m.soft_reset()
         # ... will trigger an alarm screen
-
+        
+        
+        
 
 
 
