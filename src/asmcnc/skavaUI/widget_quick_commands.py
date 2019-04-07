@@ -173,35 +173,43 @@ class QuickCommands(Widget):
         
         # Before going to the GO screen, we are going to check the GCOde file really well
         
-        # POPUP FLAG - these are annoying as heck.
-        
-        #self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
-        errorfound = 0
-               
-        #check if we've homed
-        if self.m.is_machine_homed == False:
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "You haven't homed the machine yet!")
-            errorfound += 1 
-        
-        #check if status is idle
-        if self.m.state() != 'Idle':
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "Wait! The machine is not idle. You may need to restart or unlock it.")
-            errorfound += 1 
-        
-        #check that job boundary is within machine boundary
-        if self.is_job_within_bounds() == False:
-            errorfound += 1 
-        
-        if errorfound > 0: return # if we find errors, don't proceed to check
+        if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
+            print('Hi??')
+            self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
+            self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
+            self.sm.get_screen('check_job').entry_screen = 'home'
+            self.sm.current = 'check_job'
         
         else: 
-            if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
-                print('Hi??')
-                self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
-                self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
-                self.sm.get_screen('check_job').entry_screen = 'home'
-                self.sm.current = 'check_job'
-    
+            # POPUP FLAG - these are annoying as heck.
+            
+            #self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
+            errorfound = 0
+               
+            #check if we've homed
+            if self.m.is_machine_homed == False:
+                popup_prestream_check.PopupPrestream(self.m, self.sm, "You haven't homed the machine yet!")
+                errorfound += 1 
+            
+            #check if status is idle
+            if self.m.state() != 'Idle':
+                popup_prestream_check.PopupPrestream(self.m, self.sm, "Wait! The machine is not idle. You may need to restart or unlock it.")
+                errorfound += 1 
+            
+            #check that job boundary is within machine boundary
+            if self.is_job_within_bounds() == False:
+                errorfound += 1 
+            
+            if errorfound > 0: return # if we find errors, don't proceed to check
+            
+#             else: 
+#                 if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
+#                     print('Hi??')
+#                     self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
+#                     self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
+#                     self.sm.get_screen('check_job').entry_screen = 'home'
+#                     self.sm.current = 'check_job'
+        
             else:  
                 # this actually does nothing bc all functionality is in the damn pop ups -_-
     #             self.m.enable_check_mode()
