@@ -255,6 +255,9 @@ class RouterMachine(object):
     
     def resume(self):
         self.s.write_realtime('~', altDisplayText = 'Resume')       
+        if sys.platform != "win32":
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')
@@ -281,9 +284,10 @@ class RouterMachine(object):
         self.s.write_command(gcode)
 
     def unlock_after_alarm(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
         self.s.write_command('$X')
+        if sys.platform != "win32":
+            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
     
     def go_to_jobstart_xy(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
