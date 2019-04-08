@@ -144,9 +144,13 @@ class BoundaryWarningScreen(Screen):
         '\n\n'.join(map(str,self.job_box_details))
         
     def quit_to_home(self): 
-            self.sm.current = 'home'
+        self.sm.current = 'home'
             
     def button_press(self):
         self.quit_button.background_color = get_color_from_hex('#c43c00')
+        
+    def on_leave(self):
+        self.display_output = ''
+        self.job_box_details = []
 
         
