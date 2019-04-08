@@ -310,8 +310,11 @@ def log(message):
 class HomeScreen(Screen):
 
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
-    job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
+#     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
     job_filename = ''
+    gcode_has_been_checked_and_its_ok = False
+    
+    job_box = job_envelope.BoundingBox()
 
     def __init__(self, **kwargs):
 
@@ -351,8 +354,6 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
-    job_box = job_envelope.BoundingBox()
-
 
     def on_enter(self): 
         log('Job loaded:')
@@ -366,59 +367,27 @@ class HomeScreen(Screen):
         else:
             self.file_data_label.text = '[b]Load a file...[/b]'
             self.job_filename = ''
-        
-
+  
+            self.job_box.range_x[0] = 0
+            self.job_box.range_x[1] = 0
+            self.job_box.range_y[0] = 0
+            self.job_box.range_y[1] = 0
+            self.job_box.range_z[0] = 0
+            self.job_box.range_z[1] = 0      
+            try:            
+                self.gcode_preview_widget.draw_file_in_xy_plane([])
+                self.gcode_preview_widget.get_non_modal_gcode([])
+            except:
+                print 'No G-code loaded.'
  
     def preview_job_file(self, dt):
-# OLD ------------------------------------------------------------------------------
-#         #### Scan for files in Q, and update info panels
-# 
-#         filename = ''
-# 
-#         if files_in_q:
-# 
-#             # Search for preview image in Q dir and show
-#             for filename in files_in_q:
-#                 if filename.split('.')[1] == 'png':
-#                     self.home_image_preview.source = self.job_q_dir + filename
-#                     break
-#                 else:
-#                     self.home_image_preview.source = self.no_image_preview_path
-# 
-#             # Search for nc file in Q dir and process
-#             
-# 
-#             for filename in files_in_q:
-# 
-#                 if filename.split('.')[1].startswith(('nc','NC','gcode','GCODE')):
-# 
-# #                     if not job_file_gcode:
-# #                         job_file_gcode = self.load_job_file(self.job_q_dir + filename)
-# 
-#                     #t = threading.Thread(target=self.load_gcode_list, args=[filename])
-#                     #t.daemon = True
-# 
-#                     ### Threading load Gcode list
-# #                    manager = Manager()
-# #                    gcode_mgr_list = manager.list()
-# #                    t = Process(target=self.load_gcode_list, args=(filename, gcode_mgr_list))
-# #                    t.start()
-# #                    t.join()
-# #                    log ('Joined ' + str(len(gcode_mgr_list)))
-# 
-# #                    gcode_list = []
-# #                    for line in gcode_mgr_list:
-# #                        gcode_list.append(line)
-#                     ###
-# 
-#                     ### No threading
-# #                    gcode_list = self.load_gcode_list(filename, gcode_mgr_list) #Call thread function
-# -------------------------------------------------------------------------------------------------
         
-        
+        # Might leave this here for now - might change if you move datums etc.?      
         log('> get_non_modal_gcode')
         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
+
         log('< get_non_modal_gcode ' + str(len(gcode_list)))
+
         ###
 
         # Draw gcode preview
@@ -450,18 +419,6 @@ class HomeScreen(Screen):
         log('DONE')
         # break
 
-# --------------------------------------------------------------------------
-# OLD:
-#     def load_job_file(self, job_file_path):
-# 
-#         log('> load_job_file')
-#         job_gcode = []
-#         job_file = open(job_file_path, 'r')
-#         for line in job_file:
-#             job_gcode.append(line.strip())
-#         job_file.close()
-#         log('< load_job_file')
-#         return job_gcode
 
 # ------------------------------------------------------------------------------------
 # USED IN THREADING SECTION: 

@@ -172,34 +172,41 @@ class QuickCommands(Widget):
     def proceed_to_go_screen(self):
         
         # Before going to the GO screen, we are going to check the GCOde file really well
-        
+
         # POPUP FLAG - these are annoying as heck.
         
         #self.sm.transition = FadeTransition() # declared here to ensure the popup transition is also the same when it screen changes later, if desired
         errorfound = 0
-               
-        #check if we've homed
-        if self.m.is_machine_homed == False:
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "You haven't homed the machine yet!")
-            errorfound += 1 
-        
-        #check if status is idle
-        if self.m.state() != 'Idle':
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "Wait! The machine is not idle. You may need to restart or unlock it.")
-            errorfound += 1 
-        
-        #check that job boundary is within machine boundary
-        if self.is_job_within_bounds() == False:
-            errorfound += 1 
-        
-        if errorfound > 0: return # if we find errors, don't proceed to check
-        else:  
-#             self.m.enable_check_mode()
-            
-             self.sm.current = 'go'
-            
 
+        #check if status is idle
+        if self.sm.get_screen('home').job_gcode ==[]:
+            return
         
+        if self.m.state() != 'Idle':
+            self.sm.current = 'mstate'
+            
+        else:
+            #check if we've homed
+            if self.m.is_machine_homed == False:
+                self.sm.current = 'homingWarning'
+                
+            else:
+                if self.is_job_within_bounds() == False:                   
+                    self.sm.current = 'boundary'
+                    
+                else:
+                    if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
+                        print('Hi??')
+                        self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
+                        self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
+                        self.sm.get_screen('check_job').entry_screen = 'home'
+                        self.sm.current = 'check_job'                        
+
+                    else:  
+                        # this actually does nothing bc all functionality is in the damn pop ups -_-
+            #             self.m.enable_check_mode()
+                        self.sm.current = 'go'
+
         
     def is_job_within_bounds(self):
 
@@ -209,25 +216,37 @@ class QuickCommands(Widget):
         # Mins
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the X home position. The job will crash into the home position.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the X home position. The job will crash into the home position.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too close to the X home position. The job will crash into the home position." + '\n\n[/color]')
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the Y home position. The job will crash into the home position.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the Y home position. The job will crash into the home position.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too close to the Y home position. The job will crash into the home position." + '\n\n[/color]')
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the Z home position. The router will not reach that far.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the Z home position. The router will not reach that far.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too far from the Z home position. The router will not reach that far." + '\n\n[/color]')
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the X home position. The router will not reach that far.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the X home position. The router will not reach that far.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too far from the X home position. The router will not reach that far." + '\n\n[/color]') 
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the Y home position. The router will not reach that far.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too far from the Y home position. The router will not reach that far.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too far from the Y home position. The router will not reach that far." + '\n\n[/color]') 
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the Z home position. The job will crash into the home position.")
+            # popup_prestream_check.PopupPrestream(self.m, self.sm, "The job target is too close to the Z home position. The job will crash into the home position.")
+            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
+            "The job target is too close to the Z home position. The job will crash into the home position." + '\n\n[/color]')
             errorfound += 1 
 
         if errorfound > 0: return False
