@@ -262,7 +262,7 @@ class CheckingScreen(Screen):
         else:
             self.toggle_boundary_buttons(False)
             self.check_outcome = 'WARNING: Job is not within machine bounds!' + \
-            '\n\nChecking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.'
+            '\n\nWARNING: Checking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.'
             self.write_boundary_output()
 
 
