@@ -399,7 +399,11 @@ class CheckingScreen(Screen):
             
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
-                self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                
+                if self.entry_screen == 'file_loading':
+                    self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                elif self.entry_screen == 'home':
+                    self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
                 self.job_ok = False
             else:
                 self.check_outcome =  'No errors found. You\'re good to go!'
@@ -435,7 +439,7 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         if error_summary == []:
-            error_summary.append('[color=#FFFFFF]There\'s nothing here. Top job, Mac.[/color]')
+            error_summary.append('[color=#FFFFFF]There\'s nothing here. Excellent.[/color]')
         
         # Put everything into a giant string for the ReStructed Text object        
         self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
@@ -452,20 +456,31 @@ class CheckingScreen(Screen):
 ## EXITING SCREEN
 
     def quit_to_home(self): 
-        if self.job_ok:
-            self.sm.get_screen('home').job_gcode = self.job_gcode
-            self.sm.get_screen('home').job_filename = self.checking_file_name
-            self.sm.current = 'home'
-            
-        else: 
-            
-            if self.m.s.is_sequential_streaming:
-                self.m.s.cancel_sequential_stream()
-            
-            if self.m.state().startswith('Check'):
-                self.m.s.write_command('$C', altDisplayText = 'Check mode OFF')
+        
+        if self.entry_screen == 'file_loading':
+        
+            if self.job_ok:
+                self.sm.get_screen('home').job_gcode = self.job_gcode
+                self.sm.get_screen('home').job_filename = self.checking_file_name
+                self.sm.current = 'home'
                 
-            self.sm.current = 'home'
+            else: 
+                
+                if self.m.s.is_sequential_streaming:
+                    self.m.s.cancel_sequential_stream()
+                
+                if self.m.state().startswith('Check'):
+                    self.m.s.write_command('$C', altDisplayText = 'Check mode OFF')
+                    
+                self.sm.current = 'home'
+                
+        elif self.entry_screen == 'home':
+            
+            if self.job_ok:
+                self.sm.current = 'go'
+                
+            else:
+                self.sm.current = 'home'
             
     def load_file_now(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
