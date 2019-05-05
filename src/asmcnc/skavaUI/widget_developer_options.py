@@ -106,13 +106,8 @@ class DevOptions(Widget):
             self.m.s.start_sequential_stream(settings)
 
     def reboot(self):
-        
         self.sm.current = 'rebooting'
 
-#         if sys.platform != "win32":
-#             sudoPassword = 'posys'
-#             command = 'sudo reboot'
-#             p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
     def quit_to_console(self):
         print 'Bye!'
