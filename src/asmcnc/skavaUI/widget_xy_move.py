@@ -380,10 +380,20 @@ class XYMove(Widget):
         self.m.get_grbl_status()
 
     def go_x_datum(self):
-        self.m.go_x_datum()
+        if self.m.is_machine_homed == False:
+                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+                self.sm.get_screen('homingWarning').error_msg = ''
+                self.sm.current = 'homingWarning'
+        else:
+            self.m.go_x_datum()
 
     def go_y_datum(self):
-        self.m.go_y_datum()
+        if self.m.is_machine_homed == False:
+                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+                self.sm.get_screen('homingWarning').error_msg = ''
+                self.sm.current = 'homingWarning'
+        else:
+            self.m.go_y_datum()
 
     def set_x_datum(self):
         self.m.set_x_datum()

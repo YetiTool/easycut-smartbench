@@ -54,17 +54,17 @@ Builder.load_string("""
  
             Label:
                 size_hint_y: 0.6
-                font_size: '22sp'
+                font_size: '26sp'
                 text_size: self.size
                 halign: 'left'
-                valign: 'middle'
-                text: '\\nCannot start Job.'
+                valign: 'top'
+                text: root.error_msg
                                 
             Label:
                 size_hint_y: 0.6
-                font_size: '22sp'
+                font_size: '24sp'
                 text_size: self.size
-                halign: 'left'
+                halign: 'center'
                 valign: 'middle'
                 text: root.user_instruction
                 
@@ -138,14 +138,15 @@ class WarningHoming(Screen):
     # define error description to make kivy happy
     button_text = StringProperty()
     user_instruction = StringProperty()
+    error_msg = StringProperty()
     
     def __init__(self, **kwargs):
         super(WarningHoming, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
 
-    def on_enter(self):
-        self.user_instruction = 'Please home SmartBench before attempting to start a job.'
+#     def on_enter(self):
+#         self.user_instruction = 'Please home SmartBench before attempting to start a job.'
     
     def return_press(self):
         self.getout_button.background_color = get_color_from_hex('#c43c00')

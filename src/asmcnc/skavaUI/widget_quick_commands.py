@@ -184,6 +184,8 @@ class QuickCommands(Widget):
         else:
             #check if we've homed
             if self.m.is_machine_homed == False:
+                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+                self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
                 self.sm.current = 'homingWarning'
                 
             else:
