@@ -55,7 +55,7 @@ class RebootingScreen(Screen):
         self.sm=kwargs['screen_manager']
     
     def on_enter(self): 
-        Clock.schedule_once(self.reboot, 1.5)
+        Clock.schedule_once(self.reboot, 1)
         
     def reboot(self, dt):
 
