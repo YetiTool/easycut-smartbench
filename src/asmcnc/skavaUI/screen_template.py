@@ -10,7 +10,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty  # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
