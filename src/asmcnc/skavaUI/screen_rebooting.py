@@ -8,6 +8,7 @@ Basic screen
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 import sys, os
 
 
@@ -54,9 +55,9 @@ class RebootingScreen(Screen):
         self.sm=kwargs['screen_manager']
     
     def on_enter(self): 
-        self.reboot()
+        Clock.schedule_once(self.reboot, 1.5)
         
-    def reboot(self):
+    def reboot(self, dt):
 
         if sys.platform != "win32":
             sudoPassword = 'posys'
