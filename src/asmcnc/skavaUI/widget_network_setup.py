@@ -110,9 +110,10 @@ class NetworkSetup(Widget):
         os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
         os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
         os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-        
-        os.system('sudo reboot')
-        
+
+        self.sm.current = 'rebooting'
+#         os.system('sudo reboot')
+         
     
 
         

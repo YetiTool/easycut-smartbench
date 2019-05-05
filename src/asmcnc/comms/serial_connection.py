@@ -17,8 +17,7 @@ from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
-    popup_job_done
+from asmcnc.skavaUI import popup_job_done
 import re
 from functools import partial
 from serial.serialutil import SerialException
@@ -60,9 +59,9 @@ class SerialConnection(object):
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
-        if self.sm.current != 'serialScreen':
+        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
             self.sm.get_screen('serialScreen').error_description = serial_error
-            self.sm.current = 'serialScreen' 
+            self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
         print('start establish')

@@ -45,6 +45,7 @@ from asmcnc.skavaUI import screen_safety_warning
 from asmcnc.skavaUI import screen_mstate_warning
 from asmcnc.skavaUI import screen_homing_warning
 from asmcnc.skavaUI import screen_boundary_warning
+from asmcnc.skavaUI import screen_rebooting
 
 Cmport = 'COM3'
 
@@ -79,6 +80,7 @@ class SkavaUI(App):
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m)
         homing_warning_screen = screen_homing_warning.WarningHoming(name = 'homingWarning', screen_manager = sm, machine =m)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
+        rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -98,6 +100,7 @@ class SkavaUI(App):
         sm.add_widget(mstate_screen)
         sm.add_widget(homing_warning_screen)
         sm.add_widget(boundary_warning_screen)
+        sm.add_widget(rebooting_screen)
         # set screen to start on
         sm.current = 'safety'
         return sm

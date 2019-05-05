@@ -208,10 +208,7 @@ class SerialFailureClass(Screen):
         'If connection with SmartBench has been interrupted, the machine may also need to be restarted.'
     
     def reboot_button_press(self):
-        if sys.platform != "win32":
-            sudoPassword = 'posys'
-            command = 'sudo reboot'
-            p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))   
+        self.sm.current = 'rebooting'
             
     def reestablish_button_press(self):
         self.m.s.establish_connection(self.port)
