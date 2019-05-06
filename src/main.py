@@ -46,6 +46,7 @@ from asmcnc.skavaUI import screen_mstate_warning
 from asmcnc.skavaUI import screen_homing_warning
 from asmcnc.skavaUI import screen_boundary_warning
 from asmcnc.skavaUI import screen_rebooting
+from asmcnc.skavaUI import screen_job_done
 
 Cmport = 'COM3'
 
@@ -81,6 +82,7 @@ class SkavaUI(App):
         homing_warning_screen = screen_homing_warning.WarningHoming(name = 'homingWarning', screen_manager = sm, machine =m)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
+        job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -101,7 +103,14 @@ class SkavaUI(App):
         sm.add_widget(homing_warning_screen)
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
+        sm.add_widget(job_done_screen)
         # set screen to start on
+        
+#         hours = 1
+#         minutes = 2
+#         seconds = 3
+#         sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+#         sm.current = 'jobdone'
         sm.current = 'safety'
         return sm
 
