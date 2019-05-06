@@ -60,7 +60,5 @@ class RebootingScreen(Screen):
     def reboot(self, dt):
 
         if sys.platform != "win32":
-            sudoPassword = 'posys'
-            command = 'sudo reboot'
-            p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+            os.system('sudo reboot')
         
