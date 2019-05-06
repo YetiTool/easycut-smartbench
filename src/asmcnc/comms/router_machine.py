@@ -7,6 +7,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 from asmcnc.comms import serial_connection
 from kivy.clock import Clock
 import sys
+from __builtin__ import True
 
 
 class RouterMachine(object):
@@ -195,7 +196,11 @@ class RouterMachine(object):
         self.s.write_command('$J=G91 ' + axis + str(dist) + ' F' + str(speed))
     
     def quit_jog(self):
-        self.s.write_realtime('\x85', altDisplayText = 'Quit jog')       
+        self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
+#         if self.state().startswith('Jog'):
+#             return True
+#         else:
+#             return False
 
     def hold(self):
         self.door()
