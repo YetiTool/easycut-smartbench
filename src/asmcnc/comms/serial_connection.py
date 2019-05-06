@@ -17,7 +17,6 @@ from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_job_done
 import re
 from functools import partial
 from serial.serialutil import SerialException
