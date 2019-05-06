@@ -196,6 +196,7 @@ class SerialConnection(object):
 
             # Process anything in the write_command and write_realtime lists,
             # i.e. everything else.
+            
             command_counter = 0
             for command in self.write_command_buffer:
                 self.write_direct(*command)
@@ -209,8 +210,6 @@ class SerialConnection(object):
                 realtime_counter += 1
                 
             del self.write_realtime_buffer[0:(realtime_counter+1)]
-            
-            # FLAG: Add in something to yell at the user if this hasn't read anything in a while
 
             
             # If there's a message received, deal with it depending on type:

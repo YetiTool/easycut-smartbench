@@ -40,14 +40,6 @@ Builder.load_string("""
         Button:
             text: 'Return to lobby'
             on_release: root.return_to_lobby()
-        BoxLayout:
-            orientation: 'vertical'
-            Switch:
-                active: False
-            Label:
-                text: 'GRBL gcode check'
-                font_size: 18
-                color: 0,0,0,1
         ToggleButton:
             state: root.buffer_log_mode
             text: 'Buffer Log'

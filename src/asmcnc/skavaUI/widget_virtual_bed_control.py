@@ -222,7 +222,17 @@ class VirtualBedControl(Widget):
         self.m.get_grbl_status()
         
     def go_to_jobstart_xy(self):
-        self.m.go_to_jobstart_xy()
+        if self.m.is_machine_homed == False:
+            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+            self.sm.get_screen('homingWarning').error_msg = ''
+            self.sm.current = 'homingWarning'
+        else:
+            self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
-        self.m.go_to_standby()
+        if self.m.is_machine_homed == False:
+            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+            self.sm.get_screen('homingWarning').error_msg = ''
+            self.sm.current = 'homingWarning'
+        else:
+            self.m.go_to_standby()
