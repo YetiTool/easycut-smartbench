@@ -346,19 +346,13 @@ class SerialConnection(object):
         return
 
     def initialise_job(self):
-        
-        timeout = time.time() + 10  # CHECK THIS TIMEOUT - is it too long/too short?? 
                 
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()
-        
-        # When head moved out of the way, should get 'ok' come back from grbl. 
-        # Once this happens can continue with other instructions:  
-         
-                
+  
         # for the buffer stuffing style streaming
         self.s.flushInput()
         
