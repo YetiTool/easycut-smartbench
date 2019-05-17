@@ -47,6 +47,7 @@ from asmcnc.skavaUI import screen_homing_warning
 from asmcnc.skavaUI import screen_boundary_warning
 from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
+from asmcnc.skavaUI import screen_final_chance_to_check_gcode
 
 Cmport = 'COM3'
 
