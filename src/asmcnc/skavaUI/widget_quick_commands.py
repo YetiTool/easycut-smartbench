@@ -194,11 +194,12 @@ class QuickCommands(Widget):
                     
                 else:
                     if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
-                        print('Hi??')
-                        self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
-                        self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
-                        self.sm.get_screen('check_job').entry_screen = 'home'
-                        self.sm.current = 'check_job'                        
+#                         self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
+#                         self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
+#                         self.sm.get_screen('check_job').entry_screen = 'home'
+#                         self.sm.current = 'check_job'                        
+
+                        self.sm.current = 'lastChanceToCheckGcode'                        
 
                     else:  
                         # this actually does nothing bc all functionality is in the damn pop ups -_-

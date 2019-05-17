@@ -119,7 +119,7 @@ Builder.load_string("""
                     disabled: True
                     background_color: hex('#0d47a1')
                     on_release: 
-                        root.quit_to_home()
+                        root.proceed_to_go()
 
                     BoxLayout:
                         padding: 5
@@ -129,7 +129,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'No thanks, quit to home'
+                            text: 'No thanks, lets go'
                             
 """)
 
@@ -141,11 +141,6 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class AskToCheckBeforeGo(Screen):  
- 
-    load_value = NumericProperty()
-    loading_file_name = StringProperty()
-    job_loading_loaded = StringProperty()
-    objectifile = None
     
     def __init__(self, **kwargs):
         super(AskToCheckBeforeGo, self).__init__(**kwargs)
@@ -154,78 +149,14 @@ class AskToCheckBeforeGo(Screen):
         self.job_gcode=kwargs['job']
         
     def on_enter(self):    
-               
-        self.job_loading_loaded = '[b]Loading Job...[/b]'
-        self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
-        self.load_value = 0
-        self.check_button.disabled = True
-        Clock.usleep(1)
-        # CAD file processing sequence
-        self.job_gcode = []
-        self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
-        
-        #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
-        #self.job_loading_loaded = '[b]Job Loaded[/b]'     
-    
-    def quit_to_home(self):
-        self.sm.get_screen('home').job_gcode = self.job_gcode
-        self.sm.get_screen('home').job_filename = self.loading_file_name
-        self.sm.current = 'home'
-        
-    def return_to_filechooser(self):
-        self.job_gcode = []
-        self.sm.current = 'local_filechooser'
+        pass    
+
+    def proceed_to_go(self):
+        self.sm.current = 'go'
         
     def go_to_check_job(self):
-               
         self.sm.get_screen('check_job').checking_file_name = self.loading_file_name
         self.sm.get_screen('check_job').job_gcode = self.job_gcode
         self.sm.get_screen('check_job').entry_screen = 'file_loading'
         self.sm.get_screen('home').job_gcode = []
         self.sm.current = 'check_job'
-        
-    def objectifiled(self, job_file_path, dt):
-
-        log('> load_job_file')
-        
-        preloaded_job_gcode = []
-
-        job_file = open(job_file_path, 'r')     # open file and copy each line into the object
-        self.load_value = 1
-        # clean up code as it's copied into the object
-        for line in job_file:
-            # Strip comments/spaces/new line and capitalize:
-            l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
-            
-            if l_block.find('%') == -1 and l_block.find('M6') == -1:    # Drop undesirable lines
-                preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
-                
-        job_file.close()
-        self.load_value = 2
-
-        log('< load_job_file')
-
-        self.job_gcode = preloaded_job_gcode
-   
-        self.job_loading_loaded = '[b]Job Loaded[/b]'
-        self.check_button.disabled = False
-        self.home_button.disabled = False
-        
-        
-        
-# THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
-#     def write_file_to_JobQ(self, objectifile):
-#         
-#         files_in_q = os.listdir(job_q_dir) # clean Q
-#         if files_in_q:
-#             for file in files_in_q:
-#                 os.remove(job_q_dir+file)
-# 
-#         # write cleaned up g-code to new file
-#         new_file = open(job_q_dir+'LoadedGCode.nc','w')
-#         for line in objectifile:
-#             new_file.write(line)
-#             new_file.write('\n')
-#         new_file.close()
-
