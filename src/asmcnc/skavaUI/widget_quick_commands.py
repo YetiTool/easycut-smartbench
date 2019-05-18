@@ -171,48 +171,29 @@ class QuickCommands(Widget):
 
     def proceed_to_go_screen(self):
         
-        # NON-OPTIONAL CHECKS
+        # NON-OPTIONAL CHECKS (bomb if non-satisfactory)
         
-        # GCode must be loaded
-        # Machine state must be idle
+        # GCode must be loaded.
+        # Machine state must be idle.
+        # Machine must be homed.
+        # Job must be within machine bounds.
 
         if self.sm.get_screen('home').job_gcode ==[]:
-            return
+            pass
 
-        if self.m.state() != 'Idle':
+        elif self.m.state() != 'Idle':
             self.sm.current = 'mstate'
-            return
-
-
-        # OPTIONAL CHECKS
-        # Process through screens
-        
-        # Has machine been homed?
-        # Is the job within machine bounds?
-        # Has the GCode file been checked?
+            
+        elif self.m.is_machine_homed == False:
+            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+            self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
+            self.sm.current = 'homingWarning'
+                
+        elif self.is_job_within_bounds() == False:                   
+            self.sm.current = 'boundary'
                     
         else:
-            
-            if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
-                self.sm.current = 'homingWarning'
-                
-            else:
-                if self.is_job_within_bounds() == False:                   
-                    self.sm.current = 'boundary'
-                    
-                else:
-                    if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
-#                         self.sm.get_screen('check_job').checking_file_name = self.sm.get_screen('home').job_filename
-#                         self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
-#                         self.sm.get_screen('check_job').entry_screen = 'home'
-#                         self.sm.current = 'check_job'                        
-                        self.sm.current = 'lastChanceToCheckGcode'                        
-                    else:  
-                        # this actually does nothing bc all functionality is in the damn pop ups -_-
-            #             self.m.enable_check_mode()
-                        self.sm.current = 'go'
+            self.sm.current = 'go'
 
         
     def is_job_within_bounds(self):

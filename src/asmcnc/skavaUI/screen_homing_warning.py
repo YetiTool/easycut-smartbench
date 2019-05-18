@@ -84,7 +84,7 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     on_press:
-                        root.home_SmartBench_press()
+                        root.button_press()
                     on_release:
                         root.home_SmartBench_release()
                         
@@ -99,34 +99,7 @@ Builder.load_string("""
                             text: 'Home SmartBench'
                             size: self.parent.size
                             pos: self.parent.pos
-            
-                Button:
-                    size_hint_y: 0.5
-                    size_hint_x: 3
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_down: ''
-                    background_color: hex('#e65100')
-                    on_press:
-                        root.button_press()
-                    on_release:
-                        root.continue_anyway_release()
-                        
-                    BoxLayout:
-                        padding: 20
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: 'Continue anyway'
-                            size: self.parent.size
-                            pos: self.parent.pos
+
 
                 Button:
                     size_hint_y: 0.5
@@ -186,9 +159,6 @@ class WarningHoming(Screen):
     def home_SmartBench_release(self):
         self.sm.current = 'homing'
 
-    def continue_anyway_release(self):
-        self.sm.current = self.next_screen
-    
     def return_release(self):
         self.sm.current = 'home' 
                       

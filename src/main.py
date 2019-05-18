@@ -47,7 +47,6 @@ from asmcnc.skavaUI import screen_homing_warning
 from asmcnc.skavaUI import screen_boundary_warning
 from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
-from asmcnc.skavaUI import screen_final_chance_to_check_gcode
 
 Cmport = 'COM9'
 
@@ -84,7 +83,6 @@ class SkavaUI(App):
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
-        ask_to_check_gode_before_go = screen_final_chance_to_check_gcode.AskToCheckBeforeGo(name = 'lastChanceToCheckGcode', screen_manager = sm, machine =m)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -106,7 +104,6 @@ class SkavaUI(App):
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
         sm.add_widget(job_done_screen)
-        sm.add_widget(ask_to_check_gode_before_go)
         # set screen to start on
         
 #         hours = 1
