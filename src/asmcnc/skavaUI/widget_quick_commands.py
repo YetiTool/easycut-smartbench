@@ -171,18 +171,28 @@ class QuickCommands(Widget):
 
     def proceed_to_go_screen(self):
         
-        # Before going to the GO screen, we are going to check the GCOde file really well
-        errorfound = 0
+        # NON-OPTIONAL CHECKS
+        
+        # GCode must be loaded
+        # Machine state must be idle
 
-        #check if status is idle
         if self.sm.get_screen('home').job_gcode ==[]:
             return
-        
+
         if self.m.state() != 'Idle':
             self.sm.current = 'mstate'
-            
+            return
+
+
+        # OPTIONAL CHECKS
+        # Process through screens
+        
+        # Has machine been homed?
+        # Is the job within machine bounds?
+        # Has the GCode file been checked?
+                    
         else:
-            #check if we've homed
+            
             if self.m.is_machine_homed == False:
                 self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
                 self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
@@ -198,9 +208,7 @@ class QuickCommands(Widget):
 #                         self.sm.get_screen('check_job').job_gcode = self.sm.get_screen('home').job_gcode
 #                         self.sm.get_screen('check_job').entry_screen = 'home'
 #                         self.sm.current = 'check_job'                        
-
                         self.sm.current = 'lastChanceToCheckGcode'                        
-
                     else:  
                         # this actually does nothing bc all functionality is in the damn pop ups -_-
             #             self.m.enable_check_mode()

@@ -56,19 +56,6 @@ Builder.load_string("""
             orientation: 'vertical'
             size_hint_x: 1
             spacing: 10
-             
-            Label:
-                size_hint_y: 1
-                font_size: '40sp'
-                text: root.job_loading_loaded
-                markup: True
- 
-            Label:
-                text_size: self.size
-                font_size: '16sp'
-                halign: 'center'
-                valign: 'bottom'
-                text: root.loading_file_name
                 
             Label:
                 text_size: self.size
@@ -119,7 +106,7 @@ Builder.load_string("""
                     disabled: True
                     background_color: hex('#0d47a1')
                     on_release: 
-                        root.proceed_to_go()
+                        root.proceed_to_next_screen()
 
                     BoxLayout:
                         padding: 5
@@ -142,17 +129,21 @@ def log(message):
 
 class AskToCheckBeforeGo(Screen):  
     
+    next_screen = 'homingWarning'
+
     def __init__(self, **kwargs):
         super(AskToCheckBeforeGo, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.job_gcode=kwargs['job']
-        
-    def on_enter(self):    
-        pass    
 
-    def proceed_to_go(self):
-        self.sm.current = 'go'
+    def on_pre_enter(self, *args):
+        if self.sm.get_screen('home').gcode_has_been_checked_and_its_ok == False:
+            pass
+        else:
+            self.sm.current = self.next_screen
+
+    def proceed_to_next_screen(self):
+        self.sm.current = self.next_screen
         
     def go_to_check_job(self):
         self.sm.get_screen('check_job').checking_file_name = self.loading_file_name

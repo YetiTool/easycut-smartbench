@@ -49,7 +49,7 @@ from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_final_chance_to_check_gcode
 
-Cmport = 'COM3'
+Cmport = 'COM9'
 
 class SkavaUI(App):
 
