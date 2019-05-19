@@ -70,8 +70,7 @@ Builder.load_string("""
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 70, 0
-                spacing: 70
+                spacing: 35
  
                 Button:
                     size_hint_y:0.5
@@ -85,7 +84,7 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     on_press:
-                        root.home_SmartBench_press()
+                        root.button_press()
                     on_release:
                         root.home_SmartBench_release()
                         
@@ -100,7 +99,8 @@ Builder.load_string("""
                             text: 'Home SmartBench'
                             size: self.parent.size
                             pos: self.parent.pos
-            
+
+
                 Button:
                     size_hint_y: 0.5
                     size_hint_x: 3
@@ -113,19 +113,19 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     on_press:
-                        root.return_press()
+                        root.button_press()
                     on_release:
                         root.return_release()
                         
                     BoxLayout:
-                        padding: 20
+                        padding: 5
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'Return to EasyCut'
+                            text: 'Quit'
                             size: self.parent.size
                             pos: self.parent.pos
                         
@@ -140,23 +140,25 @@ class WarningHoming(Screen):
     user_instruction = StringProperty()
     error_msg = StringProperty()
     
+    next_screen = 'go'
+    
     def __init__(self, **kwargs):
         super(WarningHoming, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
 
-#     def on_enter(self):
-#         self.user_instruction = 'Please home SmartBench before attempting to start a job.'
-    
-    def return_press(self):
+    def on_pre_enter(self, *args):
+        if self.m.is_machine_homed == False:
+            pass # allow screen to present itself
+        else:
+            self.sm.current = self.next_screen
+            
+    def button_press(self):
         self.getout_button.background_color = get_color_from_hex('#c43c00')
-        
-    def home_SmartBench_press(self):
-        self.homing_button.background_color = get_color_from_hex('#c43c00')
-              
+                      
     def home_SmartBench_release(self):
         self.sm.current = 'homing'
-    
+
     def return_release(self):
         self.sm.current = 'home' 
                       
