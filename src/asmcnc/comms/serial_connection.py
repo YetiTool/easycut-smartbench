@@ -189,9 +189,9 @@ class SerialConnection(object):
 
         while True:
             
-            if FLUSH_FLAG = True:
+            if self.FLUSH_FLAG == True:
                 self.s.flushInput()
-                FLUSH_FLAG = False
+                self.FLUSH_FLAG = False
             
             # Polling 
             if self.next_poll_time < time.time():
@@ -359,7 +359,7 @@ class SerialConnection(object):
   
         # for the buffer stuffing style streaming
         # self.s.flushInput()
-        FLUSH_FLAG = True
+        self.FLUSH_FLAG = True
         
         time.sleep(0.1)
         
@@ -460,7 +460,7 @@ class SerialConnection(object):
 
         # Flush
         # self.s.flushInput()
-        FLUSH_FLAG = True
+        self.FLUSH_FLAG = True
         
         # Move head up        
         Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
