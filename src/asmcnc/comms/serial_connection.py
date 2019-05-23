@@ -42,6 +42,7 @@ class SerialConnection(object):
     job_gcode = []
     response_log = []
     suppress_error_screens = False
+    FLUSH_FLAG = False
     
     write_command_buffer = []
     write_realtime_buffer = []
@@ -187,6 +188,10 @@ class SerialConnection(object):
     def grbl_scanner(self):
 
         while True:
+            
+            if self.FLUSH_FLAG == True:
+                self.s.flushInput()
+                self.FLUSH_FLAG = False
             
             # Polling 
             if self.next_poll_time < time.time():
@@ -353,7 +358,10 @@ class SerialConnection(object):
         self.m.zUp()
   
         # for the buffer stuffing style streaming
-        self.s.flushInput()
+        # self.s.flushInput()
+        self.FLUSH_FLAG = True
+        
+        time.sleep(0.1)
         
         # Reset counters & flags
         self.l_count = 0
@@ -451,7 +459,8 @@ class SerialConnection(object):
         log("G-code streaming cancelled!")
 
         # Flush
-        self.s.flushInput()
+        # self.s.flushInput()
+        self.FLUSH_FLAG = True
         
         # Move head up        
         Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
