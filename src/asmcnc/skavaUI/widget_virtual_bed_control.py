@@ -8,7 +8,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 
@@ -223,7 +222,17 @@ class VirtualBedControl(Widget):
         self.m.get_grbl_status()
         
     def go_to_jobstart_xy(self):
-        self.m.go_to_jobstart_xy()
+        if self.m.is_machine_homed == False:
+            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+            self.sm.get_screen('homingWarning').error_msg = ''
+            self.sm.current = 'homingWarning'
+        else:
+            self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
-        self.m.go_to_standby()
+        if self.m.is_machine_homed == False:
+            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+            self.sm.get_screen('homingWarning').error_msg = ''
+            self.sm.current = 'homingWarning'
+        else:
+            self.m.go_to_standby()

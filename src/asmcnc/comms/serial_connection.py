@@ -17,8 +17,6 @@ from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_alarm_homing, popup_alarm_general, popup_error,\
-    popup_job_done
 import re
 from functools import partial
 from serial.serialutil import SerialException
@@ -44,6 +42,7 @@ class SerialConnection(object):
     job_gcode = []
     response_log = []
     suppress_error_screens = False
+    FLUSH_FLAG = False
     
     write_command_buffer = []
     write_realtime_buffer = []
@@ -60,9 +59,9 @@ class SerialConnection(object):
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
-        if self.sm.current != 'serialScreen':
+        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
             self.sm.get_screen('serialScreen').error_description = serial_error
-            self.sm.current = 'serialScreen' 
+            self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
         print('start establish')
@@ -190,6 +189,10 @@ class SerialConnection(object):
 
         while True:
             
+            if self.FLUSH_FLAG == True:
+                self.s.flushInput()
+                self.FLUSH_FLAG = False
+            
             # Polling 
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
@@ -197,6 +200,7 @@ class SerialConnection(object):
 
             # Process anything in the write_command and write_realtime lists,
             # i.e. everything else.
+            
             command_counter = 0
             for command in self.write_command_buffer:
                 self.write_direct(*command)
@@ -210,8 +214,6 @@ class SerialConnection(object):
                 realtime_counter += 1
                 
             del self.write_realtime_buffer[0:(realtime_counter+1)]
-            
-            # FLAG: Add in something to yell at the user if this hasn't read anything in a while
 
             
             # If there's a message received, deal with it depending on type:
@@ -348,21 +350,18 @@ class SerialConnection(object):
         return
 
     def initialise_job(self):
-        
-        timeout = time.time() + 10  # CHECK THIS TIMEOUT - is it too long/too short?? 
                 
         if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
         self.m.zUp()
-        
-        # When head moved out of the way, should get 'ok' come back from grbl. 
-        # Once this happens can continue with other instructions:  
-         
-                
+  
         # for the buffer stuffing style streaming
-        self.s.flushInput()
+        # self.s.flushInput()
+        self.FLUSH_FLAG = True
+        
+        time.sleep(0.1)
         
         # Reset counters & flags
         self.l_count = 0
@@ -433,9 +432,14 @@ class SerialConnection(object):
         #time_take_minutes = int(time_taken_seconds/60)
         log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
-        popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
-        
+        # reset go screen to go again
         self.sm.get_screen('go').reset_go_screen_after_job_finished()
+
+        # send info to the job done screen
+        self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+        self.sm.current = 'jobdone'
+        # popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -455,7 +459,8 @@ class SerialConnection(object):
         log("G-code streaming cancelled!")
 
         # Flush
-        self.s.flushInput()
+        # self.s.flushInput()
+        self.FLUSH_FLAG = True
         
         # Move head up        
         Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)

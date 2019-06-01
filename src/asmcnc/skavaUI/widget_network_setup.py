@@ -8,7 +8,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
@@ -111,9 +110,10 @@ class NetworkSetup(Widget):
         os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
         os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
         os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-        
-        os.system('sudo reboot')
-        
+
+        self.sm.current = 'rebooting'
+#         os.system('sudo reboot')
+         
     
 
         

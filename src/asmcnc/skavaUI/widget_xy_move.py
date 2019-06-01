@@ -8,9 +8,9 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
+from kivy.clock import Clock
 from asmcnc.skavaUI import widget_virtual_bed
 
 
@@ -65,6 +65,7 @@ Builder.load_string("""
 
             Button:
                 background_color: hex('#F4433600')
+                always_release: True
                 on_release: 
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
@@ -106,6 +107,7 @@ Builder.load_string("""
                             
             Button:
                 background_color: hex('#F4433600')
+                always_release: True
                 on_release: 
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
@@ -142,6 +144,7 @@ Builder.load_string("""
                         allow_stretch: True  
             Button:
                 background_color: hex('#F4433600')
+                always_release: True
                 on_release: 
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
@@ -183,10 +186,13 @@ Builder.load_string("""
 
             Button:
                 background_color: hex('#F4433600')
-                on_release: 
+                always_release: True
+                on_release:
+                    print('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    print('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
@@ -371,7 +377,13 @@ class XYMove(Widget):
         
             
     def cancelXYJog(self):
-        if self.jogMode == 'free': self.m.quit_jog()
+        if self.jogMode == 'free': 
+            self.m.quit_jog()
+        
+#             if self.m.quit_jog() == True:
+# #                 self.m.quit_jog()
+#                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
+ 
 
     def set_workzone_to_pos_xy(self):
         self.m.set_workzone_to_pos_xy()
@@ -381,10 +393,20 @@ class XYMove(Widget):
         self.m.get_grbl_status()
 
     def go_x_datum(self):
-        self.m.go_x_datum()
+        if self.m.is_machine_homed == False:
+                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+                self.sm.get_screen('homingWarning').error_msg = ''
+                self.sm.current = 'homingWarning'
+        else:
+            self.m.go_x_datum()
 
     def go_y_datum(self):
-        self.m.go_y_datum()
+        if self.m.is_machine_homed == False:
+                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
+                self.sm.get_screen('homingWarning').error_msg = ''
+                self.sm.current = 'homingWarning'
+        else:
+            self.m.go_y_datum()
 
     def set_x_datum(self):
         self.m.set_x_datum()

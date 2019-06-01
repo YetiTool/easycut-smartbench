@@ -10,7 +10,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
-from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
@@ -41,14 +40,6 @@ Builder.load_string("""
         Button:
             text: 'Return to lobby'
             on_release: root.return_to_lobby()
-        BoxLayout:
-            orientation: 'vertical'
-            Switch:
-                active: False
-            Label:
-                text: 'GRBL gcode check'
-                font_size: 18
-                color: 0,0,0,1
         ToggleButton:
             state: root.buffer_log_mode
             text: 'Buffer Log'
@@ -107,11 +98,8 @@ class DevOptions(Widget):
             self.m.s.start_sequential_stream(settings)
 
     def reboot(self):
+        self.sm.current = 'rebooting'
 
-        if sys.platform != "win32":
-            sudoPassword = 'posys'
-            command = 'sudo reboot'
-            p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
     def quit_to_console(self):
         print 'Bye!'
