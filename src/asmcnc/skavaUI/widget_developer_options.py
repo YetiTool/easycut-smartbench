@@ -62,6 +62,15 @@ Builder.load_string("""
         Label:
             text: ''
             color: 0,0,0,1
+        Button:
+            text: 'Pull PL Update'
+            on_release: root.pull_pl_update()
+        Label:
+            text: 'Install PL v0.0.x'
+            color: 0,0,0,1
+        Label:
+            text: ''
+            color: 0,0,0,1
         Label:
             text: 'Code base'
             color: 0,0,0,1
@@ -152,6 +161,10 @@ class DevOptions(Widget):
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull")
+        self.reboot()
+
+    def pull_pl_update(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull")
         self.reboot()
 
     def bake_grbl_settings(self):
