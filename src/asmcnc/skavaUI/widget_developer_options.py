@@ -67,10 +67,9 @@ Builder.load_string("""
             on_release: root.pull_pl_update()
         Label:
             text: 'Install PL v0.0.x'
-            color: 0,0,0,1
-        Label:
-            text: ''
-            color: 0,0,0,1
+        Button:
+            text: 'Re-run PL Install'
+            on_release: root.ansible_service_run()
         Label:
             text: 'Code base'
             color: 0,0,0,1
@@ -166,6 +165,9 @@ class DevOptions(Widget):
     def pull_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull")
         self.reboot()
+
+    def ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
 
     def bake_grbl_settings(self):
         grbl_settings = [
