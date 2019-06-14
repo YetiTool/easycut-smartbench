@@ -69,6 +69,10 @@ Builder.load_string("""
             color: 0,0,0,1
             id: sw_branch_label
             id: sw_version_label
+        Button:
+            text: 'Restore GRBL settings'
+            on_release: root.restore_grbl_settings()
+
 """)
 
 
@@ -76,6 +80,8 @@ class DevOptions(Widget):
 
     buffer_log_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
+    scraped_grbl_settings = []
+
 
     def __init__(self, **kwargs):
 
@@ -167,3 +173,50 @@ class DevOptions(Widget):
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+    
+    def restore_grbl_settings(self):
+        grbl_settings = [
+                    '$0=' + self.m.s.setting_0,    #Step pulse, microseconds
+                    '$1=' + self.m.s.setting_1,    #Step idle delay, milliseconds
+                    '$2=' + self.m.s.setting_2,           #Step port invert, mask
+                    '$3=' + self.m.s.setting_3,           #Direction port invert, mask
+                    '$4=' + self.m.s.setting_4,           #Step enable invert, boolean
+                    '$5=' + self.m.s.setting_5,           #Limit pins invert, boolean
+                    '$6=' + self.m.s.setting_6,           #Probe pin invert, boolean
+                    '$10=' + self.m.s.setting_10,          #Status report, mask <----------------------
+                    '$11=' + self.m.s.setting_11,      #Junction deviation, mm
+                    '$12=' + self.m.s.setting_12,      #Arc tolerance, mm
+                    '$13=' + self.m.s.setting_13,          #Report inches, boolean
+                    '$20=' + self.m.s.setting_20,          #Soft limits, boolean <-------------------
+                    '$21=' + self.m.s.setting_21,          #Hard limits, boolean <------------------
+                    '$22=' + self.m.s.setting_22,          #Homing cycle, boolean <------------------------
+                    '$23=' + self.m.s.setting_23,          #Homing dir invert, mask
+                    '$24=' + self.m.s.setting_24,     #Homing feed, mm/min
+                    '$25=' + self.m.s.setting_25,    #Homing seek, mm/min
+                    '$26=' + self.m.s.setting_26,        #Homing debounce, milliseconds
+                    '$27=' + self.m.s.setting_27,      #Homing pull-off, mm
+                    '$30=' + self.m.s.setting_30,      #Max spindle speed, RPM
+                    '$31=' + self.m.s.setting_31,         #Min spindle speed, RPM
+                    '$32=' + self.m.s.setting_32,           #Laser mode, boolean
+                    '$100=' + self.m.s.setting_100,   #X steps/mm
+                    '$101=' + self.m.s.setting_101,   #Y steps/mm
+                    '$102=' + self.m.s.setting_102,   #Z steps/mm
+                    '$110=' + self.m.s.setting_110,   #X Max rate, mm/min
+                    '$111=' + self.m.s.setting_111,   #Y Max rate, mm/min
+                    '$112=' + self.m.s.setting_112,   #Z Max rate, mm/min
+                    '$120=' + self.m.s.setting_120,    #X Acceleration, mm/sec^2
+                    '$121=' + self.m.s.setting_121,    #Y Acceleration, mm/sec^2
+                    '$122=' + self.m.s.setting_122,    #Z Acceleration, mm/sec^2
+                    '$130=' + self.m.s.setting_130,   #X Max travel, mm TODO: Link to a settings object
+                    '$131=' + self.m.s.setting_131,   #Y Max travel, mm
+                    '$132=' + self.m.s.setting_132,   #Z Max travel, mm
+                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                    '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+            ]
+        
+        grbl_params = 'G10 L2 P1 X' + self.m.s.g54_x + ' Y' + self.m.s.g54_y + ' Z' + self.m.s.g54_z # tell GRBL what position it's in
+
+        self.m.s.start_sequential_stream(grbl_settings)   # Send any grbl specific parameters        
+        self.m.s.start_sequential_stream(grbl_settings)   # Send any grbl specific parameters
+        
