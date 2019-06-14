@@ -230,6 +230,6 @@ class DevOptions(Widget):
         g = open('saved_grbl_settings_params.txt', 'r')
         settings_to_restore = g.read()
         print(settings_to_restore)
-#        self.m.s.start_sequential_stream(grbl_settings)   # Send any grbl specific parameters        
+        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters        
 
         
