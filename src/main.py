@@ -48,7 +48,7 @@ from asmcnc.skavaUI import screen_boundary_warning
 from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 
-Cmport = 'COM9'
+Cmport = 'COM3'
 
 class SkavaUI(App):
 
