@@ -65,8 +65,9 @@ Builder.load_string("""
         Button:
             text: 'Pull PL Update'
             on_release: root.pull_pl_update()
-        Label:
+        Button:
             text: 'Install PL v0.0.x'
+            on_release: root.set_tag_pl_update()
         Button:
             text: 'Re-run PL Install'
             on_release: root.ansible_service_run()
@@ -151,7 +152,7 @@ class DevOptions(Widget):
         self.sw_version_label.text = data
 
     def refresh_platform_version_label(self):
-        data = os.popen("echo $SB_PLATFORM_VERSION").read()
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
         self.platform_version_label.text = data
 
     def refresh_latest_platform_version_label(self):
@@ -164,6 +165,11 @@ class DevOptions(Widget):
 
     def pull_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull")
+        self.reboot()
+
+    def set_tag_pl_update(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
         self.reboot()
 
     def ansible_service_run(self):
