@@ -233,14 +233,14 @@ class DevOptions(Widget):
     
     def flash_fw(self):
         os.system("sudo pigpiod")
-        pi = pigpio.pi()
-        pi.set_mode(17, pigpio.ALT3)
-        print(pi.get_mode(17))
-        pi.stop()
-        os.system("chmod +x update_fw.sh")
-        os.system("./update_fw.sh")
-        quit()
-    
+#         pi = pigpio.pi()
+#         pi.set_mode(17, pigpio.ALT3)
+#         print(pi.get_mode(17))
+#         pi.stop()
+#         os.system("chmod +x update_fw.sh")
+#         os.system("./update_fw.sh")
+#         quit()
+#     
     def restore_grbl_settings(self):
         
         g = open('saved_grbl_settings_params.txt', 'r')
