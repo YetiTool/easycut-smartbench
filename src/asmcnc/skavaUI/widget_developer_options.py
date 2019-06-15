@@ -238,7 +238,7 @@ class DevOptions(Widget):
         print(pi.get_mode(17))
         pi.stop()
         os.system("chmod +x update_fw.sh")
-        os.system("./update_fw.sh &")
+        os.system("./update_fw.sh")
         # sys.exit()
 #     
     def restore_grbl_settings(self):
