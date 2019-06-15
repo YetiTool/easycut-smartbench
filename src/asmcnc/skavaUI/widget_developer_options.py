@@ -4,6 +4,7 @@ Created on 1 Feb 2018
 '''
 
 import sys, os
+import pigpio
 
 import kivy
 from kivy.lang import Builder
@@ -72,6 +73,9 @@ Builder.load_string("""
         Button:
             text: 'Save GRBL settings'
             on_release: root.save_grbl_settings()    
+        Button:
+            text: 'Flash FW'
+            on_release: root.flash_fw()
         Button:
             text: 'Restore GRBL settings'
             on_release: root.restore_grbl_settings()
@@ -180,6 +184,9 @@ class DevOptions(Widget):
 
     def save_grbl_settings(self):
 
+        self.m.send_any_gcode_command("$$")
+        self.m.send_any_gcode_command("$#")
+
         grbl_settings_and_params = [
                     '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
                     '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
@@ -223,7 +230,16 @@ class DevOptions(Widget):
         f.close()
         
         print(grbl_settings_and_params)
-        
+    
+    def flash_fw(self):
+        os.system("sudo pigpiod")
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("chmod +x update_fw.sh")
+        os.system("./update_fw.sh")
+        quit()
     
     def restore_grbl_settings(self):
         
