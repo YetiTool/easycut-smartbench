@@ -15,6 +15,9 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
+PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
+PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
+PLATFORM_HOME= "/home/pi/"
 
 Builder.load_string("""
 
@@ -164,6 +167,8 @@ class DevOptions(Widget):
         self.reboot()
 
     def pull_pl_update(self):
+        if not os.path.exists(PLATFORM_DIRECTORY):
+          os.system("cd "+PLATFORM_HOME+" && git clone "+PLATFORM_REPOSITORY)
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull")
         self.reboot()
 
