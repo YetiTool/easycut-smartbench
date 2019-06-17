@@ -15,18 +15,22 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
+PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
+PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
+PLATFORM_HOME= "/home/pi/"
 
 Builder.load_string("""
 
 <DevOptions>:
 
     sw_version_label:sw_version_label
-    sw_branch_label:sw_branch_label
+    platform_version_label:platform_version_label
+    latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        cols: 2
+        cols: 3
 
         Button:
             text: 'Reboot'
@@ -59,16 +63,47 @@ Builder.load_string("""
             text: 'Bake GRBL settings'
             on_release: root.bake_grbl_settings()
         Label:
-            test: 'Repository Branch'
-            font_size: 18
+            text: ''
             color: 0,0,0,1
-            id: sw_branch_label
+        Button:
+            text: 'Pull PL Update'
+            on_release: root.pull_pl_update()
+        Button:
+            text: 'Install PL v0.0.x'
+            on_release: root.set_tag_pl_update()
+        Button:
+            text: 'Re-run PL Install'
+            on_release: root.ansible_service_run()
         Label:
-            text: 'SW VER'
-            font_size: 18
+            text: 'Code base'
             color: 0,0,0,1
-            id: sw_branch_label
+        Label:
+            text: 'Current'
+            color: 0,0,0,1
+        Label:
+            text: 'Available'
+            color: 0,0,0,1
+        Label:
+            text: 'EasyCut'
+            color: 0,0,0,1
+        Label:
+            text: 'Repository Branch'
+            color: 0,0,0,1
             id: sw_version_label
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: 'Platform'
+            color: 0,0,0,1
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+            id: platform_version_label
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+            id: latest_platform_version_label 
 """)
 
 
@@ -82,8 +117,9 @@ class DevOptions(Widget):
         super(DevOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.refresh_sw_branch_label()
         self.refresh_sw_version_label()
+        self.refresh_platform_version_label()
+        self.refresh_latest_platform_version_label()
 
     def virtual_hw_toggled(self):
         if self.virtual_hw_mode == 'normal': # virtual hw mode OFF
@@ -114,17 +150,35 @@ class DevOptions(Widget):
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    def refresh_sw_branch_label(self):
-        data = os.popen("git symbolic-ref --short HEAD").read()
-        self.sw_branch_label.text = data
-
     def refresh_sw_version_label(self):
         data = os.popen("git describe --always").read()
         self.sw_version_label.text = data
 
+    def refresh_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
+        self.platform_version_label.text = data
+
+    def refresh_latest_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()
+        self.latest_platform_version_label.text = data
+
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull")
         self.reboot()
+
+    def pull_pl_update(self):
+        if not os.path.exists(PLATFORM_DIRECTORY):
+          os.system("cd "+PLATFORM_HOME+" && git clone "+PLATFORM_REPOSITORY)
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull")
+        self.reboot()
+
+    def set_tag_pl_update(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
+        self.reboot()
+
+    def ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
 
     def bake_grbl_settings(self):
         grbl_settings = [
