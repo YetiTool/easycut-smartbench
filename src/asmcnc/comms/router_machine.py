@@ -87,7 +87,8 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.5') 
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
-        self.zUp()        
+        self.zUp()    
+            
 #         Clock.schedule_once(self.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
 # 
 #     def probe_z_post_operation(self, dt):
