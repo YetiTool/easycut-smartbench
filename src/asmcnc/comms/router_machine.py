@@ -89,21 +89,6 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.5') 
         self.zUp()    
 
-            
-#         Clock.schedule_once(self.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
-# 
-#     def probe_z_post_operation(self, dt):
-# 
-#         # Retract:
-#         # if deep enough to retract fully
-#         if self.mpos_z() + self.z_lift_after_probing < -self.limit_switch_safety_distance:
-#             self.s.write_command('G0 G54 Z' + str(self.z_lift_after_probing))
-# 
-#         # if to close to limit, only go to limit
-#         else:
-#             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
-# 
-#         self.zUp()
 
     def home_all(self):
 
