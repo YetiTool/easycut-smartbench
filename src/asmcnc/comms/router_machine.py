@@ -26,7 +26,7 @@ class RouterMachine(object):
     
     z_lift_after_probing = 20.0
     z_probe_speed = 60
-    z_touch_plate_thickness = 1.65
+    z_touch_plate_thickness = 1.53
 
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     
@@ -81,23 +81,27 @@ class RouterMachine(object):
         # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
 
-    def probe_z_detection_event(self):
+    def probe_z_detection_event(self, z_machine_coord_when_probed):
 
+        self.s.write_command('G90 G1 G53 Z' + z_machine_coord_when_probed)
+        self.s.write_command('G4 P0.5') 
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
-
-
-    def probe_z_post_operation(self, dt):
-
-        # Retract:
-        # if deep enough to retract fully
-        if self.mpos_z() + self.z_lift_after_probing < -self.limit_switch_safety_distance:
-            self.s.write_command('G0 G54 Z' + str(self.z_lift_after_probing))
-
-        # if to close to limit, only go to limit
-        else:
-            self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
-
-        self.zUp()
+        self.s.write_command('G4 P0.5') 
+        self.zUp()        
+#         Clock.schedule_once(self.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
+# 
+#     def probe_z_post_operation(self, dt):
+# 
+#         # Retract:
+#         # if deep enough to retract fully
+#         if self.mpos_z() + self.z_lift_after_probing < -self.limit_switch_safety_distance:
+#             self.s.write_command('G0 G54 Z' + str(self.z_lift_after_probing))
+# 
+#         # if to close to limit, only go to limit
+#         else:
+#             self.s.write_command('G0 G53 Z' + str(-(self.limit_switch_safety_distance)))
+# 
+#         self.zUp()
 
     def home_all(self):
 

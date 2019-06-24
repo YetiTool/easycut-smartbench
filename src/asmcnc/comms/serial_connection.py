@@ -242,7 +242,7 @@ class SerialConnection(object):
 ##---------------------------------------------------                
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-                if True:
+                if self.VERBOSE_ALL_RESPONSE: 
                     if rec_temp.startswith('<'):
                         log(rec_temp)
                     else:
@@ -253,7 +253,6 @@ class SerialConnection(object):
                     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
                 except:
                     pass
-                if self.VERBOSE_ALL_RESPONSE: print rec_temp
     
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
@@ -697,10 +696,16 @@ class SerialConnection(object):
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
             elif self.expecting_probe_result and stripped_message.startswith('PRB'):
 
+                log(stripped_message)
+
                 successful_probe = stripped_message.split(':')[2]
+                
                 if successful_probe:
-                    self.m.probe_z_detection_event()
-                    Clock.schedule_once(self.m.probe_z_post_operation, 0.3) # Delay to dodge EEPROM write blocking
+
+                    z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
+                    log('Probed at machine height: ' + z_machine_coord_when_probed)
+                    self.m.probe_z_detection_event(z_machine_coord_when_probed)
+
 
                 self.expecting_probe_result = False # clear flag
 
