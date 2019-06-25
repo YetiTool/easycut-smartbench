@@ -85,7 +85,7 @@ class SerialConnection(object):
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
-                    if (line[:4] == 'ttyAMA' or line[:6] == 'ttyACM'): # look for... 
+                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
