@@ -275,7 +275,9 @@ class SerialConnection(object):
                 if self.is_job_streaming:
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
-                    else: self.end_stream()
+                    else: 
+                        if self.g_count == self.l_count:
+                            self.end_stream()
                     
 
 
