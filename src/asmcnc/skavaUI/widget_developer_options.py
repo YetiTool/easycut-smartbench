@@ -159,13 +159,13 @@ class DevOptions(Widget):
         self.platform_version_label.text = data
 
     def refresh_latest_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
         self.latest_platform_version_label.text = data
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 
-    def pull_pl_update(self):
+    def send_logs(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
 
     def email_state(self):
