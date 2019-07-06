@@ -232,11 +232,12 @@ class DevOptions(Widget):
         print(grbl_settings_and_params)
     
     def flash_fw(self):
-#         os.system("sudo pigpiod")
+        os.system("sudo service pigpiod start")
         pi = pigpio.pi()
         pi.set_mode(17, pigpio.ALT3)
         print(pi.get_mode(17))
         pi.stop()
+        os.system("sudo service pigpiod stop")        
         os.system("./update_fw.sh")
         # sys.exit()
 #     
