@@ -163,22 +163,22 @@ class DevOptions(Widget):
         self.latest_platform_version_label.text = data
 
     def get_sw_update(self):
-        os.system("cd /home/pi/easycut-smartbench/ && git pull && reboot")
+        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 
     def pull_pl_update(self):
         if not os.path.exists(PLATFORM_DIRECTORY):
           os.system("cd "+PLATFORM_HOME+" && git clone "+PLATFORM_REPOSITORY)
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull && reboot")
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull && sudo reboot")
 
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
 
     def set_tag_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && reboot")
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def ansible_service_run(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && reboot")
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def bake_grbl_settings(self):
         grbl_settings = [
