@@ -62,9 +62,9 @@ Builder.load_string("""
         Button:
             text: 'Bake GRBL settings'
             on_release: root.bake_grbl_settings()
-        Label:
-            text: ''
-            color: 0,0,0,1
+        Button:
+            text: 'E-mail state'
+            on_release: root.email_state()
         Button:
             text: 'Pull PL Update'
             on_release: root.pull_pl_update()
@@ -169,6 +169,9 @@ class DevOptions(Widget):
         if not os.path.exists(PLATFORM_DIRECTORY):
           os.system("cd "+PLATFORM_HOME+" && git clone "+PLATFORM_REPOSITORY)
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull && reboot")
+
+    def email_state(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
 
     def set_tag_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
