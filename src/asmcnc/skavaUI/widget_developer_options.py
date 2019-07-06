@@ -16,18 +16,22 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
+PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
+PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
+PLATFORM_HOME= "/home/pi/"
 
 Builder.load_string("""
 
 <DevOptions>:
 
     sw_version_label:sw_version_label
-    sw_branch_label:sw_branch_label
+    platform_version_label:platform_version_label
+    latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        cols: 2
+        cols: 3
 
         Button:
             text: 'Reboot'
@@ -52,24 +56,7 @@ Builder.load_string("""
             text: 'Virtual HW'
             on_state:
                 root.virtual_hw_mode = self.state
-                root.virtual_hw_toggled()
-        Button:
-            text: 'Get SW update'
-            on_release: root.get_sw_update()
-        Button:
-            text: 'Bake GRBL settings'
-            on_release: root.bake_grbl_settings()
-        Label:
-            test: 'Repository Branch'
-            font_size: 18
-            color: 0,0,0,1
-            id: sw_branch_label
-        Label:
-            text: 'SW VER'
-            font_size: 18
-            color: 0,0,0,1
-            id: sw_branch_label
-            id: sw_version_label
+                root.virtual_hw_toggled()     
         Button:
             text: 'Save GRBL settings'
             on_release: root.save_grbl_settings()    
@@ -79,8 +66,54 @@ Builder.load_string("""
         Button:
             text: 'Restore GRBL settings'
             on_release: root.restore_grbl_settings()
-
-
+        Button:
+            text: 'Get SW update'
+            on_release: root.get_sw_update()
+        Button:
+            text: 'Bake GRBL settings'
+            on_release: root.bake_grbl_settings()
+        Button:
+            text: 'E-mail state'
+            on_release: root.email_state()
+        Button:
+            text: 'Send logs'
+            on_release: root.send_logs()
+        Button:
+            text: 'Install PL v0.0.x'
+            on_release: root.set_tag_pl_update()
+        Button:
+            text: 'Re-run PL Install'
+            on_release: root.ansible_service_run()
+        Label:
+            text: 'Code base'
+            color: 0,0,0,1
+        Label:
+            text: 'Current'
+            color: 0,0,0,1
+        Label:
+            text: 'Available'
+            color: 0,0,0,1
+        Label:
+            text: 'EasyCut'
+            color: 0,0,0,1
+        Label:
+            text: 'Repository Branch'
+            color: 0,0,0,1
+            id: sw_version_label
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: 'Platform'
+            color: 0,0,0,1
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+            id: platform_version_label
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+            id: latest_platform_version_label
 """)
 
 
@@ -96,8 +129,9 @@ class DevOptions(Widget):
         super(DevOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.refresh_sw_branch_label()
         self.refresh_sw_version_label()
+        self.refresh_platform_version_label()
+        self.refresh_latest_platform_version_label()
 
     def virtual_hw_toggled(self):
         if self.virtual_hw_mode == 'normal': # virtual hw mode OFF
@@ -128,17 +162,33 @@ class DevOptions(Widget):
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    def refresh_sw_branch_label(self):
-        data = os.popen("git symbolic-ref --short HEAD").read()
-        self.sw_branch_label.text = data
-
     def refresh_sw_version_label(self):
         data = os.popen("git describe --always").read()
         self.sw_version_label.text = data
 
+    def refresh_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
+        self.platform_version_label.text = data
+
+    def refresh_latest_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
+        self.latest_platform_version_label.text = data
+
     def get_sw_update(self):
-        os.system("cd /home/pi/easycut-smartbench/ && git pull")
-        self.reboot()
+        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
+
+    def send_logs(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+
+    def email_state(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
+
+    def set_tag_pl_update(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+
+    def ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def bake_grbl_settings(self):
         grbl_settings = [
@@ -246,6 +296,4 @@ class DevOptions(Widget):
         g = open('saved_grbl_settings_params.txt', 'r')
         settings_to_restore = g.read()
         print(settings_to_restore)
-        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters        
-
-        
+        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
