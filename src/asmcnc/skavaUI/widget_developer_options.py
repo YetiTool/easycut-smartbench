@@ -66,8 +66,8 @@ Builder.load_string("""
             text: 'E-mail state'
             on_release: root.email_state()
         Button:
-            text: 'Pull PL Update'
-            on_release: root.pull_pl_update()
+            text: 'Send logs'
+            on_release: root.send_logs()
         Button:
             text: 'Install PL v0.0.x'
             on_release: root.set_tag_pl_update()
@@ -166,9 +166,7 @@ class DevOptions(Widget):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 
     def pull_pl_update(self):
-        if not os.path.exists(PLATFORM_DIRECTORY):
-          os.system("cd "+PLATFORM_HOME+" && git clone "+PLATFORM_REPOSITORY)
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git pull && sudo reboot")
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
 
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
