@@ -85,7 +85,7 @@ class SerialConnection(object):
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
-                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
+                    if (line[:6] == 'ttyAMA' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
@@ -634,50 +634,56 @@ class SerialConnection(object):
             # '$$' is called to yield the report from grbl
             # It is called at init, at end of "start_sequential_stream" function - this forces sw to be in sync with grbl settings
 
-            if setting == '$0': pass  # Step pulse, microseconds
-            elif setting == '$1': pass  # Step idle delay, milliseconds
-            elif setting == '$2': pass  # Step port invert, mask
-            elif setting == '$3': pass  # Direction port invert, mask
-            elif setting == '$4': pass  # Step enable invert, boolean
-            elif setting == '$5': pass  # Limit pins invert, boolean
-            elif setting == '$6': pass  # Probe pin invert, boolean
-            elif setting == '$10': pass  # Status report, mask
-            elif setting == '$11': pass  # Junction deviation, mm
-            elif setting == '$12': pass  # Arc tolerance, mm
-            elif setting == '$13': pass  # Report inches, boolean
-            elif setting == '$20': pass  # Soft limits, boolean
-            elif setting == '$21': pass  # Hard limits, boolean
-            elif setting == '$22': pass  # Homing cycle, boolean
-            elif setting == '$23': pass  # Homing dir invert, mask
-            elif setting == '$24': pass  # Homing feed, mm/min
-            elif setting == '$25': pass  # Homing seek, mm/min
-            elif setting == '$26': pass  # Homing debounce, milliseconds
-            elif setting == '$27': pass  # Homing pull-off, mm
-            elif setting == '$30': pass  # Max spindle speed, RPM
-            elif setting == '$31': pass  # Min spindle speed, RPM
-            elif setting == '$32': pass  # Laser mode, boolean
-            elif setting == '$100': pass  # X steps/mm
-            elif setting == '$101': pass  # Y steps/mm
-            elif setting == '$102': pass  # Z steps/mm
+            if setting == '$0': self.setting_0 = value; # Step pulse, microseconds
+            elif setting == '$1': self.setting_1 = value;  # Step idle delay, milliseconds
+            elif setting == '$2': self.setting_2 = value;  # Step port invert, mask
+            elif setting == '$3': self.setting_3 = value;  # Direction port invert, mask
+            elif setting == '$4': self.setting_4 = value;  # Step enable invert, boolean
+            elif setting == '$5': self.setting_5 = value;  # Limit pins invert, boolean
+            elif setting == '$6': self.setting_6 = value;  # Probe pin invert, boolean
+            elif setting == '$10': self.setting_10 = value;  # Status report, mask
+            elif setting == '$11': self.setting_11 = value;  # Junction deviation, mm
+            elif setting == '$12': self.setting_12 = value;  # Arc tolerance, mm
+            elif setting == '$13': self.setting_13 = value;  # Report inches, boolean
+            elif setting == '$20': self.setting_20 = value;  # Soft limits, boolean
+            elif setting == '$21': self.setting_21 = value;  # Hard limits, boolean
+            elif setting == '$22': self.setting_22 = value;  # Homing cycle, boolean
+            elif setting == '$23': self.setting_23 = value;  # Homing dir invert, mask
+            elif setting == '$24': self.setting_24 = value;  # Homing feed, mm/min
+            elif setting == '$25': self.setting_25 = value;  # Homing seek, mm/min
+            elif setting == '$26': self.setting_26 = value;  # Homing debounce, milliseconds
+            elif setting == '$27': self.setting_27 = value;  # Homing pull-off, mm
+            elif setting == '$30': self.setting_30 = value;  # Max spindle speed, RPM
+            elif setting == '$31': self.setting_31 = value;  # Min spindle speed, RPM
+            elif setting == '$32': self.setting_32 = value;  # Laser mode, boolean
+            elif setting == '$100': self.setting_100 = value;  # X steps/mm
+            elif setting == '$101': self.setting_101 = value;  # Y steps/mm
+            elif setting == '$102': self.setting_102 = value;  # Z steps/mm
             elif setting == '$110': # X Max rate, mm/min
+                self.setting_110 = value;
                 self.sm.get_screen('home').common_move_widget.fast_x_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$111': # Y Max rate, mm/min
+                self.setting_111 = value;
                 self.sm.get_screen('home').common_move_widget.fast_y_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$112': # Z Max rate, mm/min
+                self.setting_112 = value;
                 self.sm.get_screen('home').common_move_widget.fast_z_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
-            elif setting == '$120': pass  # X Acceleration, mm/sec^2
-            elif setting == '$121': pass  # Y Acceleration, mm/sec^2
-            elif setting == '$122': pass  # Z Acceleration, mm/sec^2
+            elif setting == '$120': self.setting_120 = value;  # X Acceleration, mm/sec^2
+            elif setting == '$121': self.setting_121 = value;  # Y Acceleration, mm/sec^2
+            elif setting == '$122': self.setting_122 = value;  # Z Acceleration, mm/sec^2
             elif setting == '$130':
+                self.setting_130 = value;
                 self.m.grbl_x_max_travel = value  # X Max travel, mm
                 self.m.set_jog_limits()
             elif setting == '$131':
+                self.setting_131 = value;
                 self.m.grbl_y_max_travel = value  # Y Max travel, mm
                 self.m.set_jog_limits()
             elif setting == '$132':
+                self.setting_132 = value;
                 self.m.grbl_z_max_travel = value  # Z Max travel, mm
                 self.m.set_jog_limits()
 
@@ -694,6 +700,13 @@ class SerialConnection(object):
                 self.g28_x = pos[0]
                 self.g28_y = pos[1]
                 self.g28_z = pos[2]
+                
+            elif stripped_message.startswith('G54:'):
+                
+                pos = stripped_message[4:].split(',')
+                self.g54_x = pos[0]
+                self.g54_y = pos[1]
+                self.g54_z = pos[2]
 
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
             elif self.expecting_probe_result and stripped_message.startswith('PRB'):

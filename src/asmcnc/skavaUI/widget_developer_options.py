@@ -4,6 +4,7 @@ Created on 1 Feb 2018
 '''
 
 import sys, os
+import pigpio
 
 import kivy
 from kivy.lang import Builder
@@ -55,7 +56,16 @@ Builder.load_string("""
             text: 'Virtual HW'
             on_state:
                 root.virtual_hw_mode = self.state
-                root.virtual_hw_toggled()
+                root.virtual_hw_toggled()     
+        Button:
+            text: 'Save GRBL settings'
+            on_release: root.save_grbl_settings()    
+        Button:
+            text: 'Flash FW'
+            on_release: root.flash_fw()
+        Button:
+            text: 'Restore GRBL settings'
+            on_release: root.restore_grbl_settings()
         Button:
             text: 'Get SW update'
             on_release: root.get_sw_update()
@@ -103,7 +113,7 @@ Builder.load_string("""
         Label:
             text: 'n/a found'
             color: 0,0,0,1
-            id: latest_platform_version_label 
+            id: latest_platform_version_label
 """)
 
 
@@ -111,6 +121,8 @@ class DevOptions(Widget):
 
     buffer_log_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
+    scraped_grbl_settings = []
+
 
     def __init__(self, **kwargs):
 
@@ -219,3 +231,69 @@ class DevOptions(Widget):
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+    def save_grbl_settings(self):
+
+        self.m.send_any_gcode_command("$$")
+        self.m.send_any_gcode_command("$#")
+
+        grbl_settings_and_params = [
+                    '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
+                    '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
+                    '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
+                    '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
+                    '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
+                    '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
+                    '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
+                    '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
+                    '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
+                    '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
+                    '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
+                    '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
+                    '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
+                    '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
+                    '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
+                    '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
+                    '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
+                    '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
+                    '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
+                    '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
+                    '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
+                    '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
+                    '$100=' + str(self.m.s.setting_100),   #X steps/mm
+                    '$101=' + str(self.m.s.setting_101),   #Y steps/mm
+                    '$102=' + str(self.m.s.setting_102),   #Z steps/mm
+                    '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
+                    '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
+                    '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
+                    '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
+                    '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
+                    '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
+                    '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                    '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
+                    '$132=' + str(self.m.s.setting_132),   #Z Max travel, mm
+                    'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+            ]
+
+        f = open('saved_grbl_settings_params.txt', 'w')
+        f.write(str(grbl_settings_and_params))
+        f.close()
+        
+        print(grbl_settings_and_params)
+    
+    def flash_fw(self):
+        os.system("sudo service pigpiod start")
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")        
+        os.system("./update_fw.sh")
+        # sys.exit()
+#     
+    def restore_grbl_settings(self):
+        
+        g = open('saved_grbl_settings_params.txt', 'r')
+        settings_to_restore = g.read()
+        print(settings_to_restore)
+        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
