@@ -514,20 +514,9 @@ class SerialConnection(object):
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
-            # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ>
-            # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|WCO:-166.126,-213.609,-21.822>
-            # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|Ov:100,100,100>
-
-#            self.validate_status_message(message)
-
-            validMessage = True
-
-# Error checking from Skippy, but DANGEROUS bc it gets rid of other (more user-useful) errors. 
-#             commasCnt = message.count(",")
-#             if (commasCnt != 4 and commasCnt != 6):
-#                 validMessage = False
-#                 log("ERROR status parse: comma count fail: " + message)
-#                 return
+            # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>
+            # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
+            # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
@@ -540,7 +529,6 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                validMessage = False
                 log("ERROR status parse: Status invalid: " + message)
                 return
 
@@ -621,31 +609,33 @@ class SerialConnection(object):
                             print self.serial_blocks_available + " " + self.serial_chars_available
                             if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
 
-                # Get limit switch states: Pn:pxXyYZ
+                # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith('Pn:'):
                     
-                    if 'x' in part: self.limit_x = True
+                    pins_info = part.split(':')[1]
+                    
+                    if 'x' in pins_info: self.limit_x = True
                     else: self.limit_x = False
                     
-                    if 'X' in part: self.limit_X = True
+                    if 'X' in pins_info: self.limit_X = True
                     else: self.limit_X = False
                     
-                    if 'y' in part: self.limit_y = True
+                    if 'y' in pins_info: self.limit_y = True
                     else: self.limit_y = False
                     
-                    if 'Y' in part: self.limit_Y = True
+                    if 'Y' in pins_info: self.limit_Y = True
                     else: self.limit_Y = False
                     
-                    if 'z' in part: self.limit_z = True
+                    if 'z' in pins_info: self.limit_z = True
                     else: self.limit_z = False
 
-                    if 'P' in part: self.probe = True
+                    if 'P' in pins_info: self.probe = True
                     else: self.probe = False
 
-                    if 'g' in part: self.spare_door = True
+                    if 'g' in pins_info: self.spare_door = True
                     else: self.spare_door = False
                     
-                    if 'G' in part: self.dust_shoe_cover = True
+                    if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
                 
                 else:

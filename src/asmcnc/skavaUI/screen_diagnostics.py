@@ -188,11 +188,9 @@ class DiagnosticsScreen(Screen):
         if case == 'z+':  self.m.jog_relative('Z', str(z_distance), z_feed)
 
 
-
     def limit_switch_check(self, dt):
         
         switch_states = self.m.get_switch_states()
-        
        
         if 'limit_x' in switch_states: self.limit_x_label.text = 'X min - OK'
         else: self.limit_x_label.text = 'X min'

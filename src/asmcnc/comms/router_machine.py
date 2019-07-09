@@ -326,13 +326,15 @@ class RouterMachine(object):
         if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover') 
         if self.s.spare_door == True: switch_states.append('spare_door')
         
+        print switch_states
+        
         return switch_states 
     
     def disable_limit_switches(self):
 
         #turn soft limits, hard limts OFF
         print 'switching soft limits & hard limts OFF'
-        settings = ['$22=1','$20=0','$21=0']
+        settings = ['$22=0','$20=0','$21=0']
         self.s.start_sequential_stream(settings)
     
     def enable_limit_switches(self):
