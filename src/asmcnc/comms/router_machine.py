@@ -8,6 +8,7 @@ from asmcnc.comms import serial_connection
 from kivy.clock import Clock
 import sys
 from __builtin__ import True
+from kivy.uix.switch import Switch
 
 
 class RouterMachine(object):
@@ -312,6 +313,20 @@ class RouterMachine(object):
     def door(self):
         self.s.write_realtime('\x84', altDisplayText = 'Door')
 
+    def get_switch_states(self):
+        
+        switch_states = []
+        
+        if self.s.limit_x == True: switch_states.append('limit_x') # convention: min is lower_case
+        if self.s.limit_X == True: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
+        if self.s.limit_y == True: switch_states.append('limit_y')   
+        if self.s.limit_Y == True: switch_states.append('limit_Y') 
+        if self.s.limit_z == True: switch_states.append('limit_z') 
+        if self.s.probe == True: switch_states.append('probe') 
+        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover') 
+        if self.s.spare_door == True: switch_states.append('spare_door')
+        
+        return switch_states 
 
 # LIGHTING
 
@@ -346,6 +361,13 @@ class RouterMachine(object):
             self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
 
+    def set_led_colour_by_name(self, colour_name):
+
+        if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
+        if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
+        if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
+        if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
+        if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
 
     led_state = 0
     led_states = [

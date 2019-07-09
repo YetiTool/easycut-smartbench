@@ -490,6 +490,15 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # IO Pins for switches etc
+    limit_x = False # convention: min is lower_case
+    limit_X = False # convention: MAX is UPPER_CASE
+    limit_y = False
+    limit_Y = False
+    limit_z = False
+    probe = False
+    dust_shoe_cover = False
+    spare_door = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -612,6 +621,33 @@ class SerialConnection(object):
                             print self.serial_blocks_available + " " + self.serial_chars_available
                             if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
 
+                # Get limit switch states: Pn:pxXyYZ
+                elif part.startswith('Pn:'):
+                    
+                    if 'x' in part: self.limit_x = True
+                    else: self.limit_x = False
+                    
+                    if 'X' in part: self.limit_X = True
+                    else: self.limit_X = False
+                    
+                    if 'y' in part: self.limit_y = True
+                    else: self.limit_y = False
+                    
+                    if 'Y' in part: self.limit_Y = True
+                    else: self.limit_Y = False
+                    
+                    if 'z' in part: self.limit_z = True
+                    else: self.limit_z = False
+
+                    if 'p' in part: self.probe = True
+                    else: self.probe = False
+
+                    if 'g' in part: self.spare_door = True
+                    else: self.spare_door = False
+                    
+                    if 'G' in part: self.dust_shoe_cover = True
+                    else: self.dust_shoe_cover = False
+                
                 else:
                     continue
 
