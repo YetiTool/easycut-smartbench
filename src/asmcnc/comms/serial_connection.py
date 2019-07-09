@@ -639,7 +639,7 @@ class SerialConnection(object):
                     if 'z' in part: self.limit_z = True
                     else: self.limit_z = False
 
-                    if 'p' in part: self.probe = True
+                    if 'P' in part: self.probe = True
                     else: self.probe = False
 
                     if 'g' in part: self.spare_door = True

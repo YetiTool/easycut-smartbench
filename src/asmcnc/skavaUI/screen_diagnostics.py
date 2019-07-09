@@ -159,6 +159,13 @@ class DiagnosticsScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         Clock.schedule_interval(self.limit_switch_check, 0.2)
 
+    def on_enter(self):
+        
+        self.m.disable_limit_switches()
+        
+    def on_leave(self):
+        self.m.enable_limit_switches()
+
     
     def led(self, command):
         
@@ -179,7 +186,7 @@ class DiagnosticsScreen(Screen):
         if case == 'y+':  self.m.jog_relative('Y', str(xy_distance), xy_feed)
         if case == 'z-':  self.m.jog_relative('Z-', str(z_distance), z_feed)
         if case == 'z+':  self.m.jog_relative('Z', str(z_distance), z_feed)
-        else: pass
+
 
 
     def limit_switch_check(self, dt):
