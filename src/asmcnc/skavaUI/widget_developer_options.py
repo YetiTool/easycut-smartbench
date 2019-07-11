@@ -163,7 +163,8 @@ class DevOptions(Widget):
         self.latest_platform_version_label.text = data
 
     def get_sw_update(self):
-        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
+        os.system("cd /home/pi/easycut-smartbench/ && git pull")
+        self.sm.current = 'rebooting'
 
     def send_logs(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
@@ -173,10 +174,12 @@ class DevOptions(Widget):
 
     def set_tag_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
+        self.sm.current = 'rebooting'
 
     def ansible_service_run(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
+        self.sm.current = 'rebooting'
 
     def bake_grbl_settings(self):
         grbl_settings = [
