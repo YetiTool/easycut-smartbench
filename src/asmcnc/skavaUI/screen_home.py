@@ -100,7 +100,7 @@ Builder.load_string("""
                                     id: network_container
 
                                 AccordionItem:
-                                    title: 'Developer'
+                                    title: 'Settings'
                                     id: developer_container
 
 

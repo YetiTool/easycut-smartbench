@@ -29,73 +29,80 @@ Builder.load_string("""
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        cols: 3
+        cols: 1
 
-        Button:
-            text: 'Go back'
-            on_release: root.go_back()
-        Button:
-            text: 'Quit to Console'
-            on_release: root.quit_to_console()
-        Button:
-            text: 'Save GRBL settings'
-            on_release: root.save_grbl_settings()    
-        Button:
-            text: 'Flash FW'
-            on_release: root.flash_fw()
-        Button:
-            text: 'Restore GRBL settings'
-            on_release: root.restore_grbl_settings()
-        Button:
-            text: 'Get SW update'
-            on_release: root.get_sw_update()
-        Button:
-            text: 'Bake GRBL settings'
-            on_release: root.bake_grbl_settings()
-        Button:
-            text: 'E-mail state'
-            on_release: root.email_state()
-        Button:
-            text: 'Send logs'
-            on_release: root.send_logs()
-        Button:
-            text: 'Install PL v0.0.x'
-            on_release: root.set_tag_pl_update()
-        Button:
-            text: 'Re-run PL Install'
-            on_release: root.ansible_service_run()
-        Button:
-            text: 'Placeholder'
         Label:
-            text: 'Code base'
+            text: 'Support & Debugging'
             color: 1,1,1,1
-        Label:
-            text: 'Current'
-            color: 1,1,1,1
-        Label:
-            text: 'Available'
-            color: 1,1,1,1
-        Label:
-            text: 'EasyCut'
-            color: 1,1,1,1
-        Label:
-            text: 'Repository Branch'
-            color: 1,1,1,1
-            id: sw_version_label
-        Label:
-            text: ''
-            color: 1,1,1,1
-        Label:
-            text: 'Platform'
-            color: 1,1,1,1
-        Label:
-            text: 'n/a found'
-            color: 1,1,1,1
-            id: platform_version_label
-        Label:
-            text: 'n/a found'
-            color: 1,1,1,1
-            id: latest_platform_version_label
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4
+    
+            Button:
+                text: 'Quit to Console'
+                on_release: root.quit_to_console()
+            Button:
+                text: 'Save GRBL settings'
+                on_release: root.save_grbl_settings()    
+            Button:
+                text: 'Flash FW'
+                on_release: root.flash_fw()
+            Button:
+                text: 'Restore GRBL settings'
+                on_release: root.restore_grbl_settings()
+            Button:
+                text: 'Get SW update'
+                on_release: root.get_sw_update()
+            Button:
+                text: 'Bake GRBL settings'
+                on_release: root.bake_grbl_settings()
+            Button:
+                text: 'E-mail state'
+                on_release: root.email_state()
+            Button:
+                text: 'Send logs'
+                on_release: root.send_logs()
+            Button:
+                text: 'Install PL v0.0.x'
+                on_release: root.set_tag_pl_update()
+            Button:
+                text: 'Re-run PL Install'
+                on_release: root.ansible_service_run()
+            Button:
+                text: 'Go back'
+                on_release: root.go_back()
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+            Label:
+                text: 'Current'
+                color: 1,1,1,1
+            Label:
+                text: 'Available'
+                color: 1,1,1,1
+            Label:
+                text: 'EasyCut'
+                color: 1,1,1,1
+            Label:
+                text: 'Repository Branch'
+                color: 1,1,1,1
+                id: sw_version_label
+            Label:
+                text: ''
+                color: 1,1,1,1
+            Label:
+                text: 'Platform'
+                color: 1,1,1,1
+            Label:
+                text: 'n/a found'
+                color: 1,1,1,1
+                id: platform_version_label
+            Label:
+                text: 'n/a found'
+                color: 1,1,1,1
+                id: latest_platform_version_label
 """)
 
 class DeveloperScreen(Screen):
@@ -131,7 +138,6 @@ class DeveloperScreen(Screen):
 
     def reboot(self):
         self.sm.current = 'rebooting'
-
 
     def quit_to_console(self):
         print 'Bye!'
