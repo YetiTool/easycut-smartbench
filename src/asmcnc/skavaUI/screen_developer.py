@@ -29,7 +29,7 @@ Builder.load_string("""
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        cols: 1
+        cols: 2
 
         Label:
             text: 'Support & Debugging'
@@ -39,7 +39,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 0.4
 
             Button:
@@ -66,7 +66,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 0.4
                         
             Button:
@@ -93,7 +93,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 0.4
                         
             Button:
@@ -120,7 +120,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 0.4     
 
             Button:
@@ -143,7 +143,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 0.4
 
             Button:
@@ -170,7 +170,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 4
+            cols: 2
             size_hint_y: 1
        
             
