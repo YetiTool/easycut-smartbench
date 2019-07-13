@@ -28,6 +28,7 @@ Builder.load_string("""
     platform_version_label:platform_version_label
     pl_hash_label:pl_hash_label
     pl_branch_label:pl_branch_label
+    fw_version_label:fw_version_label
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -254,7 +255,8 @@ Builder.load_string("""
 
             Label:
                 text: 'FW version'
-                color: 1,1,1,1                
+                color: 1,1,1,1
+                id: fw_version_label 
 """)
 
 class DeveloperScreen(Screen):
@@ -272,6 +274,7 @@ class DeveloperScreen(Screen):
         self.refresh_sw_version_labels()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
+        self.scrape_fw_version()
         
     def go_back(self):
         self.sm.current = 'home'
@@ -307,6 +310,10 @@ class DeveloperScreen(Screen):
     def refresh_latest_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
         self.latest_platform_version = str(data)
+
+    def scrape_fw_version(self):
+        self.m.send_any_gcode_command("$I")
+        self.fw_version_label.text = self.m.s.fw_version
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")

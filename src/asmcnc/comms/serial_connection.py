@@ -727,10 +727,7 @@ class SerialConnection(object):
                 self.expecting_probe_result = False # clear flag
                 
             elif stripped_message.startswith('ASM CNC'):
-                print('Woohoo')
-                print(stripped_message)
                 self.fw_version = stripped_message.split(':')[1]
-                print(str(self.fw_version))
 
 ## SEQUENTIAL STREAMING
 

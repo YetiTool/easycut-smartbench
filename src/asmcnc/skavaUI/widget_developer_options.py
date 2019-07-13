@@ -27,6 +27,7 @@ Builder.load_string("""
     sw_version_label:sw_version_label
     platform_version_label:platform_version_label
     latest_platform_version_label:latest_platform_version_label
+    fw_version_label:fw_version_label
 
     GridLayout:
         size: self.parent.size
@@ -90,7 +91,7 @@ Builder.load_string("""
         Label:
             text: 'n/a found'
             color: 0,0,0,1
-#             id: platform_version_label
+            id: fw_version_label
         Label:
             text: 'n/a found'
             color: 0,0,0,1
@@ -114,6 +115,7 @@ class DevOptions(Widget):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
+        self.scrape_fw_version()
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
@@ -128,7 +130,8 @@ class DevOptions(Widget):
         self.latest_platform_version_label.text = data
         
     def scrape_fw_version(self):
-        pass
+        self.m.send_any_gcode_command("$I")
+        self.fw_version_label.text = self.m.s.fw_version
     
 
     def reboot(self):
