@@ -203,7 +203,10 @@ Builder.load_string("""
                 
             Label: 
                 text: ''
-
+                
+            Label: 
+                text: 'EC version'
+                color: 1,1,1,1
 
         GridLayout:
             size: self.parent.size
@@ -236,6 +239,14 @@ Builder.load_string("""
             Label:
                 text: 'FW hash'
                 color: 1,1,1,1
+
+            Label:
+                text: 'PL version'
+                color: 1,1,1,1
+
+            Label:
+                text: 'FW version'
+                color: 1,1,1,1                
 """)
 
 class DeveloperScreen(Screen):
