@@ -150,27 +150,6 @@ Builder.load_string("""
                 text: ''
                 color: 1,1,1,1
         
-            GridLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                cols: 1
-#                 size_hint_y: 1
-
-                Button:
-                    text: 'Go back'
-                    on_release: root.go_back()
-                    
-                Button:
-                    text: 'Build Info'
-                    on_release: root.go_back()
-                
-                Button:
-                    text: 'Quit to Console'
-                    on_release: root.quit_to_console()
-                
-                Button:
-                    text: 'Reboot'
-                    on_release: root.reboot() 
         
         GridLayout:
             size: self.parent.size
@@ -193,18 +172,37 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 1
+            cols: 2
             size_hint_y: 1
+ 
+            Button:
+                text: 'Go back'
+                on_release: root.go_back()
+                
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+                
+            Button:
+                text: 'Build Info'
+                on_release: root.go_back()
+
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
             
+            Button:
+                text: 'Quit to Console'
+                on_release: root.quit_to_console()
+
             Label:
                 text: 'Code base'
                 color: 1,1,1,1
-            Label:
-                text: 'Code base'
-                color: 1,1,1,1
-            Label:
-                text: 'Code base'
-                color: 1,1,1,1
+            
+            Button:
+                text: 'Reboot'
+                on_release: root.reboot() 
+
             Label:
                 text: 'Code base'
                 color: 1,1,1,1
