@@ -36,6 +36,11 @@ Builder.load_string("""
             color: 1,1,1,1
             size_hint_y: 0.25
 
+        Label:
+            text: 'Install Updates'
+            color: 1,1,1,1
+            size_hint_y: 0.25
+
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
@@ -57,12 +62,6 @@ Builder.load_string("""
                 text: 'Diagnostics'
 #                 on_release: root.diagnostics()
                 
-                  
-        Label:
-            text: 'Install Updates'
-            color: 1,1,1,1
-            size_hint_y: 0.25
-
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
@@ -90,6 +89,11 @@ Builder.load_string("""
             color: 1,1,1,1
             size_hint_y: 0.25
             
+        Label:
+            text: 'GRBL Settings'
+            color: 1,1,1,1
+            size_hint_y: 0.25
+            
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
@@ -112,11 +116,6 @@ Builder.load_string("""
                 text: 'Roll Back All'
 #                 on_release: root.ansible_service_run()
     
-        Label:
-            text: 'GRBL Settings'
-            color: 1,1,1,1
-            size_hint_y: 0.25
-
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
@@ -137,6 +136,11 @@ Builder.load_string("""
 
         Label:
             text: 'Misc'
+            color: 1,1,1,1
+            size_hint_y: 0.25
+
+        Label:
+            text: 'Build Information'
             color: 1,1,1,1
             size_hint_y: 0.25
 
@@ -161,11 +165,6 @@ Builder.load_string("""
             Button:
                 text: 'Reboot'
                 on_release: root.reboot()   
-
-        Label:
-            text: 'Build Information'
-            color: 1,1,1,1
-            size_hint_y: 0.25
 
         GridLayout:
             size: self.parent.size
