@@ -271,10 +271,11 @@ class DeveloperScreen(Screen):
         super(DeveloperScreen, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.m.send_any_gcode_command("$I")
         self.refresh_sw_version_labels()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
+    
+    def on_enter(self, *args):
         self.scrape_fw_version()
         
     def go_back(self):
@@ -297,7 +298,6 @@ class DeveloperScreen(Screen):
         self.sm.current = 'lobby'
 
     def refresh_sw_version_labels(self):
-        print('magic')
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])
         self.sw_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
@@ -314,8 +314,8 @@ class DeveloperScreen(Screen):
         self.latest_platform_version = str(data)
 
     def scrape_fw_version(self):
+        self.m.send_any_gcode_command("$I")
         self.fw_version_label.text = str(self.m.s.fw_version)
-        print('bam' + str(self.m.s.fw_version))
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")

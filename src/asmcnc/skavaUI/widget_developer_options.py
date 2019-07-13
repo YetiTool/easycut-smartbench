@@ -115,7 +115,9 @@ class DevOptions(Widget):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
-        self.scrape_fw_version()
+        
+    def on_enter(self):
+        self.scrape_fw_version()       
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
