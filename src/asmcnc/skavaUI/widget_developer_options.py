@@ -117,7 +117,7 @@ class DevOptions(Widget):
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
-        self.sw_version_label.text = str(data[0])      
+        self.sw_version_label.text = str(sw_data[0])      
 
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
