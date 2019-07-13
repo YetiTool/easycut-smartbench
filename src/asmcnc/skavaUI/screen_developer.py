@@ -24,7 +24,7 @@ Builder.load_string("""
 
     sw_version_label:sw_version_label
     platform_version_label:platform_version_label
-    latest_platform_version_label:latest_platform_version_label
+#     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
         size: self.parent.size
