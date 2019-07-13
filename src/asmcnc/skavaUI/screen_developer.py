@@ -52,6 +52,16 @@ Builder.load_string("""
             Button:
                 text: 'Restore GRBL settings'
                 on_release: root.restore_grbl_settings()
+                
+        Label:
+            text: 'Get Updates'
+            color: 1,1,1,1
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4
+            
             Button:
                 text: 'Get SW update'
                 on_release: root.get_sw_update()
@@ -64,6 +74,16 @@ Builder.load_string("""
             Button:
                 text: 'Send logs'
                 on_release: root.send_logs()
+
+        Label:
+            text: 'Roll Back Updates'
+            color: 1,1,1,1
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4                
+        
             Button:
                 text: 'Install PL v0.0.x'
                 on_release: root.set_tag_pl_update()
