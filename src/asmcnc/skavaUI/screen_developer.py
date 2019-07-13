@@ -86,7 +86,7 @@ Builder.load_string("""
             text: ''
             color: 1,1,1,1
         Label:
-            text: 'Platform'1,1,1,1
+            text: 'Platform'
             color: 1,1,1,1
         Label:
             text: 'n/a found'
