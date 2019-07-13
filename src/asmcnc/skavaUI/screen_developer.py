@@ -64,35 +64,37 @@ Builder.load_string("""
         Button:
             text: 'Re-run PL Install'
             on_release: root.ansible_service_run()
+        Button:
+            text: 'Placeholder'
         Label:
             text: 'Code base'
             color: 1,1,1,1
         Label:
             text: 'Current'
-            color: 0,0,0,1
+            color: 1,1,1,1
         Label:
             text: 'Available'
-            color: 0,0,0,1
+            color: 1,1,1,1
         Label:
             text: 'EasyCut'
-            color: 0,0,0,1
+            color: 1,1,1,1
         Label:
             text: 'Repository Branch'
-            color: 0,0,0,1
+            color: 1,1,1,1
             id: sw_version_label
         Label:
             text: ''
             color: 1,1,1,1
         Label:
-            text: 'Platform'
-            color: 0,0,0,1
+            text: 'Platform'1,1,1,1
+            color: 1,1,1,1
         Label:
             text: 'n/a found'
-            color: 0,0,0,1
+            color: 1,1,1,1
             id: platform_version_label
         Label:
             text: 'n/a found'
-            color: 0,0,0,1
+            color: 1,1,1,1
             id: latest_platform_version_label
 """)
 
