@@ -134,11 +134,6 @@ Builder.load_string("""
                 text: 'Bake GRBL settings'
                 on_release: root.bake_grbl_settings()
 
-    GridLayout:
-        size: self.parent.size
-        pos: self.parent.pos
-        cols: 2
-
         Label:
             text: 'Misc'
             color: 1,1,1,1
