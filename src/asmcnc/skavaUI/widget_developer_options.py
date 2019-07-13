@@ -132,7 +132,6 @@ class DevOptions(Widget):
         
     def scrape_fw_version(self):
         self.fw_version_label.text = str(self.m.s.fw_version)
-        print('argh' + str(self.m.s.fw_version))
     
     def reboot(self):
         self.sm.current = 'rebooting'
@@ -146,8 +145,6 @@ class DevOptions(Widget):
         self.m.home_all()
 
     def return_to_lobby(self):
-        #self.sm.transition = SlideTransition()
-        #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
     def get_any_updates(self):
@@ -209,6 +206,7 @@ class DevOptions(Widget):
             ]
 
         f = open('saved_grbl_settings_params.txt', 'w')
+        f.write("auto_restore = True")
         f.write(str(grbl_settings_and_params))
         f.close()
         
@@ -225,11 +223,10 @@ class DevOptions(Widget):
         # sys.exit()
 #     
     def restore_grbl_settings(self):
-        
         g = open('saved_grbl_settings_params.txt', 'r')
         settings_to_restore = g.read()
         print(settings_to_restore)
-        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+#         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
 
     def go_to_dev(self):
         self.sm.current = 'dev'
