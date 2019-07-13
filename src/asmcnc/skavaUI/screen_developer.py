@@ -66,7 +66,7 @@ Builder.load_string("""
             on_release: root.ansible_service_run()
         Label:
             text: 'Code base'
-            color: 0,0,0,1
+            color: 1,1,1,1
         Label:
             text: 'Current'
             color: 0,0,0,1
