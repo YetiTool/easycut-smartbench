@@ -177,18 +177,10 @@ Builder.load_string("""
  
             Button:
                 text: 'Go back'
-                on_release: root.go_back()
-                
-            Label:
-                text: 'Code base'
-                color: 1,1,1,1
-                
-            Button:
-                text: 'Build Info'
-                on_release: root.go_back()
+                on_release: root.go_back()               
 
             Label:
-                text: 'Code base'
+                text: 'EasyCut'
                 color: 1,1,1,1
             
             Button:
@@ -196,7 +188,7 @@ Builder.load_string("""
                 on_release: root.quit_to_console()
 
             Label:
-                text: 'Code base'
+                text: 'Platform'
                 color: 1,1,1,1
             
             Button:
@@ -204,7 +196,7 @@ Builder.load_string("""
                 on_release: root.reboot() 
 
             Label:
-                text: 'Code base'
+                text: 'Firmware'
                 color: 1,1,1,1
 
 
@@ -218,32 +210,29 @@ Builder.load_string("""
             
 
             Label:
-                text: 'Current'
+                text: 'EC branch'
+                color: 1,1,1,1
+                id: sw_version_label                
+  
+              Label:
+                text: 'EC hash'
+                color: 1,1,1,1
+                
+            Label:
+                text: 'PL branch'
+                color: 1,1,1,1
+                id: platform_version_label               
+                
+            Label:
+                text: 'PL hash'
+                color: 1,1,1,1
+
+            Label:
+                text: 'FW branch'
                 color: 1,1,1,1
             Label:
-                text: 'Available'
+                text: 'FW hash'
                 color: 1,1,1,1
-            Label:
-                text: 'EasyCut'
-                color: 1,1,1,1
-            Label:
-                text: 'Repository Branch'
-                color: 1,1,1,1
-                id: sw_version_label
-            Label:
-                text: ''
-                color: 1,1,1,1
-            Label:
-                text: 'Platform'
-                color: 1,1,1,1
-            Label:
-                text: 'n/a found'
-                color: 1,1,1,1
-                id: platform_version_label
-            Label:
-                text: 'n/a found'
-                color: 1,1,1,1
-                id: latest_platform_version_label
 """)
 
 class DeveloperScreen(Screen):
