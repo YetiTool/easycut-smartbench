@@ -24,6 +24,7 @@ Builder.load_string("""
 
     sw_version_label:sw_version_label
     sw_hash_label:sw_hash_label
+    sw_branch_label:sw_branch_label
     platform_version_label:platform_version_label
 #     latest_platform_version_label:latest_platform_version_label
 
@@ -191,7 +192,7 @@ Builder.load_string("""
             Label:
                 text: 'EC branch'
                 color: 1,1,1,1
-                id: sw_version_label 
+                id: sw_branch_label 
 
             
             Button:
@@ -264,7 +265,7 @@ class DeveloperScreen(Screen):
         super(DeveloperScreen, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.refresh_sw_version_label()
+        self.refresh_sw_version_labels()
         self.refresh_platform_version_label()
 #         self.refresh_latest_platform_version_label()
         
@@ -287,10 +288,13 @@ class DeveloperScreen(Screen):
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    def refresh_sw_version_label(self):
+    def refresh_sw_version_labels(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])
         self.sw_hash_label.text = str(sw_data[2])
+        self.sw_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2"))
+        
+        
 
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
