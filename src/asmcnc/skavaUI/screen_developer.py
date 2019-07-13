@@ -26,6 +26,8 @@ Builder.load_string("""
     sw_hash_label:sw_hash_label
     sw_branch_label:sw_branch_label
     platform_version_label:platform_version_label
+    pl_hash_label:pl_hash_label
+    pl_branch_label:pl_branch_label
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -230,7 +232,7 @@ Builder.load_string("""
             Label:
                 text: 'PL branch'
                 color: 1,1,1,1
-                id: platform_version_label               
+                id: pl_branch_label               
 
             Label:
                 text: 'FW branch'
@@ -239,6 +241,7 @@ Builder.load_string("""
             Label:
                 text: 'PL hash'
                 color: 1,1,1,1
+                id: pl_hash_label
 
             Label:
                 text: 'FW hash'
@@ -247,6 +250,7 @@ Builder.load_string("""
             Label:
                 text: 'PL version'
                 color: 1,1,1,1
+                id: platform_version_label 
 
             Label:
                 text: 'FW version'
@@ -291,14 +295,14 @@ class DeveloperScreen(Screen):
     def refresh_sw_version_labels(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])
-        self.sw_hash_label.text = str(sw_data[2])
+        self.sw_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
         self.sw_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2").read())
-        
-        
 
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
         self.platform_version_label.text = data
+        self.pl_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
+        self.pl_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2").read())
 
     def refresh_latest_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
