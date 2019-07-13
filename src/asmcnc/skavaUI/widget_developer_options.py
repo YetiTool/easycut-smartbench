@@ -132,6 +132,7 @@ class DevOptions(Widget):
     def scrape_fw_version(self):
         self.m.send_any_gcode_command("$I")
         self.fw_version_label.text = str(self.m.s.fw_version)
+        print(str(self.m.s.fw_version))
     
     def reboot(self):
         self.sm.current = 'rebooting'
