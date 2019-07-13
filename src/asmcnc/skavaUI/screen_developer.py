@@ -138,7 +138,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 2
-            size_hint_y: 0.2.5
+            size_hint_y: 0.25
             
             Label:
                 text: 'Misc'
