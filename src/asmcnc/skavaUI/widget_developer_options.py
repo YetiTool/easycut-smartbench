@@ -90,11 +90,11 @@ Builder.load_string("""
             text: 'Firmware'
             color: 0,0,0,1
         Label:
-            text: 'n/a found'
+            text: 'X'
             color: 0,0,0,1
             id: fw_version_label
         Label:
-            text: 'n/a found'
+            text: 'X'
             color: 0,0,0,1
 #            id: latest_platform_version_label    
         
