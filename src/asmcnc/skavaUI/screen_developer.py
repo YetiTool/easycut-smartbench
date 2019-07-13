@@ -313,7 +313,7 @@ class DeveloperScreen(Screen):
 
     def scrape_fw_version(self):
         self.m.send_any_gcode_command("$I")
-        self.fw_version_label.text = self.m.s.fw_version
+        self.fw_version_label.text = str(self.m.s.fw_version)
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
