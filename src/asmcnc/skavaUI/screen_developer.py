@@ -297,6 +297,7 @@ class DeveloperScreen(Screen):
         self.sm.current = 'lobby'
 
     def refresh_sw_version_labels(self):
+        print('magic')
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])
         self.sw_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
