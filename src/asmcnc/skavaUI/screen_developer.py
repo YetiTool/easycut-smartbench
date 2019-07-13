@@ -292,7 +292,7 @@ class DeveloperScreen(Screen):
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])
         self.sw_hash_label.text = str(sw_data[2])
-        self.sw_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2"))
+        self.sw_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2").read())
         
         
 
