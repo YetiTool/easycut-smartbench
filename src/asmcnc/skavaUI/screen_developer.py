@@ -138,17 +138,19 @@ Builder.load_string("""
             text: 'Misc'
             color: 1,1,1,1
             size_hint_y: 0.25
+            size_hint_x: 0.25
 
         Label:
             text: 'Build Information'
             color: 1,1,1,1
             size_hint_y: 0.25
+            size_hint_x: 0.75
 
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 2
-            size_hint_y: 0.4
+            cols: 1
+            size_hint_y: 1
 
             Button:
                 text: 'Go back'
@@ -169,7 +171,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 2
+            cols: 3
             size_hint_y: 1
        
             
