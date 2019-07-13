@@ -116,7 +116,7 @@ class DevOptions(Widget):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
-        Clock.schedule_once(lambda dt: self.scrape_fw_version(),6)
+        Clock.schedule_once(lambda dt: self.scrape_fw_version(),10)
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
