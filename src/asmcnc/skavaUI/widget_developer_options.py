@@ -126,6 +126,10 @@ class DevOptions(Widget):
     def refresh_latest_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
         self.latest_platform_version_label.text = data
+        
+    def scrape_fw_version(self):
+        pass
+    
 
     def reboot(self):
         self.sm.current = 'rebooting'
