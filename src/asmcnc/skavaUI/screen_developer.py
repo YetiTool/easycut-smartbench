@@ -138,6 +138,9 @@ Builder.load_string("""
             Button:
                 text: 'Bake GRBL settings'
                 on_release: root.bake_grbl_settings()
+                
+            Button:
+                text: 'Clear saved GRBL settings'
 
         GridLayout:
             size: self.parent.size
@@ -437,8 +440,6 @@ class DeveloperScreen(Screen):
     def restore_grbl_settings(self):
         
         g = open('saved_grbl_settings_params.txt', 'r')
-        firstL = g.readline()
         settings_to_restore = g.read()
-        print(firstL)
 #         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
 
