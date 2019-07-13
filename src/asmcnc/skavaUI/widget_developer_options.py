@@ -116,7 +116,7 @@ class DevOptions(Widget):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
-        Clock.schedule_once(lambda dt: self.scrape_fw_version(),1)
+        Clock.schedule_once(lambda dt: self.scrape_fw_version(),2)
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
@@ -132,7 +132,7 @@ class DevOptions(Widget):
         
     def scrape_fw_version(self):
         self.fw_version_label.text = str(self.m.s.fw_version)
-        print(str(self.m.s.fw_version))
+        print('argh' + str(self.m.s.fw_version))
     
     def reboot(self):
         self.sm.current = 'rebooting'
