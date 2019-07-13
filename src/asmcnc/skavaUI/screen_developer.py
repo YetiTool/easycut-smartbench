@@ -134,11 +134,17 @@ Builder.load_string("""
                 text: 'Bake GRBL settings'
                 on_release: root.bake_grbl_settings()
 
-        Label:
-            text: 'Misc'
-            color: 1,1,1,1
-            size_hint_y: 0.25
-            size_hint_x: 0.25
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 2
+#             size_hint_y: 0.2.5
+            
+            Label:
+                text: 'Misc'
+                color: 1,1,1,1
+                size_hint_y: 0.25
+#                 size_hint_x: 0.25
 
         Label:
             text: 'Build Information'
@@ -149,7 +155,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 1
+            cols: 2
             size_hint_y: 1
             size_hint_x: 0.25
 
@@ -172,7 +178,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 3
+            cols: 2
             size_hint_y: 1
             size_hint_x: 0.75
        
