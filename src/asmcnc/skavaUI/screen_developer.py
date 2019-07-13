@@ -289,7 +289,7 @@ class DeveloperScreen(Screen):
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
-        self.sw_version_label.text = sw_data
+        self.sw_version_label.text = str(sw_data[0])
         self.sw_hash_label.text = str(sw_data[2])
 
     def refresh_platform_version_label(self):
