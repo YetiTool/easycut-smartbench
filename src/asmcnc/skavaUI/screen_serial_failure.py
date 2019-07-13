@@ -195,7 +195,7 @@ class SerialFailureClass(Screen):
         super(SerialFailureClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
-        self.port=kwargs['win_port']
+#         self.port=kwargs['win_port']
 
     def on_enter(self):
         # use the message to get the error description        
