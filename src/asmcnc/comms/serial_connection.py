@@ -2,6 +2,8 @@
 Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
+
+THIS LOOKS FOR PORT ttyAMA not ttyS - incompatible with older platforms.
 '''
 
 from kivy.config import Config
@@ -85,7 +87,7 @@ class SerialConnection(object):
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
-                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
+                    if (line[:6] == 'ttyAMA' or line[:6] == 'ttyACM'): # look for... 
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign

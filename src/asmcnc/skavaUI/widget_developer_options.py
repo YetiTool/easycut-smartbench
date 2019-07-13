@@ -51,12 +51,16 @@ Builder.load_string("""
             on_state:
                 root.buffer_log_mode = self.state
                 print root.buffer_log_mode
-        ToggleButton:
-            state: root.virtual_hw_mode
-            text: 'Virtual HW'
-            on_state:
-                root.virtual_hw_mode = self.state
-                root.virtual_hw_toggled()     
+        Button:
+            text: 'Developer'
+            on_release: root.go_to_dev()                     
+                
+#         ToggleButton:
+#             state: root.virtual_hw_mode
+#             text: 'Virtual HW'
+#             on_state:
+#                 root.virtual_hw_mode = self.state
+#                 root.virtual_hw_toggled()     
         Button:
             text: 'Save GRBL settings'
             on_release: root.save_grbl_settings()    
@@ -297,3 +301,6 @@ class DevOptions(Widget):
         settings_to_restore = g.read()
         print(settings_to_restore)
         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+
+    def go_to_dev(self):
+        self.sm.current = 'dev'

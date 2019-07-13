@@ -350,6 +350,7 @@ class HomeScreen(Screen):
         self.network_container.add_widget(widget_network_setup.NetworkSetup(machine=self.m, screen_manager=self.sm))
         self.developer_widget = widget_developer_options.DevOptions(machine=self.m, screen_manager=self.sm)
         self.developer_container.add_widget(self.developer_widget)
+        
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
