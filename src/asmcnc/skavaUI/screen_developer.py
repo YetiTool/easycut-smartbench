@@ -90,6 +90,12 @@ Builder.load_string("""
             color: 1,1,1,1
             size_hint_y: 0.25
             
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4
+            size_hint_y: 0.4
+                        
             Button:
                 text: 'Roll Back Software'
 #                 on_release: root.get_sw_update()
@@ -142,6 +148,10 @@ Builder.load_string("""
 
             Button:
                 text: 'Go back'
+                on_release: root.go_back()
+                
+            Button:
+                text: 'Build Info'
                 on_release: root.go_back()
             
             Button:
