@@ -418,6 +418,7 @@ class DeveloperScreen(Screen):
             ]
 
         f = open('saved_grbl_settings_params.txt', 'w')
+        f.write("auto_restore = True")
         f.write(str(grbl_settings_and_params))
         f.close()
         
@@ -438,5 +439,5 @@ class DeveloperScreen(Screen):
         g = open('saved_grbl_settings_params.txt', 'r')
         settings_to_restore = g.read()
         print(settings_to_restore)
-        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+#         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
 
