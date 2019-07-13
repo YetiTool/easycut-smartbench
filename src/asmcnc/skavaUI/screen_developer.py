@@ -41,22 +41,16 @@ Builder.load_string("""
             pos: self.parent.pos
             cols: 4
             size_hint_y: 0.5
-    
+
             Button:
-                text: 'Quit to Console'
-                on_release: root.quit_to_console()
+                text: 'E-mail state'
+                on_release: root.email_state()
             Button:
-                text: 'Save GRBL settings'
-                on_release: root.save_grbl_settings()    
-            Button:
-                text: 'Flash FW'
-                on_release: root.flash_fw()
-            Button:
-                text: 'Restore GRBL settings'
-                on_release: root.restore_grbl_settings()
-                
+                text: 'Send logs'
+                on_release: root.send_logs()   
+                  
         Label:
-            text: 'Get Updates'
+            text: 'Install Updates'
             color: 1,1,1,1
             size_hint_y: 0.25
 
@@ -64,19 +58,15 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            
+            size_hint_y: 0.5
+                        
             Button:
                 text: 'Get SW update'
                 on_release: root.get_sw_update()
+
             Button:
-                text: 'Bake GRBL settings'
-                on_release: root.bake_grbl_settings()
-            Button:
-                text: 'E-mail state'
-                on_release: root.email_state()
-            Button:
-                text: 'Send logs'
-                on_release: root.send_logs()
+                text: 'Flash FW'
+                on_release: root.flash_fw()
 
         Label:
             text: 'Roll Back Updates'
@@ -87,17 +77,16 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4                
-        
+            size_hint_y: 0.5
+               
             Button:
                 text: 'Install PL v0.0.x'
                 on_release: root.set_tag_pl_update()
+                
             Button:
                 text: 'Re-run PL Install'
                 on_release: root.ansible_service_run()
-            Button:
-                text: 'Go back'
-                on_release: root.go_back()
-                
+    
         Label:
             text: 'GRBL Settings'
             color: 1,1,1,1
@@ -107,6 +96,58 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
+            size_hint_y: 0.5     
+
+            Button:
+                text: 'Save GRBL settings'
+                on_release: root.save_grbl_settings()    
+            
+            Button:
+                text: 'Flash FW'
+                on_release: root.flash_fw()
+            
+            Button:
+                text: 'Restore GRBL settings'
+                on_release: root.restore_grbl_settings()
+            
+            Button:
+                text: 'Bake GRBL settings'
+                on_release: root.bake_grbl_settings()
+
+        Label:
+            text: 'Misc'
+            color: 1,1,1,1
+            size_hint_y: 0.25
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4
+            size_hint_y: 0.5
+
+            Button:
+                text: 'Go back'
+                on_release: root.go_back()
+            
+            Button:
+                text: 'Quit to Console'
+                on_release: root.quit_to_console()
+            
+            Button:
+                text: 'Reboot'
+                on_release: root.reboot()   
+
+        Label:
+            text: 'Build Information'
+            color: 1,1,1,1
+            size_hint_y: 0.25
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 4
+            size_hint_y: 0.5  
+       
             
             Label:
                 text: 'Code base'
