@@ -214,7 +214,7 @@ Builder.load_string("""
                 color: 1,1,1,1
                 id: sw_version_label                
   
-              Label:
+            Label:
                 text: 'EC hash'
                 color: 1,1,1,1
                 
