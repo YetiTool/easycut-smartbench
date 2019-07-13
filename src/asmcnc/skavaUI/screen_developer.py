@@ -169,7 +169,7 @@ Builder.load_string("""
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            cols: 2
+            cols: 1
             size_hint_y: 1
             size_hint_x: 0.25
 
@@ -187,7 +187,27 @@ Builder.load_string("""
             
             Button:
                 text: 'Reboot'
-                on_release: root.reboot()   
+                on_release: root.reboot() 
+                
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 1
+            size_hint_y: 1
+            
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+            Label:
+                text: 'Code base'
+                color: 1,1,1,1
+
 
         GridLayout:
             size: self.parent.size
@@ -197,9 +217,7 @@ Builder.load_string("""
             size_hint_x: 0.75
        
             
-            Label:
-                text: 'Code base'
-                color: 1,1,1,1
+
             Label:
                 text: 'Current'
                 color: 1,1,1,1
