@@ -48,7 +48,7 @@ Builder.load_string("""
                     
         Button:
             text: 'Get Updates'
-            on_release: root.get_sw_update()
+            on_release: root.get_any_updates()
 
         Button:
             text: 'Developer'
@@ -84,6 +84,18 @@ Builder.load_string("""
             text: 'n/a found'
             color: 0,0,0,1
             id: latest_platform_version_label
+        Label:
+            text: 'Firmware'
+            color: 0,0,0,1
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+#             id: platform_version_label
+        Label:
+            text: 'n/a found'
+            color: 0,0,0,1
+#            id: latest_platform_version_label    
+        
 """)
 
 
@@ -103,21 +115,20 @@ class DevOptions(Widget):
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
 
-    def virtual_hw_toggled(self):
-        if self.virtual_hw_mode == 'normal': # virtual hw mode OFF
-            #turn soft limits, hard limts and homing cycle ON
-            print 'Virtual HW mode OFF: switching soft limits, hard limts and homing cycle on'
-            settings = ['$22=1','$21=1','$20=1']
-            self.m.s.start_sequential_stream(settings)
-        if self.virtual_hw_mode == 'down': # virtual hw mode ON
-            #turn soft limits, hard limts and homing cycle OFF
-            print 'Virtual HW mode ON: switching soft limits, hard limts and homing cycle off'
-            settings = ['$22=0','$20=0','$21=0']
-            self.m.s.start_sequential_stream(settings)
+    def refresh_sw_version_label(self):
+        sw_data = (os.popen("git describe --always").read()).split('-')
+        self.sw_version_label.text = str(data[0])      
+
+    def refresh_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
+        self.platform_version_label.text = data
+
+    def refresh_latest_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
+        self.latest_platform_version_label.text = data
 
     def reboot(self):
         self.sm.current = 'rebooting'
-
 
     def quit_to_console(self):
         print 'Bye!'
@@ -132,19 +143,7 @@ class DevOptions(Widget):
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
 
-    def refresh_sw_version_label(self):
-        data = os.popen("git describe --always").read()
-        self.sw_version_label.text = data
-
-    def refresh_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
-        self.platform_version_label.text = data
-
-    def refresh_latest_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
-        self.latest_platform_version_label.text = data
-
-    def get_sw_update(self):
+    def get_any_updates(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 
     def send_logs(self):
@@ -160,50 +159,7 @@ class DevOptions(Widget):
     def ansible_service_run(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
-    def bake_grbl_settings(self):
-        grbl_settings = [
-                    '$0=10',    #Step pulse, microseconds
-                    '$1=255',    #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',     #Homing feed, mm/min
-                    '$25=3000.0',    #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',      #Homing pull-off, mm
-                    '$30=25000.0',      #Max spindle speed, RPM
-                    '$31=0.0',         #Min spindle speed, RPM
-                    '$32=0',           #Laser mode, boolean
-                    '$100=56.649',   #X steps/mm
-                    '$101=56.623',   #Y steps/mm
-                    '$102=1066.667',   #Z steps/mm
-                    '$110=6000.0',   #X Max rate, mm/min
-                    '$111=6000.0',   #Y Max rate, mm/min
-                    '$112=750.0',   #Z Max rate, mm/min
-                    '$120=500.0',    #X Acceleration, mm/sec^2
-                    '$121=200.0',    #Y Acceleration, mm/sec^2
-                    '$122=200.0',    #Z Acceleration, mm/sec^2
-                    '$130=1237.0',   #X Max travel, mm TODO: Link to a settings object
-                    '$131=2470.0',   #Y Max travel, mm
-                    '$132=143.0',   #Z Max travel, mm
-                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
-            ]
-
-        self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
-
     def save_grbl_settings(self):
-
         self.m.send_any_gcode_command("$$")
         self.m.send_any_gcode_command("$#")
 

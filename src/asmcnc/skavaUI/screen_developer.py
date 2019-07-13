@@ -23,6 +23,7 @@ Builder.load_string("""
 <DeveloperScreen>:
 
     sw_version_label:sw_version_label
+    sw_hash_label:sw_hash_label
     platform_version_label:platform_version_label
 #     latest_platform_version_label:latest_platform_version_label
 
@@ -200,6 +201,7 @@ Builder.load_string("""
             Label:
                 text: 'EC hash'
                 color: 1,1,1,1
+                id: sw_hash_label 
                 
             Label: 
                 text: ''
@@ -207,6 +209,7 @@ Builder.load_string("""
             Label: 
                 text: 'EC version'
                 color: 1,1,1,1
+                id: sw_version_label 
 
         GridLayout:
             size: self.parent.size
@@ -268,18 +271,6 @@ class DeveloperScreen(Screen):
     def go_back(self):
         self.sm.current = 'home'
 
-    def virtual_hw_toggled(self):
-        if self.virtual_hw_mode == 'normal': # virtual hw mode OFF
-            #turn soft limits, hard limts and homing cycle ON
-            print 'Virtual HW mode OFF: switching soft limits, hard limts and homing cycle on'
-            settings = ['$22=1','$21=1','$20=1']
-            self.m.s.start_sequential_stream(settings)
-        if self.virtual_hw_mode == 'down': # virtual hw mode ON
-            #turn soft limits, hard limts and homing cycle OFF
-            print 'Virtual HW mode ON: switching soft limits, hard limts and homing cycle off'
-            settings = ['$22=0','$20=0','$21=0']
-            self.m.s.start_sequential_stream(settings)
-
     def reboot(self):
         self.sm.current = 'rebooting'
 
@@ -297,8 +288,9 @@ class DeveloperScreen(Screen):
         self.sm.current = 'lobby'
 
     def refresh_sw_version_label(self):
-        data = os.popen("git describe --always").read()
+        sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = data
+        self.sw_hash_label.text = str(data[2])
 
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
