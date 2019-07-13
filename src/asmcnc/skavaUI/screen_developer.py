@@ -267,7 +267,7 @@ class DeveloperScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.refresh_sw_version_labels()
         self.refresh_platform_version_label()
-#         self.refresh_latest_platform_version_label()
+        self.refresh_latest_platform_version_label()
         
     def go_back(self):
         self.sm.current = 'home'
