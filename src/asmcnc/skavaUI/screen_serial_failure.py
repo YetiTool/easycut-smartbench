@@ -210,9 +210,9 @@ class SerialFailureClass(Screen):
     def reboot_button_press(self):
         self.sm.current = 'rebooting'
             
-    def reestablish_button_press(self):
-        self.m.s.establish_connection(self.port)
-        self.m.s.initialise_grbl()
+#     def reestablish_button_press(self):
+#         self.m.s.establish_connection(self.port)
+#         self.m.s.initialise_grbl()
         
     def return_to_go_screen(self):
         self.sm.current = 'go'
