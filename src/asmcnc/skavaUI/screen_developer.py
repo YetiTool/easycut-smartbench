@@ -300,9 +300,9 @@ class DeveloperScreen(Screen):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
         self.platform_version_label.text = data
 
-#     def refresh_latest_platform_version_label(self):
-#         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
-#         self.latest_platform_version_label.text = data
+    def refresh_latest_platform_version_label(self):
+        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
+        self.latest_platform_version = str(data)
 
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
@@ -314,7 +314,7 @@ class DeveloperScreen(Screen):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
 
     def set_tag_pl_update(self):
-#         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def ansible_service_run(self):
