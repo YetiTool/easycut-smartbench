@@ -34,12 +34,13 @@ Builder.load_string("""
         Label:
             text: 'Support & Debugging'
             color: 1,1,1,1
-            size_hint_y: 0.2
+            size_hint_y: 0.25
 
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
+            size_hint_y: 0.5
     
             Button:
                 text: 'Quit to Console'
@@ -57,7 +58,7 @@ Builder.load_string("""
         Label:
             text: 'Get Updates'
             color: 1,1,1,1
-            size_hint_y: 0.2
+            size_hint_y: 0.25
 
         GridLayout:
             size: self.parent.size
@@ -80,7 +81,7 @@ Builder.load_string("""
         Label:
             text: 'Roll Back Updates'
             color: 1,1,1,1
-            size_hint_y: 0.2
+            size_hint_y: 0.25
 
         GridLayout:
             size: self.parent.size
@@ -98,9 +99,9 @@ Builder.load_string("""
                 on_release: root.go_back()
                 
         Label:
-            text: 'Roll Back Updates'
+            text: 'GRBL Settings'
             color: 1,1,1,1
-            size_hint_y: 0.2
+            size_hint_y: 0.25
 
         GridLayout:
             size: self.parent.size
