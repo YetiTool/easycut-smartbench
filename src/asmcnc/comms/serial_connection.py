@@ -729,7 +729,8 @@ class SerialConnection(object):
             elif stripped_message.startswith('ASM CNC'):
                 print('Woohoo')
                 print(stripped_message)
-                print(stripped_message.split(':')[1])
+                self.fw_version = stripped_message.split(':')[1]
+                print(str(self.fw_version))
 
 ## SEQUENTIAL STREAMING
 
