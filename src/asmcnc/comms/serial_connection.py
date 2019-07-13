@@ -499,6 +499,8 @@ class SerialConnection(object):
 
 
     expecting_probe_result = False
+    
+    fw_version = ''
 
 
     def process_grbl_push(self, message):
