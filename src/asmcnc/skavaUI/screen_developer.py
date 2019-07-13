@@ -188,16 +188,21 @@ Builder.load_string("""
                 on_release: root.quit_to_console()
 
             Label:
-                text: 'Platform'
+                text: 'EC branch'
                 color: 1,1,1,1
+                id: sw_version_label 
+
             
             Button:
                 text: 'Reboot'
                 on_release: root.reboot() 
-
+                
             Label:
-                text: 'Firmware'
+                text: 'EC hash'
                 color: 1,1,1,1
+                
+            Label: 
+                text: ''
 
 
         GridLayout:
@@ -207,29 +212,27 @@ Builder.load_string("""
             size_hint_y: 1
             size_hint_x: 0.75
        
-            
-
             Label:
-                text: 'EC branch'
+                text: 'Platform'
                 color: 1,1,1,1
-                id: sw_version_label                
-  
+                
             Label:
-                text: 'EC hash'
+                text: 'Firmware'
                 color: 1,1,1,1
                 
             Label:
                 text: 'PL branch'
                 color: 1,1,1,1
                 id: platform_version_label               
+
+            Label:
+                text: 'FW branch'
+                color: 1,1,1,1
                 
             Label:
                 text: 'PL hash'
                 color: 1,1,1,1
 
-            Label:
-                text: 'FW branch'
-                color: 1,1,1,1
             Label:
                 text: 'FW hash'
                 color: 1,1,1,1
