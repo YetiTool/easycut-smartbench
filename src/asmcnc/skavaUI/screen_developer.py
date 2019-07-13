@@ -40,14 +40,23 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            size_hint_y: 0.5
+            size_hint_y: 0.4
 
+            Button:
+                text: 'Allow Remote Access'
+#                 on_release: root.allow_access()
+            Button:
+                text: 'Send logs'
+                on_release: root.send_logs()
+                
             Button:
                 text: 'E-mail state'
                 on_release: root.email_state()
+                
             Button:
-                text: 'Send logs'
-                on_release: root.send_logs()   
+                text: 'Diagnostics'
+#                 on_release: root.diagnostics()
+                
                   
         Label:
             text: 'Install Updates'
@@ -58,34 +67,44 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            size_hint_y: 0.5
+            size_hint_y: 0.4
                         
             Button:
-                text: 'Get SW update'
+                text: 'Pull Software'
                 on_release: root.get_sw_update()
 
             Button:
-                text: 'Flash FW'
+                text: 'Pull Firmware'
                 on_release: root.flash_fw()
+
+            Button:
+                text: 'Pull Platform'
+                on_release: root.set_tag_pl_update()
+                
+            Button:
+                text: 'Re-run Platform Install'
+                on_release: root.ansible_service_run()
 
         Label:
             text: 'Roll Back Updates'
             color: 1,1,1,1
             size_hint_y: 0.25
-
-        GridLayout:
-            size: self.parent.size
-            pos: self.parent.pos
-            cols: 4                
-            size_hint_y: 0.5
-               
+            
             Button:
-                text: 'Install PL v0.0.x'
-                on_release: root.set_tag_pl_update()
+                text: 'Roll Back Software'
+#                 on_release: root.get_sw_update()
+
+            Button:
+                text: 'Roll Back Firmware'
+#                 on_release: root.flash_fw()
+
+            Button:
+                text: 'Roll Back Platform'
+#                 on_release: root.set_tag_pl_update()
                 
             Button:
-                text: 'Re-run PL Install'
-                on_release: root.ansible_service_run()
+                text: 'Roll Back All'
+#                 on_release: root.ansible_service_run()
     
         Label:
             text: 'GRBL Settings'
@@ -96,16 +115,12 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            size_hint_y: 0.5     
+            size_hint_y: 0.4     
 
             Button:
                 text: 'Save GRBL settings'
                 on_release: root.save_grbl_settings()    
-            
-            Button:
-                text: 'Flash FW'
-                on_release: root.flash_fw()
-            
+                        
             Button:
                 text: 'Restore GRBL settings'
                 on_release: root.restore_grbl_settings()
@@ -123,7 +138,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            size_hint_y: 0.5
+            size_hint_y: 0.4
 
             Button:
                 text: 'Go back'
@@ -146,7 +161,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             cols: 4
-            size_hint_y: 0.5  
+            size_hint_y: 1
        
             
             Label:
