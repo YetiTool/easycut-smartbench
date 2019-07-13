@@ -32,29 +32,11 @@ Builder.load_string("""
         cols: 3
 
         Button:
-            text: 'Reboot'
-            on_release: root.reboot()
+            text: 'Go back'
+            on_release: root.go_back()
         Button:
             text: 'Quit to Console'
             on_release: root.quit_to_console()
-        Button:
-            text: 'Square axes'
-            on_release: root.square_axes()
-        Button:
-            text: 'Return to lobby'
-            on_release: root.return_to_lobby()
-        ToggleButton:
-            state: root.buffer_log_mode
-            text: 'Buffer Log'
-            on_state:
-                root.buffer_log_mode = self.state
-                print root.buffer_log_mode
-        ToggleButton:
-            state: root.virtual_hw_mode
-            text: 'Virtual HW'
-            on_state:
-                root.virtual_hw_mode = self.state
-                root.virtual_hw_toggled()     
         Button:
             text: 'Save GRBL settings'
             on_release: root.save_grbl_settings()    
@@ -100,7 +82,7 @@ Builder.load_string("""
             id: sw_version_label
         Label:
             text: ''
-            color: 0,0,0,1
+            color: 1,1,1,1
         Label:
             text: 'Platform'
             color: 0,0,0,1
@@ -129,6 +111,9 @@ class DeveloperScreen(Screen):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
+        
+    def go_back(self):
+        self.sm.current = 'home'
 
     def virtual_hw_toggled(self):
         if self.virtual_hw_mode == 'normal': # virtual hw mode OFF

@@ -45,49 +45,15 @@ Builder.load_string("""
         Button:
             text: 'Return to lobby'
             on_release: root.return_to_lobby()
-        ToggleButton:
-            state: root.buffer_log_mode
-            text: 'Buffer Log'
-            on_state:
-                root.buffer_log_mode = self.state
-                print root.buffer_log_mode
+                    
+        Button:
+            text: 'Get Updates'
+            on_release: root.get_sw_update()
+
         Button:
             text: 'Developer'
             on_release: root.go_to_dev()                     
-                
-#         ToggleButton:
-#             state: root.virtual_hw_mode
-#             text: 'Virtual HW'
-#             on_state:
-#                 root.virtual_hw_mode = self.state
-#                 root.virtual_hw_toggled()     
-        Button:
-            text: 'Save GRBL settings'
-            on_release: root.save_grbl_settings()    
-        Button:
-            text: 'Flash FW'
-            on_release: root.flash_fw()
-        Button:
-            text: 'Restore GRBL settings'
-            on_release: root.restore_grbl_settings()
-        Button:
-            text: 'Get SW update'
-            on_release: root.get_sw_update()
-        Button:
-            text: 'Bake GRBL settings'
-            on_release: root.bake_grbl_settings()
-        Button:
-            text: 'E-mail state'
-            on_release: root.email_state()
-        Button:
-            text: 'Send logs'
-            on_release: root.send_logs()
-        Button:
-            text: 'Install PL v0.0.x'
-            on_release: root.set_tag_pl_update()
-        Button:
-            text: 'Re-run PL Install'
-            on_release: root.ansible_service_run()
+
         Label:
             text: 'Code base'
             color: 0,0,0,1
