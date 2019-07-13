@@ -132,7 +132,7 @@ class DevOptions(Widget):
         self.latest_platform_version_label.text = data
         
     def scrape_fw_version(self):
-        self.m.send_any_gcode_command("$I")
+
         self.fw_version_label.text = str(self.m.s.fw_version)
         print('woohoo' + str(self.m.s.fw_version))
     

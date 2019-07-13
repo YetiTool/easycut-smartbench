@@ -168,6 +168,8 @@ class SerialConnection(object):
 
         self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
+        # check version
+        self.m.send_any_gcode_command("$I")
         # if ENABLE_STATUS_REPORTS:
             # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
