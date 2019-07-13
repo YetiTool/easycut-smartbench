@@ -301,8 +301,8 @@ class DeveloperScreen(Screen):
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
         self.platform_version_label.text = data
-        self.pl_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
-        self.pl_branch_label.text = str(os.popen("git branch | grep \* | cut -d ' ' -f2").read())
+        self.pl_hash_label.text = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read())
+        self.pl_branch_label.text = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \* | cut -d ' ' -f2").read())
 
     def refresh_latest_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
