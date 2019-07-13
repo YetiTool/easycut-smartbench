@@ -15,6 +15,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.clock import Clock
 
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
 PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
@@ -115,9 +116,7 @@ class DevOptions(Widget):
         self.refresh_sw_version_label()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
-        
-    def on_enter(self):
-        self.scrape_fw_version()
+        Clock.schedule_once(lambda dt: self.scrape_fw_version(),1)
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
@@ -132,9 +131,8 @@ class DevOptions(Widget):
         self.latest_platform_version_label.text = data
         
     def scrape_fw_version(self):
-
         self.fw_version_label.text = str(self.m.s.fw_version)
-        print('woohoo' + str(self.m.s.fw_version))
+        print(str(self.m.s.fw_version))
     
     def reboot(self):
         self.sm.current = 'rebooting'
