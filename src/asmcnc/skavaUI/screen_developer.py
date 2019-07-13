@@ -271,6 +271,7 @@ class DeveloperScreen(Screen):
         super(DeveloperScreen, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.m.send_any_gcode_command("$I")
         self.refresh_sw_version_labels()
         self.refresh_platform_version_label()
         self.refresh_latest_platform_version_label()
@@ -312,7 +313,6 @@ class DeveloperScreen(Screen):
         self.latest_platform_version = str(data)
 
     def scrape_fw_version(self):
-        self.m.send_any_gcode_command("$I")
         self.fw_version_label.text = str(self.m.s.fw_version)
         print('bam' + str(self.m.s.fw_version))
 
