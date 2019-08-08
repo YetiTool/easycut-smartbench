@@ -9,6 +9,7 @@ settings that are user-level (inc. Get Updates, version info etc.)
 
 import kivy
 import time
+#import pigpio
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
@@ -55,6 +56,8 @@ Builder.load_string("""
             Button:
                 text: 'Allow Remote Access'
 #                 on_release: root.allow_access()
+                disabled: 'true'
+                
             Button:
                 text: 'Send logs'
                 on_release: root.send_logs()
@@ -80,6 +83,7 @@ Builder.load_string("""
             Button:
                 text: 'Pull Firmware'
                 on_release: root.flash_fw()
+                disabled: 'true'
 
             Button:
                 text: 'Pull Platform'
@@ -107,19 +111,23 @@ Builder.load_string("""
                         
             Button:
                 text: 'Roll Back Software'
+                disabled: 'true'
 #                 on_release: root.get_sw_update()
 
             Button:
                 text: 'Roll Back Firmware'
 #                 on_release: root.flash_fw()
+                disabled: 'true'
 
             Button:
                 text: 'Roll Back Platform'
 #                 on_release: root.set_tag_pl_update()
+                disabled: 'true'
                 
             Button:
                 text: 'Roll Back All'
 #                 on_release: root.ansible_service_run()
+                disabled: 'true'
     
         GridLayout:
             size: self.parent.size
@@ -128,19 +136,23 @@ Builder.load_string("""
             size_hint_y: 0.4     
 
             Button:
-                text: 'Save GRBL settings'
-                on_release: root.save_grbl_settings()    
+                text: ''
+                background_normal: ''
+                background_color: [0,0,0,0]
                         
             Button:
-                text: 'Restore GRBL settings'
-                on_release: root.restore_grbl_settings()
-            
+                text: ''
+                background_normal: ''
+                background_color: [0,0,0,0]
+                           
+            Button:
+                text: ''
+                background_normal: ''
+                background_color: [0,0,0,0]
+                
             Button:
                 text: 'Bake GRBL settings'
                 on_release: root.bake_grbl_settings()
-                
-            Button:
-                text: 'Clear saved GRBL settings'
 
         GridLayout:
             size: self.parent.size
@@ -322,11 +334,16 @@ class DeveloperScreen(Screen):
     def get_sw_update(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 
+## Diagnostics
+
     def send_logs(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
 
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
+
+
+    ## Platform updates
 
     def set_tag_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
@@ -334,6 +351,10 @@ class DeveloperScreen(Screen):
 
     def ansible_service_run(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+
+
+
+## GRBL Settings
 
     def bake_grbl_settings(self):
         grbl_settings = [
@@ -426,20 +447,23 @@ class DeveloperScreen(Screen):
         f.close()
         
         print(grbl_settings_and_params)
-    
-    def flash_fw(self):
-        os.system("sudo service pigpiod start")
-        pi = pigpio.pi()
-        pi.set_mode(17, pigpio.ALT3)
-        print(pi.get_mode(17))
-        pi.stop()
-        os.system("sudo service pigpiod stop")        
-        os.system("./update_fw.sh")
-        # sys.exit()
-#     
+
     def restore_grbl_settings(self):
         
         g = open('saved_grbl_settings_params.txt', 'r')
         settings_to_restore = g.read()
 #         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+
+    def flash_fw(self):
+        pass
+#         os.system("sudo service pigpiod start")
+#         pi = pigpio.pi()
+#         pi.set_mode(17, pigpio.ALT3)
+#         print(pi.get_mode(17))
+#         pi.stop()
+#         os.system("sudo service pigpiod stop")        
+#         os.system("./update_fw.sh")
+#         # sys.exit()
+#     
+
 

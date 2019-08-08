@@ -49,7 +49,7 @@ from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 
-Cmport = 'COM5'
+Cmport = 'COM3'
 
 class SkavaUI(App):
 

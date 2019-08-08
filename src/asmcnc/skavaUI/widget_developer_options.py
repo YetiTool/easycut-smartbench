@@ -4,7 +4,7 @@ Created on 1 Feb 2018
 '''
 
 import sys, os
-import pigpio
+#import pigpio
 
 import kivy
 from kivy.lang import Builder
@@ -49,8 +49,8 @@ Builder.load_string("""
             on_release: root.return_to_lobby()
                     
         Button:
-            text: 'Get Updates'
-            on_release: root.get_any_updates()
+            text: 'Get software updates'
+            on_release: root.get_sw_updates()
 
         Button:
             text: 'Developer'
@@ -118,6 +118,8 @@ class DevOptions(Widget):
         self.refresh_latest_platform_version_label()
         Clock.schedule_once(lambda dt: self.scrape_fw_version(),9)
 
+    ## Updates version labels
+
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --always").read()).split('-')
         self.sw_version_label.text = str(sw_data[0])      
@@ -132,7 +134,7 @@ class DevOptions(Widget):
         
     def scrape_fw_version(self):
         self.fw_version_label.text = str(self.m.s.fw_version)
-    
+        
     def reboot(self):
         self.sm.current = 'rebooting'
 
@@ -147,14 +149,22 @@ class DevOptions(Widget):
     def return_to_lobby(self):
         self.sm.current = 'lobby'
 
-    def get_any_updates(self):
+    def get_sw_updates(self):
         os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
-
-    def send_logs(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-
-    def email_state(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
+        
+        ## FW flash functions: 
+        
+        # save grbl settings
+        # flash fw
+        # restore grbl settings - will need to do this auto after FW flash. 
+        ### - do by looking for saved settings on start up.
+        
+        ## PL update: 
+        # set tag
+        # ansible run
+        
+        
+# Stuff for later------------------------------------------
 
     def set_tag_pl_update(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version_label.text)
@@ -162,6 +172,24 @@ class DevOptions(Widget):
 
     def ansible_service_run(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+   
+    def flash_fw(self):
+        pass
+#         os.system("sudo service pigpiod start")
+#         pi = pigpio.pi()
+#         pi.set_mode(17, pigpio.ALT3)
+#         print(pi.get_mode(17))
+#         pi.stop()
+#         os.system("sudo service pigpiod stop")        
+#         os.system("./update_fw.sh")
+#         # sys.exit()
+#     
+
+    def restore_grbl_settings(self):
+        g = open('saved_grbl_settings_params.txt', 'r')
+        settings_to_restore = g.read()
+        print(settings_to_restore)
+#         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
 
     def save_grbl_settings(self):
         self.m.send_any_gcode_command("$$")
@@ -211,22 +239,7 @@ class DevOptions(Widget):
         f.close()
         
         print(grbl_settings_and_params)
-    
-    def flash_fw(self):
-        os.system("sudo service pigpiod start")
-        pi = pigpio.pi()
-        pi.set_mode(17, pigpio.ALT3)
-        print(pi.get_mode(17))
-        pi.stop()
-        os.system("sudo service pigpiod stop")        
-        os.system("./update_fw.sh")
-        # sys.exit()
-#     
-    def restore_grbl_settings(self):
-        g = open('saved_grbl_settings_params.txt', 'r')
-        settings_to_restore = g.read()
-        print(settings_to_restore)
-#         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+#
 
-    def go_to_dev(self):
+    def go_to_dev(self): ## Dev screen
         self.sm.current = 'dev'
