@@ -1,4 +1,3 @@
-=======
 '''
 Created on 16 Nov 2017
 @author: Ed

@@ -68,7 +68,7 @@ Builder.load_string("""
                 
             Button:
                 text: 'Diagnostics'
-#                 on_release: root.diagnostics()
+                on_release: root.diagnostics()
                 
         GridLayout:
             size: self.parent.size
@@ -342,6 +342,8 @@ class DeveloperScreen(Screen):
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
 
+    def diagnostics(self):
+        self.sm.current = 'diagnostics'
 
     ## Platform updates
 

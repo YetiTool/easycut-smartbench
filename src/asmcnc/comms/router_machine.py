@@ -326,7 +326,7 @@ class RouterMachine(object):
         if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover') 
         if self.s.spare_door == True: switch_states.append('spare_door')
         
-        print switch_states
+    #    print switch_states
         
         return switch_states 
     
