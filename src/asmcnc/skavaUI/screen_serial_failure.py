@@ -195,7 +195,7 @@ class SerialFailureClass(Screen):
         super(SerialFailureClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
-        self.port=kwargs['win_port']
+#         self.port=kwargs['win_port']
 
     def on_enter(self):
         # use the message to get the error description        
@@ -210,9 +210,9 @@ class SerialFailureClass(Screen):
     def reboot_button_press(self):
         self.sm.current = 'rebooting'
             
-    def reestablish_button_press(self):
-        self.m.s.establish_connection(self.port)
-        self.m.s.initialise_grbl()
+#     def reestablish_button_press(self):
+#         self.m.s.establish_connection(self.port)
+#         self.m.s.initialise_grbl()
         
     def return_to_go_screen(self):
         self.sm.current = 'go'

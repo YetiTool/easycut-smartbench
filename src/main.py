@@ -1,3 +1,4 @@
+=======
 '''
 Created on 16 Nov 2017
 @author: Ed
@@ -47,9 +48,10 @@ from asmcnc.skavaUI import screen_homing_warning
 from asmcnc.skavaUI import screen_boundary_warning
 from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
+from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 
-Cmport = 'COM5'
+Cmport = 'COM3'
 
 class SkavaUI(App):
 
@@ -84,6 +86,7 @@ class SkavaUI(App):
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
+        developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m)
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
 
         # add the screens to screen manager
@@ -106,8 +109,8 @@ class SkavaUI(App):
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
         sm.add_widget(job_done_screen)
+        sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
-
         # set screen to start on
         
 #         hours = 1
