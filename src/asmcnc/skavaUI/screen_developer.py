@@ -19,6 +19,11 @@ from kivy.clock import Clock
 
 import sys, os
 
+PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
+PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
+PLATFORM_HOME= "/home/pi/"
+
+
 Builder.load_string("""
 
 <DeveloperScreen>:
