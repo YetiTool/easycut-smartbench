@@ -23,6 +23,7 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+from kivy.input.recorder import Recorder
 
 from asmcnc.comms import router_machine 
 # NB: router_machine imports serial_connection
@@ -110,17 +111,15 @@ class SkavaUI(App):
         sm.add_widget(job_done_screen)
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
+
         # set screen to start on
-        
-#         hours = 1
-#         minutes = 2
-#         seconds = 3
-#         sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-#         sm.current = 'jobdone'
         sm.current = 'safety'
         return sm
-
 
 if __name__ == '__main__':
 
     SkavaUI().run()
+    
+    rec = Recorder(filename='touchrecorder.txt')
+    rec.record = True
+    

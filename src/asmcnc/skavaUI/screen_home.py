@@ -354,8 +354,7 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
-
-    def on_enter(self): 
+    def on_enter(self):
         log('Job loaded:')
 
         # File label at the top
@@ -379,6 +378,27 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print 'No G-code loaded.'
+                
+        ## screensaver functions
+        self.SScounter = 0
+        self.clear_recorder_file()
+        self.screensaver_event = Clock.schedule_interval(lambda *args: self.screensaver_function(), 60)
+    
+    def clear_recorder_file(self):
+        recorder_file = open("touchrecorder.txt","w")
+        recorder_file.truncate(0)
+
+    def screensaver_function(self):
+        if os.path.exists('touchrecorder.txt') and os.path.getsize('touchrecorder.txt') > 0:
+            self.clear_recorder_file()
+            self.SScounter = 0
+        else:
+            self.SScounter = self.SScounter + 1
+            
+            if self.SScounter == 5:
+                Clock.unschedule(self.screensaver_event)
+                self.sm.current = 'lobby'
+
  
     def preview_job_file(self, dt):
         
