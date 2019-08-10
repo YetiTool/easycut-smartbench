@@ -21,7 +21,7 @@ from multiprocessing import Process, Manager
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar,\
     widget_z_move, widget_xy_move, widget_common_move,\
     widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor,\
-    widget_network_setup, widget_developer_options, widget_gcode_view
+    widget_network_setup, widget_settings_options, widget_gcode_view
 from asmcnc.geometry import job_envelope
 from time import sleep
 
@@ -44,7 +44,7 @@ Builder.load_string("""
     virtual_bed_control_container:virtual_bed_control_container
     gcode_monitor_container:gcode_monitor_container
     network_container:network_container
-    developer_container:developer_container
+    settings_container:settings_container
     part_info_label:part_info_label
     home_tab:home_tab
     tab_panel:tab_panel
@@ -101,7 +101,7 @@ Builder.load_string("""
 
                                 AccordionItem:
                                     title: 'Settings'
-                                    id: developer_container
+                                    id: settings_container
 
 
 
@@ -348,8 +348,8 @@ class HomeScreen(Screen):
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         self.network_container.add_widget(widget_network_setup.NetworkSetup(machine=self.m, screen_manager=self.sm))
-        self.developer_widget = widget_developer_options.DevOptions(machine=self.m, screen_manager=self.sm)
-        self.developer_container.add_widget(self.developer_widget)
+        self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm)
+        self.settings_container.add_widget(self.settings_widget)
         
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))

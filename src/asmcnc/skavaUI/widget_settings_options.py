@@ -23,7 +23,7 @@ PLATFORM_HOME= "/home/pi/"
 
 Builder.load_string("""
 
-<DevOptions>:
+<SettingsOptions>:
 
     sw_version_label:sw_version_label
     platform_version_label:platform_version_label
@@ -101,7 +101,7 @@ Builder.load_string("""
 """)
 
 
-class DevOptions(Widget):
+class SettingsOptions(Widget):
 
     buffer_log_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
@@ -110,7 +110,7 @@ class DevOptions(Widget):
 
     def __init__(self, **kwargs):
 
-        super(DevOptions, self).__init__(**kwargs)
+        super(SettingsOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.refresh_sw_version_label()

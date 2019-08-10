@@ -357,7 +357,7 @@ class SerialConnection(object):
 
     def initialise_job(self):
                 
-        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
@@ -612,7 +612,7 @@ class SerialConnection(object):
                     # print if change flagged
                     if self.print_buffer_status == True:
                         self.print_buffer_status = False
-                        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+                        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
                             print self.serial_blocks_available + " " + self.serial_chars_available
                             if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
 
