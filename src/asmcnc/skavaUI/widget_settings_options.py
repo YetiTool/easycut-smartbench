@@ -150,7 +150,17 @@ class SettingsOptions(Widget):
         self.sm.current = 'lobby'
 
     def get_sw_updates(self):
-        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
+##        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
+##      Update SW according to latest release: 
+        self.refresh_latest_sw_version_label()
+        os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
+        os.system("sudo reboot")
+        
+    def refresh_latest_sw_version_label(self):
+        data = os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
+        self.latest_sw_version = str(data)
+
+
         
         ## FW flash functions: 
         
