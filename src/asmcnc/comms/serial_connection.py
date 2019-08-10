@@ -2,6 +2,8 @@
 Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
+
+THIS LOOKS FOR PORT ttyAMA not ttyS - incompatible with older platforms.
 '''
 
 from kivy.config import Config
@@ -85,7 +87,8 @@ class SerialConnection(object):
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
 
                     # OR: UART Comms hardware
-                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
+                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
+                    # When platform is updated, this needs to be moved across to the AMA0 port :)
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
@@ -166,6 +169,8 @@ class SerialConnection(object):
 
         self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
+        # check version
+        self.m.send_any_gcode_command("$I")
         # if ENABLE_STATUS_REPORTS:
             # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
 
@@ -352,7 +357,7 @@ class SerialConnection(object):
 
     def initialise_job(self):
                 
-        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
@@ -490,6 +495,15 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # IO Pins for switches etc
+    limit_x = False # convention: min is lower_case
+    limit_X = False # convention: MAX is UPPER_CASE
+    limit_y = False
+    limit_Y = False
+    limit_z = False
+    probe = False
+    dust_shoe_cover = False
+    spare_door = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -497,6 +511,8 @@ class SerialConnection(object):
 
 
     expecting_probe_result = False
+    
+    fw_version = ''
 
 
     def process_grbl_push(self, message):
@@ -505,20 +521,9 @@ class SerialConnection(object):
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
-            # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ>
-            # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|WCO:-166.126,-213.609,-21.822>
-            # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:pxXyYZ|Ov:100,100,100>
-
-#            self.validate_status_message(message)
-
-            validMessage = True
-
-# Error checking from Skippy, but DANGEROUS bc it gets rid of other (more user-useful) errors. 
-#             commasCnt = message.count(",")
-#             if (commasCnt != 4 and commasCnt != 6):
-#                 validMessage = False
-#                 log("ERROR status parse: comma count fail: " + message)
-#                 return
+            # 13:09:46.077 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ>
+            # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
+            # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
@@ -531,7 +536,6 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                validMessage = False
                 log("ERROR status parse: Status invalid: " + message)
                 return
 
@@ -608,10 +612,39 @@ class SerialConnection(object):
                     # print if change flagged
                     if self.print_buffer_status == True:
                         self.print_buffer_status = False
-                        if self.sm.get_screen('home').developer_widget.buffer_log_mode == "down":
+                        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
                             print self.serial_blocks_available + " " + self.serial_chars_available
                             if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
 
+                # Get limit switch states: Pn:PxXyYZ
+                elif part.startswith('Pn:'):
+                    
+                    pins_info = part.split(':')[1]
+                    
+                    if 'x' in pins_info: self.limit_x = True
+                    else: self.limit_x = False
+                    
+                    if 'X' in pins_info: self.limit_X = True
+                    else: self.limit_X = False
+                    
+                    if 'y' in pins_info: self.limit_y = True
+                    else: self.limit_y = False
+                    
+                    if 'Y' in pins_info: self.limit_Y = True
+                    else: self.limit_Y = False
+                    
+                    if 'z' in pins_info: self.limit_z = True
+                    else: self.limit_z = False
+
+                    if 'P' in pins_info: self.probe = True
+                    else: self.probe = False
+
+                    if 'g' in pins_info: self.spare_door = True
+                    else: self.spare_door = False
+                    
+                    if 'G' in pins_info: self.dust_shoe_cover = True
+                    else: self.dust_shoe_cover = False
+                
                 else:
                     continue
 
@@ -634,50 +667,56 @@ class SerialConnection(object):
             # '$$' is called to yield the report from grbl
             # It is called at init, at end of "start_sequential_stream" function - this forces sw to be in sync with grbl settings
 
-            if setting == '$0': pass  # Step pulse, microseconds
-            elif setting == '$1': pass  # Step idle delay, milliseconds
-            elif setting == '$2': pass  # Step port invert, mask
-            elif setting == '$3': pass  # Direction port invert, mask
-            elif setting == '$4': pass  # Step enable invert, boolean
-            elif setting == '$5': pass  # Limit pins invert, boolean
-            elif setting == '$6': pass  # Probe pin invert, boolean
-            elif setting == '$10': pass  # Status report, mask
-            elif setting == '$11': pass  # Junction deviation, mm
-            elif setting == '$12': pass  # Arc tolerance, mm
-            elif setting == '$13': pass  # Report inches, boolean
-            elif setting == '$20': pass  # Soft limits, boolean
-            elif setting == '$21': pass  # Hard limits, boolean
-            elif setting == '$22': pass  # Homing cycle, boolean
-            elif setting == '$23': pass  # Homing dir invert, mask
-            elif setting == '$24': pass  # Homing feed, mm/min
-            elif setting == '$25': pass  # Homing seek, mm/min
-            elif setting == '$26': pass  # Homing debounce, milliseconds
-            elif setting == '$27': pass  # Homing pull-off, mm
-            elif setting == '$30': pass  # Max spindle speed, RPM
-            elif setting == '$31': pass  # Min spindle speed, RPM
-            elif setting == '$32': pass  # Laser mode, boolean
-            elif setting == '$100': pass  # X steps/mm
-            elif setting == '$101': pass  # Y steps/mm
-            elif setting == '$102': pass  # Z steps/mm
+            if setting == '$0': self.setting_0 = value; # Step pulse, microseconds
+            elif setting == '$1': self.setting_1 = value;  # Step idle delay, milliseconds
+            elif setting == '$2': self.setting_2 = value;  # Step port invert, mask
+            elif setting == '$3': self.setting_3 = value;  # Direction port invert, mask
+            elif setting == '$4': self.setting_4 = value;  # Step enable invert, boolean
+            elif setting == '$5': self.setting_5 = value;  # Limit pins invert, boolean
+            elif setting == '$6': self.setting_6 = value;  # Probe pin invert, boolean
+            elif setting == '$10': self.setting_10 = value;  # Status report, mask
+            elif setting == '$11': self.setting_11 = value;  # Junction deviation, mm
+            elif setting == '$12': self.setting_12 = value;  # Arc tolerance, mm
+            elif setting == '$13': self.setting_13 = value;  # Report inches, boolean
+            elif setting == '$20': self.setting_20 = value;  # Soft limits, boolean
+            elif setting == '$21': self.setting_21 = value;  # Hard limits, boolean
+            elif setting == '$22': self.setting_22 = value;  # Homing cycle, boolean
+            elif setting == '$23': self.setting_23 = value;  # Homing dir invert, mask
+            elif setting == '$24': self.setting_24 = value;  # Homing feed, mm/min
+            elif setting == '$25': self.setting_25 = value;  # Homing seek, mm/min
+            elif setting == '$26': self.setting_26 = value;  # Homing debounce, milliseconds
+            elif setting == '$27': self.setting_27 = value;  # Homing pull-off, mm
+            elif setting == '$30': self.setting_30 = value;  # Max spindle speed, RPM
+            elif setting == '$31': self.setting_31 = value;  # Min spindle speed, RPM
+            elif setting == '$32': self.setting_32 = value;  # Laser mode, boolean
+            elif setting == '$100': self.setting_100 = value;  # X steps/mm
+            elif setting == '$101': self.setting_101 = value;  # Y steps/mm
+            elif setting == '$102': self.setting_102 = value;  # Z steps/mm
             elif setting == '$110': # X Max rate, mm/min
+                self.setting_110 = value;
                 self.sm.get_screen('home').common_move_widget.fast_x_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$111': # Y Max rate, mm/min
+                self.setting_111 = value;
                 self.sm.get_screen('home').common_move_widget.fast_y_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
             elif setting == '$112': # Z Max rate, mm/min
+                self.setting_112 = value;
                 self.sm.get_screen('home').common_move_widget.fast_z_speed = value
                 self.sm.get_screen('home').common_move_widget.set_jog_speeds()
-            elif setting == '$120': pass  # X Acceleration, mm/sec^2
-            elif setting == '$121': pass  # Y Acceleration, mm/sec^2
-            elif setting == '$122': pass  # Z Acceleration, mm/sec^2
+            elif setting == '$120': self.setting_120 = value;  # X Acceleration, mm/sec^2
+            elif setting == '$121': self.setting_121 = value;  # Y Acceleration, mm/sec^2
+            elif setting == '$122': self.setting_122 = value;  # Z Acceleration, mm/sec^2
             elif setting == '$130':
+                self.setting_130 = value;
                 self.m.grbl_x_max_travel = value  # X Max travel, mm
                 self.m.set_jog_limits()
             elif setting == '$131':
+                self.setting_131 = value;
                 self.m.grbl_y_max_travel = value  # Y Max travel, mm
                 self.m.set_jog_limits()
             elif setting == '$132':
+                self.setting_132 = value;
                 self.m.grbl_z_max_travel = value  # Z Max travel, mm
                 self.m.set_jog_limits()
 
@@ -694,6 +733,13 @@ class SerialConnection(object):
                 self.g28_x = pos[0]
                 self.g28_y = pos[1]
                 self.g28_z = pos[2]
+                
+            elif stripped_message.startswith('G54:'):
+                
+                pos = stripped_message[4:].split(',')
+                self.g54_x = pos[0]
+                self.g54_y = pos[1]
+                self.g54_z = pos[2]
 
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
             elif self.expecting_probe_result and stripped_message.startswith('PRB'):
@@ -710,6 +756,9 @@ class SerialConnection(object):
 
 
                 self.expecting_probe_result = False # clear flag
+                
+            elif stripped_message.startswith('ASM CNC'):
+                self.fw_version = stripped_message.split(':')[1]
 
 ## SEQUENTIAL STREAMING
 
