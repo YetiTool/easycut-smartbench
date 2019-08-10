@@ -382,7 +382,7 @@ class HomeScreen(Screen):
         ## screensaver functions
         self.SScounter = 0
         self.clear_recorder_file()
-        self.screensaver_event = Clock.schedule_interval(lambda *args: self.screensaver_function(), 60)
+        self.screensaver_event = Clock.schedule_interval(lambda *args: self.screensaver_function(), 5)
     
     def clear_recorder_file(self):
         recorder_file = open("touchrecorder.txt","w")
@@ -397,7 +397,7 @@ class HomeScreen(Screen):
             
             if self.SScounter == 5:
                 Clock.unschedule(self.screensaver_event)
-                self.sm.current = 'lobby'
+                self.sm.current = 'screensaver'
 
  
     def preview_job_file(self, dt):
