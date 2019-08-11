@@ -95,6 +95,7 @@ class ScreenSaverScreen(Screen):
 
     def on_enter(self):
         self.wakeup_text = '[b]Wake Up Yeti[/b]'
+        self.wake_up_button.disabled = False
         self.yeti_counter = 1
         self.swap_image_event = Clock.schedule_interval(lambda *args: self.swap_image(), 1.2)
         
@@ -113,6 +114,7 @@ class ScreenSaverScreen(Screen):
         Clock.schedule_once(lambda *args: self.quit_to_home(), 3)
         
     def quit_to_home(self):
+        
         self.sm.current = 'home'
   
         
