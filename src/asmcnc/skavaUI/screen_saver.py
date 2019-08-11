@@ -19,6 +19,10 @@ import sys, os
 Builder.load_string("""
 
 <ScreenSaverScreen>:
+    
+    wake_up_button:wake_up_button
+    yeti_image:yeti_image
+    
     canvas:
         Color: 
             rgba: hex('#0D47A1')
@@ -39,6 +43,7 @@ Builder.load_string("""
 #             padding: 10
             
             Image:
+                id: yeti_image
                 size_hint_y: 3
                 keep_ratio: True
                 allow_stretch: False
@@ -55,12 +60,14 @@ Builder.load_string("""
                                
             AnchorLayout: 
                 Button:
+                    id: wake_up_button
                     size_hint_x: 0.25
                     size_hint_y: 0.45
                     halign: 'center'
                     valign: 'middle'
                     background_normal: ''
                     background_color: hex('#1E88E5')
+                    disabled: False
                     on_release: 
                         root.wake_up_yeti()
                     
@@ -88,10 +95,21 @@ class ScreenSaverScreen(Screen):
 
     def on_enter(self):
         self.wakeup_text = '[b]Wake Up Yeti[/b]'
+        self.yeti_counter = 1
+        self.swap_image_event = Clock.schedule_interval(lambda *args: self.swap_image(), 1.2)
+        
+    def swap_image(self):
+        if self.yeti_counter == 0:
+            self.yeti_image.source = "./asmcnc/skavaUI/img/Sleeping_Yeti.png"
+            self.yeti_counter = 1
+        else:
+            self.yeti_image.source = "./asmcnc/skavaUI/img/Sleeping_Yeti_Alt.png"
+            self.yeti_counter = 0           
 
     def wake_up_yeti(self):
         self.wakeup_text = '[b]Waking Up...[/b]'
-
+        self.wake_up_button.disabled = True
+        Clock.unschedule(self.swap_image_event)
         Clock.schedule_once(lambda *args: self.quit_to_home(), 3)
         
     def quit_to_home(self):
