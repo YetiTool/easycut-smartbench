@@ -56,7 +56,7 @@ Builder.load_string("""
             AnchorLayout: 
                 Button:
                     size_hint_x: 0.25
-                    size_hint_y: 0.35
+                    size_hint_y: 0.45
                     halign: 'center'
                     valign: 'middle'
                     background_normal: ''
