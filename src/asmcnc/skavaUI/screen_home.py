@@ -396,8 +396,11 @@ class HomeScreen(Screen):
             self.SScounter = self.SScounter + 1
             
             if self.SScounter == 5:
-                Clock.unschedule(self.screensaver_event)
-                self.sm.current = 'screensaver'
+                self.SScounter = 0
+                
+                if self.sm.current == 'home':
+                    Clock.unschedule(self.screensaver_event)
+                    self.sm.current = 'screensaver'
 
  
     def preview_job_file(self, dt):
