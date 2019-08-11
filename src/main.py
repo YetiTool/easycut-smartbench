@@ -111,12 +111,7 @@ class SkavaUI(App):
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
         # set screen to start on
-        
-#         hours = 1
-#         minutes = 2
-#         seconds = 3
-#         sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-#         sm.current = 'jobdone'
+
         sm.current = 'safety'
         return sm
 
