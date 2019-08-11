@@ -388,7 +388,7 @@ class DeveloperScreen(Screen):
                     '$31=0.0',         #Min spindle speed, RPM
                     '$32=0',           #Laser mode, boolean
                     '$100=56.649',   #X steps/mm
-                    '$101=56.623',   #Y steps/mm
+                    '$101=56.665',   #Y steps/mm
                     '$102=1066.667',   #Z steps/mm
                     '$110=6000.0',   #X Max rate, mm/min
                     '$111=6000.0',   #Y Max rate, mm/min
@@ -396,9 +396,9 @@ class DeveloperScreen(Screen):
                     '$120=500.0',    #X Acceleration, mm/sec^2
                     '$121=200.0',    #Y Acceleration, mm/sec^2
                     '$122=200.0',    #Z Acceleration, mm/sec^2
-                    '$130=1237.0',   #X Max travel, mm TODO: Link to a settings object
-                    '$131=2470.0',   #Y Max travel, mm
-                    '$132=143.0',   #Z Max travel, mm
+                    '$130=1300.0',   #X Max travel, mm TODO: Link to a settings object
+                    '$131=2502.0',   #Y Max travel, mm
+                    '$132=150.0',   #Z Max travel, mm
                     '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
                     '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
             ]
