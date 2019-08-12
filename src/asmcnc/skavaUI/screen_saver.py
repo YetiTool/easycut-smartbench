@@ -68,7 +68,7 @@ Builder.load_string("""
                     background_normal: ''
                     background_color: hex('#1E88E5')
                     disabled: False
-                    on_release: 
+                    on_press: 
                         root.button_press()
                     
                     Label:

@@ -121,9 +121,9 @@ class SkavaUI(App):
         return sm
 
 if __name__ == '__main__':
-
-    SkavaUI().run()
     
     rec = Recorder(filename='touchrecorder.txt')
-    rec.record = True
+    rec.record = True   
+
+    SkavaUI().run()
     
