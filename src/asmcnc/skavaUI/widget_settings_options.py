@@ -124,8 +124,9 @@ class SettingsOptions(Widget):
     ## Updates version labels
 
     def refresh_sw_version_label(self):
-        sw_data = (os.popen("git describe --always").read()).split('-')
-        self.sw_version_label.text = str(sw_data[0])      
+        sw_data = (os.popen("git describe --tags").read())
+        print(sw_data)
+        self.sw_version_label.text = str(sw_data) 
 
     def refresh_platform_version_label(self):
         data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
