@@ -314,6 +314,8 @@ class HomeScreen(Screen):
     gcode_has_been_checked_and_its_ok = False
     
     job_box = job_envelope.BoundingBox()
+    
+    screensaver_scheduled = False
 
     def __init__(self, **kwargs):
 
@@ -381,25 +383,51 @@ class HomeScreen(Screen):
                 
         ## screensaver functions
         self.SScounter = 0
+        self.recorder_file = open("touchrecorder.txt","r+")
         self.clear_recorder_file()
-        self.screensaver_event = Clock.schedule_interval(lambda *args: self.screensaver_function(), 1)
-    
+        self.times_avoided = 0
+        if not self.screensaver_scheduled:
+            self.screensaver_event = Clock.schedule_interval(lambda *args: self.screensaver_function(), 2)
+            self.screensaver_scheduled = True
+
     def clear_recorder_file(self):
-        recorder_file = open("touchrecorder.txt","w")
-        recorder_file.truncate(0)
+#        recorder_file = open("touchrecorder.txt","w")
+        self.recorder_file.truncate(0)
+#        recorder_file.close()
 
     def screensaver_function(self):
-        if os.path.exists('touchrecorder.txt') and os.path.getsize('touchrecorder.txt') > 0:
+#        recorder_file = open('touchrecorder.txt','r+')
+#        touches = self.recorder_file.read(20)
+#        recorder_file.close()
+        
+        recorder_size = os.popen("du -h touchrecorder.txt").read()
+        
+        print(recorder_size)
+        
+        
+        if recorder_size != "":
+            
             self.clear_recorder_file()
             self.SScounter = 0
             
+            self.times_avoided = self.times_avoided + 1
+            print(self.times_avoided)
+            
         else:
-            self.SScounter = self.SScounter + 1            
+            self.SScounter = self.SScounter + 1
             if self.SScounter == 5:
                 self.SScounter = 0
                 
-                if self.sm.current == 'home':
+                file = open('pathtest.txt','w')
+                file.close()
+                
+                print touches
+                print(str((os.path.getsize('touchrecorder.txt'))))
+                
+                if self.sm.current == 'home' and os.path.exists('touchrecorder.txt') and (os.path.getsize('touchrecorder.txt') == 0):
                     Clock.unschedule(self.screensaver_event)
+                    self.recorder_file.close()
+                    self.screensaver_scheduled =  False
                     self.sm.current = 'screensaver'
 
  
