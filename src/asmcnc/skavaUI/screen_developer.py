@@ -365,8 +365,8 @@ class DeveloperScreen(Screen):
 
     def bake_grbl_settings(self):
         grbl_settings = [
-                    '$0=10',    #Step pulse, microseconds
-                    '$1=255',    #Step idle delay, milliseconds
+                    '$0=10',          #Step pulse, microseconds
+                    '$1=255',         #Step idle delay, milliseconds
                     '$2=4',           #Step port invert, mask
                     '$3=1',           #Direction port invert, mask
                     '$4=0',           #Step enable invert, boolean
@@ -380,27 +380,27 @@ class DeveloperScreen(Screen):
                     '$21=1',          #Hard limits, boolean <------------------
                     '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',     #Homing feed, mm/min
-                    '$25=3000.0',    #Homing seek, mm/min
+                    '$24=600.0',      #Homing feed, mm/min
+                    '$25=3000.0',     #Homing seek, mm/min
                     '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',      #Homing pull-off, mm
-                    '$30=25000.0',      #Max spindle speed, RPM
-                    '$31=0.0',         #Min spindle speed, RPM
-                    '$32=0',           #Laser mode, boolean
-                    '$100=56.649',   #X steps/mm
-                    '$101=56.665',   #Y steps/mm
-                    '$102=1066.667',   #Z steps/mm
-                    '$110=6000.0',   #X Max rate, mm/min
-                    '$111=6000.0',   #Y Max rate, mm/min
-                    '$112=750.0',   #Z Max rate, mm/min
-                    '$120=500.0',    #X Acceleration, mm/sec^2
-                    '$121=200.0',    #Y Acceleration, mm/sec^2
-                    '$122=200.0',    #Z Acceleration, mm/sec^2
-                    '$130=1300.0',   #X Max travel, mm TODO: Link to a settings object
-                    '$131=2502.0',   #Y Max travel, mm
-                    '$132=150.0',   #Z Max travel, mm
-                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
+                    '$27=15.000',     #Homing pull-off, mm
+                    '$30=25000.0',    #Max spindle speed, RPM
+                    '$31=0.0',        #Min spindle speed, RPM
+                    '$32=0',          #Laser mode, boolean
+#                     '$100=56.649',    #X steps/mm
+#                     '$101=56.665',    #Y steps/mm
+#                     '$102=1066.667',  #Z steps/mm
+                    '$110=8000.0',    #X Max rate, mm/min
+                    '$111=6000.0',    #Y Max rate, mm/min
+                    '$112=750.0',     #Z Max rate, mm/min
+                    '$120=500.0',     #X Acceleration, mm/sec^2
+                    '$121=200.0',     #Y Acceleration, mm/sec^2
+                    '$122=200.0',     #Z Acceleration, mm/sec^2
+                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
+                    '$131=2502.0',    #Y Max travel, mm
+                    '$132=150.0',     #Z Max travel, mm
+                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
