@@ -125,7 +125,6 @@ class SettingsOptions(Widget):
 
     def refresh_sw_version_label(self):
         sw_data = (os.popen("git describe --tags").read())
-        print(sw_data)
         self.sw_version_label.text = str(sw_data) 
 
     def refresh_platform_version_label(self):
