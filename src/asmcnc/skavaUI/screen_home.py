@@ -362,7 +362,7 @@ class HomeScreen(Screen):
         if self.job_gcode != []:
             self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
             # Preview file
-            Clock.schedule_once(self.preview_job_file, 0.1)
+#            Clock.schedule_once(self.preview_job_file, 0.05)
             
         else:
             self.file_data_label.text = '[b]Load a file...[/b]'
@@ -380,7 +380,7 @@ class HomeScreen(Screen):
             except:
                 print 'No G-code loaded.'
  
-    def preview_job_file(self, dt):
+    def preview_job_file(self):
         
         # Might leave this here for now - might change if you move datums etc.?      
         log('> get_non_modal_gcode')

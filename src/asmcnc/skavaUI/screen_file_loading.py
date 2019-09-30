@@ -171,6 +171,7 @@ class LoadingScreen(Screen):
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.loading_file_name
+        self.sm.get_screen('home').preview_job_file()
         self.sm.current = 'home'
         
     def return_to_filechooser(self):

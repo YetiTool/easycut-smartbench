@@ -462,6 +462,7 @@ class CheckingScreen(Screen):
             if self.job_ok:
                 self.sm.get_screen('home').job_gcode = self.job_gcode
                 self.sm.get_screen('home').job_filename = self.checking_file_name
+                self.sm.get_screen('home').preview_job_file()
                 self.sm.current = 'home'
                 
             else: 
@@ -485,6 +486,7 @@ class CheckingScreen(Screen):
     def load_file_now(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
+        self.sm.get_screen('home').preview_job_file()
         self.sm.current = 'home'       
     
     def on_leave(self, *args):
