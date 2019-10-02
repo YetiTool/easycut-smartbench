@@ -325,20 +325,30 @@ class GCodeView(Widget):
                 start = bit[0]             
 
                 if start == 'X':
-                    last_x = float(bit[1:])
-                    if last_x > self.max_x: self.max_x = last_x
-                    if last_x < self.min_x: self.min_x = last_x
-                    last_x = bit[1:]
+                    try: 
+                        last_x = float(bit[1:])
+                        if last_x > self.max_x: self.max_x = last_x
+                        if last_x < self.min_x: self.min_x = last_x
+                        last_x = bit[1:]
+                    except: 
+                        print 'Line not for preview (' + str(line_number) + '): ' + line
                 elif start == 'Y':
-                    last_y = float(bit[1:])
-                    if last_y > self.max_y: self.max_y = last_y
-                    if last_y < self.min_y: self.min_y = last_y
-                    last_y = bit[1:]
+                    try: 
+                        last_y = float(bit[1:])
+                        if last_y > self.max_y: self.max_y = last_y
+                        if last_y < self.min_y: self.min_y = last_y
+                        last_y = bit[1:]
+                    except: 
+                        print 'Line not for preview (' + str(line_number) + '): ' + line                        
+                        
                 elif start == 'Z':
-                    last_z = float(bit[1:])
-                    if last_z > self.max_z: self.max_z = last_z
-                    if last_z < self.min_z: self.min_z = last_z
-                    last_z = bit[1:]
+                    try:
+                        last_z = float(bit[1:])
+                        if last_z > self.max_z: self.max_z = last_z
+                        if last_z < self.min_z: self.min_z = last_z
+                        last_z = bit[1:]
+                    except: 
+                        print 'Line not for preview (' + str(line_number) + '): ' + line
                 elif start == 'F': feed_rate = bit[1:]
                 elif start == 'I': i = bit[1:]
                 elif start == 'J': j = bit[1:]
