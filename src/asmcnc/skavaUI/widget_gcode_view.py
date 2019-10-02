@@ -79,7 +79,7 @@ class GCodeView(Widget):
 #     def __init__(self, **kwargs):
 #         super(GCodeView, self).__init__(**kwargs)
 
-    max_lines_to_read = 1000
+    max_lines_to_read = 2000
 
     def draw_file_in_xy_plane(self, gcode_list):
         log('len(gcode_list) ' + str(len(gcode_list)))
