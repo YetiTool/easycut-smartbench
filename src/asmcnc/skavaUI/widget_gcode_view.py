@@ -244,7 +244,7 @@ class GCodeView(Widget):
             Color(0, 1, 0, 1)
 
 
-    def get_non_modal_gcode(self, job_file_gcode):
+    def get_non_modal_gcode(self, job_file_gcode, line_cap):
 
         xy_preview_gcode = []
 
@@ -268,7 +268,7 @@ class GCodeView(Widget):
         for draw_line in job_file_gcode:
             
             lines_read += 1
-            if lines_read > self.max_lines_to_read: break
+            if line_cap == True and lines_read > self.max_lines_to_read: break
              
             # Prevent any weird behaviour
             line = draw_line
