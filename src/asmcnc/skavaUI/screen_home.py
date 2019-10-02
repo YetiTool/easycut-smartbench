@@ -380,7 +380,7 @@ class HomeScreen(Screen):
             except:
                 print 'No G-code loaded.'
  
-    def preview_job_file(self):
+    def preview_job_file(self, dt):
         
         # Might leave this here for now - might change if you move datums etc.?      
         log('> get_non_modal_gcode')
