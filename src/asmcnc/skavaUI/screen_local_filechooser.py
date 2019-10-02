@@ -57,7 +57,7 @@ Builder.load_string("""
                 id: filechooser
                 rootpath: './jobCache/'
                 filter_dirs: True
-                filters: ['*.nc','*.NC','*.gcode','*.GCODE']
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode']
                 on_selection: 
                     root.refresh_filechooser()
                     root.detect_preview_image(filechooser.selection[0])
