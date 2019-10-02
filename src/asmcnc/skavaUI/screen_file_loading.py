@@ -219,7 +219,6 @@ class LoadingScreen(Screen):
 
         self.job_gcode = preloaded_job_gcode
         self.sm.get_screen('home').job_gcode = self.job_gcode
-#        self.sm.get_screen('home').preview_job_file()
         self.job_loading_loaded = '[b]Job Loaded[/b]'
         self.check_button.disabled = False
         self.home_button.disabled = False
