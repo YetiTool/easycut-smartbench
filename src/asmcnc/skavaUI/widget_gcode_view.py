@@ -79,6 +79,7 @@ class GCodeView(Widget):
 #     def __init__(self, **kwargs):
 #         super(GCodeView, self).__init__(**kwargs)
 
+    max_lines_to_read = 1000
 
     def draw_file_in_xy_plane(self, gcode_list):
         log('len(gcode_list) ' + str(len(gcode_list)))
@@ -93,14 +94,13 @@ class GCodeView(Widget):
         plane = 'G17'
         move = 'G0'
         lines_read = 0
-        max_lines_to_read = 1000
 
         log('> for line in gcode_list')
         
         for line in gcode_list:
 
             lines_read += 1
-            if lines_read > 1000: break
+            if lines_read > self.max_lines_to_read: break
 
             for bit in line.split(' '):
                 # find plane
@@ -263,7 +263,12 @@ class GCodeView(Widget):
         line_number = 0
         log('> get_non_modal_gcode: process loop')
         
+        lines_read = 0
+        
         for draw_line in job_file_gcode:
+            
+            lines_read += 1
+            if lines_read > self.max_lines_to_read: break
              
             # Prevent any weird behaviour
             line = draw_line
