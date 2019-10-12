@@ -392,11 +392,7 @@ class CheckingScreen(Screen):
     
         if self.error_log != []:
             Clock.unschedule(self.error_out_event)
-
-            # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
-            del self.error_log[0]
-            del self.error_log[(len(self.error_log)-1)]
-            
+           
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
                 
@@ -429,7 +425,13 @@ class CheckingScreen(Screen):
         
         # Zip error log and GRBL commands together, and remove any lines with no gcode
         no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.job_gcode)))
-
+#        no_empties = list(zip(error_log, self.job_gcode))
+        print no_empties
+        print len(no_empties)
+        
+        print(error_log)
+        print
+        print(self.job_gcode)
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
@@ -466,14 +468,11 @@ class CheckingScreen(Screen):
                 
             else: 
                 
-                if self.m.s.is_sequential_streaming:
-                    self.m.s.cancel_sequential_stream()
-                
-                if self.m.state().startswith('Check'):
-                    self.m.s.write_command('$C', altDisplayText = 'Check mode OFF')
-                    
+                if self.m.s.is_job_streaming:
+                    self.m.s.cancel_stream()
+
                 self.sm.current = 'home'
-                
+
         elif self.entry_screen == 'home':
             
             if self.job_ok:
@@ -482,7 +481,8 @@ class CheckingScreen(Screen):
             else:
                 self.sm.current = 'home'
             
-    def load_file_now(self):
+    def load_file_now(self): 
+        # this is only shown if there's a boundary conflict, so no streaming has started
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.checking_file_name
         self.sm.current = 'home'       
@@ -496,3 +496,4 @@ class CheckingScreen(Screen):
         self.display_output = ''
         self.job_ok = False
         self.error_log = []
+        self.m.disable_check_mode()
