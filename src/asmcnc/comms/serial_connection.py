@@ -265,7 +265,7 @@ class SerialConnection(object):
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
                         self.process_grbl_response(rec_temp)
-                        print rec_temp
+#                        print rec_temp
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
@@ -320,16 +320,7 @@ class SerialConnection(object):
         
         # Set up error logging
         self.suppress_error_screens = True
-        self.response_log = []
-        
-        # instead of start stream, tell it to run job
-        # self.run_job(object_to_check)
-        
-        # in run job, during job start pass flag to function telling it to store oks and errors
-        # during job run
-        
-        # check this flag during grbl scanner
-        
+        self.response_log = []        
         
         # Start sequential stream
         self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
