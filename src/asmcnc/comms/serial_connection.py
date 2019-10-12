@@ -477,10 +477,19 @@ class SerialConnection(object):
         
         if not self.m.is_check_mode_enabled:
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            
+            # Flush
+            self.FLUSH_FLAG = True
+        
+            # Move head up and turn vac off after a delay
+            Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
 
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            
+            # Flush
+            self.FLUSH_FLAG = True
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -488,15 +497,6 @@ class SerialConnection(object):
 
         log("G-code streaming cancelled!")
 
-        # Flush
-        # self.s.flushInput()
-        self.FLUSH_FLAG = True
-        
-        # Move head up and turn vac off after a delay
-        Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
-        
-        
-        
 
 # PUSH MESSAGE HANDLING
 
