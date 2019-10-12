@@ -347,9 +347,6 @@ class SerialConnection(object):
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
         if self.initialise_job() and self.job_gcode:
-            
-            # start saving responses from check around here
-            
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
