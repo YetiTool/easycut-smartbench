@@ -209,11 +209,12 @@ class CheckingScreen(Screen):
     check_outcome = StringProperty()
     display_output = StringProperty()
     exit_label = StringProperty()
-    
+    entry_screen = StringProperty()
+        
     job_ok = False
     error_log = []
+    error_out_event = None
     
-    entry_screen = StringProperty()
     job_box = job_envelope.BoundingBox()
     
 #     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
@@ -425,13 +426,7 @@ class CheckingScreen(Screen):
         
         # Zip error log and GRBL commands together, and remove any lines with no gcode
         no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.job_gcode)))
-#        no_empties = list(zip(error_log, self.job_gcode))
-        print no_empties
-        print len(no_empties)
-        
-        print(error_log)
-        print
-        print(self.job_gcode)
+
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
@@ -489,6 +484,7 @@ class CheckingScreen(Screen):
     
     def on_leave(self, *args):
         # self.quit_button.disabled = True
+        if self.error_out_event != None: Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''
@@ -498,4 +494,3 @@ class CheckingScreen(Screen):
         self.error_log = []
         if self.m.s.is_job_streaming:
             self.m.s.cancel_stream()
-        self.m.disable_check_mode()
