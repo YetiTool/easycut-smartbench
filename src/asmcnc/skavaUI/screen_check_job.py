@@ -233,11 +233,24 @@ class CheckingScreen(Screen):
         self.exit_label = 'Cancel'
         
         if self.entry_screen == 'file_loading':        
-            self.boundary_check()
+            try: self.boundary_check()
+            except:
+                self.toggle_boundary_buttons(True)
+                self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+                self.check_outcome = 'Cannot check job: unable to run boundary check on file. Please make sure file is in recognisable format.'
+                self.job_gcode = []
         
         else:
-            self.check_gcode()
-        
+            self.try_gcode_check()
+    
+    def try_gcode_check(self):
+        try: self.check_gcode()
+        except:
+            self.toggle_boundary_buttons(True)
+            self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+            self.check_outcome = 'Cannot check job: unable to run g-code check on file. Please make sure file is in recognisable format.'
+            self.job_gcode = []        
+            
         
     def boundary_check(self):
         
@@ -257,7 +270,7 @@ class CheckingScreen(Screen):
         if self.is_job_within_bounds():
             # update screen
             self.check_outcome = 'Job is within bounds.'
-            Clock.schedule_once(lambda dt: self.check_gcode(), 0.4)
+            Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
             # auto check g-code? Yeah, why not.
 
         else:
