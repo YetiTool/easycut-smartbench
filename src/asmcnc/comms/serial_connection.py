@@ -265,6 +265,7 @@ class SerialConnection(object):
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
                         self.process_grbl_response(rec_temp)
+#                        print rec_temp
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
@@ -319,7 +320,7 @@ class SerialConnection(object):
         
         # Set up error logging
         self.suppress_error_screens = True
-        self.response_log = []
+        self.response_log = []        
         
         # Start sequential stream
         self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
@@ -328,6 +329,7 @@ class SerialConnection(object):
 
         # get error log back to the checking screen when it's ready
         Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
+
 
     def return_check_outcome(self, job_object,dt):
         if len(self.response_log) >= len(job_object) + 2:
@@ -353,6 +355,12 @@ class SerialConnection(object):
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             self.is_job_finished = True
+            
+        else: 
+            log('Could not initialise job')
+            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            self.is_job_finished = True
+                     
         return
 
     def initialise_job(self):
@@ -361,12 +369,13 @@ class SerialConnection(object):
             self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
-        self.m.zUp()
-  
+        self.m.prepare_machine()
+        
         # for the buffer stuffing style streaming
         # self.s.flushInput()
         self.FLUSH_FLAG = True
         
+        # allow a little time for flushing and z head movement
         time.sleep(0.1)
         
         # Reset counters & flags
@@ -425,7 +434,8 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
         
-        self.m.zUp()
+        # move head up and turn vac off
+        self.m.post_cut_sequence()
 
         # Tell user the job has finished
         log("G-code streaming finished!")
@@ -468,8 +478,11 @@ class SerialConnection(object):
         # self.s.flushInput()
         self.FLUSH_FLAG = True
         
-        # Move head up        
-        Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+        # Move head up and turn vac off after a delay
+        Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
+        
+        
+        
 
 # PUSH MESSAGE HANDLING
 
