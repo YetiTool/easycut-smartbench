@@ -52,8 +52,8 @@ Builder.load_string("""
                     size_hint_y: 5
                     id: filechooser_usb
                     path: './jobCache/'
-#                     filter_dirs: True
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE']
+                    filter_dirs: True
+                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: 
                         root.refresh_filechooser()
 #                         root.detect_preview_image(filechooser_usb.selection[0])

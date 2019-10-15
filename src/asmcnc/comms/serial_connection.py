@@ -326,6 +326,7 @@ class SerialConnection(object):
         # run job as per normal, if_check_enabled has been set to true
         self.run_job(job_object)
 
+
         # get error log back to the checking screen when it's ready
         Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
 
@@ -343,7 +344,9 @@ class SerialConnection(object):
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
+
         if self.initialise_job() and self.job_gcode:               
+
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
