@@ -40,6 +40,7 @@ class SerialConnection(object):
     s = None    # Serial comms object
     sm = None   # Screen manager object
 
+    grbl_out = ""
     job_gcode = []
     response_log = []
     suppress_error_screens = False
@@ -225,7 +226,8 @@ class SerialConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-
+                    self.grbl_out = rec_temp;
+                    # print self.grbl_out
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
@@ -263,7 +265,7 @@ class SerialConnection(object):
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
                         self.process_grbl_response(rec_temp)
-
+#                        print rec_temp
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
@@ -313,25 +315,25 @@ class SerialConnection(object):
     def check_job(self, job_object):
         
         log('Checking job...')
- 
-        self.m.enable_check_mode()
-
-        # Sleep to ensure check mode ok isn't included in log
-        time.sleep(0.2)
-
+        # Add $C both ends to toggle GRBL checking
+        object_to_check = ['$C'] + job_object + ['$C']
+        
         # Set up error logging
         self.suppress_error_screens = True
-        self.response_log = []
+        self.response_log = []        
         
-        # run job as per normal, if_check_enabled has been set to true
-        self.run_job(job_object)
-
+        # Start sequential stream
+        self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
+        
+        # Sequential stream runs
 
         # get error log back to the checking screen when it's ready
         Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
 
+
     def return_check_outcome(self, job_object,dt):
-        if len(self.response_log) >= len(job_object): # + 2
+        if len(self.response_log) >= len(job_object) + 2:
+            self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
         
@@ -344,9 +346,7 @@ class SerialConnection(object):
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
-
-        if self.initialise_job() and self.job_gcode:               
-
+        if self.initialise_job() and self.job_gcode:
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
@@ -366,13 +366,13 @@ class SerialConnection(object):
     def initialise_job(self):
                 
         if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
-            self.buffer_monitor_file = open("buffer_log.txt", "w") 
+            self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
 
         # Move head out of the way before moving to the job datum in XY.
-        if not self.m.is_check_mode_enabled:
-            self.m.prepare_machine()
+        self.m.prepare_machine()
         
         # for the buffer stuffing style streaming
+        # self.s.flushInput()
         self.FLUSH_FLAG = True
         
         # allow a little time for flushing and z head movement
@@ -401,7 +401,7 @@ class SerialConnection(object):
                 self.l_count += 1 # lines sent to grbl           
             else:
                 return
-
+ 
         self.is_stream_lines_remaining = False
 
     # if 'ok' or 'error' rec'd from GRBL
@@ -416,10 +416,6 @@ class SerialConnection(object):
             
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
-            
-            if self.suppress_error_screens == True:
-                self.response_log.append(message)
-            
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
@@ -437,36 +433,29 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
-
-# ONLY DO FOLLOWING IF JOB ACTUALLY RAN
-
-        if not self.m.is_check_mode_enabled:
-            
-            # move head up and turn vac off
-            self.m.post_cut_sequence()
-    
-            # Tell user the job has finished
-            log("G-code streaming finished!")
-            self.stream_end_time = time.time()
-            time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
-            #time_take_minutes = int(time_taken_seconds/60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-    
-            # reset go screen to go again
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
-    
-            # send info to the job done screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-            self.sm.current = 'jobdone'
-            # popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
         
-        else:
-            self.m.disable_check_mode()
-            self.suppress_error_screens = False
+        # move head up and turn vac off
+        self.m.post_cut_sequence()
+
+        # Tell user the job has finished
+        log("G-code streaming finished!")
+        self.stream_end_time = time.time()
+        time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
+        hours = int(time_taken_seconds / (60 * 60))
+        seconds_remainder = time_taken_seconds % (60 * 60)
+        minutes = int(seconds_remainder / 60)
+        seconds = int(seconds_remainder % 60)
+        #time_take_minutes = int(time_taken_seconds/60)
+        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+
+        # reset go screen to go again
+        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+
+        # send info to the job done screen
+        self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+        self.sm.current = 'jobdone'
+        # popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -478,28 +467,22 @@ class SerialConnection(object):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
         
-        if not self.m.is_check_mode_enabled:
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
-            
-            # Flush
-            self.FLUSH_FLAG = True
-        
-            # Move head up and turn vac off after a delay
-            Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
-
-        else:
-            self.m.disable_check_mode()
-            self.suppress_error_screens = False
-            
-            # Flush
-            self.FLUSH_FLAG = True
-        
+        self.sm.get_screen('go').reset_go_screen_after_job_finished()
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
         log("G-code streaming cancelled!")
 
+        # Flush
+        # self.s.flushInput()
+        self.FLUSH_FLAG = True
+        
+        # Move head up and turn vac off after a delay
+        Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
+        
+        
+        
 
 # PUSH MESSAGE HANDLING
 

@@ -126,8 +126,8 @@ Builder.load_string("""
                 on_press: root.send_gcode_preset("$N")
                 size_hint_y:0.1
             Button:
-                text: "Check $C"
-                on_press: root.toggle_check_mode()
+                text: "Gcode"
+                on_press: root.send_gcode_preset("$C")
                 size_hint_y:0.1
             Button:
                 text: "Help"
@@ -190,12 +190,7 @@ class GCodeMonitor(Widget):
     def send_gcode_preset(self, input):
         
         self.m.send_any_gcode_command(input)
-    
-    def toggle_check_mode(self):
-        if self.m.is_check_mode_enabled:
-            self.m.disable_check_mode()
-        else:
-            self.m.enable_check_mode()
+        
 
     def clear_monitor(self): 
         
