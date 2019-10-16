@@ -193,6 +193,10 @@ class LoadingScreen(Screen):
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
         self.load_value = 1
+
+        # Header
+        preloaded_job_gcode.append("AE")  #append cleaned up gcode to object
+        preloaded_job_gcode.append("G4 P2")  #append cleaned up gcode to object
         
         # clean up code as it's copied into the object
         for line in job_file:
@@ -203,6 +207,11 @@ class LoadingScreen(Screen):
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
+        
+        # Footer
+        preloaded_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        preloaded_job_gcode.append("AF")  #append cleaned up gcode to object
+
         
         self.load_value = 2
 
