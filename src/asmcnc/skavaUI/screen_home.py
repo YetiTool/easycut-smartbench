@@ -362,10 +362,7 @@ class HomeScreen(Screen):
         if self.job_gcode != []:
             self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
             # Preview file
-            try: 
-                Clock.schedule_once(self.preview_job_file, 0.05)
-            except:
-                log('Unable to preview file')
+            Clock.schedule_once(self.preview_job_file, 0.1)
             
         else:
             self.file_data_label.text = '[b]Load a file...[/b]'
@@ -387,7 +384,7 @@ class HomeScreen(Screen):
         
         # Might leave this here for now - might change if you move datums etc.?      
         log('> get_non_modal_gcode')
-        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, True)
+        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode)
 
         log('< get_non_modal_gcode ' + str(len(gcode_list)))
 
