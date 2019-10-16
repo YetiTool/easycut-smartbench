@@ -282,22 +282,14 @@ class RouterMachine(object):
         self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     def enable_check_mode(self):
-        if not self.state().startswith('Check'):
-            self.s.write_command('$C', altDisplayText = 'Check mode ON')
+        if self.is_check_mode_enabled == False:
             self.is_check_mode_enabled = True
-        else:
-            print 'Check mode already enabled'
-            self.is_check_mode_enabled = True           
+            self.s.write_command('$C', altDisplayText = 'Check mode ON')
 
     def disable_check_mode(self):
-        if self.state().startswith('Check') \
-            or (self.state().startswith('Alarm') and self.is_check_mode_enabled == True) \
-            or (self.state().startswith('Error') and self.is_check_mode_enabled == True): 
-            self.s.write_command('$C', altDisplayText = 'Check mode OFF')
+        if self.is_check_mode_enabled == True:
             self.is_check_mode_enabled = False
-        else:
-            print 'Check mode already disabled'
-            self.is_check_mode_enabled = False 
+            self.s.write_command('$C', altDisplayText = 'Check mode OFF')
 
     def set_x_datum(self):
         self.s.write_command('G10 L20 P1 X0')
