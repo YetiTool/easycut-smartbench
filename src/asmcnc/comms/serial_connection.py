@@ -232,17 +232,10 @@ class SerialConnection(object):
                     self.get_serial_screen('Could not read line from serial buffer.')
             else: 
                 rec_temp = ''
-##---------------------------------------------------           
-#             time.sleep(1)
-#             print 'RX line length: ', len(rec_temp)
-##---------------------------------------------------
+
             # If something received from serial buffer, process it. 
             if len(rec_temp):  
-##---------------------------------------------------
-                #print 'RX line: ', rec_temp
-                # return rec_temp
-                #HACK send every line received to console
-##---------------------------------------------------                
+            
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE: 
@@ -367,7 +360,7 @@ class SerialConnection(object):
 
         # Move head out of the way before moving to the job datum in XY.
         if not self.m.is_check_mode_enabled:
-            self.m.prepare_machine()
+            self.m.prepare_machine() #PROBLEM
         
         # for the buffer stuffing style streaming
         self.FLUSH_FLAG = True
@@ -440,7 +433,7 @@ class SerialConnection(object):
         if not self.m.is_check_mode_enabled:
             
             # move head up and turn vac off
-            self.m.post_cut_sequence()
+            self.m.post_cut_sequence() #PROBLEM
     
             # Tell user the job has finished
             log("G-code streaming finished!")
@@ -482,7 +475,7 @@ class SerialConnection(object):
             self.FLUSH_FLAG = True
         
             # Move head up and turn vac off after a delay
-            Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
 
         else:
             self.m.disable_check_mode()
