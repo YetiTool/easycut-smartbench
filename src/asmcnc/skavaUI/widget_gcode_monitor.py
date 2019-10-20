@@ -192,6 +192,7 @@ class GCodeMonitor(Widget):
         self.m.send_any_gcode_command(input)
     
     def toggle_check_mode(self):
+        
         if self.m.is_check_mode_enabled:
             self.m.disable_check_mode()
         else:

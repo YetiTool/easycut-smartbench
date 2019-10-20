@@ -265,8 +265,7 @@ class GoScreen(Screen):
 
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
-
-        # self.job_gcode = self.sm.get_screen('home').job_gcode  
+ 
         self.job_in_progress = False
         
     def on_enter(self, *args):
@@ -294,8 +293,6 @@ class GoScreen(Screen):
             
             
         self.feedOverride.feed_norm()
-
-        
 
 #         self.btn_pause_play.size_hint_y = None
 #         self.btn_pause_play.height = '0dp'
@@ -378,9 +375,17 @@ class GoScreen(Screen):
     def stream_job(self):
                 
         if self.job_gcode:
-          
+            
+            # Alternative vac_fix. Not very tidy but will probably work.
+            with_vac_job_gcode = []
+            with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
+            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+            with_vac_job_gcode.extend(self.job_gcode)
+            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+            with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+
             try:
-                self.m.s.run_job(self.job_gcode)
+                self.m.s.run_job(with_vac_job_gcode)
                 print('Streaming')
 
             except:

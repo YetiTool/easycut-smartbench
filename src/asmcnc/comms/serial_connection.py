@@ -40,6 +40,7 @@ class SerialConnection(object):
     s = None    # Serial comms object
     sm = None   # Screen manager object
 
+    grbl_out = ""
     job_gcode = []
     response_log = []
     suppress_error_screens = False
@@ -225,7 +226,8 @@ class SerialConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-
+                    self.grbl_out = rec_temp;
+                    # print self.grbl_out
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
@@ -256,7 +258,6 @@ class SerialConnection(object):
                     # If RESPONSE message (used in streaming, counting processed gcode lines)
                     if rec_temp.startswith(('ok', 'error')):
                         self.process_grbl_response(rec_temp)
-
                     # If PUSH message
                     else:
                         self.process_grbl_push(rec_temp)
@@ -306,12 +307,12 @@ class SerialConnection(object):
     def check_job(self, job_object):
         
         log('Checking job...')
- 
+
         self.m.enable_check_mode()
-
+        
         # Sleep to ensure check mode ok isn't included in log
-        time.sleep(0.2)
-
+        time.sleep(0.1)
+        
         # Set up error logging
         self.suppress_error_screens = True
         self.response_log = []
@@ -324,6 +325,7 @@ class SerialConnection(object):
 
     def return_check_outcome(self, job_object,dt):
         if len(self.response_log) >= len(job_object): # + 2
+            self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
         
@@ -336,7 +338,7 @@ class SerialConnection(object):
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
-        if self.initialise_job() and self.job_gcode:               
+        if self.initialise_job() and self.job_gcode:
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
@@ -345,27 +347,21 @@ class SerialConnection(object):
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             self.is_job_finished = True
-            
-        else: 
-            log('Could not initialise job')
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
-            self.is_job_finished = True
-                     
         return
 
     def initialise_job(self):
                 
         if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
             self.buffer_monitor_file = open("buffer_log.txt", "w") 
-
-        # Move head out of the way before moving to the job datum in XY.
+            
         if not self.m.is_check_mode_enabled:
-            self.m.prepare_machine() #PROBLEM
-        
-        # for the buffer stuffing style streaming
+            # Move head out of the way before moving to the job datum in XY.
+# >>>>>>> revert-196-vac_fix
+            # self.m.prepare_machine() #PROBLEM
+            self.m.zUp()
+  
         self.FLUSH_FLAG = True
         
-        # allow a little time for flushing and z head movement
         time.sleep(0.1)
         
         # Reset counters & flags
@@ -391,25 +387,20 @@ class SerialConnection(object):
                 self.l_count += 1 # lines sent to grbl           
             else:
                 return
-
+ 
         self.is_stream_lines_remaining = False
 
     # if 'ok' or 'error' rec'd from GRBL
-    def process_grbl_response(self, message):
+    def process_grbl_response(self, message):    
+        if self.suppress_error_screens == True:
+            self.response_log.append(message)
 
         # This is a special condition, used only at startup to set EEPROM settings
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
             
-            if self.suppress_error_screens == True:
-                self.response_log.append(message)
-            
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
-            
-            if self.suppress_error_screens == True:
-                self.response_log.append(message)
-            
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
@@ -428,12 +419,13 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
 
-# ONLY DO FOLLOWING IF JOB ACTUALLY RAN
-
         if not self.m.is_check_mode_enabled:
-            
+
+# >>>>>>> revert-196-vac_fix           
             # move head up and turn vac off
-            self.m.post_cut_sequence() #PROBLEM
+            # self.m.post_cut_sequence() #PROBLEM
+
+            self.m.zUp()
     
             # Tell user the job has finished
             log("G-code streaming finished!")
@@ -443,7 +435,6 @@ class SerialConnection(object):
             seconds_remainder = time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
-            #time_take_minutes = int(time_taken_seconds/60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
     
             # reset go screen to go again
@@ -452,8 +443,7 @@ class SerialConnection(object):
             # send info to the job done screen
             self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             self.sm.current = 'jobdone'
-            # popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
-        
+
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
@@ -461,7 +451,6 @@ class SerialConnection(object):
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
-
 
 
     def cancel_stream(self):
@@ -473,9 +462,13 @@ class SerialConnection(object):
             
             # Flush
             self.FLUSH_FLAG = True
-        
-            # Move head up and turn vac off after a delay
-            Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
+
+# >>>>>>> revert-196-vac_fix        
+#             # Move head up and turn vac off after a delay
+#             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
+#             
+            # Move head up        
+            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
 
         else:
             self.m.disable_check_mode()
@@ -484,11 +477,13 @@ class SerialConnection(object):
             # Flush
             self.FLUSH_FLAG = True
         
+        
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
         log("G-code streaming cancelled!")
+        
 
 
 # PUSH MESSAGE HANDLING

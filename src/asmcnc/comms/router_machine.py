@@ -28,12 +28,9 @@ class RouterMachine(object):
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
 
-
-    # Default power on settings: 
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
-    is_check_mode_enabled = False   
-#     job_file_gcode = []
+    is_check_mode_enabled = False    
 
             
     def __init__(self, win_serial_port, screen_manager):
@@ -351,20 +348,7 @@ class RouterMachine(object):
         print 'switching soft limits & hard limts ON'
         settings = ['$22=1','$20=1','$21=1']
         self.s.start_sequential_stream(settings)
-        
-    def grbl_pause(self, seconds): 
-        self.s.write_command("G4 P" + str(seconds))   
-    
-    def prepare_machine(self):
-        self.zUp()
-        self.vac_on()
-        self.grbl_pause(2)
-        
-    def post_cut_sequence(self):
-        self.zUp()
-        self.grbl_pause(2)       
-        self.vac_off()
-    
+
 # LIGHTING
 
     def set_led_state(self, dt):
