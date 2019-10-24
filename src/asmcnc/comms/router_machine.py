@@ -14,7 +14,6 @@ from kivy.uix.switch import Switch
 class RouterMachine(object):
     
     s = None # serial object
-    is_machine_homed = False # status on powerup
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
     grbl_x_max_travel = 1500.0 # measured from true home
@@ -29,9 +28,9 @@ class RouterMachine(object):
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
 
+    is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
-    
-#     job_file_gcode = []
+    is_check_mode_enabled = False    
 
             
     def __init__(self, win_serial_port, screen_manager):
@@ -279,17 +278,23 @@ class RouterMachine(object):
     def feed_override_down_10(self, final_percentage=''):
         self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
-    is_check_mode_enabled = False
-
     def enable_check_mode(self):
-        if self.is_check_mode_enabled == False:
-            self.is_check_mode_enabled = True
+        if not self.state().startswith('Check'):
             self.s.write_command('$C', altDisplayText = 'Check mode ON')
+            self.is_check_mode_enabled = True
+        else:
+            print 'Check mode already enabled'
+            self.is_check_mode_enabled = True           
 
     def disable_check_mode(self):
-        if self.is_check_mode_enabled == True:
-            self.is_check_mode_enabled = False
+        if self.state().startswith('Check') \
+            or (self.state().startswith('Alarm') and self.is_check_mode_enabled == True) \
+            or (self.state().startswith('Error') and self.is_check_mode_enabled == True): 
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
+            self.is_check_mode_enabled = False
+        else:
+            print 'Check mode already disabled'
+            self.is_check_mode_enabled = False 
 
     def set_x_datum(self):
         self.s.write_command('G10 L20 P1 X0')

@@ -209,11 +209,12 @@ class CheckingScreen(Screen):
     check_outcome = StringProperty()
     display_output = StringProperty()
     exit_label = StringProperty()
+    entry_screen = StringProperty()
     
     job_ok = False
     error_log = []
+    error_out_event = None
     
-    entry_screen = StringProperty()
     job_box = job_envelope.BoundingBox()
     
 #     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
@@ -232,12 +233,25 @@ class CheckingScreen(Screen):
         self.exit_label = 'Cancel'
         
         if self.entry_screen == 'file_loading':        
-            self.boundary_check()
+            try: self.boundary_check()
+            except:
+                self.toggle_boundary_buttons(True)
+                self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+                self.check_outcome = 'Cannot check job: unable to run boundary check on file. Please make sure file is in recognisable format.'
+                self.job_gcode = []
         
         else:
-            self.check_gcode()
-        
-        
+            self.try_gcode_check()
+    
+    def try_gcode_check(self):
+        try: self.check_gcode()
+        except:
+            self.toggle_boundary_buttons(True)
+            self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+            self.check_outcome = 'Cannot check job: unable to run g-code check on file. Please make sure file is in recognisable format.'
+            self.job_gcode = []        
+
+              
     def boundary_check(self):
         
         # get non modal g-code
@@ -256,7 +270,7 @@ class CheckingScreen(Screen):
         if self.is_job_within_bounds():
             # update screen
             self.check_outcome = 'Job is within bounds.'
-            Clock.schedule_once(lambda dt: self.check_gcode(), 0.4)
+            Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
             # auto check g-code? Yeah, why not.
 
         else:
@@ -394,8 +408,8 @@ class CheckingScreen(Screen):
             Clock.unschedule(self.error_out_event)
 
             # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
-            del self.error_log[0]
-            del self.error_log[(len(self.error_log)-1)]
+#             del self.error_log[0]
+#             del self.error_log[(len(self.error_log)-1)]
             
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
@@ -464,14 +478,10 @@ class CheckingScreen(Screen):
                 self.sm.get_screen('home').job_filename = self.checking_file_name
                 self.sm.current = 'home'
                 
-            else: 
-                
-                if self.m.s.is_sequential_streaming:
-                    self.m.s.cancel_sequential_stream()
-                
-                if self.m.state().startswith('Check'):
-                    self.m.s.write_command('$C', altDisplayText = 'Check mode OFF')
-                    
+            else:         
+                if self.m.s.is_job_streaming:
+                    self.m.s.cancel_stream()
+                                        
                 self.sm.current = 'home'
                 
         elif self.entry_screen == 'home':
@@ -489,6 +499,8 @@ class CheckingScreen(Screen):
     
     def on_leave(self, *args):
         # self.quit_button.disabled = True
+        if self.error_out_event != None: 
+            Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''
@@ -496,3 +508,5 @@ class CheckingScreen(Screen):
         self.display_output = ''
         self.job_ok = False
         self.error_log = []
+        if self.m.s.is_job_streaming:
+            self.m.s.cancel_stream()

@@ -234,17 +234,10 @@ class SerialConnection(object):
                     self.get_serial_screen('Could not read line from serial buffer.')
             else: 
                 rec_temp = ''
-##---------------------------------------------------           
-#             time.sleep(1)
-#             print 'RX line length: ', len(rec_temp)
-##---------------------------------------------------
+
             # If something received from serial buffer, process it. 
             if len(rec_temp):  
-##---------------------------------------------------
-                #print 'RX line: ', rec_temp
-                # return rec_temp
-                #HACK send every line received to console
-##---------------------------------------------------                
+            
 
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE: 
@@ -314,23 +307,24 @@ class SerialConnection(object):
     def check_job(self, job_object):
         
         log('Checking job...')
-        # Add $C both ends to toggle GRBL checking
-        object_to_check = ['$C'] + job_object + ['$C']
+
+        self.m.enable_check_mode()
+        
+        # Sleep to ensure check mode ok isn't included in log
+        time.sleep(0.1)
         
         # Set up error logging
         self.suppress_error_screens = True
         self.response_log = []
         
-        # Start sequential stream
-        self.start_sequential_stream(object_to_check, reset_grbl_after_stream=False)
-        
-        # Sequential stream runs
+        # run job as per normal, if_check_enabled has been set to true
+        self.run_job(job_object)
 
         # get error log back to the checking screen when it's ready
         Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
 
     def return_check_outcome(self, job_object,dt):
-        if len(self.response_log) >= len(job_object) + 2:
+        if len(self.response_log) >= len(job_object): # + 2
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
@@ -358,13 +352,14 @@ class SerialConnection(object):
     def initialise_job(self):
                 
         if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
-            self.buffer_monitor_file = open("buffer_log.txt", "w") # THIS NEVER GETS CLOSED???
-
-        # Move head out of the way before moving to the job datum in XY.
-        self.m.zUp()
+            self.buffer_monitor_file = open("buffer_log.txt", "w") 
+            
+        if not self.m.is_check_mode_enabled:
+            # Move head out of the way before moving to the job datum in XY.
+# >>>>>>> revert-196-vac_fix
+            # self.m.prepare_machine() #PROBLEM
+            self.m.zUp()
   
-        # for the buffer stuffing style streaming
-        # self.s.flushInput()
         self.FLUSH_FLAG = True
         
         time.sleep(0.1)
@@ -396,14 +391,13 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
 
     # if 'ok' or 'error' rec'd from GRBL
-    def process_grbl_response(self, message):
+    def process_grbl_response(self, message):    
+        if self.suppress_error_screens == True:
+            self.response_log.append(message)
 
         # This is a special condition, used only at startup to set EEPROM settings
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
-            
-            if self.suppress_error_screens == True:
-                self.response_log.append(message)
             
         elif self.is_job_streaming:
             self.g_count += 1 # Iterate g-code counter
@@ -424,52 +418,73 @@ class SerialConnection(object):
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
-        
-        self.m.zUp()
 
-        # Tell user the job has finished
-        log("G-code streaming finished!")
-        self.stream_end_time = time.time()
-        time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
-        hours = int(time_taken_seconds / (60 * 60))
-        seconds_remainder = time_taken_seconds % (60 * 60)
-        minutes = int(seconds_remainder / 60)
-        seconds = int(seconds_remainder % 60)
-        #time_take_minutes = int(time_taken_seconds/60)
-        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+        if not self.m.is_check_mode_enabled:
 
-        # reset go screen to go again
-        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+# >>>>>>> revert-196-vac_fix           
+            # move head up and turn vac off
+            # self.m.post_cut_sequence() #PROBLEM
 
-        # send info to the job done screen
-        self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-        self.sm.current = 'jobdone'
-        # popup_job_done.PopupJobDone(self.m, self.sm, "The job has finished. It took " + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+            self.m.zUp()
+    
+            # Tell user the job has finished
+            log("G-code streaming finished!")
+            self.stream_end_time = time.time()
+            time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
+            hours = int(time_taken_seconds / (60 * 60))
+            seconds_remainder = time_taken_seconds % (60 * 60)
+            minutes = int(seconds_remainder / 60)
+            seconds = int(seconds_remainder % 60)
+            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+    
+            # reset go screen to go again
+            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+    
+            # send info to the job done screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+            self.sm.current = 'jobdone'
 
+        else:
+            self.m.disable_check_mode()
+            self.suppress_error_screens = False
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
-
 
 
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
         
-        self.sm.get_screen('go').reset_go_screen_after_job_finished()
+        if not self.m.is_check_mode_enabled:
+            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            
+            # Flush
+            self.FLUSH_FLAG = True
+
+# >>>>>>> revert-196-vac_fix        
+#             # Move head up and turn vac off after a delay
+#             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
+#             
+            # Move head up        
+            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+
+        else:
+            self.m.disable_check_mode()
+            self.suppress_error_screens = False
+            
+            # Flush
+            self.FLUSH_FLAG = True
+        
+        
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
         log("G-code streaming cancelled!")
-
-        # Flush
-        # self.s.flushInput()
-        self.FLUSH_FLAG = True
         
-        # Move head up        
-        Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+
 
 # PUSH MESSAGE HANDLING
 
