@@ -219,7 +219,7 @@ class LoadingScreen(Screen):
     def get_bounding_box(self):
     
         job_box = job_envelope.BoundingBox()
-        self.gcode_preview_widget = widget_gcode_view.GCodeView()
+        self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
     
         log('> get_non_modal_gcode')
         non_modal_gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, False)

@@ -311,7 +311,7 @@ class HomeScreen(Screen):
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     job_filename = ''
     gcode_has_been_checked_and_its_ok = False
-    non_modal_gcode_list = ListProperty()
+    non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
 
     def __init__(self, **kwargs):
