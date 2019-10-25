@@ -82,11 +82,11 @@ class GCodeView(Widget):
     max_lines_to_read = 2000
 
     def draw_file_in_xy_plane(self, gcode_list):
-        log('len(gcode_list) ' + str(len(gcode_list)))
+        # log('len(gcode_list) ' + str(len(gcode_list)))
         self.gCodePreview.canvas.clear()
-        log('> set_canvas_scale')
+        # log('> set_canvas_scale')
         self.set_canvas_scale(gcode_list)
-        log('< set_canvas_scale')
+        # log('< set_canvas_scale')
 
         last_x, last_y = 0, 0
         target_x, target_y = 0, 0
