@@ -217,8 +217,11 @@ class LoadingScreen(Screen):
         self.home_button.disabled = False
         
     def get_bounding_box(self):
-    
+
         job_box = job_envelope.BoundingBox()
+        
+        # This has to be the same widget that the home screen uses, otherwise
+        # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
     
         log('> get_non_modal_gcode')
@@ -233,5 +236,7 @@ class LoadingScreen(Screen):
         job_box.range_z[1] = self.gcode_preview_widget.max_z
         
         self.sm.get_screen('home').job_box = job_box
+        
+        # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
 
