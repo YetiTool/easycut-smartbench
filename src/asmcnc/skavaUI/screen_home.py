@@ -309,10 +309,9 @@ def log(message):
 class HomeScreen(Screen):
 
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
-#     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
     job_filename = ''
     gcode_has_been_checked_and_its_ok = False
-    
+    non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
 
     def __init__(self, **kwargs):
@@ -376,7 +375,9 @@ class HomeScreen(Screen):
             self.job_box.range_y[0] = 0
             self.job_box.range_y[1] = 0
             self.job_box.range_z[0] = 0
-            self.job_box.range_z[1] = 0      
+            self.job_box.range_z[1] = 0
+            
+            # Hack to clear any previous job files
             try:            
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
@@ -384,30 +385,14 @@ class HomeScreen(Screen):
                 print 'No G-code loaded.'
  
     def preview_job_file(self, dt):
-        
-        # Might leave this here for now - might change if you move datums etc.?      
-        log('> get_non_modal_gcode')
-        gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, True)
 
-        log('< get_non_modal_gcode ' + str(len(gcode_list)))
-
-        ###
-
-        # Draw gcode preview
+        # Draw gcode preview 
         try:
             log ('> draw_file_in_xy_plane')
-            self.gcode_preview_widget.draw_file_in_xy_plane(gcode_list)
+            self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
             log ('< draw_file_in_xy_plane')
         except:
             print 'Unable to draw gcode'
-
-        # TODO tidy this up, possibly make a job class to hold extents extents and the job data
-        self.job_box.range_x[0] = self.gcode_preview_widget.min_x
-        self.job_box.range_x[1] = self.gcode_preview_widget.max_x
-        self.job_box.range_y[0] = self.gcode_preview_widget.min_y
-        self.job_box.range_y[1] = self.gcode_preview_widget.max_y
-        self.job_box.range_z[0] = self.gcode_preview_widget.min_z
-        self.job_box.range_z[1] = self.gcode_preview_widget.max_z
 
         self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
                                      "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
@@ -420,25 +405,3 @@ class HomeScreen(Screen):
                 break
 
         log('DONE')
-        # break
-
-
-# ------------------------------------------------------------------------------------
-# USED IN THREADING SECTION: 
-
-#     def load_gcode_list(self, filename, gcode_mgr_list):
-#         log ('> get_non_modal_gcode thread')
-#         #time.sleep(2)
-#         #for x in range(10000000):
-#         #    x = x + 1
-#             #if x % 10000 == 0:
-#             #    sleep(0.0001)
-#         #log ('counted')
-# 
-#         gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_q_dir + filename)
-# 
-#         for line in gcode_list:
-#             gcode_mgr_list.append(line)
-# 
-#         log ('< get_non_modal_gcode thread ' + str(len(gcode_list)))
-#         return gcode_list

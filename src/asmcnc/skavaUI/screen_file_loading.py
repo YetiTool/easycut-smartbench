@@ -25,7 +25,8 @@ import sys, os
 from datetime import datetime
 import re
 
-from asmcnc.skavaUI import screen_check_job
+from asmcnc.skavaUI import screen_check_job, widget_gcode_view
+from asmcnc.geometry import job_envelope
 
 # from asmcnc.comms import usb_storage
 
@@ -193,10 +194,6 @@ class LoadingScreen(Screen):
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
         self.load_value = 1
-
-#         # Header
-#         preloaded_job_gcode.append("AE")  #append cleaned up gcode to object
-#         preloaded_job_gcode.append("G4 P2")  #append cleaned up gcode to object
         
         # clean up code as it's copied into the object
         for line in job_file:
@@ -207,11 +204,6 @@ class LoadingScreen(Screen):
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
-        
-#         # Footer
-#         preloaded_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-#         preloaded_job_gcode.append("AF")  #append cleaned up gcode to object
-
      
         self.load_value = 2
 
@@ -219,24 +211,32 @@ class LoadingScreen(Screen):
 
         self.job_gcode = preloaded_job_gcode
         self.sm.get_screen('home').job_gcode = self.job_gcode
+        self.get_bounding_box()
         self.job_loading_loaded = '[b]Job Loaded[/b]'
         self.check_button.disabled = False
         self.home_button.disabled = False
         
+    def get_bounding_box(self):
+
+        job_box = job_envelope.BoundingBox()
         
+        # This has to be the same widget that the home screen uses, otherwise
+        # preview does not work
+        self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
+    
+        log('> get_non_modal_gcode')
+        non_modal_gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, False)
+
+        # Get bounding box
+        job_box.range_x[0] = self.gcode_preview_widget.min_x
+        job_box.range_x[1] = self.gcode_preview_widget.max_x
+        job_box.range_y[0] = self.gcode_preview_widget.min_y
+        job_box.range_y[1] = self.gcode_preview_widget.max_y
+        job_box.range_z[0] = self.gcode_preview_widget.min_z
+        job_box.range_z[1] = self.gcode_preview_widget.max_z
         
-# THIS MIGHT STILL BE USEFUL FOR WRITING UP ERROR LOG: 
-#     def write_file_to_JobQ(self, objectifile):
-#         
-#         files_in_q = os.listdir(job_q_dir) # clean Q
-#         if files_in_q:
-#             for file in files_in_q:
-#                 os.remove(job_q_dir+file)
-# 
-#         # write cleaned up g-code to new file
-#         new_file = open(job_q_dir+'LoadedGCode.nc','w')
-#         for line in objectifile:
-#             new_file.write(line)
-#             new_file.write('\n')
-#         new_file.close()
+        self.sm.get_screen('home').job_box = job_box
+        
+        # non_modal_gcode also used for file preview in home screen
+        self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
 

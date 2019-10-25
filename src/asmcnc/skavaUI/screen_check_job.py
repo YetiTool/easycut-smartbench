@@ -252,19 +252,7 @@ class CheckingScreen(Screen):
             self.job_gcode = []        
 
               
-    def boundary_check(self):
-        
-        # get non modal g-code
-        self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, False)
-        
-        # update limits            
-        self.job_box.range_x[0] = self.gcode_preview_widget.min_x
-        self.job_box.range_x[1] = self.gcode_preview_widget.max_x
-        self.job_box.range_y[0] = self.gcode_preview_widget.min_y
-        self.job_box.range_y[1] = self.gcode_preview_widget.max_y
-        self.job_box.range_z[0] = self.gcode_preview_widget.min_z
-        self.job_box.range_z[1] = self.gcode_preview_widget.max_z
-             
+    def boundary_check(self):            
         
         # check limits
         if self.is_job_within_bounds():
