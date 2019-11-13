@@ -13,6 +13,7 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 from __builtin__ import True
+from bCNC.lib.midiparser import TRUE
 
 
 Builder.load_string("""
@@ -48,6 +49,7 @@ Builder.load_string("""
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
+        font_size: '12sp'
         text: root.text
         max_lines: 60
 
@@ -78,46 +80,59 @@ Builder.load_string("""
             spacing: 5
             orientation: "vertical"
             size_hint_x: 0.9
- 
-            TextInput:
-                size_hint_y: 0.1                        
-                id:gCodeInput
-                multiline: False
-                text: ''
-                on_text_validate: root.send_gcode_textinput()
- 
+            
             BoxLayout:
-                padding: 5
-                spacing: 5
+                padding: 0
+                spacing: 2
                 orientation: 'horizontal'
                 size_hint_y: 0.1
  
-                canvas:
-                    Color:
-                        rgba: 0,0,0,0.2
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-                Label:
-                    text: 'Hide'
-                ToggleButton:
-                    state: root.hide_received_ok
-                    text: 'oks'
-                    on_state: root.hide_received_ok = self.state                              
-                ToggleButton:
-                    state: root.hide_received_status
-                    on_state: root.hide_received_status = self.state
-                    text: 'state'
+                TextInput:
+#                     size_hint_y: 0.1                        
+                    id:gCodeInput
+                    multiline: False
+                    text: ''
+                    on_text_validate: root.send_gcode_textinput()
+                
+                Button:
+                    text: "Enter"
+                    on_press: root.send_gcode_textinput()
+#                     size_hint_y:0.1
+                    size_hint_x:0.2
+                    background_color: .6, 1, 0.6, 1
  
+#             BoxLayout:
+#                 padding: 5
+#                 spacing: 5
+#                 orientation: 'horizontal'
+#                 size_hint_y: 0.1
+#  
+#                 canvas:
+#                     Color:
+#                         rgba: 0,0,0,0.2
+#                     Rectangle:
+#                         size: self.size
+#                         pos: self.pos
+#                 Label:
+#                     text: 'Hide'
+#                 ToggleButton:
+#                     state: root.hide_received_ok
+#                     text: 'oks'
+#                     on_state: root.hide_received_ok = self.state                              
+#                 ToggleButton:
+#                     state: root.hide_received_status
+#                     on_state: root.hide_received_status = self.state
+#                     text: 'state'
+#  
             ScrollableLabelCommands:
                 size_hint_y: 0.7                       
                 id: consoleScrollText
             
             BoxLayout:
-                padding: 5
+                padding: 0
                 spacing: 5
                 orientation: 'horizontal'
-                size_hint_y: 0.1
+                size_hint_y: 0.08
  
                 canvas:
                     Color:
@@ -130,8 +145,14 @@ Builder.load_string("""
                     text: 'Status'
                     text_size: self.size
                     halign: 'left'
-                    valign: 'bottom'
+                    valign: 'middle'
                     
+#                 Button:
+#                     size_hint_x: 0.3
+#                     on_press: root.pause_status_toggle()
+#                     on_release: root.unpause_status_updates()
+#                     text: 'hold screen'
+                                        
             ScrollableLabelStatus:
                 size_hint_y: 0.3                  
                 id: consoleStatusText
@@ -142,11 +163,18 @@ Builder.load_string("""
             orientation: "vertical"
             size_hint_x: 0.17
  
-            Button:
-                text: "Enter"
-                on_press: root.send_gcode_textinput()
+#             Button:
+#                 text: "Enter"
+#                 on_press: root.send_gcode_textinput()
+#                 size_hint_y:0.1
+#                 background_color: .6, 1, 0.6, 1
+
+            ToggleButton:
+                state: root.hide_received_ok
+                markup: True
+                text: 'Hide oks'
+                on_state: root.hide_received_ok = self.state               
                 size_hint_y:0.1
-                background_color: .6, 1, 0.6, 1
             Button:
                 text: "Settings"
                 on_press: root.send_gcode_preset("$$")
@@ -186,22 +214,13 @@ Builder.load_string("""
 from kivy.clock import Clock
 
 WIDGET_UPDATE_DELAY = 0.2
-STATUS_UPDATE_DELAY = 0.3
-
-STATUS_PAUSE = False
+STATUS_UPDATE_DELAY = 0.1
 
 class ScrollableLabelCommands(ScrollView):
     text = StringProperty('')
     
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
-    
-    def on_scroll_move(self, *kwargs):
-        STATUS_PAUSE = True
-        Clock.schedule_once(self.unpause_status_update, 3)
-        
-    def unpause_status_update(self, dt):
-        STATUS_PAUSE = False
 
 class GCodeMonitor(Widget):
 
@@ -210,6 +229,7 @@ class GCodeMonitor(Widget):
     monitor_text_buffer = 'Welcome to the GCode console...\n'
     status_report_buffer = 'Welcome to the GCode console...\n'
 
+    STATUS_PAUSE = False
     
     def __init__(self, **kwargs):
     
@@ -223,7 +243,7 @@ class GCodeMonitor(Widget):
         
         # Don't update if content is to be hidden
         if content.startswith('<') and self.hide_received_status == 'down':
-            self.status_report_buffer += '\n' + content
+            self.status_report_buffer += '\n' + content 
             return
         if content == 'ok' and self.hide_received_ok == 'down': return
         
@@ -239,13 +259,12 @@ class GCodeMonitor(Widget):
         
     def update_status_text(self, dt):
         
-        if STATUS_PAUSE == False: self.consoleStatusText.text = self.status_report_buffer
+        if not self.STATUS_PAUSE: self.consoleStatusText.text = self.status_report_buffer
         
     def send_gcode_textinput(self): 
         
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
     
-
     def send_gcode_preset(self, input):
         
         self.m.send_any_gcode_command(input)
@@ -261,5 +280,16 @@ class GCodeMonitor(Widget):
         
         self.monitor_text_buffer = ""
 
+#     def pause_status_toggle(self):
+#         if self.STATUS_PAUSE == False:
+#             self.STATUS_PAUSE = True
+#         else: 
+#             self.STATUS_PAUSE = False
+#         
+#     def unpause_status_updates(self):
+#         Clock.schedule_once(lambda dt: self.pause_status_toggle(),1.5)
+
+        
+        
 
  
