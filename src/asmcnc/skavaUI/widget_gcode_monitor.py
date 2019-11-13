@@ -34,7 +34,7 @@ Builder.load_string("""
         max_lines: 60
         
 <ScrollableLabelStatus>:
-    scroll_y:0
+    scroll_y:1
 
     canvas.before:
         Color:
@@ -49,7 +49,7 @@ Builder.load_string("""
         text_size: self.width, None
         font_size: '12sp'
         text: root.text
-        max_lines: 60
+        max_lines: 3
 
 <GCodeMonitor>
     
@@ -57,162 +57,214 @@ Builder.load_string("""
     consoleStatusText:consoleStatusText
     gCodeInput:gCodeInput
     
-    BoxLayout:
-    
+    BoxLayout: 
         size: self.parent.size
-        pos: self.parent.pos      
+        pos: self.parent.pos
+        orientation: "vertical"
         padding: 5
         spacing: 5
-        orientation: "horizontal" 
+        
         canvas:
             Color:
                 rgba: 0,0,0,0.2
             Rectangle:
                 size: self.size
-                pos: self.pos
+                pos: self.pos            
 
-
+        BoxLayout:
+        
+            size: self.parent.size
+            pos: self.parent.pos      
+#            padding_horizontal: 5
+            spacing: 5
+            orientation: "horizontal" 
+#             canvas:
+#                 Color:
+#                     rgba: 0,0,0,0.2
+#                 Rectangle:
+#                     size: self.size
+#                     pos: self.pos
+    
+    
+            
+            BoxLayout:
+                padding_horizontal: 5
+                spacing: 5
+                orientation: "vertical"
+                size_hint_x: 0.9
+                
+                BoxLayout:
+                    padding: 0
+                    spacing: 2
+                    orientation: 'horizontal'
+                    size_hint_y: 0.1
+     
+                    TextInput:
+    #                     size_hint_y: 0.1                        
+                        id:gCodeInput
+                        multiline: False
+                        text: ''
+                        on_text_validate: root.send_gcode_textinput()
+                    
+                    Button:
+                        text: "Enter"
+                        on_press: root.send_gcode_textinput()
+    #                     size_hint_y:0.1
+                        size_hint_x:0.2
+                        background_color: .6, 1, 0.6, 1
+     
+    #             BoxLayout:
+    #                 padding: 5
+    #                 spacing: 5
+    #                 orientation: 'horizontal'
+    #                 size_hint_y: 0.1
+    #  
+    #                 canvas:
+    #                     Color:
+    #                         rgba: 0,0,0,0.2
+    #                     Rectangle:
+    #                         size: self.size
+    #                         pos: self.pos
+    #                 Label:
+    #                     text: 'Hide'
+    #                 ToggleButton:
+    #                     state: root.hide_received_ok
+    #                     text: 'oks'
+    #                     on_state: root.hide_received_ok = self.state                              
+    #                 ToggleButton:
+    #                     state: root.hide_received_status
+    #                     on_state: root.hide_received_status = self.state
+    #                     text: 'state'
+    #  
+                ScrollableLabelCommands:
+                    size_hint_y: 0.8                     
+                    id: consoleScrollText
+                
+#                 BoxLayout:
+#                     padding: 0
+#                     spacing: 5
+#                     orientation: 'horizontal'
+#                     size_hint_y: 0.08
+#      
+#                     canvas:
+#                         Color:
+#                             rgba: 0,0,0,0.2
+#                         Rectangle:
+#                             size: self.size
+#                             pos: self.pos
+#                 
+#                     Label:
+#                         text: 'Status'
+#                         text_size: self.size
+#                         halign: 'left'
+#                         valign: 'middle'
+                        
+    #                 Button:
+    #                     size_hint_x: 0.3
+    #                     on_press: root.pause_status_toggle()
+    #                     on_release: root.unpause_status_updates()
+    #                     text: 'hold screen'
+                                            
+    #             ScrollableLabelStatus:
+    #                 size_hint_y: 0.3                  
+    #                 id: consoleStatusText
+    #  
+            BoxLayout:
+                padding_horizontal: 5
+                spacing: 5
+                orientation: "vertical"
+                size_hint_x: 0.17
+     
+    #             Button:
+    #                 text: "Enter"
+    #                 on_press: root.send_gcode_textinput()
+    #                 size_hint_y:0.1
+    #                 background_color: .6, 1, 0.6, 1
+    
+                ToggleButton:
+                    state: root.hide_received_ok
+                    markup: True
+                    text: 'Hide oks'
+                    on_state: root.hide_received_ok = self.state               
+                    size_hint_y:0.1
+                Button:
+                    text: "Settings"
+                    on_press: root.send_gcode_preset("$$")
+                    size_hint_y:0.1
+                Button:
+                    text: "Params"
+                    on_press: root.send_gcode_preset("$#")
+                    size_hint_y:0.1
+                Button:
+                    text: "State"
+                    on_press: root.send_gcode_preset("$G")
+                    size_hint_y:0.1
+                Button:
+                    text: "Build"
+                    size_hint_y:0.1
+                    on_press: root.send_gcode_preset("$I")
+                Button:
+                    text: "StartUp"
+                    on_press: root.send_gcode_preset("$N")
+                    size_hint_y:0.1
+                Button:
+                    text: "Check $C"
+                    on_press: root.toggle_check_mode()
+                    size_hint_y:0.1
+                Button:
+                    text: "Help"
+                    on_press: root.send_gcode_preset("$")
+                    size_hint_y:0.1
+                Button:
+                    text: "Clear"
+                    on_press: root.clear_monitor()
+                    size_hint_y:0.1
+                    background_color: 1, .8, 0, 1
         
         BoxLayout:
-            padding: 0
-            spacing: 5
-            orientation: "vertical"
-            size_hint_x: 0.9
+            padding: 5
+            spacing: 0
+            orientation: 'horizontal'
+            size_hint_y: 0.09
             
-            BoxLayout:
-                padding: 0
-                spacing: 2
-                orientation: 'horizontal'
-                size_hint_y: 0.1
- 
-                TextInput:
-#                     size_hint_y: 0.1                        
-                    id:gCodeInput
-                    multiline: False
-                    text: ''
-                    on_text_validate: root.send_gcode_textinput()
-                
-                Button:
-                    text: "Enter"
-                    on_press: root.send_gcode_textinput()
-#                     size_hint_y:0.1
-                    size_hint_x:0.2
-                    background_color: .6, 1, 0.6, 1
- 
-#             BoxLayout:
-#                 padding: 5
-#                 spacing: 5
-#                 orientation: 'horizontal'
-#                 size_hint_y: 0.1
-#  
-#                 canvas:
-#                     Color:
-#                         rgba: 0,0,0,0.2
-#                     Rectangle:
-#                         size: self.size
-#                         pos: self.pos
-#                 Label:
-#                     text: 'Hide'
-#                 ToggleButton:
-#                     state: root.hide_received_ok
-#                     text: 'oks'
-#                     on_state: root.hide_received_ok = self.state                              
-#                 ToggleButton:
-#                     state: root.hide_received_status
-#                     on_state: root.hide_received_status = self.state
-#                     text: 'state'
-#  
-            ScrollableLabelCommands:
-                size_hint_y: 0.7                       
-                id: consoleScrollText
-            
-            BoxLayout:
-                padding: 0
-                spacing: 5
-                orientation: 'horizontal'
-                size_hint_y: 0.08
- 
-                canvas:
-                    Color:
-                        rgba: 0,0,0,0.2
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-            
-                Label:
-                    text: 'Status'
-                    text_size: self.size
-                    halign: 'left'
-                    valign: 'middle'
+            canvas:
+                Color:
+                    rgba: 0,0,0,0.2
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
                     
-#                 Button:
-#                     size_hint_x: 0.3
-#                     on_press: root.pause_status_toggle()
-#                     on_release: root.unpause_status_updates()
-#                     text: 'hold screen'
-                                        
-            ScrollableLabelStatus:
-                size_hint_y: 0.3                  
-                id: consoleStatusText
- 
-        BoxLayout:
-            padding: 0
-            spacing: 5
-            orientation: "vertical"
-            size_hint_x: 0.17
- 
-#             Button:
-#                 text: "Enter"
-#                 on_press: root.send_gcode_textinput()
-#                 size_hint_y:0.1
-#                 background_color: .6, 1, 0.6, 1
-
-            ToggleButton:
-                state: root.hide_received_ok
-                markup: True
-                text: 'Hide oks'
-                on_state: root.hide_received_ok = self.state               
-                size_hint_y:0.1
-            Button:
-                text: "Settings"
-                on_press: root.send_gcode_preset("$$")
-                size_hint_y:0.1
-            Button:
-                text: "Params"
-                on_press: root.send_gcode_preset("$#")
-                size_hint_y:0.1
-            Button:
-                text: "State"
-                on_press: root.send_gcode_preset("$G")
-                size_hint_y:0.1
-            Button:
-                text: "Build"
-                size_hint_y:0.1
-                on_press: root.send_gcode_preset("$I")
-            Button:
-                text: "StartUp"
-                on_press: root.send_gcode_preset("$N")
-                size_hint_y:0.1
-            Button:
-                text: "Check $C"
-                on_press: root.toggle_check_mode()
-                size_hint_y:0.1
-            Button:
-                text: "Help"
-                on_press: root.send_gcode_preset("$")
-                size_hint_y:0.1
-            Button:
-                text: "Clear"
-                on_press: root.clear_monitor()
-                size_hint_y:0.1
-                background_color: 1, .8, 0, 1                        
+                      
+            Label:
+                text: 'Status'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                    
+#         BoxLayout:
+#             padding_horizontal: 5
+#             spacing: 0
+#             orientation: 'horizontal'
+#             size_hint_y: 0.2
+#             
+#             canvas:
+#                 Color:
+#                     rgba: 0,0,0,0.2
+#                 Rectangle:
+#                     size: self.size
+#                     pos: self.pos
+    
+        ScrollableLabelStatus:
+            size_hint_y: 0.2        
+            id: consoleStatusText
+               
          
 """)
 
 from kivy.clock import Clock
 
 WIDGET_UPDATE_DELAY = 0.2
-STATUS_UPDATE_DELAY = 0.1
+STATUS_UPDATE_DELAY = 0.4
 
 class ScrollableLabelCommands(ScrollView):
     text = StringProperty('')
