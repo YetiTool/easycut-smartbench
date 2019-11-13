@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
+from __builtin__ import True
 
 
 Builder.load_string("""
@@ -187,12 +188,20 @@ from kivy.clock import Clock
 WIDGET_UPDATE_DELAY = 0.2
 STATUS_UPDATE_DELAY = 0.3
 
+STATUS_PAUSE = False
+
 class ScrollableLabelCommands(ScrollView):
     text = StringProperty('')
     
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
     
+    def on_scroll_move(self, *kwargs):
+        STATUS_PAUSE = True
+        Clock.schedule_once(self.unpause_status_update, 3)
+        
+    def unpause_status_update(self, dt):
+        STATUS_PAUSE = False
 
 class GCodeMonitor(Widget):
 
@@ -213,8 +222,8 @@ class GCodeMonitor(Widget):
     def update_monitor_text_buffer(self, input_or_output, content):
         
         # Don't update if content is to be hidden
-        if content.startswith('<') and self.hide_received_status == 'down': 
-            self.status_report_buffer += content + '\n'
+        if content.startswith('<') and self.hide_received_status == 'down':
+            self.status_report_buffer += '\n' + content
             return
         if content == 'ok' and self.hide_received_ok == 'down': return
         
@@ -230,7 +239,7 @@ class GCodeMonitor(Widget):
         
     def update_status_text(self, dt):
         
-        self.consoleStatusText.text = self.status_report_buffer
+        if STATUS_PAUSE == False: self.consoleStatusText.text = self.status_report_buffer
         
     def send_gcode_textinput(self): 
         
