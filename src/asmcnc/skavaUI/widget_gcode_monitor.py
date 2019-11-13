@@ -16,7 +16,24 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @U
 
 Builder.load_string("""
 
-<ScrollableLabel>:
+<ScrollableLabelCommands>:
+    scroll_y:0
+
+    canvas.before:
+        Color:
+            rgba: 0,0,0,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    
+    Label:
+        size_hint_y: None
+        height: self.texture_size[1]
+        text_size: self.width, None
+        text: root.text
+        max_lines: 60
+        
+<ScrollableLabelStatus>:
     scroll_y:0
 
     canvas.before:
@@ -36,6 +53,7 @@ Builder.load_string("""
 <GCodeMonitor>
     
     consoleScrollText:consoleScrollText
+    consoleStatusText:consoleStatusText
     gCodeInput:gCodeInput
     
     BoxLayout:
@@ -90,15 +108,38 @@ Builder.load_string("""
                     on_state: root.hide_received_status = self.state
                     text: 'state'
  
-            ScrollableLabel:
-                size_hint_y: 0.9                       
+            ScrollableLabelCommands:
+                size_hint_y: 0.7                       
                 id: consoleScrollText
+            
+            BoxLayout:
+                padding: 5
+                spacing: 5
+                orientation: 'horizontal'
+                size_hint_y: 0.1
+ 
+                canvas:
+                    Color:
+                        rgba: 0,0,0,0.2
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            
+                Label:
+                    text: 'Status'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'bottom'
+                    
+            ScrollableLabelStatus:
+                size_hint_y: 0.3                  
+                id: consoleStatusText
  
         BoxLayout:
             padding: 0
             spacing: 5
             orientation: "vertical"
-            size_hint_x: 0.15
+            size_hint_x: 0.17
  
             Button:
                 text: "Enter"
@@ -144,9 +185,12 @@ Builder.load_string("""
 from kivy.clock import Clock
 
 WIDGET_UPDATE_DELAY = 0.2
+STATUS_UPDATE_DELAY = 0.3
 
-class ScrollableLabel(ScrollView):
-
+class ScrollableLabelCommands(ScrollView):
+    text = StringProperty('')
+    
+class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
     
 
@@ -155,6 +199,7 @@ class GCodeMonitor(Widget):
     hide_received_ok = StringProperty('down')
     hide_received_status = StringProperty('down')
     monitor_text_buffer = 'Welcome to the GCode console...\n'
+    status_report_buffer = 'Welcome to the GCode console...\n'
 
     
     def __init__(self, **kwargs):
@@ -163,12 +208,14 @@ class GCodeMonitor(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)      # Poll for status
-    
+        Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status    
     
     def update_monitor_text_buffer(self, input_or_output, content):
         
         # Don't update if content is to be hidden
-        if content.startswith('<') and self.hide_received_status == 'down': return
+        if content.startswith('<') and self.hide_received_status == 'down': 
+            self.status_report_buffer += content + '\n'
+            return
         if content == 'ok' and self.hide_received_ok == 'down': return
         
         # Update buffer with content
@@ -180,8 +227,11 @@ class GCodeMonitor(Widget):
     def update_display_text(self, dt):   
         
         self.consoleScrollText.text = self.monitor_text_buffer
-    
-
+        
+    def update_status_text(self, dt):
+        
+        self.consoleStatusText.text = self.status_report_buffer
+        
     def send_gcode_textinput(self): 
         
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
