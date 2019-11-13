@@ -12,8 +12,6 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
-from __builtin__ import True
-from bCNC.lib.midiparser import TRUE
 
 
 Builder.load_string("""
