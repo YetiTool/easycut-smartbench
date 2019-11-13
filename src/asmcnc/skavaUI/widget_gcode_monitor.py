@@ -71,21 +71,11 @@ Builder.load_string("""
                 size: self.size
                 pos: self.pos            
 
-        BoxLayout:
-        
+        BoxLayout:      
             size: self.parent.size
             pos: self.parent.pos      
-#            padding_horizontal: 5
             spacing: 5
-            orientation: "horizontal" 
-#             canvas:
-#                 Color:
-#                     rgba: 0,0,0,0.2
-#                 Rectangle:
-#                     size: self.size
-#                     pos: self.pos
-    
-    
+            orientation: "horizontal"    
             
             BoxLayout:
                 padding_horizontal: 5
@@ -99,8 +89,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     size_hint_y: 0.1
      
-                    TextInput:
-    #                     size_hint_y: 0.1                        
+                    TextInput:                      
                         id:gCodeInput
                         multiline: False
                         text: ''
@@ -109,78 +98,19 @@ Builder.load_string("""
                     Button:
                         text: "Enter"
                         on_press: root.send_gcode_textinput()
-    #                     size_hint_y:0.1
                         size_hint_x:0.2
                         background_color: .6, 1, 0.6, 1
-     
-    #             BoxLayout:
-    #                 padding: 5
-    #                 spacing: 5
-    #                 orientation: 'horizontal'
-    #                 size_hint_y: 0.1
-    #  
-    #                 canvas:
-    #                     Color:
-    #                         rgba: 0,0,0,0.2
-    #                     Rectangle:
-    #                         size: self.size
-    #                         pos: self.pos
-    #                 Label:
-    #                     text: 'Hide'
-    #                 ToggleButton:
-    #                     state: root.hide_received_ok
-    #                     text: 'oks'
-    #                     on_state: root.hide_received_ok = self.state                              
-    #                 ToggleButton:
-    #                     state: root.hide_received_status
-    #                     on_state: root.hide_received_status = self.state
-    #                     text: 'state'
-    #  
+      
                 ScrollableLabelCommands:
                     size_hint_y: 0.8                     
                     id: consoleScrollText
-                
-#                 BoxLayout:
-#                     padding: 0
-#                     spacing: 5
-#                     orientation: 'horizontal'
-#                     size_hint_y: 0.08
-#      
-#                     canvas:
-#                         Color:
-#                             rgba: 0,0,0,0.2
-#                         Rectangle:
-#                             size: self.size
-#                             pos: self.pos
-#                 
-#                     Label:
-#                         text: 'Status'
-#                         text_size: self.size
-#                         halign: 'left'
-#                         valign: 'middle'
-                        
-    #                 Button:
-    #                     size_hint_x: 0.3
-    #                     on_press: root.pause_status_toggle()
-    #                     on_release: root.unpause_status_updates()
-    #                     text: 'hold screen'
-                                            
-    #             ScrollableLabelStatus:
-    #                 size_hint_y: 0.3                  
-    #                 id: consoleStatusText
-    #  
+                                         
             BoxLayout:
                 padding_horizontal: 5
                 spacing: 5
                 orientation: "vertical"
                 size_hint_x: 0.17
-     
-    #             Button:
-    #                 text: "Enter"
-    #                 on_press: root.send_gcode_textinput()
-    #                 size_hint_y:0.1
-    #                 background_color: .6, 1, 0.6, 1
-    
+        
                 ToggleButton:
                     state: root.hide_received_ok
                     markup: True
@@ -241,18 +171,6 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'middle'
                     
-#         BoxLayout:
-#             padding_horizontal: 5
-#             spacing: 0
-#             orientation: 'horizontal'
-#             size_hint_y: 0.2
-#             
-#             canvas:
-#                 Color:
-#                     rgba: 0,0,0,0.2
-#                 Rectangle:
-#                     size: self.size
-#                     pos: self.pos
     
         ScrollableLabelStatus:
             size_hint_y: 0.2        
