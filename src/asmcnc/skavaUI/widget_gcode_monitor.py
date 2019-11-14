@@ -194,11 +194,9 @@ class GCodeMonitor(Widget):
 
     hide_received_ok = StringProperty('down')
     hide_received_status = StringProperty('down')
-    monitor_text_buffer = 'Welcome to the GCode console...\n'
-    status_report_buffer = 'Welcome to the GCode console...\n'
+    monitor_text_buffer = ['Welcome to the GCode console...']
+    status_report_buffer = ['Welcome to the GCode console...']
 
-    STATUS_PAUSE = False
-    
     def __init__(self, **kwargs):
     
         super(GCodeMonitor, self).__init__(**kwargs)
@@ -211,23 +209,27 @@ class GCodeMonitor(Widget):
         
         # Don't update if content is to be hidden
         if content.startswith('<') and self.hide_received_status == 'down':
-            self.status_report_buffer += '\n' + content 
+            self.status_report_buffer.append(content)
             return
         if content == 'ok' and self.hide_received_ok == 'down': return
         
         # Update buffer with content
-        if input_or_output == 'snd': self.monitor_text_buffer += '> ' + content + '\n'
-        if input_or_output == 'rec': self.monitor_text_buffer += content + '\n'
-        if input_or_output == 'debug': self.monitor_text_buffer += content + '\n'
+        if input_or_output == 'snd': self.monitor_text_buffer.append( '> ' + content)
+        if input_or_output == 'rec': self.monitor_text_buffer.append(content)
+        if input_or_output == 'debug': self.monitor_text_buffer.append(content)
             
     
     def update_display_text(self, dt):   
         
-        self.consoleScrollText.text = self.monitor_text_buffer
+        self.consoleScrollText.text = '\n'.join(self.monitor_text_buffer)
+        if len(self.monitor_text_buffer) > 61:
+            del self.monitor_text_buffer[0:len(self.monitor_text_buffer)-60]
         
     def update_status_text(self, dt):
         
-        if not self.STATUS_PAUSE: self.consoleStatusText.text = self.status_report_buffer
+        self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
+        if len(self.status_report_buffer) > 4:
+            del self.status_report_buffer[0:len(self.status_report_buffer)-3]
         
     def send_gcode_textinput(self): 
         
