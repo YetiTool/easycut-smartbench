@@ -227,6 +227,9 @@ class GCodeMonitor(Widget):
         
     def update_status_text(self, dt):
         
+        if self.m.state == 'Alarm' and not 'Alarm' in self.status_report_buffer:
+            self.status_report_buffer.append('Please reset for status update')
+        
         self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
         if len(self.status_report_buffer) > 4:
             del self.status_report_buffer[0:len(self.status_report_buffer)-3]
