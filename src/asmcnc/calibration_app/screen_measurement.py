@@ -195,6 +195,7 @@ class MeasurementScreenClass(Screen):
             self.next_screen()
         
     def next_screen(self):
-        backlash_screen = screen_backlash.BacklashScreenClass(name = 'backlash', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(backlash_screen)
+        if not self.sm.has_screen('backlash'):
+            backlash_screen = screen_backlash.BacklashScreenClass(name = 'backlash', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(backlash_screen)
         self.sm.current = 'backlash'

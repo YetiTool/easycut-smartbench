@@ -35,14 +35,13 @@ Builder.load_string("""
         
             Button:
                 size_hint_y:0.9
-                id: getout_button
                 size: self.texture_size
                 valign: 'top'
                 halign: 'center'
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.repeat_section()
                     
                 BoxLayout:
                     padding: 5
@@ -56,7 +55,6 @@ Builder.load_string("""
 
             Button:
                 size_hint_y:0.9
-                id: getout_button
                 size: self.texture_size
                 valign: 'top'
                 halign: 'center'
@@ -77,7 +75,6 @@ Builder.load_string("""
                         
             Button:
                 size_hint_y:0.9
-                id: getout_button
                 size: self.texture_size
                 valign: 'top'
                 halign: 'center'
@@ -184,13 +181,18 @@ class PrepCalibrationScreenClass(Screen):
         self.sm.current = 'lobby'
         
     def skip_section(self):
-        measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(measurement_screen)
+        if not self.sm.has_screen('measurement'):
+            measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(measurement_screen)
         self.sm.current = 'measurement'       
-        
+    
+    def repeat_section(self):
+        self.sm.current = 'calibration_landing'
+    
     def next_screen(self):
-        measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(measurement_screen)
+        if not self.sm.has_screen('measurement'):
+            measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(measurement_screen)
 #         self.sm.current = 'measurement'
 
         self.sm.get_screen('homing').current_app = 'calibration'
