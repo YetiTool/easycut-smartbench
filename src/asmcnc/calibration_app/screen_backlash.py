@@ -241,7 +241,11 @@ class BacklashScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_enter(self):
+        self.refresh_screen()
+        
+    def refresh_screen(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
+        self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
         self.nudge01_button.opacity = 1
@@ -264,7 +268,7 @@ class BacklashScreenClass(Screen):
     def test(self):
         self.m.jog_relative('X', self.backlash_move_distance, 9999)
         self.m.jog_relative('X', -1*self.backlash_move_distance, 9999)
-            
+
     def nudge_01(self):
         self.m.jog_relative('X',0.1,9999)
         self.nudge_counter += 0.1
@@ -300,7 +304,10 @@ class BacklashScreenClass(Screen):
             self.next_screen()
 
     def repeat_section(self):
-        self.sm.current = 'measurement'
+        if self.sub_screen_count == 0:
+            self.sm.current = 'measurement'
+        else:
+            self.refresh_screen()
 
     def skip_section(self):
         self.next_screen()
