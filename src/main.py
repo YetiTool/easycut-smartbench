@@ -50,6 +50,8 @@ from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 
+from asmcnc.calibration_app import screen_landing
+
 Cmport = 'COM3'
 
 class SkavaUI(App):
@@ -87,6 +89,8 @@ class SkavaUI(App):
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
         developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m)
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
+        
+        calibration_landing_screen = screen_landing.CalibrationLandingScreenClass(name = 'calibration_landing', screen_manager = sm, machine = m)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -110,9 +114,11 @@ class SkavaUI(App):
         sm.add_widget(job_done_screen)
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
+        
+        sm.add_widget(calibration_landing_screen)
         # set screen to start on
 
-        sm.current = 'safety'
+        sm.current = 'calibration_landing'
         return sm
 
 

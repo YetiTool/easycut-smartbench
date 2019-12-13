@@ -99,6 +99,8 @@ class HomingScreen(Screen):
     homing_label = ObjectProperty()
     poll_for_success = None
     
+    current_app = StringProperty()
+    
     def __init__(self, **kwargs):
     
         super(HomingScreen, self).__init__(**kwargs)
@@ -193,7 +195,18 @@ class HomingScreen(Screen):
 
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
+            self.return_to_app()
+            
+    def return_to_app(self):
+        
+        if self.current_app == 'easycut':
             self.sm.current = 'home'
+            
+        elif self.current_app == 'calibration':
+            if self.quit_home == True: 
+                self.sm.current = 'prep'
+            else:
+                self.sm.current = 'measurement'
 
     def cancel_homing(self):
 
@@ -201,7 +214,7 @@ class HomingScreen(Screen):
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
 
         if self.quit_home == True:
-            self.sm.current = 'home'
+            self.return_to_app()
             
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
