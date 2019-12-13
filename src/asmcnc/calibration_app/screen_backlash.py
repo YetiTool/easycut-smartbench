@@ -42,7 +42,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.repeat_section()
                     
                 BoxLayout:
                     padding: 5
@@ -112,7 +112,7 @@ Builder.load_string("""
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
-                    text: '[color=000000]x backlash:[/color]'
+                    text: '[color=000000]  X backlash:[/color]'
                     markup: True
 
                 ScrollView:
@@ -125,6 +125,54 @@ Builder.load_string("""
                     RstDocument:
                         text: root.user_instructions
                         background_color: hex('#FFFFFF')
+                        
+                BoxLayout: 
+                    orientation: 'horizontal' 
+                    padding: 30
+                    spacing: 10
+                    
+                    Button:
+                        size_hint_y:0.9
+                        id: getout_button
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        # background_color: hex('#a80000FF')
+                        on_release: 
+                            root.nudge_01()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                #size_hint_y: 1
+                                font_size: '20sp'
+                                text: 'Nudge 0.1 mm'
+
+                    Button:
+                        size_hint_y:0.9
+                        id: getout_button
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        # background_color: hex('#a80000FF')
+                        on_release: 
+                            root.nudge_002()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                #size_hint_y: 1
+                                font_size: '20sp'
+                                text: 'Nudge 0.02 mm'
+
 
             BoxLayout:
                 orientation: 'vertical'
@@ -135,9 +183,9 @@ Builder.load_string("""
                 Label:
                     text_size: self.size
                     font_size: '18sp'
-                    halign: 'left'
+                    halign: 'center'
                     valign: 'middle'
-#                    text: '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
+                    text: '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\\n \\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
                     markup: True
                     
                 BoxLayout:
@@ -151,7 +199,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         on_release: 
-                            root.next_screen()
+                            root.test()
                             
                         BoxLayout:
                             padding: 5
@@ -161,7 +209,7 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Home'
+                                text: 'Test'
                         
             
 """)
@@ -173,6 +221,7 @@ class BacklashScreenClass(Screen):
                         'Do not allow the tape measure to bend. \n\n\n' \
                         'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
 
+    backlash_move_distance = 50
     
     def __init__(self, **kwargs):
         super(BacklashScreenClass, self).__init__(**kwargs)
@@ -182,9 +231,25 @@ class BacklashScreenClass(Screen):
     def on_enter(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
 
+
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
+    
+    def test(self):
+        self.m.jog_relative('X', self.backlash_move_distance, 9999)
+        self.m.jog_relative('X', -1*self.backlash_move_distance, 9999)
+            
+    def nudge_01(self):
+        self.m.jog_relative('X',0.1,9999)
+#         pass
         
+    def nudge_002(self):
+        self.m.jog_relative('X',0.02,9999)
+#         pass
+    
+    def repeat_section(self):
+        self.sm.current = 'measurement'
+
     def skip_section(self):
 #         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
 #         self.sm.add_widget(measurement_screen)
