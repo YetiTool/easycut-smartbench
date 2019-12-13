@@ -1,21 +1,19 @@
 '''
 Created on 12 December 2019
-Landing Screen for the Calibration App
+Screen to inform user of essential preparation before they continue calibrating
 
 @author: Letty
 '''
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-from asmcnc.calibration_app import screen_backlash
+# from asmcnc.calibration_app import screen_measurement
 
 Builder.load_string("""
 
-<MeasurementScreenClass>:
-    image_select:image_select
+<BacklashScreenClass>:
 
     canvas:
         Color: 
@@ -44,7 +42,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.repeat_section()
+                    root.skip_to_lobby()
                     
                 BoxLayout:
                     padding: 5
@@ -65,7 +63,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.next_screen()
+                    root.skip_section()
                     
                 BoxLayout:
                     padding: 5
@@ -101,25 +99,32 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             spacing: 20
+            padding: 10
 
             BoxLayout:
                 orientation: 'vertical'
-                # spacing: 10
+                spacing: 0
                 size_hint_x: 1.3
                  
                 Label:
-                    size_hint_y: 0.5
+                    size_hint_y: 0.3
                     font_size: '35sp'
-                    text: '[color=000000]X Measurement[/color]'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+                    text: '[color=000000]x backlash:[/color]'
                     markup: True
 
-                Image:
-                    id: image_select
-                    source: "./asmcnc/skavaUI/img/x_measurement_1.PNG"
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                ScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    scroll_type: ['content']
+                    
+                    RstDocument:
+                        text: root.user_instructions
+                        background_color: hex('#FFFFFF')
 
             BoxLayout:
                 orientation: 'vertical'
@@ -128,12 +133,11 @@ Builder.load_string("""
                 size_hint_x: 0.6
 
                 Label:
-                    id: instruction
                     text_size: self.size
                     font_size: '18sp'
                     halign: 'left'
                     valign: 'middle'
-                    text: root.instruction
+#                    text: '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
                     markup: True
                     
                 BoxLayout:
@@ -147,7 +151,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         on_release: 
-                            root.next_instruction()
+                            root.next_screen()
                             
                         BoxLayout:
                             padding: 5
@@ -157,44 +161,40 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Next'
+                                text: 'Home'
                         
             
 """)
 
-class MeasurementScreenClass(Screen):
-    
-    instruction = StringProperty()
-    image_select = ObjectProperty()
-    go_to_next_screen = False
+class BacklashScreenClass(Screen):
+
+    user_instructions = 'Push the tape measure up against the guard post,' \
+                        ' and take a measurement against the end plate. \n\n' \
+                        'Do not allow the tape measure to bend. \n\n\n' \
+                        'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
+
     
     def __init__(self, **kwargs):
-        super(MeasurementScreenClass, self).__init__(**kwargs)
+        super(BacklashScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-        self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
-        
+    def on_enter(self):
+        self.m.jog_absolute_single_axis('X',-1184,9999)
+
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
         
-    def repeat_section(self):
-        if self.go_to_next_screen == True:
-            self.go_to_next_screen = False
-            self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
-            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_1.PNG"
-        else: 
-            self.sm.current = 'prep'
-          
-    def next_instruction(self):
-        if self.go_to_next_screen == False:
-            self.instruction = '[color=000000]Use the home end end plate as an edge to measure against.[/color]'
-            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_2.PNG"
-            self.go_to_next_screen = True
-        else: 
-            self.next_screen()
+    def skip_section(self):
+#         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
+#         self.sm.add_widget(measurement_screen)
+#         self.sm.current = 'measurement'
+        pass
         
     def next_screen(self):
-        backlash_screen = screen_backlash.BacklashScreenClass(name = 'backlash', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(backlash_screen)
-        self.sm.current = 'backlash'
+#         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
+#         self.sm.add_widget(measurement_screen)
+#         self.sm.current = 'measurement'
+        pass
+
+
