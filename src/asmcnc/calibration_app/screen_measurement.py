@@ -7,6 +7,7 @@ Landing Screen for the Calibration App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
 # from asmcnc.calibration_app import screen_measurement
@@ -14,6 +15,7 @@ from kivy.uix.widget import Widget
 Builder.load_string("""
 
 <MeasurementScreenClass>:
+    image_select:image_select
 
     canvas:
         Color: 
@@ -42,7 +44,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.repeat_section()
                     
                 BoxLayout:
                     padding: 5
@@ -63,7 +65,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.next_screen()
                     
                 BoxLayout:
                     padding: 5
@@ -118,6 +120,7 @@ Builder.load_string("""
                     center_y: self.parent.center_y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
+
             BoxLayout:
                 orientation: 'vertical'
                 # spacing: 10
@@ -125,11 +128,12 @@ Builder.load_string("""
                 size_hint_x: 0.6
 
                 Label:
+                    id: instruction
                     text_size: self.size
                     font_size: '18sp'
                     halign: 'left'
                     valign: 'middle'
-                    text: '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
+                    text: root.instruction
                     markup: True
                     
                 BoxLayout:
@@ -143,7 +147,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         on_release: 
-                            root.next_screen()
+                            root.next_instruction()
                             
                         BoxLayout:
                             padding: 5
@@ -160,13 +164,35 @@ Builder.load_string("""
 
 class MeasurementScreenClass(Screen):
     
+    instruction = StringProperty()
+    image_select = ObjectProperty()
+    go_to_next_screen = False
+    
     def __init__(self, **kwargs):
         super(MeasurementScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+        self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
+        
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
+        
+    def repeat_section(self):
+        if self.go_to_next_screen == True:
+            self.go_to_next_screen = False
+            self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
+            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_1.PNG"
+        else: 
+            self.sm.current = 'prep'
+          
+    def next_instruction(self):
+        if self.go_to_next_screen == False:
+            self.instruction = '[color=000000]Use the home end end plate as an edge to measure against.[/color]'
+            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_2.PNG"
+            self.go_to_next_screen = True
+        else: 
+            self.next_screen()
         
     def next_screen(self):
 #         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = sm, machine = m)

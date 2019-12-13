@@ -63,7 +63,7 @@ Builder.load_string("""
                 disabled: False
                 # background_color: hex('#a80000FF')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.skip_section()
                     
                 BoxLayout:
                     padding: 5
@@ -182,6 +182,11 @@ class PrepCalibrationScreenClass(Screen):
 
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
+        
+    def skip_section(self):
+        measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(measurement_screen)
+        self.sm.current = 'measurement'       
         
     def next_screen(self):
         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
