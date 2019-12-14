@@ -195,6 +195,6 @@ class PrepCalibrationScreenClass(Screen):
             self.sm.add_widget(measurement_screen)
 #         self.sm.current = 'measurement'
 
-        self.sm.get_screen('homing').current_app = 'calibration'
+        self.sm.get_screen('homing').return_to_screen = 'measurement'
         self.sm.current = 'homing'
 

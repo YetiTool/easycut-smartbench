@@ -99,6 +99,8 @@ class HomingScreen(Screen):
     homing_label = ObjectProperty()
     poll_for_success = None
     
+    return_to_screen = 'home'
+    
     current_app = StringProperty()
     
     def __init__(self, **kwargs):
@@ -198,15 +200,7 @@ class HomingScreen(Screen):
             self.return_to_app()
             
     def return_to_app(self):
-        
-        if self.current_app == 'easycut':
-            self.sm.current = 'home'
-            
-        elif self.current_app == 'calibration':
-            if self.quit_home == True: 
-                self.sm.current = 'prep'
-            else:
-                self.sm.current = 'measurement'
+        self.sm.current = self.return_to_screen
 
     def cancel_homing(self):
 

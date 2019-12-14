@@ -1,6 +1,12 @@
 '''
 Created on 12 December 2019
-Screen to help user calibrate distances 
+Screen 2 to help user calibrate distances
+
+Screen needs to do the following: 
+
+Step 2: Inform user of measurement after machine has moved, and ask user if they want to adjust steps per mm 
+Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfiy. 
+        They will then need to go through the homing screen, and back to step 1.
 
 @author: Letty
 '''
@@ -18,6 +24,8 @@ Builder.load_string("""
 <DistanceScreen2Class>:
 
     user_instructions_text: user_instructions_text
+    improve_button_label:improve_button_label
+    continue_button_label:continue_button_label
 
     canvas:
         Color: 
@@ -137,14 +145,13 @@ Builder.load_string("""
                     
                     Button:
                         size_hint_y:0.9
-                        id: nudge01_button
                         size: self.texture_size
                         valign: 'top'
                         halign: 'center'
                         disabled: False
                         # background_color: hex('#a80000FF')
                         on_release: 
-                            root.improve_result()
+                            root.left_button()
                             
                         BoxLayout:
                             padding: 5
@@ -152,19 +159,20 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
+                                id: improve_button_label
                                 #size_hint_y: 1
                                 font_size: '20sp'
                                 text: 'I want to try to improve the result'
 
                     Button:
                         size_hint_y:0.9
-                        id: nudge002_button
+
                         valign: 'top'
                         halign: 'center'
                         disabled: False
                         # background_color: hex('#a80000FF')
                         on_release: 
-                            root.next_screen()
+                            root.right_button()
                             
                         BoxLayout:
                             padding: 5
@@ -172,7 +180,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
+                                id: continue_button_label
                                 text_size: self.size
                                 text: 'Ok, it measures as expected. Move to the next section.'
                                 valign: 'middle'
@@ -186,9 +194,19 @@ Builder.load_string("""
 
 class DistanceScreen2Class(Screen):
 
+    improve_button_label = ObjectProperty()
+    continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
+    
+    # step 2
     initial_x_cal_move = NumericProperty()
     x_cal_measure_1 = NumericProperty()
+    
+    # step 4
+    old_steps = NumericProperty()
+    new_setps = NumericProperty()
+    
+    sub_screen_count = 0
    
     def __init__(self, **kwargs):
         super(DistanceScreen2Class, self).__init__(**kwargs)
@@ -197,17 +215,64 @@ class DistanceScreen2Class(Screen):
 
     def on_enter(self):
                
-        self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
-                        '[b]The distance should measure ' + str(self.initial_x_cal_move + self.x_cal_measure_1) + '[/b]'
+        self.set_up_screen()
 
-    def improve_result(self):
-        self.sm.current = 'distance'
+    def set_up_screen(self):
+        
+        if self.sub_screen_count == 0: 
+            # Step 2: 
+            self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
+                            '[b]The distance should measure ' + str(self.initial_x_cal_move + self.x_cal_measure_1) + '[/b]'
+            self.improve_button_label.text = 'I want to try to improve the result'
+            self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'
+
+        if self.sub_screen_count == 1: 
+            # Step 4: 
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + str(self.old_steps) + '[/b] \n\n' \
+                            'The new number of steps per mm is: [b]' + str(self.new_steps) + '[/b] \n\n' \
+                            'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
+                            ' \n [b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b] \n\n' \
+                            'Would you like to set the new number of steps?'
+                            
+                            
+            self.improve_button_label.text = 'NO - RESTART THIS SECTION'
+            self.continue_button_label.text = 'YES - HOME AND VERIFY'
+                        
+
+    def left_button(self):
+        
+        if self.sub_screen_count == 0: # Step 2: Improve result
+            self.sub_screen_count = 1
+            self.sm.current = 'distance'
+        elif self.sub_screen_count == 1: # Step 4: Start over
+            self.sub_screen_count = 0
+            self.repeat_section()
+
+    def right_button(self):
+        if self.sub_screen_count == 0: # Step 2: FINISH & GO TO NEXT SECTION
+            self.skip_section(0)
+            
+        elif self.sub_screen_count == 1: # Step 4: SET, HOME AND VERIFY
+            
+            # set new steps per mm
+            self.m.send_any_gcode_command('$100 = new_steps')
+            self.m.get_grbl_settings()
+            
+            # refresh step 1 for verification
+            self.sm.get_screen('distance').refresh_screen_to_step1()
+            self.sub_screen_count = 0
+            
+            # get homing screen
+            self.sm.get_screen('homing').return_to_screen = 'distance'
+            self.sm.current = 'homing'
 
     def repeat_section(self):
         if self.sub_screen_count == 0:
             self.sm.current = 'backlash'
-        else:
-            self.refresh_screen()
+        elif self.sub_screen_count == 1:
+            self.sm.get_screen('distance').refresh_screen_to_step1()
+            self.sub_screen_count = 0
+            self.sm.current = 'distance'
 
     def skip_section(self):
         self.next_screen()
@@ -216,11 +281,7 @@ class DistanceScreen2Class(Screen):
         self.sm.current = 'lobby'
         
     def next_screen(self):
+        self.sub_screen_count = 0        
         # Y STUFF
-        
-#         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
-#         self.sm.add_widget(measurement_screen)
-#         self.sm.current = 'measurement'
-        pass
-
+        self.sm.current = 'backlash'
 

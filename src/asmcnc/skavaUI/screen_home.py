@@ -357,7 +357,7 @@ class HomeScreen(Screen):
     def on_enter(self): 
 
         # Set flag for homing screen
-        self.sm.get_screen('homing').current_app = 'easycut'
+        self.sm.get_screen('homing').return_to_screen = 'home'
 
         # File label at the top
         if self.job_gcode != []:
