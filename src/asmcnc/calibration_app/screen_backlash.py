@@ -244,7 +244,7 @@ class BacklashScreenClass(Screen):
         self.refresh_screen()
         
     def refresh_screen(self):
-        #self.m.jog_absolute_single_axis('X',-1184,9999)
+        self.m.jog_absolute_single_axis('X',-1184,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -279,7 +279,7 @@ class BacklashScreenClass(Screen):
     
     def next_instruction(self):
         if self.sub_screen_count == 0:
-            #self.test()
+            self.test()
             self.nudge_counter = 0
             self.sub_screen_count = 1
             self.test_ok_label.text = 'Ok'
