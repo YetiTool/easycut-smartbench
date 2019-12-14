@@ -1,7 +1,6 @@
 '''
 Created on 12 December 2019
-Landing Screen for the Calibration App
-
+Screen to inform user about how to conduct measurements during calibration. 
 @author: Letty
 '''
 

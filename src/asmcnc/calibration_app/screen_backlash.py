@@ -1,6 +1,6 @@
 '''
 Created on 12 December 2019
-Screen to inform user of essential preparation before they continue calibrating
+Screen to help user measure backlash in calibration
 
 @author: Letty
 '''
@@ -10,7 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-# from asmcnc.calibration_app import screen_measurement
+from asmcnc.calibration_app import screen_distance
 
 Builder.load_string("""
 
@@ -244,7 +244,7 @@ class BacklashScreenClass(Screen):
         self.refresh_screen()
         
     def refresh_screen(self):
-        self.m.jog_absolute_single_axis('X',-1184,9999)
+        #self.m.jog_absolute_single_axis('X',-1184,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -279,7 +279,7 @@ class BacklashScreenClass(Screen):
     
     def next_instruction(self):
         if self.sub_screen_count == 0:
-            self.test()
+            #self.test()
             self.nudge_counter = 0
             self.sub_screen_count = 1
             self.test_ok_label.text = 'Ok'
@@ -313,9 +313,10 @@ class BacklashScreenClass(Screen):
         self.next_screen()
         
     def next_screen(self):
-#         measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
-#         self.sm.add_widget(measurement_screen)
-#         self.sm.current = 'measurement'
-        pass
+        if not self.sm.has_screen('distance'):
+            distance_screen = screen_distance.DistanceScreenClass(name = 'distance', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(distance_screen)
+        self.sm.current = 'distance'
+
 
 
