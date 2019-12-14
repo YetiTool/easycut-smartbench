@@ -327,10 +327,10 @@ class DistanceScreenClass(Screen):
         #calculate new steps per mm
         self.new_x_steps_per_mm = self.existing_steps_per_mm * ( self.final_x_cal_move / self.measured_x_cal_move )
         
-        if self.new_x_steps_per_mm < self.existing_steps_per_mm + 10 and self.new_x_steps_per_mm > self.existing_steps_per_mm - 10:
-            self.m.send_any_gcode_command('$100 =' + self.new_x_steps_per_mm)
-        else: 
-            self.set_move_label.text = 'Error!!'
+#         if self.new_x_steps_per_mm < self.existing_steps_per_mm + 10 and self.new_x_steps_per_mm > self.existing_steps_per_mm - 10:
+#             self.m.send_any_gcode_command('$100 =' + self.new_x_steps_per_mm)
+#         else: 
+#             self.set_move_label.text = 'Error!!'
 
     def next_instruction(self):
         if self.sub_screen_count == 0:
