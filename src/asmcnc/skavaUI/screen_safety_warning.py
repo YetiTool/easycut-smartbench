@@ -236,4 +236,4 @@ class SafetyScreen(Screen):
         pass
         
     def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.sm.current = 'calibration_landing'
