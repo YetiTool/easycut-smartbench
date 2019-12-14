@@ -118,7 +118,7 @@ class SkavaUI(App):
         sm.add_widget(calibration_landing_screen)
         # set screen to start on
 
-        sm.current = 'calibration_landing'
+        sm.current = 'safety'
         return sm
 
 
