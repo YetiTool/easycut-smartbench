@@ -9,6 +9,7 @@
 <path>/${PROJECT_DIR_NAME}/src/asmcnc/skavaUI/img</path>
 <path>/${PROJECT_DIR_NAME}/src/asmcnc/calibration_app</path>
 <path>/${PROJECT_DIR_NAME}/src/asmcnc</path>
+<path>/${PROJECT_DIR_NAME}/src/asmcnc/calibration_app/img</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>D:\Yeti\YetiTool\easycut-smartbench\src\asmcnc\calibration_wizard</path>

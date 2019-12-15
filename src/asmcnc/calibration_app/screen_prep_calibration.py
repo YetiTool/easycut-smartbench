@@ -184,6 +184,7 @@ class PrepCalibrationScreenClass(Screen):
         if not self.sm.has_screen('measurement'):
             measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(measurement_screen)
+        self.sm.get_screen('measurement').axis = 'X'
         self.sm.current = 'measurement'       
     
     def repeat_section(self):
@@ -195,6 +196,7 @@ class PrepCalibrationScreenClass(Screen):
             self.sm.add_widget(measurement_screen)
 #         self.sm.current = 'measurement'
 
+        self.sm.get_screen('measurement').axis = 'X'
         self.sm.get_screen('homing').return_to_screen = 'measurement'
         self.sm.current = 'homing'
 

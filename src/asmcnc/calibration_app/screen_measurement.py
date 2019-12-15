@@ -1,6 +1,13 @@
 '''
 Created on 12 December 2019
 Screen to inform user about how to conduct measurements during calibration. 
+
+X-measurement: 
+ Has 3 sub screens: just pictures and text
+ 
+Y measurement: 
+ Has 2 sub screens: just pictures and text
+
 @author: Letty
 '''
 
@@ -15,6 +22,9 @@ Builder.load_string("""
 
 <MeasurementScreenClass>:
     image_select:image_select
+    action_button:action_button
+    instruction_top:instruction_top
+    instruction_left:instruction_left
 
     canvas:
         Color: 
@@ -51,7 +61,6 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: 'Repeat section'
 
@@ -62,9 +71,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
-                on_release: 
-                    root.next_screen()
+                on_press: 
+                    root.skip_section()
                     
                 BoxLayout:
                     padding: 5
@@ -72,7 +80,6 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: 'Skip section'
                         
@@ -84,7 +91,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 # background_color: hex('#a80000FF')
-                on_release: 
+                on_press: 
                     root.skip_to_lobby()
                     
                 BoxLayout:
@@ -101,15 +108,25 @@ Builder.load_string("""
             orientation: 'horizontal'
             spacing: 20
 
+            Label:
+                id: instruction_left
+                size_hint_x: 0.4
+                size: self.texture_size
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                markup: True
+
             BoxLayout:
                 orientation: 'vertical'
-                # spacing: 10
                 size_hint_x: 1.3
                  
                 Label:
-                    size_hint_y: 0.5
-                    font_size: '35sp'
-                    text: '[color=000000]X Measurement[/color]'
+                    id: instruction_top
+                    size_hint_y: 0.2
+                    size: self.texture_size
+                    #font_size: '16sp'
+                    text_size: self.size
                     markup: True
 
                 Image:
@@ -122,79 +139,134 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-                # spacing: 10
-                # padding: 10
-                size_hint_x: 0.6
-
-                Label:
-                    id: instruction
-                    text_size: self.size
-                    font_size: '18sp'
-                    halign: 'left'
+                padding: 10
+                size_hint_x: 0.3
+                  
+                Button:
+                    id: action_button
+                    size_hint_y: 0.9
+                    size: self.texture_size
                     valign: 'middle'
-                    text: root.instruction
-                    markup: True
-                    
-                BoxLayout:
-                    orientation: 'horizontal'
-                    padding: 20
-                    size_hint_y: 0.6
-                    
-                    Button:
-                        size: self.texture_size
-                        valign: 'top'
-                        halign: 'center'
-                        disabled: False
-                        on_release: 
-                            root.next_instruction()
-                            
-                        BoxLayout:
-                            padding: 5
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            
-                            Label:
-                                #size_hint_y: 1
-                                font_size: '20sp'
-                                text: 'Next'
+                    halign: 'center'
+                    disabled: False
+                    on_press: 
+                        root.next_instruction()
+                        
+                    BoxLayout:
+                        padding: 5
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        
+                        Label:
+                            font_size: '20sp'
+                            text: 'Next'
                         
             
 """)
 
 class MeasurementScreenClass(Screen):
     
-    instruction = StringProperty()
+    instruction_top = ObjectProperty()
+    instruction_left = ObjectProperty()
     image_select = ObjectProperty()
+    action_button = ObjectProperty()
     go_to_next_screen = False
+    
+    sub_screen_count = 0
+    axis = StringProperty()
     
     def __init__(self, **kwargs):
         super(MeasurementScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-        self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
+    def on_pre_enter(self):
         
+        if self.axis == 'X':
+            self.screen_x_1()
+        elif self.axis == 'Y':
+            self.screen_y_1()
+
+    def refresh_screen(self):
+        self.sub_screen_count = 0
+        self.screen_x_1()
+
+    def screen_x_1(self):
+        self.instruction_left.text = '[color=000000][b]X measurement: [/b]\n\nUse a tape measure to find the position of the Z head.\n\n' \
+                            'Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]'
+        self.instruction_top.text = ''
+        self.instruction_top.size_hint_y = 0
+        self.instruction_left.size_hint_x = 0.4
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1.PNG"
+
+    def screen_x_2(self):
+        self.instruction_top.text = '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
+        self.instruction_left.text = ''
+        self.instruction_top.size_hint_y = 0.2
+        self.instruction_left.size_hint_x = 0        
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.PNG"
+        
+    def screen_x_3(self):
+        self.instruction_top.text = '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
+        self.instruction_left.text = ''
+        self.instruction_top.size_hint_y = 0.2
+        self.instruction_left.size_hint_x = 0       
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.PNG"
+        
+    def screen_y_1(self):
+        self.instruction_top.text = '[color=000000][b]Y measurement:[/b] lay tape on top of bench [b](1)[/b], threading underneath the X beam [b](2)[/b].' \
+                            'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
+        self.instruction_left.text = ''
+        self.instruction_top.size_hint_y = 0.2
+        self.instruction_left.size_hint_x = 0
+        self.image_select.source = "./asmcnc/skavaUI/img/y_measurement_img_1.PNG"
+    
+    def screen_y_2(self):
+        self.instruction_left.text = '[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] ' \
+                            'to take a measurement of the beam\'s position against the tape measure.[/color]'
+        self.instruction_top.text = ''
+        self.instruction_top.size_hint_y = 0
+        self.instruction_left.size_hint_x = 0.4
+        self.image_select.source = "./asmcnc/skavaUI/img/y_measurement_img_2.PNG"
+    
+    def next_instruction(self):
+        
+        if self.axis == 'X':
+            if self.sub_screen_count == 0:
+                self.screen_x_2()
+                self.sub_screen_count = 1
+            elif self.sub_screen_count == 1:
+                self.screen_x_3()
+                self.sub_screen_count = 2
+            elif self.sub_screen_count == 2:
+                self.next_screen()
+                
+        if self.axis == 'Y':
+            if self.sub_screen_count == 0:
+                self.screen_y_2()
+                self.sub_screen_count = 1
+            elif self.sub_screen_count == 1: 
+                self.next_screen()
+    
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
         
     def repeat_section(self):
-        if self.go_to_next_screen == True:
-            self.go_to_next_screen = False
-            self.instruction = '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
-            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_1.PNG"
-        else: 
-            self.sm.current = 'prep'
-          
-    def next_instruction(self):
-        if self.go_to_next_screen == False:
-            self.instruction = '[color=000000]Use the home end end plate as an edge to measure against.[/color]'
-            self.image_select.source = "./asmcnc/skavaUI/img/x_measurement_2.PNG"
-            self.go_to_next_screen = True
-        else: 
-            self.next_screen()
+        
+        if self.axis == 'X':
+            if self.sub_screen_count >= 1: 
+                self.refresh_screen()
+            else: 
+                self.sm.current = 'prep'
+    
+    def skip_section(self):
+        self.next_screen()
         
     def next_screen(self):
         if not self.sm.has_screen('backlash'):
             backlash_screen = screen_backlash.BacklashScreenClass(name = 'backlash', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(backlash_screen)
+            
+        # pass across axis variable
+            
         self.sm.current = 'backlash'
