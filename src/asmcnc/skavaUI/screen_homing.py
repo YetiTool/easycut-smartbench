@@ -157,7 +157,7 @@ class HomingScreen(Screen):
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
                                   'G91', # relative coords
-                                  'G1 Y-25 F500', # drive lower frame into legs, assumes it's starting from a 3mm pull off
+                                  'G1 Y-25 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y25', # re-enter work area
                                   'G90', # abs coords
                                   
