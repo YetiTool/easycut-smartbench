@@ -231,8 +231,8 @@ class DistanceScreen2Class(Screen):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + str(self.old_steps) + '[/b] \n\n' \
                             'The new number of steps per mm is: [b]' + str(self.new_steps) + '[/b] \n\n' \
                             'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
-                            ' \n [b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b] \n\n' \
-                            'Would you like to set the new number of steps?'
+                            ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
+                            '[color=000000]Would you like to set the new number of steps?[/color]'
                             
                             
             self.improve_button_label.text = 'NO - RESTART THIS SECTION'
@@ -250,7 +250,7 @@ class DistanceScreen2Class(Screen):
 
     def right_button(self):
         if self.sub_screen_count == 0: # Step 2: FINISH & GO TO NEXT SECTION
-            self.skip_section(0)
+            self.skip_section()
             
         elif self.sub_screen_count == 1: # Step 4: SET, HOME AND VERIFY
             
@@ -281,7 +281,9 @@ class DistanceScreen2Class(Screen):
         self.sm.current = 'lobby'
         
     def next_screen(self):
-        self.sub_screen_count = 0        
+        self.sub_screen_count = 0
+        
         # Y STUFF
-        self.sm.current = 'backlash'
+        self.sm.get_screen('measurement').axis = 'Y'
+        self.sm.current = 'measurement'
 

@@ -405,8 +405,8 @@ class DistanceScreenClass(Screen):
             self.refresh_screen_to_step1()
 
     def skip_section(self):
-        # this needs to take user to Y backlash I think
-        pass
+        self.sm.get_screen('measurement').axis = 'Y'
+        self.sm.current = 'measurement'
         
     def next_screen(self):
         

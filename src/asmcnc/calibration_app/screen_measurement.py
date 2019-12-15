@@ -189,7 +189,10 @@ class MeasurementScreenClass(Screen):
 
     def refresh_screen(self):
         self.sub_screen_count = 0
-        self.screen_x_1()
+        if self.axis == 'X':
+            self.screen_x_1()
+        elif self.axis == 'Y':
+            self.screen_y_1()
 
     def screen_x_1(self):
         self.instruction_left.text = '[color=000000][b]X measurement: [/b]\n\nUse a tape measure to find the position of the Z head.\n\n' \
@@ -258,15 +261,20 @@ class MeasurementScreenClass(Screen):
                 self.refresh_screen()
             else: 
                 self.sm.current = 'prep'
+        if self.axis == 'Y':
+            if self.sub_screen_count >= 1: 
+                self.refresh_screen()
+            else:
+                self.sm.current = 'distance'           
     
     def skip_section(self):
         self.next_screen()
         
     def next_screen(self):
+        self.sub_screen_count = 0
         if not self.sm.has_screen('backlash'):
             backlash_screen = screen_backlash.BacklashScreenClass(name = 'backlash', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(backlash_screen)
-            
-        # pass across axis variable
-            
+
+        self.sm.get_screen('backlash').axis = self.axis         # pass across axis variable
         self.sm.current = 'backlash'

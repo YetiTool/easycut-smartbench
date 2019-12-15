@@ -235,6 +235,8 @@ class BacklashScreenClass(Screen):
     
     sub_screen_count = 0
     
+    axis = StringProperty()
+    
     def __init__(self, **kwargs):
         super(BacklashScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
