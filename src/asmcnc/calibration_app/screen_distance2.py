@@ -255,7 +255,7 @@ class DistanceScreen2Class(Screen):
         elif self.sub_screen_count == 1: # Step 4: SET, HOME AND VERIFY
             
             # set new steps per mm
-            self.m.send_any_gcode_command('$100 = new_steps')
+            self.m.send_any_gcode_command('$100 =' + self.new_steps)
             self.m.get_grbl_settings()
             
             # refresh step 1 for verification
