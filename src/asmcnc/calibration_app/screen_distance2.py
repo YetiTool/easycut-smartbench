@@ -23,6 +23,7 @@ Builder.load_string("""
 
 <DistanceScreen2Class>:
 
+    title_label:title_label
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
@@ -119,12 +120,12 @@ Builder.load_string("""
                 size_hint_x: 1.3
                  
                 Label:
+                    id: title_label
                     size_hint_y: 0.3
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
-                    text: '[color=000000]  X Distance:[/color]'
                     markup: True
 
                 ScrollView:
@@ -194,6 +195,7 @@ Builder.load_string("""
 
 class DistanceScreen2Class(Screen):
 
+    title_label = ObjectProperty()
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
@@ -201,10 +203,14 @@ class DistanceScreen2Class(Screen):
     # step 2
     initial_x_cal_move = NumericProperty()
     x_cal_measure_1 = NumericProperty()
-    
+    initial_y_cal_move = NumericProperty()
+    y_cal_measure_1 = NumericProperty()
+
     # step 4
-    old_steps = NumericProperty()
-    new_setps = NumericProperty()
+    old__x_steps = NumericProperty()
+    new__x_setps = NumericProperty()
+    old__y_steps = NumericProperty()
+    new__y_setps = NumericProperty()
     
     sub_screen_count = 0
     
@@ -215,23 +221,33 @@ class DistanceScreen2Class(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_enter(self):
-               
+    def on_pre_enter(self):
+        
+        self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]' 
         self.set_up_screen()
 
     def set_up_screen(self):
         
+        if self.axis == 'X': 
+            measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
+            old_steps = str(self.old_x_steps)
+            new_steps = str(self.new__x_steps)
+        elif self.axis == 'Y': 
+            measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
+            old_steps = str(self.old_y_steps)
+            new_steps = str(self.new__y_steps)
+        
         if self.sub_screen_count == 0: 
             # Step 2: 
             self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
-                            '[b]The distance should measure ' + str(self.initial_x_cal_move + self.x_cal_measure_1) + '[/b]'
+                            '[b]The distance should measure ' + measure_string + '[/b]'
             self.improve_button_label.text = 'I want to try to improve the result'
             self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'
 
         if self.sub_screen_count == 1: 
             # Step 4: 
-            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + str(self.old_steps) + '[/b] \n\n' \
-                            'The new number of steps per mm is: [b]' + str(self.new_steps) + '[/b] \n\n' \
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                            'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                             'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
                             ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
                             '[color=000000]Would you like to set the new number of steps?[/color]'
@@ -245,6 +261,7 @@ class DistanceScreen2Class(Screen):
         
         if self.sub_screen_count == 0: # Step 2: Improve result
             self.sub_screen_count = 1
+            self.sm.get_screen('distance').axis = self.axis
             self.sm.current = 'distance'
         elif self.sub_screen_count == 1: # Step 4: Start over
             self.sub_screen_count = 0
@@ -256,11 +273,14 @@ class DistanceScreen2Class(Screen):
             
         elif self.sub_screen_count == 1: # Step 4: SET, HOME AND VERIFY
             
+            # PROTECT FOR X AND Y
             # set new steps per mm
-            self.m.send_any_gcode_command('$100 =' + self.new_steps)
+            if self.axis == 'X': self.m.send_any_gcode_command('$100 =' + self.new_x_steps)
+            elif self.axis == 'Y': self.m.send_any_gcode_command('$101 =' + self.new_y_steps)
             self.m.get_grbl_settings()
             
             # refresh step 1 for verification
+            self.sm.get_screen('distance').axis = self.axis
             self.sm.get_screen('distance').refresh_screen_to_step1()
             self.sub_screen_count = 0
             
@@ -272,13 +292,17 @@ class DistanceScreen2Class(Screen):
         if self.sub_screen_count == 0:
             self.sm.current = 'backlash'
         elif self.sub_screen_count == 1:
+            self.sm.get_screen('distance').axis = self.axis
             self.sm.get_screen('distance').refresh_screen_to_step1()
             self.sub_screen_count = 0
             self.sm.current = 'distance'
 
     def skip_section(self):
-        self.next_screen()
-    
+        if self.axis == 'X':
+            self.next_screen()
+        elif self.axis == 'Y':
+            self.skip_to_lobby()
+            
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
         

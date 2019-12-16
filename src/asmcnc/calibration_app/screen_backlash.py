@@ -28,6 +28,7 @@ Builder.load_string("""
     user_instructions_text: user_instructions_text
     nudge002_button:nudge002_button
     nudge01_button:nudge01_button
+    title_label: title_label
 
     canvas:
         Color: 
@@ -121,12 +122,12 @@ Builder.load_string("""
                 size_hint_x: 1.3
                  
                 Label:
+                    id: title_label
                     size_hint_y: 0.3
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
-                    text: '[color=000000]  X backlash:[/color]'
                     markup: True
 
                 ScrollView:
@@ -231,6 +232,7 @@ Builder.load_string("""
 
 class BacklashScreenClass(Screen):
 
+    title_label = ObjectProperty()
     test_ok_label = ObjectProperty()
     test_instructions_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
@@ -250,6 +252,7 @@ class BacklashScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
+        self.title_label.text = '[color=000000] ' + self.axis + ' backlash:[/color]'
         if self.axis == 'X':
             self.screen_x_1()
         elif self.axis == 'Y':
