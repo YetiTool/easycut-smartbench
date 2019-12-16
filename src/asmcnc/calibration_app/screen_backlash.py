@@ -2,6 +2,13 @@
 Created on 12 December 2019
 Screen to help user measure backlash in calibration
 
+
+2*3 variants of this screen: X and Y versions of: 
+
+Step 1: Test
+Setp 2: Repeat measurement
+Step 3: Inform
+
 @author: Letty
 '''
 
@@ -242,10 +249,14 @@ class BacklashScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_enter(self):
-        self.refresh_screen()
+    def on_pre_enter(self):
+        if self.axis == 'X':
+            self.screen_x_1()
+        elif self.axis == 'Y':
+            self.screen_y_1()
         
-    def refresh_screen(self):
+        
+    def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
@@ -263,53 +274,115 @@ class BacklashScreenClass(Screen):
 
         self.test_ok_label.text = 'Test'
 
+    def screen_x_2(self):
+        self.test_ok_label.text = 'Ok'
+        self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
+                'Use the nudge buttons to return to the exact position, if required.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+        self.test_instructions_label.text = ' '
+        self.nudge_counter = 0
+    
+    def screen_x_3(self):
+        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
+                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
+                'and motor pinions to ensure a better engagement.\n\n'
+        self.nudge_counter = 0
+        self.test_ok_label.text = 'Next section'
+        self.nudge002_button.opacity = 0
+        self.nudge002_button.disabled = True
+        self.nudge01_button.opacity = 0
+        self.nudge01_button.disabled = True
+
+    def screen_y_1(self):
+        self.m.jog_absolute('X',-660, 9999)
+        self.m.jog_absolute('Y', -2320, 9999)
+        self.sub_screen_count = 0
+        self.nudge002_button.opacity = 1
+        self.nudge002_button.disabled = False
+        self.nudge01_button.opacity = 1
+        self.nudge01_button.disabled = False
+        
+        self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
+                        ' and take a measurement against the end plate. \n\n' \
+                        'Do not allow the tape measure to bend. \n\n\n' \
+                        'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
+                        
+        self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
+                        '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
+
+        self.test_ok_label.text = 'Test'
+    
+    def screen_y_2(self):
+        self.test_ok_label.text = 'Ok'
+        self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
+                'Use the nudge buttons to return to the exact position, if required.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+        self.test_instructions_label.text = ' '
+        self.nudge_counter = 0
+    
+    def screen_y_3(self):
+        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
+                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
+                'and motor pinions to ensure a better engagement.\n\n'
+        self.nudge_counter = 0
+        self.test_ok_label.text = 'Next section'
+        self.nudge002_button.opacity = 0
+        self.nudge002_button.disabled = True
+        self.nudge01_button.opacity = 0
+        self.nudge01_button.disabled = True
 
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
     
     def test(self):
-        self.m.jog_relative('X', self.backlash_move_distance, 9999)
-        self.m.jog_relative('X', -1*self.backlash_move_distance, 9999)
+        self.m.jog_relative(self.axis, self.backlash_move_distance, 9999)
+        self.m.jog_relative(self.axis, -1*self.backlash_move_distance, 9999)
 
     def nudge_01(self):
-        self.m.jog_relative('X',0.1,9999)
+        self.m.jog_relative(self.axis,0.1,9999)
         self.nudge_counter += 0.1
         
     def nudge_002(self):
-        self.m.jog_relative('X',0.02,9999)
+        self.m.jog_relative(self.axis,0.02,9999)
         self.nudge_counter += 0.02
     
     def next_instruction(self):
-        if self.sub_screen_count == 0:
-            self.test()
-            self.nudge_counter = 0
-            self.sub_screen_count = 1
-            self.test_ok_label.text = 'Ok'
-            self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
-                    'Use the nudge buttons to return to the exact position, if required.\n\n' \
-                    'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
-            self.test_instructions_label.text = ' '
-        elif self.sub_screen_count == 1:
-            self.sub_screen_count = 2
-            self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
-                    'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
-                    'and motor pinions to ensure a better engagement.\n\n'
-            self.nudge_counter = 0
-            self.test_ok_label.text = 'Next section'
-            self.nudge002_button.opacity = 0
-            self.nudge002_button.disabled = True
-            self.nudge01_button.opacity = 0
-            self.nudge01_button.disabled = True
-            
-        elif self.sub_screen_count == 2:
-            self.sub_screen_count = 0
-            self.next_screen()
+        
+        if self.axis == 'X':
+            if self.sub_screen_count == 0:
+                self.test()
+                self.sub_screen_count = 1
+                self.screen_x_2()
+    
+            elif self.sub_screen_count == 1:
+                self.sub_screen_count = 2
+                self.screen_x_3()
+                
+            elif self.sub_screen_count == 2:
+                self.sub_screen_count = 0
+                self.next_screen()
+        elif self.axis == 'Y':
+            if self.sub_screen_count == 0:
+                self.test()
+                self.sub_screen_count = 1
+                self.screen_y_2()
+    
+            elif self.sub_screen_count == 1:
+                self.sub_screen_count = 2
+                self.screen_y_3()
+                
+            elif self.sub_screen_count == 2:
+                self.sub_screen_count = 0
+                self.next_screen()
 
     def repeat_section(self):
         if self.sub_screen_count == 0:
             self.sm.current = 'measurement'
         else:
-            self.refresh_screen()
+            if self.axis == 'X':
+                self.screen_x_1()
+            elif self.axis == 'Y':
+                self.screen_y_1()
 
     def skip_section(self):
         self.next_screen()
@@ -318,6 +391,7 @@ class BacklashScreenClass(Screen):
         if not self.sm.has_screen('distance'):
             distance_screen = screen_distance.DistanceScreenClass(name = 'distance', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(distance_screen)
+        self.sm.get_screen('distance').axis = self.axis
         self.sm.current = 'distance'
 
 

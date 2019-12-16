@@ -195,7 +195,7 @@ class MeasurementScreenClass(Screen):
             self.screen_y_1()
 
     def screen_x_1(self):
-        self.instruction_left.text = '[color=000000][b]X measurement: [/b]\n\nUse a tape measure to find the position of the Z head.\n\n' \
+        self.instruction_left.text = '[color=000000][b]' + self.axis + ' measurement: [/b]\n\nUse a tape measure to find the position of the Z head.\n\n' \
                             'Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]'
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0

@@ -282,6 +282,8 @@ class DistanceScreenClass(Screen):
     sub_screen_count = 0
     nudge_counter = 0
     
+    axis = StringProperty()
+    
     initial_x_cal_move = 1000
     x_cal_measure_1 = NumericProperty()
     x_cal_measure_2 = NumericProperty()  

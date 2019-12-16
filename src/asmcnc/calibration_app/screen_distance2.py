@@ -207,6 +207,8 @@ class DistanceScreen2Class(Screen):
     new_setps = NumericProperty()
     
     sub_screen_count = 0
+    
+    axis = StringProperty()
    
     def __init__(self, **kwargs):
         super(DistanceScreen2Class, self).__init__(**kwargs)
