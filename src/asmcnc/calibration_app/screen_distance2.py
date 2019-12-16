@@ -207,10 +207,10 @@ class DistanceScreen2Class(Screen):
     y_cal_measure_1 = NumericProperty()
 
     # step 4
-    old__x_steps = NumericProperty()
-    new__x_setps = NumericProperty()
-    old__y_steps = NumericProperty()
-    new__y_setps = NumericProperty()
+    old_x_steps = NumericProperty()
+    new_x_setps = NumericProperty()
+    old_y_steps = NumericProperty()
+    new_y_setps = NumericProperty()
     
     sub_screen_count = 0
     
@@ -231,11 +231,11 @@ class DistanceScreen2Class(Screen):
         if self.axis == 'X': 
             measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
             old_steps = str(self.old_x_steps)
-            new_steps = str(self.new__x_steps)
+            new_steps = str(self.new_x_steps)
         elif self.axis == 'Y': 
             measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
             old_steps = str(self.old_y_steps)
-            new_steps = str(self.new__y_steps)
+            new_steps = str(self.new_y_steps)
         
         if self.sub_screen_count == 0: 
             # Step 2: 
