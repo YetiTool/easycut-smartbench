@@ -222,7 +222,7 @@ class MeasurementScreenClass(Screen):
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0
-        self.image_select.source = "./asmcnc/skavaUI/img/y_measurement_img_1.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_1.PNG"
     
     def screen_y_2(self):
         self.instruction_left.text = '[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] ' \
@@ -230,7 +230,7 @@ class MeasurementScreenClass(Screen):
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0
         self.instruction_left.size_hint_x = 0.4
-        self.image_select.source = "./asmcnc/skavaUI/img/y_measurement_img_2.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_2.PNG"
     
     def next_instruction(self):
         

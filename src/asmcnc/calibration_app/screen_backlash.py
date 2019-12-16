@@ -294,8 +294,8 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.disabled = True
 
     def screen_y_1(self):
-        self.m.jog_absolute('X',-660, 9999)
-        self.m.jog_absolute('Y', -2320, 9999)
+        self.m.jog_absolute_single_axis('X',-660, 9999)
+        self.m.jog_absolute_single_axis('Y', -2320, 9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False

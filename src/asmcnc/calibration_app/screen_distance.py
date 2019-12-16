@@ -293,7 +293,7 @@ class DistanceScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_enter(self):
+    def on_pre_enter(self):
         
         if self.sub_screen_count == 0:      # If we're in step 1
             self.refresh_screen_to_step1()
@@ -302,6 +302,8 @@ class DistanceScreenClass(Screen):
     
 ##  Set up user instructions and screen for Step 1 or Step 3:
     def refresh_screen_to_step1(self):
+        
+        # need first positions for x, first positions for y, and to move machine there and back from dirn
         self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter
 
         # This is set up for page 1, step 1: 
