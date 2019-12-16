@@ -210,7 +210,7 @@ class DistanceScreen2Class(Screen):
     old_x_steps = NumericProperty()
     new_x_setps = NumericProperty()
     old_y_steps = NumericProperty()
-    new_y_setps = NumericProperty()
+    new_y_steps = NumericProperty()
     
     sub_screen_count = 0
     
