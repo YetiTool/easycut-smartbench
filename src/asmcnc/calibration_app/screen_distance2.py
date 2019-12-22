@@ -208,7 +208,7 @@ class DistanceScreen2Class(Screen):
 
     # step 4
     old_x_steps = NumericProperty()
-    new_x_setps = NumericProperty()
+    new_x_steps = NumericProperty()
     old_y_steps = NumericProperty()
     new_y_steps = NumericProperty()
     
@@ -264,7 +264,6 @@ class DistanceScreen2Class(Screen):
             self.sm.get_screen('distance').axis = self.axis
             self.sm.current = 'distance'
         elif self.sub_screen_count == 1: # Step 4: Start over
-            self.sub_screen_count = 0
             self.repeat_section()
 
     def right_button(self):
