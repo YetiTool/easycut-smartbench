@@ -274,8 +274,8 @@ class DistanceScreen2Class(Screen):
             
             # PROTECT FOR X AND Y
             # set new steps per mm
-            if self.axis == 'X': self.m.send_any_gcode_command('$100 =' + self.new_x_steps)
-            elif self.axis == 'Y': self.m.send_any_gcode_command('$101 =' + self.new_y_steps)
+            if self.axis == 'X': self.m.send_any_gcode_command('$100 =' + str(self.new_x_steps))
+            elif self.axis == 'Y': self.m.send_any_gcode_command('$101 =' + str(self.new_y_steps))
             self.m.get_grbl_settings()
             
             # refresh step 1 for verification
