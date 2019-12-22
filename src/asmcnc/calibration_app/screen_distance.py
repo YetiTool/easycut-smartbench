@@ -306,6 +306,13 @@ class DistanceScreenClass(Screen):
 
         if self.sub_screen_count == 0:      # If we're in step 1
             self.refresh_screen_to_step1()
+ 
+        # need first positions for x, first positions for y, and to move machine there and back from dirn
+        if self.axis == 'X':
+            self.initial_move_x()
+        elif self.axis == 'Y':
+            self.initial_move_y()           
+            
         elif self.sub_screen_count == 1:    # If we're in step 3
             self.set_screen_to_step3()
     
@@ -313,12 +320,7 @@ class DistanceScreenClass(Screen):
     def refresh_screen_to_step1(self):
 
         self.nudge_counter = 0
-        # need first positions for x, first positions for y, and to move machine there and back from dirn
-        if self.axis == 'X':
-            self.initial_move_x()
-        elif self.axis == 'Y':
-            self.initial_move_y()
-
+        self.sub_screen_count = 0
         # This is set up for page 1, step 1: 
         self.value_input.text = '' 
         
