@@ -301,6 +301,8 @@ class DistanceScreenClass(Screen):
 
     def on_pre_enter(self):
         self.nudge_counter = 0
+        self.value_input = ObjectProperty()
+        self.value_input.text = ''
 
         self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]'
 
@@ -320,10 +322,8 @@ class DistanceScreenClass(Screen):
     def refresh_screen_to_step1(self):
 
         self.nudge_counter = 0
-        self.value_input = ''
         self.sub_screen_count = 0
         # This is set up for page 1, step 1: 
-        self.value_input.text = '' 
         
         self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
                         ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
@@ -355,10 +355,7 @@ class DistanceScreenClass(Screen):
       
     def set_screen_to_step3(self):
 
-        # set this screen up for when user returns to Step 3 :)
-        self.value_input.text = '' 
-        self.nudge_counter = 0
-        
+        # set this screen up for when user returns to Step 3 :)       
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
                                             ' a measurement at the next perfect millimeter increment.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
