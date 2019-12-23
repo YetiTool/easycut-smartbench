@@ -302,7 +302,6 @@ class DistanceScreenClass(Screen):
     def on_pre_enter(self):
         self.nudge_counter = 0
         self.value_input = ObjectProperty()
-        self.value_input.text = ''
 
         self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]'
 
