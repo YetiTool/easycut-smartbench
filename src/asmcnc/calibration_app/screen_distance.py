@@ -301,7 +301,7 @@ class DistanceScreenClass(Screen):
 
     def on_pre_enter(self):
         self.nudge_counter = 0
-        self.value_input = ObjectProperty()
+        self.value_input.text = None
 
         self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]'
 
@@ -333,12 +333,12 @@ class DistanceScreenClass(Screen):
         self.warning_label.opacity = 0
 
         self.initial_x_cal_move = 1000
-        self.x_cal_measure_1 = NumericProperty()
-        self.x_cal_measure_2 = NumericProperty()
+        self.x_cal_measure_1 = None
+        self.x_cal_measure_2 = None
         
         self.initial_y_cal_move = 2000
-        self.y_cal_measure_1 = NumericProperty()
-        self.y_cal_measure_2 = NumericProperty()
+        self.y_cal_measure_1 = None
+        self.y_cal_measure_2 = None
 
 
     def initial_move_x(self):
