@@ -307,11 +307,11 @@ class DistanceScreenClass(Screen):
         if self.sub_screen_count == 0:      # If we're in step 1
             self.refresh_screen_to_step1()
  
-        # need first positions for x, first positions for y, and to move machine there and back from dirn
-        if self.axis == 'X':
-            self.initial_move_x()
-        elif self.axis == 'Y':
-            self.initial_move_y()           
+            # need first positions for x, first positions for y, and to move machine there and back from dirn
+            if self.axis == 'X':
+                self.initial_move_x()
+            elif self.axis == 'Y':
+                self.initial_move_y()           
             
         elif self.sub_screen_count == 1:    # If we're in step 3
             self.set_screen_to_step3()
@@ -320,6 +320,7 @@ class DistanceScreenClass(Screen):
     def refresh_screen_to_step1(self):
 
         self.nudge_counter = 0
+        self.value_input = ''
         self.sub_screen_count = 0
         # This is set up for page 1, step 1: 
         self.value_input.text = '' 
@@ -331,6 +332,15 @@ class DistanceScreenClass(Screen):
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
         self.set_move_label.text = 'Set and move'
         self.warning_label.opacity = 0
+
+        self.initial_x_cal_move = 1000
+        self.x_cal_measure_1 = NumericProperty()
+        self.x_cal_measure_2 = NumericProperty()
+        
+        self.initial_y_cal_move = 2000
+        self.y_cal_measure_1 = NumericProperty()
+        self.y_cal_measure_2 = NumericProperty()
+
 
     def initial_move_x(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
