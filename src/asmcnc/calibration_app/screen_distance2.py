@@ -244,6 +244,18 @@ class DistanceScreen2Class(Screen):
             self.improve_button_label.text = 'I want to try to improve the result'
             self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'
 
+            self.initial_x_cal_move = NumericProperty()
+            self.x_cal_measure_1 = NumericProperty()
+            self.initial_y_cal_move = NumericProperty()
+            self.y_cal_measure_1 = NumericProperty()
+        
+            # step 4
+            self.old_x_steps = NumericProperty()
+            self.new_x_steps = NumericProperty()
+            self.old_y_steps = NumericProperty()
+            self.new_y_steps = NumericProperty()
+
+
         if self.sub_screen_count == 1: 
             # Step 4: 
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
