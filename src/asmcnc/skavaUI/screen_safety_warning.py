@@ -239,4 +239,4 @@ class SafetyScreen(Screen):
         self.sm.current = 'calibration_landing'
         
     def on_leave(self):
-        self.sm.remove_screen('safety')
+        self.sm.remove_widget('safety')
