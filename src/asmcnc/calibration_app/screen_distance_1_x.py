@@ -357,4 +357,6 @@ class DistanceScreenClass(Screen):
 
         self.sm.current = 'distance2x'
 
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('distance1x'))
 

@@ -17,6 +17,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 # from asmcnc.calibration_app import screen_measurement
+from asmcnc.calibration_app import screen_distance_1_x 
 
 Builder.load_string("""
 
@@ -224,13 +225,9 @@ class DistanceScreen2Class(Screen):
         self.skip_section()
 
     def repeat_section(self):
-        # remove old screen and bring up new one
-        self.sm.remove_widget(self.sm.get_screen('distance1x'))
-        from asmcnc.calibration_app import screen_distance_1_x 
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
-        self.sm.current = 'distance1x'       
-
+        self.sm.current = 'distance1x'
 
     def skip_section(self):
         # Y STUFF
