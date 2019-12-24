@@ -225,7 +225,7 @@ class DistanceScreen2Class(Screen):
 
     def repeat_section(self):
         # remove old screen and bring up new one
-        self.sm.remove_widget(distance_screen1x)
+        self.sm.remove_widget(self.sm.get_screen('distance1x'))
         from asmcnc.calibration_app import screen_distance_1_x 
         distance_screen1x = screen_distance_1_x.DistanceScreen2Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
