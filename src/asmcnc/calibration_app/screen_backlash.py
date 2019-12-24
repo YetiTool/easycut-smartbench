@@ -17,8 +17,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-from asmcnc.calibration_app import screen_distance_1_x
-
 Builder.load_string("""
 
 <BacklashScreenClass>:
