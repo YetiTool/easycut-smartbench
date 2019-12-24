@@ -17,7 +17,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-from asmcnc.calibration_app import screen_distance
+from asmcnc.calibration_app import screen_distance_1_x
 
 Builder.load_string("""
 
@@ -391,11 +391,11 @@ class BacklashScreenClass(Screen):
         self.next_screen()
         
     def next_screen(self):
-        if not self.sm.has_screen('distance'):
-            distance_screen = screen_distance.DistanceScreenClass(name = 'distance', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(distance_screen)
-        self.sm.get_screen('distance').axis = self.axis
-        self.sm.current = 'distance'
+        if not self.sm.has_screen('distance1x'):
+            distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(distance_screen1x)
+        self.sm.get_screen('distance1x').axis = self.axis
+        self.sm.current = 'distance1x'
 
 
 
