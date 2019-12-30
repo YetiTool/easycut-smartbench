@@ -18,7 +18,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
-from asmcnc.calibration_app import screen_distance2
+from asmcnc.calibration_app import screen_distance_4_x
 
 Builder.load_string("""
 
@@ -289,10 +289,6 @@ class DistanceScreenClass(Screen):
     x_cal_measure_1 = NumericProperty()
     x_cal_measure_2 = NumericProperty()
     
-    initial_y_cal_move = 2000
-    y_cal_measure_1 = NumericProperty()
-    y_cal_measure_2 = NumericProperty()
-    
       
     def __init__(self, **kwargs):
         super(DistanceScreenClass, self).__init__(**kwargs)
@@ -303,54 +299,19 @@ class DistanceScreenClass(Screen):
         self.nudge_counter = 0
         self.value_input.text = ''
 
-        self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]'
-
-        if self.sub_screen_count == 0:      # If we're in step 1
-            self.refresh_screen_to_step1()
+        self.title_label.text = '[color=000000]X Distance:[/color]'   
  
-            # need first positions for x, first positions for y, and to move machine there and back from dirn
-            if self.axis == 'X':
-                self.initial_move_x()
-            elif self.axis == 'Y':
-                self.initial_move_y()           
-            
-        elif self.sub_screen_count == 1:    # If we're in step 3
-            self.set_screen_to_step3()
-    
-##  Set up user instructions and screen for Step 1 or Step 3:
-    def refresh_screen_to_step1(self):
-
-        self.nudge_counter = 0
-        self.sub_screen_count = 0
-        # This is set up for page 1, step 1: 
-        
-        self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                        ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                        ' before entering the value on the right.'
-                        
-        self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
-        self.set_move_label.text = 'Set and move'
-        self.warning_label.opacity = 0
-
-    def initial_move_x(self):
-        self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
-        self.m.jog_relative('X',-10,9999)
-        self.m.jog_relative('X',10,9999)
-
-    def initial_move_y(self):
-        self.m.jog_absolute_single_axis('X',-660,9999)    # machine moves on screen enter       
-        self.m.jog_absolute_single_axis('Y',-2320,9999)
-        self.m.jog_relative('Y',-10,9999)
-        self.m.jog_relative('Y',10,9999)
-      
-    def set_screen_to_step3(self):
-
         # set this screen up for when user returns to Step 3 :)       
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
                                             ' a measurement at the next perfect millimeter increment.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
         self.set_move_label.text = 'Set and check'
         self.warning_label.opacity = 0
+
+    def initial_move_x(self):
+        self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
+        self.m.jog_relative('X',-10,9999)
+        self.m.jog_relative('X',10,9999)
 
     def nudge_01(self):
         self.m.jog_relative(self.axis,0.1,9999)
@@ -361,62 +322,22 @@ class DistanceScreenClass(Screen):
         self.nudge_counter += 0.02
 
     def save_measured_value(self):
-        
-        if self.axis == 'X':
-            if self.sub_screen_count == 0:
-                    self.x_cal_measure_1 = float(self.value_input.text)
-                
-            if self.sub_screen_count == 1:
-                    self.x_cal_measure_2 = float(self.value_input.text)
-
-        elif self.axis == 'Y':
-            if self.sub_screen_count == 0:
-                    self.y_cal_measure_1 = float(self.value_input.text)
-                
-            if self.sub_screen_count == 1:
-                    self.y_cal_measure_2 = float(self.value_input.text)        
+        self.x_cal_measure_2 = float(self.value_input.text)
     
-# Step 1 / sub-screen 1
-    def set_and_move(self):
-        
-        if self.axis == 'X': 
-            self.m.jog_relative('X', self.initial_x_cal_move, 9999)
-        elif self.axis == 'Y': 
-            self.m.jog_relative('Y', self.initial_y_cal_move, 9999)
-            
-        self.next_screen()
-
-    
-    # Step 3 / sub-screen 2
     def set_and_check(self):
+
+        self.final_x_cal_move = self.initial_x_cal_move + self.nudge_total # (machine thinks) 
+        self.measured_x_cal_move =  self.x_cal_measure_2 - self.x_cal_measure_1
         
-        if self.axis == 'X': 
-            self.final_x_cal_move = self.initial_x_cal_move + self.nudge_total # (machine thinks) 
-            self.measured_x_cal_move =  self.x_cal_measure_2 - self.x_cal_measure_1
-            
-            # get dollar settings
-            self.m.get_grbl_settings()
-            
-            # get setting 100 from serial screen
-            self.existing_x_steps_per_mm = self.m.s.setting_100
-            
-            #calculate new steps per mm
-            self.new_x_steps_per_mm = self.existing_x_steps_per_mm * ( self.final_x_cal_move / self.measured_x_cal_move )
+        # get dollar settings
+        self.m.get_grbl_settings()
         
-        elif self.axis == 'Y': 
-            self.final_y_cal_move = self.initial_y_cal_move + self.nudge_total # (machine thinks) 
-            self.measured_y_cal_move =  self.y_cal_measure_2 - self.y_cal_measure_1
-            
-            # get dollar settings
-            self.m.get_grbl_settings()
-            
-            # get setting 100 from serial screen
-            self.existing_y_steps_per_mm = self.m.s.setting_101
-            
-            #calculate new steps per mm
-            self.new_y_steps_per_mm = self.existing_y_steps_per_mm * ( self.final_y_cal_move / self.measured_y_cal_move )          
+        # get setting 100 from serial screen
+        self.existing_x_steps_per_mm = self.m.s.setting_100
         
-        # Ask user to check this in the next screen: 
+        #calculate new steps per mm
+        self.new_x_steps_per_mm = self.existing_x_steps_per_mm * ( self.final_x_cal_move / self.measured_x_cal_move )
+
         self.next_screen()
 
 
@@ -427,32 +348,19 @@ class DistanceScreenClass(Screen):
         if self.value_input.text == '':
             self.warning_label.opacity = 1
             return
+
+        if self.x_cal_measure_1 == float(self.value_input.text):
+            self.test_instructions_label.text = '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm increment' \
+                                                'and record the new value[/color]'
+            return
+    
+
+        self.save_measured_value()              # get text input
+        self.nudge_total = self.nudge_counter   # keep the nudges this time, we need them! 
+        self.nudge_counter = 0                  # clear nudge counter
         
-        if self.sub_screen_count == 0:  # if we're on the first version of the screen i.e. Step 1: 
-            self.save_measured_value()  # get text input
-            self.nudge_counter = 0      # clear nudge counter
-            
-            # Do the actual button command, this will also take us to relevant next screens
-            self.set_and_move()
-
-        elif self.sub_screen_count == 1:            # if we're on the step 3 version of this screen:
-
-            if self.axis == 'X' and self.x_cal_measure_1 == float(self.value_input.text):
-                self.test_instructions_label.text = '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm increment' \
-                                                    'and record the new value[/color]'
-                return
-            
-            elif self.axis == 'Y' and self.y_cal_measure_1 == float(self.value_input.text):
-                self.test_instructions_label.text = '[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm increment' \
-                                                    'and record the new value[/color]'
-                return
-
-            self.save_measured_value()              # get text input
-            self.nudge_total = self.nudge_counter   # keep the nudges this time, we need them! 
-            self.nudge_counter = 0                  # clear nudge counter
-            
-            # Do the actual button command,
-            self.set_and_check()
+        # Do the actual button command,
+        self.set_and_check()
 
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
