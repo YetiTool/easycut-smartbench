@@ -364,6 +364,7 @@ class DistanceScreen3Class(Screen):
         self.sm.current = 'lobby'
 
     def repeat_section(self):
+        self.refresh_screen_to_step1()
 
     def skip_section(self):
         self.sm.get_screen('measurement').axis = 'Y'
