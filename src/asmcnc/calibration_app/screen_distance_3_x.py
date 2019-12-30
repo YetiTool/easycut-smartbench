@@ -2,11 +2,9 @@
 Created on 12 December 2019
 Screen to help user calibrate distances 
 
-This class covers 2x2 instances of the same screen type:
-
 X and Y 
 
-Distance: step 1 and distance: step 3
+Distance: step 3
 
 
 
@@ -22,7 +20,7 @@ from asmcnc.calibration_app import screen_distance_4_x
 
 Builder.load_string("""
 
-<DistanceScreenClass>:
+<DistanceScreen3Class>:
 
     title_label:title_label
     value_input:value_input
@@ -269,7 +267,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreenClass(Screen):
+class DistanceScreen3Class(Screen):
 
     title_label = ObjectProperty()
     set_move_label = ObjectProperty()
@@ -366,48 +364,23 @@ class DistanceScreenClass(Screen):
         self.sm.current = 'lobby'
 
     def repeat_section(self):
-        if self.sub_screen_count == 0:
-            self.sm.current = 'backlash'
-        else:
-            self.refresh_screen_to_step1()
+        self.refresh_screen_to_step1()
 
     def skip_section(self):
-        if self.axis == 'X':
-            self.sm.get_screen('measurement').axis = 'Y'
-            self.sm.current = 'measurement'
-        elif self.axis == 'Y':
-            self.skip_to_lobby()
+        self.sm.get_screen('measurement').axis = 'Y'
+        self.sm.current = 'measurement'
         
     def next_screen(self):
         
-        if not self.sm.has_screen('distance2'): # only create the new screen if it doesn't exist already
-            distance2_screen = screen_distance2.DistanceScreen2Class(name = 'distance2', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(distance2_screen)
-            
-        if self.sub_screen_count == 0:
-            self.sub_screen_count = 1   # tell it that next time we need this screen we'll be on step 3
+        if not self.sm.has_screen('distance4x'): # only create the new screen if it doesn't exist already
+            distance4x_screen = screen_distance_4_x.DistanceScreen4Class(name = 'distance4x', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(distance4x_screen)
 
-            # pass variables across to distance2: step 2
-            if self.axis == 'X':
-                self.sm.get_screen('distance2').initial_x_cal_move = self.initial_x_cal_move
-                self.sm.get_screen('distance2').x_cal_measure_1 = self.x_cal_measure_1
-            if self.axis == 'Y':
-                self.sm.get_screen('distance2').initial_y_cal_move = self.initial_y_cal_move
-                self.sm.get_screen('distance2').y_cal_measure_1 = self.y_cal_measure_1                
-                
+        self.sm.get_screen('distance4x').old_x_steps = self.existing_x_steps_per_mm
+        self.sm.get_screen('distance4x').new_x_steps = self.new_x_steps_per_mm
 
-        elif self.sub_screen_count == 1: 
-            self.sub_screen_count = 0   # next time we're back we'll need to fully reset to step 1
-            
-            # pass variables across to distance2: step 4 
-            if self.axis == 'X':
-                self.sm.get_screen('distance2').old_x_steps = self.existing_x_steps_per_mm
-                self.sm.get_screen('distance2').new_x_steps = self.new_x_steps_per_mm
-            if self.axis == 'Y':
-                self.sm.get_screen('distance2').old_y_steps = self.existing_y_steps_per_mm
-                self.sm.get_screen('distance2').new_y_steps = self.new_y_steps_per_mm               
-        
-        self.sm.get_screen('distance2').axis = self.axis
-        self.sm.current = 'distance2'
+        self.sm.current = 'distance4x'
 
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('distance3x'))
 

@@ -5,8 +5,6 @@ Screen 2 to help user calibrate distances
 Screen needs to do the following: 
 
 Step 2: Inform user of measurement after machine has moved, and ask user if they want to adjust steps per mm 
-Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfiy. 
-        They will then need to go through the homing screen, and back to step 1.
 
 @author: Letty
 '''
@@ -243,7 +241,7 @@ class DistanceScreen2Class(Screen):
         
     def next_screen(self):
         if not self.sm.has_screen('distance3x'): # only create the new screen if it doesn't exist already
-            distance3x_screen = screen_distance_3_x.DistanceScreen2Class(name = 'distance3x', screen_manager = self.sm, machine = self.m)
+            distance3x_screen = screen_distance_3_x.DistanceScreen3Class(name = 'distance3x', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(distance3x_screen)
         self.sm.current = 'distance3x'
         

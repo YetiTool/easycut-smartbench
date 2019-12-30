@@ -6,7 +6,7 @@ This class covers 2x2 instances of the same screen type:
 
 X and Y 
 
-Distance: step 1 and distance: step 3
+Distance: step 1
 
 
 
