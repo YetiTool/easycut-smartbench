@@ -17,6 +17,8 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 # from asmcnc.calibration_app import screen_measurement
+from asmcnc.calibration_app import screen_distance_3_x
+
 
 Builder.load_string("""
 
