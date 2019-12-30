@@ -306,17 +306,15 @@ class DistanceScreen3Class(Screen):
         self.set_move_label.text = 'Set and check'
         self.warning_label.opacity = 0
 
-    def initial_move_x(self):
-        self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
-        self.m.jog_relative('X',-10,9999)
-        self.m.jog_relative('X',10,9999)
+    def on_enter(self):
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
 
     def nudge_01(self):
-        self.m.jog_relative(self.axis,0.1,9999)
+        self.m.jog_relative('X',0.1,9999)
         self.nudge_counter += 0.1
         
     def nudge_002(self):
-        self.m.jog_relative(self.axis,0.02,9999)
+        self.m.jog_relative('X',0.02,9999)
         self.nudge_counter += 0.02
 
     def save_measured_value(self):

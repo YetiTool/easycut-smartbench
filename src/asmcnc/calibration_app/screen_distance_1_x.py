@@ -311,11 +311,11 @@ class DistanceScreenClass(Screen):
         self.m.jog_relative('X',10,9999)
 
     def nudge_01(self):
-        self.m.jog_relative(self.axis,0.1,9999)
+        self.m.jog_relative('X',0.1,9999)
         self.nudge_counter += 0.1
         
     def nudge_002(self):
-        self.m.jog_relative(self.axis,0.02,9999)
+        self.m.jog_relative('X',0.02,9999)
         self.nudge_counter += 0.02
 
     def save_measured_value(self):
