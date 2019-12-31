@@ -14,6 +14,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
+from kivy.clock import Clock
 # from asmcnc.calibration_app import screen_measurement
 
 Builder.load_string("""
@@ -224,24 +225,21 @@ class DistanceScreen4Class(Screen):
 
     def right_button(self):
         # set new steps per mm
-        
-        ## MAKE SURE THIS FINISHES BEFORE HOMING - SEQUENTIAL STREAM
         set_new_steps_sequence = ['$100 =' + str(self.new_x_steps),
                                   '$$'
                                   ]
-        self.m.s.start_sequential_stream(set_new_steps_sequence)
+        self.m.s.start_sequential_stream(set_new_steps_sequence) 
+        # this makes sure we stay on this screen until steps have been set before triggering homing sequence     
+        self.poll_for_success = Clock.schedule(self.check_for_successful_completion,1)
 
-        # set up distance screen 1-x to return to after homing
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-        distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
-        self.sm.get_screen('homing').return_to_screen = 'distance1x'        
-        self.sm.add_widget(distance_screen1x)
-        
-        # get homing screen
-        # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
-        
+    def check_for_successful_completion(self, dt):
+        # if sequential_stream completes successfully
+        if self.m.s.is_sequential_streaming == False:
+            print ("New steps have been set: $100 =" + str(self.new_x_steps))
 
-        self.sm.current = 'homing'
+            Clock.unschedule(self.poll_for_success)
+            self.next_screen()
+
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
@@ -253,7 +251,17 @@ class DistanceScreen4Class(Screen):
         # Y STUFF
         self.sm.get_screen('measurement').axis = 'Y'
         self.sm.current = 'measurement'
-            
+    
+    def next_screen(self):
+        # set up distance screen 1-x to return to after homing
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
+        self.sm.add_widget(distance_screen1x)
+        self.sm.get_screen('homing').return_to_screen = 'distance1x'        
+        # get homing screen
+        # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
+        self.sm.current = 'homing'
+    
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
        
