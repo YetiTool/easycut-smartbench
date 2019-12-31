@@ -306,9 +306,6 @@ class DistanceScreen3Class(Screen):
         self.set_move_label.text = 'Set and check'
         self.warning_label.opacity = 0
 
-    def on_enter(self):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-
     def nudge_01(self):
         self.m.jog_relative('X',0.1,9999)
         self.nudge_counter += 0.1
@@ -362,7 +359,10 @@ class DistanceScreen3Class(Screen):
         self.sm.current = 'lobby'
 
     def repeat_section(self):
-        self.refresh_screen_to_step1()
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(distance_screen1x)
+        self.sm.current = 'distance1x'
 
     def skip_section(self):
         self.sm.get_screen('measurement').axis = 'Y'

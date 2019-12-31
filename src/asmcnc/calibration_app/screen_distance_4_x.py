@@ -219,9 +219,6 @@ class DistanceScreen4Class(Screen):
         self.improve_button_label.text = 'NO - RESTART THIS SECTION'
         self.continue_button_label.text = 'YES - HOME AND VERIFY'
     
-    def on_enter(self, *args):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-    
     def left_button(self):
         self.repeat_section()
 
@@ -231,6 +228,7 @@ class DistanceScreen4Class(Screen):
         self.m.get_grbl_settings()
         
         # set up distance screen 1-x to return to after homing
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
         
@@ -239,6 +237,7 @@ class DistanceScreen4Class(Screen):
         self.sm.current = 'homing'
 
     def repeat_section(self):
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
         self.sm.current = 'distance1x'

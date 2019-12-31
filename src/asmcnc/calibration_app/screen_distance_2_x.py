@@ -216,10 +216,7 @@ class DistanceScreen2Class(Screen):
                         '[b]The distance should measure ' + measure_string + '[/b]'
         self.improve_button_label.text = 'I want to try to improve the result'
         self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'       
-
-    def on_enter(self):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-        
+       
     def left_button(self):
         self.next_screen()
 
@@ -227,6 +224,7 @@ class DistanceScreen2Class(Screen):
         self.skip_section()
 
     def repeat_section(self):
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
         self.sm.current = 'distance1x'
