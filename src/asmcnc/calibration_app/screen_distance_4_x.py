@@ -224,9 +224,13 @@ class DistanceScreen4Class(Screen):
 
     def right_button(self):
         # set new steps per mm
-        self.m.send_any_gcode_command('$100 =' + str(self.new_x_steps))
-        self.m.get_grbl_settings()
         
+        ## MAKE SURE THIS FINISHES BEFORE HOMING - SEQUENTIAL STREAM
+        set_new_steps_sequence = ['$100 =' + str(self.new_x_steps),
+                                  '$$'
+                                  ]
+        self.m.s.start_sequential_stream(set_new_steps_sequence)
+
         # set up distance screen 1-x to return to after homing
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
