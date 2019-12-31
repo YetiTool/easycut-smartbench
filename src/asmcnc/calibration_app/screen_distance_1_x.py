@@ -305,7 +305,7 @@ class DistanceScreenClass(Screen):
         self.nudge_counter = 0
     
     def on_enter(self):
-        self.initial_move_x()
+        #self.initial_move_x()
 
     def initial_move_x(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
