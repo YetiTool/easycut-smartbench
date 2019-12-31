@@ -226,7 +226,7 @@ class DistanceScreen4Class(Screen):
 
     def right_button(self):
         # set new steps per mm
-        self.m.send_any_gcode_command('$100 =' + self.new_x_steps)
+        self.m.send_any_gcode_command('$100 =' + str(self.new_x_steps))
         self.m.get_grbl_settings()
         
         # set up distance screen 1-x to return to after homing
