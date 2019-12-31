@@ -203,7 +203,7 @@ class DistanceScreen4Class(Screen):
     new_x_steps = NumericProperty()
    
     def __init__(self, **kwargs):
-        super(DistanceScreen2Class, self).__init__(**kwargs)
+        super(DistanceScreen4Class, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
