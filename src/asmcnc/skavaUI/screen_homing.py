@@ -124,7 +124,7 @@ class HomingScreen(Screen):
             self.m.set_state('Home') 
 
             # monitor sequential stream status for completion
-            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 2)           
+            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
 
         elif self.m.state().startswith('Alarm'):
             self.homing_label.font_size =  '20sp'
@@ -139,7 +139,7 @@ class HomingScreen(Screen):
 
 
     def home_normally(self):
-        
+        # home without suaring the axis
         normal_homing_sequence = ['$H']
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
@@ -192,10 +192,8 @@ class HomingScreen(Screen):
         elif self.m.s.is_sequential_streaming == False:
             print "Homing success!"
             self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
-
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
-            print "Leaving homing screen"
             self.return_to_app()
             
     def return_to_app(self):
