@@ -304,7 +304,7 @@ class DistanceScreenClass(Screen):
 
         self.nudge_counter = 0
     
-    def on_enter(self):
+    #def on_enter(self):
         #self.initial_move_x()
 
     def initial_move_x(self):
