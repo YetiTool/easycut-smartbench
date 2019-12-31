@@ -110,9 +110,7 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     
-    def on_enter(self):
-        
-        
+    def on_enter(self):       
         if self.m.state().startswith('Idle'):
             self.homing_text = '[b]Homing. Please wait...[/b]'
         
@@ -121,12 +119,12 @@ class HomingScreen(Screen):
                 self.home_with_squaring()
             else: 
                 self.home_normally()
-    
+
             # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
             self.m.set_state('Home') 
-    
+
             # monitor sequential stream status for completion
-            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
+            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 2)           
 
         elif self.m.state().startswith('Alarm'):
             self.homing_label.font_size =  '20sp'
@@ -197,6 +195,7 @@ class HomingScreen(Screen):
 
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
+            print "Leaving homing screen"
             self.return_to_app()
             
     def return_to_app(self):
@@ -214,8 +213,7 @@ class HomingScreen(Screen):
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
         # ... will trigger an alarm screen
-        
-        
+
     def on_leave(self):
         self.quit_home = False
 

@@ -230,12 +230,13 @@ class DistanceScreen4Class(Screen):
         # set up distance screen 1-x to return to after homing
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+        self.sm.get_screen('homing').return_to_screen = 'distance1x'        
         self.sm.add_widget(distance_screen1x)
         
         # get homing screen
         # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
         
-        self.sm.get_screen('homing').return_to_screen = 'distance1x'
+
         self.sm.current = 'homing'
 
     def repeat_section(self):
