@@ -15,8 +15,6 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 # from asmcnc.calibration_app import screen_measurement
-from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-
 
 Builder.load_string("""
 
@@ -220,7 +218,10 @@ class DistanceScreen4Class(Screen):
                             
         self.improve_button_label.text = 'NO - RESTART THIS SECTION'
         self.continue_button_label.text = 'YES - HOME AND VERIFY'
-     
+    
+    def on_enter(self, *args):
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+    
     def left_button(self):
         self.repeat_section()
 
