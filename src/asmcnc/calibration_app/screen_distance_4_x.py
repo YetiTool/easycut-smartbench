@@ -233,6 +233,8 @@ class DistanceScreen4Class(Screen):
         self.sm.add_widget(distance_screen1x)
         
         # get homing screen
+        # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
+        
         self.sm.get_screen('homing').return_to_screen = 'distance1x'
         self.sm.current = 'homing'
 
