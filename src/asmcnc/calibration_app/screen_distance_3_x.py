@@ -325,6 +325,9 @@ class DistanceScreen3Class(Screen):
         self.final_x_cal_move = self.initial_x_cal_move + self.nudge_total # (machine thinks) 
         self.measured_x_cal_move =  self.x_cal_measure_2 - self.x_cal_measure_1
         
+        print self.final_x_cal_move
+        print self.measured_x_cal_move
+        
         # get dollar settings
         self.m.get_grbl_settings()
         
