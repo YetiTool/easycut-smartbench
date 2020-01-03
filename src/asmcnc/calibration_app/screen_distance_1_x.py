@@ -335,7 +335,7 @@ class DistanceScreen1Class(Screen):
         self.x_cal_measure_1 = float(self.value_input.text)
     
     def set_and_move(self):       
-        set_and_move_stream = ['$J=G91 ' + 'X' + str(self.initial_x_cal_move) + ' F9999'
+        set_and_move_stream = ['$J=G91 ' + 'X' + str(self.initial_x_cal_move) + ' F9999',
                                'G4 P0.5'
                                ]
         self.m.s.start_sequential_stream(set_and_move_stream)
