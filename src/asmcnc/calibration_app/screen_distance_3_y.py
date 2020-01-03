@@ -362,7 +362,9 @@ class DistanceScreen3Class(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
-        self.skip_to_lobby()
+        final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(final_screen)
+        self.sm.current = 'calibration_complete'
         
     def next_screen(self):       
         if not self.sm.has_screen('distance4y'): # only create the new screen if it doesn't exist already
