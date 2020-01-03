@@ -27,6 +27,7 @@ Builder.load_string("""
     warning_label:warning_label
     nudge002_button:nudge002_button
     nudge01_button:nudge01_button
+    set_move_button:set_move_button
 
     canvas:
         Color: 
@@ -243,6 +244,7 @@ Builder.load_string("""
                     size_hint_y: 0.7
                     
                     Button:
+                        id: set_move_button
                         size: self.texture_size
                         valign: 'top'
                         halign: 'center'
@@ -274,6 +276,7 @@ class DistanceScreen1Class(Screen):
     nudge002_button = ObjectProperty()
     value_input = ObjectProperty()
     warning_label = ObjectProperty()
+    set_move_button = ObjectProperty()
 
     sub_screen_count = 0
     nudge_counter = 0
@@ -291,6 +294,7 @@ class DistanceScreen1Class(Screen):
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'
         self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'                      
+        self.disable_buttons()
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
         self.set_move_label.text = 'Set and move'
         self.warning_label.opacity = 0
@@ -322,12 +326,23 @@ class DistanceScreen1Class(Screen):
             self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
                             ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
                             ' before entering the value on the right.'
+            self.enable_buttons()
             Clock.unschedule(self.poll_for_jog_finish)
 
     def set_and_move(self):
         self.m.jog_relative('Y', self.initial_y_cal_move, 9999)      
         self.next_screen()
 
+    def disable_buttons(self):
+        self.nudge01_button.disabled = 'True'
+        self.nudge002_button.disabled = 'True'
+        self.set_move_button.disabled = 'True'
+        
+    def enable_buttons(self):
+        self.nudge01_button.disabled = 'False'
+        self.nudge002_button.disabled = 'False'
+        self.set_move_button.disabled = 'False' 
+        
     def next_instruction(self):
         
         # When the button under the text input is pressed, it triggers the button command and sets up
