@@ -212,7 +212,7 @@ class DistanceScreen2Class(Screen):
         self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
                         '[b]The distance should measure ' + measure_string + '[/b]'
         self.improve_button_label.text = 'I want to try to improve the result'
-        self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'                        
+        self.continue_button_label.text = 'OK, it measures as expected. Finish calibration!'                        
 
     def left_button(self):
         self.next_screen()

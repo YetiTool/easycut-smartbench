@@ -17,6 +17,7 @@ from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
 from asmcnc.calibration_app import screen_backlash
+from asmcnc.calibration_app import screen_distance_1_x
 
 Builder.load_string("""
 
@@ -265,7 +266,10 @@ class MeasurementScreenClass(Screen):
             if self.sub_screen_count >= 1: 
                 self.refresh_screen()
             else:
-                self.sm.current = 'distance'           
+                if not self.sm.has_screen('distance1x'):
+                    distance_screen1x = screen_distance_1_x.DistanceScreen1Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+                    self.sm.add_widget(distance_screen1x)
+                self.sm.current = 'distance1x'
     
     def skip_section(self):
         self.next_screen()
