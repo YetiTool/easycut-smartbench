@@ -16,7 +16,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
-from kivy.Clock import Clock 
+from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_1_x
 from asmcnc.calibration_app import screen_distance_1_y
 
