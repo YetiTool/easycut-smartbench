@@ -337,11 +337,7 @@ class BacklashScreenClass(Screen):
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
     
-    def test(self):
-        
-#         # need to change this to sequential stream
-#         self.m.jog_relative(self.axis, self.backlash_move_distance, 9999)
-#         self.m.jog_relative(self.axis, -1*self.backlash_move_distance, 9999)       
+    def test(self):    
         
         jog_relative_to_stream = ['$J=G91 ' + self.axis + str(self.backlash_move_distance) + ' F9999',
                                   '$J=G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F9999'

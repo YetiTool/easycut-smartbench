@@ -18,6 +18,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
+from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_2_x
 
 Builder.load_string("""
@@ -324,7 +325,10 @@ class DistanceScreen1Class(Screen):
         self.x_cal_measure_1 = float(self.value_input.text)
     
     def set_and_move(self):
-        self.m.jog_relative('X', self.initial_x_cal_move, 9999)            
+        
+        set_and_move_stream = ['$J=G91 ' + 'X' + str(self.initial_x_cal_move) + ' F9999']
+        self.m.s.start_sequential_stream(set_and_move_stream)
+#         self.m.jog_relative('X', self.initial_x_cal_move, 9999)            
         self.next_screen()
 
     def next_instruction(self):       
@@ -358,7 +362,15 @@ class DistanceScreen1Class(Screen):
         self.sm.get_screen('distance2x').initial_x_cal_move = self.initial_x_cal_move
         self.sm.get_screen('distance2x').x_cal_measure_1 = self.x_cal_measure_1             
 
-        self.sm.current = 'distance2x'
+        # want the wait screen called here
+        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
+        self.sm.current = 'wait'
+        
+    def wait_for_movement_to_complete(self, dt):
+
+        if self.m.s.is_sequential_streaming == False:
+            Clock.unschedule(self.poll_for_success)
+            self.sm.current = 'distance2x'
 
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance1x'))
