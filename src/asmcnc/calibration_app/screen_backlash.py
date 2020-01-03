@@ -371,9 +371,9 @@ class BacklashScreenClass(Screen):
         
         if self.axis == 'X':
             if self.sub_screen_count == 0:
-                self.test()
                 self.sub_screen_count = 1
                 self.screen_x_2()
+                self.test()
     
             elif self.sub_screen_count == 1:
                 self.sub_screen_count = 2
