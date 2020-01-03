@@ -252,6 +252,7 @@ class BacklashScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+    def on_pre_enter(self):
         self.title_label.text = '[color=000000] ' + self.axis + ' backlash:[/color]'
         if self.axis == 'X':
             self.screen_x_1() # these don't work if returning from wait screen
@@ -347,9 +348,9 @@ class BacklashScreenClass(Screen):
                                   ]
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         
-        # want the wait screen called here
-        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
-        self.sm.current = 'wait'
+#         # want the wait screen called here
+#         self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
+#         self.sm.current = 'wait'
         
     def wait_for_movement_to_complete(self, dt):
         
@@ -405,7 +406,6 @@ class BacklashScreenClass(Screen):
                 self.screen_y_1()
 
     def skip_section(self):
-        self.sub_screen_count = 2
         self.next_screen()
         
     def next_screen(self):    
@@ -419,8 +419,3 @@ class BacklashScreenClass(Screen):
                 distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)
                 self.sm.add_widget(distance_screen1y)
             self.sm.current = 'distance1y'            
-
-    def on_leave(self):
-        if self.sub_screen_count == 2:
-            self.sm.remove_widget(self.sm.get_screen('backlash'))
-            
