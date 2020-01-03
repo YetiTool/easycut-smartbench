@@ -39,7 +39,7 @@ Builder.load_string("""
                 font_size: '28sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=455A64]Calibration Complete![/color]'
+                text: '[color=263238]Calibration Complete![/color]'
                 markup: 'True'
 """)
 
