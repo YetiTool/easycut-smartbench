@@ -789,6 +789,10 @@ class SerialConnection(object):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
         log("start_sequential_stream")
+
+        self.FLUSH_FLAG = True        
+        time.sleep(0.1)
+
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._send_next_sequential_stream()
