@@ -252,14 +252,12 @@ class BacklashScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_pre_enter(self):
         self.title_label.text = '[color=000000] ' + self.axis + ' backlash:[/color]'
         if self.axis == 'X':
-            self.screen_x_1()
+            self.screen_x_1() # these don't work if returning from wait screen
         elif self.axis == 'Y':
             self.screen_y_1()
-        
-        
+
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
         self.sub_screen_count = 0
@@ -407,6 +405,7 @@ class BacklashScreenClass(Screen):
                 self.screen_y_1()
 
     def skip_section(self):
+        self.sub_screen_count = 2
         self.next_screen()
         
     def next_screen(self):    
@@ -420,3 +419,8 @@ class BacklashScreenClass(Screen):
                 distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)
                 self.sm.add_widget(distance_screen1y)
             self.sm.current = 'distance1y'            
+
+    def on_leave(self):
+        if self.sub_screen_count == 2:
+            self.sm.remove_widget(self.sm.get_screen('backlash'))
+            
