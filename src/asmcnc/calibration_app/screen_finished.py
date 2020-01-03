@@ -19,7 +19,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#DCEDC8')
+            rgba: hex('##FAFAFA')
         Rectangle: 
             size: self.size
             pos: self.pos

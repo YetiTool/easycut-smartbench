@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_2_y
+from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
