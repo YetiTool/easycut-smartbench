@@ -39,7 +39,7 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=546E7A]Moving to the next measurement point...[/color]'
+                text: '[color=455A64]Moving to the next measurement point...[/color]'
                 markup: 'True'
 """)
 

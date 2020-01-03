@@ -354,7 +354,9 @@ class DistanceScreen1Class(Screen):
             
         self.sm.get_screen('distance2y').initial_y_cal_move = self.initial_y_cal_move
         self.sm.get_screen('distance2y').y_cal_measure_1 = self.y_cal_measure_1
-        self.sm.current = 'distance2y'
+
+        self.sm.get_screen('wait').return_to_screen = 'distance2y'
+        self.sm.current = 'wait'
 
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance1y'))
