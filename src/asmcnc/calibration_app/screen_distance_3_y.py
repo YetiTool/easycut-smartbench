@@ -265,7 +265,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreenClass(Screen):
+class DistanceScreen3Class(Screen):
 
     title_label = ObjectProperty()
     set_move_label = ObjectProperty()
@@ -286,7 +286,7 @@ class DistanceScreenClass(Screen):
     
       
     def __init__(self, **kwargs):
-        super(DistanceScreenClass, self).__init__(**kwargs)
+        super(DistanceScreen3Class, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
