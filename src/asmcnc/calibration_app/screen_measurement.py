@@ -281,4 +281,10 @@ class MeasurementScreenClass(Screen):
             self.sm.add_widget(backlash_screen)
 
         self.sm.get_screen('backlash').axis = self.axis         # pass across axis variable
+
+        if self.axis == 'X':
+            self.sm.get_screen('backlash').screen_x_1() # these don't work if returning from wait screen
+        elif self.axis == 'Y':
+            self.sm.get_screen('backlash').screen_y_1()
+        
         self.sm.current = 'backlash'

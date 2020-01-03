@@ -254,10 +254,10 @@ class BacklashScreenClass(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000] ' + self.axis + ' backlash:[/color]'
-        if self.axis == 'X':
-            self.screen_x_1() # these don't work if returning from wait screen
-        elif self.axis == 'Y':
-            self.screen_y_1()
+#         if self.axis == 'X':
+#             self.screen_x_1() # these don't work if returning from wait screen
+#         elif self.axis == 'Y':
+#             self.screen_y_1()
 
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
@@ -348,9 +348,9 @@ class BacklashScreenClass(Screen):
                                   ]
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         
-#         # want the wait screen called here
-#         self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
-#         self.sm.current = 'wait'
+        # want the wait screen called here
+        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
+        self.sm.current = 'wait'
         
     def wait_for_movement_to_complete(self, dt):
         
