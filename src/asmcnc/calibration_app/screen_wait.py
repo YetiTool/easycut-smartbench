@@ -1,0 +1,59 @@
+'''
+Created on 12 December 2019
+Landing Screen for the Calibration App
+
+@author: Letty
+'''
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.widget import Widget
+
+# from asmcnc.calibration_app import screen_prep_calibration
+
+Builder.load_string("""
+
+<WaitScreenClass>:
+
+    canvas:
+        Color: 
+            rgba: hex('#DCEDC8')
+        Rectangle: 
+            size: self.size
+            pos: self.pos
+             
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 90,50
+        spacing: 0
+        size_hint_x: 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.8
+
+            Label:
+                text_size: self.size
+                font_size: '18sp'
+                halign: 'center'
+                valign: 'middle'
+                text: '[color=546E7A]Moving to the next measurement point...[/color]'
+                markup: 'True'
+""")
+
+class WaitScreenClass(Screen):
+    
+    return_to_screen = StringProperty()
+    
+    def __init__(self, **kwargs):
+        super(WaitScreenClass, self).__init__(**kwargs)
+        self.sm=kwargs['screen_manager']
+        self.m=kwargs['machine']
+
+    def next_screen(self):
+        if not self.sm.has_screen('prep'):
+            prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(prep_screen)
+        self.sm.current = 'prep'
+ 
