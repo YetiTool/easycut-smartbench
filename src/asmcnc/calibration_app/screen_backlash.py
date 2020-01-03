@@ -280,7 +280,7 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.disabled = False
         self.disable_buttons()
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
-        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)                       
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
         self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                         '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
 
@@ -315,7 +315,7 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.disabled = False
         self.disable_buttons()
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
-        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)                       
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
         self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                         '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
 

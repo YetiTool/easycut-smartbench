@@ -36,7 +36,7 @@ Builder.load_string("""
 
             Label:
                 text_size: self.size
-                font_size: '18sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]Moving to the next measurement point...[/color]'

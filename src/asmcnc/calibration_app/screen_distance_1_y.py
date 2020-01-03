@@ -302,7 +302,7 @@ class DistanceScreen1Class(Screen):
     
     def on_enter(self):
         self.initial_move_y()
-        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)
 
     def initial_move_y(self):
         self.m.jog_absolute_single_axis('X',-660,9999)    # machine moves on screen enter       

@@ -6,7 +6,8 @@ Screen to inform user of essential preparation before they continue calibrating
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
 from kivy.uix.widget import Widget
 
 from asmcnc.calibration_app import screen_measurement
@@ -38,7 +39,7 @@ Builder.load_string("""
                 size: self.texture_size
                 valign: 'top'
                 halign: 'center'
-                disabled: False
+                disabled: True
                 # background_color: hex('#a80000FF')
                 on_release: 
                     root.repeat_section()
@@ -58,7 +59,7 @@ Builder.load_string("""
                 size: self.texture_size
                 valign: 'top'
                 halign: 'center'
-                disabled: False
+                disabled: True
                 # background_color: hex('#a80000FF')
                 on_release: 
                     root.skip_section()
