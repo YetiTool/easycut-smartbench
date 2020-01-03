@@ -309,9 +309,17 @@ class DistanceScreen1Class(Screen):
         self.initial_move_x()
 
     def initial_move_x(self):
-        self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
-        self.m.jog_relative('X',-10,9999)
-        self.m.jog_relative('X',10,9999)
+        
+        # change this into sequential streaming with the move screen
+        
+        initial_move_stream =['$J=G53 ' + 'X' + str(-1184) + ' F' + str(9999),
+                              '$J=G91 ' + 'X' + str(-10) + ' F' + str(9999),
+                              '$J=G91 ' + 'X' + str(10) + ' F' + str(9999)
+                              ]
+        self.m.s.start_sequential_stream(initial_move_stream)      
+#         self.m.jog_absolute_single_axis('X',-1184,9999)    # machine moves on screen enter       
+#         self.m.jog_relative('X',-10,9999)
+#         self.m.jog_relative('X',10,9999)
 
     def nudge_01(self):
         self.m.jog_relative('X',0.1,9999)
@@ -324,8 +332,7 @@ class DistanceScreen1Class(Screen):
     def save_measured_value(self):
         self.x_cal_measure_1 = float(self.value_input.text)
     
-    def set_and_move(self):
-        
+    def set_and_move(self):       
         set_and_move_stream = ['$J=G91 ' + 'X' + str(self.initial_x_cal_move) + ' F9999'
                                ]
         self.m.s.start_sequential_stream(set_and_move_stream)
