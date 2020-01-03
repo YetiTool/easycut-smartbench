@@ -13,9 +13,10 @@ Step 3: Inform
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
+from kivy.Clock import Clock 
 from asmcnc.calibration_app import screen_distance_1_x
 from asmcnc.calibration_app import screen_distance_1_y
 
@@ -338,8 +339,25 @@ class BacklashScreenClass(Screen):
         self.sm.current = 'lobby'
     
     def test(self):
-        self.m.jog_relative(self.axis, self.backlash_move_distance, 9999)
-        self.m.jog_relative(self.axis, -1*self.backlash_move_distance, 9999)
+        
+#         # need to change this to sequential stream
+#         self.m.jog_relative(self.axis, self.backlash_move_distance, 9999)
+#         self.m.jog_relative(self.axis, -1*self.backlash_move_distance, 9999)       
+        
+        jog_relative_to_stream = ['$J=G91 ' + self.axis + str(self.backlash_move_distance) + ' F9999',
+                                  '$J=G91 ' + self.axis + str(-1*self.backlash_move_distance) + ' F9999'
+                                  ]
+        self.m.s.start_sequential_stream(jog_relative_to_stream)
+        
+        # want the wait screen called here
+        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
+        self.sm.current = 'wait'
+        
+    def wait_for_movement_to_complete(self, dt):
+        
+        if self.m.s.is_sequential_streaming == False:
+            Clock.unschedule(self.poll_for_success)
+            self.sm.current = 'backlash'
 
     def nudge_01(self):
         self.m.jog_relative(self.axis,0.1,9999)

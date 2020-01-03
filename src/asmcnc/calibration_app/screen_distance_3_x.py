@@ -1,12 +1,8 @@
 '''
 Created on 12 December 2019
-Screen to help user calibrate distances 
-
-X and Y 
+Screen to help user calibrate number of steps per distance for X axis 
 
 Distance: step 3
-
-
 
 @author: Letty
 '''
