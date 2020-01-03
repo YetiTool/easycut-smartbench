@@ -267,7 +267,9 @@ class BacklashScreenClass(Screen):
             self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
                             ' and take a measurement against the end plate. \n\n' \
                             'Do not allow the tape measure to bend. \n\n\n' \
-                            'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'   
+                            'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
+            self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
+                            '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]' 
             self.enable_buttons()        
             Clock.unschedule(self.poll_for_jog_finish)
 
@@ -281,9 +283,7 @@ class BacklashScreenClass(Screen):
         self.disable_buttons()
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
-        self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
-                        '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
-
+        self.test_instructions_label.text = ''
         self.test_ok_label.text = 'Test'
 
     def screen_x_2(self):
@@ -316,9 +316,7 @@ class BacklashScreenClass(Screen):
         self.disable_buttons()
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
-        self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
-                        '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
-
+        self.test_instructions_label.text = ''
         self.test_ok_label.text = 'Test'
     
     def screen_y_2(self):
