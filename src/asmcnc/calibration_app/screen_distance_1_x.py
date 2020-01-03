@@ -22,7 +22,7 @@ from asmcnc.calibration_app import screen_distance_2_x
 
 Builder.load_string("""
 
-<DistanceScreenClass>:
+<DistanceScreen1Class>:
 
     title_label:title_label
     value_input:value_input
@@ -269,7 +269,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreenClass(Screen):
+class DistanceScreen1Class(Screen):
 
     title_label = ObjectProperty()
     set_move_label = ObjectProperty()
@@ -288,12 +288,12 @@ class DistanceScreenClass(Screen):
     x_cal_measure_1 = NumericProperty()   
       
     def __init__(self, **kwargs):
-        super(DistanceScreenClass, self).__init__(**kwargs)
+        super(DistanceScreen1Class, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]'
+        self.title_label.text = '[color=000000]X Distance:[/color]'
         self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
                         ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
                         ' before entering the value on the right.'

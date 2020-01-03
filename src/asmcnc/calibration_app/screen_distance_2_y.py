@@ -1,12 +1,8 @@
 '''
 Created on 12 December 2019
-Screen 2 to help user calibrate distances
-
-Screen needs to do the following: 
+Screen 2 to help user calibrate distances for Y axis
 
 Step 2: Inform user of measurement after machine has moved, and ask user if they want to adjust steps per mm 
-Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfiy. 
-        They will then need to go through the homing screen, and back to step 1.
 
 @author: Letty
 '''
@@ -17,7 +13,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 
-# from asmcnc.calibration_app import screen_measurement
+from asmcnc.calibration_app import screen_distance_3_y
 
 Builder.load_string("""
 
@@ -201,20 +197,8 @@ class DistanceScreen2Class(Screen):
     user_instructions_text = ObjectProperty()
     
     # step 2
-    initial_x_cal_move = NumericProperty()
-    x_cal_measure_1 = NumericProperty()
     initial_y_cal_move = NumericProperty()
     y_cal_measure_1 = NumericProperty()
-
-    # step 4
-    old_x_steps = NumericProperty()
-    new_x_steps = NumericProperty()
-    old_y_steps = NumericProperty()
-    new_y_steps = NumericProperty()
-    
-    sub_screen_count = 0
-    
-    axis = StringProperty()
    
     def __init__(self, **kwargs):
         super(DistanceScreen2Class, self).__init__(**kwargs)
@@ -222,93 +206,39 @@ class DistanceScreen2Class(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
+        measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
         
-        self.title_label.text = '[color=000000] ' + self.axis + ' Distance:[/color]' 
-        self.set_up_screen()
-
-    def set_up_screen(self):
-        
-        if self.axis == 'X': 
-            measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
-            old_steps = str(self.old_x_steps)
-            new_steps = str(self.new_x_steps)
-        elif self.axis == 'Y': 
-            measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
-            old_steps = str(self.old_y_steps)
-            new_steps = str(self.new_y_steps)
-        
-        if self.sub_screen_count == 0: 
-            # Step 2: 
-            self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
-                            '[b]The distance should measure ' + measure_string + '[/b]'
-            self.improve_button_label.text = 'I want to try to improve the result'
-            self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'
-
-        if self.sub_screen_count == 1: 
-            # Step 4: 
-            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
-                            'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
-                            'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
-                            ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
-                            '[color=000000]Would you like to set the new number of steps?[/color]'
-                            
-                            
-            self.improve_button_label.text = 'NO - RESTART THIS SECTION'
-            self.continue_button_label.text = 'YES - HOME AND VERIFY'
-                        
+        self.title_label.text = '[color=000000]Y Distance:[/color]' 
+        self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
+                        '[b]The distance should measure ' + measure_string + '[/b]'
+        self.improve_button_label.text = 'I want to try to improve the result'
+        self.continue_button_label.text = 'OK, it measures as expected. Finish and move to the next section'                        
 
     def left_button(self):
-        
-        if self.sub_screen_count == 0: # Step 2: Improve result
-            self.sub_screen_count = 1
-            self.sm.get_screen('distance').axis = self.axis
-            self.sm.current = 'distance'
-        elif self.sub_screen_count == 1: # Step 4: Start over
-            self.repeat_section()
+        self.next_screen()
 
     def right_button(self):
-        if self.sub_screen_count == 0: # Step 2: FINISH & GO TO NEXT SECTION
-            self.skip_section()
-            
-        elif self.sub_screen_count == 1: # Step 4: SET, HOME AND VERIFY
-            
-            # PROTECT FOR X AND Y
-            # set new steps per mm
-            if self.axis == 'X': self.m.send_any_gcode_command('$100=' + str(self.new_x_steps))
-            elif self.axis == 'Y': self.m.send_any_gcode_command('$101=' + str(self.new_y_steps))
-            self.m.get_grbl_settings()
-            
-            # refresh step 1 for verification
-            self.sm.get_screen('distance').axis = self.axis
-            self.sm.get_screen('distance').refresh_screen_to_step1() # this is a problem
-            self.sub_screen_count = 0
-            
-            # get homing screen
-            self.sm.get_screen('homing').return_to_screen = 'distance'
-            self.sm.current = 'homing'
+        self.skip_section()
 
     def repeat_section(self):
-        if self.sub_screen_count == 0:
-            self.sm.current = 'backlash'
-        elif self.sub_screen_count == 1:
-            self.sm.get_screen('distance').axis = self.axis
-            self.sm.get_screen('distance').refresh_screen_to_step1()
-            self.sub_screen_count = 0
-            self.sm.current = 'distance'
+        from asmcnc.calibration_app import screen_distance_1_y # this has to be here
+        distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(distance_screen1y)
+        self.sm.current = 'distance1y'
 
     def skip_section(self):
-        if self.axis == 'X':
-            self.next_screen()
-        elif self.axis == 'Y':
-            self.skip_to_lobby()
+        # Temporary - want a "Calibration complete" screen        
+        self.skip_to_lobby()
             
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
         
     def next_screen(self):
-        self.sub_screen_count = 0
-        
-        # Y STUFF
-        self.sm.get_screen('measurement').axis = 'Y'
-        self.sm.current = 'measurement'
+        if not self.sm.has_screen('distance3y'): # only create the new screen if it doesn't exist already
+            distance3y_screen = screen_distance_3_y.DistanceScreen3Class(name = 'distance3y', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(distance3y_screen)
+        self.sm.get_screen('distance3y').y_cal_measure_1 = self.y_cal_measure_1
+        self.sm.current = 'distance3y'
 
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('distance2y'))

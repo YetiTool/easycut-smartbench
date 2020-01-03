@@ -235,8 +235,7 @@ class DistanceScreen4Class(Screen):
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
-            print ("New steps have been set: $100 =" + str(self.new_x_steps))
-
+            print ("New steps have been set: $100 = " + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
@@ -255,7 +254,7 @@ class DistanceScreen4Class(Screen):
     def next_screen(self):
         # set up distance screen 1-x to return to after homing
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-        distance_screen1x = screen_distance_1_x.DistanceScreenClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
+        distance_screen1x = screen_distance_1_x.DistanceScreen1Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1x)
         self.sm.get_screen('homing').return_to_screen = 'distance1x'        
         # get homing screen
