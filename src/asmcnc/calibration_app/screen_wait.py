@@ -52,7 +52,7 @@ class WaitScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def next_screen(self):
+    def on_enter(self):
         self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
         
     def wait_for_movement_to_complete(self, dt):
