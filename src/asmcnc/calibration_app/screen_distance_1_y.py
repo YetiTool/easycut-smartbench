@@ -12,6 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
+from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_2_y
 
 Builder.load_string("""
@@ -289,10 +290,7 @@ class DistanceScreen1Class(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'
-        self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                        ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                        ' before entering the value on the right.'
-                        
+        self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'                      
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
         self.set_move_label.text = 'Set and move'
         self.warning_label.opacity = 0
@@ -300,6 +298,7 @@ class DistanceScreen1Class(Screen):
     
     def on_enter(self):
         self.initial_move_y()
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)
 
     def initial_move_y(self):
         self.m.jog_absolute_single_axis('X',-660,9999)    # machine moves on screen enter       
@@ -316,7 +315,14 @@ class DistanceScreen1Class(Screen):
         self.nudge_counter += 0.02
 
     def save_measured_value(self):
-        self.y_cal_measure_1 = float(self.value_input.text)       
+        self.y_cal_measure_1 = float(self.value_input.text)
+        
+    def update_instruction(self, dt):
+        if not self.m.state() == 'Jog':
+            self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
+                            ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
+                            ' before entering the value on the right.'
+            Clock.unschedule(self.poll_for_jog_finish)
 
     def set_and_move(self):
         self.m.jog_relative('Y', self.initial_y_cal_move, 9999)      
