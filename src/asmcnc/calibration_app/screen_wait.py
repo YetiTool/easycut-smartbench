@@ -53,7 +53,7 @@ class WaitScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_enter(self):
-        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
+        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 1)
         
     def wait_for_movement_to_complete(self, dt):
         if not self.m.state() == 'Jog':
