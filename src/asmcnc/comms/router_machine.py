@@ -103,7 +103,6 @@ class RouterMachine(object):
         return self.s.is_job_streaming
     
     def state(self):
-        print self.s.m_state
         return self.s.m_state
 
     def set_state(self, temp_state):
