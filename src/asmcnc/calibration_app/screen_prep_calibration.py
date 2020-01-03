@@ -10,7 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.uix.widget import Widget
 
 from asmcnc.calibration_app import screen_measurement
-from asmcnc.calibration_app import screen_wait
 
 Builder.load_string("""
 
@@ -192,14 +191,10 @@ class PrepCalibrationScreenClass(Screen):
         self.sm.current = 'calibration_landing'
     
     def next_screen(self):
-    
-        wait_screen = screen_wait.WaitScreenClass(name = 'wait', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(wait_screen)
         
         if not self.sm.has_screen('measurement'):
             measurement_screen = screen_measurement.MeasurementScreenClass(name = 'measurement', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(measurement_screen)
-#         self.sm.current = 'measurement'
 
         self.sm.get_screen('measurement').axis = 'X'
         self.sm.get_screen('homing').return_to_screen = 'measurement'

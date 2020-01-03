@@ -12,6 +12,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 
 from asmcnc.calibration_app import screen_prep_calibration
+from asmcnc.calibration_app import screen_wait
 
 Builder.load_string("""
 
@@ -105,8 +106,6 @@ Builder.load_string("""
 """)
 
 class CalibrationLandingScreenClass(Screen):
-
-
     
     def __init__(self, **kwargs):
         super(CalibrationLandingScreenClass, self).__init__(**kwargs)
@@ -117,6 +116,10 @@ class CalibrationLandingScreenClass(Screen):
         self.sm.current = 'lobby'
         
     def next_screen(self):
+        
+        wait_screen = screen_wait.WaitScreenClass(name = 'wait', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(wait_screen)
+        
         if not self.sm.has_screen('prep'):
             prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(prep_screen)
