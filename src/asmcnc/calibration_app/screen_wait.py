@@ -57,6 +57,6 @@ class WaitScreenClass(Screen):
         
     def wait_for_movement_to_complete(self, dt):
 
-        if self.m.state == 'Jog':
+        if not self.m.state == 'Jog':
             Clock.unschedule(self.poll_for_success)
             self.sm.current = self.return_to_screen
