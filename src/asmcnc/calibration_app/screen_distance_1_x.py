@@ -343,6 +343,7 @@ class DistanceScreen1Class(Screen):
         self.sm.current = 'lobby'
 
     def repeat_section(self):
+        self.sm.get_screen('backlash').axis = 'X'
         self.sm.current = 'backlash'
 
     def skip_section(self):

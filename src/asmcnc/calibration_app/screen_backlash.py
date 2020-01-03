@@ -380,6 +380,7 @@ class BacklashScreenClass(Screen):
 
     def repeat_section(self):
         if self.sub_screen_count == 0:
+            self.sm.get_screen('measurement').axis = self.axis
             self.sm.current = 'measurement'
         else:
             if self.axis == 'X':
