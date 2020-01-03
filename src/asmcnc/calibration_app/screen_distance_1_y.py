@@ -349,7 +349,7 @@ class DistanceScreen1Class(Screen):
     def next_screen(self):
         if not self.sm.has_screen('distance2y'): # only create the new screen if it doesn't exist already
             distance2y_screen = screen_distance_2_y.DistanceScreen2Class(name = 'distance2y', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(distance2_screen)
+            self.sm.add_widget(distance2y_screen)
             
         self.sm.get_screen('distance2y').initial_y_cal_move = self.initial_y_cal_move
         self.sm.get_screen('distance2y').y_cal_measure_1 = self.y_cal_measure_1
