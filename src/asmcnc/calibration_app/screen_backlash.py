@@ -345,14 +345,9 @@ class BacklashScreenClass(Screen):
         self.m.s.start_sequential_stream(jog_relative_to_stream)
         
         # want the wait screen called here
-        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
+        self.sm.get_screen('wait').return_to_screen = 'backlash'
         self.sm.current = 'wait'
-        
-    def wait_for_movement_to_complete(self, dt):
-        
-        if self.m.s.is_sequential_streaming == False:
-            Clock.unschedule(self.poll_for_success)
-            self.sm.current = 'backlash'
+
 
     def nudge_01(self):
         self.m.jog_relative(self.axis,0.1,9999)

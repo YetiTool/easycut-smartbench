@@ -362,17 +362,10 @@ class DistanceScreen1Class(Screen):
             self.sm.add_widget(distance2x_screen)
             
         self.sm.get_screen('distance2x').initial_x_cal_move = self.initial_x_cal_move
-        self.sm.get_screen('distance2x').x_cal_measure_1 = self.x_cal_measure_1             
-
-        # want the wait screen called here
-        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
-        self.sm.current = 'wait'
+        self.sm.get_screen('distance2x').x_cal_measure_1 = self.x_cal_measure_1
         
-    def wait_for_movement_to_complete(self, dt):
-
-        if self.m.s.is_sequential_streaming == False:
-            Clock.unschedule(self.poll_for_success)
-            self.sm.current = 'distance2x'
+        self.sm.get_screen('wait').return_to_screen = 'distance2x'
+        self.sm.current = 'wait'
 
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance1x'))

@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 # from asmcnc.calibration_app import screen_prep_calibration
 
@@ -52,9 +53,10 @@ class WaitScreenClass(Screen):
         self.m=kwargs['machine']
 
     def next_screen(self):
+        self.poll_for_success = Clock.schedule_interval(self.wait_for_movement_to_complete, 2)
         
-        if not self.sm.has_screen('prep'):
-            prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(prep_screen)
-        self.sm.current = 'prep'
- 
+    def wait_for_movement_to_complete(self, dt):
+
+        if self.m.s.is_sequential_streaming == False:
+            Clock.unschedule(self.poll_for_success)
+            self.sm.current = self.return_to_screen
