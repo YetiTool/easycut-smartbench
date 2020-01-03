@@ -344,9 +344,9 @@ class DistanceScreen1Class(Screen):
         self.set_move_button.disabled = True
         
     def enable_buttons(self):
-        self.nudge01_button.enabled = True
-        self.nudge002_button.enabled = True
-        self.set_move_button.enabled = True
+        self.nudge01_button.disabled = False
+        self.nudge002_button.disabled = False
+        self.set_move_button.disabled = False
 
     def next_instruction(self):       
         if self.value_input.text == '':
