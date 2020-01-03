@@ -30,6 +30,7 @@ Builder.load_string("""
     nudge002_button:nudge002_button
     nudge01_button:nudge01_button
     title_label: title_label
+    action_button: action_button
 
     canvas:
         Color: 
@@ -210,6 +211,7 @@ Builder.load_string("""
                     size_hint_y: 0.6
                     
                     Button:
+                        id: action_button
                         size: self.texture_size
                         valign: 'top'
                         halign: 'center'
@@ -239,6 +241,7 @@ class BacklashScreenClass(Screen):
     user_instructions_text = ObjectProperty()
     nudge01_button = ObjectProperty()
     nudge002_button = ObjectProperty()
+    action_button = ObjectProperty()
 
     backlash_move_distance = 50
     nudge_counter = 0
@@ -259,6 +262,15 @@ class BacklashScreenClass(Screen):
 #         elif self.axis == 'Y':
 #             self.screen_y_1()
 
+    def update_instruction(self, dt):
+        if not self.m.state() == 'Jog':
+            self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
+                            ' and take a measurement against the end plate. \n\n' \
+                            'Do not allow the tape measure to bend. \n\n\n' \
+                            'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'   
+            self.enable_buttons()        
+            Clock.unschedule(self.poll_for_jog_finish)
+
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
         self.sub_screen_count = 0
@@ -266,12 +278,9 @@ class BacklashScreenClass(Screen):
         self.nudge002_button.disabled = False
         self.nudge01_button.opacity = 1
         self.nudge01_button.disabled = False
-        
-        self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
-                        ' and take a measurement against the end plate. \n\n' \
-                        'Do not allow the tape measure to bend. \n\n\n' \
-                        'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
-                        
+        self.disable_buttons()
+        self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)                       
         self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                         '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
 
@@ -305,11 +314,8 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.opacity = 1
         self.nudge01_button.disabled = False
         
-        self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
-                        ' and take a measurement against the end plate. \n\n' \
-                        'Do not allow the tape measure to bend. \n\n\n' \
-                        'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
-                        
+        self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
+        self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 1)                       
         self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                         '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]'
 
@@ -356,6 +362,16 @@ class BacklashScreenClass(Screen):
     def nudge_002(self):
         self.m.jog_relative(self.axis,0.02,9999)
         self.nudge_counter += 0.02
+        
+    def disable_buttons(self):
+        self.nudge01_button.disabled = True
+        self.nudge002_button.disabled = True
+        self.action_button.disabled = True
+        
+    def enable_buttons(self):
+        self.nudge01_button.disabled = False
+        self.nudge002_button.disabled = False
+        self.action_button.disabled = False
     
     def next_instruction(self):
         

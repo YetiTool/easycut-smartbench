@@ -339,9 +339,9 @@ class DistanceScreen1Class(Screen):
         self.set_move_button.disabled = True
         
     def enable_buttons(self):
-        self.nudge01_button.enabled = False
-        self.nudge002_button.enabled = False
-        self.set_move_button.enabled = False
+        self.nudge01_button.disabled = False
+        self.nudge002_button.disabled = False
+        self.set_move_button.disabled = False
         
     def next_instruction(self):
         
