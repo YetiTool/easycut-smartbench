@@ -300,7 +300,7 @@ class BacklashScreenClass(Screen):
         self.test_ok_label.text = '[color=455A64]Test[/color]'
 
     def screen_x_2(self):
-        self.test_ok_label.text = 'Ok'
+        self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
                 'Use the nudge buttons to return to the exact position, if required.\n\n' \
                 'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
@@ -333,7 +333,7 @@ class BacklashScreenClass(Screen):
         self.test_ok_label.text = '[color=455A64]Test[/color]'
     
     def screen_y_2(self):
-        self.test_ok_label.text = 'Ok'
+        self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
                 'Use the nudge buttons to return to the exact position, if required.\n\n' \
                 'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
