@@ -20,7 +20,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#0d47a1FF')
+            rgba: hex('#FFFFFF')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -39,7 +39,7 @@ Builder.load_string("""
             Label:
                 size_hint_y: 1
                 font_size: '35sp'
-                text: 'Do you want to calibrate SmartBench?'
+                text: '[color=263238]Do you want to calibrate SmartBench?[/color]'
                 markup: True
 
             Label:
@@ -47,14 +47,16 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'middle'
-                text: 'We calibrate SmartBench in the factory, but if it has had a bumpy journey, or you have been using it a lot, we recommend you re-calibrate to be sure.'
+                text: '[color=546E7A]We calibrate SmartBench in the factory, but if it has had a bumpy journey, or you have been using it a lot, we recommend you re-calibrate to be sure.[/color]'
+                markup: True
 
             Label:
                 text_size: self.size
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'middle'
-                text: 'Calibration can take 10 minutes. You will need an accurate tape measure.'
+                text: '[color=546E7A]Calibration can take 10 minutes. You will need an accurate tape measure.[/color]'
+                markup: True
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -68,7 +70,8 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     disabled: False
-                    # background_color: hex('#a80000FF')
+                    background_normal: ''
+                    background_color: hex('#FFCDD2')
                     on_release: 
                         root.skip_to_lobby()
                         
@@ -80,7 +83,8 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'No, skip'
+                            text: '[color=455A64]No, skip[/color]'
+                            markup: True
 
                 Button:
                     size_hint_y:0.9
@@ -89,7 +93,8 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     disabled: False
-                    # background_color: hex('#a80000FF')
+                    background_normal: ''
+                    background_color: hex('#DCEDC8')
                     on_release: 
                         root.next_screen()
                         
@@ -101,7 +106,8 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'Yes, calibrate'
+                            text: '[color=455A64]Yes, calibrate[/color]'
+                            markup: True
             
 """)
 

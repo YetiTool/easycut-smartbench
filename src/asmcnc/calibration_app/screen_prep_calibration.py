@@ -80,7 +80,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
                     
@@ -92,7 +93,8 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Quit calibration'
+                        text: '[color=455A64]Quit calibration[/color]'
+                        markup: True
 
         BoxLayout:
             orientation: 'horizontal'
@@ -147,6 +149,8 @@ Builder.load_string("""
                         size: self.texture_size
                         valign: 'top'
                         halign: 'center'
+                        background_normal: ''
+                        background_color: hex('#DCEDC8')
                         disabled: False
                         on_release: 
                             root.next_screen()
@@ -159,7 +163,8 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Home'
+                                text: '[color=455A64]Home[/color]'
+                                markup: True
                         
             
 """)

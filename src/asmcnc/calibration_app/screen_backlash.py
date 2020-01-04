@@ -57,7 +57,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#E1F5FE')
                 on_release: 
                     root.repeat_section()
                     
@@ -69,7 +70,8 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Repeat section'
+                        text: '[color=455A64]Repeat section[/color]'
+                        markup: True
 
             Button:
                 size_hint_y:0.9
@@ -78,7 +80,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#E1F5FE')
                 on_release: 
                     root.skip_section()
                     
@@ -90,7 +93,8 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Skip section'
+                        text: '[color=455A64]Skip section[/color]'
+                        markup: True
                         
             Button:
                 size_hint_y:0.9
@@ -99,7 +103,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
                     
@@ -111,7 +116,8 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Quit calibration'
+                        text: '[color=455A64]Quit calibration[/color]'
+                        markup: True
 
         BoxLayout:
             orientation: 'horizontal'
@@ -155,7 +161,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#E1F5FE')
                         on_release: 
                             root.nudge_01()
                             
@@ -167,7 +174,8 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.1 mm'
+                                text: '[color=455A64]Nudge 0.1 mm[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -176,7 +184,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#E1F5FE')
                         on_release: 
                             root.nudge_002()
                             
@@ -188,7 +197,8 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.02 mm'
+                                text: '[color=455A64]Nudge 0.02 mm[/color]'
+                                markup: True
 
 
             BoxLayout:
@@ -216,6 +226,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
+                        background_normal: ''
+                        background_color: hex('#DCEDC8')
                         on_release: 
                             root.next_instruction()
                             
@@ -228,7 +240,8 @@ Builder.load_string("""
                                 id: test_ok_label
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Test'
+                                text:'[color=455A64]Test[/color]'
+                                markup: True
                         
             
 """)
