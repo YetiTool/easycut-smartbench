@@ -58,7 +58,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#BBDEFB')
+                background_color: hex('#D6EAF8')
                 on_release: 
                     root.repeat_section()
                     
@@ -81,7 +81,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#BBDEFB')
+                background_color: hex('#D6EAF8')
                 on_release: 
                     root.skip_section()
                     
@@ -297,7 +297,7 @@ class BacklashScreenClass(Screen):
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
         self.test_instructions_label.text = ''
-        self.test_ok_label.text = 'Test'
+        self.test_ok_label.text = '[color=455A64]Test[/color]'
 
     def screen_x_2(self):
         self.test_ok_label.text = 'Ok'
@@ -312,7 +312,7 @@ class BacklashScreenClass(Screen):
                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
-        self.test_ok_label.text = 'Next section'
+        self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
         self.nudge002_button.disabled = True
         self.nudge01_button.opacity = 0
@@ -330,7 +330,7 @@ class BacklashScreenClass(Screen):
         self.user_instructions_text.text = 'Please wait while the machine moves to the next measurement point...'
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)                       
         self.test_instructions_label.text = ''
-        self.test_ok_label.text = 'Test'
+        self.test_ok_label.text = '[color=455A64]Test[/color]'
     
     def screen_y_2(self):
         self.test_ok_label.text = 'Ok'
@@ -345,7 +345,7 @@ class BacklashScreenClass(Screen):
                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
-        self.test_ok_label.text = 'Next section'
+        self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
         self.nudge002_button.disabled = True
         self.nudge01_button.opacity = 0
