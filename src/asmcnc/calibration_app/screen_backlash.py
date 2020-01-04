@@ -58,7 +58,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#D6EAF8')
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.repeat_section()
                     
@@ -81,7 +81,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#D6EAF8')
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.skip_section()
                     
