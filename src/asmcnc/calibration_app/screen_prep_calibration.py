@@ -150,7 +150,7 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         background_normal: ''
-                        background_color: hex('#DCEDC8')
+                        background_color: hex('#C5E1A5')
                         disabled: False
                         on_release: 
                             root.next_screen()
