@@ -55,7 +55,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.repeat_section()
                     
@@ -65,9 +66,9 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Repeat section'
+                        text: '[color=455A64]Previous section[/color]'
+                        markup: True
 
             Button:
                 size_hint_y:0.9
@@ -76,7 +77,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.skip_section()
                     
@@ -86,9 +88,9 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Skip section'
+                        text: '[color=455A64]Skip section[/color]'
+                        markup: True
                         
             Button:
                 size_hint_y:0.9
@@ -97,7 +99,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
                     
@@ -109,7 +112,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Quit calibration'
+                        text: '[color=455A64]Quit calibration[/color]'
 
         BoxLayout:
             orientation: 'horizontal'
