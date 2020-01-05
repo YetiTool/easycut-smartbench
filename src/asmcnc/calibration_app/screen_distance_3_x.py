@@ -167,7 +167,7 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.1 mm'
+                                text: '[color=455A64]Nudge 0.1 mm[/color]'
 
                     Button:
                         size_hint_y:0.9
@@ -189,7 +189,7 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.02 mm'
+                                text: '[color=455A64]Nudge 0.02 mm[/color]'
 
 
             BoxLayout:
