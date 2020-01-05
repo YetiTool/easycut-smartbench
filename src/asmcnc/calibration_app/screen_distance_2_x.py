@@ -176,7 +176,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#C5E1A5')
+                        background_color: hex('#FFECB3')
                         on_release: 
                             root.right_button()
                             
@@ -188,7 +188,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: '[color=455A64]Ok, it measures as expected. Move to the next section.[/color]'
+                                text: '[color=455A64]Ok, it measures as expected.//nMove to the next section.[/color]'
                                 valign: 'middle'
                                 halign: 'center'
                                 markup: True
