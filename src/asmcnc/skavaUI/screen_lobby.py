@@ -19,6 +19,8 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 
+from asmcnc.calibration_app import screen_landing
+
 
 Builder.load_string("""
 
@@ -82,12 +84,43 @@ Builder.load_string("""
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'CAD / CAM'
-                        
+
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing: 20
-                                            
+    
+                    Button:
+                        size_hint_y: 8
+                        id: load_button
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.calibrate_smartbench()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/lobby_app_calibrate.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Calibrate SmartBench'
+                   
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                                             
                     Button:
                         id: load_button
                         disabled: True
@@ -116,37 +149,37 @@ Builder.load_string("""
                         font_size: '25sp'
                         text: 'Virtual Jig'
                         
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing: 20
-
-                    Button:
-                        id: load_button
-                        disabled: True
-                        size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-#                             root.go_to_initial_screen(1)
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-#                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
-                                source: "./asmcnc/skavaUI/img/lobby_door_hole_driller_comingsoon.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        size_hint_y: 1
-                        font_size: '25sp'
-                        text: 'Door Holer'
+#                 BoxLayout:
+#                     orientation: 'vertical'
+#                     size_hint_x: 1
+#                     spacing: 20
+# 
+#                     Button:
+#                         id: load_button
+#                         disabled: True
+#                         size_hint_y: 8
+#                         background_color: hex('#FFFFFF00')
+#                         on_release: 
+# #                             root.go_to_initial_screen(1)
+#                             self.background_color = hex('#FFFFFF00')
+#                         on_press:
+#                             self.background_color = hex('#FFFFFF00')
+#                         BoxLayout:
+#                             padding: 0
+#                             size: self.parent.size
+#                             pos: self.parent.pos
+#                             Image:
+#                                 id: image_select
+# #                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
+#                                 source: "./asmcnc/skavaUI/img/lobby_door_hole_driller_comingsoon.png"
+#                                 center_x: self.parent.center_x
+#                                 y: self.parent.y
+#                                 size: self.parent.width, self.parent.height
+#                                 allow_stretch: True 
+#                     Label:
+#                         size_hint_y: 1
+#                         font_size: '25sp'
+#                         text: 'Door Holer'
                         
             # Carousel pane 2
         
@@ -402,6 +435,11 @@ class LobbyScreen(Screen):
         #self.sm.transition.direction = 'up' 
         self.sm.current = 'home'
     
+    def calibrate_smartbench(self):
+        if not self.sm.has_screen('calibration_landing'):
+            calibration_landing_screen = screen_landing.CalibrationLandingScreenClass(name = 'calibration_landing', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(calibration_landing_screen)
+        self.sm.current = 'calibration_landing'
     
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()

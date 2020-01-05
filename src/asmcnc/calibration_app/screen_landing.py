@@ -133,4 +133,6 @@ class CalibrationLandingScreenClass(Screen):
             prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(prep_screen)
         self.sm.current = 'prep'
- 
+
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
