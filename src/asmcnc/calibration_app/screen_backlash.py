@@ -162,7 +162,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#BBDEFB')
+                        background_color: hex('#B3E5FC')
                         on_release: 
                             root.nudge_01()
                             
