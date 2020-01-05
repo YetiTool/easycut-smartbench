@@ -176,7 +176,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#FFE082')
+                        background_color: hex('#C5E1A5')
                         on_release: 
                             root.right_button()
                             
