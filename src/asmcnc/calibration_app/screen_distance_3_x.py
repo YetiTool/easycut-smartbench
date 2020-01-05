@@ -16,7 +16,7 @@ from asmcnc.calibration_app import screen_distance_4_x
 
 Builder.load_string("""
 
-<DistanceScreen3Class>:
+<DistanceScreen3xClass>:
 
     title_label:title_label
     value_input:value_input
@@ -270,7 +270,7 @@ Builder.load_string("""
                                 markup: True
 """)
 
-class DistanceScreen3Class(Screen):
+class DistanceScreen3xClass(Screen):
 
     title_label = ObjectProperty()
     set_move_label = ObjectProperty()
@@ -292,7 +292,7 @@ class DistanceScreen3Class(Screen):
     
       
     def __init__(self, **kwargs):
-        super(DistanceScreen3Class, self).__init__(**kwargs)
+        super(DistanceScreen3xClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
