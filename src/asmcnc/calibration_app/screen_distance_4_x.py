@@ -151,7 +151,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#FFF59D')
+                        background_color: hex('#FFCDD2')
                         on_release: 
                             root.left_button()
                             
@@ -164,7 +164,7 @@ Builder.load_string("""
                                 id: improve_button_label
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'I want to try to improve the result'
+                                text: '[color=455A64]NO - RESTART THIS SECTION[/color]'
 
                     Button:
                         size_hint_y:0.9
@@ -184,10 +184,10 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: 'Ok, it measures as expected. Move to the next section.'
+                                text: '[color=455A64]YES - HOME AND VERIFY[/color]'
                                 valign: 'middle'
                                 halign: 'center'
-                                #markup: True
+                                markup: True
 
 
                         
@@ -220,8 +220,8 @@ class DistanceScreen4xClass(Screen):
                             '[color=000000]Would you like to set the new number of steps?[/color]'
                             
                             
-        self.improve_button_label.text = 'NO - RESTART THIS SECTION'
-        self.continue_button_label.text = 'YES - HOME AND VERIFY'
+#         self.improve_button_label.text = 'NO - RESTART THIS SECTION'
+#         self.continue_button_label.text = 'YES - HOME AND VERIFY'
     
     def left_button(self):
         self.repeat_section()

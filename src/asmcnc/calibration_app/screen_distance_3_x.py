@@ -165,7 +165,6 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.1 mm[/color]'
                                 markup: True
@@ -188,7 +187,6 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.02 mm[/color]'
                                 markup: True
@@ -215,7 +213,6 @@ Builder.load_string("""
                     size_hint_y: 0.4
                     TextInput: 
                         id: value_input
-#                         size_hint_y: 0.4
                         valign: 'middle'
                         halign: 'center'
                         text_size: self.size
@@ -236,7 +233,6 @@ Builder.load_string("""
 
                 Label:
                     id: test_instructions_label
-#                    size_hint_y: 0.5
                     text_size: self.size
                     font_size: '18sp'
                     halign: 'center'

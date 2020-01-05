@@ -66,9 +66,9 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: '[color=455A64]Repeat section[/color]'
+                        markup: True
 
             Button:
                 size_hint_y:0.9
@@ -90,6 +90,7 @@ Builder.load_string("""
                     Label:
                         font_size: '20sp'
                         text: '[color=455A64]Skip section[/color]'
+                        markup: True
                         
             Button:
                 size_hint_y:0.9
@@ -109,9 +110,9 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: '[color=455A64]Quit calibration[/color]'
+                        markup: True
 
         BoxLayout:
             orientation: 'horizontal'
@@ -264,7 +265,6 @@ Builder.load_string("""
                             
                             Label:
                                 id: set_move_label
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Set and check[/color]'
                                 markup: True
