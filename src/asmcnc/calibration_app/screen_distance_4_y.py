@@ -187,13 +187,10 @@ Builder.load_string("""
                                 id: continue_button_label
                                 text_size: self.size
                                 text: '[color=455A64]YES - HOME AND VERIFY[/color]'
+                                font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
-                                markup: True
-
-
-                        
-            
+                                markup: True          
 """)
 
 class DistanceScreen4yClass(Screen):
