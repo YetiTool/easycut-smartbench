@@ -186,6 +186,7 @@ Builder.load_string("""
                                 id: continue_button_label
                                 text_size: self.size
                                 text: '[color=455A64]Ok, it measures as expected. Move to the next section.[/color]'
+                                font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
                                 markup: True

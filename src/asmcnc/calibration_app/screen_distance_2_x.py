@@ -97,7 +97,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#EBF5FB')
+                background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
                     

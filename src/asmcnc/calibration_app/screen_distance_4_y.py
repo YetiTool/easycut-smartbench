@@ -51,7 +51,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.repeat_section()
                     
@@ -72,7 +73,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.skip_section()
                     
@@ -161,9 +163,9 @@ Builder.load_string("""
                             
                             Label:
                                 id: improve_button_label
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]NO - RESTART THIS SECTION[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -187,7 +189,7 @@ Builder.load_string("""
                                 text: '[color=455A64]YES - HOME AND VERIFY[/color]'
                                 valign: 'middle'
                                 halign: 'center'
-                                #markup: True
+                                markup: True
 
 
                         

@@ -255,6 +255,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
+                        background_normal: ''
+                        background_color: hex('#C5E1A5')
                         on_release: 
                             root.next_instruction()
                             
