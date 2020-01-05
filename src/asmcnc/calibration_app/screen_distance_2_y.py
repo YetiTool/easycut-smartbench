@@ -189,11 +189,7 @@ Builder.load_string("""
                                 font_size: '18sp'
                                 valign: 'middle'
                                 halign: 'center'
-                                markup: True
-
-
-                        
-            
+                                markup: True   
 """)
 
 class DistanceScreen2yClass(Screen):
