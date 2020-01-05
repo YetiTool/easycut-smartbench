@@ -168,9 +168,9 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.1 mm[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -190,9 +190,9 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.02 mm[/color]'
+                                markup: True
 
 
             BoxLayout:
@@ -305,7 +305,6 @@ class DistanceScreen1Class(Screen):
         self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'                      
         self.disable_buttons()
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
-#         self.set_move_label.text = 'Set and move'
         self.warning_label.opacity = 0
         self.nudge_counter = 0
     
