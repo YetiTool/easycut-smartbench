@@ -266,7 +266,7 @@ Builder.load_string("""
                             Label:
                                 id: set_move_label
                                 font_size: '20sp'
-                                text: '[color=455A64]Set and move[/color]'
+                                text: '[color=455A64]Set and check[/color]'
                                 markup: True
                         
             
@@ -308,7 +308,6 @@ class DistanceScreen3Class(Screen):
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
                                             ' a measurement at the next perfect millimeter increment.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
-        self.set_move_label.text = 'Set and check'
         self.warning_label.opacity = 0
 
     def nudge_01(self):
