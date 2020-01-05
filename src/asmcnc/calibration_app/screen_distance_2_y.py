@@ -17,7 +17,7 @@ from asmcnc.calibration_app import screen_distance_3_y
 
 Builder.load_string("""
 
-<DistanceScreen2Class>:
+<DistanceScreen2yClass>:
 
     title_label:title_label
     user_instructions_text: user_instructions_text
@@ -195,7 +195,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreen2Class(Screen):
+class DistanceScreen2yClass(Screen):
 
     title_label = ObjectProperty()
     improve_button_label = ObjectProperty()
@@ -207,7 +207,7 @@ class DistanceScreen2Class(Screen):
     y_cal_measure_1 = NumericProperty()
    
     def __init__(self, **kwargs):
-        super(DistanceScreen2Class, self).__init__(**kwargs)
+        super(DistanceScreen2yClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
@@ -227,7 +227,7 @@ class DistanceScreen2Class(Screen):
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y # this has to be here
-        distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1y)
         self.sm.current = 'distance1y'
 
@@ -241,7 +241,7 @@ class DistanceScreen2Class(Screen):
         
     def next_screen(self):
         if not self.sm.has_screen('distance3y'): # only create the new screen if it doesn't exist already
-            distance3y_screen = screen_distance_3_y.DistanceScreen3Class(name = 'distance3y', screen_manager = self.sm, machine = self.m)
+            distance3y_screen = screen_distance_3_y.DistanceScreen3yClass(name = 'distance3y', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(distance3y_screen)
         self.sm.get_screen('distance3y').y_cal_measure_1 = self.y_cal_measure_1
         self.sm.current = 'distance3y'

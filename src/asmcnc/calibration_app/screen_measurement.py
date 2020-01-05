@@ -277,7 +277,7 @@ class MeasurementScreenClass(Screen):
                 self.refresh_screen()
             else:
                 if not self.sm.has_screen('distance1x'):
-                    distance_screen1x = screen_distance_1_x.DistanceScreen1Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+                    distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
                     self.sm.add_widget(distance_screen1x)
                 self.sm.current = 'distance1x'
     

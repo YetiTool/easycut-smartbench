@@ -18,7 +18,7 @@ from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
-<DistanceScreen1Class>:
+<DistanceScreen1yClass>:
 
     title_label:title_label
     value_input:value_input
@@ -275,7 +275,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreen1Class(Screen):
+class DistanceScreen1yClass(Screen):
 
     title_label = ObjectProperty()
     set_move_label = ObjectProperty()
@@ -296,7 +296,7 @@ class DistanceScreen1Class(Screen):
     
       
     def __init__(self, **kwargs):
-        super(DistanceScreen1Class, self).__init__(**kwargs)
+        super(DistanceScreen1yClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
@@ -380,7 +380,7 @@ class DistanceScreen1Class(Screen):
         
     def next_screen(self):
         if not self.sm.has_screen('distance2y'): # only create the new screen if it doesn't exist already
-            distance2y_screen = screen_distance_2_y.DistanceScreen2Class(name = 'distance2y', screen_manager = self.sm, machine = self.m)
+            distance2y_screen = screen_distance_2_y.DistanceScreen2yClass(name = 'distance2y', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(distance2y_screen)
             
         self.sm.get_screen('distance2y').initial_y_cal_move = self.initial_y_cal_move

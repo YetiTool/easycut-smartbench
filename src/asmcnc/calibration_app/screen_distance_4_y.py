@@ -19,7 +19,7 @@ from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
-<DistanceScreen4Class>:
+<DistanceScreen4yClass>:
 
     title_label:title_label
     user_instructions_text: user_instructions_text
@@ -193,7 +193,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreen4Class(Screen):
+class DistanceScreen4yClass(Screen):
 
     title_label = ObjectProperty()
     improve_button_label = ObjectProperty()
@@ -208,7 +208,7 @@ class DistanceScreen4Class(Screen):
     axis = StringProperty()
    
     def __init__(self, **kwargs):
-        super(DistanceScreen4Class, self).__init__(**kwargs)
+        super(DistanceScreen4yClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
@@ -252,7 +252,7 @@ class DistanceScreen4Class(Screen):
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y # this has to be here
-        distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)     
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1y)
         self.sm.current = 'distance1y'
 
@@ -267,7 +267,7 @@ class DistanceScreen4Class(Screen):
     def next_screen(self):
         # set up distance screen 1-x to return to after homing
         from asmcnc.calibration_app import screen_distance_1_y # this has to be here
-        distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)     
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1y)
         self.sm.get_screen('homing').return_to_screen = 'distance1y'        
         # get homing screen

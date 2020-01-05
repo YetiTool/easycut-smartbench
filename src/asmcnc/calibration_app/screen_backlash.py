@@ -429,11 +429,11 @@ class BacklashScreenClass(Screen):
     def next_screen(self):    
         if self.axis == 'X':       
             if not self.sm.has_screen('distance1x'):
-                distance_screen1x = screen_distance_1_x.DistanceScreen1Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+                distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
                 self.sm.add_widget(distance_screen1x)
             self.sm.current = 'distance1x'
         elif self.axis == 'Y':
             if not self.sm.has_screen('distance1y'):
-                distance_screen1y = screen_distance_1_y.DistanceScreen1Class(name = 'distance1y', screen_manager = self.sm, machine = self.m)
+                distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)
                 self.sm.add_widget(distance_screen1y)
             self.sm.current = 'distance1y'            

@@ -20,7 +20,7 @@ from asmcnc.calibration_app import screen_distance_3_x
 
 Builder.load_string("""
 
-<DistanceScreen2Class>:
+<DistanceScreen2xClass>:
 
     title_label:title_label
     user_instructions_text: user_instructions_text
@@ -198,7 +198,7 @@ Builder.load_string("""
             
 """)
 
-class DistanceScreen2Class(Screen):
+class DistanceScreen2xClass(Screen):
 
     title_label = ObjectProperty()
     improve_button_label = ObjectProperty()
@@ -210,7 +210,7 @@ class DistanceScreen2Class(Screen):
     x_cal_measure_1 = NumericProperty()
    
     def __init__(self, **kwargs):
-        super(DistanceScreen2Class, self).__init__(**kwargs)
+        super(DistanceScreen2xClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
@@ -230,7 +230,7 @@ class DistanceScreen2Class(Screen):
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
-        distance_screen1x = screen_distance_1_x.DistanceScreen1Class(name = 'distance1x', screen_manager = self.sm, machine = self.m)
+        distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1x)
         self.sm.current = 'distance1x'
 
