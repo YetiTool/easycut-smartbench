@@ -65,6 +65,7 @@ Builder.load_string("""
                     Label:
                         font_size: '20sp'
                         text: '[color=455A64]Repeat section[/color]'
+                        markup: True
 
             Button:
                 size_hint_y:0.9
