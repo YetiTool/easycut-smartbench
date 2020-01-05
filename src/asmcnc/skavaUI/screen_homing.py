@@ -100,8 +100,7 @@ class HomingScreen(Screen):
     poll_for_success = None
     
     return_to_screen = 'home'
-    
-    current_app = StringProperty()
+    cancel_to_screen = 'home'
     
     def __init__(self, **kwargs):
     
@@ -200,12 +199,11 @@ class HomingScreen(Screen):
         self.sm.current = self.return_to_screen
 
     def cancel_homing(self):
-
         print('Cancelling homing...')
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
 
         if self.quit_home == True:
-            self.return_to_app()
+            self.sm.current = self.cancel_to_screen
             
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)

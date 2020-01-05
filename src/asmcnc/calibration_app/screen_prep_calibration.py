@@ -204,5 +204,6 @@ class PrepCalibrationScreenClass(Screen):
 
         self.sm.get_screen('measurement').axis = 'X'
         self.sm.get_screen('homing').return_to_screen = 'measurement'
+        self.sm.get_screen('homing').cancel_to_screen = 'prep'  
         self.sm.current = 'homing'
 

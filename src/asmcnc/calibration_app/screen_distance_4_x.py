@@ -261,7 +261,8 @@ class DistanceScreen4xClass(Screen):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1x)
-        self.sm.get_screen('homing').return_to_screen = 'distance1x'        
+        self.sm.get_screen('homing').return_to_screen = 'distance1x'
+        self.sm.get_screen('homing').cancel_to_screen = 'prep'    
         # get homing screen
         # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
         self.sm.current = 'homing'

@@ -358,6 +358,7 @@ class HomeScreen(Screen):
 
         # Set flag for homing screen
         self.sm.get_screen('homing').return_to_screen = 'home'
+        self.sm.get_screen('homing').cancel_to_screen = 'home'  
 
         # File label at the top
         if self.job_gcode != []:
