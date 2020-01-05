@@ -55,7 +55,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.repeat_section()
                     
@@ -67,7 +68,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Repeat section'
+                        text: '[color=455A64]Repeat section[/color]'
 
             Button:
                 size_hint_y:0.9
@@ -76,7 +77,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#EBF5FB')
                 on_release: 
                     root.skip_section()
                     
@@ -86,9 +88,8 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Skip section'
+                        text: '[color=455A64]Skip section[/color]'
                         
             Button:
                 size_hint_y:0.9
@@ -97,7 +98,8 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: False
-                # background_color: hex('#a80000FF')
+                background_normal: ''
+                background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
                     
@@ -109,7 +111,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: 'Quit calibration'
+                        text: '[color=455A64]Quit calibration[/color]'
 
         BoxLayout:
             orientation: 'horizontal'
@@ -165,7 +167,8 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.1 mm'
+                                text: '[color=455A64]Nudge 0.1 mm[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -186,8 +189,8 @@ Builder.load_string("""
                             Label:
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.02 mm'
-
+                                text: '[color=455A64]Nudge 0.02 mm[/color]'
+                                markup: True
 
             BoxLayout:
                 orientation: 'vertical'
@@ -261,7 +264,7 @@ Builder.load_string("""
                                 id: set_move_label
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Set and move'
+                                text: '[color=455A64]Set and move[/color]'
                         
             
 """)

@@ -149,7 +149,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#FFF59D')
                         on_release: 
                             root.left_button()
                             

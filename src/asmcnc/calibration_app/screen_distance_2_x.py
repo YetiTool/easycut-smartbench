@@ -220,7 +220,6 @@ class DistanceScreen2Class(Screen):
         self.title_label.text = '[color=000000]X Distance:[/color]'
         self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
                         '[b]The distance should measure ' + measure_string + '[/b]'
-#         self.improve_button_label.text = 'I want to try to improve the result'
         self.continue_button_label.text = '[color=455A64]Ok, it measures as expected.\n Finish and move on to the next section.[/color]'
        
     def left_button(self):

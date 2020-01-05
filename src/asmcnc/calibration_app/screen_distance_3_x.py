@@ -168,6 +168,7 @@ Builder.load_string("""
                                 #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.1 mm[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -190,7 +191,7 @@ Builder.load_string("""
                                 #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.02 mm[/color]'
-
+                                markup: True
 
             BoxLayout:
                 orientation: 'vertical'
