@@ -54,7 +54,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.repeat_section()
                     
                 BoxLayout:
@@ -76,7 +76,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.skip_section()
                     
                 BoxLayout:
@@ -98,7 +98,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#FFCDD2')
-                on_release: 
+                on_press: 
                     root.quit_calibration()
                     
                 BoxLayout:
@@ -154,7 +154,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#FFF59D')
-                        on_release: 
+                        on_press: 
                             root.left_button()
                             
                         BoxLayout:
@@ -177,7 +177,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#C5E1A5')
-                        on_release: 
+                        on_press: 
                             root.right_button()
                             
                         BoxLayout:

@@ -59,7 +59,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.repeat_section()
                     
                 BoxLayout:
@@ -82,7 +82,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.skip_section()
                     
                 BoxLayout:
@@ -91,7 +91,6 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
@@ -105,7 +104,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#FFCDD2')
-                on_release: 
+                on_press: 
                     root.quit_calibration()
                     
                 BoxLayout:
@@ -163,7 +162,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#B3E5FC')
-                        on_release: 
+                        on_press: 
                             root.nudge_01()
                             
                         BoxLayout:
@@ -172,7 +171,6 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Nudge 0.1 mm[/color]'
                                 markup: True
@@ -186,7 +184,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#B3E5FC')
-                        on_release: 
+                        on_press: 
                             root.nudge_002()
                             
                         BoxLayout:
@@ -203,8 +201,6 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-                # spacing: 10
-                # padding: 10
                 size_hint_x: 0.6
 
                 Label:
@@ -228,7 +224,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#C5E1A5')
-                        on_release: 
+                        on_press: 
                             root.next_instruction()
                             
                         BoxLayout:
@@ -238,12 +234,9 @@ Builder.load_string("""
                             
                             Label:
                                 id: test_ok_label
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text:'[color=455A64]Test[/color]'
-                                markup: True
-                        
-            
+                                markup: True         
 """)
 
 class BacklashScreenClass(Screen):

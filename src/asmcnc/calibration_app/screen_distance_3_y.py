@@ -56,7 +56,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.repeat_section()
                     
                 BoxLayout:
@@ -78,7 +78,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.skip_section()
                     
                 BoxLayout:
@@ -100,7 +100,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#FFCDD2')
-                on_release: 
+                on_press: 
                     root.quit_calibration()
                     
                 BoxLayout:
@@ -157,7 +157,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#B3E5FC')
-                        on_release: 
+                        on_press: 
                             root.nudge_01()
                             
                         BoxLayout:
@@ -180,7 +180,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#B3E5FC')
-                        on_release: 
+                        on_press: 
                             root.nudge_002()
                             
                         BoxLayout:
@@ -256,7 +256,7 @@ Builder.load_string("""
                         disabled: False
                         background_normal: ''
                         background_color: hex('#C5E1A5')
-                        on_release: 
+                        on_press: 
                             root.next_instruction()
                             
                         BoxLayout:

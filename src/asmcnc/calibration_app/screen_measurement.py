@@ -54,7 +54,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#D6EAF8')
-                on_release: 
+                on_press: 
                     root.repeat_section()
                     
                 BoxLayout:
@@ -107,7 +107,6 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
@@ -133,7 +132,6 @@ Builder.load_string("""
                     id: instruction_top
                     size_hint_y: 0.2
                     size: self.texture_size
-                    #font_size: '16sp'
                     text_size: self.size
                     markup: True
 

@@ -40,8 +40,7 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: True
-                # background_color: hex('#a80000FF')
-                on_release: 
+                on_press: 
                     root.repeat_section()
                     
                 BoxLayout:
@@ -50,7 +49,6 @@ Builder.load_string("""
                     pos: self.parent.pos
                     
                     Label:
-                        #size_hint_y: 1
                         font_size: '20sp'
                         text: 'Repeat section'
 
@@ -60,8 +58,7 @@ Builder.load_string("""
                 valign: 'top'
                 halign: 'center'
                 disabled: True
-                # background_color: hex('#a80000FF')
-                on_release: 
+                on_press: 
                     root.skip_section()
                     
                 BoxLayout:
@@ -82,7 +79,7 @@ Builder.load_string("""
                 disabled: False
                 background_normal: ''
                 background_color: hex('#FFCDD2')
-                on_release: 
+                on_press: 
                     root.quit_calibration()
                     
                 BoxLayout:
@@ -137,7 +134,6 @@ Builder.load_string("""
                     font_size: '18sp'
                     halign: 'left'
                     valign: 'middle'
-#                    text: '[color=000000]Use the guard post on the Z head as a reference point for the end of the tape measure.[/color]'
                     markup: True
                     
                 BoxLayout:
@@ -152,7 +148,7 @@ Builder.load_string("""
                         background_normal: ''
                         background_color: hex('#C5E1A5')
                         disabled: False
-                        on_release: 
+                        on_press: 
                             root.next_screen()
                             
                         BoxLayout:
@@ -161,7 +157,6 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
                                 text: '[color=455A64]Home[/color]'
                                 markup: True
