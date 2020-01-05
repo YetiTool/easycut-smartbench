@@ -174,9 +174,9 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.1 mm'
+                                text: '[color=455A64]Nudge 0.1 mm[/color]'
+                                markup: True
 
                     Button:
                         size_hint_y:0.9
@@ -196,9 +196,9 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Label:
-                                #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Nudge 0.02 mm'
+                                text: '[color=455A64]Nudge 0.02 mm[/color]'
+                                markup: True
 
 
             BoxLayout:
@@ -244,7 +244,6 @@ Builder.load_string("""
 
                 Label:
                     id: test_instructions_label
-#                    size_hint_y: 0.5
                     text_size: self.size
                     font_size: '18sp'
                     halign: 'center'
@@ -274,9 +273,9 @@ Builder.load_string("""
                             
                             Label:
                                 id: set_move_label
-                                #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Set and move'
+                                text: '[color=455A64]Set and move[/color]'
+                                markup: True
                         
             
 """)
@@ -310,7 +309,7 @@ class DistanceScreen1Class(Screen):
         self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'
         self.disable_buttons()    
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
-        self.set_move_label.text = 'Set and move'
+#         self.set_move_label.text = 'Set and move'
         self.warning_label.opacity = 0
 
         self.nudge_counter = 0
