@@ -28,23 +28,23 @@ Builder.load_string("""
     nudge01_button:nudge01_button
 
     canvas:
-        Color: 
+        Color:
             rgba: hex('#FFFFFF')
-        Rectangle: 
+        Rectangle:
             size: self.size
             pos: self.pos
-             
+
     BoxLayout:
         orientation: 'vertical'
         padding: 20
         spacing: 0
-
+        
         BoxLayout:
             orientation: 'horizontal'
             padding: 0, 0
             spacing: 20
             size_hint_y: 0.2
-        
+
             Button:
                 size_hint_y:0.9
                 id: getout_button
@@ -56,12 +56,12 @@ Builder.load_string("""
                 background_color: hex('#EBF5FB')
                 on_release: 
                     root.repeat_section()
-                    
+
                 BoxLayout:
                     padding: 5
                     size: self.parent.size
                     pos: self.parent.pos
-                    
+
                     Label:
                         font_size: '20sp'
                         text: '[color=455A64]Repeat section[/color]'
@@ -78,18 +78,18 @@ Builder.load_string("""
                 background_color: hex('#EBF5FB')
                 on_release: 
                     root.skip_section()
-                    
+
                 BoxLayout:
                     padding: 5
                     size: self.parent.size
                     pos: self.parent.pos
-                    
+
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
-                        
+
             Button:
                 size_hint_y:0.9
                 id: getout_button
@@ -101,12 +101,12 @@ Builder.load_string("""
                 background_color: hex('#FFCDD2')
                 on_release: 
                     root.skip_to_lobby()
-                    
+
                 BoxLayout:
                     padding: 5
                     size: self.parent.size
                     pos: self.parent.pos
-                    
+
                     Label:
                         font_size: '20sp'
                         text: '[color=455A64]Quit calibration[/color]'
@@ -247,7 +247,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     padding: 10
                     size_hint_y: 0.7
-                    
+
                     Button:
                         size: self.texture_size
                         valign: 'top'
@@ -257,19 +257,17 @@ Builder.load_string("""
                         background_color: hex('#C5E1A5')
                         on_release: 
                             root.next_instruction()
-                            
+
                         BoxLayout:
                             padding: 5
                             size: self.parent.size
                             pos: self.parent.pos
-                            
+
                             Label:
                                 id: set_move_label
                                 font_size: '20sp'
                                 text: '[color=455A64]Set and check[/color]'
                                 markup: True
-                        
-            
 """)
 
 class DistanceScreen3Class(Screen):
