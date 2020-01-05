@@ -167,11 +167,11 @@ Builder.load_string("""
 
                     Button:
                         size_hint_y:0.9
-
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#C5E1A5')
                         on_release: 
                             root.right_button()
                             

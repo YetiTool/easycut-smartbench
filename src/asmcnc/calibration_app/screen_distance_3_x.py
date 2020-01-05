@@ -154,7 +154,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#BBDEFB')
                         on_release: 
                             root.nudge_01()
                             
@@ -175,7 +176,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#BBDEFB')
                         on_release: 
                             root.nudge_002()
                             
@@ -250,6 +252,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
+                        background_normal: ''
+                        background_color: hex('#C5E1A5')
                         on_release: 
                             root.next_instruction()
                             
@@ -260,9 +264,9 @@ Builder.load_string("""
                             
                             Label:
                                 id: set_move_label
-                                #size_hint_y: 1
                                 font_size: '20sp'
-                                text: 'Set and move'
+                                text: '[color=455A64]Set and move[/color]'
+                                markup: True
                         
             
 """)
