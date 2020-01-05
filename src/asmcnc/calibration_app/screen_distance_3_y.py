@@ -155,7 +155,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#BBDEFB')
                         on_release: 
                             root.nudge_01()
                             
@@ -177,7 +178,8 @@ Builder.load_string("""
                         valign: 'top'
                         halign: 'center'
                         disabled: False
-                        # background_color: hex('#a80000FF')
+                        background_normal: ''
+                        background_color: hex('#BBDEFB')
                         on_release: 
                             root.nudge_002()
                             
@@ -264,7 +266,8 @@ Builder.load_string("""
                                 id: set_move_label
                                 #size_hint_y: 1
                                 font_size: '20sp'
-                                text: '[color=455A64]Set and move[/color]'
+                                text: '[color=455A64]Set and check[/color]'
+                                markup: True
                         
             
 """)
@@ -304,7 +307,6 @@ class DistanceScreen3Class(Screen):
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
                                             ' a measurement at the next perfect millimeter increment.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
-        self.set_move_label.text = 'Set and check'
 
     def nudge_01(self):
         self.m.jog_relative('Y',0.1,9999)
