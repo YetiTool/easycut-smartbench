@@ -188,7 +188,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                font_size: '18sp'
+                                font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
                                 markup: True
