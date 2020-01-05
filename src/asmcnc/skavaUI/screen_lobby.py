@@ -114,7 +114,8 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Calibrate SmartBench'
+                        text: 'Calibrate\nSmartBench'
+                        markup: True
                    
                 BoxLayout:
                     orientation: 'vertical'
