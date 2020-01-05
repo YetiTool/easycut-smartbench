@@ -73,7 +73,7 @@ Builder.load_string("""
                     disabled: False
                     background_normal: ''
                     background_color: hex('#FFCDD2')
-                    on_release: 
+                    on_press: 
                         root.skip_to_lobby()
                         
                     BoxLayout:
@@ -96,7 +96,7 @@ Builder.load_string("""
                     disabled: False
                     background_normal: ''
                     background_color: hex('#C5E1A5')
-                    on_release: 
+                    on_press: 
                         root.next_screen()
                         
                     BoxLayout:
