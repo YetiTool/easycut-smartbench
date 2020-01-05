@@ -62,7 +62,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#EBF5FB')
+                background_color: hex('#D6EAF8')
                 on_release: 
                     root.repeat_section()
                     
@@ -85,7 +85,7 @@ Builder.load_string("""
                 halign: 'center'
                 disabled: False
                 background_normal: ''
-                background_color: hex('#EBF5FB')
+                background_color: hex('#D6EAF8')
                 on_release: 
                     root.skip_section()
                     
@@ -164,7 +164,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#BBDEFB')
+                        background_color: hex('#B3E5FC')
                         on_release: 
                             root.nudge_01()
                             
@@ -186,7 +186,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#BBDEFB')
+                        background_color: hex('#B3E5FC')
                         on_release: 
                             root.nudge_002()
                             
