@@ -15,7 +15,6 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from asmcnc.calibration_app import screen_distance_4_y
-from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
@@ -102,7 +101,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -360,8 +359,8 @@ class DistanceScreen3yClass(Screen):
         # Do the actual button command,
         self.set_and_check()
 
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y # this has to be here
@@ -370,8 +369,6 @@ class DistanceScreen3yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
-        final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(final_screen)
         self.sm.current = 'calibration_complete'
         
     def next_screen(self):       

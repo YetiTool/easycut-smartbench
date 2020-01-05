@@ -15,7 +15,6 @@ from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 
-from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
@@ -98,7 +97,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -257,12 +256,10 @@ class DistanceScreen4yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
-        final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(final_screen)
         self.sm.current = 'calibration_complete'
         
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
         
     def next_screen(self):
         # set up distance screen 1-x to return to after homing
@@ -273,3 +270,7 @@ class DistanceScreen4yClass(Screen):
         # get homing screen
         # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
         self.sm.current = 'homing'
+
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('distance4y'))
+

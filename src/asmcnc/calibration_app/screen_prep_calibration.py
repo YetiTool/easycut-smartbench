@@ -83,7 +83,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -183,8 +183,8 @@ class PrepCalibrationScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
         
     def skip_section(self):
         if not self.sm.has_screen('measurement'):

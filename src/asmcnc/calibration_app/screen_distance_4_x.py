@@ -98,7 +98,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -266,8 +266,8 @@ class DistanceScreen4xClass(Screen):
         # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
         self.sm.current = 'homing'
     
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
        
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance4x'))

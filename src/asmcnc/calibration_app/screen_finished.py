@@ -52,11 +52,16 @@ class FinishedCalScreenClass(Screen):
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 3)
-        self.sm.remove_widget(self.sm.get_screen('measurement'))
-        self.sm.remove_widget(self.sm.get_screen('backlash'))
-        self.sm.remove_widget(self.sm.get_screen('prep'))
-        self.sm.remove_widget(self.sm.get_screen('wait'))
-        self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
+        if self.sm.has_screen('measurement'):
+            self.sm.remove_widget(self.sm.get_screen('measurement'))
+        if not self.sm.has_screen('backlash'):
+            self.sm.remove_widget(self.sm.get_screen('backlash'))
+        if not self.sm.has_screen('prep'):
+            self.sm.remove_widget(self.sm.get_screen('prep'))
+        if not self.sm.has_screen('wait'):
+            self.sm.remove_widget(self.sm.get_screen('wait'))
+        if not self.sm.has_screen('calibration_landing'):
+            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
         
     def exit_screen(self, dt):
         self.sm.current = 'lobby'

@@ -100,7 +100,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
 
                 BoxLayout:
                     padding: 5
@@ -353,8 +353,8 @@ class DistanceScreen3xClass(Screen):
         # Do the actual button command,
         self.set_and_check()
 
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here

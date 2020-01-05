@@ -99,7 +99,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_press: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -262,8 +262,8 @@ class MeasurementScreenClass(Screen):
             elif self.sub_screen_count == 1: 
                 self.next_screen()
     
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
         
     def repeat_section(self):
         

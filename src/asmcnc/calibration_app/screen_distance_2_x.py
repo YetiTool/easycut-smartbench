@@ -99,7 +99,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -239,8 +239,8 @@ class DistanceScreen2xClass(Screen):
         self.sm.get_screen('measurement').axis = 'Y'
         self.sm.current = 'measurement'
             
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
         
     def next_screen(self):
         if not self.sm.has_screen('distance3x'): # only create the new screen if it doesn't exist already

@@ -106,7 +106,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -351,8 +351,8 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.opacity = 0
         self.nudge01_button.disabled = True
 
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete' 
     
     def test(self):    
         
@@ -436,4 +436,4 @@ class BacklashScreenClass(Screen):
             if not self.sm.has_screen('distance1y'):
                 distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)
                 self.sm.add_widget(distance_screen1y)
-            self.sm.current = 'distance1y'            
+            self.sm.current = 'distance1y'       

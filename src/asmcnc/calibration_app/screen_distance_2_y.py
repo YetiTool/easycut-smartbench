@@ -96,7 +96,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -229,12 +229,10 @@ class DistanceScreen2yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
-        final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(final_screen)
         self.sm.current = 'calibration_complete'
           
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
         
     def next_screen(self):
         if not self.sm.has_screen('distance3y'): # only create the new screen if it doesn't exist already

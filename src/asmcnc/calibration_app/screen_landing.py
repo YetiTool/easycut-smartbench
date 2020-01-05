@@ -13,6 +13,7 @@ from kivy.uix.widget import Widget
 
 from asmcnc.calibration_app import screen_prep_calibration
 from asmcnc.calibration_app import screen_wait
+from asmcnc.calibration_app import screen_finished
 
 Builder.load_string("""
 
@@ -125,6 +126,8 @@ class CalibrationLandingScreenClass(Screen):
         
         wait_screen = screen_wait.WaitScreenClass(name = 'wait', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(wait_screen)
+        final_screen = screen_finished.FinishedCalScreenClass(name = 'calibration_complete', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(final_screen)
         
         if not self.sm.has_screen('prep'):
             prep_screen = screen_prep_calibration.PrepCalibrationScreenClass(name = 'prep', screen_manager = self.sm, machine = self.m)

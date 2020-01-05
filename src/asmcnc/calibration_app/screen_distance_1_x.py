@@ -109,7 +109,7 @@ Builder.load_string("""
                 background_normal: ''
                 background_color: hex('#FFCDD2')
                 on_release: 
-                    root.skip_to_lobby()
+                    root.quit_calibration()
                     
                 BoxLayout:
                     padding: 5
@@ -367,9 +367,8 @@ class DistanceScreen1xClass(Screen):
         # Do the actual button command, this will also take us to relevant next screens
         self.set_and_move()
 
-
-    def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+    def quit_calibration(self):
+        self.sm.current = 'calibration_complete'
 
     def repeat_section(self):
         self.sm.get_screen('backlash').axis = 'X'
