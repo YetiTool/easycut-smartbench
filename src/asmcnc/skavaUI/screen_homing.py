@@ -99,6 +99,9 @@ class HomingScreen(Screen):
     homing_label = ObjectProperty()
     poll_for_success = None
     
+    return_to_screen = 'home'
+    cancel_to_screen = 'home'
+    
     def __init__(self, **kwargs):
     
         super(HomingScreen, self).__init__(**kwargs)
@@ -106,9 +109,7 @@ class HomingScreen(Screen):
         self.m=kwargs['machine']
     
     
-    def on_enter(self):
-        
-        
+    def on_enter(self):       
         if self.m.state().startswith('Idle'):
             self.homing_text = '[b]Homing. Please wait...[/b]'
         
@@ -117,10 +118,10 @@ class HomingScreen(Screen):
                 self.home_with_squaring()
             else: 
                 self.home_normally()
-    
+
             # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
             self.m.set_state('Home') 
-    
+
             # monitor sequential stream status for completion
             self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
 
@@ -137,7 +138,7 @@ class HomingScreen(Screen):
 
 
     def home_normally(self):
-        
+        # home without suaring the axis
         normal_homing_sequence = ['$H']
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
@@ -181,7 +182,7 @@ class HomingScreen(Screen):
     def check_for_successful_completion(self, dt):
 
         # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.m.state == 'Alarm':
+        if self.m.state() == 'Alarm':
             print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
             self.homing_text = '[b]Homing unsuccessful.[/b]'
@@ -190,25 +191,25 @@ class HomingScreen(Screen):
         elif self.m.s.is_sequential_streaming == False:
             print "Homing success!"
             self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
-
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
-            self.sm.current = 'home'
+            self.return_to_app()
+            
+    def return_to_app(self):
+        self.sm.current = self.return_to_screen
 
     def cancel_homing(self):
-
         print('Cancelling homing...')
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
 
         if self.quit_home == True:
-            self.sm.current = 'home'
+            self.sm.current = self.cancel_to_screen
             
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
         # ... will trigger an alarm screen
-        
-        
+
     def on_leave(self):
         self.quit_home = False
 

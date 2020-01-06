@@ -313,6 +313,7 @@ class HomeScreen(Screen):
     gcode_has_been_checked_and_its_ok = False
     non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
+    
 
     def __init__(self, **kwargs):
 
@@ -353,9 +354,11 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
-
     def on_enter(self): 
-        log('Job loaded:')
+
+        # Set flag for homing screen
+        self.sm.get_screen('homing').return_to_screen = 'home'
+        self.sm.get_screen('homing').cancel_to_screen = 'home'  
 
         # File label at the top
         if self.job_gcode != []:

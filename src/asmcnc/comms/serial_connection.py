@@ -395,6 +395,13 @@ class SerialConnection(object):
         if self.suppress_error_screens == True:
             self.response_log.append(message)
 
+        if message.startswith('error'):
+            log('ERROR from GRBL: ' + message)
+            
+            if self.suppress_error_screens == False:
+                self.sm.get_screen('errorScreen').message = message
+                self.sm.current = 'errorScreen'
+
         # This is a special condition, used only at startup to set EEPROM settings
         if self.is_sequential_streaming:
             self._send_next_sequential_stream()
@@ -404,12 +411,7 @@ class SerialConnection(object):
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
-        if message.startswith('error'):
-            log('ERROR from GRBL: ' + message)
-            
-            if self.suppress_error_screens == False:
-                self.sm.get_screen('errorScreen').message = message
-                self.sm.current = 'errorScreen'
+
 
     # After streaming is completed
     def end_stream(self):
@@ -805,7 +807,7 @@ class SerialConnection(object):
             log("sequential stream ended")
             if self._reset_grbl_after_stream:
                 self.m.soft_reset()
-                print "GRBL Reset after sequential stream ended"
+                log("GRBL Reset after sequential stream ended")
 
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):

@@ -157,6 +157,8 @@ class WarningHoming(Screen):
         self.getout_button.background_color = get_color_from_hex('#c43c00')
                       
     def home_SmartBench_release(self):
+        self.sm.get_screen('homing').return_to_screen = 'home'
+        self.sm.get_screen('homing').cancel_to_screen = 'home'  
         self.sm.current = 'homing'
 
     def return_release(self):
