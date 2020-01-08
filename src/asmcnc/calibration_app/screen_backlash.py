@@ -289,6 +289,8 @@ class BacklashScreenClass(Screen):
 
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
+        self.m.jog_relative('X',-10,9999)
+        self.m.jog_relative('X',10,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -303,8 +305,9 @@ class BacklashScreenClass(Screen):
     def screen_x_2(self):
         self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
-                'Use the nudge buttons to return to the exact position, if required.\n\n' \
-                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+                'If required, use the nudge buttons to return to the exact position.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot,' \
+                ' repeat the section (using the button in the top left).'
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
@@ -322,6 +325,8 @@ class BacklashScreenClass(Screen):
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
         self.m.jog_absolute_single_axis('Y', -2320, 9999)
+        self.m.jog_relative('Y',-10,9999)
+        self.m.jog_relative('Y',10,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -336,8 +341,9 @@ class BacklashScreenClass(Screen):
     def screen_y_2(self):
         self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
-                'Use the nudge buttons to return to the exact position, if required.\n\n' \
-                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+                'If required, use the nudge buttons to return to the exact position.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot,' \
+                ' repeat the section (using the button in the top left).'
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
@@ -369,11 +375,17 @@ class BacklashScreenClass(Screen):
 
 
     def nudge_01(self):
-        self.m.jog_relative(self.axis,0.1,9999)
+        if self.sub_screen_count == 0:
+            self.m.jog_relative(self.axis,0.1,9999)
+        elif self.sub_screen_count == 1:
+            self.m.jog_relative(self.axis,-0.1,9999)    
         self.nudge_counter += 0.1
         
     def nudge_002(self):
-        self.m.jog_relative(self.axis,0.02,9999)
+        if self.sub_screen_count == 0:
+            self.m.jog_relative(self.axis,0.02,9999)
+        elif self.sub_screen_count == 1:
+            self.m.jog_relative(self.axis,-0.02,9999) 
         self.nudge_counter += 0.02
         
     def disable_buttons(self):
