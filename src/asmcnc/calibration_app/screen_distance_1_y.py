@@ -330,10 +330,13 @@ class DistanceScreen1yClass(Screen):
         self.y_cal_measure_1 = float(self.value_input.text)
         
     def update_instruction(self, dt):
-        if not self.m.state() == 'Jog':
-            self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                            ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                            ' before entering the value on the right.'
+        if not self.m.state() == 'Jog':                           
+            self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
+                        ' and take a measurement against the end plate. \n\n' \
+                        'Do not allow the tape measure to bend. \n\n\n' \
+                        'Use the nudge buttons so that the measurement is precisely up to a millimeter line' \
+                        ' before entering the value on the right.'                       
+
             self.enable_buttons()
             Clock.unschedule(self.poll_for_jog_finish)
 

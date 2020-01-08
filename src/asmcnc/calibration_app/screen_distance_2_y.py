@@ -212,7 +212,7 @@ class DistanceScreen2yClass(Screen):
         measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
         
         self.title_label.text = '[color=000000]Y Distance:[/color]' 
-        self.user_instructions_text.text = 'Re-measure distance between guard post and end plate. \n\n' \
+        self.user_instructions_text.text = 'Re-measure distance between the beam and the home end. \n\n' \
                         '[b]The distance should measure ' + measure_string + '[/b]'
         self.continue_button_label.text = '[color=455A64]Ok, it measures as expected.\n Finish calibration.[/color]'
 
