@@ -20,6 +20,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_2_x
+from _ast import Or
 
 
 Builder.load_string("""
@@ -296,6 +297,7 @@ class DistanceScreen1xClass(Screen):
     
     axis = StringProperty()
     
+    expected_user_entry = 100
     initial_x_cal_move = 1000
     x_cal_measure_1 = NumericProperty()   
       
@@ -358,6 +360,17 @@ class DistanceScreen1xClass(Screen):
 
     def next_instruction(self):       
         if self.value_input.text == '':
+            self.warning_label.text = '[color=ff0000]PLEASE ENTER A VALUE![/color]'
+            self.warning_label.opacity = 1
+            return
+        
+        if float(self.value_input.text) < float(self.expected_user_entry - 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO LOW![/color]'
+            self.warning_label.opacity = 1
+            return    
+            
+        if float(self.value_input.text) > float(self.expected_user_entry + 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO HIGH![/color]'
             self.warning_label.opacity = 1
             return
  

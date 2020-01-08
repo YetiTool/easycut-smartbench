@@ -362,6 +362,16 @@ class DistanceScreen1yClass(Screen):
         if self.value_input.text == '':
             self.warning_label.opacity = 1
             return
+        
+        if float(self.value_input.text) < float(self.expected_user_entry - 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO LOW![/color]'
+            self.warning_label.opacity = 1      
+            return     
+            
+        if float(self.value_input.text) > float(self.expected_user_entry + 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO HIGH![/color]'
+            self.warning_label.opacity = 1
+            return
 
         self.save_measured_value()  # get text input
         self.nudge_counter = 0      # clear nudge counter
