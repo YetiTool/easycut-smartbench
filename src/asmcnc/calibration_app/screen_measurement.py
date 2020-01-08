@@ -204,6 +204,7 @@ class MeasurementScreenClass(Screen):
             self.screen_y_1()
 
     def screen_x_1(self):
+        self.m.jog_absolute_single_axis('X',-1184,9999)
         self.instruction_left.text = '[color=000000][b]' + self.axis + ' measurement: [/b]\n\nUse a tape measure to find the position of the Z head.\n\n' \
                             'Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]'
         self.instruction_top.text = ''
@@ -226,6 +227,8 @@ class MeasurementScreenClass(Screen):
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.PNG"
         
     def screen_y_1(self):
+        self.m.jog_absolute_single_axis('X',-660, 9999)
+        self.m.jog_absolute_single_axis('Y', -2320, 9999)
         self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Position tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b].' \
                             'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
         self.instruction_left.text = ''
