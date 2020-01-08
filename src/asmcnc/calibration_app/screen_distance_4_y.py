@@ -24,6 +24,7 @@ Builder.load_string("""
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
+    right_button: right_button
 
     canvas:
         Color: 
@@ -167,8 +168,8 @@ Builder.load_string("""
                                 markup: True
 
                     Button:
-                        size_hint_y:0.9
-
+                        id: right_button
+                        size_hint_y: 0.9
                         valign: 'top'
                         halign: 'center'
                         disabled: False
@@ -198,13 +199,12 @@ class DistanceScreen4yClass(Screen):
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
+    right_button = ObjectProperty()
     
     old_y_steps = NumericProperty()
     new_y_steps = NumericProperty()
     
-    sub_screen_count = 0
-    
-    axis = StringProperty()
+    expected_steps = 56.7
    
     def __init__(self, **kwargs):
         super(DistanceScreen4yClass, self).__init__(**kwargs)
@@ -218,13 +218,29 @@ class DistanceScreen4yClass(Screen):
         old_steps = str(self.old_y_steps)
         new_steps = str(self.new_y_steps)
 
-        # Step 4: 
-        self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
-                        'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
-                        'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
-                        ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
-                        '[color=000000]Would you like to set the new number of steps?[/color]'
-                        
+        if self.new_y_steps < (self.expected_steps - 2):
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                                'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                                'This is outside of the expected range, please repeat the section. \n\n' \
+                                'If you get this result again, please contact customer support for help.'
+            self.right_button.disabled = True
+   
+        elif self.new_y_steps > (self.expected_steps + 2):
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                                'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                                'This is outside of the expected range, please repeat the section. \n\n' \
+                                'If you get this result again, please contact customer support for help.'  
+            self.right_button.disabled = True
+        
+        else: 
+            # Step 4: 
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                            'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                            'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
+                            ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
+                            '[color=000000]Would you like to set the new number of steps?[/color]'
+            self.right_button.disabled = False
+                            
                         
 #         self.improve_button_label.text = '[color=455A64]NO - RESTART THIS SECTION[/color]'
 #         self.continue_button_label.text = '[color=455A64]YES - HOME AND VERIFY[/color]'
