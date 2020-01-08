@@ -19,6 +19,8 @@ Builder.load_string("""
 
 <CalibrationLandingScreenClass>:
 
+    user_instruction: user_instruction
+    
     canvas:
         Color: 
             rgba: hex('#FFFFFF')
@@ -44,11 +46,12 @@ Builder.load_string("""
                 markup: True
 
             Label:
+                id: user_instruction
+                size_hint_y: 2
                 text_size: self.size
                 font_size: '18sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=546E7A]We calibrate SmartBench in the factory, but if it has had a bumpy journey, or you have been using it a lot, we recommend you re-calibrate to be sure.[/color]'
                 markup: True
 
             Label:
@@ -114,10 +117,17 @@ Builder.load_string("""
 
 class CalibrationLandingScreenClass(Screen):
     
+    user_instruction = ObjectProperty()
+    
     def __init__(self, **kwargs):
         super(CalibrationLandingScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        
+        self.user_instruction.text  = '[color=546E7A]We calibrate SmartBench in the factory, but we recommend you re-calibrate if:\n\n' \
+                                '- it has had a bumpy journey;\n' \
+                                '- if you have been using it a lot;\n' \
+                                '- or if the ambient temperature is hotter or cooler than usual.[/color]'
 
     def skip_to_lobby(self):
         self.sm.current = 'lobby'

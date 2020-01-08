@@ -166,7 +166,8 @@ Builder.load_string("""
 
 class PrepCalibrationScreenClass(Screen):
 
-    preparation_list = '- Ensure that wheels and pinions are set by gently rocking each axis. See our YouTube channel for more information.\n' \
+    preparation_list = '- Ensure that wheels and pinions are set by gently rocking each axis. See our YouTube video,' \
+                        ' [i]SmartBench: Walkthrough of Calibration Wizard[/i], for more information.\n' \
                         '- Clear the machine - remove any material from the machine.\n' \
                         '- Lower the X beam so that it is running on the bench.\n' \
                         '- Clean all tracks and racks with a vacuum.\n' \

@@ -360,6 +360,7 @@ class DistanceScreen3yClass(Screen):
         self.set_and_check()
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
 
     def repeat_section(self):
@@ -369,6 +370,7 @@ class DistanceScreen3yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
         
     def next_screen(self):       

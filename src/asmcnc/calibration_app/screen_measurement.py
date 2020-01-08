@@ -226,7 +226,7 @@ class MeasurementScreenClass(Screen):
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.PNG"
         
     def screen_y_1(self):
-        self.instruction_top.text = '[color=000000][b]Y measurement:[/b] lay tape on top of bench [b](1)[/b], threading underneath the X beam [b](2)[/b].' \
+        self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Position tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b].' \
                             'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
@@ -261,6 +261,7 @@ class MeasurementScreenClass(Screen):
                 self.next_screen()
     
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
         
     def repeat_section(self):
