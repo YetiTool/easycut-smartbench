@@ -277,7 +277,7 @@ class BacklashScreenClass(Screen):
                                 'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
             if self.axis == 'Y':
                 self.user_instructions_text.text = 'Use a scraper blade or block, pushed against the inside' \
-                                ' surface of the beam to take a measurement of the beam’s position against' \
+                                ' surface of the beam to take a measurement of the beam\'s position against' \
                                 ' the tape measure. \n\n' \
                                 'Do not allow the tape measure to bend. \n\n\n' \
                                 'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
