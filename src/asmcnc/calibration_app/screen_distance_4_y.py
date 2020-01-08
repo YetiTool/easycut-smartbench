@@ -221,14 +221,14 @@ class DistanceScreen4yClass(Screen):
         if self.new_y_steps < (self.expected_steps - 2):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
-                                'This is outside of the expected range, please repeat the section. \n\n' \
+                                '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'
             self.right_button.disabled = True
    
         elif self.new_y_steps > (self.expected_steps + 2):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
-                                'This is outside of the expected range, please repeat the section. \n\n' \
+                                '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'  
             self.right_button.disabled = True
         
