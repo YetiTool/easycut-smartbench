@@ -104,7 +104,7 @@ Builder.load_string("""
                 size_hint_x: 1.3
                  
                 Label:
-                    size_hint_y: 0.3
+                    size_hint_y: 0.2
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
