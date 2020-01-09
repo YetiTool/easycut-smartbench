@@ -294,7 +294,8 @@ class DistanceScreen1yClass(Screen):
     y_cal_measure_1 = NumericProperty()
     y_cal_measure_2 = NumericProperty()
     
-      
+    expected_user_entry = 200
+    
     def __init__(self, **kwargs):
         super(DistanceScreen1yClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -361,6 +362,7 @@ class DistanceScreen1yClass(Screen):
         # for the next version of this screen:         
         if self.value_input.text == '':
             self.warning_label.opacity = 1
+            self.warning_label.text = '[color=ff0000]PLEASE ENTER A VALUE![/color]'
             return
         
         if float(self.value_input.text) < float(self.expected_user_entry - 20):

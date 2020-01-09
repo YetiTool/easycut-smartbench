@@ -312,7 +312,7 @@ class BacklashScreenClass(Screen):
         self.nudge_counter = 0
     
     def screen_x_3(self):
-        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' \
                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
@@ -348,7 +348,7 @@ class BacklashScreenClass(Screen):
         self.nudge_counter = 0
     
     def screen_y_3(self):
-        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' \
                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
