@@ -135,6 +135,7 @@ Builder.load_string("""
                     halign: 'left'
                     valign: 'middle'
                     markup: True
+                    text: '[color=000000]When your machine is prepared, start the homing sequence.[/color]'
                     
                 BoxLayout:
                     orientation: 'horizontal'

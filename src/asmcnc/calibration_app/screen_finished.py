@@ -59,7 +59,11 @@ class FinishedCalScreenClass(Screen):
     def on_enter(self):
 
         if self.calibration_cancelled == True:
-            self.screen_text.text = '[color=455A64]Calibration Cancelled[/color]'
+            self.screen_text.text = '[color=455A64]Calibration Cancelled.\n\n' \
+                                    'Please remove your tape measure from SmartBench![/color]'
+        else: 
+             self.screen_text.text = '[color=455A64]Calibration Complete!\n\n' \
+                                    'Please remove your tape measure from SmartBench.[/color]'           
         
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
         if self.sm.has_screen('measurement'):
