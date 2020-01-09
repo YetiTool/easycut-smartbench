@@ -135,7 +135,6 @@ Builder.load_string("""
                     halign: 'left'
                     valign: 'middle'
                     markup: True
-                    text: '[color=000000]When your machine is prepared, start the homing sequence.[/color]'
                     
                 BoxLayout:
                     orientation: 'horizontal'
@@ -172,7 +171,8 @@ class PrepCalibrationScreenClass(Screen):
                         '- Clear the machine - remove any material from the machine.\n' \
                         '- Lower the X beam so that it is running on the bench.\n' \
                         '- Clean all tracks and racks with a vacuum.\n' \
-                        '- Prepare a calibrated tape measure (e.g. check the tape against a meter rule).\n'
+                        '- Prepare a calibrated tape measure (e.g. check the tape against a meter rule).\n' \
+                        '- When your machine is prepared, press "Home" to start the homing sequence.'
 
     
     def __init__(self, **kwargs):

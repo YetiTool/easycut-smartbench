@@ -130,7 +130,7 @@ Builder.load_string("""
                  
                 Label:
                     id: title_label
-                    size_hint_y: 0.3
+                    size_hint_y: 0.2
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
