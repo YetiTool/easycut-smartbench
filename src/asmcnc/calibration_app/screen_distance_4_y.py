@@ -24,7 +24,7 @@ Builder.load_string("""
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
-    right_button: right_button
+    right_button_id: right_button_id
 
     canvas:
         Color: 
@@ -168,7 +168,7 @@ Builder.load_string("""
                                 markup: True
 
                     Button:
-                        id: right_button
+                        id: right_button_id
                         size_hint_y: 0.9
                         valign: 'top'
                         halign: 'center'
@@ -186,7 +186,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: '[color=455A64]YES - HOME AND VERIFY[/color]'
+                                text: '[color=455A64]YES - SET, HOME, AND VERIFY[/color]'
                                 font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
@@ -199,7 +199,7 @@ class DistanceScreen4yClass(Screen):
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
-    right_button = ObjectProperty()
+    right_button_id = ObjectProperty()
     
     old_y_steps = NumericProperty()
     new_y_steps = NumericProperty()
@@ -223,14 +223,14 @@ class DistanceScreen4yClass(Screen):
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'
-            self.right_button.disabled = True
+            self.right_button_id.disabled = True
    
         elif self.new_y_steps > (self.expected_steps + 2):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'  
-            self.right_button.disabled = True
+            self.right_button_id.disabled = True
         
         else: 
             # Step 4: 
@@ -239,7 +239,7 @@ class DistanceScreen4yClass(Screen):
                             'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
                             ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
                             '[color=000000]Would you like to set the new number of steps?[/color]'
-            self.right_button.disabled = False
+            self.right_button_id.disabled = False
                             
                         
 #         self.improve_button_label.text = '[color=455A64]NO - RESTART THIS SECTION[/color]'

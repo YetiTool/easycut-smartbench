@@ -187,7 +187,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: '[color=455A64]YES - SET, HOME AND VERIFY[/color]'
+                                text: '[color=455A64]YES - SET, HOME, AND VERIFY[/color]'
                                 font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
@@ -226,14 +226,14 @@ class DistanceScreen4xClass(Screen):
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'
-            #self.right_button.disabled = True
+            self.right_button_id.disabled = True
    
         elif self.new_x_steps > (self.expected_steps + 2):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'  
-            #self.right_button.disabled = True
+            self.right_button_id.disabled = True
         
         else: 
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
@@ -241,7 +241,7 @@ class DistanceScreen4xClass(Screen):
                                 'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
                                 ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
                                 '[color=000000]Would you like to set the new number of steps?[/color]'
-            self.right_button.disabled = False
+            self.right_button_id.disabled = False
     
     def left_button(self):
         self.repeat_section()
