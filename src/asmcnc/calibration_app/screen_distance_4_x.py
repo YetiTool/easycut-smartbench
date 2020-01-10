@@ -25,7 +25,7 @@ Builder.load_string("""
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
-    right_button: right_button
+    right_button_id: right_button_id
 
     canvas:
         Color: 
@@ -169,7 +169,7 @@ Builder.load_string("""
                                 markup: True
 
                     Button:
-                        id: right_button
+                        id: right_button_id
                         size_hint_y:0.9
                         valign: 'top'
                         halign: 'center'
@@ -204,7 +204,7 @@ class DistanceScreen4xClass(Screen):
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
-    right_button = ObjectProperty()
+    right_button_id = ObjectProperty()
     
     old_x_steps = NumericProperty()
     new_x_steps = NumericProperty()
@@ -253,7 +253,7 @@ class DistanceScreen4xClass(Screen):
                                   ]
         self.m.s.start_sequential_stream(set_new_steps_sequence) 
         # this makes sure we stay on this screen until steps have been set before triggering homing sequence     
-        # self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion,1)
+        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion,1)
 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
