@@ -67,7 +67,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -337,7 +337,8 @@ class DistanceScreen1yClass(Screen):
                             ' the tape measure. \n\n' \
                             'Do not allow the tape measure to bend. \n\n\n' \
                             'Use the nudge buttons so that the measurement is precisely up to a millimeter line' \
-                            ' before entering the value on the right.'                       
+                            ' before entering the value on the right.\n\n' \
+                            'Nudging will move the Z head towards Y-home.'                    
 
             self.enable_buttons()
             Clock.unschedule(self.poll_for_jog_finish)

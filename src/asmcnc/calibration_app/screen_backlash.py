@@ -70,7 +70,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:

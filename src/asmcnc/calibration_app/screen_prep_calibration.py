@@ -50,7 +50,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: 'Repeat section'
+                        text: 'Go Back'
 
             Button:
                 size_hint_y:0.9
