@@ -338,9 +338,9 @@ class DistanceScreen1xClass(Screen):
         
     def update_instruction(self, dt):
         if not self.m.state() == 'Jog':
-            self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                            ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                            ' before entering the value on the right.\n\n' \
+            self.user_instructions_text.text = '\n\nPush the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
+                            'Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
+                            'before entering the value on the right.\n\n' \
                             'Nudging will move the Z head towards X-home.'
             self.enable_buttons()        
             Clock.unschedule(self.poll_for_jog_finish)
