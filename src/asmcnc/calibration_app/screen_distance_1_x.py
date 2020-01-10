@@ -341,7 +341,7 @@ class DistanceScreen1xClass(Screen):
             self.user_instructions_text.text = '\n\nPush the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
                             'Do not allow the tape measure to bend. \n\nUse the nudge buttons so that the measurement is precisely up to a millimeter line,' \
                             'before entering the value on the right.\n\n' \
-                            'Nudging will move the Z head towards X-home.'
+                            'Nudging will move the Z head away from X-home.'
             self.enable_buttons()        
             Clock.unschedule(self.poll_for_jog_finish)
     

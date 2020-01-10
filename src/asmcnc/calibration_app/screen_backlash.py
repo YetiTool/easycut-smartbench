@@ -275,14 +275,14 @@ class BacklashScreenClass(Screen):
                                 ' and take a measurement against the end plate. \n\n' \
                                 'Do not allow the tape measure to bend. \n\n\n' \
                                 'Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n' \
-                                'Nudging will move the Z head towards X-home.'
+                                'Nudging will move the Z head away from X-home.'
             if self.axis == 'Y':
                 self.user_instructions_text.text = 'Use a scraper blade or block, pushed against the inside' \
                                 ' surface of the beam to take a measurement of the beam\'s position against' \
                                 ' the tape measure. \n\n' \
                                 'Do not allow the tape measure to bend. \n\n\n' \
                                 'Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n' \
-                                'Nudging will move the Z head towards Y-home.'
+                                'Nudging will move the Z head away from Y-home.'
                                
             self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                             '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]' 
@@ -310,14 +310,14 @@ class BacklashScreenClass(Screen):
                 'If required, use the nudge buttons to return to the exact position.\n\n' \
                 'The amount nudged will be added to give the backlash value. If you overshoot,' \
                 ' repeat the section (using the button in the top left).\n\n' \
-                'Nudging will move the Z head away from X-home.'
+                'Nudging will move the Z head towards X-home.'
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
     def screen_x_3(self):
-        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' \
-                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
-                'and motor pinions to ensure a better engagement.\n\n'
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' # \
+#                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
+#                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
@@ -347,15 +347,15 @@ class BacklashScreenClass(Screen):
                 'If required, use the nudge buttons to return to the exact position.\n\n' \
                 'The amount nudged will be added to give the backlash value. If you overshoot,' \
                 ' repeat the section (using the button in the top left).\n\n' \
-                'Nudging will move the Z head away from Y-home.'
+                'Nudging will move the Z head towards Y-home.'
                 
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
     def screen_y_3(self):
-        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' \
-                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
-                'and motor pinions to ensure a better engagement.\n\n'
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' # \
+#                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
+#                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0

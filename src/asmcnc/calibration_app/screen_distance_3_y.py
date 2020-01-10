@@ -307,7 +307,7 @@ class DistanceScreen3yClass(Screen):
         # set this screen up for when user returns to Step 3 :)       
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
                                             ' a measurement at the next perfect millimeter increment.\n\n' \
-                                            'Nudging will move the Z head towards Y-home.'
+                                            'Nudging will move the Z head away from Y-home.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
 
     def nudge_01(self):
