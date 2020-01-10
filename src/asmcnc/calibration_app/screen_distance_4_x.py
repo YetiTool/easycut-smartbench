@@ -187,7 +187,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: '[color=455A64]YES - HOME AND VERIFY[/color]'
+                                text: '[color=455A64]YES - SET, HOME AND VERIFY[/color]'
                                 font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
@@ -226,14 +226,14 @@ class DistanceScreen4xClass(Screen):
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'
-            self.right_button.disabled = True
+            #self.right_button.disabled = True
    
         elif self.new_x_steps > (self.expected_steps + 2):
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
                                 'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                                 '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
                                 'If you get this result again, please contact customer support for help.'  
-            self.right_button.disabled = True
+            #self.right_button.disabled = True
         
         else: 
             self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
