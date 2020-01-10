@@ -239,12 +239,7 @@ class DistanceScreen4yClass(Screen):
                             'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
                             ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
                             '[color=000000]Would you like to set the new number of steps?[/color]'
-            self.right_button_id.disabled = False
-                            
-                        
-#         self.improve_button_label.text = '[color=455A64]NO - RESTART THIS SECTION[/color]'
-#         self.continue_button_label.text = '[color=455A64]YES - HOME AND VERIFY[/color]'
-                        
+            self.right_button_id.disabled = False                       
 
     def left_button(self):
         self.repeat_section()
