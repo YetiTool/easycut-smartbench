@@ -303,7 +303,7 @@ class DistanceScreen1yClass(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'
-        self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'                      
+        self.user_instructions_text.text = '\n\nPlease wait while the machine moves to the next measurement point...'                      
         self.disable_buttons()
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
         self.warning_label.opacity = 0
