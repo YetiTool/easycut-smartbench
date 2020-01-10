@@ -253,7 +253,7 @@ class DistanceScreen4xClass(Screen):
                                   ]
         self.m.s.start_sequential_stream(set_new_steps_sequence) 
         # this makes sure we stay on this screen until steps have been set before triggering homing sequence     
-        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion,1)
+        # self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion,1)
 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
