@@ -70,7 +70,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -130,7 +130,7 @@ Builder.load_string("""
                  
                 Label:
                     id: title_label
-                    size_hint_y: 0.3
+                    size_hint_y: 0.2
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
@@ -270,10 +270,20 @@ class BacklashScreenClass(Screen):
 
     def update_instruction(self, dt):
         if not self.m.state() == 'Jog':
-            self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
-                            ' and take a measurement against the end plate. \n\n' \
-                            'Do not allow the tape measure to bend. \n\n\n' \
-                            'Use the nudge buttons so that the measurement is precisely up to a millimeter line.'
+            if self.axis == 'X':
+                self.user_instructions_text.text = 'Push the tape measure up against the guard post,' \
+                                ' and take a measurement against the end plate. \n\n' \
+                                'Do not allow the tape measure to bend. \n\n\n' \
+                                'Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n' \
+                                'Nudging will move the Z head away from X-home.'
+            if self.axis == 'Y':
+                self.user_instructions_text.text = 'Use a scraper blade or block, pushed against the inside' \
+                                ' surface of the beam to take a measurement of the beam\'s position against' \
+                                ' the tape measure. \n\n' \
+                                'Do not allow the tape measure to bend. \n\n\n' \
+                                'Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n' \
+                                'Nudging will move the Z head away from Y-home.'
+                               
             self.test_instructions_label.text = '[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n' \
                             '\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]' 
             self.enable_buttons()        
@@ -281,6 +291,8 @@ class BacklashScreenClass(Screen):
 
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
+        self.m.jog_relative('X',-10,9999)
+        self.m.jog_relative('X',10,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -295,15 +307,17 @@ class BacklashScreenClass(Screen):
     def screen_x_2(self):
         self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
-                'Use the nudge buttons to return to the exact position, if required.\n\n' \
-                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+                'If required, use the nudge buttons to return to the exact position.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot,' \
+                ' repeat the section (using the button in the top left).\n\n' \
+                'Nudging will move the Z head towards X-home.'
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
     def screen_x_3(self):
-        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
-                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
-                'and motor pinions to ensure a better engagement.\n\n'
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' # \
+#                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
+#                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
@@ -314,6 +328,8 @@ class BacklashScreenClass(Screen):
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
         self.m.jog_absolute_single_axis('Y', -2320, 9999)
+        self.m.jog_relative('Y',-10,9999)
+        self.m.jog_relative('Y',10,9999)
         self.sub_screen_count = 0
         self.nudge002_button.opacity = 1
         self.nudge002_button.disabled = False
@@ -328,15 +344,18 @@ class BacklashScreenClass(Screen):
     def screen_y_2(self):
         self.test_ok_label.text = '[color=455A64]Ok[/color]'
         self.user_instructions_text.text = 'Repeat the measurement.\n\n' \
-                'Use the nudge buttons to return to the exact position, if required.\n\n' \
-                'The amount nudged will be added to give the backlash value. If you overshoot, repeat the section.'
+                'If required, use the nudge buttons to return to the exact position.\n\n' \
+                'The amount nudged will be added to give the backlash value. If you overshoot,' \
+                ' repeat the section (using the button in the top left).\n\n' \
+                'Nudging will move the Z head towards Y-home.'
+                
         self.test_instructions_label.text = ' '
         self.nudge_counter = 0
     
     def screen_y_3(self):
-        self.user_instructions_text.text = 'The backlash is value is ' + str(self.nudge_counter) + ' mm.\n\n' \
-                'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels' \
-                'and motor pinions to ensure a better engagement.\n\n'
+        self.user_instructions_text.text = 'The backlash value is ' + str(self.nudge_counter) + ' mm.\n\n' # \
+#                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
+#                 'and motor pinions to ensure a better engagement.\n\n'
         self.nudge_counter = 0
         self.test_ok_label.text = '[color=455A64]Next section[/color]'
         self.nudge002_button.opacity = 0
@@ -345,6 +364,7 @@ class BacklashScreenClass(Screen):
         self.nudge01_button.disabled = True
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete' 
     
     def test(self):    
@@ -360,11 +380,17 @@ class BacklashScreenClass(Screen):
 
 
     def nudge_01(self):
-        self.m.jog_relative(self.axis,0.1,9999)
+        if self.sub_screen_count == 0:
+            self.m.jog_relative(self.axis,0.1,9999)
+        elif self.sub_screen_count == 1:
+            self.m.jog_relative(self.axis,-0.1,9999)    
         self.nudge_counter += 0.1
         
     def nudge_002(self):
-        self.m.jog_relative(self.axis,0.02,9999)
+        if self.sub_screen_count == 0:
+            self.m.jog_relative(self.axis,0.02,9999)
+        elif self.sub_screen_count == 1:
+            self.m.jog_relative(self.axis,-0.02,9999) 
         self.nudge_counter += 0.02
         
     def disable_buttons(self):

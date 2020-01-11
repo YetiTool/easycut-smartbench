@@ -67,7 +67,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: '[color=455A64]Previous section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -294,7 +294,8 @@ class DistanceScreen1yClass(Screen):
     y_cal_measure_1 = NumericProperty()
     y_cal_measure_2 = NumericProperty()
     
-      
+    expected_user_entry = 200
+    
     def __init__(self, **kwargs):
         super(DistanceScreen1yClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -302,7 +303,7 @@ class DistanceScreen1yClass(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]Y Distance:[/color]'
-        self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'                      
+        self.user_instructions_text.text = '\n\nPlease wait while the machine moves to the next measurement point...'                      
         self.disable_buttons()
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
         self.warning_label.opacity = 0
@@ -330,10 +331,15 @@ class DistanceScreen1yClass(Screen):
         self.y_cal_measure_1 = float(self.value_input.text)
         
     def update_instruction(self, dt):
-        if not self.m.state() == 'Jog':
-            self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                            ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                            ' before entering the value on the right.'
+        if not self.m.state() == 'Jog':                           
+            self.user_instructions_text.text = 'Use a scraper blade or block, pushed against the inside' \
+                            ' surface of the beam to take a measurement of the beam\'s position against' \
+                            ' the tape measure. \n\n' \
+                            'Do not allow the tape measure to bend. \n\n\n' \
+                            'Use the nudge buttons so that the measurement is precisely up to a millimeter line' \
+                            ' before entering the value on the right.\n\n' \
+                            'Nudging will move the Z head away from Y-home.'                    
+
             self.enable_buttons()
             Clock.unschedule(self.poll_for_jog_finish)
 
@@ -357,6 +363,17 @@ class DistanceScreen1yClass(Screen):
         # for the next version of this screen:         
         if self.value_input.text == '':
             self.warning_label.opacity = 1
+            self.warning_label.text = '[color=ff0000]PLEASE ENTER A VALUE![/color]'
+            return
+        
+        if float(self.value_input.text) < float(self.expected_user_entry - 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO LOW![/color]'
+            self.warning_label.opacity = 1      
+            return     
+            
+        if float(self.value_input.text) > float(self.expected_user_entry + 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO HIGH![/color]'
+            self.warning_label.opacity = 1
             return
 
         self.save_measured_value()  # get text input
@@ -366,6 +383,7 @@ class DistanceScreen1yClass(Screen):
         self.set_and_move()
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
 
     def repeat_section(self):

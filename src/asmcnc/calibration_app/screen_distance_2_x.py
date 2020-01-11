@@ -64,7 +64,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -240,6 +240,7 @@ class DistanceScreen2xClass(Screen):
         self.sm.current = 'measurement'
             
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
         
     def next_screen(self):

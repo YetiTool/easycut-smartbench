@@ -64,7 +64,7 @@ Builder.load_string("""
 
                     Label:
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -300,7 +300,8 @@ class DistanceScreen3xClass(Screen):
  
         # set this screen up for when user returns to Step 3 :)       
         self.user_instructions_text.text = 'Using the nudges move the carriage to achieve' \
-                                            ' a measurement at the next perfect millimeter increment.'
+                                            ' a measurement at the next perfect millimeter increment.\n\n' \
+                                            'Nudging will move the Z head away from X-home.'
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'  
         self.warning_label.opacity = 0
 
@@ -354,6 +355,7 @@ class DistanceScreen3xClass(Screen):
         self.set_and_check()
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
 
     def repeat_section(self):

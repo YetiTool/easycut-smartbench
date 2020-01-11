@@ -17,6 +17,8 @@ Builder.load_string("""
 
 <FinishedCalScreenClass>:
 
+    screen_text:screen_text
+
     canvas:
         Color: 
             rgba: hex('##FAFAFA')
@@ -35,6 +37,7 @@ Builder.load_string("""
             size_hint_x: 0.8
 
             Label:
+                id: screen_text
                 text_size: self.size
                 font_size: '28sp'
                 halign: 'center'
@@ -44,14 +47,25 @@ Builder.load_string("""
 """)
 
 class FinishedCalScreenClass(Screen):
-       
+    
+    screen_text = ObjectProperty()
+    calibration_cancelled = False
+    
     def __init__(self, **kwargs):
         super(FinishedCalScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
     def on_enter(self):
-        self.poll_for_success = Clock.schedule_once(self.exit_screen, 3)
+
+        if self.calibration_cancelled == True:
+            self.screen_text.text = '[color=455A64]Calibration Cancelled.\n\n' \
+                                    'Please remove your tape measure from SmartBench![/color]'
+        else: 
+             self.screen_text.text = '[color=455A64]Calibration Complete!\n\n' \
+                                    'Please remove your tape measure from SmartBench.[/color]'           
+        
+        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
         if self.sm.has_screen('measurement'):
             self.sm.remove_widget(self.sm.get_screen('measurement'))
         if self.sm.has_screen('backlash'):

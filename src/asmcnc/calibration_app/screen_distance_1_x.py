@@ -20,6 +20,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from asmcnc.calibration_app import screen_distance_2_x
+from _ast import Or
 
 
 Builder.load_string("""
@@ -74,7 +75,7 @@ Builder.load_string("""
                     Label:
                         #size_hint_y: 1
                         font_size: '20sp'
-                        text: '[color=455A64]Previous section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -296,6 +297,7 @@ class DistanceScreen1xClass(Screen):
     
     axis = StringProperty()
     
+    expected_user_entry = 100
     initial_x_cal_move = 1000
     x_cal_measure_1 = NumericProperty()   
       
@@ -306,7 +308,7 @@ class DistanceScreen1xClass(Screen):
 
     def on_pre_enter(self):
         self.title_label.text = '[color=000000]X Distance:[/color]'
-        self.user_instructions_text.text = '\n\n Please wait while the machine moves to the next measurement point...'
+        self.user_instructions_text.text = '\n\nPlease wait while the machine moves to the next measurement point...'
         self.disable_buttons()    
         self.test_instructions_label.text = '[color=000000]Enter the value recorded by your tape measure. [/color]'
 #         self.set_move_label.text = 'Set and move'
@@ -336,9 +338,10 @@ class DistanceScreen1xClass(Screen):
         
     def update_instruction(self, dt):
         if not self.m.state() == 'Jog':
-            self.user_instructions_text.text = '\n\n Push the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
-                            ' Do not allow the tape measure to bend. \n\n Use the nudge buttons so that the measurement is precisely up to a millimeter line,' \
-                            ' before entering the value on the right.'   
+            self.user_instructions_text.text = '\n\nPush the tape measure up against the guard post, and take an exact measurement against the end plate. \n\n' \
+                            'Do not allow the tape measure to bend. \n\nUse the nudge buttons so that the measurement is precisely up to a millimeter line,' \
+                            'before entering the value on the right.\n\n' \
+                            'Nudging will move the Z head away from X-home.'
             self.enable_buttons()        
             Clock.unschedule(self.poll_for_jog_finish)
     
@@ -358,6 +361,17 @@ class DistanceScreen1xClass(Screen):
 
     def next_instruction(self):       
         if self.value_input.text == '':
+            self.warning_label.text = '[color=ff0000]PLEASE ENTER A VALUE![/color]'
+            self.warning_label.opacity = 1
+            return
+        
+        if float(self.value_input.text) < float(self.expected_user_entry - 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO LOW![/color]'
+            self.warning_label.opacity = 1
+            return    
+            
+        if float(self.value_input.text) > float(self.expected_user_entry + 20):
+            self.warning_label.text = '[color=ff0000]VALUE IS TOO HIGH![/color]'
             self.warning_label.opacity = 1
             return
  
@@ -368,6 +382,7 @@ class DistanceScreen1xClass(Screen):
         self.set_and_move()
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
 
     def repeat_section(self):

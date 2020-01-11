@@ -25,6 +25,7 @@ Builder.load_string("""
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
+    right_button_id: right_button_id
 
     canvas:
         Color: 
@@ -63,7 +64,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: '[color=455A64]Repeat section[/color]'
+                        text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
@@ -168,6 +169,7 @@ Builder.load_string("""
                                 markup: True
 
                     Button:
+                        id: right_button_id
                         size_hint_y:0.9
                         valign: 'top'
                         halign: 'center'
@@ -185,7 +187,7 @@ Builder.load_string("""
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                text: '[color=455A64]YES - HOME AND VERIFY[/color]'
+                                text: '[color=455A64]YES - SET, HOME, AND VERIFY[/color]'
                                 font_size: '20sp'
                                 valign: 'middle'
                                 halign: 'center'
@@ -202,9 +204,12 @@ class DistanceScreen4xClass(Screen):
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
+    right_button_id = ObjectProperty()
     
     old_x_steps = NumericProperty()
     new_x_steps = NumericProperty()
+    
+    expected_steps = 56.7
    
     def __init__(self, **kwargs):
         super(DistanceScreen4xClass, self).__init__(**kwargs)
@@ -213,17 +218,30 @@ class DistanceScreen4xClass(Screen):
 
     def on_pre_enter(self):
         old_steps = str(self.old_x_steps)
-        new_steps = str(self.new_x_steps)        
+        new_steps = str(self.new_x_steps)  
         self.title_label.text = '[color=000000]X Distance:[/color]'
-        self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
-                            'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
-                            'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
-                            ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
-                            '[color=000000]Would you like to set the new number of steps?[/color]'
-                            
-                            
-#         self.improve_button_label.text = 'NO - RESTART THIS SECTION'
-#         self.continue_button_label.text = 'YES - HOME AND VERIFY'
+        
+        if self.new_x_steps < (self.expected_steps - 2):
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                                'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                                '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
+                                'If you get this result again, please contact customer support for help.'
+            self.right_button_id.disabled = True
+   
+        elif self.new_x_steps > (self.expected_steps + 2):
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                                'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                                '[color=ff0000][b]This is outside of the expected range, please repeat the section.[/b][/color] \n\n' \
+                                'If you get this result again, please contact customer support for help.'  
+            self.right_button_id.disabled = True
+        
+        else: 
+            self.user_instructions_text.text = 'The old number of steps per mm was : [b]' + old_steps + '[/b] \n\n' \
+                                'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
+                                'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
+                                ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
+                                '[color=000000]Would you like to set the new number of steps?[/color]'
+            self.right_button_id.disabled = False
     
     def left_button(self):
         self.repeat_section()
@@ -244,7 +262,6 @@ class DistanceScreen4xClass(Screen):
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
-
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)
@@ -262,12 +279,11 @@ class DistanceScreen4xClass(Screen):
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1x)
         self.sm.get_screen('homing').return_to_screen = 'distance1x'
-        self.sm.get_screen('homing').cancel_to_screen = 'prep'    
-        # get homing screen
-        # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
+        self.sm.get_screen('homing').cancel_to_screen = 'prep'
         self.sm.current = 'homing'
     
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
        
     def on_leave(self):

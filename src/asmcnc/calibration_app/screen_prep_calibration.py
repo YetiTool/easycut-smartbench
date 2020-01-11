@@ -50,7 +50,7 @@ Builder.load_string("""
                     
                     Label:
                         font_size: '20sp'
-                        text: 'Repeat section'
+                        text: 'Go Back'
 
             Button:
                 size_hint_y:0.9
@@ -104,7 +104,7 @@ Builder.load_string("""
                 size_hint_x: 1.3
                  
                 Label:
-                    size_hint_y: 0.3
+                    size_hint_y: 0.2
                     font_size: '35sp'
                     text_size: self.size
                     halign: 'left'
@@ -166,11 +166,13 @@ Builder.load_string("""
 
 class PrepCalibrationScreenClass(Screen):
 
-    preparation_list = '- Ensure that wheels and pinions are set by gently rocking each axis. See our YouTube channel for more information.\n' \
+    preparation_list = '- Ensure that wheels and pinions are set by gently rocking each axis. See our YouTube video,' \
+                        ' [i]SmartBench: Walkthrough of Calibration Wizard[/i], for more information.\n' \
                         '- Clear the machine - remove any material from the machine.\n' \
                         '- Lower the X beam so that it is running on the bench.\n' \
                         '- Clean all tracks and racks with a vacuum.\n' \
-                        '- Prepare a calibrated tape measure (e.g. check the tape against a meter rule).\n'
+                        '- Prepare a calibrated tape measure (e.g. check the tape against a meter rule).\n' \
+                        '- When your machine is prepared, press "Home" to start the homing sequence.'
 
     
     def __init__(self, **kwargs):
