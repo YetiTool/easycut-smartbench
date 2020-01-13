@@ -238,7 +238,8 @@ class DistanceScreen4yClass(Screen):
                             'The new number of steps per mm is: [b]' + new_steps + '[/b] \n\n' \
                             'You will need to home the machine, and then repeat steps 1 and 2 to verify your results. \n\n' \
                             ' \n [color=ff0000][b]WARNING: SETTING THE NEW NUMBER OF STEPS WILL CHANGE HOW THE MACHINE MOVES.[/b][/color] \n\n' \
-                            '[color=000000]Would you like to set the new number of steps?[/color]'
+                            '[color=000000]Would you like to set the new number of steps?[/color] \n\n' \
+                            '[color=ff0000][b]REMOVE YOUR TAPE MEASURE BEFORE HOMING THE MACHINE[/b][/color]'
             self.right_button_id.disabled = False                       
 
     def left_button(self):
