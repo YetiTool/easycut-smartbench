@@ -137,7 +137,7 @@ Builder.load_string("""
 
                 Image:
                     id: image_select
-                    source: "./asmcnc/skavaUI/img/x_measurement_1.PNG"
+                    source: "./asmcnc/skavaUI/img/x_measurement_1_UPDATE.jpg"
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
                     size: self.parent.width, self.parent.height
@@ -212,21 +212,21 @@ class MeasurementScreenClass(Screen):
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0
         self.instruction_left.size_hint_x = 0.4
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1_UPDATE.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1_UPDATE.jpg"
 
     def screen_x_2(self):
         self.instruction_top.text = '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0        
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2_UPDATE.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2_UPDATE.jpg"
         
     def screen_x_3(self):
         self.instruction_top.text = '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0       
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3_UPDATE.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3_UPDATE.jpg"
         
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
