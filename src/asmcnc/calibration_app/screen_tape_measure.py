@@ -1,6 +1,6 @@
 '''
-Created on 12 December 2019
-Landing Screen for the Calibration App
+Created on 17 January 2020
+Warning to remind user to remove their tape measure before homing the machine
 
 @author: Letty
 '''
@@ -90,3 +90,5 @@ class TapeMeasureScreenClass(Screen):
     def next_screen(self):
         self.sm.current = 'homing'
         
+    def on_leave(self):
+        self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
