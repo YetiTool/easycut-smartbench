@@ -16,6 +16,7 @@ from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 
 
+
 Builder.load_string("""
 
 <DistanceScreen4yClass>:
@@ -274,15 +275,18 @@ class DistanceScreen4yClass(Screen):
         self.sm.current = 'calibration_complete'
         
     def next_screen(self):
+
         # set up distance screen 1-x to return to after homing
-        from asmcnc.calibration_app import screen_distance_1_y # this has to be here
-        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)     
+        from asmcnc.calibration_app import screen_distance_1_y
+        from asmcnc.calibration_app import screen_tape_measure
+        distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)
+        tape_measure_screen = screen_tape_measure.TapeMeasureScreenClass(name = 'tape_measure_alert', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1y)
+        self.sm.add_widget(tape_measure_screen)
         self.sm.get_screen('homing').return_to_screen = 'distance1y'
         self.sm.get_screen('homing').cancel_to_screen = 'prep'   
-        # get homing screen
-        # FLAG: HOMING SCREEN DIDN'T STAY UP THE WHOLE TIME MACHINE WAS HOMING... why the hell not??
-        self.sm.current = 'homing'
+
+        self.sm.current = 'tape_measure_alert'
 
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance4y'))
