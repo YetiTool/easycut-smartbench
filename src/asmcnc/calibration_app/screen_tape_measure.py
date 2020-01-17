@@ -41,14 +41,14 @@ Builder.load_string("""
                 center_y: self.parent.center_y
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
-                size_hint_y: 1.5
+                size_hint_y: 1.4
 
             Label:
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=ff0000]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
+                text: '[color=ff0000]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE BEFORE CONTINUING.[/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
         
