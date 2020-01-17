@@ -137,7 +137,7 @@ Builder.load_string("""
 
                 Image:
                     id: image_select
-                    source: "./asmcnc/skavaUI/img/x_measurement_1.PNG"
+#                    source: "./asmcnc/skavaUI/img/x_measurement_1.jpg"
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
                     size: self.parent.width, self.parent.height
@@ -205,28 +205,28 @@ class MeasurementScreenClass(Screen):
 
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
-        self.instruction_left.text = '[color=000000][b]' + self.axis + ' measurement: [/b]' \
+        self.instruction_left.text = '[color=000000][b]' + self.axis + ' measurement technique: [/b]' \
                             '\n\nDisconnect the vacuum.' \
                             '\n\nUse a tape measure to find the position of the Z head.\n\n' \
                             'Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]'
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0
         self.instruction_left.size_hint_x = 0.4
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1.jpg"
 
     def screen_x_2(self):
         self.instruction_top.text = '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0        
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.jpg"
         
     def screen_x_3(self):
         self.instruction_top.text = '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0       
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.jpg"
         
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
