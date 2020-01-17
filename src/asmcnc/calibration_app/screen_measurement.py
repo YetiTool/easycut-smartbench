@@ -137,7 +137,7 @@ Builder.load_string("""
 
                 Image:
                     id: image_select
-                    source: "./asmcnc/skavaUI/img/x_measurement_1.jpg"
+#                    source: "./asmcnc/skavaUI/img/x_measurement_1.jpg"
                     center_x: self.parent.center_x
                     center_y: self.parent.center_y
                     size: self.parent.width, self.parent.height
