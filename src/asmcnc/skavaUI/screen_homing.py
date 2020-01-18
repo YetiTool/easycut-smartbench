@@ -203,6 +203,10 @@ class HomingScreen(Screen):
         if self.m.state().startswith('Idle'):
             self.trigger_homing()
             Clock.unschedule(self.poll_for_ready)
+            print('ready')
+            
+        else:
+            print('not ready')
             
 
     def cancel_homing(self):
