@@ -111,6 +111,8 @@ class HomingScreen(Screen):
         self.m.soft_reset()
         self.m.unlock_after_alarm()
         
+        # need a "poll for idle status" to give time for machine to reset
+        
         if self.m.state().startswith('Idle'):
             self.homing_text = '[b]Homing. Please wait...[/b]'
         
