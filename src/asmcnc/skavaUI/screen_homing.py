@@ -108,6 +108,8 @@ class HomingScreen(Screen):
     
     def on_enter(self):
         
+        self.m.soft_reset()
+        self.m.unlock_after_alarm()
         
         if self.m.state().startswith('Idle'):
             self.homing_text = '[b]Homing. Please wait...[/b]'
