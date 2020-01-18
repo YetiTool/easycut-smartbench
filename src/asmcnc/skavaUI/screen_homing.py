@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 import sys, os
+from time import sleep
 
 
 # Kivy UI builder:
@@ -110,7 +111,6 @@ class HomingScreen(Screen):
         
         self.homing_text = '[b]Homing. Please wait...[/b]'
         self.m.soft_reset()
-        self.m.unlock_after_alarm()
         self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
     
     def trigger_homing(self):
@@ -201,6 +201,8 @@ class HomingScreen(Screen):
             
     def is_machine_idle(self, dt):  
         if self.m.state().startswith('Idle'):
+            self.m.unlock_after_alarm()
+            time.sleep(0.2)
             self.trigger_homing()
             Clock.unschedule(self.poll_for_ready)
             print('ready')
