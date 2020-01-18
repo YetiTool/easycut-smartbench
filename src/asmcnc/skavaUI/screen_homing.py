@@ -111,7 +111,7 @@ class HomingScreen(Screen):
         
         self.homing_text = '[b]Homing. Please wait...[/b]'
         self.m.soft_reset()
-        time.sleep(0.2)      
+        sleep(0.2)      
         self.m.unlock_after_alarm()
         self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
     
