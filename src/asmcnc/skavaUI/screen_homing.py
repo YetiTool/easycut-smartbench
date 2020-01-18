@@ -108,11 +108,13 @@ class HomingScreen(Screen):
     
     def on_enter(self):
         
+        self.homing_text = '[b]Homing. Please wait...[/b]'
         self.m.soft_reset()
         self.m.unlock_after_alarm()
-        
-        # need a "poll for idle status" to give time for machine to reset
-        
+        self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 0.1)
+    
+    def trigger_homing(self):
+     
         if self.m.state().startswith('Idle'):
             self.homing_text = '[b]Homing. Please wait...[/b]'
         
@@ -137,8 +139,6 @@ class HomingScreen(Screen):
             self.homing_label.font_size =  '20sp'
             self.homing_text = 'Machine is not Idle. Please ensure machine is in an idle state before re-attempting to Home.'
             self.quit_home = True
-            
-
 
     def home_normally(self):
         
@@ -198,6 +198,12 @@ class HomingScreen(Screen):
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
             self.sm.current = 'home'
+            
+    def is_machine_idle(self, dt):  
+        if self.m.state == 'Idle':
+            self.trigger_homing()
+            Clock.unschedule(self.poll_for_ready)
+            
 
     def cancel_homing(self):
 
