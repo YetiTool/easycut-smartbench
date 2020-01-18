@@ -2,6 +2,8 @@
 Created March 2019
 
 @author: Letty
+
+Screen to prevent user interaction with GUI while machine is homing
 '''
 import kivy
 from kivy.lang import Builder
@@ -13,7 +15,6 @@ from kivy.clock import Clock
 
 import sys, os
 from time import sleep
-
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -38,8 +39,6 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-#             spacing: 20
-#             padding: 10
             
             Image:
                 size_hint_y: 1.2
@@ -104,14 +103,13 @@ class HomingScreen(Screen):
     
         super(HomingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-    
+        self.m=kwargs['machine']  
     
     def on_enter(self):
         
         self.homing_text = '[b]Homing. Please wait...[/b]'
         self.m.soft_reset()
-        sleep(0.2)      
+        sleep(0.2)
         self.m.unlock_after_alarm()
         self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
     
@@ -147,7 +145,6 @@ class HomingScreen(Screen):
         normal_homing_sequence = ['$H']
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
-
     def home_with_squaring(self):
 
         # This function is designed to square the machine's X&Y axes
@@ -182,8 +179,7 @@ class HomingScreen(Screen):
                                   ]
 
         self.m.s.start_sequential_stream(square_homing_sequence)
-
-        
+     
     def check_for_successful_completion(self, dt):
 
         # if alarm state is triggered which prevents homing from completing, stop checking for success
@@ -204,12 +200,7 @@ class HomingScreen(Screen):
     def is_machine_idle(self, dt):  
         if self.m.state().startswith('Idle'):
             self.trigger_homing()
-            Clock.unschedule(self.poll_for_ready)
-            print('ready')
-            
-        else:
-            print('not ready')
-            
+            Clock.unschedule(self.poll_for_ready)           
 
     def cancel_homing(self):
 
@@ -220,11 +211,10 @@ class HomingScreen(Screen):
             self.sm.current = 'home'
             
         else:
+            # ... will trigger an alarm screen
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
-        # ... will trigger an alarm screen
-        
-        
+    
     def on_leave(self):
         self.quit_home = False
 
