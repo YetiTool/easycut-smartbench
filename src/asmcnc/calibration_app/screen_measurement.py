@@ -228,6 +228,14 @@ class MeasurementScreenClass(Screen):
         self.instruction_left.size_hint_x = 0       
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.jpg"
         
+    def screen_x_4(self):
+        self.instruction_top.text = '[color=000000]Note which face you take your measurement from, and be sure to use the same face every time you make a measurement.' \
+                                    '\nMake sure you make your measurement in line with the reference face.[/color]'
+        self.instruction_left.text = ''
+        self.instruction_top.size_hint_y = 0.2
+        self.instruction_left.size_hint_x = 0       
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_4.png"
+        
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
         self.m.jog_absolute_single_axis('Y', -2320, 9999)
@@ -256,6 +264,9 @@ class MeasurementScreenClass(Screen):
                 self.screen_x_3()
                 self.sub_screen_count = 2
             elif self.sub_screen_count == 2:
+                self.screen_x_4()
+                self.sub_screen_count = 3
+            elif self.sub_screen_count == 3:
                 self.next_screen()
                 
         if self.axis == 'Y':
