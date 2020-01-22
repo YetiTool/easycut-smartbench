@@ -128,7 +128,7 @@ Builder.load_string("""
                             
                             Label:
                                 id: middle_button_label
-                                font_size: '20sp'
+                                font_size: '22sp'
                                 markup: True
                     
                     Button:
@@ -216,12 +216,14 @@ class HomingScreen(Screen):
         
         ## Right button
         self.right_button.size_hint_y = 1
+        self.right_button.size_hint_x = 0.1
         self.right_button.opacity = 1
         self.right_button.disabled = False
         self.right_button_label.text = '[color=455A64]No, cancel[/color]'
         
         ## Left button
         self.left_button.size_hint_y = 1
+        self.left_button.size_hint_x = 0.1
         self.left_button.opacity = 1
         self.left_button.disabled = False
         self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
@@ -286,12 +288,14 @@ class HomingScreen(Screen):
         
         ## Right button
         self.right_button.size_hint_y = 1
+        self.right_button.size_hint_x = 0.1
         self.right_button.opacity = 1
         self.right_button.disabled = False
         self.right_button_label.text = '[color=B0BEC5]No, cancel[/color]'
         
         ## Left button
         self.left_button.size_hint_y = 1
+        self.left_button.size_hint_x = 0.1
         self.left_button.opacity = 1
         self.left_button.disabled = False
         self.left_button_label.text = '[color=B0BEC5]Yes, continue[/color]'
