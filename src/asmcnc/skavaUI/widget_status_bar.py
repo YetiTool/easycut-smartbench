@@ -7,7 +7,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
@@ -33,9 +33,11 @@ Builder.load_string("""
     wifi_image:wifi_image
     ip_status_label:ip_status_label
 
+    cheeky_color: '#4CAF50FF'
+
     canvas:
         Color:
-            rgba: hex('#4CAF50FF')
+            rgba: hex(self.cheeky_color)
         Rectangle:
             pos:self.pos
             size: self.size
@@ -135,6 +137,8 @@ class StatusBar(Widget):
 
     GRBL_REPORT_INTERVAL = 0.1
     IP_REPORT_INTERVAL = 2
+    
+    cheeky_color = StringProperty('#4CAF50FF')
 
     def __init__(self, **kwargs):
 
@@ -143,7 +147,6 @@ class StatusBar(Widget):
         self.sm=kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
-
 
     def on_enter(self):
         self.refresh_ip_label_value()
