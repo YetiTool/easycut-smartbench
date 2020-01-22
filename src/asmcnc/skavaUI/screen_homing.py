@@ -381,6 +381,7 @@ class HomingScreen(Screen):
      
     def check_for_successful_completion(self, dt):
 
+        self.m.set_state('Home')
         # if alarm state is triggered which prevents homing from completing, stop checking for success
         if self.m.state().startswith('Alarm'):
             print "Poll for homing success unscheduled"
