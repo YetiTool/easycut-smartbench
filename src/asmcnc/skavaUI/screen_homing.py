@@ -188,7 +188,7 @@ class HomingScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#42A5F5'
 
-    def on_enter(self):
+    def on_pre_enter(self):
 
         if self.m.state().startswith('Idle'):
             self.pre_homing_reset()          
@@ -319,8 +319,8 @@ class HomingScreen(Screen):
         
     def is_machine_idle(self, dt):  
         if self.m.state().startswith('Idle'):
-            self.trigger_homing()
             Clock.unschedule(self.poll_for_ready)
+            self.trigger_homing()
     
     def trigger_homing(self):
         
@@ -409,6 +409,8 @@ class HomingScreen(Screen):
             self.m.soft_reset()
     
     def on_leave(self):
+        if self.poll_for_success != None: Clock.unschedule(self.poll_for_success)
+        if self.poll_for_ready != None: Clock.unschedule(self.poll_for_ready)
         self.quit_home = False
 
 
