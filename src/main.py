@@ -112,7 +112,7 @@ class SkavaUI(App):
         sm.add_widget(diagnostics_screen)
 
         # set screen to start on
-        sm.current = 'homing'
+        sm.current = 'safety'
         return sm
 
 
