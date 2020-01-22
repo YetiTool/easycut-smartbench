@@ -177,6 +177,9 @@ class HomingScreen(Screen):
     poll_for_success = None
     quit_home = False
     
+    return_to_screen = 'home'
+    cancel_to_screen = 'home'
+    
     def __init__(self, **kwargs):
     
         super(HomingScreen, self).__init__(**kwargs)
@@ -192,6 +195,7 @@ class HomingScreen(Screen):
 
         if self.m.state().startswith('Idle'):
             self.pre_homing_reset()          
+
 
         elif self.m.state().startswith('Alarm'):
             self.quit_home = True
@@ -340,7 +344,7 @@ class HomingScreen(Screen):
         self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
 
     def home_normally(self):
-        
+        # home without suaring the axis
         normal_homing_sequence = ['$H']
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
@@ -383,7 +387,9 @@ class HomingScreen(Screen):
 
         self.m.set_state('Home')
         # if alarm state is triggered which prevents homing from completing, stop checking for success
+
         if self.m.state().startswith('Alarm'):
+
             print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
             self.homing_text = '[b]Homing unsuccessful.[/b]'
@@ -392,18 +398,19 @@ class HomingScreen(Screen):
         elif self.m.s.is_sequential_streaming == False:
             print "Homing success!"
             self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
-
             self.m.is_machine_homed = True # status on powerup
             Clock.unschedule(self.poll_for_success)
-            self.sm.current = 'home'          
+            self.return_to_app()
+            
+    def return_to_app(self):
+        self.sm.current = self.return_to_screen
 
     def cancel_homing(self):
-
         print('Cancelling homing...')
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success) # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
 
         if self.quit_home == True:
-            self.sm.current = 'home'
+            self.sm.current = self.cancel_to_screen
             
         else:
             # ... will trigger an alarm screen

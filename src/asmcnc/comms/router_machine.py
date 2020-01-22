@@ -91,7 +91,6 @@ class RouterMachine(object):
 
 
     def home_all(self):
-
         self.sm.current = 'homing'
 
 
