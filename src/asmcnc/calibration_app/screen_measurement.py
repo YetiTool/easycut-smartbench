@@ -248,7 +248,7 @@ class MeasurementScreenClass(Screen):
     def screen_y_2(self):
         self.instruction_left.text = '[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] ' \
                             'to take a measurement of the beam\'s position against the tape measure.' \
-                            '\n\nNote which face you take your initial measurement from, and make sure you use that same face each time you measure.[/color]'
+                            '\n\nNote which face [b](1)[/b] you take your initial measurement from, and make sure you use that same face each time you measure.[/color]'
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0.1
         self.instruction_left.size_hint_x = 0.4
