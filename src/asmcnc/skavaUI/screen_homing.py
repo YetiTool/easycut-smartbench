@@ -2,6 +2,8 @@
 Created March 2019
 
 @author: Letty
+
+Screen to prevent user interaction with GUI while machine is homing
 '''
 import kivy
 from kivy.lang import Builder
@@ -12,7 +14,9 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 import sys, os
+from time import sleep
 
+from asmcnc.skavaUI import widget_status_bar
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -20,69 +24,135 @@ Builder.load_string("""
 <HomingScreen>:
 
     homing_label:homing_label
-
+    status_container:status_container
+    right_button:right_button
+    middle_button:middle_button
+    left_button:left_button
+    right_button_label:right_button_label
+    middle_button_label:middle_button_label
+    left_button_label:left_button_label
+    
     canvas:
         Color: 
-            rgba: hex('#0D47A1')
+            rgba: hex('#FFFFFF')
         Rectangle: 
             size: self.size
-            pos: self.pos
-             
-    BoxLayout:
-        orientation: 'horizontal'
-        padding: 70
-        spacing: 70
-        size_hint_x: 1
+            pos: self.pos         
+
+    BoxLayout: 
+        spacing: 0
+        padding: 0
+        orientation: 'vertical'
 
         BoxLayout:
-            orientation: 'vertical'
+            size_hint_y: 0.08
+            id: status_container 
+            pos: self.pos        
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 40
+            spacing: 70
             size_hint_x: 1
-#             spacing: 20
-#             padding: 10
-            
-            Image:
-                size_hint_y: 1.2
-                keep_ratio: True
-                allow_stretch: True
-                source: "./asmcnc/skavaUI/img/home_big.png"
+    
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 1
+                spacing: 10
                 
-            Label:
-                id: homing_label
-                text_size: self.size
-                size_hint_y: 0.5
-                text: root.homing_text
-                markup: True
-                font_size: '40sp'   
-                valign: 'bottom'
-                halign: 'center'
-                
-            AnchorLayout: 
-                Button:
-                    size_hint_x: 0.25
-                    size_hint_y: 0.35
-                    halign: 'center'
-                    valign: 'middle'
-                    background_normal: ''
-                    background_color: hex('#1E88E5')
-                    on_release: 
-                        root.cancel_homing()
+                Image:
+                    size_hint_y: 1.2
+                    keep_ratio: True
+                    allow_stretch: True
+                    source: "./asmcnc/skavaUI/img/home_big.png"
+                    valign: 'top'
                     
-                    Label:
-                        #size: self.texture_size
-                        text: '[b]Cancel Homing[/b]'
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        text_size: self.size
-                        valign: 'middle'
+                Label:
+                    id: homing_label
+                    text_size: self.size
+                    size_hint_y: 0.8
+                    text: root.homing_text
+                    markup: True
+                    font_size: '18sp'   
+                    valign: 'bottom'
+                    halign: 'center'
+    
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: 0, 0
+                    spacing: 20
+                    size_hint_y: 0.7
+                
+                    Button:
+                        size_hint_y: 1
+                        id: right_button
+                        size: self.texture_size
+                        valign: 'top'
                         halign: 'center'
-                        font_size: '22sp'
-                        markup: True
-            Label: 
-                size_hint_y: 0.2
-                text: 'Squaring the axes will cause the machine to make a stalling noise. This is normal.'
-                markup: True
-                font_size: '20sp' 
-                valign: 'top'
+                        disabled: False
+                        background_normal: ''
+                        background_color: hex('#FFCDD2')
+                        on_press: 
+                            root.cancel_homing()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                id: right_button_label
+                                font_size: '22sp'
+                                text: '[color=455A64]No, cancel[/color]'
+                                markup: True
+                    Button:
+                        id: middle_button
+                        size_hint_y: None
+                        size_hint_x: None
+                        opacity: 0
+                        height: '0dp'
+                        width: '0dp'
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        background_normal: ''
+                        background_color: hex('#64B5F6')
+                        on_press: 
+                            root.cancel_homing()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                id: middle_button_label
+                                font_size: '24sp'
+                                markup: True
+                    
+                    Button:
+                        size_hint_y: 1
+                        id: left_button
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        background_normal: ''
+                        background_color: hex('#BBDEFB')
+                        on_press: 
+                            root.pre_homing_reset()
+                            
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                id: left_button_label
+                                font_size: '22sp'
+                                text: '[color=455A64]Yes, continue[/color]'
+                                markup: True
                 
 
 """)
@@ -92,12 +162,20 @@ Builder.load_string("""
 
 class HomingScreen(Screen):
     
-    
     is_squaring_XY_needed_after_homing = True
-    homing_text = StringProperty()
-    quit_home = False
     homing_label = ObjectProperty()
+    homing_text = StringProperty()
+
+    right_button = ObjectProperty()
+    middle_button = ObjectProperty()
+    left_button = ObjectProperty()
+    
+    right_button_label = ObjectProperty()
+    middle_button_label = ObjectProperty()
+    left_button_label = ObjectProperty()   
+    
     poll_for_success = None
+    quit_home = False
     
     return_to_screen = 'home'
     cancel_to_screen = 'home'
@@ -107,41 +185,168 @@ class HomingScreen(Screen):
         super(HomingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
-    
-    def on_enter(self):       
-        if self.m.state().startswith('Idle'):
-            self.homing_text = '[b]Homing. Please wait...[/b]'
         
-            # Is this first time since power cycling?
-            if self.is_squaring_XY_needed_after_homing: 
-                self.home_with_squaring()
-            else: 
-                self.home_normally()
+        # Status bar
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_container.add_widget(self.status_bar_widget)
+        self.status_bar_widget.cheeky_color = '#42A5F5'
 
-            # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-            self.m.set_state('Home') 
+    def on_pre_enter(self):
 
-            # monitor sequential stream status for completion
-            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 1)           
+        if self.m.state().startswith('Idle'):
+            self.pre_homing_reset()          
+
 
         elif self.m.state().startswith('Alarm'):
-            self.homing_label.font_size =  '20sp'
-            self.homing_text = 'Machine is not Idle. Please clear the alarm state before re-attempting to Home.'
             self.quit_home = True
-            
-        else:
-            self.homing_label.font_size =  '20sp'
-            self.homing_text = 'Machine is not Idle. Please ensure machine is in an idle state before re-attempting to Home.'
-            self.quit_home = True
-            
+            self.layout_in_alarm_state()
 
+        else:
+            self.quit_home = True
+            self.layout_other_state()                     
+    
+    def layout_in_alarm_state(self):
+
+        # Text
+        self.homing_label.font_size =  '19sp'
+        self.homing_text = '[color=546E7A]The Machine is in an alarm state.' \
+                        '\n\nHoming will clear the alarm state, and the machine will resume normal operation.' \
+                        '\nWould you like to continue?[/color]'
+        
+        # Status bar colour      
+        self.status_bar_widget.cheeky_color = '#E53935'
+        
+        # Two button layout
+        
+        ## Right button
+        self.right_button.size_hint_y = 1
+        self.right_button.size_hint_x = 0.1
+        self.right_button.opacity = 1
+        self.right_button.disabled = False
+        self.right_button_label.text = '[color=455A64]No, cancel[/color]'
+        
+        ## Left button
+        self.left_button.size_hint_y = 1
+        self.left_button.size_hint_x = 0.1
+        self.left_button.opacity = 1
+        self.left_button.disabled = False
+        self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
+
+        ## Middle button
+        self.middle_button.size_hint_y = None
+        self.middle_button.size_hint_x = None
+        self.middle_button.height = '0dp'
+        self.middle_button.width = '0dp'
+        self.middle_button.opacity = 0
+        self.middle_button.disabled = True
+        self.middle_button_label.text = ''
+
+    def layout_during_homing(self):
+        
+        # Text
+        self.homing_label.font_size =  '20sp'
+        self.homing_text = '[color=546E7A]Homing. Please wait...' \
+                        '\n\nSquaring the axes will cause the machine to make a stalling noise.' \
+                        '\nThis is normal.[/color]'
+        
+        # Status bar colour
+        self.status_bar_widget.cheeky_color = '#42A5F5'
+        
+        # Single button layout
+
+        ## Right button
+        self.right_button.size_hint_y = None
+        self.right_button.size_hint_x = None
+        self.right_button.height = '0dp'
+        self.right_button.width = '220dp'
+        self.right_button.opacity = 0
+        self.right_button.disabled = True
+        self.right_button_label.text = ''
+        
+        ## Left button
+        self.left_button.size_hint_y = None
+        self.left_button.size_hint_x = None
+        self.left_button.height = '0dp'
+        self.left_button.width = '220dp'
+        self.left_button.opacity = 0
+        self.left_button.disabled = True
+        self.left_button_label.text = ''
+
+        ## Middle button
+        self.middle_button.size_hint_y = 1
+        self.middle_button.size_hint_x = 0.1
+        self.middle_button.opacity = 1
+        self.middle_button.disabled = False
+        self.middle_button_label.text = '[color=FFFFFF]Cancel Homing[/color]'      
+
+    def layout_other_state(self):
+        # Text
+        self.homing_label.font_size =  '19sp'
+        self.homing_text = '[color=546E7A]The Machine is not in an idle state.' \
+                        '\n\nHoming will reset and unlock the machine, and it will resume normal operation.' \
+                        '\nWould you like to continue?[/color]'
+        
+        # Status bar colour      
+        self.status_bar_widget.cheeky_color = '#FF7043'
+        
+        # Two button layout
+        
+        ## Right button
+        self.right_button.size_hint_y = 1
+        self.right_button.size_hint_x = 0.1
+        self.right_button.opacity = 1
+        self.right_button.disabled = False
+        self.right_button_label.text = '[color=455A64]No, cancel[/color]'
+        
+        ## Left button
+        self.left_button.size_hint_y = 1
+        self.left_button.size_hint_x = 0.1
+        self.left_button.opacity = 1
+        self.left_button.disabled = False
+        self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
+
+        ## Middle button
+        self.middle_button.size_hint_y = None
+        self.middle_button.size_hint_x = None
+        self.middle_button.height = '0dp'
+        self.middle_button.width = '0dp'
+        self.middle_button.opacity = 0
+        self.middle_button.disabled = True
+        self.middle_button_label.text = ''
+        
+    def pre_homing_reset(self):
+        
+        self.layout_during_homing() 
+        self.m.soft_reset()
+        sleep(0.2)
+        self.m.unlock_after_alarm()
+        self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
+        
+    def is_machine_idle(self, dt):  
+        if self.m.state().startswith('Idle'):
+            Clock.unschedule(self.poll_for_ready)
+            self.trigger_homing()
+    
+    def trigger_homing(self):
+        
+        self.quit_home = False
+        
+        # Is this first time since power cycling?
+        if self.is_squaring_XY_needed_after_homing: 
+            self.home_with_squaring()
+        else: 
+            self.home_normally()
+
+        # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
+        self.m.set_state('Home') 
+
+        # monitor sequential stream status for completion
+        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
 
     def home_normally(self):
         # home without suaring the axis
         normal_homing_sequence = ['$H']
         self.m.s.start_sequential_stream(normal_homing_sequence)
-
 
     def home_with_squaring(self):
 
@@ -177,12 +382,14 @@ class HomingScreen(Screen):
                                   ]
 
         self.m.s.start_sequential_stream(square_homing_sequence)
-
-        
+     
     def check_for_successful_completion(self, dt):
 
+        self.m.set_state('Home')
         # if alarm state is triggered which prevents homing from completing, stop checking for success
-        if self.m.state() == 'Alarm':
+
+        if self.m.state().startswith('Alarm'):
+
             print "Poll for homing success unscheduled"
             Clock.unschedule(self.poll_for_success)
             self.homing_text = '[b]Homing unsuccessful.[/b]'
@@ -206,11 +413,13 @@ class HomingScreen(Screen):
             self.sm.current = self.cancel_to_screen
             
         else:
+            # ... will trigger an alarm screen
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
-        # ... will trigger an alarm screen
-
+    
     def on_leave(self):
+        if self.poll_for_success != None: Clock.unschedule(self.poll_for_success)
+        if self.poll_for_ready != None: Clock.unschedule(self.poll_for_ready)
         self.quit_home = False
 
 
