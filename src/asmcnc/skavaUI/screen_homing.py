@@ -230,6 +230,7 @@ class HomingScreen(Screen):
         self.middle_button.size_hint_y = None
         self.middle_button.size_hint_x = None
         self.middle_button.height = '0dp'
+        self.middle_button.width = '0dp'
         self.middle_button.opacity = 0
         self.middle_button.disabled = True
         self.middle_button_label.text = ''
@@ -269,7 +270,7 @@ class HomingScreen(Screen):
         self.middle_button.size_hint_x = 0.1
         self.middle_button.opacity = 1
         self.middle_button.disabled = False
-        self.middle_button_label.text = '[color=455A64]Cancel Homing[/color]'      
+        self.middle_button_label.text = '[color=FFFFFF]Cancel Homing[/color]'      
 
     def layout_other_state(self):
         # Text
@@ -287,18 +288,19 @@ class HomingScreen(Screen):
         self.right_button.size_hint_y = 1
         self.right_button.opacity = 1
         self.right_button.disabled = False
-        self.right_button_label.text = '[color=455A64]No, cancel[/color]'
+        self.right_button_label.text = '[color=B0BEC5]No, cancel[/color]'
         
         ## Left button
         self.left_button.size_hint_y = 1
         self.left_button.opacity = 1
         self.left_button.disabled = False
-        self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
+        self.left_button_label.text = '[color=B0BEC5]Yes, continue[/color]'
 
         ## Middle button
         self.middle_button.size_hint_y = None
         self.middle_button.size_hint_x = None
         self.middle_button.height = '0dp'
+        self.middle_button.width = '0dp'
         self.middle_button.opacity = 0
         self.middle_button.disabled = True
         self.middle_button_label.text = ''
