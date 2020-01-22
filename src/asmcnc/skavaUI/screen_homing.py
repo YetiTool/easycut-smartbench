@@ -337,7 +337,7 @@ class HomingScreen(Screen):
         self.m.set_state('Home') 
 
         # monitor sequential stream status for completion
-        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.5)
+        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
 
     def home_normally(self):
         
