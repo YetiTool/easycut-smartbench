@@ -229,8 +229,7 @@ class MeasurementScreenClass(Screen):
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.jpg"
         
     def screen_x_4(self):
-        self.instruction_top.text = '[color=000000]Note which face you take your measurement from, and be sure to use the same face every time you make a measurement.' \
-                                    '\nMake sure you make your measurement in line with the reference face.[/color]'
+        self.instruction_top.text = '[color=000000]Make sure you make your measurement in line with the reference face.[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0       
