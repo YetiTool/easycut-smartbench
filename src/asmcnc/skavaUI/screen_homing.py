@@ -219,14 +219,14 @@ class HomingScreen(Screen):
         self.right_button.size_hint_x = 0.1
         self.right_button.opacity = 1
         self.right_button.disabled = False
-        self.right_button_label.text = '[color=FFFFFF]No, cancel[/color]'
+        self.right_button_label.text = '[color=455A64]No, cancel[/color]'
         
         ## Left button
         self.left_button.size_hint_y = 1
         self.left_button.size_hint_x = 0.1
         self.left_button.opacity = 1
         self.left_button.disabled = False
-        self.left_button_label.text = '[color=FFFFFF]Yes, continue[/color]'
+        self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
 
         ## Middle button
         self.middle_button.size_hint_y = None
@@ -291,14 +291,14 @@ class HomingScreen(Screen):
         self.right_button.size_hint_x = 0.1
         self.right_button.opacity = 1
         self.right_button.disabled = False
-        self.right_button_label.text = '[color=B0BEC5]No, cancel[/color]'
+        self.right_button_label.text = '[color=455A64]No, cancel[/color]'
         
         ## Left button
         self.left_button.size_hint_y = 1
         self.left_button.size_hint_x = 0.1
         self.left_button.opacity = 1
         self.left_button.disabled = False
-        self.left_button_label.text = '[color=B0BEC5]Yes, continue[/color]'
+        self.left_button_label.text = '[color=455A64]Yes, continue[/color]'
 
         ## Middle button
         self.middle_button.size_hint_y = None
