@@ -242,7 +242,8 @@ class HomingScreen(Screen):
         # Text
         self.homing_label.font_size =  '20sp'
         self.homing_text = '[color=546E7A]Homing. Please wait...' \
-                        '\n\nSquaring the axes will cause the machine to make a stalling noise. This is normal.[/color]'
+                        '\n\nSquaring the axes will cause the machine to make a stalling noise.' \
+                        '\nThis is normal.[/color]'
         
         # Status bar colour
         self.status_bar_widget.cheeky_color = '#42A5F5'
