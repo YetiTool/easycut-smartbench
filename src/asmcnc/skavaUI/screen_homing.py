@@ -139,7 +139,7 @@ Builder.load_string("""
                         halign: 'center'
                         disabled: False
                         background_normal: ''
-                        background_color: hex('#B3E5FC')
+                        background_color: hex('#BBDEFB')
                         on_press: 
                             root.pre_homing_reset()
                             
