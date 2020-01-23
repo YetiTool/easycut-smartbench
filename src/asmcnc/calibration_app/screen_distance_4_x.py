@@ -279,7 +279,7 @@ class DistanceScreen4xClass(Screen):
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1x)
         self.sm.get_screen('homing').return_to_screen = 'distance1x'
-        self.sm.get_screen('homing').cancel_to_screen = 'prep'
+        self.sm.get_screen('homing').cancel_to_screen = 'calibration_complete'
         self.sm.current = 'homing'
     
     def quit_calibration(self):

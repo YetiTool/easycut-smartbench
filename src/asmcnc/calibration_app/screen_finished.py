@@ -56,7 +56,9 @@ class FinishedCalScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_enter(self):
+    def on_pre_enter(self):
+        
+        print('Calibration cancelled')
 
         if self.calibration_cancelled == True:
             self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
