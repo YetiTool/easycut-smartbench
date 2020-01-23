@@ -74,8 +74,6 @@ class FinishedCalScreenClass(Screen):
             self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
         if self.sm.has_screen('tape_measure_alert'):
             self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
-
-        print('all done')
             
     def on_enter(self):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
@@ -84,8 +82,6 @@ class FinishedCalScreenClass(Screen):
         if not self.sm.current == 'alarmScreen':
             self.sm.current = 'lobby'
         
-    def on_leave(self):
-        print('leaving cal screen')
-        
+    def on_leave(self):       
         if self.sm.has_screen('calibration_complete'):
             self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
