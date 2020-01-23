@@ -422,6 +422,8 @@ class HomingScreen(Screen):
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success)
         if self.poll_for_ready != None: Clock.unschedule(self.poll_for_ready)
         self.quit_home = False
+        
+        
 
 
         
