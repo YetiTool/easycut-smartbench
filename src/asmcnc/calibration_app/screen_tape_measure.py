@@ -57,7 +57,7 @@ Builder.load_string("""
             Label:
                 id: alert_label
                 text_size: self.size
-                font_size: '26sp'
+                font_size: '24sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
