@@ -372,8 +372,9 @@ class DistanceScreen3yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
+        self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'                
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'calibration_complete'
+        self.sm.current = 'tape_measure_alert'
         
     def next_screen(self):       
         if not self.sm.has_screen('distance4y'): # only create the new screen if it doesn't exist already

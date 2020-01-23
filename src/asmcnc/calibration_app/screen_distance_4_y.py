@@ -269,7 +269,8 @@ class DistanceScreen4yClass(Screen):
         self.sm.current = 'distance1y'
 
     def skip_section(self):
-        self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'
+        self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'                
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'tape_measure_alert'
         
     def quit_calibration(self):
