@@ -39,7 +39,7 @@ Builder.load_string("""
                 font_size: '40sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=455A64]WARNING![/color]'
+                text: '[color=455A64]TAPE MEASURE ALERT![/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
             
@@ -70,7 +70,7 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     background_normal: ''
-                    background_color: hex('#FFCDD2')
+                    background_color: hex('#EF5350')
                     disabled: False
                     on_press: 
                         root.next_screen()
@@ -82,7 +82,7 @@ Builder.load_string("""
                         
                         Label:
                             font_size: '22sp'
-                            text: '[color=FFFFFF]Ok, continue[/color]'
+                            text: '[color=455A64]Ok, continue[/color]'
                             markup: 'True'
                 
 """)
