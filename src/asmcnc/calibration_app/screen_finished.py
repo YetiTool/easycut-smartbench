@@ -57,9 +57,6 @@ class FinishedCalScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        
-        print('Calibration cancelled')
-
         if self.calibration_cancelled == True:
             self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
         else: 
@@ -88,19 +85,7 @@ class FinishedCalScreenClass(Screen):
             self.sm.current = 'lobby'
         
     def on_leave(self):
-        
         print('leaving cal screen')
         
-        if self.sm.has_screen('measurement'):
-            self.sm.remove_widget(self.sm.get_screen('measurement'))
-        if self.sm.has_screen('backlash'):
-            self.sm.remove_widget(self.sm.get_screen('backlash'))
-        if self.sm.has_screen('prep'):
-            self.sm.remove_widget(self.sm.get_screen('prep'))
-        if self.sm.has_screen('wait'):
-            self.sm.remove_widget(self.sm.get_screen('wait'))
-        if self.sm.has_screen('calibration_landing'):
-            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
-        if self.sm.has_screen('tape_measure_alert'):
-            self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
-        self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
+        if self.sm.has_screen('calibration_complete'):
+            self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
