@@ -57,7 +57,7 @@ Builder.load_string("""
             Label:
                 id: alert_label
                 text_size: self.size
-                font_size: '20sp'
+                font_size: '24sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
@@ -68,7 +68,7 @@ Builder.load_string("""
             AnchorLayout:
                 Button:
                     #size: self.texture_size
-                    size_hint_y: 1
+                    size_hint_y: 0.9
                     size_hint_x: 0.35
                     valign: 'top'
                     halign: 'center'
