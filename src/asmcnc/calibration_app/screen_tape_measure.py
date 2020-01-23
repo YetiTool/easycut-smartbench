@@ -84,8 +84,8 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: '24sp'
-                            text: '[color=FFFFFF]Ok, continue[/color]'
+                            font_size: '26sp'
+                            text: '[color=FFFFFF]Ok, continue...[/color]'
                             markup: 'True'
                 
 """)
