@@ -49,7 +49,7 @@ Builder.load_string("""
 class FinishedCalScreenClass(Screen):
     
     screen_text = ObjectProperty()
-    calibration_cancelled = False
+    calibration_cancelled = True
     
     def __init__(self, **kwargs):
         super(FinishedCalScreenClass, self).__init__(**kwargs)
