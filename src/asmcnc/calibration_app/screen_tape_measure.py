@@ -53,7 +53,7 @@ Builder.load_string("""
                 valign: 'middle'
                 text: '[color=455A64]TAPE MEASURE WARNING![/color]'
                 markup: 'True'
-                #size_hint_y: 0.2
+                size_hint_y: 0.2
             Label:
                 id: alert_label
                 text_size: self.size
