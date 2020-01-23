@@ -236,7 +236,7 @@ class SafetyScreen(Screen):
         pass
         
     def quit_to_lobby(self):
-        self.sm.current = 'calibration_landing'
+        self.sm.current = 'lobby'
         
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('safety'))

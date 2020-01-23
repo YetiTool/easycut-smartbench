@@ -171,10 +171,10 @@ class PrepCalibrationScreenClass(Screen):
                         '- Clear the machine - remove any material from the machine.\n' \
                         '- Lower the X beam so that it is running on the bench.\n' \
                         '- Clean all tracks and racks with a vacuum.\n' \
+                        '- Disconnect the vacuum hose from the Z-head.\n' \
                         '- Prepare a calibrated tape measure (e.g. check the tape against a meter rule).\n' \
                         '- When your machine is prepared, press "Home" to start the homing sequence.'
 
-    
     def __init__(self, **kwargs):
         super(PrepCalibrationScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']

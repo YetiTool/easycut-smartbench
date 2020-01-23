@@ -206,7 +206,7 @@ class MeasurementScreenClass(Screen):
     def screen_x_1(self):
         self.m.jog_absolute_single_axis('X',-1184,9999)
         self.instruction_left.text = '[color=000000][b]' + self.axis + ' measurement technique: [/b]' \
-                            '\n\nDisconnect the vacuum.' \
+                            '\n\nDisconnect the vacuum hose from the Z-head.' \
                             '\n\nUse a tape measure to find the position of the Z head.\n\n' \
                             'Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]'
         self.instruction_top.text = ''
@@ -228,10 +228,17 @@ class MeasurementScreenClass(Screen):
         self.instruction_left.size_hint_x = 0       
         self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.jpg"
         
+    def screen_x_4(self):
+        self.instruction_top.text = '[color=000000]Make sure you make your measurement in line with the reference face.[/color]'
+        self.instruction_left.text = ''
+        self.instruction_top.size_hint_y = 0.2
+        self.instruction_left.size_hint_x = 0       
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_4.png"
+        
     def screen_y_1(self):
         self.m.jog_absolute_single_axis('X',-660, 9999)
         self.m.jog_absolute_single_axis('Y', -2320, 9999)
-        self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b].' \
+        self.instruction_top.text = '[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. ' \
                             'Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
@@ -240,7 +247,8 @@ class MeasurementScreenClass(Screen):
     
     def screen_y_2(self):
         self.instruction_left.text = '[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] ' \
-                            'to take a measurement of the beam\'s position against the tape measure.[/color]'
+                            'to take a measurement of the beam\'s position against the tape measure.' \
+                            '\n\nNote which face [b](1)[/b] you take your initial measurement from, and make sure you use that same face each time you measure.[/color]'
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0.1
         self.instruction_left.size_hint_x = 0.4
@@ -256,6 +264,9 @@ class MeasurementScreenClass(Screen):
                 self.screen_x_3()
                 self.sub_screen_count = 2
             elif self.sub_screen_count == 2:
+                self.screen_x_4()
+                self.sub_screen_count = 3
+            elif self.sub_screen_count == 3:
                 self.next_screen()
                 
         if self.axis == 'Y':
