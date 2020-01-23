@@ -100,7 +100,7 @@ class TapeMeasureScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         
-        self.alert_label.text = '[color=455A64]TAPE MEASURE WARNING:\n\nPlease remove your tape measure from the machine now.[/color]'
+        self.alert_label.text = '[color=455A64]TAPE MEASURE WARNING!\n\nPlease remove your tape measure from the machine now.[/color]'
 
     def next_screen(self):
         self.sm.current = self.return_to_screen
