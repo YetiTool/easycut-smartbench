@@ -26,7 +26,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 80,50
+        padding: 80,30
         spacing: 0
         size_hint_x: 1
 
@@ -39,7 +39,7 @@ Builder.load_string("""
                 font_size: '38sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=546E7A]WARNING![/color]'
+                text: '[color=455A64]WARNING![/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
             
@@ -66,7 +66,7 @@ Builder.load_string("""
                 Button:
                     #size: self.texture_size
                     size_hint_y: 0.9
-                    size_hint_x: 0.4
+                    size_hint_x: 0.35
                     valign: 'top'
                     halign: 'center'
                     background_normal: ''
