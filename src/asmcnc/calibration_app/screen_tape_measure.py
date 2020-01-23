@@ -36,10 +36,10 @@ Builder.load_string("""
             
             Label:
                 text_size: self.size
-                font_size: '35sp'
+                font_size: '38sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=263238]WARNING![/color]'
+                text: '[color=546E7A]WARNING![/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
             
