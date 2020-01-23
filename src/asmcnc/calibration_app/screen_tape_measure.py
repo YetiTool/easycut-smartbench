@@ -68,12 +68,12 @@ Builder.load_string("""
             AnchorLayout:
                 Button:
                     #size: self.texture_size
-                    size_hint_y: 0.9
+                    size_hint_y: 0.8
                     size_hint_x: 0.35
                     valign: 'top'
                     halign: 'center'
                     background_normal: ''
-                    background_color: hex('#E57373')
+                    background_color: hex('#EF9A9A')
                     disabled: False
                     on_press: 
                         root.next_screen()
@@ -84,7 +84,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: '22sp'
+                            font_size: '24sp'
                             text: '[color=FFFFFF]Ok, continue[/color]'
                             markup: 'True'
                 
