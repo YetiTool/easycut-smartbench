@@ -63,10 +63,8 @@ class FinishedCalScreenClass(Screen):
         if self.calibration_cancelled == True:
             self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
         else: 
-            self.screen_text.text = '[color=455A64]Calibration Complete![/color]'           
+            self.screen_text.text = '[color=455A64]Calibration Complete![/color]'                   
 
-        
-        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
         if self.sm.has_screen('measurement'):
             self.sm.remove_widget(self.sm.get_screen('measurement'))
         if self.sm.has_screen('backlash'):
@@ -79,9 +77,15 @@ class FinishedCalScreenClass(Screen):
             self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
         if self.sm.has_screen('tape_measure_alert'):
             self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
-        
+
+        print('all done')
+            
+    def on_enter(self):
+        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
+ 
     def exit_screen(self, dt):
-        self.sm.current = 'lobby'
+        if not self.sm.current == 'alarmScreen':
+            self.sm.current = 'lobby'
         
     def on_leave(self):
         
