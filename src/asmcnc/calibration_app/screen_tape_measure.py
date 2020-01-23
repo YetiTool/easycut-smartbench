@@ -16,6 +16,8 @@ from kivy.clock import Clock
 Builder.load_string("""
 
 <TapeMeasureScreenClass>:
+    
+    alert_label:alert_label
 
     canvas:
         Color: 
@@ -34,14 +36,14 @@ Builder.load_string("""
             orientation: 'vertical'
             size_hint_x: 0.8
             
-            Label:
-                text_size: self.size
-                font_size: '40sp'
-                halign: 'center'
-                valign: 'middle'
-                text: '[color=455A64]TAPE MEASURE ALERT![/color]'
-                markup: 'True'
-                #size_hint_y: 0.2
+#             Label:
+#                 text_size: self.size
+#                 font_size: '40sp'
+#                 halign: 'center'
+#                 valign: 'middle'
+#                 text: '[color=455A64]TAPE MEASURE ALERT![/color]'
+#                 markup: 'True'
+#                 #size_hint_y: 0.2
             
             Image:
                 id: image_measure
@@ -53,6 +55,7 @@ Builder.load_string("""
                 size_hint_y: 1.4
 
             Label:
+                id: alert_label
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
@@ -90,11 +93,14 @@ Builder.load_string("""
 class TapeMeasureScreenClass(Screen):
     
     return_to_screen = StringProperty()
+    alert_label = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        
+        self.alert_label.text = '[color=455A64]TAPE MEASURE ALERT:\n\nPlease remove your tape measure from the machine now.[/color]'
 
     def next_screen(self):
         self.sm.current = self.return_to_screen
