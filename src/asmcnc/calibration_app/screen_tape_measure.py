@@ -73,7 +73,7 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     background_normal: ''
-                    background_color: hex('#EF5350')
+                    background_color: hex('#E57373')
                     disabled: False
                     on_press: 
                         root.next_screen()
@@ -85,7 +85,7 @@ Builder.load_string("""
                         
                         Label:
                             font_size: '22sp'
-                            text: '[color=455A64]Ok, continue[/color]'
+                            text: '[color=FFFFFF]Ok, continue[/color]'
                             markup: 'True'
                 
 """)
