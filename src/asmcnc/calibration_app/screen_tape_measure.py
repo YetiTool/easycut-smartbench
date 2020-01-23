@@ -36,7 +36,14 @@ Builder.load_string("""
             orientation: 'vertical'
             size_hint_x: 0.8
             
-
+#             Label:
+#                 text_size: self.size
+#                 font_size: '40sp'
+#                 halign: 'center'
+#                 valign: 'middle'
+#                 text: '[color=455A64]TAPE MEASURE ALERT![/color]'
+#                 markup: 'True'
+#                 #size_hint_y: 0.2
             
             Image:
                 id: image_measure
@@ -46,18 +53,11 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
                 size_hint_y: 1.4
-            Label:
-                text_size: self.size
-                font_size: '26sp'
-                halign: 'center'
-                valign: 'bottom'
-                text: '[color=455A64]TAPE MEASURE WARNING![/color]'
-                markup: 'True'
-                size_hint_y: 0.1
+
             Label:
                 id: alert_label
                 text_size: self.size
-                font_size: '24sp'
+                font_size: '26sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
@@ -100,7 +100,7 @@ class TapeMeasureScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         
-        self.alert_label.text = '[color=455A64]Please remove your tape measure from the machine now.[/color]'
+        self.alert_label.text = '[color=455A64]\nTAPE MEASURE WARNING!\nPlease remove your tape measure from the machine now.[/color]'
 
     def next_screen(self):
         self.sm.current = self.return_to_screen
