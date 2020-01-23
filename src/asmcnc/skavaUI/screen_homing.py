@@ -416,6 +416,7 @@ class HomingScreen(Screen):
             # ... will trigger an alarm screen
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.soft_reset()
+            self.sm.current = self.cancel_to_screen
     
     def on_leave(self):
         if self.poll_for_success != None: Clock.unschedule(self.poll_for_success)
