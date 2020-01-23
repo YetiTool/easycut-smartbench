@@ -26,7 +26,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 80,30
+        padding: 80,20
         spacing: 0
         size_hint_x: 1
 
@@ -36,7 +36,7 @@ Builder.load_string("""
             
             Label:
                 text_size: self.size
-                font_size: '38sp'
+                font_size: '40sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]WARNING![/color]'
@@ -57,7 +57,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=ff0000]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
+                text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
         
@@ -65,7 +65,7 @@ Builder.load_string("""
             AnchorLayout:
                 Button:
                     #size: self.texture_size
-                    size_hint_y: 0.9
+                    size_hint_y: 1
                     size_hint_x: 0.35
                     valign: 'top'
                     halign: 'center'
@@ -81,8 +81,8 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: '20sp'
-                            text: '[color=455A64]Ok, continue[/color]'
+                            font_size: '22sp'
+                            text: '[color=FFFFFF]Ok, continue[/color]'
                             markup: 'True'
                 
 """)
