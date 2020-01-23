@@ -28,7 +28,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 80,20
+        padding: 80,30
         spacing: 0
         size_hint_x: 1
 
@@ -100,7 +100,7 @@ class TapeMeasureScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         
-        self.alert_label.text = '[color=455A64]TAPE MEASURE ALERT:\n\nPlease remove your tape measure from the machine now.[/color]'
+        self.alert_label.text = '[color=455A64]TAPE MEASURE WARNING:\nPlease remove your tape measure from the machine now.[/color]'
 
     def next_screen(self):
         self.sm.current = self.return_to_screen
