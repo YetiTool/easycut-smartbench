@@ -36,10 +36,10 @@ Builder.load_string("""
             
             Label:
                 text_size: self.size
-                font_size: '24sp'
+                font_size: '35sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=ff0000]WARNING![/color]'
+                text: '[color=263238]WARNING![/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
             
@@ -57,7 +57,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=ff0000]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE BEFORE CONTINUING.[/color]'
+                text: '[color=ff0000]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
                 markup: 'True'
                 #size_hint_y: 0.2
         
