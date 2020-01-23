@@ -26,13 +26,22 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 90,50
+        padding: 80,50
         spacing: 0
         size_hint_x: 1
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.8
+            
+            Label:
+                text_size: self.size
+                font_size: '24sp'
+                halign: 'center'
+                valign: 'middle'
+                text: '[color=ff0000]WARNING![/color]'
+                markup: 'True'
+                #size_hint_y: 0.2
             
             Image:
                 id: image_measure
@@ -73,7 +82,7 @@ Builder.load_string("""
                         
                         Label:
                             font_size: '20sp'
-                            text: '[color=455A64]Continue[/color]'
+                            text: '[color=455A64]Ok, continue[/color]'
                             markup: 'True'
                 
 """)

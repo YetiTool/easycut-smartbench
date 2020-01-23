@@ -181,6 +181,7 @@ class PrepCalibrationScreenClass(Screen):
         self.m=kwargs['machine']
 
     def quit_calibration(self):
+        self.sm.get_screen('calibration_complete').calibration_cancelled = True
         self.sm.current = 'calibration_complete'
         
     def skip_section(self):
