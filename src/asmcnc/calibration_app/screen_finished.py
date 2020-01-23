@@ -84,6 +84,9 @@ class FinishedCalScreenClass(Screen):
         self.sm.current = 'lobby'
         
     def on_leave(self):
+        
+        print('leaving cal screen')
+        
         if self.sm.has_screen('measurement'):
             self.sm.remove_widget(self.sm.get_screen('measurement'))
         if self.sm.has_screen('backlash'):
