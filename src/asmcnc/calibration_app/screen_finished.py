@@ -84,4 +84,16 @@ class FinishedCalScreenClass(Screen):
         self.sm.current = 'lobby'
         
     def on_leave(self):
+        if self.sm.has_screen('measurement'):
+            self.sm.remove_widget(self.sm.get_screen('measurement'))
+        if self.sm.has_screen('backlash'):
+            self.sm.remove_widget(self.sm.get_screen('backlash'))
+        if self.sm.has_screen('prep'):
+            self.sm.remove_widget(self.sm.get_screen('prep'))
+        if self.sm.has_screen('wait'):
+            self.sm.remove_widget(self.sm.get_screen('wait'))
+        if self.sm.has_screen('calibration_landing'):
+            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
+        if self.sm.has_screen('tape_measure_alert'):
+            self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
         self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
