@@ -283,8 +283,9 @@ class DistanceScreen4xClass(Screen):
         self.sm.current = 'homing'
     
     def quit_calibration(self):
+        self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'                
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'calibration_complete'
+        self.sm.current = 'tape_measure_alert'
        
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('distance4x'))

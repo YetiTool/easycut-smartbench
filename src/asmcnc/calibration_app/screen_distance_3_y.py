@@ -361,8 +361,9 @@ class DistanceScreen3yClass(Screen):
         self.set_and_check()
 
     def quit_calibration(self):
+        self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'                
         self.sm.get_screen('calibration_complete').calibration_cancelled = True
-        self.sm.current = 'calibration_complete'
+        self.sm.current = 'tape_measure_alert'
 
     def repeat_section(self):
         from asmcnc.calibration_app import screen_distance_1_y # this has to be here

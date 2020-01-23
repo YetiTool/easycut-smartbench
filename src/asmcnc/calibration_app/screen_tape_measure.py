@@ -88,7 +88,7 @@ class TapeMeasureScreenClass(Screen):
         self.m=kwargs['machine']
 
     def next_screen(self):
-        self.sm.current = 'homing'
+        self.sm.current = self.return_to_screen
         
     def on_leave(self):
         self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
