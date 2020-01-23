@@ -49,22 +49,19 @@ Builder.load_string("""
 class FinishedCalScreenClass(Screen):
     
     screen_text = ObjectProperty()
-    calibration_cancelled = False
+    calibration_cancelled = True
     
     def __init__(self, **kwargs):
         super(FinishedCalScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def on_enter(self):
-
+    def on_pre_enter(self):
         if self.calibration_cancelled == True:
             self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
         else: 
-            self.screen_text.text = '[color=455A64]Calibration Complete![/color]'           
+            self.screen_text.text = '[color=455A64]Calibration Complete![/color]'                   
 
-        
-        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
         if self.sm.has_screen('measurement'):
             self.sm.remove_widget(self.sm.get_screen('measurement'))
         if self.sm.has_screen('backlash'):
@@ -77,9 +74,14 @@ class FinishedCalScreenClass(Screen):
             self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
         if self.sm.has_screen('tape_measure_alert'):
             self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
-        
+            
+    def on_enter(self):
+        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
+ 
     def exit_screen(self, dt):
-        self.sm.current = 'lobby'
+        if not self.sm.current == 'alarmScreen':
+            self.sm.current = 'lobby'
         
-    def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
+    def on_leave(self):       
+        if self.sm.has_screen('calibration_complete'):
+            self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
