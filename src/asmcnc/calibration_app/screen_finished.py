@@ -59,11 +59,9 @@ class FinishedCalScreenClass(Screen):
     def on_enter(self):
 
         if self.calibration_cancelled == True:
-            self.screen_text.text = '[color=455A64]Calibration Cancelled.\n\n' \
-                                    '[/color]'
+            self.screen_text.text = '[color=455A64]Calibration Cancelled.[/color]'
         else: 
-            self.screen_text.text = '[color=455A64]Calibration Complete!\n\n' \
-                                    '[/color]'           
+            self.screen_text.text = '[color=455A64]Calibration Complete![/color]'           
 
         
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
