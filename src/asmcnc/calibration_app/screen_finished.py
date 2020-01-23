@@ -75,6 +75,8 @@ class FinishedCalScreenClass(Screen):
             self.sm.remove_widget(self.sm.get_screen('wait'))
         if self.sm.has_screen('calibration_landing'):
             self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
+        if self.sm.has_screen('tape_measure_alert'):
+            self.sm.remove_widget(self.sm.get_screen('tape_measure_alert'))
         
     def exit_screen(self, dt):
         self.sm.current = 'lobby'
