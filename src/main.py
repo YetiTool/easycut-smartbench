@@ -49,6 +49,7 @@ from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
+from asmcnc.shapeCutter_app import screen_shapeCutter_template  
 
 Cmport = 'COM3'
 
@@ -111,8 +112,12 @@ class SkavaUI(App):
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
 
+        # test screen
+      
+        sCtemplate_screen = screen_shapeCutter_template.ShapeCutterTemplateScreenClass(name = 'sCtemplate', screen_manager = sm, machine =m)
+        sm.add_widget(sCtemplate_screen)
         # set screen to start on
-        sm.current = 'safety'
+        sm.current = 'sCtemplate'
         return sm
 
 
