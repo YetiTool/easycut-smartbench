@@ -7,116 +7,122 @@ Landing Screen for the Shape Cutter App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
 <ShapeCutterLandingScreenClass>:
-
-    user_instruction: user_instruction
     
-    canvas:
-        Color: 
-            rgba: hex('#FFFFFF')
-        Rectangle: 
-            size: self.size
-            pos: self.pos
-             
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 90,50
-        spacing: 0
-        size_hint_x: 1
+        height: dp(800)
+        width: dp(480)
+        canvas:
+            Rectangle: 
+                pos: self.pos
+                size: self.size
+                source: "./asmcnc/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 0.8
-             
-            Label:
-                size_hint_y: 1
-                font_size: '35sp'
-                text: '[color=263238]Welcome to the Shape Cutter[/color]'
-                markup: True
-
-            Label:
-                id: user_instruction
-                size_hint_y: 2
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                markup: True
-
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'center'
-                valign: 'middle'
-                text: '[color=546E7A]Select a shape to cut...[/color]'
-                markup: True
+            padding: 0
+            spacing: 0
+            orientation: "vertical"       
                 
+            Label:
+                size_hint: (None,None)
+                height: dp(90)
+                width: dp(800)
+                text: "Welcome to Shape Cutter"
+                font_size: 30
+                halign: "center"
+                valign: "bottom"
+                markup: True
+                   
+                    
             BoxLayout:
-                orientation: 'horizontal'
-                padding: 0, 0
-                spacing: 20
-            
-                Button:
-                    size_hint_y:0.9
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_color: hex('#FFCDD2')
-                    on_press: 
-                        root.skip_to_lobby()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: '[color=455A64]No[/color]'
-                            markup: True
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(190)
+                padding: 20
+                spacing: 0
+                Label:
+                    size_hint: (None,None)
+                    height: dp(190)
+                    width: dp(800)
+                    halign: "center"
+                    valign: "middle"
+                    text: "Select a shape to cut..."
+                    color: 0,0,0,1
+                    font_size: 26
+                    markup: True
 
-                Button:
-                    size_hint_y:0.9
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_color: hex('#C5E1A5')
-                    on_press: 
-                        root.next_screen()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(200)
+                padding: 116
+                spacing: 0
+                orientation: 'horizontal'
+                pos: self.parent.pos
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(400)
+                    height: dp(200)
+                    padding: 0
+                    pos: self.parent.pos
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(168)
+                        width: dp(168)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
                         pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: '[color=455A64]Yes[/color]'
-                            markup: True
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/shapeCutter_app/img/cut_circle.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(400)
+                    height: dp(200)
+                    padding: 0
+                    pos: self.parent.pos
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(168)
+                        width: dp(168)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/shapeCutter_app/img/cut_square.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True              
+
             
 """)
 
 class ShapeCutterLandingScreenClass(Screen):
     
-    user_instruction = ObjectProperty()
+#     user_instruction = ObjectProperty()
     
     def __init__(self, **kwargs):
         super(ShapeCutterLandingScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         
-        self.user_instruction.text  = ''
+#         self.user_instruction.text  = ''
 
     def skip_to_lobby(self):
         self.sm.current = 'lobby'
@@ -125,4 +131,4 @@ class ShapeCutterLandingScreenClass(Screen):
         pass
 
     def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('shapeCutter_landing'))
+        self.sm.remove_widget(self.sm.get_screen('sClanding'))
