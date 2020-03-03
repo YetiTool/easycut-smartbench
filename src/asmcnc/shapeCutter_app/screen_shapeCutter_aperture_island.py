@@ -79,7 +79,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.cut_circle()
+                        #on_press: 
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -97,7 +97,7 @@ Builder.load_string("""
                     padding: (0,0,20,0)
                     pos: self.parent.pos
                     
-                    # rectangle button
+                    # Square button
                     Button:
                         size_hint: (None,None)
                         height: dp(168)
@@ -105,13 +105,12 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.cut_rectangle()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/shapeCutter_app/img/cut_rectangle.png"
+                                source: "./asmcnc/shapeCutter_app/img/cut_square.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -145,7 +144,7 @@ class ShapeCutterLandingScreenClass(Screen):
         self.m=kwargs['machine']
 
         
-    def cut_rectangle(self):
+    def cut_square(self):
         pass
     
     def cut_circle(self):

@@ -7,14 +7,17 @@ Template Screen for the Shape Cutter App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.metrics import MetricsBase
+from kivy.properties import StringProperty, ObjectProperty
 
 Builder.load_string("""
 
 <ShapeCutterTutorialScreenClass>
 
     BoxLayout:
+        size_hint: (None,None)
+        width: dp(800)
+        height: dp(480)
         padding: 0
         spacing: 0
         orientation: "vertical"
@@ -109,22 +112,188 @@ Builder.load_string("""
                         allow_stretch: True                    
                     
         BoxLayout:
-            padding: 10
-            height: dp(800)
-            width: dp(480)
+            size_hint: (None,None)
+            padding: 0
+            height: dp(390)
+            width: dp(800)
             canvas:
                 Rectangle: 
                     pos: self.pos
                     size: self.size
                     source: "./asmcnc/shapeCutter_app/img/background.png"
+            
+            BoxLayout:
+                orientation: "vertical"
+                padding: 0
+                spacing: 0
+                    
+                BoxLayout: #Header
+                    size_hint: (None,None)
+                    height: dp(60)
+                    width: dp(800)
+                    padding: (20,0,0,0)
+                    orientation: "horizontal"
+                    
+                    BoxLayout: #Screen number
+                        size_hint: (None,None)
+                        padding: 0
+                        height: dp(40)
+                        width: dp(40)
+                        canvas:
+                            Rectangle: 
+                                pos: self.pos
+                                size: self.size
+                                source: "./asmcnc/shapeCutter_app/img/number_box.png"
+                        Label:
+                            text: root.screen_number
+                            valign: "middle"
+                            halign: "center"
+                            font_size: 26
+                            markup: True
+                                
+                                
+                        
+                    BoxLayout: #Title
+                        size_hint: (None,None)
+                        height: dp(60)
+                        width: dp(740)
+                        padding: (20,20,0,0)
+                        
+                        Label:
+                            text: root.title_label
+                            color: 0,0,0,1
+                            font_size: 28
+                            markup: True
+                            halign: "left"
+                            valign: "bottom"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                        
+                    
+                BoxLayout: #Body
+                    size_hint: (None,None)
+                    height: dp(330)
+                    width: dp(800)
+                    padding: 0,20,0,0
+                    orientation: "horizontal"
+                    
+                    BoxLayout: #text box
+                        size_hint: (None,None)
+                        height: dp(310)
+                        width: dp(675)
+                        padding: 80,0,0,0
+                        
+                        Label:
+                            text: root.user_instructions
+                            color: 0,0,0,1
+                            font_size: 20
+                            markup: True
+                            halign: "left"
+                            valign: "top"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+
+                    BoxLayout: #action box
+                        size_hint: (None,None)
+                        height: dp(310)
+                        width: dp(125)
+                        padding: 0,0,0,34
+                        spacing: 34
+                        orientation: "vertical"
+                        
+                        BoxLayout: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            padding: (24,0,24,34)
+                            Button: 
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(40)
+                                background_color: hex('#F4433600')
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/shapeCutter_app/img/info_icon.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
+
+                        Button: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            background_color: hex('#F4433600')
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/shapeCutter_app/img/arrow_back.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                        Button: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            background_color: hex('#F4433600')
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/shapeCutter_app/img/arrow_next.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True               
 
 """)
 
 class ShapeCutterTutorialScreenClass(Screen):
     
+    screen_number = StringProperty("[b]I[/b]")
+    title_label = StringProperty("[b]Using the app[/b]")
+    user_instructions = StringProperty("Use the Back and Next buttons to move through each section.\n\n" \
+                                       "Use the navigation tabs to move between sections.\n\n" \
+                                       "Press the [b]i[/b] if you need more information.\n\n" \
+                                       "For more help, see the video at: ")
+    
     def __init__(self, **kwargs):
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        
+    def get_info(self):
+        pass
+    
+    def go_back(self):
+        pass
+    
+    def next_screen(self):
+        pass    
+    
+    def exit(self):
+        pass
+
+    def arrows(self):
+        pass
+    
+    def nav_tabs(self):
+        pass
+    
+    def info_button(self):
+        pass
+    
+    def more_help(self):
+        pass
+    
 
         
