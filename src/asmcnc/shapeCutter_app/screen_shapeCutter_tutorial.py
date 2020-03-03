@@ -1,6 +1,6 @@
 '''
-Created on 20 February 2020
-Template Screen for the Shape Cutter App
+Created on 2 March 2020
+Tutorial Screen for the Shape Cutter App
 
 @author: Letty
 '''
@@ -13,6 +13,8 @@ from kivy.properties import StringProperty, ObjectProperty
 Builder.load_string("""
 
 <ShapeCutterTutorialScreenClass>
+
+    info_button: info_button
 
     BoxLayout:
         size_hint: (None,None)
@@ -34,6 +36,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.prepare()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -46,6 +49,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.load()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -58,6 +62,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.define()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -72,6 +77,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.position()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -86,6 +92,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.check()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -100,6 +107,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(90)
+                on_press: root.exit()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -208,11 +216,14 @@ Builder.load_string("""
                             height: dp(67)
                             width: dp(88)
                             padding: (24,0,24,34)
-                            Button: 
+                            Button:
+                                id: info_button
                                 size_hint: (None,None)
                                 height: dp(40)
                                 width: dp(40)
                                 background_color: hex('#F4433600')
+                                opacity: 1
+                                on_press: root.get_info()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -229,6 +240,7 @@ Builder.load_string("""
                             height: dp(67)
                             width: dp(88)
                             background_color: hex('#F4433600')
+                            on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -244,6 +256,7 @@ Builder.load_string("""
                             height: dp(67)
                             width: dp(88)
                             background_color: hex('#F4433600')
+                            on_press: root.next_screen()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -259,6 +272,8 @@ Builder.load_string("""
 
 class ShapeCutterTutorialScreenClass(Screen):
     
+    info_button = ObjectProperty()
+    
     screen_number = StringProperty("[b]I[/b]")
     title_label = StringProperty("[b]Using the app[/b]")
     user_instructions = StringProperty("Use the Back and Next buttons to move through each section.\n\n" \
@@ -270,18 +285,43 @@ class ShapeCutterTutorialScreenClass(Screen):
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        
+
+# Action buttons       
     def get_info(self):
         pass
     
     def go_back(self):
-        pass
+        self.sm.current = 'sClanding'
     
     def next_screen(self):
-        pass    
+        self.sm.current = 'sClanding'
+    
+# Tab functions
+
+    def prepare(self):
+        self.sm.current = 'sC1'
+
+    def load(self):
+        #self.sm.current = 'sC10'
+        pass
+    
+    def define(self):
+        #self.sm.current = 'sC16'
+        pass
+    
+    def position(self):
+        #self.sm.current = 'sC26'
+        pass
+    
+    def check(self):
+        #self.sm.current = 'sC34'
+        pass
     
     def exit(self):
+        #self.sm.current = 'lobby'
         pass
+
+# Tutorial specific functions
 
     def arrows(self):
         pass
