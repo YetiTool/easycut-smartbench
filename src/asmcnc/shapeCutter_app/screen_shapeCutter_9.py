@@ -473,8 +473,7 @@ class ShapeCutter9ScreenClass(Screen):
         pass
     
     def go_back(self):
-        #self.sm.current = 'sC8'
-        pass
+        self.sm.current = 'sC8'
     
     def next_screen(self):
         self.sm.current = 'sC10'

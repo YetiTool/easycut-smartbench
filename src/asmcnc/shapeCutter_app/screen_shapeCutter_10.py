@@ -445,7 +445,7 @@ class ShapeCutter10ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.sm.current = 'sCl'
+        self.sm.current = 'sC9'
     
     def next_screen(self):
         if not self.sm.has_screen('sC11'):
