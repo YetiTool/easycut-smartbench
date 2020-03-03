@@ -10,7 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 
 from asmcnc.shapeCutter_app import screen_shapeCutter_1
-from asmcnc.shapeCutter_app import screen_shapeCutter_10
+from asmcnc.shapeCutter_app import screen_shapeCutter_11
 from asmcnc.shapeCutter_app import screen_shapeCutter_16
 from asmcnc.shapeCutter_app import screen_shapeCutter_26
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
@@ -174,9 +174,9 @@ class ShapeCutterLandingScreenClass(Screen):
         if not self.sm.has_screen('sC1'):
             sC1_screen = screen_shapeCutter_1.ShapeCutter1ScreenClass(name = 'sC1', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC1_screen)
-        if not self.sm.has_screen('sC10'):
-            sC10_screen = screen_shapeCutter_10.ShapeCutter10ScreenClass(name = 'sC10', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC10_screen)
+        if not self.sm.has_screen('sC11'):
+            sC11_screen = screen_shapeCutter_11.ShapeCutter11ScreenClass(name = 'sC11', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC11_screen)
         if not self.sm.has_screen('sC26'):
             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC26_screen)

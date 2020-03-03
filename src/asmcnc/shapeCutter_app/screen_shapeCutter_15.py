@@ -1,5 +1,5 @@
 '''
-Created on 2 March 2020
+Created on 20 February 2020
 Screen 15 for the Shape Cutter App
 
 @author: Letty
@@ -188,46 +188,21 @@ Builder.load_string("""
                     padding: 0,20,0,0
                     orientation: "horizontal"
                     
-                    BoxLayout: #text box
+                    BoxLayout: # text and pics
                         size_hint: (None,None)
                         height: dp(310)
                         width: dp(675)
-                        padding: 80,0,0,122
-                        spacing: 10
+                        padding: 0,0,0,0
                         orientation: "vertical"
-                        
-                        Label:
-                            text: root.user_instructions
-                            color: 0,0,0,1
-                            font_size: 20
-                            markup: True
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            
-                        BoxLayout: #checklist 1
+                    
+                        BoxLayout: #text box
                             size_hint: (None,None)
-                            height: dp(22)
-                            width: dp(595)
-                            padding: (20,0,20,0)                         
-                            orientation: "horizontal"
-                            
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                    
-                                Image: 
-                                    source: "./asmcnc/shapeCutter_app/img/box_checked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Home SmartBench"
+                            height: dp(60)
+                            width: dp(675)
+                            padding: 80,0,0,0
+                            orientation: "vertical"                       
+                            Label:
+                                text: root.user_instructions
                                 color: 0,0,0,1
                                 font_size: 20
                                 markup: True
@@ -237,125 +212,18 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
 
-                        BoxLayout: #checklist 2
+                        BoxLayout: #image box
                             size_hint: (None,None)
-                            height: dp(22)
-                            width: dp(595)
-                            padding: (20,0,20,0)                         
-                            orientation: "horizontal"
-
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                          
-                                Image: 
-                                    source: "./asmcnc/shapeCutter_app/img/box_checked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Secure spoilboard if required"
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                
-                        BoxLayout: #checklist 3
-                            size_hint: (None,None)
-                            height: dp(22)
-                            width: dp(595)
-                            padding: (20,0,20,0)                         
-                            orientation: "horizontal"
-                            
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                           
-                                Image: 
-                                    source: "./asmcnc/shapeCutter_app/img/box_checked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Secure stock material"
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
-                                size: self.parent.size
-                                pos: self.parent.pos
-
-                        BoxLayout: #checklist 4
-                            size_hint: (None,None)
-                            height: dp(22)
-                            width: dp(595)
-                            padding: (20,0,20,0)                         
-                            orientation: "horizontal"
-
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                          
-                                Image: 
-                                    source: "./asmcnc/shapeCutter_app/img/box_checked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Clamp X beam"
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                                        
-                        BoxLayout: #checklist 5
-                            size_hint: (None,None)
-                            height: dp(22)
-                            width: dp(595)
-                            padding: (20,0,20,0)                         
-                            orientation: "horizontal"
-                            
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                        
-                                Image: 
-                                    source: "./asmcnc/shapeCutter_app/img/box_checked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Fit cutter"
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
-                                size: self.parent.size
-                                pos: self.parent.pos
+                            height: dp(250)
+                            width: dp(675)
+                            padding:40,0,0,25      
+                            Image:
+                                source: "./asmcnc/shapeCutter_app/img/photo_15_1.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+                                        
 
                     BoxLayout: #action box
                         size_hint: (None,None)
@@ -429,8 +297,10 @@ class ShapeCutter15ScreenClass(Screen):
     info_button = ObjectProperty()
     
     screen_number = StringProperty("[b]15[/b]")
-    title_label = StringProperty("[b]Loaded![/b]")
-    user_instructions = StringProperty()
+    title_label = StringProperty("[b]Clamp X beam[/b]")
+    user_instructions = StringProperty("Clamp X beam down [b](1)[/b] and check the upper wheel" \
+                                       " units run on the surface of the material [b](2)[/b].")
+
     
     def __init__(self, **kwargs):
         super(ShapeCutter15ScreenClass, self).__init__(**kwargs)
@@ -445,14 +315,13 @@ class ShapeCutter15ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.sm.current = 'sCl'
+        self.sm.current = 'sC14'
     
     def next_screen(self):
-#         if not self.sm.has_screen('sC15'):
-#             sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', screen_manager = self.sm, machine = self.m)
-#             self.sm.add_widget(sC15_screen)
-#         self.sm.current = 'sC15'
-        pass
+        if not self.sm.has_screen('sC16'):
+            sC16_screen = screen_shapeCutter_16.ShapeCutter16ScreenClass(name = 'sC16', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC16_screen)
+        self.sm.current = 'sC16'
     
 # Tab functions
 
@@ -460,14 +329,14 @@ class ShapeCutter15ScreenClass(Screen):
         self.sm.current = 'sC1'
     
     def load(self):
-        self.sm.current = 'sC10'
+        self.sm.current = 'sC11'
     
     def define(self):
         #self.sm.current = 'sC16'
         pass
     
     def position(self):
-        #self.sm.current = 'sC26'
+        self.sm.current = 'sC26'
         pass
     
     def check(self):

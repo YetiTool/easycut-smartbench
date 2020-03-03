@@ -328,7 +328,7 @@ class ShapeCutter7ScreenClass(Screen):
         self.sm.current = 'sC1'
     
     def load(self):
-        self.sm.current = 'sC10'
+        self.sm.current = 'sC11'
     
     def define(self):
         #self.sm.current = 'sC16'

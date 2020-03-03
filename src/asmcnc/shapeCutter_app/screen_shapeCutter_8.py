@@ -1,6 +1,6 @@
 '''
 Created on 20 February 2020
-Screen 5 for the Shape Cutter App
+Screen 8 for the Shape Cutter App
 
 @author: Letty
 '''
@@ -328,7 +328,7 @@ class ShapeCutter8ScreenClass(Screen):
         self.sm.current = 'sC1'
     
     def load(self):
-        self.sm.current = 'sC10'
+        self.sm.current = 'sC11'
     
     def define(self):
         #self.sm.current = 'sC16'
