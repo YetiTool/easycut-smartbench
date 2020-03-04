@@ -59,60 +59,60 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(170)
-                padding: (180,0,180,30)
+                height: dp(200)
+                padding: (150,0,150,0)
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
-                    height: dp(171)
-                    padding: (28,0,20,0)
+                    width: dp(250)
+                    height: dp(200)
+                    padding: (23,0,20,0)
                     pos: self.parent.pos
                     
                     # aperture
                     Button:
                         size_hint: (None,None)
-                        height: dp(171)
-                        width: dp(172)
+                        height: dp(200)
+                        width: dp(207)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.thumbs_up()
+                        on_press: root.aperture()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/shapeCutter_app/img/thumbs_up.png"
+                                source: "./asmcnc/shapeCutter_app/img/apt_rect.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
-                    height: dp(171)
-                    padding: (20,0,28,0)
+                    width: dp(250)
+                    height: dp(200)
+                    padding: (20,0,23,0)
                     pos: self.parent.pos
                     
                     # island
                     Button:
                         size_hint: (None,None)
-                        height: dp(171)
-                        width: dp(172)
+                        height: dp(200)
+                        width: dp(207)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.thumbs_down()
+                        on_press: root.island()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/shapeCutter_app/img/thumbs_down.png"
+                                source: "./asmcnc/shapeCutter_app/img/is_rect.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -120,7 +120,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(80)
+                height: dp(50)
                 padding: (740,0,0,20)
                 spacing: 0
                 orientation: 'horizontal'

@@ -16,6 +16,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_26
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
+from asmcnc.shapeCutter_app import screen_shapeCutter_aperture_island
 
 Builder.load_string("""
 
@@ -167,10 +168,16 @@ class ShapeCutterLandingScreenClass(Screen):
         self.sm.current = 'sCtutorial'
       
     def cut_rectangle(self):
-        pass
+        self.next_screen()
     
     def cut_circle(self):
-        pass
+        self.next_screen()
+    
+    def next_screen(self):
+        if not self.sm.has_screen('sCApIs'):
+            sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCApIs_screen)
+        self.sm.current = 'sCApIs'
 
     def on_pre_leave(self):
         if not self.sm.has_screen('sC1'):
