@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 
+from asmcnc.shapeCutter_app import screen_shapeCutter_dimensions
 
 Builder.load_string("""
 
@@ -195,4 +196,7 @@ class ShapeCutterApIsScreenClass(Screen):
         self.next_screen()
             
     def next_screen(self):
-        self.sm.current = 'sC1'
+        if not self.sm.has_screen('sCdimensions'):
+            sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCdimensions_screen)
+        self.sm.current = 'sCdimensions'
