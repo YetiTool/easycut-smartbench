@@ -1,5 +1,5 @@
 '''
-Created on 20 February 2020
+Created on 3 March 2020
 Screen 3 for the Shape Cutter App
 
 @author: Letty

@@ -1,20 +1,28 @@
 '''
-Created on 20 February 2020
-Template Screen for the Shape Cutter App
+Created on 4 March 2020
+Screen 27 for the Shape Cutter App
 
 @author: Letty
 '''
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.metrics import MetricsBase
+from kivy.properties import StringProperty, ObjectProperty
+
+from asmcnc.shapeCutter_app import screen_shapeCutter_30
 
 Builder.load_string("""
 
-<ShapeCutterTemplateButtonsScreenClass>
+<ShapeCutter27ScreenClass>
+
+    info_button: info_button
+    image_box: image_box
 
     BoxLayout:
+        size_hint: (None,None)
+        width: dp(800)
+        height: dp(480)
         padding: 0
         spacing: 0
         orientation: "vertical"
@@ -31,6 +39,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.prepare()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -43,6 +52,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.load()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -55,6 +65,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.define()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -69,12 +80,13 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.position()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/shapeCutter_app/img/position_tab_blue.png"
+                        source: "./asmcnc/shapeCutter_app/img/position_tab_grey.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -83,6 +95,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                on_press: root.check()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -97,6 +110,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(90)
+                on_press: root.exit()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -109,22 +123,258 @@ Builder.load_string("""
                         allow_stretch: True                    
                     
         BoxLayout:
-            padding: 10
-            height: dp(800)
-            width: dp(480)
+            size_hint: (None,None)
+            padding: 0
+            height: dp(390)
+            width: dp(800)
             canvas:
                 Rectangle: 
                     pos: self.pos
                     size: self.size
                     source: "./asmcnc/shapeCutter_app/img/background.png"
+            
+            BoxLayout:
+                orientation: "vertical"
+                padding: 0
+                spacing: 0
+                    
+                BoxLayout: #Header
+                    size_hint: (None,None)
+                    height: dp(60)
+                    width: dp(800)
+                    padding: (20,0,0,0)
+                    orientation: "horizontal"
+                    
+                    BoxLayout: #Screen number
+                        size_hint: (None,None)
+                        padding: 0
+                        height: dp(40)
+                        width: dp(40)
+                        canvas:
+                            Rectangle: 
+                                pos: self.pos
+                                size: self.size
+                                source: "./asmcnc/shapeCutter_app/img/number_box.png"
+                        Label:
+                            text: root.screen_number
+                            valign: "middle"
+                            halign: "center"
+                            font_size: 26
+                            markup: True
+                                
+                                
+                        
+                    BoxLayout: #Title
+                        size_hint: (None,None)
+                        height: dp(60)
+                        width: dp(740)
+                        padding: (20,20,0,0)
+                        
+                        Label:
+                            text: root.title_label
+                            color: 0,0,0,1
+                            font_size: 28
+                            markup: True
+                            halign: "left"
+                            valign: "bottom"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                        
+                    
+                BoxLayout: #Body
+                    size_hint: (None,None)
+                    height: dp(330)
+                    width: dp(800)
+                    padding: 0,20,0,0
+                    orientation: "horizontal"
+                    
+                    BoxLayout: # text and pics
+                        size_hint: (None,None)
+                        height: dp(310)
+                        width: dp(675)
+                        padding: 0,0,0,0
+                        orientation: "vertical"
+                    
+                        BoxLayout: #text box
+                            size_hint: (None,None)
+                            height: dp(55)
+                            width: dp(675)
+                            padding: 80,0,0,0
+                            orientation: "vertical"                       
+                            Label:
+                                text: root.user_instructions
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                halign: "left"
+                                valign: "top"
+                                text_size: self.size
+                                size: self.parent.size
+                                pos: self.parent.pos
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(255)
+                            width: dp(675)
+                            padding:0,0,0,15
+                            spacing: 20
+                            BoxLayout: #image box
+                                id: image_box
+                                size_hint: (None,None)
+                                height: dp(240)
+                                width: dp(500)
+                                padding:25,0,0,0
+                                Image:
+                                    source: root.image_source
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                                
+                            Label:          
+                                text: "In the next step, you will need to centre the tool over the datum position."
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                halign: "left"
+                                valign: "top"
+                                text_size: self.size
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                
+                                
+                    BoxLayout: #action box
+                        size_hint: (None,None)
+                        height: dp(310)
+                        width: dp(125)
+                        padding: 0,0,0,34
+                        spacing: 34
+                        orientation: "vertical"
+                        
+                        BoxLayout: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            padding: (24,0,24,34)
+                            Button:
+                                id: info_button
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(40)
+                                background_color: hex('#F4433600')
+                                opacity: 1
+                                on_press: root.get_info()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/shapeCutter_app/img/info_icon.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
+
+                        Button: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            background_color: hex('#F4433600')
+                            on_press: root.go_back()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/shapeCutter_app/img/arrow_back.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                        Button: 
+                            size_hint: (None,None)
+                            height: dp(67)
+                            width: dp(88)
+                            background_color: hex('#F4433600')
+                            on_press: root.next_screen()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/shapeCutter_app/img/arrow_next.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True               
 
 """)
 
-class ShapeCutterTemplateButtonsScreenClass(Screen):
+class ShapeCutter27ScreenClass(Screen):
+    
+    shape = 'circle'
+    
+    info_button = ObjectProperty()
+    image_box = ObjectProperty()
+    
+    screen_number = StringProperty("[b]27[/b]")
+    title_label = StringProperty("[b]Set job XY datum[/b]")
+    user_instructions = StringProperty("Mark the shape datum position on the material. " \
+                                       "This is always in the bottom right corner of your rectangle.")
+    image_source = StringProperty("./asmcnc/shapeCutter_app/img/27_rect.png")
+    
     
     def __init__(self, **kwargs):
-        super(ShapeCutterTemplateButtonsScreenClass, self).__init__(**kwargs)
+        super(ShapeCutter27ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+    def on_pre_enter(self):
+        self.info_button.opacity = 1
         
+        if self.shape == 'circle':
+            self.user_instructions = ("Mark the shape\'s datum position on the material. " \
+                                      "This is always in the centre of your circle. ")
+            self.image_source = ("./asmcnc/shapeCutter_app/img/27_circ.png")
+            self.image_box.padding = 120,0,0,0
+        elif self.shape == 'rectangle':
+            self.user_instructions = ("Mark the shape\'s datum position on the material. " \
+                                      "This is always in the bottom right corner of your rectangle.")
+            self.image_source = ("./asmcnc/shapeCutter_app/img/27_rect.png")
+            self.image_box.padding = 25,0,0,0
+
+# Action buttons       
+    def get_info(self):
+        pass
+    
+    def go_back(self):
+        self.sm.current = 'sC26'
+    
+    def next_screen(self):
+        if not self.sm.has_screen('sC30'):
+            sC30_screen = screen_shapeCutter_30.ShapeCutter30ScreenClass(name = 'sC30', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC30_screen)
+        self.sm.current = 'sC30'
+    
+# Tab functions
+
+    def prepare(self):
+        self.sm.current = 'sC1'
+    
+    def load(self):
+        self.sm.current = 'sC11'
+    
+    def define(self):
+        #self.sm.current = 'sC16'
+        pass
+    
+    def position(self):
+        self.sm.current = 'sC26'
+        pass
+    
+    def check(self):
+        #self.sm.current = 'sC34'
+        pass
+    
+    def exit(self):
+        self.sm.current = 'lobby'
