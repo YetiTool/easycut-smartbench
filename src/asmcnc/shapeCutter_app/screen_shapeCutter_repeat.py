@@ -1,6 +1,6 @@
 '''
 Created on 4 March 2020
-ApIs Screen for the Shape Cutter App
+Repeat? Screen for the Shape Cutter App
 
 @author: Letty
 '''
@@ -12,7 +12,7 @@ from kivy.properties import ObjectProperty
 
 Builder.load_string("""
 
-<ShapeCutterApIsScreenClass>:
+<ShapeCutterRepeatScreenClass>:
     
     BoxLayout:
         height: dp(800)
@@ -32,7 +32,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(800)
-                text: "Shape Cutter"
+                text: "Would you like to do this again?"
                 font_size: 30
                 halign: "center"
                 valign: "bottom"
@@ -51,7 +51,7 @@ Builder.load_string("""
                     width: dp(800)
                     halign: "center"
                     valign: "middle"
-                    text: "Select a shape to define..."
+                    text: ""
                     color: 0,0,0,1
                     font_size: 26
                     markup: True
@@ -60,23 +60,23 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(170)
-                padding: (180,0,180,30)
+                padding: (100,0,100,30)
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
+                    width: dp(200)
                     height: dp(171)
-                    padding: (28,0,20,0)
+                    padding: (16,0,16,0)
                     pos: self.parent.pos
                     
-                    # aperture
+                    # Repeat
                     Button:
                         size_hint: (None,None)
                         height: dp(171)
-                        width: dp(172)
+                        width: dp(168)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -86,23 +86,23 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/shapeCutter_app/img/thumbs_up.png"
+                                source: "./asmcnc/shapeCutter_app/img/button_repeat.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
+                    width: dp(200)
                     height: dp(171)
-                    padding: (20,0,28,0)
+                    padding: (16,0,16,0)
                     pos: self.parent.pos
                     
-                    # island
+                    # New
                     Button:
                         size_hint: (None,None)
                         height: dp(171)
-                        width: dp(172)
+                        width: dp(168)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -112,7 +112,33 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/shapeCutter_app/img/thumbs_down.png"
+                                source: "./asmcnc/shapeCutter_app/img/button_new.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(200)
+                    height: dp(171)
+                    padding: (16,0,16,0)
+                    pos: self.parent.pos
+                    
+                    # Next
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(171)
+                        width: dp(168)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.thumbs_down()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/shapeCutter_app/img/button_exit.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -127,20 +153,28 @@ Builder.load_string("""
                 pos: self.parent.pos
 """)
 
-class ShapeCutterApIsScreenClass(Screen):
+class ShapeCutterRepeatScreenClass(Screen):
 
-    info_button = ObjectProperty()   
+    exiting = False 
     
     def __init__(self, **kwargs):
-        super(ShapeCutterApIsScreenClass, self).__init__(**kwargs)
+        super(ShapeCutterRepeatScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-      
-    def aperture(self):
-        self.next_screen()
     
-    def island(self):
-        self.next_screen()
-            
-    def next_screen(self):
-        self.sm.current = 'sC1'
+    def repeat(self):
+        self.sm.current = 'sC26'
+        
+    def new_cut(self):
+        self.sm.current = 'sClanding'
+        
+    def exit(self):
+        self.exiting = True
+        self.sm.current = 'lobby'
+        
+    def on_pre_leave(self):
+        # clear out screens
+        if self.exiting == True:
+            self.exiting = False
+        else: 
+            pass

@@ -117,7 +117,6 @@ Builder.load_string("""
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True  
-            # Info button
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
@@ -136,16 +135,15 @@ class ShapeCutterFeedbackScreenClass(Screen):
         super(ShapeCutterFeedbackScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
-    def get_info(self):
-        pass
       
     def thumbs_up(self):
         pass
+        self.next_screen()
     
     def thumbs_down(self):
         pass
-    
+        self.next_screen()
+            
     def next_screen(self):
-        pass
+        self.sm.current = 'sCrepeat'
 

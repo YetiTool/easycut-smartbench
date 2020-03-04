@@ -15,6 +15,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_16
 from asmcnc.shapeCutter_app import screen_shapeCutter_26
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
+from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
 
 Builder.load_string("""
 
@@ -184,3 +185,6 @@ class ShapeCutterLandingScreenClass(Screen):
         if not self.sm.has_screen('sCfeedback'):
             sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sCfeedback_screen)
+        if not self.sm.has_screen('sCrepeat'):
+            sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCrepeat_screen)
