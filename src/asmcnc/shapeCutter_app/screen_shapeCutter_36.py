@@ -4,13 +4,13 @@ Screen 36 for the Shape Cutter App
 
 @author: Letty
 '''
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_37
+#from asmcnc.shapeCutter_app import screen_shapeCutter_36
 
 Builder.load_string("""
 
@@ -57,7 +57,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/shapeCutter_app/img/load_tab_grey.png"
+                        source: "./asmcnc/shapeCutter_app/img/load_tab_blue.png"
                         size: self.parent.size
                         stretch: True
             Button:
@@ -100,7 +100,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/shapeCutter_app/img/check_tab_blue.png"
+                        source: "./asmcnc/shapeCutter_app/img/check_tab_grey.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -187,43 +187,38 @@ Builder.load_string("""
                     width: dp(800)
                     padding: 0,20,0,0
                     orientation: "horizontal"
-                    
-                    BoxLayout: # text and pics
+                 
+                    BoxLayout: #text box
                         size_hint: (None,None)
                         height: dp(310)
                         width: dp(675)
-                        padding: 0,0,0,0
+                        padding: 80,0,0,5
                         orientation: "vertical"
-                    
-                        BoxLayout: #text box
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(675)
-                            padding: 80,0,0,0
-                            orientation: "vertical"                       
-                            Label:
-                                text: root.user_instructions
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
+                        Button:
+                            id: spindle_toggle
+                            on_release: root.start_job()
+                            background_color: 1, 1, 1, 0 
+                            BoxLayout:
+                                padding: 10
                                 size: self.parent.size
-                                pos: self.parent.pos
-
-                        BoxLayout: #image box
-                            size_hint: (None,None)
-                            height: dp(270)
-                            width: dp(675)
-                            padding:100,0,0,5
-                            Image:
-                                source: "./asmcnc/shapeCutter_app/img/27_rect_c.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
-                                        
+                                pos: self.parent.pos      
+                                Image:
+                                    id: go_image
+                                    source: "./asmcnc/skavaUI/img/go.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True  
+                        Label:
+                            text: root.user_instructions
+                            color: 0,0,0,1
+                            font_size: 18
+                            markup: True
+                            halign: "center"
+                            valign: "top"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
 
                     BoxLayout: #action box
                         size_hint: (None,None)
@@ -278,7 +273,8 @@ Builder.load_string("""
                             height: dp(67)
                             width: dp(88)
                             background_color: hex('#F4433600')
-                            on_press: root.next_screen()
+                            #on_press: root.next_screen()
+                            opacity: 0
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -295,32 +291,35 @@ Builder.load_string("""
 class ShapeCutter36ScreenClass(Screen):
     
     info_button = ObjectProperty()
+    vacuum_toggle = ObjectProperty()
     
     screen_number = StringProperty("[b]36[/b]")
-    title_label = StringProperty("[b]Set Job XY Datum[/b]")
-    user_instructions = StringProperty("Mark the shape\'s datum position on the material." \
-                                       " This is always in the bottom right corner of your rectangle. ")
-    
+    title_label = StringProperty("[b]You\'re all set![/b]")
+    user_instructions = StringProperty()
+   
     def __init__(self, **kwargs):
         super(ShapeCutter36ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.info_button.opacity = 1
-
+        self.info_button.opacity = 0
+        
+        # get job info
+        self.user_instructions = ("[b]Your cut time is 13 minutes.[/b]\n\n" \
+                                           "(That\'s also the world record time to beat for fastest mile" \
+                                           " hula-hooped while balancing a milk bottle on the head. "\
+                                           "So what are you waiting for?)")
+ 
 # Action buttons       
     def get_info(self):
         pass
     
     def go_back(self):
-        self.sm.current = 'sC13'
+        self.sm.current = 'sC35'
     
     def next_screen(self):
-        if not self.sm.has_screen('sC15'):
-            sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC15_screen)
-        self.sm.current = 'sC15'
+        pass
     
 # Tab functions
 
@@ -336,11 +335,13 @@ class ShapeCutter36ScreenClass(Screen):
     
     def position(self):
         self.sm.current = 'sC26'
-        pass
     
     def check(self):
-        #self.sm.current = 'sC34'
-        pass
+        self.sm.current = 'sC34'
     
     def exit(self):
         self.sm.current = 'lobby'
+    
+# Screen specific
+    def start_job(self):
+        pass
