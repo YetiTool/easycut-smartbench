@@ -319,7 +319,7 @@ class ShapeCutter36ScreenClass(Screen):
         self.sm.current = 'sC35'
     
     def next_screen(self):
-        pass
+        self.sm.current = 'sCfeedback'
     
 # Tab functions
 
@@ -344,4 +344,4 @@ class ShapeCutter36ScreenClass(Screen):
     
 # Screen specific
     def start_job(self):
-        pass
+        self.next_screen()

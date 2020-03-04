@@ -14,6 +14,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_11
 from asmcnc.shapeCutter_app import screen_shapeCutter_16
 from asmcnc.shapeCutter_app import screen_shapeCutter_26
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
+from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 
 Builder.load_string("""
 
@@ -65,16 +66,16 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(170)
-                padding: (116,0,116,30)
+                padding: (180,0,180,30)
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(400)
+                    width: dp(220)
                     height: dp(170)
-                    padding: (20,0,0,0)
+                    padding: (25,0,27,0)
                     pos: self.parent.pos
                     
                     # Circle button
@@ -98,9 +99,9 @@ Builder.load_string("""
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(400)
+                    width: dp(220)
                     height: dp(170)
-                    padding: (0,0,20,0)
+                    padding: (27,0,25,0)
                     pos: self.parent.pos
                     
                     # rectangle button
@@ -180,3 +181,6 @@ class ShapeCutterLandingScreenClass(Screen):
         if not self.sm.has_screen('sC26'):
             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC26_screen)
+        if not self.sm.has_screen('sCfeedback'):
+            sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCfeedback_screen)
