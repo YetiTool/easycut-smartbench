@@ -298,7 +298,7 @@ class ShapeCutter36ScreenClass(Screen):
     
     screen_number = StringProperty("[b]36[/b]")
     title_label = StringProperty("[b]Set Job XY Datum[/b]")
-    user_instructions = StringProperty("Mark the shape’s datum position on the material." \
+    user_instructions = StringProperty("Mark the shape\'s datum position on the material." \
                                        " This is always in the bottom right corner of your rectangle. ")
     
     def __init__(self, **kwargs):

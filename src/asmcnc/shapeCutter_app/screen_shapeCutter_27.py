@@ -319,7 +319,7 @@ class ShapeCutter27ScreenClass(Screen):
     
     screen_number = StringProperty("[b]27[/b]")
     title_label = StringProperty("[b]Set job XY datum[/b]")
-    user_instructions = StringProperty("Mark the shape datum position on the material. " \
+    user_instructions = StringProperty("Mark the shape\'s datum position on the material. " \
                                        "This is always in the bottom right corner of your rectangle.")
     image_source = StringProperty("./asmcnc/shapeCutter_app/img/27_rect.png")
     

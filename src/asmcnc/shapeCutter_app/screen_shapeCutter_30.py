@@ -10,7 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_31
+from asmcnc.shapeCutter_app import screen_shapeCutter_32
 
 Builder.load_string("""
 
@@ -300,20 +300,20 @@ class ShapeCutter30ScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.info_button.opacity = 0
+        self.info_button.opacity = 1
 
 # Action buttons       
     def get_info(self):
         pass
     
     def go_back(self):
-        self.sm.current = 'sC2'
+        self.sm.current = 'sC29'
     
     def next_screen(self):
-        if not self.sm.has_screen('sC4'):
-            sC4_screen = screen_shapeCutter_4.ShapeCutter4ScreenClass(name = 'sC4', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC4_screen)
-        self.sm.current = 'sC4'
+        if not self.sm.has_screen('sC32'):
+            sC32_screen = screen_shapeCutter_32.ShapeCutter32ScreenClass(name = 'sC32', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC32_screen)
+        self.sm.current = 'sC32'
     
 # Tab functions
 
