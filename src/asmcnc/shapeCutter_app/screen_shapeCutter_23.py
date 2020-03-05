@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_24
-
 Builder.load_string("""
 
 <ShapeCutter23ScreenClass>
@@ -19,7 +17,12 @@ Builder.load_string("""
     info_button: info_button
     unit_toggle: unit_toggle
     unit_label: unit_label
-
+    xy_feed_units: xy_feed_units
+    z_feed_units: z_feed_units
+    xy_feed: xy_feed
+    z_feed: z_feed
+    spindle_speed: spindle_speed
+    
     BoxLayout:
         size_hint: (None,None)
         width: dp(800)
@@ -261,7 +264,7 @@ Builder.load_string("""
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -279,7 +282,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -293,14 +296,13 @@ Builder.load_string("""
                                             input_filter: 'float'
                                             multiline: False
                                             text: ''
-                                            on_text_validate: root.check_dimensions()
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
-                                            text: "units/min"
+                                            id: xy_feed_units
                                             color: 0,0,0,1
                                             font_size: 20
                                             markup: True
@@ -312,7 +314,7 @@ Builder.load_string("""
                                 
                                 BoxLayout: #dimension 2
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -330,7 +332,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -343,15 +345,14 @@ Builder.load_string("""
                                             markup: True
                                             input_filter: 'float'
                                             multiline: False
-                                            text: ''
-                                            on_text_validate: root.check_dimensions()                           
+                                            text: ''                           
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
-                                            text: "units/min"
+                                            id: z_feed_units
                                             color: 0,0,0,1
                                             font_size: 20
                                             markup: True
@@ -362,7 +363,7 @@ Builder.load_string("""
                                             pos: self.parent.pos
                                 BoxLayout: #dimension 3
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -380,7 +381,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -393,11 +394,10 @@ Builder.load_string("""
                                             markup: True
                                             input_filter: 'float'
                                             multiline: False
-                                            text: ''
-                                            on_text_validate: root.check_dimensions()                                                                
+                                            text: ''                                                                
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
@@ -513,6 +513,9 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
+        self.xy_feed_units.text = self.unit_label.text + "/min"
+        self.z_feed_units.text = self.unit_label.text + "/min"
+
 # Action buttons       
     def get_info(self):
         pass
@@ -521,7 +524,7 @@ class ShapeCutter23ScreenClass(Screen):
         self.sm.current = 'sC22'
     
     def next_screen(self):
-        self.sm.current = 'sC24'
+        self.check_dimensions()
     
 # Tab functions
 
@@ -547,8 +550,19 @@ class ShapeCutter23ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
+            
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
 
+        self.xy_feed_units.text = self.unit_label.text + "/min"
+        self.z_feed_units.text = self.unit_label.text + "/min"
+
     def check_dimensions(self):
-        pass
+        if not self.xy_feed.text == "" and not self.z_feed.text == "":
+            self.j.parameter_dict["feed rates"]["xy feed rate"] = self.xy_feed.text
+            self.j.parameter_dict["feed rates"]["z feed rate"] = self.z_feed.text
+            self.j.parameter_dict["feed rates"]["spindle speed"] = self.spindle_speed.text
+
+            self.sm.current = 'sC24'
+        else:
+            pass

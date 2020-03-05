@@ -175,24 +175,21 @@ class ShapeCutterApIsScreenClass(Screen):
         self.j=kwargs['job_parameters']
         
     def on_pre_enter(self):
-        if self.shape == 'circle':
-#             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
-#                                       "This is always in the centre of your circle. ")
+        if self.j.shape_dict["shape"] == "circle":
             self.image_apt.source = ("./asmcnc/shapeCutter_app/img/apt_circ.png")
             self.image_is.source = ("./asmcnc/shapeCutter_app/img/is_circ.png")
         
-        elif self.shape == 'rectangle':
-#             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
-#                                       "This is always in the bottom right corner of your rectangle.")
-            self.image_apt = ("./asmcnc/shapeCutter_app/img/apt_rect.png")
-            self.image_is = ("./asmcnc/shapeCutter_app/img/is_rect.png")
-
+        elif self.j.shape_dict["shape"] == 'rectangle':
+            self.image_apt.source = ("./asmcnc/shapeCutter_app/img/apt_rect.png")
+            self.image_is.source = ("./asmcnc/shapeCutter_app/img/is_rect.png")
       
     def aperture(self):
+        self.j.shape_dict["cut_type"] = "aperture"
         self.next_screen()
     
     def island(self):
+        self.j.shape_dict["cut_type"] = "island"
         self.next_screen()
-            
+
     def next_screen(self):
         self.sm.current = 'sCdimensions'

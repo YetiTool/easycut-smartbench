@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_22
-
 Builder.load_string("""
 
 <ShapeCutter21ScreenClass>
@@ -313,7 +311,7 @@ class ShapeCutter21ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.sm.current = 'sC19'
+        self.sm.current = 'sC20'
     
     def next_screen(self):
         self.sm.current = 'sC22'

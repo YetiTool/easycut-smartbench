@@ -206,7 +206,8 @@ class ShapeCutterLandingScreenClass(Screen):
         self.j = sC_job_parameters.ShapeCutterJobParameters()
 
     def on_pre_enter(self):
-        self.load_screens()
+        if not self.sm.has_screen('sC1'):
+            self.load_screens()
         
     def load_screens(self):
         sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
@@ -300,9 +301,11 @@ class ShapeCutterLandingScreenClass(Screen):
         self.sm.current = 'sCtutorial'
       
     def cut_rectangle(self):
+        self.j.shape_dict["shape"] = "rectangle"
         self.next_screen()
     
     def cut_circle(self):
+        self.j.shape_dict["shape"] = "circle"
         self.next_screen()
     
     def next_screen(self):

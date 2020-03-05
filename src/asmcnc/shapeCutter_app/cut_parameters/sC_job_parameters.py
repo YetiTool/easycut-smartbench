@@ -28,6 +28,7 @@ class ShapeCutterJobParameters(object):
         
         
         self.tabs = {
+            "tabs?": "",
             "width": "",
             "height": "",
             "spacing": ""
@@ -40,16 +41,23 @@ class ShapeCutterJobParameters(object):
             }
 
         self.feed_rates = {
-            "cutting feed rate": "",
-            "lead in feed rate": "",
-            "lead out feed rate": "",
-            "plunge feed rate": ""
+            "xy feed rate": "",
+            "z feed rate": "",
+            "spindle speed": "",
+            }
+        
+        self.strategy_parameters = {
+            "stock bottom offset": "",
+            "step down": "",
+            "finishing passes": ""
             }
         
         self.parameter_dict = {
+            "units": "",
             "tabs": self.tabs,
             "cutter dimensions": self.cutter_dimensions,
-            "feed rates": self.feed_rates            
+            "feed rates": self.feed_rates,
+            "strategy parameters": self.strategy_parameters         
             }
         
         

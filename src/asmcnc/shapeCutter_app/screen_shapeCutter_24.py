@@ -19,6 +19,12 @@ Builder.load_string("""
     info_button: info_button
     unit_toggle: unit_toggle
     unit_label: unit_label
+    step_down_units: step_down_units
+    stock_bottom_offset_units: stock_bottom_offset_units
+    finishing_passes: finishing_passes
+    stock_bottom_offset: stock_bottom_offset
+    step_down: step_down 
+    
 
     BoxLayout:
         size_hint: (None,None)
@@ -261,7 +267,7 @@ Builder.load_string("""
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -279,7 +285,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -293,13 +299,13 @@ Builder.load_string("""
                                             input_filter: 'float'
                                             multiline: False
                                             text: ''
-                                            on_text_validate: root.check_dimensions()
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
+                                            id: stock_bottom_offset_units
                                             text: "units"
                                             color: 0,0,0,1
                                             font_size: 20
@@ -312,7 +318,7 @@ Builder.load_string("""
                                 
                                 BoxLayout: #dimension 2
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -330,7 +336,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -343,15 +349,14 @@ Builder.load_string("""
                                             markup: True
                                             input_filter: 'float'
                                             multiline: False
-                                            text: ''
-                                            on_text_validate: root.check_dimensions()                           
+                                            text: ''                           
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
-                                            text: "units"
+                                            id: step_down_units
                                             color: 0,0,0,1
                                             font_size: 20
                                             markup: True
@@ -362,7 +367,7 @@ Builder.load_string("""
                                             pos: self.parent.pos
                                 BoxLayout: #dimension 3
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(595)
                                     padding: (0,0,20,0)                   
                                     orientation: "horizontal"
@@ -380,7 +385,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(90)
                                         padding: (10,0,10,0)
                                                     
@@ -391,17 +396,16 @@ Builder.load_string("""
                                             text_size: self.size
                                             font_size: '20sp'
                                             markup: True
-                                            input_filter: 'float'
+                                            input_filter: 'int'
                                             multiline: False
-                                            text: ''
-                                            on_text_validate: root.check_dimensions()                                                                
+                                            text: ''                                                                
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(150)
                                         padding: (10,0,10,0)
                                         Label: 
-                                            text: ""
+                                            text: "passes"
                                             color: 0,0,0,1
                                             font_size: 20
                                             markup: True
@@ -511,7 +515,7 @@ class ShapeCutter24ScreenClass(Screen):
         self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
-        self.info_button.opacity = 0
+        self.info_button.opacity = 1
 
 # Action buttons       
     def get_info(self):
@@ -521,7 +525,7 @@ class ShapeCutter24ScreenClass(Screen):
         self.sm.current = 'sC23'
     
     def next_screen(self):
-        self.sm.current = 'sC25'
+        self.check_dimensions()
     
 # Tab functions
 
@@ -547,8 +551,20 @@ class ShapeCutter24ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
+            
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
 
+        self.stock_bottom_offset_units.text = self.unit_label.text + "/min"
+        self.step_down_units.text = self.unit_label.text + "/min"
+
     def check_dimensions(self):
-        pass
+        if not self.stock_bottom_offset.text == "" and not self.step_down.text == "" \
+        and not self.finishing_passes.text == "":
+            self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = self.stock_bottom_offset.text
+            self.j.parameter_dict["strategy parameters"]["step down"] = self.step_down.text
+            self.j.parameter_dict["strategy parameters"]["finishing passes"] = self.finishing_passes.text
+
+            self.sm.current = 'sC25'
+        else:
+            pass

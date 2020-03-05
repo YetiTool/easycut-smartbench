@@ -10,7 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.uix.textinput import TextInput
 
-
 Builder.load_string("""
 
 <ShapeCutterDimensionsScreenClass>:
@@ -18,10 +17,10 @@ Builder.load_string("""
     image_dims: image_dims
     unit_toggle: unit_toggle
     unit_label: unit_label
-    x_dimension: x_dimension
-    y_dimension: y_dimension
-    z_dimension: z_dimension
-    r_dimension: r_dimension
+    input_dim1: input_dim1
+    input_dim2: input_dim2
+    input_dim3: input_dim3
+    input_dim4: input_dim4
 
     BoxLayout:
         height: dp(800)
@@ -47,24 +46,6 @@ Builder.load_string("""
                 halign: "center"
                 valign: "bottom"
                 markup: True
-                   
-#                     
-#             BoxLayout:
-#                 size_hint: (None,None)
-#                 width: dp(800)
-#                 height: dp(50)
-#                 padding: 0
-#                 spacing: 0
-#                 Label:
-#                     size_hint: (None,None)
-#                     height: dp(100)
-#                     width: dp(800)
-#                     halign: "center"
-#                     valign: "middle"
-#                     text: "Enter dimensions"
-#                     color: 0,0,0,1
-#                     font_size: 26
-#                     markup: True
 
             # Body
             BoxLayout:
@@ -82,7 +63,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(220)
                     height: dp(330)
-                    padding: (0,0,0,50)
+                    padding: (0,0,0,30)
                     spacing: 20
                     pos: self.parent.pos
                     
@@ -136,13 +117,13 @@ Builder.load_string("""
                         # label + text entry
                     BoxLayout: #dimension 1
                         size_hint: (None,None)
-                        height: dp(30)
+                        height: dp(40)
                         width: dp(220)
                         padding: (30,0,20,0)                   
                         orientation: "horizontal"
                         
                         Label: 
-                            text: "X"
+                            text: root.dim_1
                             color: 0,0,0,1
                             font_size: 24
                             markup: True
@@ -154,12 +135,12 @@ Builder.load_string("""
                                                       
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(30)
+                            height: dp(40)
                             width: dp(120)
                             padding: (20,0,0,0)
                                         
                             TextInput: 
-                                id: x_dimension
+                                id: input_dim1
                                 valign: 'middle'
                                 halign: 'center'
                                 text_size: self.size
@@ -171,13 +152,13 @@ Builder.load_string("""
                                 on_text_validate: root.check_dimensions()
                     BoxLayout: #dimension 2
                         size_hint: (None,None)
-                        height: dp(30)
+                        height: dp(40)
                         width: dp(220)
                         padding: (30,0,20,0)                     
                         orientation: "horizontal"
                         
                         Label: 
-                            text: "Y"
+                            text: root.dim_2
                             color: 0,0,0,1
                             font_size: 24
                             markup: True
@@ -189,12 +170,12 @@ Builder.load_string("""
                                                       
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(30)
+                            height: dp(40)
                             width: dp(120)
                             padding: (20,0,0,0)
                                         
                             TextInput: 
-                                id: y_dimension
+                                id: input_dim2
                                 valign: 'middle'
                                 halign: 'center'
                                 text_size: self.size
@@ -206,13 +187,13 @@ Builder.load_string("""
                                 on_text_validate: root.check_dimensions()
                     BoxLayout: #dimension 3
                         size_hint: (None,None)
-                        height: dp(30)
+                        height: dp(40)
                         width: dp(220)
                         padding: (30,0,20,0)                     
                         orientation: "horizontal"
                         
                         Label: 
-                            text: "Z"
+                            text: root.dim_3
                             color: 0,0,0,1
                             font_size: 24
                             markup: True
@@ -224,12 +205,12 @@ Builder.load_string("""
                                                       
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(30)
+                            height: dp(40)
                             width: dp(120)
                             padding: (20,0,0,0)
                                         
                             TextInput: 
-                                id: z_dimension
+                                id: input_dim3
                                 valign: 'middle'
                                 halign: 'center'
                                 text_size: self.size
@@ -242,13 +223,13 @@ Builder.load_string("""
                                                                 
                     BoxLayout: #dimension 4
                         size_hint: (None,None)
-                        height: dp(30)
+                        height: dp(40)
                         width: dp(220)
                         padding: (30,0,20,0)                  
                         orientation: "horizontal"
                         
                         Label: 
-                            text: "r"
+                            text: root.dim_4
                             color: 0,0,0,1
                             font_size: 24
                             markup: True
@@ -260,13 +241,13 @@ Builder.load_string("""
                                                       
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(30)
+                            height: dp(40)
                             width: dp(120)
                             padding: (20,0,0,0)
                                         
                             TextInput: 
-                                id: r_dimension
-                                valign: 'middle'
+                                id: input_dim4
+                                valign: 'top'
                                 halign: 'center'
                                 text_size: self.size
                                 font_size: '20sp'
@@ -274,7 +255,7 @@ Builder.load_string("""
                                 input_filter: 'float'
                                 multiline: False
                                 text: ''
-                                on_text_validate: root.check_dimensions()           
+                                on_text_validate: root.check_dimensions()          
                 # Image
                 BoxLayout:
                     size_hint: (None,None)
@@ -307,11 +288,13 @@ Builder.load_string("""
 
 class ShapeCutterDimensionsScreenClass(Screen):
 
-    info_button = ObjectProperty()   
-    #X_dimension = ObjectProperty()
+    info_button = ObjectProperty()
     units = StringProperty("mm")
-    shape = 'rectangle'
-    cut_type = 'island'
+    dim_1 = StringProperty()
+    dim_2 = StringProperty()
+    dim_3 = StringProperty()
+    dim_4 = StringProperty()
+
     
     def __init__(self, **kwargs):
         super(ShapeCutterDimensionsScreenClass, self).__init__(**kwargs)
@@ -320,19 +303,49 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.j=kwargs['job_parameters']
         
     def on_pre_enter(self):
-        if self.shape == 'circle' and self.cut_type == 'island':
-            self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_is_circ.png")
+        if self.j.shape_dict["shape"] == 'circle':            
+            self.input_dim1.opacity = 0
+            self.input_dim2.opacity = 1
+            self.input_dim3.opacity = 1
+            self.input_dim4.opacity = 0
+            self.input_dim1.disabled = True
+            self.input_dim2.disabled = False
+            self.input_dim3.disabled = False
+            self.input_dim4.disabled = True
+            self.dim_1 = ""
+            self.dim_2 = "D"
+            self.dim_3 = "Z"
+            self.dim_4 = ""
             
-            # pick dimensions for each shape (only some are relevant)
-        
-        elif self.shape == 'rectangle' and self.cut_type == 'island':
-            self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_is_rect.png")
+            self.j.shape_dict["dimensions"] = self.j.circle_dimensions
             
-        elif self.shape == 'circle' and self.cut_type == 'aperture':
-            self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_apt_circ.png")
-        
-        elif self.shape == 'rectangle' and self.cut_type == 'aperture':
-            self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_apt_rect.png")
+            if self.j.shape_dict["cut_type"] == 'island':
+                self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_is_circ.png")
+            
+            elif self.j.shape_dict["cut_type"] == 'aperture':
+                self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_apt_circ.png")
+              
+        elif self.j.shape_dict["shape"] == 'rectangle':
+            self.input_dim1.opacity = 1
+            self.input_dim2.opacity = 1
+            self.input_dim3.opacity = 1
+            self.input_dim4.opacity = 1
+            self.input_dim1.disabled = False
+            self.input_dim2.disabled = False
+            self.input_dim3.disabled = False
+            self.input_dim4.disabled = False
+            self.dim_1 = "X"
+            self.dim_2 = "Y"
+            self.dim_3 = "R"
+            self.dim_4 = "Z"
+
+            self.j.shape_dict["dimensions"] = self.j.rectangle_dimensions 
+            
+            if self.j.shape_dict["cut_type"] == 'island':
+                self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_is_rect.png")
+
+            elif self.j.shape_dict["cut_type"] == 'aperture':
+                self.image_dims.source = ("./asmcnc/shapeCutter_app/img/dims_apt_rect.png")
 
       
     def toggle_units(self):
@@ -343,12 +356,31 @@ class ShapeCutterDimensionsScreenClass(Screen):
     
     def check_dimensions(self):
         
-        if not (self.x_dimension.text == "") and not (self.y_dimension.text == "") \
-        and not (self.z_dimension.text == "") and not (self.r_dimension.text == ""):
-            # save the dimensions
-            self.next_screen()     
-        else:
-            pass
+        if self.j.shape_dict["shape"] == 'rectangle':
             
+            # if all fields are full
+            if not (self.input_dim1.text == "") and not (self.input_dim2.text == "") \
+            and not (self.input_dim3.text == "") and not (self.input_dim4.text == ""):
+            
+                # save the dimensions
+                self.j.shape_dict["dimensions"]["X"] = self.input_dim1.text
+                self.j.shape_dict["dimensions"]["Y"] = self.input_dim2.text
+                self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
+                self.j.shape_dict["dimensions"]["R"] = self.input_dim4.text
+                
+                self.next_screen()
+            else:
+                pass
+            
+        if self.j.shape_dict["shape"] == 'circle':
+            if not (self.input_dim2.text == "") and not (self.input_dim3.text == ""):            # save the dimensions
+                # save the dimensions
+                self.j.shape_dict["dimensions"]["D"] = self.input_dim2.text
+                self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
+                
+                self.next_screen()
+            else:
+                pass
+
     def next_screen(self):
         self.sm.current = 'sC1'

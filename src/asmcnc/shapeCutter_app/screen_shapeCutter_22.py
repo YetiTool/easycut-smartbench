@@ -10,15 +10,20 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_23
-
 Builder.load_string("""
 
 <ShapeCutter22ScreenClass>
 
     info_button: info_button
+    tab_toggle: tab_toggle
+    tab_YN: tab_YN
     unit_toggle: unit_toggle
     unit_label: unit_label
+    main_image: main_image
+    td_dimension:td_dimension
+    th_dimension:th_dimension
+    tw_dimension:tw_dimension
+
 
     BoxLayout:
         size_hint: (None,None)
@@ -226,14 +231,14 @@ Builder.load_string("""
                                     padding: (10,0,0,25)
                                                 
                                     ToggleButton:
-                                        id: unit_toggle
+                                        id: tab_toggle
                                         size_hint: (None,None)
                                         height: dp(30)
                                         width: dp(75)
                                         background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
-                                        on_press: root.toggle_units()
+                                        on_press: root.toggle_tabs()
         
                                         BoxLayout:
                                             height: dp(30)
@@ -244,8 +249,8 @@ Builder.load_string("""
                                                     size: self.parent.size
                                                     source: "./asmcnc/shapeCutter_app/img/mm_inches_toggle.png"  
                                         Label:
-                                            id: unit_label
-                                            text: "Y/N"
+                                            id: tab_YN
+                                            text: "Yes"
                                             color: 1,1,1,1
                                             font_size: 20
                                             markup: True
@@ -269,6 +274,7 @@ Builder.load_string("""
                                 width: dp(420)
                                 padding:20,0,0,11                          
                                 Image:
+                                    id: main_image
                                     source: "./asmcnc/shapeCutter_app/img/tabs_rect.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
@@ -284,16 +290,14 @@ Builder.load_string("""
                                 spacing: 20
                                 pos: self.parent.pos
                                 
-                                # BL horizontal
-                                    # Toggle button
+                                # Unit toggle
                                 BoxLayout:
                                     size_hint: (None,None)
                                     height: dp(30)
                                     width: dp(210)
                                     padding: (70,0,10,0)                   
                                     orientation: "horizontal"
-            
-                                                                  
+                               
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(30)
@@ -332,7 +336,7 @@ Builder.load_string("""
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(210)
                                     padding: (20,0,20,0)                   
                                     orientation: "horizontal"
@@ -350,7 +354,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(120)
                                         padding: (20,0,0,0)
                                                     
@@ -364,11 +368,9 @@ Builder.load_string("""
                                             input_filter: 'float'
                                             multiline: False
                                             text: ''
-                                            on_text_validate: root.check_dimensions()                           
-                                
                                 BoxLayout: #dimension 2
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(210)
                                     padding: (20,0,20,0)                   
                                     orientation: "horizontal"
@@ -386,7 +388,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(120)
                                         padding: (20,0,0,0)
                                                     
@@ -399,11 +401,10 @@ Builder.load_string("""
                                             markup: True
                                             input_filter: 'float'
                                             multiline: False
-                                            text: ''
-                                            on_text_validate: root.check_dimensions()                           
+                                            text: ''                           
                                 BoxLayout: #dimension 3
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(35)
                                     width: dp(210)
                                     padding: (20,0,20,0)                   
                                     orientation: "horizontal"
@@ -421,7 +422,7 @@ Builder.load_string("""
                                                                   
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(35)
                                         width: dp(120)
                                         padding: (20,0,0,0)
                                                     
@@ -435,13 +436,6 @@ Builder.load_string("""
                                             input_filter: 'float'
                                             multiline: False
                                             text: ''
-                                            on_text_validate: root.check_dimensions()                           
-                           
-
-                                
-                        
-                                        
-
                     BoxLayout: #action box
                         size_hint: (None,None)
                         height: dp(310)
@@ -526,6 +520,11 @@ class ShapeCutter22ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
+        if self.j.shape_dict["shape"] == 'circle':
+            self.main_image.source = "./asmcnc/shapeCutter_app/img/tabs_circ.png"
+        elif self.j.shape_dict["shape"] == 'rectangle':
+            self.main_image.source = "./asmcnc/shapeCutter_app/img/tabs_rect.png"
+
 # Action buttons       
     def get_info(self):
         pass
@@ -534,7 +533,7 @@ class ShapeCutter22ScreenClass(Screen):
         self.sm.current = 'sC21'
     
     def next_screen(self):
-        self.sm.current = 'sC23'
+        self.check_dimensions()
     
 # Tab functions
 
@@ -560,9 +559,34 @@ class ShapeCutter22ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
+            self.j.parameter_dict["units"] = "mm"
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
+            self.j.parameter_dict["units"] = "inches"
+
+    def toggle_tabs(self):
+        if self.tab_toggle.state == 'normal':
+            self.tab_YN.text = "Yes"  
+            self.j.parameter_dict["tabs"]["tabs?"] = True
+        elif self.tab_toggle.state == 'down': 
+            self.tab_YN.text = "No"    
+            self.j.parameter_dict["tabs"]["tabs?"] = False    
 
     def check_dimensions(self):
-        pass
         
+        if self.tab_YN.text == "Yes": 
+            self.j.parameter_dict["tabs"]["tabs?"] = True
+            if not self.td_dimension.text == "" and not self.th_dimension.text == "" \
+            and not self.tw_dimension.text == "":
+                self.j.parameter_dict["tabs"]["spacing"] = self.td_dimension.text
+                self.j.parameter_dict["tabs"]["height"] = self.th_dimension.text
+                self.j.parameter_dict["tabs"]["width"] = self.tw_dimension.text
+    
+                self.sm.current = 'sC23'
+            else:
+                pass
+            
+        elif self.tab_YN.text == "No": 
+            self.j.parameter_dict["tabs"]["tabs?"] = False
+            
+            self.sm.current = 'sC23'
