@@ -211,6 +211,7 @@ class ShapeCutterSaveJobScreenClass(Screen):
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
             
     def next_screen(self):
         self.sm.current = 'sfeedback'

@@ -330,10 +330,7 @@ class ShapeCutter1ScreenClass(Screen):
     def go_back(self):
         self.sm.current = 'sClanding'
     
-    def next_screen(self):
-        if not self.sm.has_screen('sC2'):
-            sC2_screen = screen_shapeCutter_2.ShapeCutter2ScreenClass(name = 'sC2', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC2_screen)
+    def next_screen(self)
         self.sm.current = 'sC2'
     
 # Tab functions

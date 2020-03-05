@@ -508,6 +508,7 @@ class ShapeCutter24ScreenClass(Screen):
         super(ShapeCutter24ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -520,9 +521,6 @@ class ShapeCutter24ScreenClass(Screen):
         self.sm.current = 'sC23'
     
     def next_screen(self):
-        if not self.sm.has_screen('sC25'):
-            sC25_screen = screen_shapeCutter_25.ShapeCutter25ScreenClass(name = 'sC25', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC25_screen)
         self.sm.current = 'sC25'
     
 # Tab functions

@@ -317,6 +317,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         super(ShapeCutterDimensionsScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
         
     def on_pre_enter(self):
         if self.shape == 'circle' and self.cut_type == 'island':
@@ -347,9 +348,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
             # save the dimensions
             self.next_screen()     
         else:
-            pass        
-        
-        
+            pass
             
     def next_screen(self):
         self.sm.current = 'sC1'

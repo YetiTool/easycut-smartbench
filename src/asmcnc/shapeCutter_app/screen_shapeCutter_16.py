@@ -11,7 +11,6 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.shapeCutter_app import screen_shapeCutter_17
-from asmcnc.shapeCutter_app import screen_shapeCutter_18
 
 Builder.load_string("""
 

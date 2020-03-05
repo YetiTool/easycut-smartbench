@@ -10,8 +10,6 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-#from asmcnc.shapeCutter_app import screen_shapeCutter_36
-
 Builder.load_string("""
 
 <ShapeCutter36ScreenClass>
@@ -301,6 +299,7 @@ class ShapeCutter36ScreenClass(Screen):
         super(ShapeCutter36ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
