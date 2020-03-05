@@ -314,7 +314,7 @@ class ShapeCutterTutorialScreenClass(Screen):
         self.sm.current = 'sC33'
     
     def exit(self):
-        self.sm.current = 'sCcancelled'
+        self.sm.current = 'sCexit'
 
 # Tutorial specific functions
 

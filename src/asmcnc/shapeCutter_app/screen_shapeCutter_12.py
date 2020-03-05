@@ -318,5 +318,5 @@ class ShapeCutter12ScreenClass(Screen):
         self.sm.current = 'sC33'
     
     def exit(self):
-        self.sm.current = 'lobby'
+        self.sm.current = 'sCexit'
         

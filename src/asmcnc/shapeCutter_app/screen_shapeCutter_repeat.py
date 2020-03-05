@@ -169,12 +169,4 @@ class ShapeCutterRepeatScreenClass(Screen):
         self.sm.current = 'sClanding'
         
     def exit(self):
-        self.exiting = True
-        self.sm.current = 'lobby'
-        
-    def on_pre_leave(self):
-        # clear out screens
-        if self.exiting == True:
-            self.exiting = False
-        else: 
-            pass
+        self.sm.current = 'sCexit'

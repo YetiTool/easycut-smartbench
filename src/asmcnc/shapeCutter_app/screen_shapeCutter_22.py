@@ -269,7 +269,7 @@ Builder.load_string("""
                                 width: dp(420)
                                 padding:20,0,0,11                          
                                 Image:
-                                    source: "./asmcnc/shapeCutter_app/img/tabs_circ.png"
+                                    source: "./asmcnc/shapeCutter_app/img/tabs_rect.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
@@ -554,7 +554,7 @@ class ShapeCutter22ScreenClass(Screen):
         self.sm.current = 'sC33'
     
     def exit(self):
-        self.sm.current = 'lobby'
+        self.sm.current = 'sCexit'
         
 # Screen specific
     def toggle_units(self):
