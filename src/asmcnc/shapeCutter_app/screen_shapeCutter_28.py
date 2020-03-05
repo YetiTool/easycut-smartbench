@@ -13,7 +13,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.shapeCutter_app import screen_shapeCutter_29
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_xy_move
-from asmcnc.shapeCutter_app import widget_sC28_xy_move
+from asmcnc.shapeCutter_app import widget_sC28_xy_move, widget_sC_work_coordinates
 
 Builder.load_string("""
 
@@ -22,6 +22,7 @@ Builder.load_string("""
     info_button: info_button
     xy_move_container: xy_move_container
     virtual_bed_container: virtual_bed_container
+    work_coords_container: work_coords_container
     
     BoxLayout:
         size_hint: (None,None)
@@ -214,10 +215,11 @@ Builder.load_string("""
                             width: dp(395)
                             padding: (0,0,0,0)
                         BoxLayout: 
+                            id: work_coords_container
                             size_hint: (None,None)
                             height: dp(60)
                             width: dp(395)
-                            padding: (0,0,0,10)
+                            padding: (7.5,15,17.5,5)
 
                     BoxLayout: #action box
                         size_hint: (None,None)
@@ -304,6 +306,8 @@ class ShapeCutter28ScreenClass(Screen):
 
         self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm))
 
+        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.sm)
+        self.work_coords_container.add_widget(self.work_coords_widget)
 
     def on_pre_enter(self):
         self.info_button.opacity = 1

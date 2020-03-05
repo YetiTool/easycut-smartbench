@@ -12,8 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.shapeCutter_app import screen_shapeCutter_32
 
-from asmcnc.skavaUI import widget_z_move
-from shapeCutter_app import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move
+from shapeCutter_app import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
 
 Builder.load_string("""
 
@@ -23,6 +22,7 @@ Builder.load_string("""
     xy_move_container: xy_move_container
     z_move_container: z_move_container
     z_set_go_container: z_set_go_container
+    work_coords_container: work_coords_container
     
     BoxLayout:
         size_hint: (None,None)
@@ -226,10 +226,11 @@ Builder.load_string("""
                                 width: dp(200)
                         
                         BoxLayout: 
+                            id: work_coords_container
                             size_hint: (None,None)
                             height: dp(60)
                             width: dp(395)
-                            padding: (0,0,0,10)
+                            padding: (45,15,25,5)
 
                     BoxLayout: #action box
                         size_hint: (None,None)
@@ -319,6 +320,10 @@ class ShapeCutter31ScreenClass(Screen):
         
         self.z_move_widget = widget_sC31_z_move.SC31ZMove(machine=self.m, screen_manager=self.sm)
         self.z_move_container.add_widget(self.z_move_widget)
+
+        self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.sm)
+        self.work_coords_container.add_widget(self.work_coords_widget)
+
 
 
     def on_pre_enter(self):
