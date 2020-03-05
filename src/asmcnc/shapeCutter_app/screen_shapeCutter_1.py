@@ -330,7 +330,7 @@ class ShapeCutter1ScreenClass(Screen):
     def go_back(self):
         self.sm.current = 'sClanding'
     
-    def next_screen(self)
+    def next_screen(self):
         self.sm.current = 'sC2'
     
 # Tab functions

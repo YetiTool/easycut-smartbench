@@ -52,6 +52,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_36
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
 from asmcnc.shapeCutter_app import screen_shapeCutter_post_job_save
+from asmcnc.shapeCutter_app import screen_shapeCutter_job_cancelled
 
 from asmcnc.shapeCutter_app.cut_parameters import sC_job_parameters
 
@@ -210,7 +211,7 @@ class ShapeCutterLandingScreenClass(Screen):
     def load_screens(self):
         sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sCApIs_screen)
-        sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', screen_manager = self.sm, machine = self.m)
+        sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sCdimensions_screen)
         
         sC1_screen = screen_shapeCutter_1.ShapeCutter1ScreenClass(name = 'sC1', screen_manager = self.sm, machine = self.m)
@@ -292,6 +293,8 @@ class ShapeCutterLandingScreenClass(Screen):
         self.sm.add_widget(sCfeedback_screen)
         sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(sCrepeat_screen)
+        sCcancelled_screen = screen_shapeCutter_job_cancelled.ShapeCutterCancelledScreenClass(name = 'sCcancelled', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(sCcancelled_screen)
         
     def get_info(self):
         self.sm.current = 'sCtutorial'
