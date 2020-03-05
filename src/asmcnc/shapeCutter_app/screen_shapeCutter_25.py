@@ -374,13 +374,13 @@ class ShapeCutter25ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.sm.current = 'sC16'
+        self.sm.current = 'sC24'
     
     def next_screen(self):
-        if not self.sm.has_screen('sC18'):
-            sC18_screen = screen_shapeCutter_18.ShapeCutter18ScreenClass(name = 'sC18', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC18_screen)
-        self.sm.current = 'sC18'
+        if not self.sm.has_screen('sC26'):
+            sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC26_screen)
+        self.sm.current = 'sC26'
     
 # Tab functions
 
@@ -397,7 +397,7 @@ class ShapeCutter25ScreenClass(Screen):
         self.sm.current = 'sC26'
     
     def check(self):
-        self.sm.current = 'sC34'
+        self.sm.current = 'sC33'
     
     def exit(self):
         self.sm.current = 'lobby'

@@ -311,7 +311,7 @@ class ShapeCutterTutorialScreenClass(Screen):
         self.sm.current = 'sC26'
     
     def check(self):
-        self.sm.current = 'sC34'
+        self.sm.current = 'sC33'
     
     def exit(self):
         self.sm.current = 'lobby'

@@ -313,7 +313,7 @@ class ShapeCutter34ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.sm.current = 'sC32'
+        self.sm.current = 'sC33'
     
     def next_screen(self):
         if not self.sm.has_screen('sC35'):
@@ -336,7 +336,7 @@ class ShapeCutter34ScreenClass(Screen):
         self.sm.current = 'sC26'
     
     def check(self):
-        self.sm.current = 'sC34'
+        self.sm.current = 'sC33'
     
     def exit(self):
         self.sm.current = 'lobby'

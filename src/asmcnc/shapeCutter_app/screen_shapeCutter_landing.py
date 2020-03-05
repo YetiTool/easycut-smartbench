@@ -13,7 +13,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_1
 from asmcnc.shapeCutter_app import screen_shapeCutter_11
 from asmcnc.shapeCutter_app import screen_shapeCutter_17
 from asmcnc.shapeCutter_app import screen_shapeCutter_26
-from asmcnc.shapeCutter_app import screen_shapeCutter_34
+from asmcnc.shapeCutter_app import screen_shapeCutter_33
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
 from asmcnc.shapeCutter_app import screen_shapeCutter_aperture_island
@@ -193,9 +193,9 @@ class ShapeCutterLandingScreenClass(Screen):
         if not self.sm.has_screen('sC26'):
             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC26_screen)
-        if not self.sm.has_screen('sC34'):
-            sC34_screen = screen_shapeCutter_34.ShapeCutter34ScreenClass(name = 'sC34', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sC34_screen)
+        if not self.sm.has_screen('sC33'):
+            sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC33_screen)
         if not self.sm.has_screen('sCsavejob'):
             sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sCsavejob_screen)
