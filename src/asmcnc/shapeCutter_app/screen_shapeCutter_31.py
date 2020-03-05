@@ -12,7 +12,8 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.shapeCutter_app import screen_shapeCutter_32
 
-from asmcnc.skavaUI import widget_xy_move, widget_z_move, widget_common_move
+from asmcnc.skavaUI import widget_z_move
+from shapeCutter_app import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move
 
 Builder.load_string("""
 
@@ -21,7 +22,7 @@ Builder.load_string("""
     info_button: info_button
     xy_move_container: xy_move_container
     z_move_container: z_move_container
-    common_move_container: common_move_container
+    z_set_go_container: z_set_go_container
     
     BoxLayout:
         size_hint: (None,None)
@@ -214,7 +215,7 @@ Builder.load_string("""
                             padding: (15,0,15,0)
                             orientation: "horizontal"
                             BoxLayout: # common move
-                                id: common_move_container
+                                id: z_set_go_container
                                 size_hint: (None, None)
                                 height: dp(260)
                                 width: dp(165)
@@ -222,7 +223,8 @@ Builder.load_string("""
                                 id: z_move_container
                                 size_hint: (None, None)
                                 height: dp(260)
-                                width: dp(200)                            
+                                width: dp(200)
+                        
                         BoxLayout: 
                             size_hint: (None,None)
                             height: dp(60)
@@ -309,13 +311,13 @@ class ShapeCutter31ScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         
-        self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
-        self.common_move_container.add_widget(self.common_move_widget)
+        self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(machine=self.m, screen_manager=self.sm)
+        self.z_set_go_container.add_widget(self.z_set_go_widget)
         
-        self.z_move_widget = widget_z_move.ZMove(machine=self.m, screen_manager=self.sm)
+        self.z_move_widget = widget_sC31_z_move.SC31ZMove(machine=self.m, screen_manager=self.sm)
         self.z_move_container.add_widget(self.z_move_widget)
 
 

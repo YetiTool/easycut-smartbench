@@ -13,6 +13,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.shapeCutter_app import screen_shapeCutter_29
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_xy_move
+from asmcnc.shapeCutter_app import widget_sC28_xy_move
 
 Builder.load_string("""
 
@@ -298,7 +299,7 @@ class ShapeCutter28ScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm))
