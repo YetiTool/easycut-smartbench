@@ -490,20 +490,16 @@ class ShapeCutter9ScreenClass(Screen):
     
     def load(self):
         self.sm.current = 'sC11'
-        
+    
     def define(self):
-        #self.sm.current = 'sC16'
-        pass
+        self.sm.current = 'sC17'
     
     def position(self):
-        #self.sm.current = 'sC26'
-        pass
+        self.sm.current = 'sC26'
     
     def check(self):
-        #self.sm.current = 'sC34'
-        pass
+        self.sm.current = 'sC34'
     
     def exit(self):
-        #self.sm.current = 'lobby'
-        pass
+        self.sm.current = 'lobby'
         

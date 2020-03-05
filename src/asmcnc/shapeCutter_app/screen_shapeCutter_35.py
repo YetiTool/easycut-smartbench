@@ -329,8 +329,7 @@ class ShapeCutter35ScreenClass(Screen):
         self.sm.current = 'sC11'
     
     def define(self):
-        #self.sm.current = 'sC16'
-        pass
+        self.sm.current = 'sC17'
     
     def position(self):
         self.sm.current = 'sC26'

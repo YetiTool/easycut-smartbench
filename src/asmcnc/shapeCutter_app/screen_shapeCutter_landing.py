@@ -11,12 +11,13 @@ from kivy.properties import ObjectProperty
 
 from asmcnc.shapeCutter_app import screen_shapeCutter_1
 from asmcnc.shapeCutter_app import screen_shapeCutter_11
-from asmcnc.shapeCutter_app import screen_shapeCutter_16
+from asmcnc.shapeCutter_app import screen_shapeCutter_17
 from asmcnc.shapeCutter_app import screen_shapeCutter_26
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
 from asmcnc.shapeCutter_app import screen_shapeCutter_aperture_island
+from asmcnc.shapeCutter_app import screen_shapeCutter_post_job_save
 
 Builder.load_string("""
 
@@ -186,9 +187,18 @@ class ShapeCutterLandingScreenClass(Screen):
         if not self.sm.has_screen('sC11'):
             sC11_screen = screen_shapeCutter_11.ShapeCutter11ScreenClass(name = 'sC11', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC11_screen)
+        if not self.sm.has_screen('sC17'):
+            sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC17_screen)
         if not self.sm.has_screen('sC26'):
             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sC26_screen)
+        if not self.sm.has_screen('sC34'):
+            sC34_screen = screen_shapeCutter_34.ShapeCutter34ScreenClass(name = 'sC34', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sC34_screen)
+        if not self.sm.has_screen('sCsavejob'):
+            sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCsavejob_screen)
         if not self.sm.has_screen('sCfeedback'):
             sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sCfeedback_screen)
