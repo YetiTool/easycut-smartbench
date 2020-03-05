@@ -1,5 +1,5 @@
 '''
-Created on 20 February 2020
+Created on 3 March 2020
 Screen 8 for the Shape Cutter App
 
 @author: Letty
@@ -190,7 +190,7 @@ Builder.load_string("""
                     
                     BoxLayout: # text and pics
                         size_hint: (None,None)
-                        height: dp(310)
+                        height: dp(330)
                         width: dp(675)
                         padding: 0,0,0,0
                         orientation: "vertical"
@@ -207,23 +207,60 @@ Builder.load_string("""
                                 font_size: 20
                                 markup: True
                                 halign: "left"
-                                valign: "top"
+                                valign: "bottom"
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
 
                         BoxLayout: #image box
                             size_hint: (None,None)
-                            height: dp(250)
+                            height: dp(230)
                             width: dp(675)
-                            padding:40,0,0,25      
+                            padding:40,0,0,0     
                             Image:
                                 source: "./asmcnc/shapeCutter_app/img/photo_8_1.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
-                                        
+                        BoxLayout: #image number box
+                            size_hint: (None,None)
+                            height: dp(50)
+                            width: dp(675)
+                            padding:173.75,5,143.75,15
+                            spacing: 287.5
+                            BoxLayout: #photo numbers
+                                size_hint: (None,None)
+                                padding: 0
+                                height: dp(30)
+                                width: dp(30)
+                                canvas:
+                                    Rectangle: 
+                                        pos: self.pos
+                                        size: self.size
+                                        source: "./asmcnc/shapeCutter_app/img/photo_number_circle.png"
+                                Label:
+                                    text: "1"
+                                    valign: "middle"
+                                    halign: "center"
+                                    font_size: 26
+                                    markup: True
+                            BoxLayout: #photo numbers
+                                size_hint: (None,None)
+                                padding: 0
+                                height: dp(30)
+                                width: dp(30)
+                                canvas:
+                                    Rectangle: 
+                                        pos: self.pos
+                                        size: self.size
+                                        source: "./asmcnc/shapeCutter_app/img/photo_number_circle.png"
+                                Label:
+                                    text: "2"
+                                    valign: "middle"
+                                    halign: "center"
+                                    font_size: 26
+                                    markup: True                                       
 
                     BoxLayout: #action box
                         size_hint: (None,None)
