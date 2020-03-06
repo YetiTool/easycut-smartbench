@@ -249,8 +249,8 @@ class GoScreen(Screen):
     paused = False    
     job_in_progress = None
     
-    return_to_screen = 'home'
-    cancel_to_screen = 'home'
+    return_to_screen = 'home' # screen to go to after job runs
+    cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
 
     def __init__(self, **kwargs):
 
@@ -311,6 +311,7 @@ class GoScreen(Screen):
    
     def start_stop_button_press(self):
        
+        self.cancel_to_screen = self.return_to_screen
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
@@ -355,11 +356,7 @@ class GoScreen(Screen):
         self.job_in_progress = True
 
     def return_to_app(self):
-
-        if self.start_stop_button_press_counter == 0:
-            self.sm.current = self.cancel_to_screen
-        else:
-            self.sm.current = self.return_to_screen
+        self.sm.current = self.cancel_to_screen
             
     @mainthread
     def reset_go_screen_after_job_finished(self):

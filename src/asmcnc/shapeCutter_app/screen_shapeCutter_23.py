@@ -513,10 +513,10 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
-        self.xy_feed.text = self.j.parameter_dict["feed rates"]["xy feed rate"]
-        self.z_feed.text = self.j.parameter_dict["feed rates"]["z feed rate"]
-        self.spindle_speed.text= self.j.parameter_dict["feed rates"]["spindle speed"]
-        self.unit_label.text = self.j.parameter_dict["feed rates"]["units"]
+        self.xy_feed.text = str(self.j.parameter_dict["feed rates"]["xy feed rate"])
+        self.z_feed.text = str(self.j.parameter_dict["feed rates"]["z feed rate"])
+        self.spindle_speed.text= str(self.j.parameter_dict["feed rates"]["spindle speed"])
+        self.unit_label.text = str(self.j.parameter_dict["feed rates"]["units"])
 
         self.xy_feed_units.text = self.unit_label.text + "/min"
         self.z_feed_units.text = self.unit_label.text + "/min"

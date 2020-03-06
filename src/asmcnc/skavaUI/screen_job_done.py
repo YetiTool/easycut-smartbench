@@ -90,5 +90,4 @@ class JobDoneScreen(Screen):
         self.m=kwargs['machine']
     
     def quit_to_go(self):
-        self.sm.get_screen('go').reset_go_screen_after_job_finished()
         self.sm.current = self.return_to_screen

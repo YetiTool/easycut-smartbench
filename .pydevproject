@@ -11,6 +11,7 @@
 <path>/${PROJECT_DIR_NAME}/cut_parameters</path>
 <path>/${PROJECT_DIR_NAME}/parameter_cache</path>
 <path>/${PROJECT_DIR_NAME}/shapeCutter_jobCache</path>
+<path>/${PROJECT_DIR_NAME}/src/asmcnc/skavaUI</path>
 </pydev_pathproperty>
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>D:\Yeti\YetiTool\easycut-smartbench\src\asmcnc\calibration_wizard</path>
