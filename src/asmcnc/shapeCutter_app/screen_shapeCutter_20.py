@@ -463,6 +463,10 @@ class ShapeCutter20ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
+        self.a_dimension.text = self.j.parameter_dict["cutter dimensions"]["diameter"]
+        self.b_dimension.text = self.j.parameter_dict["cutter dimensions"]["cutting length"]
+        self.c_dimension.text = self.j.parameter_dict["cutter dimensions"]["shoulder length"]
+        self.unit_label.text = self.j.parameter_dict["cutter dimensions"]["units"]
 
 # Action buttons       
     def get_info(self):
@@ -498,21 +502,18 @@ class ShapeCutter20ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
-#            self.j.parameter_dict["units"] = self.unit_label.text
+            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
-#            self.j.parameter_dict["units"] = self.unit_label.text
+            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
 
-    def check_dimensions(self):
-        
-#        self.j.parameter_dict["units"] = self.unit_label.text
-        
+    def check_dimensions(self):        
         if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
         and not self.c_dimension.text == "":
             self.j.parameter_dict["cutter dimensions"]["diameter"] = self.a_dimension.text
             self.j.parameter_dict["cutter dimensions"]["cutting length"] = self.b_dimension.text
             self.j.parameter_dict["cutter dimensions"]["shoulder length"] = self.c_dimension.text
-
+            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
             self.sm.current = 'sC21'
         else:
             pass

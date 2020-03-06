@@ -514,6 +514,11 @@ class ShapeCutter24ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
+    
+        self.stock_bottom_offset.text = self.j.parameter_dict["strategy parameters"]["stock bottom offset"]
+        self.step_down.text = self.j.parameter_dict["strategy parameters"]["step down"]
+        self.finishing_passes.text = self.j.parameter_dict["strategy parameters"]["finishing passes"]
+        self.unit_label.text = self.j.parameter_dict["strategy parameters"]["units"]
 
         self.stock_bottom_offset_units.text = self.unit_label.text
         self.step_down_units.text = self.unit_label.text
@@ -562,10 +567,10 @@ class ShapeCutter24ScreenClass(Screen):
     def check_dimensions(self):
         if not self.stock_bottom_offset.text == "" and not self.step_down.text == "" \
         and not self.finishing_passes.text == "":
-            self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = self.stock_bottom_offset.text
-            self.j.parameter_dict["strategy parameters"]["step down"] = self.step_down.text
-            self.j.parameter_dict["strategy parameters"]["finishing passes"] = self.finishing_passes.text
-
+            self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = float(self.stock_bottom_offset.text)
+            self.j.parameter_dict["strategy parameters"]["step down"] = float(self.step_down.text)
+            self.j.parameter_dict["strategy parameters"]["finishing passes"] = float(self.finishing_passes.text)
+            self.j.parameter_dict["strategy parameters"]["units"] = self.unit_label.text
             self.sm.current = 'sC25'
         else:
             pass

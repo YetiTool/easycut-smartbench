@@ -368,6 +368,7 @@ class ShapeCutter25ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.display_profile = self.j.parameters_to_string()
+
 # Action buttons       
     def get_info(self):
         pass

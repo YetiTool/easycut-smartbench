@@ -525,6 +525,11 @@ class ShapeCutter22ScreenClass(Screen):
         elif self.j.shape_dict["shape"] == 'rectangle':
             self.main_image.source = "./asmcnc/shapeCutter_app/img/tabs_rect.png"
 
+        self.td_dimension.text = self.j.parameter_dict["tabs"]["spacing"]
+        self.th_dimension.text = self.j.parameter_dict["tabs"]["height"]
+        self.tw_dimension.text = self.j.parameter_dict["tabs"]["width"]
+        self.unit_label.text = self.j.parameter_dict["tabs"]["units"]
+
 # Action buttons       
     def get_info(self):
         pass
@@ -583,6 +588,7 @@ class ShapeCutter22ScreenClass(Screen):
                 self.j.parameter_dict["tabs"]["spacing"] = self.td_dimension.text
                 self.j.parameter_dict["tabs"]["height"] = self.th_dimension.text
                 self.j.parameter_dict["tabs"]["width"] = self.tw_dimension.text
+                self.j.parameter_dict["tabs"]["units"] = self.unit_label.text
     
                 self.sm.current = 'sC23'
             else:

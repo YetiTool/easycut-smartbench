@@ -327,10 +327,12 @@ class HomingScreen(Screen):
     def is_machine_idle(self, dt):  
         if self.m.state().startswith('Idle'):
             Clock.unschedule(self.poll_for_ready)
-            self.trigger_homing()
-
-        if sys.platform == "win32":
-            Clock.schedule_once(self.developer_windows_esc, self.dev_win_dt)     
+            
+            if sys.platform == "win32":
+                Clock.schedule_once(self.developer_windows_esc, self.dev_win_dt) 
+            
+            else: 
+                self.trigger_homing()
     
     def trigger_homing(self):
         

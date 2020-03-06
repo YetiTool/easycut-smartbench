@@ -513,6 +513,11 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
+        self.xy_feed.text = self.j.parameter_dict["feed rates"]["xy feed rate"]
+        self.z_feed.text = self.j.parameter_dict["feed rates"]["z feed rate"]
+        self.spindle_speed.text= self.j.parameter_dict["feed rates"]["spindle speed"]
+        self.unit_label.text = self.j.parameter_dict["feed rates"]["units"]
+
         self.xy_feed_units.text = self.unit_label.text + "/min"
         self.z_feed_units.text = self.unit_label.text + "/min"
 
@@ -550,21 +555,21 @@ class ShapeCutter23ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
+            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
             
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
-
+            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
+            
         self.xy_feed_units.text = self.unit_label.text + "/min"
         self.z_feed_units.text = self.unit_label.text + "/min"
 
-    def check_dimensions(self):
-#        self.j.parameter_dict["units"] = self.unit_label.text
-        
+    def check_dimensions(self):        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
-            self.j.parameter_dict["feed rates"]["xy feed rate"] = self.xy_feed.text
-            self.j.parameter_dict["feed rates"]["z feed rate"] = self.z_feed.text
-            self.j.parameter_dict["feed rates"]["spindle speed"] = self.spindle_speed.text
-
+            self.j.parameter_dict["feed rates"]["xy feed rate"] = float(self.xy_feed.text)
+            self.j.parameter_dict["feed rates"]["z feed rate"] = float(self.z_feed.text)
+            self.j.parameter_dict["feed rates"]["spindle speed"] = float(self.spindle_speed.text)
+            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
             self.sm.current = 'sC24'
         else:
             pass
