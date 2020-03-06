@@ -10,9 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_32
-
-from shapeCutter_app import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
+from asmcnc.shapeCutter_app import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
 
 Builder.load_string("""
 

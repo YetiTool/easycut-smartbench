@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_29
-
 from asmcnc.skavaUI import widget_virtual_bed, widget_xy_move
 from asmcnc.shapeCutter_app import widget_sC28_xy_move, widget_sC_work_coordinates
 

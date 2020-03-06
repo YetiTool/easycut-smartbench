@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_26
-
 Builder.load_string("""
 
 <ShapeCutter25ScreenClass>
