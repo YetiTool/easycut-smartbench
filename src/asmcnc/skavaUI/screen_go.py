@@ -285,7 +285,6 @@ class GoScreen(Screen):
         
         elif self.job_in_progress == False and self.job_gcode != []:
             # If job is not in progress, but a job is loaded and ready to go
-            # 
             self.reset_go_screen_after_job_finished()
             self.no_job = False
             self.stop_start.disabled = False
