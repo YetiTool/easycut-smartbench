@@ -193,8 +193,11 @@ class QuickCommands(Widget):
             self.sm.current = 'boundary'
 
         else:
+            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
+            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
+            self.sm.get_screen('go').return_to_screen = 'home'
+            self.sm.get_screen('go').cancel_to_screen = 'home'      
             self.sm.current = 'go'
-
         
     def is_job_within_bounds(self):
 

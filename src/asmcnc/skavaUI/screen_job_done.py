@@ -81,6 +81,7 @@ Builder.load_string("""
 class JobDoneScreen(Screen):
 
     jobdone_text = StringProperty()
+    return_to_screen = StringProperty()
 
     def __init__(self, **kwargs):
     
@@ -89,4 +90,5 @@ class JobDoneScreen(Screen):
         self.m=kwargs['machine']
     
     def quit_to_go(self):
-        self.sm.current = 'go'
+        self.sm.get_screen('go').on_enter()
+        self.sm.current = self.return_to_screen

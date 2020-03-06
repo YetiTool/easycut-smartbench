@@ -12,60 +12,60 @@ class ShapeCutterJobParameters(object):
     parameterCache_file_path = './asmcnc/shapeCutter_app/parameter_cache/'
     jobCache_file_path = './asmcnc/shapeCutter_app/shapeCutter_jobCache/'
     profile_filename = ""
-
-    # internal settings:
+    
+    # Internal settings
     z_height_for_rapid_move = 3
     
     def __init__(self):
  
+        # shape dimensions
+        self.circle_dimensions = {
+            "D": "0",
+            "Z": "0"
+            }
+        
+        self.rectangle_dimensions = {
+            "X": "0",
+            "Y": "0",
+            "Z": "0",
+            "R": "0"
+            }
+        
         # shape choices       
         self.shape_dict = {
             "shape": "",
             "cut_type": "",
-            "dimensions": "",
+            "dimensions": self.circle_dimensions,
             "units": "mm"
-            }
-        
-        # shape dimensions
-        self.circle_dimensions = {
-            "D": "",
-            "Z": ""
-            }
-        
-        self.rectangle_dimensions = {
-            "X": "",
-            "Y": "",
-            "Z": "",
-            "R": ""
             }
         
         # parameters
         self.tabs = {
             "tabs?": "",
-            "width": "",
-            "height": "",
-            "spacing": "",
+            "width": "0",
+            "height": "0",
+            "spacing": "0",
             "units": "mm"
             }
         
         self.cutter_dimensions = {
-            "diameter": "",
-            "cutting length": "",
-            "shoulder length": "",
+            "diameter": "0",
+            "cutting length": "0",
+            "shoulder length": "0",
             "units": "mm"
             }
 
         self.feed_rates = {
-            "xy feed rate": "",
-            "z feed rate": "",
-            "spindle speed": "",
+            "xy feed rate": "0",
+            "z feed rate": "0",
+            "spindle speed": "0",
             "units": "mm"
             }
         
         self.strategy_parameters = {
-            "stock bottom offset": "",
-            "step down": "",
-            "finishing passes": "",
+            "stock bottom offset": "0",
+            "step down": "0",
+            "finishing passes": "0",
             "units": "mm"
             }
         
@@ -121,45 +121,50 @@ class ShapeCutterJobParameters(object):
         # adapted from Gcode file generator found at: 
         # https://github.com/YetiTool/GCodeFileGenerators/blob/master/shapes/shape_cut.py
 
+        # internal settings:
+        z_height_for_rapid_move = self.z_height_for_rapid_move
+
         # MODE
-        # shape = "rectangle"
         shape = self.shape_dict["shape"]
         aperture_or_island = self.shape_dict["cut_type"]
+
     
-        
-        # TAB PARAMS
-        tabs = self.parameter_dict["tabs"]["tabs?"]
-        tab_height = self.parameter_dict["tabs"]["height"]
-        tab_width = self.parameter_dict["tabs"]["width"]
-        tab_distance = self.parameter_dict["tabs"]["spacing"]
-        
-        # RECTANGLE PARAMETERS
-        rect_job_x = self.shape_dict["dimensions"]["X"]
-        rect_job_y = self.shape_dict["dimensions"]["Y"]
-        rect_job_rad = self.shape_dict["dimensions"]["R"]
+        material_thickness = float(self.shape_dict["dimensions"]["Z"]) #??
+                
+        # RECTANGLE PARAMETERS  
+        if shape == "rectangle":
+            rect_job_x = float(self.shape_dict["dimensions"]["X"])
+            rect_job_y = float(self.shape_dict["dimensions"]["Y"])
+            rect_job_rad = float(self.shape_dict["dimensions"]["R"])
         
         # CIRCLE PARAMS
-        circ_input_diameter = self.shape_dict["dimensions"]["D"]
-        
+        elif shape == "circle":
+            circ_input_diameter = float(self.shape_dict["dimensions"]["D"])
+       
         # TOOL
-        cutter_diameter = self.parameter_dict["cutter dimensions"]["diameter"]
+        cutter_diameter = float(self.parameter_dict["cutter dimensions"]["diameter"])
         cutter_rad = cutter_diameter/2
+
+        # TAB PARAMS
+        tabs = self.parameter_dict["tabs"]["tabs?"]
+        
+        if tabs == True:
+            tab_height = float(self.parameter_dict["tabs"]["height"])
+            tab_width = float(self.parameter_dict["tabs"]["width"])
+            tab_distance = float(self.parameter_dict["tabs"]["spacing"])
+            tab_absolute_height = -(material_thickness - tab_height)
+            tab_effective_width = cutter_diameter + tab_width
         
         # FEEDS AND SPEEDS
-        xy_feed_rate = self.parameter_dict["feed rates"]["xy feed rate"]
-        plunge_feed_rate = self.parameter_dict["feed rates"]["z feed rate"]
-        spindle_speed = self.parameter_dict["feed rates"]["spindle speed"]
+        xy_feed_rate = float(self.parameter_dict["feed rates"]["xy feed rate"])
+        plunge_feed_rate = float(self.parameter_dict["feed rates"]["z feed rate"])
+        spindle_speed = float(self.parameter_dict["feed rates"]["spindle speed"])
         
         # STRATEGY
-        material_thickness = 10 # ?? 
-        stock_bottom_offset = self.parameter_dict["strategy parameters"]["stock bottom offset"]
-        stepdown = self.parameter_dict["strategy parameters"]["step down"]
-        finishing_pass = self.parameter_dict["strategy parameters"]["finishing passes"]
+        stock_bottom_offset = float(self.parameter_dict["strategy parameters"]["stock bottom offset"])
+        stepdown = float(self.parameter_dict["strategy parameters"]["step down"])
+        finishing_pass = int(self.parameter_dict["strategy parameters"]["finishing passes"])
 
-
-        job_name = self.jobCache_file_path + shape + " " + aperture_or_island + self.profile_filename + ".nc"
-        tab_absolute_height = -(material_thickness - tab_height)
-        tab_effective_width = cutter_diameter + tab_width
         z_max = - material_thickness - stock_bottom_offset
 
         # RECTANGLE PARAMS
@@ -280,6 +285,8 @@ class ShapeCutterJobParameters(object):
         ################ GCODE GENERATOR ###############
         
         ######## GCODE HEADER
+        
+        job_name = self.generate_gCode_filename()
         
         lines = ['(' + job_name + ')',
                 'G90', #Absolute
@@ -402,11 +409,16 @@ class ShapeCutterJobParameters(object):
         lines.append("G4 P2") #Pause for vac overrun
         lines.append("M30") #Prog end
         lines.append("%") #Prog end (redundant?)
-          
+
+        return lines
+
+    def generate_gCode_filename(self):
+        job_name = self.jobCache_file_path + self.shape_dict["shape"] \
+         + " " + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
+        return job_name      
+       
+    def save_gCode(self, lines, job_name):    
         f = open(job_name, "w")
         for line in lines:
-            f.write(line + "\n")   
-        
+            f.write(line + "\n")         
         print "Done: " + job_name
-
-        

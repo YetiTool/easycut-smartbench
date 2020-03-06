@@ -95,10 +95,10 @@ Builder.load_string("""
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
                                 on_release:
-                                    root.manager.current = 'home'
                                     self.background_color = hex('#F4433600')
                                 on_press:
                                     self.background_color = hex('#F44336FF')
+                                    root.return_to_app()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -147,9 +147,9 @@ Builder.load_string("""
                                 disabled: True
                                 background_color: hex('#F4433600')
                                 on_release:
-                                    root.start_stop_button_press()
                                     self.background_color = hex('#F4433600')
                                 on_press:
+                                    root.start_stop_button_press()
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
@@ -241,10 +241,16 @@ class GoScreen(Screen):
     test_property = 0
     btn_back = ObjectProperty()
     no_job = True
+    
     job_filename = StringProperty()
+    job_gcode = []
+    
     start_stop_button_press_counter = 0
     paused = False    
     job_in_progress = None
+    
+    return_to_screen = 'home'
+    cancel_to_screen = 'home'
 
     def __init__(self, **kwargs):
 
@@ -270,8 +276,7 @@ class GoScreen(Screen):
         
     def on_enter(self, *args):
         
-        self.job_gcode = self.sm.get_screen('home').job_gcode
-        self.job_filename = self.sm.get_screen('home').job_filename
+        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
         
         if self.job_in_progress == True and self.job_gcode != []:
             self.no_job = False
@@ -310,6 +315,7 @@ class GoScreen(Screen):
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
+            
             self.stream_job()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
             #Hide back button
@@ -349,7 +355,13 @@ class GoScreen(Screen):
         self.m.s.is_job_streaming = True
         self.job_in_progress = True
 
+    def return_to_app(self):
 
+        if self.start_stop_button_press_counter == 0:
+            self.sm.current = self.cancel_to_screen
+        else:
+            self.sm.current = self.return_to_screen
+            
     @mainthread
     def reset_go_screen_after_job_finished(self):
 
@@ -370,7 +382,6 @@ class GoScreen(Screen):
         self.btn_pause_play.height = '0dp'
         
         self.feedOverride.feed_norm()
-
 
     def stream_job(self):
                 

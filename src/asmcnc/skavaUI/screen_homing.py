@@ -347,10 +347,7 @@ class HomingScreen(Screen):
 
         # monitor sequential stream status for completion       
         self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
-
-        # in case of development
-
-            
+   
 
     def home_normally(self):
         # home without suaring the axis

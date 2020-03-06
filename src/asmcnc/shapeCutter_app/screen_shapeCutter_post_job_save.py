@@ -7,7 +7,7 @@ Feedback Screen for the Shape Cutter App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, StringProperty
 
 
 Builder.load_string("""
@@ -133,7 +133,7 @@ Builder.load_string("""
                             do_scroll_y: True
                             scroll_type: ['content']
                             RstDocument:
-                                text: root.user_instructions
+                                text: root.display_profile
                                 background_color: hex('#FFFFFF')                 
                 BoxLayout: #action box
                     size_hint: (None,None)
@@ -206,13 +206,18 @@ class ShapeCutterSaveJobScreenClass(Screen):
 
     info_button = ObjectProperty()   
     user_instructions = ObjectProperty()
+    display_profile = StringProperty()
     
     def __init__(self, **kwargs):
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        
+    def on_pre_enter(self):
+        self.display_profile = self.j.parameters_to_string()
             
     def next_screen(self):
-        self.sm.current = 'sfeedback'
+        self.sm.current = 'sCfeedback'
+
 

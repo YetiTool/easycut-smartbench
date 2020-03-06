@@ -80,7 +80,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.thumbs_up()
+                        on_press: root.repeat()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -106,7 +106,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.thumbs_down()
+                        on_press: root.new_cut()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -132,7 +132,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.thumbs_down()
+                        on_press: root.exit()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size

@@ -318,7 +318,11 @@ class ShapeCutter36ScreenClass(Screen):
         self.sm.current = 'sC35'
     
     def next_screen(self):
-        self.sm.current = 'sCsavejob'
+        self.sm.get_screen('go').job_gcode = self.j.generate_gCode()
+        self.sm.get_screen('go').job_filename  = self.j.generate_gCode_filename()
+        self.sm.current = 'go'
+        self.sm.get_screen('go').return_to_screen = 'sCsavejob'
+        self.sm.get_screen('go').cancel_to_screen = 'sC36' 
     
 # Tab functions
 
