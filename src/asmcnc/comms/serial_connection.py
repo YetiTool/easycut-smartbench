@@ -439,13 +439,15 @@ class SerialConnection(object):
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+
+            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
     
             # reset go screen to go again
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
     
             # send info to the job done screen
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             self.sm.current = 'jobdone'
 
         else:
