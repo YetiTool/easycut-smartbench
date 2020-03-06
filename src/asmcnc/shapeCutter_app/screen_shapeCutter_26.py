@@ -310,7 +310,9 @@ class ShapeCutter26ScreenClass(Screen):
         self.sm.current = 'sC25'
     
     def next_screen(self):
-        self.sm.current = 'sC27'
+        self.sm.get_screen('homing').return_to_screen = 'sC27'
+        self.sm.get_screen('homing').cancel_to_screen = 'sC26'      
+        self.sm.current = 'homing'
     
 # Tab functions
 
