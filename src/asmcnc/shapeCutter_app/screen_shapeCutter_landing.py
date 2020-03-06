@@ -208,17 +208,20 @@ class ShapeCutterLandingScreenClass(Screen):
 
     # this is very hacky and I will change it
     def on_pre_enter(self):
-        if not self.sm.has_screen('sC1'):
+        if not self.sm.has_screen('sCtutorial'):
             self.load_screens()
         
     def on_enter(self):
-        self.load_more_screens()
+        if not self.sm.has_screen('sC1'):
+            self.load_more_screens()
         
     def on_pre_leave(self):
-        self.and_more_screens()
+        if not self.sm.has_screen('sC17'):
+            self.and_more_screens()
         
     def on_leave(self):
-        self.and_some_extra_screens()
+        if not self.sm.has_screen('sCsavejob'):
+            self.and_some_extra_screens()
         
     def load_screens(self):
         sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', screen_manager = self.sm, machine = self.m)
