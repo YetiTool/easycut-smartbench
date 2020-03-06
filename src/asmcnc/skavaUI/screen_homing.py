@@ -162,6 +162,8 @@ Builder.load_string("""
 
 class HomingScreen(Screen):
     
+    dev_win_dt = 2
+    
     is_squaring_XY_needed_after_homing = True
     homing_label = ObjectProperty()
     homing_text = StringProperty()
@@ -326,6 +328,9 @@ class HomingScreen(Screen):
         if self.m.state().startswith('Idle'):
             Clock.unschedule(self.poll_for_ready)
             self.trigger_homing()
+
+        if sys.platform == "win32":
+            Clock.schedule_once(self.developer_windows_esc, self.dev_win_dt)     
     
     def trigger_homing(self):
         
@@ -340,8 +345,12 @@ class HomingScreen(Screen):
         # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
         self.m.set_state('Home') 
 
-        # monitor sequential stream status for completion
+        # monitor sequential stream status for completion       
         self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+
+        # in case of development
+
+            
 
     def home_normally(self):
         # home without suaring the axis
@@ -398,7 +407,7 @@ class HomingScreen(Screen):
         elif self.m.s.is_sequential_streaming == False:
             print "Homing success!"
             self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
-            self.m.is_machine_homed = True # status on powerup
+            self.m.is_machine_homed = True # clear this flag too
             Clock.unschedule(self.poll_for_success)
             self.return_to_app()
             
@@ -424,6 +433,11 @@ class HomingScreen(Screen):
         self.quit_home = False
         
         
-
+    def developer_windows_esc(self, dt):
+        print "pretend Homing success!"
+        self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
+        self.m.is_machine_homed = True # clear this flag too
+        self.m.set_state('Idle')
+        self.return_to_app()
 
         

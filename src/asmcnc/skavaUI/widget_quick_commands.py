@@ -14,7 +14,7 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_stop_press
 
-
+import sys
 
 Builder.load_string("""
 
@@ -189,9 +189,9 @@ class QuickCommands(Widget):
             self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
             self.sm.current = 'homingWarning'
                 
-        elif self.is_job_within_bounds() == False:                   
+        elif self.is_job_within_bounds() == False and sys.platform != "win32":                   
             self.sm.current = 'boundary'
-                    
+
         else:
             self.sm.current = 'go'
 

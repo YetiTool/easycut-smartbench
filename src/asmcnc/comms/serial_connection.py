@@ -72,6 +72,7 @@ class SerialConnection(object):
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 print('self.s. done')
+                self.suppress_error_screens = True
                 return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
@@ -842,7 +843,7 @@ class SerialConnection(object):
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
             # log('Console display error: ' + str(consoleDisplayError))
 
-        # Finally issue the command 
+        # Finally issue the command        
         if self.s:
             try:
                 
@@ -858,7 +859,7 @@ class SerialConnection(object):
 #                  SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 self.get_serial_screen('Could not write last command to serial buffer.')
-#                 log('Serial Error: ' + str(serialError))
+    #                 log('Serial Error: ' + str(serialError))
         
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
