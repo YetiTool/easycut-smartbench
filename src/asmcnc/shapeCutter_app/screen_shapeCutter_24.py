@@ -517,6 +517,9 @@ class ShapeCutter24ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
+        self.stock_bottom_offset_units.text = self.unit_label.text + "/min"
+        self.step_down_units.text = self.unit_label.text + "/min"
+
 # Action buttons       
     def get_info(self):
         pass

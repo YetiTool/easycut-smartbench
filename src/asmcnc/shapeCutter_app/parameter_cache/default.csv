@@ -1,0 +1,21 @@
+tabs
+	units	mm
+	width	
+	spacing	
+	tabs?	
+	height	
+cutter dimensions
+	units	mm
+	diameter	
+	shoulder length	
+	cutting length	
+strategy parameters
+	units	mm
+	step down	
+	stock bottom offset	8
+	finishing passes	
+feed rates
+	units	mm
+	z feed rate	
+	spindle speed	
+	xy feed rate	

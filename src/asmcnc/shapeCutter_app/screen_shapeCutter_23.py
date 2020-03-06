@@ -558,6 +558,8 @@ class ShapeCutter23ScreenClass(Screen):
         self.z_feed_units.text = self.unit_label.text + "/min"
 
     def check_dimensions(self):
+#        self.j.parameter_dict["units"] = self.unit_label.text
+        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
             self.j.parameter_dict["feed rates"]["xy feed rate"] = self.xy_feed.text
             self.j.parameter_dict["feed rates"]["z feed rate"] = self.z_feed.text

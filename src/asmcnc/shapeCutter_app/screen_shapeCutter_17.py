@@ -10,8 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_18
-
 Builder.load_string("""
 
 <ShapeCutter17ScreenClass>
@@ -247,7 +245,7 @@ Builder.load_string("""
                                 do_scroll_y: True
                                 scroll_type: ['content']
                                 RstDocument:
-                                    text: root.user_instructions
+                                    text: root.display_profile
                                     background_color: hex('#FFFFFF')
 
                     BoxLayout: #action box
@@ -323,8 +321,8 @@ class ShapeCutter17ScreenClass(Screen):
     
     screen_number = StringProperty("[b]17[/b]")
     title_label = StringProperty("[b]Would you like to choose an existing cut profile?[/b]")
-    user_instructions = StringProperty("e\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\ne")
-    
+    display_profile = StringProperty("No file loaded")
+        
     def __init__(self, **kwargs):
         super(ShapeCutter17ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -366,5 +364,5 @@ class ShapeCutter17ScreenClass(Screen):
         
 # Screen commands
     def load_file(self):
-        pass
+        self.display_profile = self.j.load_parameters()
         

@@ -205,7 +205,7 @@ class ShapeCutterLandingScreenClass(Screen):
         # initialise job parameters
         self.j = sC_job_parameters.ShapeCutterJobParameters()
 
-    def on_pre_enter(self):
+    def on_enter(self):
         if not self.sm.has_screen('sC1'):
             self.load_screens()
         

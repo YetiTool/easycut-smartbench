@@ -498,12 +498,14 @@ class ShapeCutter20ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
-            self.j.parameter_dict["units"] = "mm"
+#            self.j.parameter_dict["units"] = self.unit_label.text
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
-            self.j.parameter_dict["units"] = "inches"
+#            self.j.parameter_dict["units"] = self.unit_label.text
 
     def check_dimensions(self):
+        
+#        self.j.parameter_dict["units"] = self.unit_label.text
         
         if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
         and not self.c_dimension.text == "":

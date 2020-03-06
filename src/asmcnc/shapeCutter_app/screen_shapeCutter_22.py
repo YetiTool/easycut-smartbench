@@ -559,10 +559,10 @@ class ShapeCutter22ScreenClass(Screen):
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
             self.unit_label.text = "mm"
-            self.j.parameter_dict["units"] = "mm"
+#            self.j.parameter_dict["units"] = "mm"
         elif self.unit_toggle.state == 'down': 
             self.unit_label.text = "inches"
-            self.j.parameter_dict["units"] = "inches"
+#            self.j.parameter_dict["units"] = "inches"
 
     def toggle_tabs(self):
         if self.tab_toggle.state == 'normal':
@@ -573,6 +573,8 @@ class ShapeCutter22ScreenClass(Screen):
             self.j.parameter_dict["tabs"]["tabs?"] = False    
 
     def check_dimensions(self):
+        
+#        self.j.parameter_dict["units"] = self.unit_label.text
         
         if self.tab_YN.text == "Yes": 
             self.j.parameter_dict["tabs"]["tabs?"] = True

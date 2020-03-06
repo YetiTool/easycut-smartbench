@@ -17,6 +17,7 @@ Builder.load_string("""
 <ShapeCutter25ScreenClass>
 
     info_button: info_button
+    file_name: file_name
 
     BoxLayout:
         size_hint: (None,None)
@@ -231,7 +232,6 @@ Builder.load_string("""
                                         text_size: self.size
                                         font_size: '20sp'
                                         markup: True
-                                        input_filter: 'float'
                                         multiline: False
                                         text: ''
                                         on_text_validate: root.save_filename()                           
@@ -283,7 +283,7 @@ Builder.load_string("""
                                 do_scroll_y: True
                                 scroll_type: ['content']
                                 RstDocument:
-                                    text: root.user_instructions
+                                    text: root.display_profile
                                     background_color: hex('#FFFFFF')
 
                     BoxLayout: #action box
@@ -359,8 +359,8 @@ class ShapeCutter25ScreenClass(Screen):
     
     screen_number = StringProperty("[b]25[/b]")
     title_label = StringProperty("[b]Would you like to save this as a new profile?[/b]")
-    user_instructions = StringProperty("e\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\nee\n\ne")
-    
+    display_profile = StringProperty()
+
     def __init__(self, **kwargs):
         super(ShapeCutter25ScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -369,7 +369,7 @@ class ShapeCutter25ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
-
+        self.display_profile = self.j.parameters_to_string()
 # Action buttons       
     def get_info(self):
         pass
@@ -403,5 +403,7 @@ class ShapeCutter25ScreenClass(Screen):
 # Screen commands
     def save_filename(self):
         pass
+    
     def save_file(self):
-        pass
+        if self.file_name.text:
+            self.j.save_parameters(self.file_name.text)
