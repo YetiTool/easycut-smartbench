@@ -206,9 +206,19 @@ class ShapeCutterLandingScreenClass(Screen):
         # initialise job parameters
         self.j = sC_job_parameters.ShapeCutterJobParameters()
 
+    # this is very hacky and I will change it
     def on_pre_enter(self):
         if not self.sm.has_screen('sC1'):
             self.load_screens()
+        
+    def on_enter(self):
+        self.load_more_screens()
+        
+    def on_pre_leave(self):
+        self.and_more_screens()
+        
+    def on_leave(self):
+        self.and_some_extra_screens()
         
     def load_screens(self):
         sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', screen_manager = self.sm, machine = self.m)
@@ -217,7 +227,8 @@ class ShapeCutterLandingScreenClass(Screen):
         self.sm.add_widget(sCApIs_screen)
         sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sCdimensions_screen)
-        
+    
+    def load_more_screens(self):
         sC1_screen = screen_shapeCutter_1.ShapeCutter1ScreenClass(name = 'sC1', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(sC1_screen)
         sC2_screen = screen_shapeCutter_2.ShapeCutter2ScreenClass(name = 'sC2', screen_manager = self.sm, machine = self.m)
@@ -250,6 +261,8 @@ class ShapeCutterLandingScreenClass(Screen):
         self.sm.add_widget(sC15_screen)
         sC16_screen = screen_shapeCutter_16.ShapeCutter16ScreenClass(name = 'sC16', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(sC16_screen)
+        
+    def and_more_screens(self):
         sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sC17_screen)
         sC18_screen = screen_shapeCutter_18.ShapeCutter18ScreenClass(name = 'sC18', screen_manager = self.sm, machine = self.m)
@@ -291,6 +304,7 @@ class ShapeCutterLandingScreenClass(Screen):
         sC36_screen = screen_shapeCutter_36.ShapeCutter36ScreenClass(name = 'sC36', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sC36_screen)
 
+    def and_some_extra_screens(self):
         sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sCsavejob_screen)
         sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', screen_manager = self.sm, machine = self.m)
