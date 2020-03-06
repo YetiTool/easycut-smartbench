@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 
+from asmcnc.shapeCutter_app import screen_shapeCutter_tutorial
 from asmcnc.shapeCutter_app import screen_shapeCutter_aperture_island
 from asmcnc.shapeCutter_app import screen_shapeCutter_dimensions
 
@@ -205,11 +206,13 @@ class ShapeCutterLandingScreenClass(Screen):
         # initialise job parameters
         self.j = sC_job_parameters.ShapeCutterJobParameters()
 
-    def on_enter(self):
+    def on_pre_enter(self):
         if not self.sm.has_screen('sC1'):
             self.load_screens()
         
     def load_screens(self):
+        sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', screen_manager = self.sm, machine = self.m)
+        self.sm.add_widget(sCtutorial_screen)
         sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sCApIs_screen)
         sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', screen_manager = self.sm, machine = self.m, job_parameters = self.j)

@@ -117,9 +117,7 @@ class SkavaUI(App):
       
         sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', screen_manager = sm, machine =m)
         sm.add_widget(sClanding_screen)
-        
-        sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', screen_manager = sm, machine =m)
-        sm.add_widget(sCtutorial_screen)
+
         # set screen to start on
         sm.current = 'sClanding'
         return sm
