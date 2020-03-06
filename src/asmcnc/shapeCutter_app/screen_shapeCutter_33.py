@@ -11,7 +11,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.skavaUI import widget_virtual_bed
-from shapeCutter_app import widget_sC_work_coordinates
+from asmcnc.shapeCutter_app import widget_sC_work_coordinates
 
 
 Builder.load_string("""
