@@ -50,11 +50,6 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_34
 from asmcnc.shapeCutter_app import screen_shapeCutter_35
 from asmcnc.shapeCutter_app import screen_shapeCutter_36
 
-from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
-from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
-from asmcnc.shapeCutter_app import screen_shapeCutter_post_job_save
-from asmcnc.shapeCutter_app import screen_shapeCutter_exit
-
 from asmcnc.shapeCutter_app.cut_parameters import sC_job_parameters
 
 Builder.load_string("""
@@ -210,19 +205,15 @@ class ShapeCutterLandingScreenClass(Screen):
     def on_pre_enter(self):
         if not self.sm.has_screen('sCtutorial'):
             self.load_screens()
+            
+        if not self.sm.has_screen('sC17'):
+            self.and_more_screens()
+
         
     def on_enter(self):
         if not self.sm.has_screen('sC1'):
             self.load_more_screens()
-        
-    def on_pre_leave(self):
-        if not self.sm.has_screen('sC17'):
-            self.and_more_screens()
-        
-    def on_leave(self):
-        if not self.sm.has_screen('sCsavejob'):
-            self.and_some_extra_screens()
-        
+
     def load_screens(self):
         sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(sCtutorial_screen)
@@ -307,15 +298,6 @@ class ShapeCutterLandingScreenClass(Screen):
         sC36_screen = screen_shapeCutter_36.ShapeCutter36ScreenClass(name = 'sC36', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
         self.sm.add_widget(sC36_screen)
 
-    def and_some_extra_screens(self):
-        sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', screen_manager = self.sm, machine = self.m, job_parameters = self.j)
-        self.sm.add_widget(sCsavejob_screen)
-        sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(sCfeedback_screen)
-        sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(sCrepeat_screen)
-        sCexit_screen = screen_shapeCutter_exit.ShapeCutterExitScreenClass(name = 'sCexit', screen_manager = self.sm, machine = self.m)
-        self.sm.add_widget(sCexit_screen)
         
     def get_info(self):
         self.sm.current = 'sCtutorial'

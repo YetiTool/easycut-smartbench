@@ -10,7 +10,7 @@ import math
 class ShapeCutterJobParameters(object):
     
     parameterCache_file_path = './asmcnc/shapeCutter_app/parameter_cache/'
-    jobCache_file_path = './asmcnc/shapeCutter_app/shapeCutter_jobCache/'
+    jobCache_file_path = './asmcnc/jobCache/'
     profile_filename = ""
     
     # Internal settings
