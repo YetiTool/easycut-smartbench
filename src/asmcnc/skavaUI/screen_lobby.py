@@ -19,8 +19,10 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 
+from asmcnc.apps import app_manager
+
 from asmcnc.calibration_app import screen_landing
-from asmcnc.shapeCutter_app import screen_shapeCutter_landing
+from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
 
 
 Builder.load_string("""
@@ -422,6 +424,7 @@ class LobbyScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
  
+        self.am = app_manager.AppManagerClass(screen_manager = self.sm, machine = self.m)
 # FLAG
     def on_enter(self):
         if not sys.platform == "win32":
@@ -440,10 +443,11 @@ class LobbyScreen(Screen):
         self.sm.current = 'calibration_landing'
     
     def shapecutter_app(self):
-        if not self.sm.has_screen('sClanding'):
-            sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sClanding_screen)
-        self.sm.current = 'sClanding'
+        self.am.start_shapecutter_app()
+#         if not self.sm.has_screen('sClanding'):
+#             sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', screen_manager = self.sm, machine = self.m)
+#             self.sm.add_widget(sClanding_screen)
+#         self.sm.current = 'sClanding'
     
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()
