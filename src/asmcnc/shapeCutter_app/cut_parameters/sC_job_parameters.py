@@ -10,7 +10,7 @@ import math
 class ShapeCutterJobParameters(object):
     
     parameterCache_file_path = './asmcnc/shapeCutter_app/parameter_cache/'
-    jobCache_file_path = './asmcnc/jobCache/'
+    jobCache_file_path = './jobCache/'
     profile_filename = ""
     
     # Internal settings
@@ -414,7 +414,7 @@ class ShapeCutterJobParameters(object):
 
     def generate_gCode_filename(self):
         job_name = self.jobCache_file_path + self.shape_dict["shape"] \
-         + " " + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
+         + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
         return job_name      
        
     def save_gCode(self, lines, job_name):    
