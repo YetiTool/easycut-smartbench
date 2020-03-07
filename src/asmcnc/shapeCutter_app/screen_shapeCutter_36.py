@@ -13,7 +13,7 @@ from kivy.clock import Clock
 from asmcnc.shapeCutter_app import screen_shapeCutter_feedback
 from asmcnc.shapeCutter_app import screen_shapeCutter_repeat
 from asmcnc.shapeCutter_app import screen_shapeCutter_post_job_save
-from asmcnc.shapeCutter_app import screen_shapeCutter_exit
+
 
 Builder.load_string("""
 
@@ -322,8 +322,7 @@ class ShapeCutter36ScreenClass(Screen):
             self.sm.add_widget(sCfeedback_screen)
             sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(sCrepeat_screen)
-            sCexit_screen = screen_shapeCutter_exit.ShapeCutterExitScreenClass(name = 'sCexit', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(sCexit_screen)
+
  
 # Action buttons       
     def get_info(self):

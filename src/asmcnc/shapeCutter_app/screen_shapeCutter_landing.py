@@ -49,6 +49,7 @@ from asmcnc.shapeCutter_app import screen_shapeCutter_33
 from asmcnc.shapeCutter_app import screen_shapeCutter_34
 from asmcnc.shapeCutter_app import screen_shapeCutter_35
 from asmcnc.shapeCutter_app import screen_shapeCutter_36
+from asmcnc.shapeCutter_app import screen_shapeCutter_exit
 
 from asmcnc.shapeCutter_app.cut_parameters import sC_job_parameters
 
@@ -208,6 +209,10 @@ class ShapeCutterLandingScreenClass(Screen):
             
         if not self.sm.has_screen('sC17'):
             self.and_more_screens()
+        
+        if not self.sm.has_screen('sCexit'):
+            sCexit_screen = screen_shapeCutter_exit.ShapeCutterExitScreenClass(name = 'sCexit', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(sCexit_screen)
 
         
     def on_enter(self):

@@ -121,7 +121,9 @@ class ShapeCutterExitScreenClass(Screen):
         self.sm.remove_widget(self.sm.get_screen('sC34'))
         self.sm.remove_widget(self.sm.get_screen('sC35'))
         self.sm.remove_widget(self.sm.get_screen('sC36'))
-        self.sm.remove_widget(self.sm.get_screen('sCsavejob'))
-        self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
-        self.sm.remove_widget(self.sm.get_screen('sCrepeat'))
+        
+        if self.sm.has_screen('sCsavejob'):        
+            self.sm.remove_widget(self.sm.get_screen('sCsavejob'))
+            self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
+            self.sm.remove_widget(self.sm.get_screen('sCrepeat'))
 
