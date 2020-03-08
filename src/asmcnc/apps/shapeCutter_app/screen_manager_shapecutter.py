@@ -435,6 +435,9 @@ class ScreenManagerShapeCutter(object):
                 sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC12_screen)
         elif self.sm.current == 'sC11':
+            if not self.sm.has_screen('sC12'):
+                sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                self.sm.add_widget(sC12_screen)            
             if not self.sm.has_screen('sC13'):
                 sC13_screen = screen_shapeCutter_13.ShapeCutter13ScreenClass(name = 'sC13', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC13_screen)            
@@ -458,7 +461,7 @@ class ScreenManagerShapeCutter(object):
             if not self.sm.has_screen('sC18'):
                 sC18_screen = screen_shapeCutter_18.ShapeCutter18ScreenClass(name = 'sC18', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC18_screen)
-        elif self.sm.current == 'sC17':
+        elif self.sm.current == 'sC17':           
             if not self.sm.has_screen('sC19'):
                 sC19_screen = screen_shapeCutter_19.ShapeCutter19ScreenClass(name = 'sC19', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC19_screen)           
@@ -495,6 +498,9 @@ class ScreenManagerShapeCutter(object):
                 sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
         elif self.sm.current == 'sC26':
+            if not self.sm.has_screen('sC27'):
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                self.sm.add_widget(sC27_screen)
             if not self.sm.has_screen('sC28'):
                 sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', screen_manager = self.sm, machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC28_screen)
@@ -949,12 +955,19 @@ class ScreenManagerShapeCutter(object):
     def homing_screen(self, cancel_to_screen, return_to_screen):
         
         if self.sm.current == 'sC11':
+            if not self.sm.has_screen('sC12'):
+                sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                self.sm.add_widget(sC12_screen)
+            
             self.sm.get_screen('homing').return_to_screen = return_to_screen
             self.sm.get_screen('homing').cancel_to_screen = cancel_to_screen  
             self.sm.current = 'homing'
         
         elif self.sm.current == 'sC26':
-
+            if not self.sm.has_screen('sC27'):
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                self.sm.add_widget(sC27_screen)
+                
             self.sm.get_screen('homing').return_to_screen = return_to_screen
             self.sm.get_screen('homing').cancel_to_screen = cancel_to_screen  
             self.sm.current = 'homing'
