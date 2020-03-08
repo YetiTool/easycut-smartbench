@@ -236,7 +236,7 @@ Builder.load_string("""
                                     width: dp(100)
                                     padding: (0,0,0,0)                              
                                     Button:
-                                        on_press: root.trace()
+                                        on_press: root.trace_job()
                                         background_color: 1, 1, 1, 0 
                                         BoxLayout:
                                             padding: 10
@@ -254,7 +254,7 @@ Builder.load_string("""
                                     width: dp(100)
                                     padding: (0,0,0,0)                              
                                     Button:
-                                        on_press: root.stop_move()
+                                        on_press: root.stop_jog()
                                         background_color: 1, 1, 1, 0 
                                         BoxLayout:
                                             padding: 10
@@ -366,6 +366,7 @@ class ShapeCutter33ScreenClass(Screen):
         super(ShapeCutter33ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
         self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.shapecutter_sm.sm))
 
@@ -405,20 +406,26 @@ class ShapeCutter33ScreenClass(Screen):
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen specific
 
 # Screen specific:
 
     def trace_job(self): #(need to generate gcode in advance)
 
+        self.m.go_x_datum()
+        self.m.go_y_datum()
+
         job_x_range = self.j.range_x[1] - self.j.range_x[0]
         job_y_range = self.j.range_y[1] - self.j.range_y[0]
     
-#         if case == 'X+': self.m.jog_relative('X', job_x_range, x_feed_speed)
-#         if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)
-#         if case == 'Y+': self.m.jog_relative('Y', job_y_range, y_feed_speed)
-#         if case == 'Y-': self.m.jog_relative('Y', -job_y_range, y_feed_speed)
+        xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+    
+        self.m.jog_relative('X', job_x_range, xy_feed_speed)
+        self.m.jog_relative('Y', job_y_range, xy_feed_speed)
+        self.m.jog_relative('X', -job_x_range, xy_feed_speed)
+        self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
 
     def stop_jog(self):
         self.m.quit_jog()
+
+
+        

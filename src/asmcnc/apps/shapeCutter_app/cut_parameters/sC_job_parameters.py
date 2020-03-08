@@ -92,17 +92,14 @@ class ShapeCutterJobParameters(object):
         pass
  
     def load_parameters(self):
-        
-#        display_parameters = ''
-        
+
         r = csv.reader(open(self.parameterCache_file_path + 'default' + '.csv', "r"), delimiter = '\t', lineterminator = '\n')
         for row in r:
-#            display_parameters = display_parameters + '\t\t\t\t\t\t'.join(row) + '\n\r'
             if ('\t'.join(row)).split('\t')[0]in self.parameter_dict:
                 current_group = ('\t'.join(row)).split('\t')[0]
-            else:
-                if ('\t'.join(row)).split('\t')[0] in self.parameter_dict[current_group]:
-                    self.parameter_dict[current_group]('\t'.join(row)).split('\t')[0] = ('\t'.join(row)).split('\t')[1]        
+            else:                
+                if ('\t'.join(row)).split('\t')[1] in self.parameter_dict[current_group]:
+                    self.parameter_dict[current_group][('\t'.join(row)).split('\t')[1]] = ('\t'.join(row)).split('\t')[2]     
 
         output = self.parameters_to_string()
         return output
@@ -172,7 +169,7 @@ class ShapeCutterJobParameters(object):
         # STRATEGY
         stock_bottom_offset = float(self.parameter_dict["strategy parameters"]["stock bottom offset"])
         stepdown = float(self.parameter_dict["strategy parameters"]["step down"])
-        finishing_pass = int(self.parameter_dict["strategy parameters"]["finishing passes"])
+        finishing_pass = float(self.parameter_dict["strategy parameters"]["finishing passes"])
 
         z_max = - material_thickness - stock_bottom_offset
 
@@ -295,7 +292,7 @@ class ShapeCutterJobParameters(object):
         
         ######## GCODE HEADER
         
-        job_name = self.generate_gCode_filename()
+        job_name = self.gcode_filename
         
         lines = ['(' + job_name + ')',
                 'G90', #Absolute

@@ -516,7 +516,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC32_screen)
         elif self.sm.current == 'sC31':
             if not self.sm.has_screen('sC33'):
-                sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC33_screen) 
         elif self.sm.current == 'sC32':
             if not self.sm.has_screen('sC34'):
@@ -942,8 +942,8 @@ class ScreenManagerShapeCutter(object):
          
         self.sm.get_screen('go').return_to_screen = return_to_screen
         self.sm.get_screen('go').cancel_to_screen = cancel_to_screen        
-        self.sm.get_screen('go').job_gcode = self.j.generate_gCode()
-        self.sm.get_screen('go').job_filename  = self.j.generate_gCode_filename()
+        self.sm.get_screen('go').job_gcode = self.j.gcode_lines
+        self.sm.get_screen('go').job_filename  = self.j.gcode_filename
         self.sm.current = 'go'
     
     def homing_screen(self, cancel_to_screen, return_to_screen):

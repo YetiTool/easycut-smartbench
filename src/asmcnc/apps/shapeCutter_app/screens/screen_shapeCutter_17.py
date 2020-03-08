@@ -363,6 +363,8 @@ class ShapeCutter17ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen commands
+    
     def load_file(self):
+        
         self.display_profile = self.j.load_parameters()
         
