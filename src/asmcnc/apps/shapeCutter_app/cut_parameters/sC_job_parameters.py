@@ -285,14 +285,12 @@ class ShapeCutterJobParameters(object):
                                 
                     circ_tab_start_angle += circ_angle_between_tabs
                     
-        
+                    circ_tab_next_start_pos = circ_tab_start_pos[1:] + circ_tab_start_pos[:1] # simple way to rotate a list
                 
                     
         ################ GCODE GENERATOR ###############
         
         ######## GCODE HEADER
-        
-        job_name = self.gcode_filename
         
         lines = ['(' + job_name + ')',
                 'G90', #Absolute
@@ -300,7 +298,8 @@ class ShapeCutterJobParameters(object):
                 'G17', #XY plane
                 'G21', #In MM
                 'M3 S25000', # Turn on spindle
-                'G4 P1' # Allow time for inrush
+                'G4 P1', # Allow time for inrush
+                'G91.1' # relative rad centre definitions. IMPORTANT: "G90.1" (absolute rad centre definitions) DOESN'T WORK IN GRBL
                 ]
         
         
@@ -311,11 +310,9 @@ class ShapeCutterJobParameters(object):
         lines.append("\n(Start of shape)")
         
         if shape == "rectangle":
-            lines.append("G91.1") # relative rad centre definitions
             lines.append("G0 X" + str(x_flat_min) + " Y" + str(y_min))
         
         elif shape == "circle":
-            lines.append("G90.1") # absolute rad centre definitions
             lines.append("G0 X" + str(circ_path_rad) + " Y" + str(0))
         
         lines.append("G0 Z" + str(z_height_for_rapid_move))
@@ -387,16 +384,18 @@ class ShapeCutterJobParameters(object):
                 # plunge and draw circle, anti-clockwise
                 lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
                 if tabs and z < tab_absolute_height:
-                    for (xy_start, xy_end) in zip(circ_tab_start_pos, circ_tab_end_pos):
+                    for (xy_start, xy_end, xy_next) in zip(circ_tab_start_pos, circ_tab_end_pos, circ_tab_next_start_pos):
                         
                         lines.append("(Tab)")
-                        if xy_start[0] != circ_path_rad: # hack to prevent repetition of co-ordinates from triggering a 360 degree revolution (makes sure that x co-ords aren't the same before appending - only works in this template with start point position etc)
-                            lines.append("G3 X" + str(xy_start[0]) + " Y" + str(xy_start[1]) + " I0 J0 F" + str(xy_feed_rate))
+        #                 if xy_start[0] != circ_path_rad: # hack to prevent repetition of co-ordinates from triggering a 360 degree revolution (makes sure that x co-ords aren't the same before appending - only works in this template with start point position etc)
+        #                     lines.append("G3 X" + str(xy_start[0]) + " Y" + str(xy_start[1]) + " I" + str(-xy_start[0]) + " J" + str(-xy_start[1]) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
-                        lines.append("G3 X" + str(xy_end[0]) + " Y" + str(xy_end[1]) + " I0 J0 F" + str(xy_feed_rate))
+                        lines.append("G3 X" + str(xy_end[0]) + " Y" + str(xy_end[1]) + " I" + str(-xy_start[0]) + "J" + str(-xy_start[1]) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
+                        lines.append("G3 X" + str(xy_next[0]) + " Y" + str(xy_next[1]) + " I" + str(-xy_end[0]) + " J" + str(-xy_end[1]) + " F" + str(xy_feed_rate))
                   
-                lines.append("G3 X" + str(circ_path_rad) + " Y0 I0 J0 F" + str(xy_feed_rate))
+                else:
+                    lines.append("G3 X" + str(circ_path_rad) + " Y0 I" + str(-circ_path_rad) + " J0 F" + str(xy_feed_rate))
         
             # assess if final_pass
             if z == z_max and finishing_pass <= 0: break
