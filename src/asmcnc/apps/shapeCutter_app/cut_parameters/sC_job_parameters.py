@@ -292,6 +292,8 @@ class ShapeCutterJobParameters(object):
         
         ######## GCODE HEADER
         
+        job_name = self.gcode_filename
+        
         lines = ['(' + job_name + ')',
                 'G90', #Absolute
                 'G94', #Feed units per mm
