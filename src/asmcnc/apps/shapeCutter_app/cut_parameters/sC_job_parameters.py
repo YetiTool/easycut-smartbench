@@ -414,7 +414,7 @@ class ShapeCutterJobParameters(object):
         lines.append("M5") #Kill spindle
         lines.append("G4 P2") #Pause for vac overrun
         lines.append("M30") #Prog end
-        lines.append("%") #Prog end (redundant?)
+#        lines.append("%") #Prog end (redundant?) # BREAKER OF THINGS GET IN YOUR GRAVE
 
         self.gcode_lines = lines
 

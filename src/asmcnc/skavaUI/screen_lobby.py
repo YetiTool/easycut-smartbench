@@ -444,10 +444,6 @@ class LobbyScreen(Screen):
     
     def shapecutter_app(self):
         self.am.start_shapecutter_app()
-#         if not self.sm.has_screen('sClanding'):
-#             sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', screen_manager = self.sm, machine = self.m)
-#             self.sm.add_widget(sClanding_screen)
-#         self.sm.current = 'sClanding'
     
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()

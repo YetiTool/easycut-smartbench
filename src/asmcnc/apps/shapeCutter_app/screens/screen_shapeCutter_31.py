@@ -326,6 +326,7 @@ class ShapeCutter31ScreenClass(Screen):
         self.info_button.opacity = 1
 
 # Action buttons       
+
     def get_info(self):
         pass
     
