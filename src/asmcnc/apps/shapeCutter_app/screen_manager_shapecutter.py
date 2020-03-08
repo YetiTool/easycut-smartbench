@@ -974,7 +974,7 @@ class ScreenManagerShapeCutter(object):
         if not self.sm.has_screen('sClanding'): 
             sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sClanding_screen)
-            self.sm.current = 'sClanding'
+        self.sm.current = 'sClanding'
                 
     def load_all_screens(self):        
         self.load_entry_screens()
