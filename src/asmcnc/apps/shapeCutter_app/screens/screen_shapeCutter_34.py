@@ -307,6 +307,7 @@ class ShapeCutter34ScreenClass(Screen):
         self.info_button.opacity = 0
 
 # Action buttons       
+
     def get_info(self):
         pass
     
@@ -337,14 +338,16 @@ class ShapeCutter34ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
     
 # Screen specific
+
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
             print ("vac off")
-            #self.m.vac_off()
+            self.m.vac_off()
         else:
             print ("vac on")
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
+            self.m.vac_on()
             Clock.schedule_once(self.reset_vacuum, 2)
 
     def reset_vacuum(self, dt):

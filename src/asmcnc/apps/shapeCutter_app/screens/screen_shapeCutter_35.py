@@ -336,13 +336,14 @@ class ShapeCutter35ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
     
 # Screen specific
+
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
-            #self.m.spindle_off()
+            self.m.spindle_off()
         else: 
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
-            #self.m.spindle_on()
+            self.m.spindle_on()
             Clock.schedule_once(self.reset_spindle, 2)
 
     def reset_spindle(self, dt):

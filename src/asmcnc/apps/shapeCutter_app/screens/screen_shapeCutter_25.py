@@ -404,11 +404,10 @@ class ShapeCutter25ScreenClass(Screen):
         pass
     
     def save_file(self):
-        if self.file_name.text:
-            self.j.save_parameters(self.file_name.text)
-            
-            lines = self.j.generate_gCode()
-            gcode_filename = self.j.generate_gCode_filename()
-            
-            self.j.save_gCode(lines, gcode_filename)
+        self.j.save_parameters(self.file_name.text)
+        
+#         lines = self.j.generate_gCode()
+#         gcode_filename = self.j.generate_gCode_filename()
+        
+#         self.j.save_gCode(lines, gcode_filename)
             

@@ -6,9 +6,9 @@ tabs
 	height	0
 cutter dimensions
 	units	mm
-	diameter	10
+	diameter	0
 	shoulder length	0
-	cutting length	0
+	cutting length	210
 strategy parameters
 	units	mm
 	step down	0.0

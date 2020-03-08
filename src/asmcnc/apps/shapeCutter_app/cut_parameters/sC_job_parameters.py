@@ -13,6 +13,10 @@ class ShapeCutterJobParameters(object):
     jobCache_file_path = './jobCache/'
     profile_filename = ""
     
+    # gcode
+    gcode_lines = []
+    gcode_filename = ''
+    
     # Internal settings
     z_height_for_rapid_move = 3
     
@@ -75,6 +79,11 @@ class ShapeCutterJobParameters(object):
             "feed rates": self.feed_rates,
             "strategy parameters": self.strategy_parameters         
             }
+
+        # Bounding box
+        self.range_x = [0,0] 
+        self.range_y = [0,0] 
+        self.range_z = [0,0]
     
     def validate_shape_dimensions(self):
         pass
@@ -410,15 +419,35 @@ class ShapeCutterJobParameters(object):
         lines.append("M30") #Prog end
         lines.append("%") #Prog end (redundant?)
 
-        return lines
+        self.gcode_lines = lines
 
     def generate_gCode_filename(self):
-        job_name = self.jobCache_file_path + self.shape_dict["shape"] \
+        self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
          + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
-        return job_name      
        
     def save_gCode(self, lines, job_name):    
         f = open(job_name, "w")
         for line in lines:
             f.write(line + "\n")         
         print "Done: " + job_name
+
+    def set_job_envelope(self):
+
+        # there's a bug here - needs looking at! 
+ 
+        x_values = []
+        y_values = []
+        z_values = []
+
+        for line in self.gcode_lines:
+            blocks = str(line).strip().split(" ")
+            for part in blocks:
+                try:
+                    if part.startswith(('X')): x_values.append(float(part[1:]))
+                    if part.startswith(('Y')): y_values.append(float(part[1:]))
+                    if part.startswith(('Z')): z_values.append(float(part[1:]))
+                except:
+                    print "Envelope calculator: skipped '" + part + "'"
+        self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
+        self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
+        self.range_z[0], self.range_z[1] = min(z_values), max(z_values)

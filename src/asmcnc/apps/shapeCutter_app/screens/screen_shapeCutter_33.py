@@ -12,7 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.apps.shapeCutter_app.screens import widget_sC_work_coordinates
-
+from asmcnc.geometry import job_envelope
 
 Builder.load_string("""
 
@@ -375,7 +375,8 @@ class ShapeCutter33ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
+# Action buttons  
+    
     def get_info(self):
         pass
     
@@ -406,3 +407,18 @@ class ShapeCutter33ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen specific
+
+# Screen specific:
+
+    def trace_job(self): #(need to generate gcode in advance)
+
+        job_x_range = self.j.range_x[1] - self.j.range_x[0]
+        job_y_range = self.j.range_y[1] - self.j.range_y[0]
+    
+#         if case == 'X+': self.m.jog_relative('X', job_x_range, x_feed_speed)
+#         if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)
+#         if case == 'Y+': self.m.jog_relative('Y', job_y_range, y_feed_speed)
+#         if case == 'Y-': self.m.jog_relative('Y', -job_y_range, y_feed_speed)
+
+    def stop_jog(self):
+        self.m.quit_jog()
