@@ -203,7 +203,7 @@ class ShapeCutterJobParameters(object):
             
             # tabs
             
-            if tabs:
+            if tabs == True:
                 
                 rect_tab_offset_from_origin = cutter_rad # so tab doesn't start near the flat end point (potential errors with r0 hack
                 
@@ -253,7 +253,7 @@ class ShapeCutterJobParameters(object):
             elif aperture_or_island == "island":
                 circ_path_rad = (circ_input_diameter + cutter_diameter) / 2
         
-            if tabs:
+            if tabs == True:
                 
                 # calculate an even distribution of tabs along the circumference, based on desired distance between each (round down the distance between tabs as needed to achieve even distribution)
                 # working in rads here
@@ -329,7 +329,7 @@ class ShapeCutterJobParameters(object):
                 lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
                 
                 # x-out
-                if tabs and z < tab_absolute_height:
+                if tabs == True and z < tab_absolute_height:
                     for start_tab_coord in x_out_tabs:
                         lines.append("G1 X" + str(start_tab_coord) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
@@ -341,7 +341,7 @@ class ShapeCutterJobParameters(object):
                 lines.append("G3 X" + str(x_max) + " Y" + str(y_flat_min) + " I" + str(0) +  " J" + str(rect_path_rad))
                 
                 # y-out
-                if tabs and z < tab_absolute_height:
+                if tabs == True and z < tab_absolute_height:
                     for start_tab_coord in y_out_tabs:
                         lines.append("G1 Y" + str(start_tab_coord) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
@@ -353,7 +353,7 @@ class ShapeCutterJobParameters(object):
                 lines.append("G3 X" + str(x_flat_max) + " Y" + str(y_max) + " I" + str(-rect_path_rad) +  " J" + str(0))
                 
                 # x-rtn
-                if tabs and z < tab_absolute_height:
+                if tabs == True and z < tab_absolute_height:
                     for start_tab_coord in x_rtn_tabs:
                         lines.append("G1 X" + str(start_tab_coord) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
@@ -365,7 +365,7 @@ class ShapeCutterJobParameters(object):
                 lines.append("G3 X" + str(x_min) + " Y" + str(y_flat_max) + " I" + str(0) +  " J" + str(-rect_path_rad))
                 
                 # y-rtn
-                if tabs and z < tab_absolute_height:
+                if tabs == True and z < tab_absolute_height:
                     for start_tab_coord in y_rtn_tabs:
                         lines.append("G1 Y" + str(start_tab_coord) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
@@ -383,7 +383,7 @@ class ShapeCutterJobParameters(object):
         
                 # plunge and draw circle, anti-clockwise
                 lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
-                if tabs and z < tab_absolute_height:
+                if tabs == True and z < tab_absolute_height:
                     for (xy_start, xy_end, xy_next) in zip(circ_tab_start_pos, circ_tab_end_pos, circ_tab_next_start_pos):
                         
                         lines.append("(Tab)")
