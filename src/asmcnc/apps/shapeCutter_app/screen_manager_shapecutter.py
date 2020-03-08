@@ -100,7 +100,7 @@ class ScreenManagerShapeCutter(object):
         
     def check_tab(self):
         if not self.sm.has_screen('sC33'):
-            sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', screen_manager = self.sm, machine = self.m, shapecutter = self)
+            sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sC33_screen) 
         self.sm.current = 'sC33'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
