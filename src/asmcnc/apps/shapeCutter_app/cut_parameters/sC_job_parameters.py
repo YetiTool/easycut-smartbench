@@ -124,6 +124,7 @@ class ShapeCutterJobParameters(object):
 
     def generate_gCode(self): # Generate GCode
 
+        self.generate_gCode_filename()
         # adapted from Gcode file generator found at: 
         # https://github.com/YetiTool/GCodeFileGenerators/blob/master/shapes/shape_cut.py
 
@@ -423,11 +424,11 @@ class ShapeCutterJobParameters(object):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
          + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
        
-    def save_gCode(self, lines, job_name):    
-        f = open(job_name, "w")
-        for line in lines:
+    def save_gCode(self):    
+        f = open(self.gcode_filename, "w")
+        for line in self.gcode_lines:
             f.write(line + "\n")         
-        print "Done: " + job_name
+        print "Done: " + self.gcode_filename
 
     def set_job_envelope(self):
 
