@@ -26,6 +26,7 @@ from kivy.core.window import Window
 
 from asmcnc.comms import router_machine 
 # NB: router_machine imports serial_connection
+from asmcnc.apps import app_manager
 
 from asmcnc.skavaUI import screen_initial, screen_help
 from asmcnc.skavaUI import screen_home
@@ -65,8 +66,10 @@ class SkavaUI(App):
         
         job_gcode = []  # declare g-code object
         
+        am = app_manager.AppManagerClass(sm, m)
+        
         # initialise the screens
-        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m)
+        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)

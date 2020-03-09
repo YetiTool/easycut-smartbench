@@ -41,23 +41,7 @@ Builder.load_string("""
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-#                 Button:
-#                     background_color: hex('#F4433600')
-#                     on_release: 
-#                         root.go_x_datum()
-#                         self.background_color = hex('#F4433600')
-#                     on_press: 
-#                         self.background_color = hex('#F44336FF')
-#                     BoxLayout:
-#                         size: self.parent.size
-#                         pos: self.parent.pos  
-#                         Image:
-#                             source: "./asmcnc/skavaUI/img/go_datum_x.png"
-#                             center_x: self.parent.center_x
-#                             y: self.parent.y
-#                             size: self.parent.width, self.parent.height
-#                             allow_stretch: True               
+                pos: self.parent.pos          
             
 
 
@@ -85,23 +69,7 @@ Builder.load_string("""
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-#                 Button:
-#                     background_color: hex('#F4433600')
-#                     on_release: 
-#                         root.go_y_datum()
-#                         self.background_color = hex('#F4433600')
-#                     on_press: 
-#                         self.background_color = hex('#F44336FF')
-#                     BoxLayout:
-#                         size: self.parent.size
-#                         pos: self.parent.pos  
-#                         Image:
-#                             source: "./asmcnc/skavaUI/img/go_datum_y.png"
-#                             center_x: self.parent.center_x
-#                             y: self.parent.y
-#                             size: self.parent.width, self.parent.height
-#                             allow_stretch: True  
+                pos: self.parent.pos
                             
             Button:
                 background_color: hex('#F4433600')
@@ -319,8 +287,8 @@ class SC31XYMove(Widget):
     
     def buttonJogXY(self, case):
 
-        x_feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogX
-        y_feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogY
+        x_feed_speed = self.feedSpeedJogX
+        y_feed_speed = self.feedSpeedJogY
         
         if self.jogMode == 'free':
             if case == 'X-': self.m.jog_absolute_single_axis('X', 

@@ -296,7 +296,7 @@ class ShapeCutter13ScreenClass(Screen):
     
     screen_number = StringProperty("[b]13[/b]")
     title_label = StringProperty("[b]Secure the spoil board (optional)[/b]")
-    user_instructions = StringProperty("Fix the spoil board to the bench using either screw, clamp, or tape.\n" \
+    user_instructions = StringProperty("Fix the spoil board to the bench using either screws, clamps, or tape.\n" \
                                        "For work holding techniques visit www.yetitool.com/support.")
     
     def __init__(self, **kwargs):

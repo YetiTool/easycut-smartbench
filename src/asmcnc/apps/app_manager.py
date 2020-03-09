@@ -16,7 +16,7 @@ class AppManagerClass(object):
         self.m = machine
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(app_manager = self, screen_manager = self.sm, machine = self.m)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
         
     # here are all the functions that might be called in the lobby e.g. 
     

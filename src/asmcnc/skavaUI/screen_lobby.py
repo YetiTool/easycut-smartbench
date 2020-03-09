@@ -19,8 +19,6 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 
-from asmcnc.apps import app_manager
-
 from asmcnc.calibration_app import screen_landing
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
 
@@ -423,8 +421,7 @@ class LobbyScreen(Screen):
         super(LobbyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
- 
-        self.am = app_manager.AppManagerClass(screen_manager = self.sm, machine = self.m)
+        self.am=kwargs['app_manager']
 # FLAG
     def on_enter(self):
         if not sys.platform == "win32":

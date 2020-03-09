@@ -29,138 +29,153 @@ Builder.load_string("""
             padding: 0
             spacing: 0
             orientation: "vertical"       
-                
-            Label:
-                size_hint: (None,None)
-                height: dp(90)
+
+            # Header
+            
+            BoxLayout: 
+                size_hint: (None, None) 
                 width: dp(800)
-                text: "Shape Cutter"
-                font_size: 30
-                halign: "center"
-                valign: "bottom"
-                markup: True
-                   
-                    
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(115)
-                padding: 0
-                spacing: 0
+                height: dp(90)            
                 Label:
                     size_hint: (None,None)
-                    height: dp(100)
+                    height: dp(90)
                     width: dp(800)
+                    text: "Shape Cutter"
+                    font_size: 30
                     halign: "center"
                     valign: "middle"
-                    text: "Select a shape to define..."
-                    color: 0,0,0,1
-                    font_size: 26
                     markup: True
-
-            BoxLayout:
-                size_hint: (None,None)
+                    text_size: self.size
+                    size: self.parent.size
+                    pos: self.parent.pos
+                   
+            
+            BoxLayout: 
+                size_hint: (None, None) 
                 width: dp(800)
-                height: dp(240)
-                padding: (150,0,150,15)
-                spacing: 0
-                orientation: 'horizontal'
-                pos: self.parent.pos                
-                
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(250)
-                    height: dp(225)
-                    padding: (23,0,20,0)
-                    pos: self.parent.pos
+                height: dp(390)
+                orientation: "vertical"
                     
-                    # aperture
-                    Button:
-                        size_hint: (None,None)
-                        height: dp(225)
-                        width: dp(207)
-                        background_color: hex('#F4433600')
-                        center: self.parent.center
-                        pos: self.parent.pos
-                        on_press: root.aperture()
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_apt
-                                source: "./asmcnc/apps/shapeCutter_app/img/apt_rect.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(250)
-                    height: dp(225)
-                    padding: (20,0,23,0)
-                    pos: self.parent.pos
-                    
-                    # island
-                    Button:
-                        size_hint: (None,None)
-                        height: dp(225)
-                        width: dp(207)
-                        background_color: hex('#F4433600')
-                        center: self.parent.center
-                        pos: self.parent.pos
-                        on_press: root.island()
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_is
-                                source: "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True  
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(50)
-                padding: (150,0,150,20)
-                spacing: 0
-                orientation: 'horizontal'
-                pos: self.parent.pos
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(250)
-                    height: dp(50)
-                    padding: (23,0,20,0)
-                    pos: self.parent.pos
+                    width: dp(800)
+                    height: dp(110)
+                    padding: 0
+                    spacing: 0
                     Label:
                         size_hint: (None,None)
-                        height: dp(50)
-                        width: dp(207)
+                        height: dp(110)
+                        width: dp(800)
                         halign: "center"
                         valign: "middle"
-                        text: "Outer (cut an aperture)"
+                        text: "Select a shape to define..."
                         color: 0,0,0,1
-                        font_size: 20
+                        font_size: 26
                         markup: True
+    
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(250)
-                    height: dp(50)
-                    padding: (20,0,23,0)
-                    pos: self.parent.pos
-                    Label:
+                    width: dp(800)
+                    height: dp(235)
+                    padding: (150,0,150,10)
+                    spacing: 0
+                    orientation: 'horizontal'
+                    pos: self.parent.pos                
+                    
+                    BoxLayout:
                         size_hint: (None,None)
-                        height: dp(50)
-                        width: dp(207)
-                        halign: "center"
-                        valign: "middle"
-                        text: "Inner (cut an island)"
-                        color: 0,0,0,1
-                        font_size: 20
-                        markup: True
+                        width: dp(250)
+                        height: dp(225)
+                        padding: (23,0,20,0)
+                        pos: self.parent.pos
+                        
+                        # aperture
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(225)
+                            width: dp(207)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.aperture()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    id: image_apt
+                                    source: "./asmcnc/apps/shapeCutter_app/img/apt_rect.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(250)
+                        height: dp(225)
+                        padding: (20,0,23,0)
+                        pos: self.parent.pos
+                        
+                        # island
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(225)
+                            width: dp(207)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.island()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    id: image_is
+                                    source: "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True  
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(800)
+                    height: dp(45)
+                    padding: (150,0,150,25)
+                    spacing: 0
+                    orientation: 'horizontal'
+                    pos: self.parent.pos
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(250)
+                        height: dp(20)
+                        padding: (23,0,20,0)
+                        pos: self.parent.pos
+                        Label:
+                            size_hint: (None,None)
+                            height: dp(20)
+                            width: dp(207)
+                            halign: "center"
+                            valign: "middle"
+                            text: "Outer (cut an aperture)"
+                            color: 0,0,0,1
+                            font_size: 20
+                            markup: True
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(250)
+                        height: dp(20)
+                        padding: (20,0,23,0)
+                        pos: self.parent.pos
+                        Label:
+                            size_hint: (None,None)
+                            height: dp(20)
+                            width: dp(207)
+                            halign: "center"
+                            valign: "middle"
+                            text: "Inner (cut an island)"
+                            color: 0,0,0,1
+                            font_size: 20
+                            markup: True
 """)
 
 class ShapeCutterApIsScreenClass(Screen):

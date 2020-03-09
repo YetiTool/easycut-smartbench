@@ -327,16 +327,17 @@ class ShapeCutter27ScreenClass(Screen):
         super(ShapeCutter27ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.j = kwargs['job_parameters']
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
         
-        if self.shape == 'circle':
+        if self.j.shape_dict["shape"] == 'circle':
             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
                                       "This is always in the centre of your circle. ")
             self.image_source = ("./asmcnc/apps/shapeCutter_app/img/27_circ.png")
             self.image_box.padding = 120,0,0,0
-        elif self.shape == 'rectangle':
+        elif self.j.shape_dict["shape"] == 'rectangle':
             self.user_instructions = ("Mark the shape\'s datum position on the material. " \
                                       "This is always in the bottom right corner of your rectangle.")
             self.image_source = ("./asmcnc/apps/shapeCutter_app/img/27_rect.png")

@@ -8,6 +8,7 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from asmcnc.apps.shapeCutter_app.cut_parameters import sC_job_parameters
+
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_1
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_10
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_11
@@ -282,7 +283,7 @@ class ScreenManagerShapeCutter(object):
             
         elif self.sm.current == 'sC26':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
             self.sm.current = 'sC27'
                     
@@ -495,11 +496,11 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC26_screen)
         elif self.sm.current == 'sC25':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
         elif self.sm.current == 'sC26':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
             if not self.sm.has_screen('sC28'):
                 sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', screen_manager = self.sm, machine = self.m, shapecutter = self)
@@ -727,7 +728,7 @@ class ScreenManagerShapeCutter(object):
                         
         elif self.sm.current == 'sC28':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)            
             self.sm.current = 'sC27'
                         
@@ -896,7 +897,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC26_screen)
         elif self.sm.current == 'sC29':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
         elif self.sm.current == 'sC30':
             if not self.sm.has_screen('sC28'):
@@ -965,7 +966,7 @@ class ScreenManagerShapeCutter(object):
         
         elif self.sm.current == 'sC26':
             if not self.sm.has_screen('sC27'):
-                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+                sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
                 
             self.sm.get_screen('homing').return_to_screen = return_to_screen
@@ -1097,7 +1098,7 @@ class ScreenManagerShapeCutter(object):
             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', screen_manager = self.sm, machine = self.m, shapecutter = self)
             self.sm.add_widget(sC26_screen)
         if not self.sm.has_screen('sC27'):
-            sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, shapecutter = self)
+            sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', screen_manager = self.sm, machine = self.m, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sC27_screen)
         if not self.sm.has_screen('sC28'):
             sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', screen_manager = self.sm, machine = self.m, shapecutter = self)
