@@ -420,7 +420,7 @@ class ShapeCutterJobParameters(object):
 
         self.gcode_lines = lines
         
-        print self.gcode
+        print self.gcode_lines
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
