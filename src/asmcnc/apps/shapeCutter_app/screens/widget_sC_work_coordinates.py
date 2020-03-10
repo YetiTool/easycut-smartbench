@@ -57,7 +57,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
@@ -66,7 +66,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
@@ -75,7 +75,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
 
         Label:
             size_hint_x: 0.1
@@ -85,7 +85,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
         Label:
             size_hint_x: 0.1
             id: grbl_yw_label
@@ -94,7 +94,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
         Label:
             size_hint_x: 0.1
             id: grbl_zw_label
@@ -103,7 +103,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 14
 """)
 
 
