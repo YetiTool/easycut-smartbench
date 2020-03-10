@@ -49,33 +49,6 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
 
-#         Image:
-#             id: serial_image
-#             size_hint_x: 0.05
-#             source: "./asmcnc/skavaUI/img/serial_on.png"
-#             center_x: self.parent.center_x
-#             y: self.parent.y
-#             size: self.parent.width, self.parent.height
-#             allow_stretch: True
-#         Image:
-#             id: wifi_image
-#             size_hint_x: 0.05
-#             source: "./asmcnc/skavaUI/img/wifi_on.png"
-#             center_x: self.parent.center_x
-#             y: self.parent.y
-#             size: self.parent.width, self.parent.height
-#             allow_stretch: True
-#         Label:
-#             size_hint_x: 0.2
-#             id: ip_status_label
-#             text_size: self.size
-#             halign: 'left'
-#             valign: 'middle'
-#             text: 'IP 255.255.255.255'
-
-#         Label:
-#             size_hint_x: 0.1
-
         Label:
             size_hint_x: 0.1
             id: grbl_xm_label
@@ -84,6 +57,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
+            font_size: 12
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
@@ -92,6 +66,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
+            font_size: 12
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
@@ -100,6 +75,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
+            font_size: 12
 
         Label:
             size_hint_x: 0.1
@@ -109,6 +85,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
+            font_size: 12
         Label:
             size_hint_x: 0.1
             id: grbl_yw_label
@@ -117,6 +94,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
+            font_size: 12
         Label:
             size_hint_x: 0.1
             id: grbl_zw_label
@@ -125,16 +103,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-
-#         Label:
-#             color: 0,0,0,1
-#             size_hint_x: 0.1
-#             id: grbl_status_label
-#             text: 'Status'
-#             text_size: self.size
-#             halign: 'right'
-#             valign: 'middle'
-
+            font_size: 12
 """)
 
 
