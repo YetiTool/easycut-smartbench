@@ -296,7 +296,7 @@ class ShapeCutter21ScreenClass(Screen):
     
     screen_number = StringProperty("[b]21[/b]")
     title_label = StringProperty("[b]Load spindle[/b]")
-    user_instructions = StringProperty("Insert spindle back into Z head, and reclamp.")
+    user_instructions = StringProperty("Insert spindle back into Z head, and reclamp. Plug in spindle cable.")
     
     def __init__(self, **kwargs):
         super(ShapeCutter21ScreenClass, self).__init__(**kwargs)

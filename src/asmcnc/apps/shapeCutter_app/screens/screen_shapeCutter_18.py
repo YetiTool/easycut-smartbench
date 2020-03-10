@@ -195,7 +195,7 @@ Builder.load_string("""
                     
                         BoxLayout: #text box
                             size_hint: (None,None)
-                            height: dp(30)
+                            height: dp(55)
                             width: dp(675)
                             padding: 80,0,0,0
                             orientation: "vertical"                       
@@ -212,7 +212,7 @@ Builder.load_string("""
 
                         BoxLayout: #image box
                             size_hint: (None,None)
-                            height: dp(280)
+                            height: dp(255)
                             width: dp(675)
                             padding:40,0,0,15      
                             Image:
@@ -296,7 +296,7 @@ class ShapeCutter18ScreenClass(Screen):
     
     screen_number = StringProperty("[b]18[/b]")
     title_label = StringProperty("[b]Remove spindle[/b]")
-    user_instructions = StringProperty("Unclamp the spindle from the Z head, and remove to fit tool.")
+    user_instructions = StringProperty("Unplug cable, unclamp the spindle from the Z head, and remove to fit tool.")
     
     def __init__(self, **kwargs):
         super(ShapeCutter18ScreenClass, self).__init__(**kwargs)

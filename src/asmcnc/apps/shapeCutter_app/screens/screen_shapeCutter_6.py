@@ -296,7 +296,7 @@ class ShapeCutter6ScreenClass(Screen):
     
     screen_number = StringProperty("[b]6[/b]")
     title_label = StringProperty("[b]Fit extraction hose[/b]")
-    user_instructions = StringProperty("Securely attach the extraction hose to the lower X beam [b](1)[/b]. " \
+    user_instructions = StringProperty("Securely attach the extraction hose to the lower X beam. " \
                                        "Check the hose can move freely.")
     
     def __init__(self, **kwargs):

@@ -260,7 +260,7 @@ class ShapeCutterJobParameters(object):
                 # working in rads here
                 
                 total_circumference = 2.0 * math.pi * circ_path_rad
-                circ_tabs_qty = math.ceil(total_circumference / tab_distance)
+                circ_tabs_qty = math.floor(total_circumference / tab_distance) #rounddown
                 circ_angle_between_tabs = (2.0 * math.pi) / circ_tabs_qty
                 circ_angle_across_tab = (tab_effective_width / total_circumference) * (2.0 * math.pi)
         
