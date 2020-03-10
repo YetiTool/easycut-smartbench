@@ -18,7 +18,7 @@ Builder.load_string("""
 
     image_dims: image_dims
     unit_toggle: unit_toggle
-    unit_label: unit_label
+    #unit_label: unit_label
     
     dimension_1: dimension_1
     dimesion_1_input_box: dimesion_1_input_box
@@ -118,7 +118,7 @@ Builder.load_string("""
                                 # Toggle button
                             BoxLayout:
                                 size_hint: (None,None)
-                                height: dp(30)
+                                height: dp(32)
                                 width: dp(196)
                                 padding: (56,0,10,0)                   
                                 orientation: "horizontal"
@@ -126,66 +126,78 @@ Builder.load_string("""
                                                               
                                 BoxLayout: 
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(32)
                                     width: dp(120)
-                                    padding: (45,0,0,0)
+                                    padding: (37,0,0,0)
                                                 
-                                    ToggleButton: # change to switch, use "if active" instead of state
-                                        id: unit_toggle
-                                        size_hint: (None,None)
-                                        height: dp(30)
-                                        width: dp(75)
-                                        background_color: hex('#F4433600')
-                                        center: self.parent.center
-                                        pos: self.parent.pos
-                                        on_press: root.toggle_units()
-         
-                                        BoxLayout:
-                                            height: dp(30)
-                                            width: dp(75)
-                                            canvas:
-                                                Rectangle: 
-                                                    pos: self.parent.pos
-                                                    size: self.parent.size
-                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-#                                     Switch:
+#                                     ToggleButton: # change to switch, use "if active" instead of state
 #                                         id: unit_toggle
-# #                                         size_hint: (None,None)
-# #                                         height: dp(30)
-# #                                         width: dp(75)
-#                                         # background_color: hex('#F4433600')
+#                                         size_hint: (None,None)
+#                                         height: dp(30)
+#                                         width: dp(75)
+#                                         background_color: hex('#F4433600')
 #                                         center: self.parent.center
 #                                         pos: self.parent.pos
-#                                         # on_press: root.toggle_units()
-#                                         active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
-#                                         canvas.after:
-#                                             Color:
-#                                                 rgb: 1,1,1
-#                                             Rectangle:
-#                                                 source: './asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png'        # make or download your background jpg
-#                                                 size: sp(83), sp(32)
-#                                                 pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+#                                         on_press: root.toggle_units()
+#          
+#                                         BoxLayout:
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             canvas:
+#                                                 Rectangle: 
+#                                                     pos: self.parent.pos
+#                                                     size: self.parent.size
+#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+                                    
+#                                     ToggleButton:
+#                                         id: unit_toggle
+#                                         size_hint: (None,None)
+#                                         height: dp(32)
+#                                         width: dp(83)
+#                                         on_press: root.toggle_units()
+#                                         opacity: 1
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos                                
+                                    Switch:
+                                        id: unit_toggle
+                                        size_hint: (None,None)
+                                        height: dp(32)
+                                        width: dp(83)
+                                        # background_color: hex('#F4433600')
+                                        center: self.parent.center
+                                        pos: self.parent.pos
+                                        on_active: root.toggle_units()
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        canvas.after:
+                                            Color:
+                                                rgb: 1,1,1
+                                            Rectangle:
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
+                                                # make or download your background jpg
+                                                size: sp(83), sp(32)
+                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                         
+                                            Rectangle:
+                                                #id: switch_rectangle
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
+                                                # make or download your slider jpg
+                                                size: sp(43), sp(32)
+                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
+
 #                                         
-#                                             Rectangle:
-#                                                 #id: switch_rectangle
-#                                                 source: './asmcnc/apps/shapeCutter_app/img/background.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/box_unchecked.png'
-#                                                 # make or download your slider jpg
-#                                                 size: sp(43), sp(32)
-#                                                 pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
 #                                         
 #                                         
-                                        
-                                        Label:
-                                            id: unit_label
-                                            text: "mm"
-                                            color: 1,1,1,1
-                                            font_size: 20
-                                            markup: True
-                                            halign: "center"
-                                            valign: "middle"
-                                            text_size: self.size
-                                            size: self.parent.size
-                                            pos: self.parent.pos
+#                                         Label:
+#                                             id: unit_label
+#                                             text: "mm"
+#                                             color: 1,1,1,1
+#                                             font_size: 20
+#                                             markup: True
+#                                             halign: "center"
+#                                             valign: "middle"
+#                                             text_size: self.size
+#                                             size: self.parent.size
+#                                             pos: self.parent.pos
                                                        
                             # BL horizontal
                                 # label + text entry
@@ -337,7 +349,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             width: dp(464)
                             height: dp(330)
-                            padding: (0,0,0,20)
+                            padding: (0,0,0,22)
                             pos: self.parent.pos
                             
                             # image box
@@ -355,7 +367,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(675)
-                        height: dp(5)
+                        height: dp(3)
                         padding: 0
                         spacing: 0
                         orientation: 'horizontal'
@@ -450,11 +462,15 @@ class ShapeCutterDimensionsScreenClass(Screen):
         
         
         
-    def on_pre_enter(self):
-        
+    def on_pre_enter(self):        
         self.info_button.opacity = 0
         self.back_button.opacity = 0
         
+        if self.j.shape_dict["units"] == 'mm':
+            self.unit_toggle.active = False
+        elif self.j.shape_dict["units"] == 'inches':
+            self.unit_toggle.active = True
+       
         if self.j.shape_dict["shape"] == 'circle':
             
             self.dimension_1.height = '0'
@@ -519,14 +535,16 @@ class ShapeCutterDimensionsScreenClass(Screen):
     def next_screen(self):
         self.shapecutter_sm.next_screen()
       
-    def toggle_units(self):
-        if self.unit_toggle.state == 'normal':
-            self.unit_label.text = "mm"
-        elif self.unit_toggle.state == 'down': 
-            self.unit_label.text = "inches"
-    
-    def check_dimensions(self):
-        
+    def toggle_units(self):       
+        if self.unit_toggle.active == True:
+            print "inches"
+            self.j.shape_dict["units"] = "inches"
+
+        elif self.unit_toggle.active == False: 
+            print "mm"
+            self.j.shape_dict["units"] = "mm"
+
+    def check_dimensions(self):    
         if self.j.shape_dict["shape"] == 'rectangle':
             
             # if all fields are full
@@ -539,6 +557,14 @@ class ShapeCutterDimensionsScreenClass(Screen):
                 self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
                 self.j.shape_dict["dimensions"]["R"] = self.input_dim4.text
                 
+                if self.unit_toggle.active == True:
+                    print "inches"
+                    self.j.shape_dict["units"] = "inches"
+        
+                elif self.unit_toggle.active == False: 
+                    print "mm"
+                    self.j.shape_dict["units"] = "mm"
+                
                 self.next_screen()
             else:
                 pass
@@ -548,6 +574,14 @@ class ShapeCutterDimensionsScreenClass(Screen):
                 # save the dimensions
                 self.j.shape_dict["dimensions"]["D"] = self.input_dim2.text
                 self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
+
+                if self.unit_toggle.active == True:
+                    print "inches"
+                    self.j.shape_dict["units"] = "inches"
+        
+                elif self.unit_toggle.active == False: 
+                    print "mm"
+                    self.j.shape_dict["units"] = "mm"
                 
                 self.next_screen()
             else:
