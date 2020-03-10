@@ -93,9 +93,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.jogModeCycled()
                     self.background_color = hex('#F4433600')
-                on_press: 
+                on_press:
+                    root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -202,9 +202,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.set_standby_to_pos()
                     self.background_color = hex('#F4433600')
-                on_press: 
+                on_press:
+                    root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0

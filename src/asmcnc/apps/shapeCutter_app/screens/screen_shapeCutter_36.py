@@ -199,7 +199,7 @@ Builder.load_string("""
                         orientation: "vertical"
                         Button:
                             id: spindle_toggle
-                            on_release: root.start_job()
+                            on_press: root.start_job()
                             background_color: 1, 1, 1, 0 
                             BoxLayout:
                                 padding: 10

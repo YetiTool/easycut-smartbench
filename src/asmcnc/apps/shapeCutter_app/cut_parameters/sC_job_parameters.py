@@ -419,6 +419,8 @@ class ShapeCutterJobParameters(object):
 #        lines.append("%") #Prog end (redundant?) # BREAKER OF THINGS GET IN YOUR GRAVE
 
         self.gcode_lines = lines
+        
+        print self.gcode
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
@@ -427,7 +429,8 @@ class ShapeCutterJobParameters(object):
     def save_gCode(self):    
         f = open(self.gcode_filename, "w")
         for line in self.gcode_lines:
-            f.write(line + "\n")         
+            f.write(line + "\n")
+            print line + "\n"
         print "Done: " + self.gcode_filename
 
     def set_job_envelope(self):

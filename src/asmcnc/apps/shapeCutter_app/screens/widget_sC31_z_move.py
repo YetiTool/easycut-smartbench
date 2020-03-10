@@ -11,7 +11,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @Unr
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 
-from asmcnc.skavaUI import widget_z_height
+from asmcnc.apps.shapeCutter_app.screens import widget_sC31_z_height
 
 
 Builder.load_string("""
@@ -34,6 +34,7 @@ Builder.load_string("""
             
             BoxLayout:
                 size_hint_y: 3.4
+                height: self.parent.height
                 id: virtual_z_container
 
         BoxLayout:
@@ -85,9 +86,9 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.probe_z()
                     self.background_color = hex('#F4433600')
-                on_press: 
+                on_press:
+                    root.probe_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -109,7 +110,7 @@ class SC31ZMove(Widget):
         super(SC31ZMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
-        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
+        self.virtual_z_container.add_widget(widget_sC31_z_height.VirtualZ31(machine=self.m, screen_manager=self.sm))
 
     def jog_z(self, case):
 

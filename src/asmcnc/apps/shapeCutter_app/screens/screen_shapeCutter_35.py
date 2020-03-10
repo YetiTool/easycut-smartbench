@@ -196,7 +196,7 @@ Builder.load_string("""
                         orientation: "vertical"
                         ToggleButton:
                             id: spindle_toggle
-                            on_release: root.set_spindle()
+                            on_press: root.set_spindle()
                             background_color: 1, 1, 1, 0 
                             BoxLayout:
                                 padding: 10
