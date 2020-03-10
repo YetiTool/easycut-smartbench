@@ -16,6 +16,7 @@ Builder.load_string("""
 
     info_button: info_button
     file_name: file_name
+    save_image: save_image
 
     BoxLayout:
         size_hint: (None,None)
@@ -249,6 +250,7 @@ Builder.load_string("""
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:
+                                            id: save_image
                                             source: "./asmcnc/apps/shapeCutter_app/img/save_file.png"
                                             size: self.parent.size
                                             stretch: True
@@ -399,18 +401,11 @@ class ShapeCutter25ScreenClass(Screen):
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
         
-# Screen commands
-    def save_filename(self):
-        pass
-    
+# Screen commands    
     def save_file(self):
         self.j.save_parameters(self.file_name.text)
-
         self.j.generate_gCode()
         self.j.save_gCode()
         
-#         lines = self.j.generate_gCode()
-#         gcode_filename = self.j.generate_gCode_filename()
-        
-#         self.j.save_gCode(lines, gcode_filename)
+        self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'
             

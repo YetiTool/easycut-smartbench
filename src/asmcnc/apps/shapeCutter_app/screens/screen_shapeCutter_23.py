@@ -320,7 +320,7 @@ Builder.load_string("""
                                     orientation: "horizontal"
                                     
                                     Label: 
-                                        text: "Z feed rate"
+                                        text: "Plunge rate"
                                         color: 0,0,0,1
                                         font_size: 20
                                         markup: True

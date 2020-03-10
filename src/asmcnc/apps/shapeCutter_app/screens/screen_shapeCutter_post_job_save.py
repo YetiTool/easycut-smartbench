@@ -14,6 +14,9 @@ Builder.load_string("""
 
 <ShapeCutterSaveJobScreenClass>:
     
+    save_image: save_image
+    file_name: file_name
+    
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -94,7 +97,7 @@ Builder.load_string("""
                                     input_filter: 'float'
                                     multiline: False
                                     text: ''
-                                    on_text_validate: root.save_filename()                           
+                          
                         BoxLayout: 
                             size_hint: (None,None)
                             height: dp(168)
@@ -111,6 +114,7 @@ Builder.load_string("""
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
+                                        id: save_image
                                         source: "./asmcnc/apps/shapeCutter_app/img/save_file.png"
                                         size: self.parent.size
                                         stretch: True
@@ -220,4 +224,9 @@ class ShapeCutterSaveJobScreenClass(Screen):
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
-
+    def save_file(self):
+        self.j.save_parameters(self.file_name.text)
+        self.j.generate_gCode()
+        self.j.save_gCode()
+        
+        self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'

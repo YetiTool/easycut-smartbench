@@ -976,7 +976,8 @@ class ScreenManagerShapeCutter(object):
             
             self.j.generate_gCode()
             self.j.generate_gCode_filename()
-            self.j.set_job_envelope()
+            
+#             self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
 
     def return_to_EC(self):
         if not self.sm.current == 'alarmScreen':
