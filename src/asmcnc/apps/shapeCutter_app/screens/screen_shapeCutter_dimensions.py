@@ -22,6 +22,9 @@ Builder.load_string("""
     input_dim2: input_dim2
     input_dim3: input_dim3
     input_dim4: input_dim4
+    
+    back_button:back_button
+    info_button:info_button
 
     BoxLayout:
         height: dp(800)
@@ -48,249 +51,354 @@ Builder.load_string("""
                 valign: "bottom"
                 markup: True
 
-            # Body
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(330)
-                padding: (80,0,34,0)
-                spacing: 0
-                orientation: 'horizontal'
-                pos: self.parent.pos                
-                
-                # Text entry
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint: (None,None)
-                    width: dp(220)
-                    height: dp(330)
-                    padding: (0,0,0,30)
-                    spacing: 20
-                    pos: self.parent.pos
-                    
-                    # BL horizontal
-                        # Toggle button
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(30)
-                        width: dp(220)
-                        padding: (80,0,10,0)                   
-                        orientation: "horizontal"
-
-                                                      
-                        BoxLayout: 
-                            size_hint: (None,None)
-                            height: dp(30)
-                            width: dp(120)
-                            padding: (45,0,0,0)
-                                        
-                            ToggleButton:
-                                id: unit_toggle
-                                size_hint: (None,None)
-                                height: dp(30)
-                                width: dp(75)
-                                background_color: hex('#F4433600')
-                                center: self.parent.center
-                                pos: self.parent.pos
-                                on_press: root.toggle_units()
-
-                                BoxLayout:
-                                    height: dp(30)
-                                    width: dp(75)
-                                    canvas:
-                                        Rectangle: 
-                                            pos: self.parent.pos
-                                            size: self.parent.size
-                                            source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                Label:
-                                    id: unit_label
-                                    text: "mm"
-                                    color: 1,1,1,1
-                                    font_size: 20
-                                    markup: True
-                                    halign: "center"
-                                    valign: "middle"
-                                    text_size: self.size
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                               
-                    # BL horizontal
-                        # label + text entry
-                    BoxLayout: #dimension 1
-                        size_hint: (None,None)
-                        height: dp(40)
-                        width: dp(220)
-                        padding: (30,0,20,0)                   
-                        orientation: "horizontal"
-                        
-                        Label: 
-                            text: root.dim_1
-                            color: 0,0,0,1
-                            font_size: 24
-                            markup: True
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                                                      
-                        BoxLayout: 
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(120)
-                            padding: (20,0,0,0)
-                                        
-                            TextInput: 
-                                id: input_dim1
-                                valign: 'middle'
-                                halign: 'center'
-                                text_size: self.size
-                                font_size: '20sp'
-                                markup: True
-                                input_filter: 'float'
-                                multiline: False
-                                text: ''
-                                on_text_validate: root.check_dimensions()
-                    BoxLayout: #dimension 2
-                        size_hint: (None,None)
-                        height: dp(40)
-                        width: dp(220)
-                        padding: (30,0,20,0)                     
-                        orientation: "horizontal"
-                        
-                        Label: 
-                            text: root.dim_2
-                            color: 0,0,0,1
-                            font_size: 24
-                            markup: True
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                                                      
-                        BoxLayout: 
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(120)
-                            padding: (20,0,0,0)
-                                        
-                            TextInput: 
-                                id: input_dim2
-                                valign: 'middle'
-                                halign: 'center'
-                                text_size: self.size
-                                font_size: '20sp'
-                                markup: True
-                                input_type: 'number'
-                                input_filter: 'float'
-                                multiline: False
-                                text: ''
-                                on_text_validate: root.check_dimensions()
-                    BoxLayout: #dimension 3
-                        size_hint: (None,None)
-                        height: dp(40)
-                        width: dp(220)
-                        padding: (30,0,20,0)                     
-                        orientation: "horizontal"
-                        
-                        Label: 
-                            text: root.dim_3
-                            color: 0,0,0,1
-                            font_size: 24
-                            markup: True
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                                                      
-                        BoxLayout: 
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(120)
-                            padding: (20,0,0,0)
-                                        
-                            TextInput: 
-                                id: input_dim3
-                                valign: 'middle'
-                                halign: 'center'
-                                text_size: self.size
-                                font_size: '20sp'
-                                markup: True
-                                input_filter: 'float'
-                                multiline: False
-                                text: ''
-                                on_text_validate: root.check_dimensions()
-                                                                
-                    BoxLayout: #dimension 4
-                        size_hint: (None,None)
-                        height: dp(40)
-                        width: dp(220)
-                        padding: (30,0,20,0)                  
-                        orientation: "horizontal"
-                        
-                        Label: 
-                            text: root.dim_4
-                            color: 0,0,0,1
-                            font_size: 24
-                            markup: True
-                            halign: "left"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                                                      
-                        BoxLayout: 
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(120)
-                            padding: (20,0,0,0)
-                                        
-                            TextInput: 
-                                id: input_dim4
-                                valign: 'top'
-                                halign: 'center'
-                                text_size: self.size
-                                font_size: '20sp'
-                                markup: True
-                                input_filter: 'float'
-                                multiline: False
-                                text: ''
-                                on_text_validate: root.check_dimensions()          
-                # Image
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(464)
-                    height: dp(310)
-                    padding: (0,0,0,0)
-                    pos: self.parent.pos
-                    
-                    # image box
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            id: image_dims
-                            source: "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True  
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(60)
-                padding: (150,0,150,20)
+                height: dp(55)
+                padding: (150,0,150,0)
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos
+
+                Label:
+                    color: 0,0,0,1
+                    font_size: 24
+                    markup: True
+                    halign: "center"
+                    valign: "bottom"
+                    text_size: self.size
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    text: "Please enter dimensions"
+
+            BoxLayout: 
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(330)
+                orientation: "horizontal"
+                spacing: 0
+                padding: 0
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(675)
+                    height: dp(335)             
+                    spacing: 0
+                    padding: 0
+                        
+                    # Body
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(675)
+                        height: dp(330)
+                        padding: (6,0,7,0)
+                        spacing: 0
+                        orientation: 'horizontal'
+                        pos: self.parent.pos
+                        
+                        # Text entry
+                        BoxLayout:
+                            orientation: 'vertical'
+                            size_hint: (None,None)
+                            width: dp(196)
+                            height: dp(330)
+                            padding: (0,0,0,30)
+                            spacing: 20
+                            pos: self.parent.pos
+                            
+                            # BL horizontal
+                                # Toggle button
+                            BoxLayout:
+                                size_hint: (None,None)
+                                height: dp(30)
+                                width: dp(196)
+                                padding: (56,0,10,0)                   
+                                orientation: "horizontal"
+        
+                                                              
+                                BoxLayout: 
+                                    size_hint: (None,None)
+                                    height: dp(30)
+                                    width: dp(120)
+                                    padding: (45,0,0,0)
+                                                
+                                    ToggleButton:
+                                        id: unit_toggle
+                                        size_hint: (None,None)
+                                        height: dp(30)
+                                        width: dp(75)
+                                        background_color: hex('#F4433600')
+                                        center: self.parent.center
+                                        pos: self.parent.pos
+                                        on_press: root.toggle_units()
+        
+                                        BoxLayout:
+                                            height: dp(30)
+                                            width: dp(75)
+                                            canvas:
+                                                Rectangle: 
+                                                    pos: self.parent.pos
+                                                    size: self.parent.size
+                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+                                        Label:
+                                            id: unit_label
+                                            text: "mm"
+                                            color: 1,1,1,1
+                                            font_size: 20
+                                            markup: True
+                                            halign: "center"
+                                            valign: "middle"
+                                            text_size: self.size
+                                            size: self.parent.size
+                                            pos: self.parent.pos
+                                                       
+                            # BL horizontal
+                                # label + text entry
+                            BoxLayout: #dimension 1
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(196)
+                                padding: (30,0,20,0)                   
+                                orientation: "horizontal"
+                                
+                                Label: 
+                                    text: root.dim_1
+                                    color: 0,0,0,1
+                                    font_size: 24
+                                    markup: True
+                                    halign: "left"
+                                    valign: "top"
+                                    text_size: self.size
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                                              
+                                BoxLayout: 
+                                    size_hint: (None,None)
+                                    height: dp(40)
+                                    width: dp(120)
+                                    padding: (20,0,0,0)
+                                                
+                                    TextInput: 
+                                        id: input_dim1
+                                        valign: 'middle'
+                                        halign: 'center'
+                                        text_size: self.size
+                                        font_size: '20sp'
+                                        markup: True
+                                        input_filter: 'float'
+                                        multiline: False
+                                        text: ''
+                                        on_text_validate: root.check_dimensions()
+                            BoxLayout: #dimension 2
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(196)
+                                padding: (30,0,20,0)                     
+                                orientation: "horizontal"
+                                
+                                Label: 
+                                    text: root.dim_2
+                                    color: 0,0,0,1
+                                    font_size: 24
+                                    markup: True
+                                    halign: "left"
+                                    valign: "top"
+                                    text_size: self.size
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                                              
+                                BoxLayout: 
+                                    size_hint: (None,None)
+                                    height: dp(40)
+                                    width: dp(120)
+                                    padding: (20,0,0,0)
+                                                
+                                    TextInput: 
+                                        id: input_dim2
+                                        valign: 'middle'
+                                        halign: 'center'
+                                        text_size: self.size
+                                        font_size: '20sp'
+                                        markup: True
+                                        input_type: 'number'
+                                        input_filter: 'float'
+                                        multiline: False
+                                        text: ''
+                                        on_text_validate: root.check_dimensions()
+                            BoxLayout: #dimension 3
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(196)
+                                padding: (30,0,20,0)                     
+                                orientation: "horizontal"
+                                
+                                Label: 
+                                    text: root.dim_3
+                                    color: 0,0,0,1
+                                    font_size: 24
+                                    markup: True
+                                    halign: "left"
+                                    valign: "top"
+                                    text_size: self.size
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                                              
+                                BoxLayout: 
+                                    size_hint: (None,None)
+                                    height: dp(40)
+                                    width: dp(120)
+                                    padding: (20,0,0,0)
+                                                
+                                    TextInput: 
+                                        id: input_dim3
+                                        valign: 'middle'
+                                        halign: 'center'
+                                        text_size: self.size
+                                        font_size: '20sp'
+                                        markup: True
+                                        input_filter: 'float'
+                                        multiline: False
+                                        text: ''
+                                        on_text_validate: root.check_dimensions()
+                                                                        
+                            BoxLayout: #dimension 4
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(196)
+                                padding: (30,0,20,0)                  
+                                orientation: "horizontal"
+                                
+                                Label: 
+                                    text: root.dim_4
+                                    color: 0,0,0,1
+                                    font_size: 24
+                                    markup: True
+                                    halign: "left"
+                                    valign: "top"
+                                    text_size: self.size
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                                              
+                                BoxLayout: 
+                                    size_hint: (None,None)
+                                    height: dp(40)
+                                    width: dp(120)
+                                    padding: (20,0,0,0)
+                                                
+                                    TextInput: 
+                                        id: input_dim4
+                                        valign: 'top'
+                                        halign: 'center'
+                                        text_size: self.size
+                                        font_size: '20sp'
+                                        markup: True
+                                        input_filter: 'float'
+                                        multiline: False
+                                        text: ''
+                                        on_text_validate: root.check_dimensions()          
+                        # Image
+                        BoxLayout:
+                            size_hint: (None,None)
+                            width: dp(464)
+                            height: dp(330)
+                            padding: (0,0,0,20)
+                            pos: self.parent.pos
+                            
+                            # image box
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    id: image_dims
+                                    source: "./asmcnc/apps/shapeCutter_app/img/is_rect.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True  
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(675)
+                        height: dp(5)
+                        padding: 0
+                        spacing: 0
+                        orientation: 'horizontal'
+                        pos: self.parent.pos
+                    
+                BoxLayout: #action box
+                    size_hint: (None,None)
+                    height: dp(330)
+                    width: dp(125)
+                    padding: 0,20,37,34
+                    spacing: 34
+                    orientation: "vertical"
+                    
+                    BoxLayout: 
+                        size_hint: (None,None)
+                        height: dp(67)
+                        width: dp(88)
+                        padding: (24,0,24,34)
+                        Button:
+                            id: info_button
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(40)
+                            background_color: hex('#F4433600')
+                            opacity: 1
+                            on_press: root.get_info()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+        
+                    Button:
+                        id: back_button
+                        size_hint: (None,None)
+                        height: dp(67)
+                        width: dp(88)
+                        background_color: hex('#F4433600')
+                        on_press: root.go_back()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+                    Button: 
+                        size_hint: (None,None)
+                        height: dp(67)
+                        width: dp(88)
+                        background_color: hex('#F4433600')
+                        on_press: root.next_screen()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True                
+    
+                
+                
 """)
 
 class ShapeCutterDimensionsScreenClass(Screen):
 
     info_button = ObjectProperty()
+    back_button = ObjectProperty()
     units = StringProperty("mm")
     dim_1 = StringProperty()
     dim_2 = StringProperty()
@@ -307,6 +415,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
         
         
     def on_pre_enter(self):
+        
+        self.info_button.opacity = 0
+        self.back_button.opacity = 0
+        
         if self.j.shape_dict["shape"] == 'circle':            
             self.input_dim1.opacity = 0
             self.input_dim2.opacity = 1
@@ -351,6 +463,15 @@ class ShapeCutterDimensionsScreenClass(Screen):
             elif self.j.shape_dict["cut_type"] == 'aperture':
                 self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_rect.png")
 
+    def get_info(self):
+        pass
+    
+    def go_back(self):
+        pass
+        # self.shapecutter_sm.previous_screen()
+    
+    def next_screen(self):
+        self.shapecutter_sm.next_screen()
       
     def toggle_units(self):
         if self.unit_toggle.state == 'normal':
