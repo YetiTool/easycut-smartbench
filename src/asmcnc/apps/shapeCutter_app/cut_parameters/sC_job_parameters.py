@@ -6,6 +6,7 @@ Module to store parameters and user choices for the Shape Cutter app
 
 import csv
 import math
+import re
 
 class ShapeCutterJobParameters(object):
     
@@ -418,8 +419,19 @@ class ShapeCutterJobParameters(object):
         lines.append("M30") #Prog end
 #        lines.append("%") #Prog end (redundant?) # BREAKER OF THINGS GET IN YOUR GRAVE
 
-        self.gcode_lines = lines
+        # strip it and see if that gets rid of errors. 
         
+        preloaded_job_gcode = []
+
+        for line in lines:
+            # Strip comments/spaces/new line and capitalize:
+            l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
+            
+            if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                preloaded_job_gcode.append(l_block)
+                
+        self.gcode_lines = preloaded_job_gcode  
+
         print self.gcode_lines
 
     def generate_gCode_filename(self):
