@@ -16,7 +16,7 @@ Builder.load_string("""
 
     info_button: info_button
     unit_toggle: unit_toggle
-    unit_label: unit_label
+    # unit_label: unit_label
     a_dimension: a_dimension
     b_dimension: b_dimension
     c_dimension: c_dimension
@@ -225,41 +225,65 @@ Builder.load_string("""
                                     # Toggle button
                                 BoxLayout:
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(32)
                                     width: dp(325)
-                                    padding: (230,0,20,0)                   
+                                    padding: (223,0,20,0)                   
                                     orientation: "horizontal"
                                                     
-                                    ToggleButton:
+#                                     ToggleButton:
+#                                         id: unit_toggle
+#                                         size_hint: (None,None)
+#                                         height: dp(30)
+#                                         width: dp(75)
+#                                         background_color: hex('#F4433600')
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos
+#                                         on_press: root.toggle_units()
+#         
+#                                         BoxLayout:
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             canvas:
+#                                                 Rectangle: 
+#                                                     pos: self.parent.pos
+#                                                     size: self.parent.size
+#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                         Label:
+#                                             id: unit_label
+#                                             text: "mm"
+#                                             color: 1,1,1,1
+#                                             font_size: 20
+#                                             markup: True
+#                                             halign: "center"
+#                                             valign: "middle"
+#                                             text_size: self.size
+#                                             size: self.parent.size
+#                                             pos: self.parent.pos                       
+                                    Switch:
                                         id: unit_toggle
                                         size_hint: (None,None)
-                                        height: dp(30)
-                                        width: dp(75)
-                                        background_color: hex('#F4433600')
+                                        height: dp(32)
+                                        width: dp(83)
+                                        # background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
-                                        on_press: root.toggle_units()
-        
-                                        BoxLayout:
-                                            height: dp(30)
-                                            width: dp(75)
-                                            canvas:
-                                                Rectangle: 
-                                                    pos: self.parent.pos
-                                                    size: self.parent.size
-                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                        Label:
-                                            id: unit_label
-                                            text: "mm"
-                                            color: 1,1,1,1
-                                            font_size: 20
-                                            markup: True
-                                            halign: "center"
-                                            valign: "middle"
-                                            text_size: self.size
-                                            size: self.parent.size
-                                            pos: self.parent.pos                       
-                            
+                                        on_active: root.toggle_units()
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        canvas.after:
+                                            Color:
+                                                rgb: 1,1,1
+                                            Rectangle:
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
+                                                # make or download your background jpg
+                                                size: sp(83), sp(32)
+                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                         
+                                            Rectangle:
+                                                #id: switch_rectangle
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
+                                                # make or download your slider jpg
+                                                size: sp(43), sp(32)
+                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))                           
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
                                     height: dp(35)
@@ -466,7 +490,12 @@ class ShapeCutter20ScreenClass(Screen):
         self.a_dimension.text = self.j.parameter_dict["cutter dimensions"]["diameter"]
         self.b_dimension.text = self.j.parameter_dict["cutter dimensions"]["cutting length"]
         self.c_dimension.text = self.j.parameter_dict["cutter dimensions"]["shoulder length"]
-        self.unit_label.text = self.j.parameter_dict["cutter dimensions"]["units"]
+        # self.unit_label.text = self.j.parameter_dict["cutter dimensions"]["units"]
+        if self.j.parameter_dict["cutter dimensions"]["units"] == "mm":
+            self.unit_toggle.active = False
+        elif self.j.parameter_dict["cutter dimensions"]["units"] == "inches":
+            self.unit_toggle.active = True
+
 
 # Action buttons       
     def get_info(self):
@@ -499,13 +528,22 @@ class ShapeCutter20ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen specific
-    def toggle_units(self):
-        if self.unit_toggle.state == 'normal':
-            self.unit_label.text = "mm"
-            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
-        elif self.unit_toggle.state == 'down': 
-            self.unit_label.text = "inches"
-            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+#     def toggle_units(self):
+#         if self.unit_toggle.state == 'normal':
+#             self.unit_label.text = "mm"
+#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+#         elif self.unit_toggle.state == 'down': 
+#             self.unit_label.text = "inches"
+#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+
+    def toggle_units(self):       
+        if self.unit_toggle.active == True:
+            print "inches"
+            self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
+
+        elif self.unit_toggle.active == False: 
+            print "mm"
+            self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
 
     def check_dimensions(self):        
         if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
