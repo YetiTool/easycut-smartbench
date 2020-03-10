@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.uix.textinput import TextInput
 from kivy.uix.behaviors import FocusBehavior
+from kivy.uix.switch import Switch
 
 Builder.load_string("""
 
@@ -122,7 +123,7 @@ Builder.load_string("""
                                     width: dp(120)
                                     padding: (45,0,0,0)
                                                 
-                                    ToggleButton:
+                                    ToggleButton: # change to switch, use "if active" instead of state
                                         id: unit_toggle
                                         size_hint: (None,None)
                                         height: dp(30)

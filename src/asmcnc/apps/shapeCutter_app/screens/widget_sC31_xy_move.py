@@ -287,8 +287,8 @@ class SC31XYMove(Widget):
     
     def buttonJogXY(self, case):
 
-        x_feed_speed = self.feedSpeedJogX
-        y_feed_speed = self.feedSpeedJogY
+        x_feed_speed = self.sm.get_screen('sC31').z_set_go_widget.feedSpeedJogX
+        y_feed_speed = self.sm.get_screen('sC31').z_set_go_widget.feedSpeedJogY
         
         if self.jogMode == 'free':
             if case == 'X-': self.m.jog_absolute_single_axis('X', 
