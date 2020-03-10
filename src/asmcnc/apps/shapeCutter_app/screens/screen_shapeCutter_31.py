@@ -228,7 +228,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(60)
                             width: dp(395)
-                            padding: (45,15,25,5)
+                            padding: (0,15,40,5)
 
                     BoxLayout: #action box
                         size_hint: (None,None)
