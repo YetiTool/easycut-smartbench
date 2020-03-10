@@ -26,6 +26,7 @@ Builder.load_string("""
     
     back_button:back_button
     info_button:info_button
+    #switch_rectangle:switch_rectangle
 
     BoxLayout:
         height: dp(800)
@@ -132,7 +133,7 @@ Builder.load_string("""
                                         center: self.parent.center
                                         pos: self.parent.pos
                                         on_press: root.toggle_units()
-        
+         
                                         BoxLayout:
                                             height: dp(30)
                                             width: dp(75)
@@ -141,6 +142,33 @@ Builder.load_string("""
                                                     pos: self.parent.pos
                                                     size: self.parent.size
                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                     Switch:
+#                                         id: unit_toggle
+# #                                         size_hint: (None,None)
+# #                                         height: dp(30)
+# #                                         width: dp(75)
+#                                         # background_color: hex('#F4433600')
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos
+#                                         # on_press: root.toggle_units()
+#                                         active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+#                                         canvas.after:
+#                                             Color:
+#                                                 rgb: 1,1,1
+#                                             Rectangle:
+#                                                 source: './asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png'        # make or download your background jpg
+#                                                 size: sp(83), sp(32)
+#                                                 pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+#                                         
+#                                             Rectangle:
+#                                                 #id: switch_rectangle
+#                                                 source: './asmcnc/apps/shapeCutter_app/img/background.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/box_unchecked.png'
+#                                                 # make or download your slider jpg
+#                                                 size: sp(43), sp(32)
+#                                                 pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
+#                                         
+#                                         
+                                        
                                         Label:
                                             id: unit_label
                                             text: "mm"
