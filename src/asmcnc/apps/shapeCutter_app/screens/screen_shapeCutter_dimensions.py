@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.uix.textinput import TextInput
+from kivy.uix.behaviors import FocusBehavior
 
 Builder.load_string("""
 
@@ -181,6 +182,7 @@ Builder.load_string("""
                                 text_size: self.size
                                 font_size: '20sp'
                                 markup: True
+                                input_type: 'number'
                                 input_filter: 'float'
                                 multiline: False
                                 text: ''
