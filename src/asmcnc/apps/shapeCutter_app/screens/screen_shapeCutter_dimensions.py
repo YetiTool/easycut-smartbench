@@ -19,6 +19,11 @@ Builder.load_string("""
     image_dims: image_dims
     unit_toggle: unit_toggle
     unit_label: unit_label
+    
+    dimension_1: dimension_1
+    dimesion_1_input_box: dimesion_1_input_box
+    text_entry_box: text_entry_box
+    
     input_dim1: input_dim1
     input_dim2: input_dim2
     input_dim3: input_dim3
@@ -100,6 +105,7 @@ Builder.load_string("""
                         
                         # Text entry
                         BoxLayout:
+                            id: text_entry_box
                             orientation: 'vertical'
                             size_hint: (None,None)
                             width: dp(196)
@@ -184,6 +190,7 @@ Builder.load_string("""
                             # BL horizontal
                                 # label + text entry
                             BoxLayout: #dimension 1
+                                id: dimension_1
                                 size_hint: (None,None)
                                 height: dp(40)
                                 width: dp(196)
@@ -196,12 +203,13 @@ Builder.load_string("""
                                     font_size: 24
                                     markup: True
                                     halign: "left"
-                                    valign: "top"
+                                    valign: "middle"
                                     text_size: self.size
                                     size: self.parent.size
                                     pos: self.parent.pos
                                                               
-                                BoxLayout: 
+                                BoxLayout:
+                                    id: dimesion_1_input_box
                                     size_hint: (None,None)
                                     height: dp(40)
                                     width: dp(120)
@@ -217,7 +225,7 @@ Builder.load_string("""
                                         input_filter: 'float'
                                         multiline: False
                                         text: ''
-                                        on_text_validate: root.check_dimensions()
+
                             BoxLayout: #dimension 2
                                 size_hint: (None,None)
                                 height: dp(40)
@@ -231,7 +239,7 @@ Builder.load_string("""
                                     font_size: 24
                                     markup: True
                                     halign: "left"
-                                    valign: "top"
+                                    valign: "middle"
                                     text_size: self.size
                                     size: self.parent.size
                                     pos: self.parent.pos
@@ -253,7 +261,7 @@ Builder.load_string("""
                                         input_filter: 'float'
                                         multiline: False
                                         text: ''
-                                        on_text_validate: root.check_dimensions()
+
                             BoxLayout: #dimension 3
                                 size_hint: (None,None)
                                 height: dp(40)
@@ -267,7 +275,7 @@ Builder.load_string("""
                                     font_size: 24
                                     markup: True
                                     halign: "left"
-                                    valign: "top"
+                                    valign: "middle"
                                     text_size: self.size
                                     size: self.parent.size
                                     pos: self.parent.pos
@@ -288,7 +296,6 @@ Builder.load_string("""
                                         input_filter: 'float'
                                         multiline: False
                                         text: ''
-                                        on_text_validate: root.check_dimensions()
                                                                         
                             BoxLayout: #dimension 4
                                 size_hint: (None,None)
@@ -303,7 +310,7 @@ Builder.load_string("""
                                     font_size: 24
                                     markup: True
                                     halign: "left"
-                                    valign: "top"
+                                    valign: "middle"
                                     text_size: self.size
                                     size: self.parent.size
                                     pos: self.parent.pos
@@ -324,7 +331,7 @@ Builder.load_string("""
                                         input_filter: 'float'
                                         multiline: False
                                         text: ''
-                                        on_text_validate: root.check_dimensions()          
+
                         # Image
                         BoxLayout:
                             size_hint: (None,None)
@@ -408,7 +415,7 @@ Builder.load_string("""
                         height: dp(67)
                         width: dp(88)
                         background_color: hex('#F4433600')
-                        on_press: root.next_screen()
+                        on_press: root.check_dimensions()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -448,7 +455,12 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.info_button.opacity = 0
         self.back_button.opacity = 0
         
-        if self.j.shape_dict["shape"] == 'circle':            
+        if self.j.shape_dict["shape"] == 'circle':
+            
+            self.dimension_1.height = '0'
+            self.dimesion_1_input_box.height = '0'
+            self.text_entry_box.padding = (0,0,0,70)
+            
             self.input_dim1.opacity = 0
             self.input_dim2.opacity = 1
             self.input_dim3.opacity = 1
@@ -471,6 +483,11 @@ class ShapeCutterDimensionsScreenClass(Screen):
                 self.image_dims.source = ("./asmcnc/apps/shapeCutter_app/img/dims_apt_circ.png")
               
         elif self.j.shape_dict["shape"] == 'rectangle':
+            
+            self.dimension_1.height = '40'
+            self.dimesion_1_input_box.height = '40'
+            self.text_entry_box.padding = (0,0,0,30)
+            
             self.input_dim1.opacity = 1
             self.input_dim2.opacity = 1
             self.input_dim3.opacity = 1

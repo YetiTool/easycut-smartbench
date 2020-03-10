@@ -273,7 +273,7 @@ Builder.load_string("""
                                         font_size: 24
                                         markup: True
                                         halign: "left"
-                                        valign: "top"
+                                        valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
                                         pos: self.parent.pos
@@ -308,7 +308,7 @@ Builder.load_string("""
                                         font_size: 24
                                         markup: True
                                         halign: "left"
-                                        valign: "top"
+                                        valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
                                         pos: self.parent.pos
@@ -343,7 +343,7 @@ Builder.load_string("""
                                         font_size: 24
                                         markup: True
                                         halign: "left"
-                                        valign: "top"
+                                        valign: "middle"
                                         text_size: self.size
                                         size: self.parent.size
                                         pos: self.parent.pos
