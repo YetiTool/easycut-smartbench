@@ -114,7 +114,7 @@ class SC31ZMove(Widget):
 
     def jog_z(self, case):
 
-        feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
+        feed_speed = self.sm.get_screen('sC31').z_set_go_widget.feedSpeedJogZ
         
         if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
             if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
