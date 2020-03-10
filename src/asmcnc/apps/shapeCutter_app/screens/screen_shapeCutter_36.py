@@ -305,9 +305,6 @@ class ShapeCutter36ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
-        
-        
-        
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -326,7 +323,6 @@ class ShapeCutter36ScreenClass(Screen):
         self.shapecutter_sm.previous_screen()
     
     def next_screen(self):
-        self.shapecutter_sm.load_final_screens()
         self.shapecutter_sm.go_screen('sC36', 'sCsavejob')
     
 # Tab functions
@@ -348,7 +344,6 @@ class ShapeCutter36ScreenClass(Screen):
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
+
     def start_job(self):
         self.next_screen()
