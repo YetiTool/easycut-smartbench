@@ -14,6 +14,9 @@ class ShapeCutterJobParameters(object):
     jobCache_file_path = './jobCache/'
     profile_filename = ""
     
+    # parameters
+    parameter_string = ''
+    
     # gcode
     gcode_lines = []
     gcode_filename = ''
@@ -92,9 +95,8 @@ class ShapeCutterJobParameters(object):
     def validate_parameters(self):
         pass
  
-    def load_parameters(self):
-
-        r = csv.reader(open(self.parameterCache_file_path + 'default' + '.csv', "r"), delimiter = '\t', lineterminator = '\n')
+    def load_parameters(self, filename):
+        r = csv.reader(open(filename, "r"), delimiter = '\t', lineterminator = '\n')
         for row in r:
             if ('\t'.join(row)).split('\t')[0]in self.parameter_dict:
                 current_group = ('\t'.join(row)).split('\t')[0]
@@ -102,8 +104,9 @@ class ShapeCutterJobParameters(object):
                 if ('\t'.join(row)).split('\t')[1] in self.parameter_dict[current_group]:
                     self.parameter_dict[current_group][('\t'.join(row)).split('\t')[1]] = ('\t'.join(row)).split('\t')[2]     
 
-        output = self.parameters_to_string()
-        return output
+        self.parameter_string = self.parameters_to_string()
+   
+        self.profile_filename = (filename.split('\\')[-1]).split('.')[0]
     
     def save_parameters(self, filename):
         w = csv.writer(open(self.parameterCache_file_path + filename + '.csv', "w"), delimiter = '\t', lineterminator = '\n')
@@ -430,9 +433,7 @@ class ShapeCutterJobParameters(object):
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 preloaded_job_gcode.append(l_block)
                 
-        self.gcode_lines = preloaded_job_gcode  
-
-        print self.gcode_lines
+        self.gcode_lines = preloaded_job_gcode
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
@@ -442,7 +443,6 @@ class ShapeCutterJobParameters(object):
         f = open(self.gcode_filename, "w")
         for line in self.gcode_lines:
             f.write(line + "\n")
-            print line + "\n"
         print "Done: " + self.gcode_filename
 
     def set_job_envelope(self):

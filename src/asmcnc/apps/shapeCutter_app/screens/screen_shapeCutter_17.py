@@ -6,9 +6,10 @@ Screen 17 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.screenmanager import ScreenManager, Screen
+
 
 Builder.load_string("""
 
@@ -204,7 +205,7 @@ Builder.load_string("""
                                 width: dp(300)
                                 padding: (0,0,0,0)
                                 Label: 
-                                    text: "No file loaded"
+                                    text: root.profile_name
                                     color: 0,0,0,1
                                     font_size: 20
                                     markup: True
@@ -322,6 +323,7 @@ class ShapeCutter17ScreenClass(Screen):
     screen_number = StringProperty("[b]17[/b]")
     title_label = StringProperty("[b]Would you like to choose an existing cut profile?[/b]")
     display_profile = StringProperty("No file loaded")
+    profile_name = StringProperty("No file loaded")
         
     def __init__(self, **kwargs):
         super(ShapeCutter17ScreenClass, self).__init__(**kwargs)
@@ -332,6 +334,11 @@ class ShapeCutter17ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
+    def on_enter(self):
+        if not self.j.parameter_string == '':
+            self.display_profile = self.j.parameter_string
+            self.profile_name = self.j.profile_filename
+        
 # Action buttons       
     def get_info(self):
         pass
@@ -365,6 +372,5 @@ class ShapeCutter17ScreenClass(Screen):
 # Screen commands
     
     def load_file(self):
-        
-        self.display_profile = self.j.load_parameters()
+        self.shapecutter_sm.filechooser_screen()
         
