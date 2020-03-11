@@ -28,12 +28,10 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser:filechooser
-    button_usb:button_usb
     modelPreviewImage:modelPreviewImage
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
-    image_usb:image_usb
     image_delete:image_delete
     image_delete_all:image_delete_all
     image_select:image_select
@@ -81,27 +79,6 @@ Builder.load_string("""
             size_hint_y: None
             height: 100
 
-            Button:
-                id: button_usb
-                disabled: True
-                size_hint_x: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    root.open_USB()
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFFFF')
-                BoxLayout:
-                    padding: 25
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_usb
-                        source: "./asmcnc/skavaUI/img/file_select_usb_disabled.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
             Button:
                 disabled: False
                 size_hint_x: 1
@@ -210,7 +187,6 @@ Builder.load_string("""
 """)
 
 parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
-# job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
 
 class SCFileChooser(Screen):
@@ -223,36 +199,11 @@ class SCFileChooser(Screen):
         super(SCFileChooser, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.j = kwargs['job_parameters']
-        self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
-        self.usb_stick.enable() # start the object scanning for USB stick
+#         self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
+#         self.usb_stick.enable() # start the object scanning for USB stick
         
     def on_enter(self):
-
         self.refresh_filechooser()
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button        
-    
-    
-    def on_leave(self):
-        self.poll_USB.cancel()
-#         self.usb_stick.disable()
-
-    def check_USB_status(self, dt):
-        
-        if self.usb_stick.is_available():
-            self.button_usb.disabled = False
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-
-        else:
-            self.button_usb.disabled = True
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-        
-
-    def open_USB(self):
-
-        self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-        #self.manager.transition.direction = 'down'
-        self.manager.current = 'usb_filechooser'
-        
 
     def refresh_filechooser(self):
 
@@ -311,11 +262,6 @@ class SCFileChooser(Screen):
                 break
         original_file.close()       
 
-
-#     def go_to_loading_screen(self, file_selection):
-# 
-#         self.manager.get_screen('loading').loading_file_name = file_selection
-#         self.manager.current = 'loading'
 
     def return_to_SC17(self, file_selection):
         self.j.load_parameters(file_selection)
