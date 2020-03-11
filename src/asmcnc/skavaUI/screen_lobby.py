@@ -434,10 +434,7 @@ class LobbyScreen(Screen):
         self.sm.current = 'home'
     
     def calibrate_smartbench(self):
-        if not self.sm.has_screen('calibration_landing'):
-            calibration_landing_screen = screen_landing.CalibrationLandingScreenClass(name = 'calibration_landing', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(calibration_landing_screen)
-        self.sm.current = 'calibration_landing'
+        self.am.start_calibration_app('lobby')
     
     def shapecutter_app(self):
         self.am.start_shapecutter_app()

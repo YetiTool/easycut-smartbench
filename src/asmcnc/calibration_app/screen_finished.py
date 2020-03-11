@@ -50,6 +50,7 @@ class FinishedCalScreenClass(Screen):
     
     screen_text = ObjectProperty()
     calibration_cancelled = True
+    return_to_screen = StringProperty()
     
     def __init__(self, **kwargs):
         super(FinishedCalScreenClass, self).__init__(**kwargs)
@@ -80,7 +81,7 @@ class FinishedCalScreenClass(Screen):
  
     def exit_screen(self, dt):
         if not self.sm.current == 'alarmScreen':
-            self.sm.current = 'lobby'
+            self.sm.current = self.return_to_screen
         
     def on_leave(self):       
         if self.sm.has_screen('calibration_complete'):

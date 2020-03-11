@@ -355,5 +355,5 @@ class ShapeCutter1ScreenClass(Screen):
     
 # Screen specific
     def calibrate(self):
-        self.shapecutter_sm.am.start_calibration_app()
+        self.shapecutter_sm.am.start_calibration_app('sC1')
         
