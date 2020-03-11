@@ -16,7 +16,7 @@ Builder.load_string("""
 
     info_button: info_button
     unit_toggle: unit_toggle
-    unit_label: unit_label
+    # unit_label: unit_label
     xy_feed_units: xy_feed_units
     z_feed_units: z_feed_units
     xy_feed: xy_feed
@@ -232,35 +232,60 @@ Builder.load_string("""
                                     padding: (342.5,0,177.5,0)                   
                                     orientation: "horizontal"
                                                     
-                                    ToggleButton:
+#                                     ToggleButton:
+#                                         id: unit_toggle
+#                                         size_hint: (None,None)
+#                                         height: dp(30)
+#                                         width: dp(75)
+#                                         background_color: hex('#F4433600')
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos
+#                                         on_press: root.toggle_units()
+#         
+#                                         BoxLayout:
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             canvas:
+#                                                 Rectangle: 
+#                                                     pos: self.parent.pos
+#                                                     size: self.parent.size
+#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                         Label:
+#                                             id: unit_label
+#                                             text: "mm"
+#                                             color: 1,1,1,1
+#                                             font_size: 20
+#                                             markup: True
+#                                             halign: "center"
+#                                             valign: "middle"
+#                                             text_size: self.size
+#                                             size: self.parent.size
+#                                             pos: self.parent.pos                       
+                                    Switch:
                                         id: unit_toggle
                                         size_hint: (None,None)
-                                        height: dp(30)
-                                        width: dp(75)
+                                        height: dp(32)
+                                        width: dp(83)
                                         background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
-                                        on_press: root.toggle_units()
-        
-                                        BoxLayout:
-                                            height: dp(30)
-                                            width: dp(75)
-                                            canvas:
-                                                Rectangle: 
-                                                    pos: self.parent.pos
-                                                    size: self.parent.size
-                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                        Label:
-                                            id: unit_label
-                                            text: "mm"
-                                            color: 1,1,1,1
-                                            font_size: 20
-                                            markup: True
-                                            halign: "center"
-                                            valign: "middle"
-                                            text_size: self.size
-                                            size: self.parent.size
-                                            pos: self.parent.pos                       
+                                        on_active: root.toggle_units()
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        canvas.after:
+                                            Color:
+                                                rgb: 1,1,1
+                                            Rectangle:
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
+                                                # make or download your background jpg
+                                                size: sp(83), sp(32)
+                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                         
+                                            Rectangle:
+                                                #id: switch_rectangle
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
+                                                # make or download your slider jpg
+                                                size: sp(43), sp(32)
+                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
@@ -516,10 +541,25 @@ class ShapeCutter23ScreenClass(Screen):
         self.xy_feed.text = str(self.j.parameter_dict["feed rates"]["xy feed rate"])
         self.z_feed.text = str(self.j.parameter_dict["feed rates"]["z feed rate"])
         self.spindle_speed.text= str(self.j.parameter_dict["feed rates"]["spindle speed"])
-        self.unit_label.text = str(self.j.parameter_dict["feed rates"]["units"])
 
-        self.xy_feed_units.text = self.unit_label.text + "/min"
-        self.z_feed_units.text = self.unit_label.text + "/min"
+        if self.j.parameter_dict["feed rates"]["units"] == "inches":
+            print "inches"
+            self.unit_toggle.active = True
+            self.xy_feed_units.text = "inches/min"
+            self.z_feed_units.text = "inches/min"
+
+        elif self.j.parameter_dict["feed rates"]["units"] == "mm": 
+            print "mm"
+            self.unit_toggle.active = False
+            self.xy_feed_units.text = "mm/min"
+            self.z_feed_units.text = "mm/min"
+        
+        #self.unit_label.text = str(self.j.parameter_dict["feed rates"]["units"])
+
+
+
+#         self.xy_feed_units.text = self.unit_label.text + "/min"
+#         self.z_feed_units.text = self.unit_label.text + "/min"
 
 # Action buttons       
     def get_info(self):
@@ -553,23 +593,40 @@ class ShapeCutter23ScreenClass(Screen):
         
 # Screen specific
     def toggle_units(self):
-        if self.unit_toggle.state == 'normal':
-            self.unit_label.text = "mm"
-            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
-            
-        elif self.unit_toggle.state == 'down': 
-            self.unit_label.text = "inches"
-            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
-            
-        self.xy_feed_units.text = self.unit_label.text + "/min"
-        self.z_feed_units.text = self.unit_label.text + "/min"
+#         if self.unit_toggle.state == 'normal':
+#             self.unit_label.text = "mm"
+#             self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
+#             
+#         elif self.unit_toggle.state == 'down': 
+#             self.unit_label.text = "inches"
+#             self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
+#             
+#         self.xy_feed_units.text = self.unit_label.text + "/min"
+#         self.z_feed_units.text = self.unit_label.text + "/min"
+        
+        if self.unit_toggle.active == True:
+            print "inches"
+            self.j.parameter_dict["feed rates"]["units"] = "inches"
+            self.xy_feed_units.text = "inches/min"
+            self.z_feed_units.text = "inches/min"
+
+        elif self.unit_toggle.active == False: 
+            print "mm"
+            self.j.parameter_dict["feed rates"]["units"] = "mm"       
+            self.xy_feed_units.text = "mm/min"
+            self.z_feed_units.text = "mm/min"
 
     def check_dimensions(self):        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
             self.j.parameter_dict["feed rates"]["xy feed rate"] = float(self.xy_feed.text)
             self.j.parameter_dict["feed rates"]["z feed rate"] = float(self.z_feed.text)
             self.j.parameter_dict["feed rates"]["spindle speed"] = float(self.spindle_speed.text)
-            self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
+            
+            if self.unit_toggle.active == True:
+                self.j.parameter_dict["feed rates"]["units"] = "inches"
+            elif self.unit_toggle.active == False: 
+                self.j.parameter_dict["feed rates"]["units"] = "mm"
+                
             self.shapecutter_sm.next_screen()
         else:
             pass
