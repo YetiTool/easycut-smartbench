@@ -551,7 +551,15 @@ class ShapeCutter20ScreenClass(Screen):
             self.j.parameter_dict["cutter dimensions"]["diameter"] = self.a_dimension.text
             self.j.parameter_dict["cutter dimensions"]["cutting length"] = self.b_dimension.text
             self.j.parameter_dict["cutter dimensions"]["shoulder length"] = self.c_dimension.text
-            self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
+            
+            if self.unit_toggle.active == True:
+                print "inches"
+                self.j.parameter_dict["cutter dimensions"]["units"] = "inches"
+    
+            elif self.unit_toggle.active == False: 
+                print "mm"
+                self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
+            
             self.shapecutter_sm.next_screen()
         else:
             pass
