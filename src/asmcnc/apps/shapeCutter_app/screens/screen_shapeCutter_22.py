@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.switch import Switch
 
 Builder.load_string("""
 
@@ -16,9 +17,9 @@ Builder.load_string("""
 
     info_button: info_button
     tab_toggle: tab_toggle
-    tab_YN: tab_YN
+    # tab_YN: tab_YN
     unit_toggle: unit_toggle
-    unit_label: unit_label
+    # unit_label: unit_label
     main_image: main_image
     td_dimension:td_dimension
     th_dimension:th_dimension
@@ -228,38 +229,62 @@ Builder.load_string("""
                                     size_hint: (None,None)
                                     height: dp(55)
                                     width: dp(85)
-                                    padding: (10,0,0,25)
+                                    padding: (2,0,0,23)
                                                 
-                                    ToggleButton:
+#                                     ToggleButton:
+#                                         id: tab_toggle
+#                                         size_hint: (None,None)
+#                                         height: dp(30)
+#                                         width: dp(75)
+#                                         background_color: hex('#F4433600')
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos
+#                                         on_press: root.toggle_tabs()
+#         
+#                                         BoxLayout:
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             canvas:
+#                                                 Rectangle: 
+#                                                     pos: self.parent.pos
+#                                                     size: self.parent.size
+#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                         Label:
+#                                             id: tab_YN
+#                                             text: "Yes"
+#                                             color: 1,1,1,1
+#                                             font_size: 20
+#                                             markup: True
+#                                             halign: "center"
+#                                             valign: "middle"
+#                                             text_size: self.size
+#                                             size: self.parent.size
+#                                             pos: self.parent.pos
+                                    Switch:
                                         id: tab_toggle
                                         size_hint: (None,None)
-                                        height: dp(30)
-                                        width: dp(75)
+                                        height: dp(32)
+                                        width: dp(83)
                                         background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
-                                        on_press: root.toggle_tabs()
-        
-                                        BoxLayout:
-                                            height: dp(30)
-                                            width: dp(75)
-                                            canvas:
-                                                Rectangle: 
-                                                    pos: self.parent.pos
-                                                    size: self.parent.size
-                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                        Label:
-                                            id: tab_YN
-                                            text: "Yes"
-                                            color: 1,1,1,1
-                                            font_size: 20
-                                            markup: True
-                                            halign: "center"
-                                            valign: "middle"
-                                            text_size: self.size
-                                            size: self.parent.size
-                                            pos: self.parent.pos
-
+                                        on_active: root.toggle_tabs()
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        canvas.after:
+                                            Color:
+                                                rgb: 1,1,1
+                                            Rectangle:
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_bg_no.png' if tab_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_yes.png' 
+                                                # make or download your background jpg
+                                                size: sp(83), sp(32)
+                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                         
+                                            Rectangle:
+                                                #id: switch_rectangle
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_fg_yes.png' if tab_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_no.png'
+                                                # make or download your slider jpg
+                                                size: sp(43), sp(32)
+                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16)) 
 
                         BoxLayout: #image & text entry box
                             size_hint: (None,None)
@@ -293,46 +318,71 @@ Builder.load_string("""
                                 # Unit toggle
                                 BoxLayout:
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(32)
                                     width: dp(210)
                                     padding: (70,0,10,0)                   
                                     orientation: "horizontal"
                                
                                     BoxLayout: 
                                         size_hint: (None,None)
-                                        height: dp(30)
+                                        height: dp(32)
                                         width: dp(120)
-                                        padding: (20,0,25,0)
+                                        padding: (37,0,0,0)
                                                     
-                                        ToggleButton:
+#                                         ToggleButton:
+#                                             id: unit_toggle
+#                                             size_hint: (None,None)
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             background_color: hex('#F4433600')
+#                                             center: self.parent.center
+#                                             pos: self.parent.pos
+#                                             on_press: root.toggle_units()
+#             
+#                                             BoxLayout:
+#                                                 height: dp(30)
+#                                                 width: dp(75)
+#                                                 canvas:
+#                                                     Rectangle: 
+#                                                         pos: self.parent.pos
+#                                                         size: self.parent.size
+#                                                         source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                             Label:
+#                                                 id: unit_label
+#                                                 text: "mm"
+#                                                 color: 1,1,1,1
+#                                                 font_size: 20
+#                                                 markup: True
+#                                                 halign: "center"
+#                                                 valign: "middle"
+#                                                 text_size: self.size
+#                                                 size: self.parent.size
+#                                                 pos: self.parent.pos                       
+                                        Switch:
                                             id: unit_toggle
                                             size_hint: (None,None)
-                                            height: dp(30)
-                                            width: dp(75)
+                                            height: dp(32)
+                                            width: dp(83)
                                             background_color: hex('#F4433600')
                                             center: self.parent.center
                                             pos: self.parent.pos
-                                            on_press: root.toggle_units()
-            
-                                            BoxLayout:
-                                                height: dp(30)
-                                                width: dp(75)
-                                                canvas:
-                                                    Rectangle: 
-                                                        pos: self.parent.pos
-                                                        size: self.parent.size
-                                                        source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                            Label:
-                                                id: unit_label
-                                                text: "mm"
-                                                color: 1,1,1,1
-                                                font_size: 20
-                                                markup: True
-                                                halign: "center"
-                                                valign: "middle"
-                                                text_size: self.size
-                                                size: self.parent.size
-                                                pos: self.parent.pos                       
+                                            on_active: root.toggle_units()
+                                            active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                            canvas.after:
+                                                Color:
+                                                    rgb: 1,1,1
+                                                Rectangle:
+                                                    source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
+                                                    # make or download your background jpg
+                                                    size: sp(83), sp(32)
+                                                    pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                             
+                                                Rectangle:
+                                                    #id: switch_rectangle
+                                                    source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
+                                                    # make or download your slider jpg
+                                                    size: sp(43), sp(32)
+                                                    pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
@@ -526,19 +576,26 @@ class ShapeCutter22ScreenClass(Screen):
             self.main_image.source = "./asmcnc/apps/shapeCutter_app/img/tabs_rect.png"
 
         if self.j.parameter_dict["tabs"]["tabs?"] == True:
-            self.tab_YN.text = "Yes"
-            self.tab_toggle.state = 'normal'
+            self.tab_toggle.active = True
+#             self.tab_toggle.state = 'normal'
             self.td_dimension.text = self.j.parameter_dict["tabs"]["spacing"]
             self.th_dimension.text = self.j.parameter_dict["tabs"]["height"]
             self.tw_dimension.text = self.j.parameter_dict["tabs"]["width"]
-            self.unit_label.text = self.j.parameter_dict["tabs"]["units"]
+#             self.unit_label.text = self.j.parameter_dict["tabs"]["units"]
+            
+            if self.j.parameter_dict["tabs"]["units"] == "inches":
+                self.unit_toggle.active = True
+
+                
+
         else:
-            self.tab_YN.text = "No"
-            self.tab_toggle.state = 'down'
+            self.tab_toggle.active = False
+#             self.tab_toggle.state = 'down'
             self.td_dimension.text = ''
             self.th_dimension.text = ''
             self.tw_dimension.text = ''
-            self.unit_label.text = self.j.parameter_dict["tabs"]["units"]            
+            if self.j.parameter_dict["tabs"]["units"] == "mm":
+                self.unit_toggle.active = False   
             
 # Action buttons       
     def get_info(self):
@@ -572,39 +629,56 @@ class ShapeCutter22ScreenClass(Screen):
         
 # Screen specific
     def toggle_units(self):
-        if self.unit_toggle.state == 'normal':
-            self.unit_label.text = "mm"
-#            self.j.parameter_dict["units"] = "mm"
-        elif self.unit_toggle.state == 'down': 
-            self.unit_label.text = "inches"
-#            self.j.parameter_dict["units"] = "inches"
+        if self.unit_toggle.active == True:
+            print "inches"
+            self.j.parameter_dict["tabs"]["units"] = "inches"
+
+        elif self.unit_toggle.active == False: 
+            print "mm"
+            self.j.parameter_dict["tabs"]["units"] = "mm"
+
 
     def toggle_tabs(self):
-        if self.tab_toggle.state == 'normal':
-            self.tab_YN.text = "Yes"  
+#         if self.tab_toggle.state == 'normal':
+#             self.tab_YN.text = "Yes"  
+#             self.j.parameter_dict["tabs"]["tabs?"] = True
+#         elif self.tab_toggle.state == 'down': 
+#             self.tab_YN.text = "No"    
+#             self.j.parameter_dict["tabs"]["tabs?"] = False    
+
+        if self.tab_toggle.active == True:
+#             self.tab_YN.text = "Yes"
+            print "Yes"
             self.j.parameter_dict["tabs"]["tabs?"] = True
-        elif self.tab_toggle.state == 'down': 
-            self.tab_YN.text = "No"    
+        elif self.tab_toggle.active == False: 
+#             self.tab_YN.text = "No"
+            print "No"
             self.j.parameter_dict["tabs"]["tabs?"] = False    
 
+
+
     def check_dimensions(self):
-        
-#        self.j.parameter_dict["units"] = self.unit_label.text
-        
-        if self.tab_YN.text == "Yes": 
+        if self.tab_toggle.active == True:
             self.j.parameter_dict["tabs"]["tabs?"] = True
             if not self.td_dimension.text == "" and not self.th_dimension.text == "" \
             and not self.tw_dimension.text == "":
                 self.j.parameter_dict["tabs"]["spacing"] = self.td_dimension.text
                 self.j.parameter_dict["tabs"]["height"] = self.th_dimension.text
                 self.j.parameter_dict["tabs"]["width"] = self.tw_dimension.text
-                self.j.parameter_dict["tabs"]["units"] = self.unit_label.text
-    
+#                 self.j.parameter_dict["tabs"]["units"] = self.unit_label.text
+                if self.unit_toggle.active == True:
+                    print "inches"
+                    self.j.parameter_dict["tabs"]["units"] = "inches"
+        
+                elif self.unit_toggle.active == False: 
+                    print "mm"
+                    self.j.parameter_dict["tabs"]["units"] = "mm"
+
                 self.shapecutter_sm.next_screen()
             else:
                 pass
             
-        elif self.tab_YN.text == "No": 
+        elif self.tab_toggle.active == False:
             self.j.parameter_dict["tabs"]["tabs?"] = False
             
             self.shapecutter_sm.next_screen()

@@ -163,7 +163,7 @@ Builder.load_string("""
                                         size_hint: (None,None)
                                         height: dp(32)
                                         width: dp(83)
-                                        # background_color: hex('#F4433600')
+                                        background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
                                         on_active: root.toggle_units()

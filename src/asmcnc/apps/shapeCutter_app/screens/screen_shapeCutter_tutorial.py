@@ -151,13 +151,13 @@ Builder.load_string("""
                             Rectangle: 
                                 pos: self.pos
                                 size: self.size
-                                source: "./asmcnc/apps/shapeCutter_app/img/number_box.png"
-                        Label:
-                            text: root.screen_number
-                            valign: "middle"
-                            halign: "center"
-                            font_size: 26
-                            markup: True
+                                source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+#                         Label:
+#                             text: root.screen_number
+#                             valign: "middle"
+#                             halign: "center"
+#                             font_size: 26
+#                             markup: True
                                 
                                 
                         
