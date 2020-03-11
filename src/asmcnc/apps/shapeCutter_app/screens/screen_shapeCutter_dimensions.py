@@ -514,8 +514,8 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.input_dim4.disabled = False
             self.dim_1 = "X"
             self.dim_2 = "Y"
-            self.dim_3 = "R"
-            self.dim_4 = "Z"
+            self.dim_3 = "Z"
+            self.dim_4 = "R"
 
             self.j.shape_dict["dimensions"] = self.j.rectangle_dimensions 
             
