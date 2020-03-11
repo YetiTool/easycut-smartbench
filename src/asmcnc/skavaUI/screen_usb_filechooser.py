@@ -180,8 +180,8 @@ class USBFileChooser(Screen):
     
     
     def set_USB_path(self, usb_path):      
-        self.filechooser_usb.path = usb_path
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path + '/'
+        self.filechooser_usb.path = usb_path + '/'
+        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
 
     def refresh_filechooser(self):
