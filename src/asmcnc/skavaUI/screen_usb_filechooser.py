@@ -51,7 +51,7 @@ Builder.load_string("""
                 FileChooserListView:
                     size_hint_y: 5
                     id: filechooser_usb
-                    path: './jobCache/'
+#                     path: './jobCache/'
                     filter_dirs: True
                     dirselect: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
@@ -181,7 +181,7 @@ class USBFileChooser(Screen):
     
     
     def set_USB_path(self, usb_path):      
-        self.filechooser_usb.path = usb_path + '/'
+        self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
 
