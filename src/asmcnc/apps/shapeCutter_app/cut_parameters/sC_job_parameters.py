@@ -106,7 +106,7 @@ class ShapeCutterJobParameters(object):
 
         self.parameter_string = self.parameters_to_string()
    
-        self.profile_filename = (filename.split('\\')[-1]).split('.')[0]
+        self.profile_filename = (filename.split('/')[-1]).split('.')[0]
     
     def save_parameters(self, filename):
         w = csv.writer(open(self.parameterCache_file_path + filename + '.csv', "w"), delimiter = '\t', lineterminator = '\n')
