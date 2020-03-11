@@ -227,9 +227,9 @@ Builder.load_string("""
                                     # Toggle button
                                 BoxLayout:
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(32)
                                     width: dp(595)
-                                    padding: (342.5,0,177.5,0)                   
+                                    padding: (342,0,170,0)
                                     orientation: "horizontal"
                                                     
 #                                     ToggleButton:
@@ -308,8 +308,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: xy_feed
@@ -358,8 +358,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: z_feed
@@ -407,8 +407,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: spindle_speed

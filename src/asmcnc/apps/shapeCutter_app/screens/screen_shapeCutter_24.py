@@ -16,7 +16,7 @@ Builder.load_string("""
 
     info_button: info_button
     unit_toggle: unit_toggle
-    unit_label: unit_label
+    # unit_label: unit_label
     step_down_units: step_down_units
     stock_bottom_offset_units: stock_bottom_offset_units
     finishing_passes: finishing_passes
@@ -228,40 +228,65 @@ Builder.load_string("""
                                     # Toggle button
                                 BoxLayout:
                                     size_hint: (None,None)
-                                    height: dp(30)
+                                    height: dp(32)
                                     width: dp(595)
-                                    padding: (342.5,0,177.5,0)                   
+                                    padding: (342,0,170,0)                
                                     orientation: "horizontal"
                                                     
-                                    ToggleButton:
+#                                     ToggleButton:
+#                                         id: unit_toggle
+#                                         size_hint: (None,None)
+#                                         height: dp(30)
+#                                         width: dp(75)
+#                                         background_color: hex('#F4433600')
+#                                         center: self.parent.center
+#                                         pos: self.parent.pos
+#                                         on_press: root.toggle_units()
+#         
+#                                         BoxLayout:
+#                                             height: dp(30)
+#                                             width: dp(75)
+#                                             canvas:
+#                                                 Rectangle: 
+#                                                     pos: self.parent.pos
+#                                                     size: self.parent.size
+#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
+#                                         Label:
+#                                             id: unit_label
+#                                             text: "mm"
+#                                             color: 1,1,1,1
+#                                             font_size: 20
+#                                             markup: True
+#                                             halign: "center"
+#                                             valign: "middle"
+#                                             text_size: self.size
+#                                             size: self.parent.size
+#                                             pos: self.parent.pos                       
+                                    Switch:
                                         id: unit_toggle
                                         size_hint: (None,None)
-                                        height: dp(30)
-                                        width: dp(75)
+                                        height: dp(32)
+                                        width: dp(83)
                                         background_color: hex('#F4433600')
                                         center: self.parent.center
                                         pos: self.parent.pos
-                                        on_press: root.toggle_units()
-        
-                                        BoxLayout:
-                                            height: dp(30)
-                                            width: dp(75)
-                                            canvas:
-                                                Rectangle: 
-                                                    pos: self.parent.pos
-                                                    size: self.parent.size
-                                                    source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                        Label:
-                                            id: unit_label
-                                            text: "mm"
-                                            color: 1,1,1,1
-                                            font_size: 20
-                                            markup: True
-                                            halign: "center"
-                                            valign: "middle"
-                                            text_size: self.size
-                                            size: self.parent.size
-                                            pos: self.parent.pos                       
+                                        on_active: root.toggle_units()
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        canvas.after:
+                                            Color:
+                                                rgb: 1,1,1
+                                            Rectangle:
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
+                                                # make or download your background jpg
+                                                size: sp(83), sp(32)
+                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                         
+                                            Rectangle:
+                                                #id: switch_rectangle
+                                                source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
+                                                # make or download your slider jpg
+                                                size: sp(43), sp(32)
+                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
                             
                                 BoxLayout: #dimension 1
                                     size_hint: (None,None)
@@ -284,8 +309,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: stock_bottom_offset
@@ -335,8 +360,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: step_down
@@ -384,8 +409,8 @@ Builder.load_string("""
                                     BoxLayout: 
                                         size_hint: (None,None)
                                         height: dp(35)
-                                        width: dp(90)
-                                        padding: (10,0,10,0)
+                                        width: dp(113)
+                                        padding: (10,0,0,0)
                                                     
                                         TextInput: 
                                             id: finishing_passes
@@ -518,10 +543,24 @@ class ShapeCutter24ScreenClass(Screen):
         self.stock_bottom_offset.text = str(self.j.parameter_dict["strategy parameters"]["stock bottom offset"])
         self.step_down.text = str(self.j.parameter_dict["strategy parameters"]["step down"])
         self.finishing_passes.text = str(self.j.parameter_dict["strategy parameters"]["finishing passes"])
-        self.unit_label.text = self.j.parameter_dict["strategy parameters"]["units"]
 
-        self.stock_bottom_offset_units.text = self.unit_label.text
-        self.step_down_units.text = self.unit_label.text
+        if self.j.parameter_dict["strategy parameters"]["units"] == "inches":
+            print "inches"
+            self.unit_toggle.active = True
+            self.stock_bottom_offset_units.text = "inches"
+            self.step_down_units.text = "inches"
+
+        elif self.j.parameter_dict["strategy parameters"]["units"] == "mm": 
+            print "mm"
+            self.unit_toggle.active = False
+            self.stock_bottom_offset_units.text = "mm"
+            self.step_down_units.text = "mm"
+
+
+#         self.unit_label.text = self.j.parameter_dict["strategy parameters"]["units"]
+
+#         self.stock_bottom_offset_units.text = self.unit_label.text
+#         self.step_down_units.text = self.unit_label.text
 
 # Action buttons       
     def get_info(self):
@@ -555,14 +594,26 @@ class ShapeCutter24ScreenClass(Screen):
         
 # Screen specific
     def toggle_units(self):
-        if self.unit_toggle.state == 'normal':
-            self.unit_label.text = "mm"
-            
-        elif self.unit_toggle.state == 'down': 
-            self.unit_label.text = "inches"
+#         if self.unit_toggle.state == 'normal':
+#             self.unit_label.text = "mm"
+#             
+#         elif self.unit_toggle.state == 'down': 
+#             self.unit_label.text = "inches"
+# 
+#         self.stock_bottom_offset_units.text = self.unit_label.text + "/min"
+#         self.step_down_units.text = self.unit_label.text + "/min"
 
-        self.stock_bottom_offset_units.text = self.unit_label.text + "/min"
-        self.step_down_units.text = self.unit_label.text + "/min"
+        if self.unit_toggle.active == True:
+            print "inches"
+            self.j.parameter_dict["strategy parameters"]["units"] = "inches"
+            self.stock_bottom_offset_units.text = "inches"
+            self.step_down_units.text = "inches"
+
+        elif self.unit_toggle.active == False: 
+            print "mm"
+            self.j.parameter_dict["strategy parameters"]["units"] = "mm"       
+            self.stock_bottom_offset_units.text = "mm"
+            self.step_down_units.text = "mm"
 
     def check_dimensions(self):
         if not self.stock_bottom_offset.text == "" and not self.step_down.text == "" \
@@ -570,7 +621,14 @@ class ShapeCutter24ScreenClass(Screen):
             self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = float(self.stock_bottom_offset.text)
             self.j.parameter_dict["strategy parameters"]["step down"] = float(self.step_down.text)
             self.j.parameter_dict["strategy parameters"]["finishing passes"] = float(self.finishing_passes.text)
-            self.j.parameter_dict["strategy parameters"]["units"] = self.unit_label.text
+            
+            if self.unit_toggle.active == True:
+                self.j.parameter_dict["strategy parameters"]["units"] = "inches"
+    
+            elif self.unit_toggle.active == False:
+                self.j.parameter_dict["strategy parameters"]["units"] = "mm"       
+
+            #self.j.parameter_dict["strategy parameters"]["units"] = self.unit_label.text
             self.shapecutter_sm.next_screen()
         else:
             pass
