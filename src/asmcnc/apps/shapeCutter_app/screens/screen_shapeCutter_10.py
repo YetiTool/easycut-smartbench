@@ -331,29 +331,29 @@ Builder.load_string("""
                             width: dp(595)
                             padding: (20,0,20,0)                         
                             orientation: "horizontal"
-                            
-                            BoxLayout: 
-                                size_hint: (None,None)
-                                height: dp(22)
-                                width: dp(30)
-                                padding: (0,0,8,0)                        
-                                Image: 
-                                    source: "./asmcnc/apps/shapeCutter_app/img/box_unchecked.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                                
-                            Label: 
-                                text: "Fit cutter"
-                                color: 0,0,0,1
-                                font_size: 20
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                text_size: self.size
-                                size: self.parent.size
-                                pos: self.parent.pos
+#                             
+#                             BoxLayout: 
+#                                 size_hint: (None,None)
+#                                 height: dp(22)
+#                                 width: dp(30)
+#                                 padding: (0,0,8,0)                        
+#                                 Image: 
+#                                     source: "./asmcnc/apps/shapeCutter_app/img/box_unchecked.png"
+#                                     center_x: self.parent.center_x
+#                                     y: self.parent.y
+#                                     size: self.parent.width, self.parent.height
+#                                     allow_stretch: True
+#                                 
+#                             Label: 
+#                                 text: "Fit cutter"
+#                                 color: 0,0,0,1
+#                                 font_size: 20
+#                                 markup: True
+#                                 halign: "left"
+#                                 valign: "top"
+#                                 text_size: self.size
+#                                 size: self.parent.size
+#                                 pos: self.parent.pos
 
                     BoxLayout: #action box
                         size_hint: (None,None)
