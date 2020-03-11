@@ -333,8 +333,8 @@ class ShapeCutter8ScreenClass(Screen):
     
     screen_number = StringProperty("[b]8[/b]")
     title_label = StringProperty("[b]Lock Z-head connections[/b]")
-    user_instructions = StringProperty("Check the drag chain latch plates [b](1)[/b]," \
-                                       " and head connectors [b](2)[/b] are secure.")
+    user_instructions = StringProperty("Check the head connectors  [b](1)[/b]," \
+                                       " and drag chain latch plates [b](2)[/b] are secure.")
     
     def __init__(self, **kwargs):
         super(ShapeCutter8ScreenClass, self).__init__(**kwargs)
