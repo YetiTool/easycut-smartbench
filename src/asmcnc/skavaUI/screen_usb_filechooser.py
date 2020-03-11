@@ -51,7 +51,7 @@ Builder.load_string("""
                 FileChooserListView:
                     size_hint_y: 5
                     id: filechooser_usb
-#                     path: './jobCache/'
+                    path: '.media/usb/'
                     filter_dirs: True
                     dirselect: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
