@@ -426,8 +426,8 @@ class ShapeCutter33ScreenClass(Screen):
             self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
             
         elif self.j.shape_dict["shape"] == "circle":
-            self.m.jog_relative('X', self.j.range_x[1], xy_feed_speed)
-            self.m.jog_relative('Y', self.j.range_y[1], xy_feed_speed)
+            self.m.jog_relative('X', self.j.range_x[0], xy_feed_speed)
+            self.m.jog_relative('Y', self.j.range_y[0], xy_feed_speed)
 
             self.m.jog_relative('X', job_x_range, xy_feed_speed)
             self.m.jog_relative('Y', job_y_range, xy_feed_speed)
