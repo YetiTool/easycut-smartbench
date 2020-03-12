@@ -676,6 +676,7 @@ class SerialConnection(object):
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             self.sm.get_screen('alarmScreen').message = message
+            self.sm.get_screen('alarmScreen').return_screen = self.sm.previous()
             self.sm.current = 'alarmScreen'
             
 

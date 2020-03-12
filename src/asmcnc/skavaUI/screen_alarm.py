@@ -132,6 +132,7 @@ class AlarmScreenClass(Screen):
     # define alarm description to make kivy happy
     alarm_description = StringProperty()
     message = StringProperty()
+    return_screen = 'home'
     # alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
 
     
@@ -147,6 +148,6 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
 
     def quit_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = self.return_screen
  
       
