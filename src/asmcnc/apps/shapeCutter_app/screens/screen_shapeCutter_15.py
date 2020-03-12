@@ -225,7 +225,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(45)
                             width: dp(675)
-                            padding:216.75,0.25,176.75,12.5
+                            padding:216.75,2.5,176.75,12.5
                             spacing: 221.5
                             BoxLayout: #photo numbers
                                 size_hint: (None,None)
@@ -241,7 +241,7 @@ Builder.load_string("""
                                     text: "1"
                                     valign: "middle"
                                     halign: "center"
-                                    font_size: 26
+                                    font_size: 22
                                     markup: True
                             BoxLayout: #photo numbers
                                 size_hint: (None,None)
@@ -257,7 +257,7 @@ Builder.load_string("""
                                     text: "2"
                                     valign: "middle"
                                     halign: "center"
-                                    font_size: 26
+                                    font_size: 22
                                     markup: True                            
                                       
 

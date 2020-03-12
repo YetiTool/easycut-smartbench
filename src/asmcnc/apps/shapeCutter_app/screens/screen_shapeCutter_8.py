@@ -241,7 +241,7 @@ Builder.load_string("""
                                     text: "1"
                                     valign: "middle"
                                     halign: "center"
-                                    font_size: 26
+                                    font_size: 22
                                     markup: True
                             BoxLayout: #photo numbers
                                 size_hint: (None,None)
@@ -257,7 +257,7 @@ Builder.load_string("""
                                     text: "2"
                                     valign: "middle"
                                     halign: "center"
-                                    font_size: 26
+                                    font_size: 22
                                     markup: True                                       
 
                     BoxLayout: #action box
