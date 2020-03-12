@@ -297,7 +297,8 @@ class SC28XYMove(Widget):
         super(SC28XYMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
-    
+        self.j=kwargs['job_parameters']
+
     jogMode = 'free'
     jog_mode_button_press_counter = 0
 
@@ -383,9 +384,8 @@ class SC28XYMove(Widget):
             if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
         
         elif self.jogMode == 'job':
-            job_box = self.sm.get_screen('home').job_box
-            job_x_range = job_box.range_x[1] - job_box.range_x[0]
-            job_y_range = job_box.range_y[1] - job_box.range_y[0]
+            job_x_range = self.j.range_x[1] - self.j.range_x[0]
+            job_y_range = self.j.range_y[1] - self.j.range_y[0]
 
             if case == 'X+': self.m.jog_relative('X', job_x_range, x_feed_speed)
             if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)

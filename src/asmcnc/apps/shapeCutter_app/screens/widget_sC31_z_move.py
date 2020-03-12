@@ -110,7 +110,8 @@ class SC31ZMove(Widget):
         super(SC31ZMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
-        self.virtual_z_container.add_widget(widget_sC31_z_height.VirtualZ31(machine=self.m, screen_manager=self.sm))
+        self.j=kwargs['job_parameters']
+        self.virtual_z_container.add_widget(widget_sC31_z_height.VirtualZ31(machine=self.m, screen_manager=self.sm, job_parameters = self.j))
 
     def jog_z(self, case):
 

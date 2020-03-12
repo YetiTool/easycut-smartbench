@@ -298,8 +298,9 @@ class ShapeCutter28ScreenClass(Screen):
         super(ShapeCutter28ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
-        self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.shapecutter_sm.sm))

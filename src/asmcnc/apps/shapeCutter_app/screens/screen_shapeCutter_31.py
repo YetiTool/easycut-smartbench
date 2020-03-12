@@ -309,14 +309,15 @@ class ShapeCutter31ScreenClass(Screen):
         super(ShapeCutter31ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
 
-        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)
         
-        self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(machine=self.m, screen_manager=self.shapecutter_sm.sm, )
         self.z_set_go_container.add_widget(self.z_set_go_widget)
         
-        self.z_move_widget = widget_sC31_z_move.SC31ZMove(machine=self.m, screen_manager=self.shapecutter_sm.sm)
+        self.z_move_widget = widget_sC31_z_move.SC31ZMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.z_move_container.add_widget(self.z_move_widget)
 
         self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)

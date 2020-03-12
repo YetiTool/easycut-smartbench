@@ -68,6 +68,7 @@ class VirtualZ31(Widget):
         super(VirtualZ31, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.j=kwargs['job_parameters']
         Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):
@@ -77,8 +78,8 @@ class VirtualZ31(Widget):
     
     def setZones(self):
  
-        z_max = self.sm.get_screen('home').job_box.range_z[1]
-        z_min = self.sm.get_screen('home').job_box.range_z[0]
+        z_max = self.j.range_z[1]
+        z_min = self.j.range_z[0]
         z0_machine_coords = self.m.z_wco()
                   
         self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
