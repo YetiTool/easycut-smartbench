@@ -435,9 +435,6 @@ class ShapeCutter33ScreenClass(Screen):
             self.m.jog_relative('X', -job_x_range, xy_feed_speed)
             self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
 
-      
-            
-
     def stop_jog(self):
         self.m.quit_jog()
 
