@@ -87,7 +87,7 @@ Builder.load_string("""
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 130, 0
+                padding: 150, 0
             
                 Button:
                     size_hint_y:0.9
@@ -108,7 +108,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'Return to the home screen'
+                            text: 'Return'
                         
 # This is code from when the alarm screen contained an image. It's broken, but might want to come back to it:                     
 #                     Image: 
