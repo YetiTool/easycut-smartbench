@@ -26,7 +26,7 @@ Builder.load_string("""
     g28Marker:g28Marker
     touch_zone:touch_zone
     
-    StencilBox2:
+    SCStencilBox2:
         size: self.parent.size
         pos: self.parent.pos
         

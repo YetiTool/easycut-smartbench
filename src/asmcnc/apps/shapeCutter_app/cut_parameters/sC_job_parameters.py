@@ -309,9 +309,6 @@ class ShapeCutterJobParameters(object):
                 'G91.1' # relative rad centre definitions. IMPORTANT: "G90.1" (absolute rad centre definitions) DOESN'T WORK IN GRBL
                 ]
         
-        
-        print lines
-        
         ###### GCODE SHAPE
         
         # Start pos
@@ -325,9 +322,6 @@ class ShapeCutterJobParameters(object):
             lines.append("G0 X" + str(circ_path_rad) + " Y" + str(0))
         
         lines.append("G0 Z" + str(z_height_for_rapid_move))
-        
-        print "start pos"
-        print lines
         
         z = -stepdown
         
@@ -387,9 +381,6 @@ class ShapeCutterJobParameters(object):
                 # rad 4
                 lines.append("G3 X" + str(x_flat_min) + " Y" + str(y_min) + " I" + str(rect_path_rad) +  " J" + str(0))
         
-                print "rectangle lines"
-                print lines
-        
             elif shape == "circle":
                 
         
@@ -420,9 +411,6 @@ class ShapeCutterJobParameters(object):
         
         ######## GCODE FOOTER
         
-        print "footer"
-        print lines
-        
         lines.append("\n(Shutdown)")
         lines.append("G0 Z" + str(z_height_for_rapid_move))
         lines.append("M5") #Kill spindle
@@ -442,8 +430,6 @@ class ShapeCutterJobParameters(object):
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 preloaded_job_gcode.append(l_block)
                 
-        
-        
         self.gcode_lines = preloaded_job_gcode        
 
 
@@ -461,26 +447,51 @@ class ShapeCutterJobParameters(object):
 
         # there's a bug here - needs looking at! 
  
-        x_values = []
-        y_values = []
-        z_values = []
-
-        for line in lines:
-            print line
-            blocks = str(line).strip().split(" ")
-            print blocks
-            for part in blocks:
-                try:
-                    if part.startswith(('X')): x_values.append(float(part[1:]))
-                    if part.startswith(('Y')): y_values.append(float(part[1:]))
-                    if part.startswith(('Z')): z_values.append(float(part[1:]))
-                except:
-                    print "Envelope calculator: skipped '" + part + "'"
-        
-        print x_values
-        print y_values
-        print z_values
-        
-        self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
-        self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
-        self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+        if self.shape_dict["shape"] == "rectangle":
+ 
+            x_values = []
+            y_values = []
+            z_values = []
+    
+            for line in lines:
+                print line
+                blocks = str(line).strip().split(" ")
+                print blocks
+                for part in blocks:
+                    try:
+                        if part.startswith(('X')): x_values.append(float(part[1:]))
+                        if part.startswith(('Y')): y_values.append(float(part[1:]))
+                        if part.startswith(('Z')): z_values.append(float(part[1:]))
+                    except:
+                        print "Envelope calculator: skipped '" + part + "'"
+            
+            print x_values
+            print y_values
+            print z_values
+            
+            self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
+            self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
+            self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+            
+        elif self.shape_dict["shape"] == "circle":
+            
+            self.range_x[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
+            self.range_x[1] = float(self.shape_dict["dimensions"]["D"])/2
+            self.range_y[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
+            self.range_y[1] = float(self.shape_dict["dimensions"]["D"])/2
+            
+            z_values = []
+    
+            for line in lines:
+                print line
+                blocks = str(line).strip().split(" ")
+                print blocks
+                for part in blocks:
+                    try:
+                        if part.startswith(('Z')): z_values.append(float(part[1:]))
+                    except:
+                        print "Envelope calculator: skipped '" + part + "'"           
+            
+            self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+                        
+            
