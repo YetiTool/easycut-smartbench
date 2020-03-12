@@ -637,10 +637,10 @@ class ScreenManagerShapeCutter(object):
             self.sm.current = 'sC9'
                         
         elif self.sm.current == 'sC11':
-            self.sm.current = 'sC10'  
             if not self.sm.has_screen('sC10'):
                 sC10_screen = screen_shapeCutter_10.ShapeCutter10ScreenClass(name = 'sC10', machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC10_screen)
+            self.sm.current = 'sC10'
             
         elif self.sm.current == 'sC12':
             if not self.sm.has_screen('sC11'):
