@@ -148,6 +148,6 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
 
     def quit_to_home(self):
-        self.sm.current = self.return_to_screen
+        self.sm.current = str(self.return_to_screen)
  
       
