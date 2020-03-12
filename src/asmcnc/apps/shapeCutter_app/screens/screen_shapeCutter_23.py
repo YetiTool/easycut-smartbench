@@ -10,6 +10,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string("""
 
 <ShapeCutter23ScreenClass>
@@ -563,8 +565,12 @@ class ShapeCutter23ScreenClass(Screen):
 
 # Action buttons       
     def get_info(self):
-        pass
-    
+        info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
+        "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
+        "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
+        "For more help please visit: https://www.yetitool.com/support/knowledge-base/hardware-smartbench-feeds-speeds"
+        popup_info.PopupInfo(self.shapecutter_sm, info)
+            
     def go_back(self):
         self.shapecutter_sm.previous_screen()
     

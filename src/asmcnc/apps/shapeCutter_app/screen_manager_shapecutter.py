@@ -955,7 +955,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sCexit_screen)
         self.sm.current = 'sCexit'
 
-    def tutorial(self):
+    def tutorial(self):        
         if not self.sm.has_screen('sCtutorial'):
             sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
             self.sm.add_widget(sCtutorial_screen)
@@ -1018,6 +1018,9 @@ class ScreenManagerShapeCutter(object):
             sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sClanding_screen)
         self.sm.current = 'sClanding'
+        if not self.sm.has_screen('sCtutorial'):
+            sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
+            self.sm.add_widget(sCtutorial_screen)
                 
     def load_all_screens(self):        
         self.load_entry_screens()

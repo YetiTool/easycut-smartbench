@@ -10,6 +10,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string("""
 
 <ShapeCutter19ScreenClass>
@@ -307,8 +309,11 @@ class ShapeCutter19ScreenClass(Screen):
         self.info_button.opacity = 1
 
 # Action buttons       
+
     def get_info(self):
-        pass
+        info = "Ensure your tool is sharp and has no obvious damage.\n\n" \
+                "Ensure your collect size matches your shank diameter."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         self.shapecutter_sm.previous_screen()

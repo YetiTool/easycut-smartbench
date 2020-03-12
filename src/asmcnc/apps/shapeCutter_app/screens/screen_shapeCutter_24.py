@@ -10,6 +10,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string("""
 
 <ShapeCutter24ScreenClass>
@@ -524,6 +526,7 @@ Builder.load_string("""
 """)
 
 class ShapeCutter24ScreenClass(Screen):
+
     
     info_button = ObjectProperty()
     
@@ -563,9 +566,13 @@ class ShapeCutter24ScreenClass(Screen):
 #         self.step_down_units.text = self.unit_label.text
 
 # Action buttons       
+
     def get_info(self):
-        pass
-    
+        info = "[b]Stock Bottom Offset:[/b] Determines the final machine depth offset from the bottom of your stock.\n\n" \
+        "[b]Step Down:[/b] Specifies the maximum step down between Z-levels.\n\n" \
+        "[b]Finishing Passes:[/b] Specifies the number of finishing passes."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
+            
     def go_back(self):
         self.shapecutter_sm.previous_screen()
     

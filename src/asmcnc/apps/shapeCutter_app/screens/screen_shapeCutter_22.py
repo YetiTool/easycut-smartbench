@@ -11,6 +11,8 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.switch import Switch
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string("""
 
 <ShapeCutter22ScreenClass>
@@ -554,6 +556,7 @@ Builder.load_string("""
 """)
 
 class ShapeCutter22ScreenClass(Screen):
+
     
     info_button = ObjectProperty()
     
@@ -598,9 +601,12 @@ class ShapeCutter22ScreenClass(Screen):
                 self.unit_toggle.active = False   
             
 # Action buttons       
+
     def get_info(self):
-        pass
-    
+        info = "Tabs are used to hold your piece in place when cutting from a sheet.\n\n" \
+        "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-workholding"
+        popup_info.PopupInfo(self.shapecutter_sm, info)
+            
     def go_back(self):
         self.shapecutter_sm.previous_screen()
     

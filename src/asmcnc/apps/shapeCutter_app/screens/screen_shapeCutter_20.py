@@ -11,6 +11,8 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.switch import Switch
 
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+
 Builder.load_string("""
 
 <ShapeCutter20ScreenClass>
@@ -500,8 +502,10 @@ class ShapeCutter20ScreenClass(Screen):
 
 # Action buttons       
     def get_info(self):
-        pass
-    
+        info = "To maintain accuracy, it is important that you measure the dimensions of your cutter.\n\n " \
+        "The shoulder length must be equal or larger than the cutting length."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
+            
     def go_back(self):
         self.shapecutter_sm.previous_screen()
     
