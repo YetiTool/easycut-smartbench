@@ -997,7 +997,7 @@ class ScreenManagerShapeCutter(object):
             self.j.generate_gCode()
             self.j.generate_gCode_filename()
             
-#             self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
+            self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):

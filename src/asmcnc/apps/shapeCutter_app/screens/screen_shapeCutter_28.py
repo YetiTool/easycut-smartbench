@@ -10,8 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_xy_move
-from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates
+from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed
 
 Builder.load_string("""
 
@@ -303,7 +302,7 @@ class ShapeCutter28ScreenClass(Screen):
         self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.shapecutter_sm.sm))
+        self.virtual_bed_container.add_widget(widget_sC_virtual_bed.SCVirtualBed(machine=self.m,  job_parameters = self.j, screen_manager=self.shapecutter_sm.sm))
 
         self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)
         self.work_coords_container.add_widget(self.work_coords_widget)
