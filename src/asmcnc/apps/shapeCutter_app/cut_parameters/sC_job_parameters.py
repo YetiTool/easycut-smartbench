@@ -10,6 +10,7 @@ import re
 
 class ShapeCutterJobParameters(object):
     
+    
     parameterCache_file_path = './asmcnc/apps/shapeCutter_app/parameter_cache/'
     jobCache_file_path = './jobCache/'
     profile_filename = ""
@@ -25,6 +26,9 @@ class ShapeCutterJobParameters(object):
     z_height_for_rapid_move = 3
     
     def __init__(self):
+ 
+#        self.m = machine
+        # self.shapecutter_sm = screen_manager_shapecutter
  
         # shape dimensions
         self.circle_dimensions = {
@@ -89,8 +93,10 @@ class ShapeCutterJobParameters(object):
         self.range_y = [0,0] 
         self.range_z = [0,0]
     
-    def validate_shape_dimensions(self):
-        pass
+    def validate_shape_dimensions(self, input):
+        
+        if input == "X":
+            pass
     
     def validate_parameters(self):
         pass
@@ -431,7 +437,6 @@ class ShapeCutterJobParameters(object):
                 preloaded_job_gcode.append(l_block)
                 
         self.gcode_lines = preloaded_job_gcode        
-
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
