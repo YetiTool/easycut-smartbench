@@ -415,11 +415,11 @@ class ShapeCutter33ScreenClass(Screen):
 
         xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
 
+        job_x_range = self.j.range_x[1] - self.j.range_x[0]
+        job_y_range = self.j.range_y[1] - self.j.range_y[0]
+
 
         if self.j.shape_dict["shape"] == "rectangle":
-            job_x_range = self.j.range_x[1] - self.j.range_x[0]
-            job_y_range = self.j.range_y[1] - self.j.range_y[0]
-        
             self.m.jog_relative('X', job_x_range, xy_feed_speed)
             self.m.jog_relative('Y', job_y_range, xy_feed_speed)
             self.m.jog_relative('X', -job_x_range, xy_feed_speed)
