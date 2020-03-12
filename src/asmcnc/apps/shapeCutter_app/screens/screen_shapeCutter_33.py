@@ -413,15 +413,25 @@ class ShapeCutter33ScreenClass(Screen):
         self.m.go_x_datum()
         self.m.go_y_datum()
 
-        job_x_range = self.j.range_x[1] - self.j.range_x[0]
-        job_y_range = self.j.range_y[1] - self.j.range_y[0]
-    
-        xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
-    
-        self.m.jog_relative('X', job_x_range, xy_feed_speed)
-        self.m.jog_relative('Y', job_y_range, xy_feed_speed)
-        self.m.jog_relative('X', -job_x_range, xy_feed_speed)
-        self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
+        if self.j.shape_dict["shape"] == "rectangle":
+            job_x_range = self.j.range_x[1] - self.j.range_x[0]
+            job_y_range = self.j.range_y[1] - self.j.range_y[0]
+        
+            xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+        
+            self.m.jog_relative('X', job_x_range, xy_feed_speed)
+            self.m.jog_relative('Y', job_y_range, xy_feed_speed)
+            self.m.jog_relative('X', -job_x_range, xy_feed_speed)
+            self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
+            
+        elif self.j.shape_dict["shape"] == "circle":
+            xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+        
+            self.m.jog_relative('X', self.j.range_x[1], xy_feed_speed)
+            self.m.jog_relative('Y', self.j.range_y[1], xy_feed_speed)
+            self.m.jog_relative('X', self.j.range_x[0], xy_feed_speed)
+            self.m.jog_relative('Y', self.j.range_y[0], xy_feed_speed)           
+            
 
     def stop_jog(self):
         self.m.quit_jog()
