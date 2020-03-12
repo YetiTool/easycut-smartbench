@@ -994,10 +994,11 @@ class ScreenManagerShapeCutter(object):
             self.sm.get_screen('homing').cancel_to_screen = cancel_to_screen  
             self.sm.current = 'homing'
             
-            self.j.generate_gCode()
-            self.j.generate_gCode_filename()
+            print self.j.shape_dict
             
-            self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
+            self.j.generate_gCode()
+            
+            # self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):

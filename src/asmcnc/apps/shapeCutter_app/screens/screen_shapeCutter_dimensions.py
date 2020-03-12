@@ -552,10 +552,14 @@ class ShapeCutterDimensionsScreenClass(Screen):
             and not (self.input_dim3.text == "") and not (self.input_dim4.text == ""):
             
                 # save the dimensions
-                self.j.shape_dict["dimensions"]["X"] = self.input_dim1.text
-                self.j.shape_dict["dimensions"]["Y"] = self.input_dim2.text
-                self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
-                self.j.shape_dict["dimensions"]["R"] = self.input_dim4.text
+                self.j.shape_dict["dimensions"]["X"] = float(self.input_dim1.text)
+                self.j.shape_dict["dimensions"]["Y"] = float(self.input_dim2.text)
+                self.j.shape_dict["dimensions"]["Z"] = float(self.input_dim3.text)
+                self.j.shape_dict["dimensions"]["R"] = float(self.input_dim4.text)
+                
+                print self.j.shape_dict
+                print self.input_dim1.text
+                
                 
                 if self.unit_toggle.active == True:
                     print "inches"
@@ -574,6 +578,8 @@ class ShapeCutterDimensionsScreenClass(Screen):
                 # save the dimensions
                 self.j.shape_dict["dimensions"]["D"] = self.input_dim2.text
                 self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
+
+                print self.j.shape_dict
 
                 if self.unit_toggle.active == True:
                     print "inches"

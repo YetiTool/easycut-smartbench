@@ -310,6 +310,8 @@ class ShapeCutterJobParameters(object):
                 ]
         
         
+        print lines
+        
         ###### GCODE SHAPE
         
         # Start pos
@@ -324,6 +326,8 @@ class ShapeCutterJobParameters(object):
         
         lines.append("G0 Z" + str(z_height_for_rapid_move))
         
+        print "start pos"
+        print lines
         
         z = -stepdown
         
@@ -383,7 +387,8 @@ class ShapeCutterJobParameters(object):
                 # rad 4
                 lines.append("G3 X" + str(x_flat_min) + " Y" + str(y_min) + " I" + str(rect_path_rad) +  " J" + str(0))
         
-                
+                print "rectangle lines"
+                print lines
         
             elif shape == "circle":
                 
@@ -415,6 +420,9 @@ class ShapeCutterJobParameters(object):
         
         ######## GCODE FOOTER
         
+        print "footer"
+        print lines
+        
         lines.append("\n(Shutdown)")
         lines.append("G0 Z" + str(z_height_for_rapid_move))
         lines.append("M5") #Kill spindle
@@ -422,8 +430,9 @@ class ShapeCutterJobParameters(object):
         lines.append("M30") #Prog end
 #        lines.append("%") #Prog end (redundant?) # BREAKER OF THINGS GET IN YOUR GRAVE
 
-        # strip it and see if that gets rid of errors. 
-        
+        self.set_job_envelope(lines)
+
+        # strip it to prevent weird gcode errors
         preloaded_job_gcode = []
 
         for line in lines:
@@ -433,7 +442,10 @@ class ShapeCutterJobParameters(object):
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 preloaded_job_gcode.append(l_block)
                 
-        self.gcode_lines = preloaded_job_gcode
+        
+        
+        self.gcode_lines = preloaded_job_gcode        
+
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
@@ -445,7 +457,7 @@ class ShapeCutterJobParameters(object):
             f.write(line + "\n")
         print "Done: " + self.gcode_filename
 
-    def set_job_envelope(self):
+    def set_job_envelope(self, lines):
 
         # there's a bug here - needs looking at! 
  
@@ -453,8 +465,10 @@ class ShapeCutterJobParameters(object):
         y_values = []
         z_values = []
 
-        for line in self.gcode_lines:
+        for line in lines:
+            print line
             blocks = str(line).strip().split(" ")
+            print blocks
             for part in blocks:
                 try:
                     if part.startswith(('X')): x_values.append(float(part[1:]))
@@ -462,6 +476,11 @@ class ShapeCutterJobParameters(object):
                     if part.startswith(('Z')): z_values.append(float(part[1:]))
                 except:
                     print "Envelope calculator: skipped '" + part + "'"
+        
+        print x_values
+        print y_values
+        print z_values
+        
         self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
         self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
         self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
