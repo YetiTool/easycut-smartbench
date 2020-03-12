@@ -401,7 +401,7 @@ class SerialConnection(object):
             
             if self.suppress_error_screens == False:
                 self.sm.get_screen('errorScreen').message = message
-                self.sm.get_screnn('errorScreen').return_to_screen = self.sm.current
+                self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
