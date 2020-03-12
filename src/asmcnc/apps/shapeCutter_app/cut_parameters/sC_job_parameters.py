@@ -483,9 +483,7 @@ class ShapeCutterJobParameters(object):
             z_values = []
     
             for line in lines:
-                print line
                 blocks = str(line).strip().split(" ")
-                print blocks
                 for part in blocks:
                     try:
                         if part.startswith(('Z')): z_values.append(float(part[1:]))
