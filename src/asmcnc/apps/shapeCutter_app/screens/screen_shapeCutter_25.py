@@ -232,8 +232,7 @@ Builder.load_string("""
                                         font_size: '20sp'
                                         markup: True
                                         multiline: False
-                                        text: ''
-                                        on_text_validate: root.save_filename()                           
+                                        text: ''                           
                             BoxLayout: 
                                 size_hint: (None,None)
                                 height: dp(168)
