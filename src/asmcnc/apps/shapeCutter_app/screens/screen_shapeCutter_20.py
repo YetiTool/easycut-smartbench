@@ -553,6 +553,10 @@ class ShapeCutter20ScreenClass(Screen):
     def check_dimensions(self):        
         if not self.a_dimension.text == "" and not self.b_dimension.text == "" \
         and not self.c_dimension.text == "":
+        
+            
+        
+        
             self.j.parameter_dict["cutter dimensions"]["diameter"] = self.a_dimension.text
             self.j.parameter_dict["cutter dimensions"]["cutting length"] = self.b_dimension.text
             self.j.parameter_dict["cutter dimensions"]["shoulder length"] = self.c_dimension.text

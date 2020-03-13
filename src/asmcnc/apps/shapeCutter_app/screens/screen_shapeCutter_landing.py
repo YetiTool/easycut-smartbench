@@ -10,7 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 
-from asmcnc.apps.shapeCutter_app.screens import popup_tutorial
+from asmcnc.apps.shapeCutter_app.screens import popup_info
 
 Builder.load_string("""
 
@@ -160,7 +160,8 @@ class ShapeCutterLandingScreenClass(Screen):
         self.j=kwargs['job_parameters']
         
     def get_info(self):
-        popup_tutorial.PopupTutorial(self.shapecutter_sm)
+
+        popup_info.PopupTutorial(self.shapecutter_sm)
       
     def cut_rectangle(self):
         self.j.shape_dict["shape"] = "rectangle"

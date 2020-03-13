@@ -12,6 +12,8 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.switch import Switch
 
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string("""
 
 <ShapeCutterDimensionsScreenClass>:
@@ -129,35 +131,7 @@ Builder.load_string("""
                                     height: dp(32)
                                     width: dp(120)
                                     padding: (37,0,0,0)
-                                                
-#                                     ToggleButton: # change to switch, use "if active" instead of state
-#                                         id: unit_toggle
-#                                         size_hint: (None,None)
-#                                         height: dp(30)
-#                                         width: dp(75)
-#                                         background_color: hex('#F4433600')
-#                                         center: self.parent.center
-#                                         pos: self.parent.pos
-#                                         on_press: root.toggle_units()
-#          
-#                                         BoxLayout:
-#                                             height: dp(30)
-#                                             width: dp(75)
-#                                             canvas:
-#                                                 Rectangle: 
-#                                                     pos: self.parent.pos
-#                                                     size: self.parent.size
-#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-                                    
-#                                     ToggleButton:
-#                                         id: unit_toggle
-#                                         size_hint: (None,None)
-#                                         height: dp(32)
-#                                         width: dp(83)
-#                                         on_press: root.toggle_units()
-#                                         opacity: 1
-#                                         center: self.parent.center
-#                                         pos: self.parent.pos                                
+                               
                                     Switch:
                                         id: unit_toggle
                                         size_hint: (None,None)
@@ -183,21 +157,6 @@ Builder.load_string("""
                                                 # make or download your slider jpg
                                                 size: sp(43), sp(32)
                                                 pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
-
-#                                         
-#                                         
-#                                         
-#                                         Label:
-#                                             id: unit_label
-#                                             text: "mm"
-#                                             color: 1,1,1,1
-#                                             font_size: 20
-#                                             markup: True
-#                                             halign: "center"
-#                                             valign: "middle"
-#                                             text_size: self.size
-#                                             size: self.parent.size
-#                                             pos: self.parent.pos
                                                        
                             # BL horizontal
                                 # label + text entry
@@ -537,14 +496,31 @@ class ShapeCutterDimensionsScreenClass(Screen):
       
     def toggle_units(self):       
         if self.unit_toggle.active == True:
-            print "inches"
             self.j.shape_dict["units"] = "inches"
+            
+            if not (self.input_dim1.text == ""): self.input_dim1.text = str(float(self.input_dim1.text) / 25.4)
+            if not (self.input_dim2.text == ""): self.input_dim2.text = str(float(self.input_dim2.text) / 25.4)
+            if not (self.input_dim3.text == ""): self.input_dim3.text = str(float(self.input_dim3.text) / 25.4)
+            if not (self.input_dim4.text == ""): self.input_dim4.text = str(float(self.input_dim4.text) / 25.4)
 
-        elif self.unit_toggle.active == False: 
-            print "mm"
+        elif self.unit_toggle.active == False:
             self.j.shape_dict["units"] = "mm"
+            
+            if not (self.input_dim1.text == ""): self.input_dim1.text = str(float(self.input_dim1.text) * 25.4)
+            if not (self.input_dim2.text == ""): self.input_dim2.text = str(float(self.input_dim2.text) * 25.4)
+            if not (self.input_dim3.text == ""): self.input_dim3.text = str(float(self.input_dim3.text) * 25.4)
+            if not (self.input_dim4.text == ""): self.input_dim4.text = str(float(self.input_dim4.text) * 25.4)
 
     def check_dimensions(self):    
+
+        if self.unit_toggle.active == True:
+            self.j.shape_dict["units"] = "inches"
+
+        elif self.unit_toggle.active == False:
+            self.j.shape_dict["units"] = "mm"
+        
+        units = self.j.shape_dict["units"]
+        
         if self.j.shape_dict["shape"] == 'rectangle':
             
             # if all fields are full
@@ -552,22 +528,20 @@ class ShapeCutterDimensionsScreenClass(Screen):
             and not (self.input_dim3.text == "") and not (self.input_dim4.text == ""):
             
                 # save the dimensions
-                self.j.shape_dict["dimensions"]["X"] = float(self.input_dim1.text)
-                self.j.shape_dict["dimensions"]["Y"] = float(self.input_dim2.text)
-                self.j.shape_dict["dimensions"]["Z"] = float(self.input_dim3.text)
-                self.j.shape_dict["dimensions"]["R"] = float(self.input_dim4.text)
+                input_dim_list = [("X", float(self.input_dim1.text)),
+                                  ("Y", float(self.input_dim2.text)),
+                                  ("Z", float(self.input_dim3.text)),
+                                  ("R", float(self.input_dim4.text))]
                 
-                print self.j.shape_dict
-                print self.input_dim1.text
-                
-                
-                if self.unit_toggle.active == True:
-                    print "inches"
-                    self.j.shape_dict["units"] = "inches"
-        
-                elif self.unit_toggle.active == False: 
-                    print "mm"
-                    self.j.shape_dict["units"] = "mm"
+                for (dim, input) in input_dim_list:
+                    setting = self.j.validate_shape_dimensions(dim, input)
+                    if not setting == True:
+                        description = dim + " dimension isn't valid. \n\n" + \
+                                    dim + " value should be between 0 and " + str(setting) + " " + units + ".\n\n" \
+                                    + "Please re-enter your dimensions."
+                        
+                        popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                        return False
                 
                 self.next_screen()
             else:
@@ -575,23 +549,21 @@ class ShapeCutterDimensionsScreenClass(Screen):
             
         if self.j.shape_dict["shape"] == 'circle':
             if not (self.input_dim2.text == "") and not (self.input_dim3.text == ""):            # save the dimensions
+                                    
                 # save the dimensions
-                self.j.shape_dict["dimensions"]["D"] = self.input_dim2.text
-                self.j.shape_dict["dimensions"]["Z"] = self.input_dim3.text
-
-                print self.j.shape_dict
-
-                if self.unit_toggle.active == True:
-                    print "inches"
-                    self.j.shape_dict["units"] = "inches"
-        
-                elif self.unit_toggle.active == False: 
-                    print "mm"
-                    self.j.shape_dict["units"] = "mm"
+                input_dim_list = [("D", float(self.input_dim2.text)),
+                                  ("Z", float(self.input_dim3.text))]
+                
+                for (dim, input) in input_dim_list:
+                    setting = self.j.validate_shape_dimensions(dim, input)
+                    if not setting == True:
+                        description = dim + " dimension isn't valid. \n\n" + \
+                                    dim + " value should be between 0 and " + str(setting) + " " + units + ".\n\n" \
+                                    + "Please re-enter your dimensions."
+                        
+                        popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                        return False
                 
                 self.next_screen()
             else:
                 pass
-
-    def next_screen(self):
-        self.shapecutter_sm.prepare_tab()

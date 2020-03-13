@@ -7,6 +7,8 @@ Module to store parameters and user choices for the Shape Cutter app
 import csv
 import math
 import re
+from __builtin__ import input
+from docutils.io import Input
 
 class ShapeCutterJobParameters(object):
     
@@ -25,22 +27,22 @@ class ShapeCutterJobParameters(object):
     # Internal settings
     z_height_for_rapid_move = 3
     
-    def __init__(self):
+    def __init__(self, machine, shapecutter_sm):
  
-#        self.m = machine
-        # self.shapecutter_sm = screen_manager_shapecutter
+        self.m = machine
+        self.shapecutter_sm = shapecutter_sm
  
         # shape dimensions
         self.circle_dimensions = {
-            "D": "0",
-            "Z": "0"
+            "D": "100",
+            "Z": "6"
             }
         
         self.rectangle_dimensions = {
-            "X": "0",
-            "Y": "0",
-            "Z": "0",
-            "R": "0"
+            "X": "100",
+            "Y": "100",
+            "Z": "6",
+            "R": "10"
             }
         
         # shape choices       
@@ -93,11 +95,59 @@ class ShapeCutterJobParameters(object):
         self.range_y = [0,0] 
         self.range_z = [0,0]
     
-    def validate_shape_dimensions(self, input):
+    def validate_shape_dimensions(self, dim, input):
         
-        if input == "X":
-            pass
-    
+        if self.shape_dict["units"] == "inches": 
+            multiplier = 1/25.4
+        else: 
+            multiplier = 1
+        
+        max_X = self.m.s.setting_130*multiplier
+        max_Y = self.m.s.setting_131*multiplier
+        max_Z = self.m.s.setting_132*multiplier
+        
+        if dim == "X":
+            
+            if not input < max_X: return max_X
+            if not input > 0: return max_X
+            
+            self.shape_dict["dimensions"]["X"] = input
+            
+        elif dim == "Y":
+            
+            if not input < max_Y: return max_Y
+            if not input > 0: return max_Y
+        
+            self.shape_dict["dimensions"]["Y"] = input
+        
+        elif dim == "Z":
+            
+            print input
+            print max_Z
+            
+            if not input < max_Z: return max_Z
+            if not input > 0: return max_Z
+            
+            self.shape_dict["dimensions"]["Z"] = input
+            
+        elif dim == "R":
+            
+            max_R = min(self.shape_dict["dimensions"]["X"], self.shape_dict["dimensions"]["Y"])*multiplier
+
+            if not input < max_R: return max_R
+            if not input >= 0: return max_R
+            
+            self.shape_dict["dimensions"]["R"] = input
+            
+        elif dim == "D":
+
+            if not input < max_X: return max_X
+            if not input > 0: return max_X
+            
+            self.shape_dict["dimensions"]["D"] = input
+        
+        return True
+           
     def validate_parameters(self):
         pass
  

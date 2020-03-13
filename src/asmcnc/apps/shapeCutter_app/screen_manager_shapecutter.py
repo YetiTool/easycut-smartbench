@@ -68,7 +68,7 @@ class ScreenManagerShapeCutter(object):
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
-        self.j = sC_job_parameters.ShapeCutterJobParameters()
+        self.j = sC_job_parameters.ShapeCutterJobParameters(self.m, self)
 
     def prepare_tab(self):
         if not self.sm.has_screen('sC1'):
