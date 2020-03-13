@@ -312,7 +312,7 @@ class ShapeCutter19ScreenClass(Screen):
 
     def get_info(self):
         info = "Ensure your tool is sharp and has no obvious damage.\n\n" \
-                "Ensure your collect size matches your shank diameter."
+                "Ensure your collet size matches your shank diameter."
         popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):

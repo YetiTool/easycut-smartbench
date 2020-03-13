@@ -498,18 +498,17 @@ class ShapeCutterDimensionsScreenClass(Screen):
         if self.unit_toggle.active == True:
             self.j.shape_dict["units"] = "inches"
             
-            if not (self.input_dim1.text == ""): self.input_dim1.text = str(float(self.input_dim1.text) / 25.4)
-            if not (self.input_dim2.text == ""): self.input_dim2.text = str(float(self.input_dim2.text) / 25.4)
-            if not (self.input_dim3.text == ""): self.input_dim3.text = str(float(self.input_dim3.text) / 25.4)
-            if not (self.input_dim4.text == ""): self.input_dim4.text = str(float(self.input_dim4.text) / 25.4)
-
+            if not (self.input_dim1.text == ""): self.input_dim1.text = "{:.2f}".format(float(self.input_dim1.text) / 25.4)
+            if not (self.input_dim2.text == ""): self.input_dim2.text = "{:.2f}".format(float(self.input_dim2.text) / 25.4)
+            if not (self.input_dim3.text == ""): self.input_dim3.text = "{:.2f}".format(float(self.input_dim3.text) / 25.4)
+            if not (self.input_dim4.text == ""): self.input_dim4.text = "{:.2f}".format(float(self.input_dim4.text) / 25.4)
         elif self.unit_toggle.active == False:
             self.j.shape_dict["units"] = "mm"
             
-            if not (self.input_dim1.text == ""): self.input_dim1.text = str(float(self.input_dim1.text) * 25.4)
-            if not (self.input_dim2.text == ""): self.input_dim2.text = str(float(self.input_dim2.text) * 25.4)
-            if not (self.input_dim3.text == ""): self.input_dim3.text = str(float(self.input_dim3.text) * 25.4)
-            if not (self.input_dim4.text == ""): self.input_dim4.text = str(float(self.input_dim4.text) * 25.4)
+            if not (self.input_dim1.text == ""): self.input_dim1.text = "{:.2f}".format(float(self.input_dim1.text) * 25.4)
+            if not (self.input_dim2.text == ""): self.input_dim2.text = "{:.2f}".format(float(self.input_dim2.text) * 25.4)
+            if not (self.input_dim3.text == ""): self.input_dim3.text = "{:.2f}".format(float(self.input_dim3.text) * 25.4)
+            if not (self.input_dim4.text == ""): self.input_dim4.text = "{:.2f}".format(float(self.input_dim4.text) * 25.4)
 
     def check_dimensions(self):    
 
@@ -537,7 +536,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
                     setting = self.j.validate_shape_dimensions(dim, input)
                     if not setting == True:
                         description = dim + " dimension isn't valid. \n\n" + \
-                                    dim + " value should be between 0 and " + str(setting) + " " + units + ".\n\n" \
+                                    dim + " value should be between 0 and " + "{:.2f}".format(setting) + " " + units + ".\n\n" \
                                     + "Please re-enter your dimensions."
                         
                         popup_input_error.PopupInputError(self.shapecutter_sm, description)
@@ -558,7 +557,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
                     setting = self.j.validate_shape_dimensions(dim, input)
                     if not setting == True:
                         description = dim + " dimension isn't valid. \n\n" + \
-                                    dim + " value should be between 0 and " + str(setting) + " " + units + ".\n\n" \
+                                    dim + " value should be between 0 and " + "{:.2f}".format(setting) + " " + units + ".\n\n" \
                                     + "Please re-enter your dimensions."
                         
                         popup_input_error.PopupInputError(self.shapecutter_sm, description)

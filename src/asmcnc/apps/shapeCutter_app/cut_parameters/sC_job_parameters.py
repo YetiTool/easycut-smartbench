@@ -63,9 +63,9 @@ class ShapeCutterJobParameters(object):
             }
         
         self.cutter_dimensions = {
-            "diameter": "0",
-            "cutting length": "0",
-            "shoulder length": "0",
+            "diameter": "6.35",
+            "cutting length": "20",
+            "shoulder length": "30",
             "units": "mm"
             }
 
@@ -122,9 +122,6 @@ class ShapeCutterJobParameters(object):
         
         elif dim == "Z":
             
-            print input
-            print max_Z
-            
             if not input < max_Z: return max_Z
             if not input > 0: return max_Z
             
@@ -132,7 +129,7 @@ class ShapeCutterJobParameters(object):
             
         elif dim == "R":
             
-            max_R = min(self.shape_dict["dimensions"]["X"], self.shape_dict["dimensions"]["Y"])*multiplier
+            max_R = min(self.shape_dict["dimensions"]["X"], self.shape_dict["dimensions"]["Y"])
 
             if not input < max_R: return max_R
             if not input >= 0: return max_R
@@ -147,6 +144,35 @@ class ShapeCutterJobParameters(object):
             self.shape_dict["dimensions"]["D"] = input
         
         return True
+
+    def validate_cutter_dimensions(self, param, input):
+        
+        if self.shape_dict["units"] == "inches" and self.parameter_dict["cutter dimensions"]["units"] == "mm": 
+            multiplier = 25.4
+        elif self.shape_dict["units"] == "mm" and self.parameter_dict["cutter dimensions"]["units"] == "inches":
+            multiplier = 1/25.4
+        else:
+            multiplier = 1
+            
+        min_B_and_C = self.shape_dict["dimensions"]["Z"]*multiplier
+
+        if param == "diameter":
+            if not input > 0: return 0
+            self.parameter_dict["cutter dimensions"]["diameter"] = input
+            
+        elif param == "cutting length":
+            if not input > 0: return 0
+        
+            self.parameter_dict["cutter dimensions"]["cutting length"] = input
+        
+        elif param == "shoulder length":
+            if not input + self.parameter_dict["cutter dimensions"]["cutting length"] > min_B_and_C:
+                return min_B_and_C
+            
+            self.parameter_dict["cutter dimensions"]["shoulder length"] = input
+        
+        return True
+        
            
     def validate_parameters(self):
         pass
