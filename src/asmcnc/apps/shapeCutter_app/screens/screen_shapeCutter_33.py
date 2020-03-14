@@ -381,27 +381,55 @@ class ShapeCutter33ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.shapecutter_sm.previous_screen()    
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.previous_screen()
+        else:
+            pass
     
     def next_screen(self):
-        self.shapecutter_sm.next_screen()
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.next_screen()
+        else:
+            pass
     
 # Tab functions
 
     def prepare(self):
-        self.shapecutter_sm.prepare_tab()
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.prepare_tab()
+        else:
+            pass  
     
+
     def load(self):
-        self.shapecutter_sm.load_tab()
+
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.load_tab()
+        else:
+            pass  
+
     
     def define(self):
-        self.shapecutter_sm.define_tab()
+
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.define_tab()
+        else:
+            pass  
     
     def position(self):
-        self.shapecutter_sm.position_tab()
+        
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.position_tab()
+        else:
+            pass  
+
     
     def check(self):
-        self.shapecutter_sm.check_tab()
+        
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.check_tab()
+        else:
+            pass  
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
@@ -410,29 +438,32 @@ class ShapeCutter33ScreenClass(Screen):
 
     def trace_job(self): #(need to generate gcode in advance)
 
-        self.m.go_x_datum()
-        self.m.go_y_datum()
-
-        xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
-
-        job_x_range = self.j.range_x[1] - self.j.range_x[0]
-        job_y_range = self.j.range_y[1] - self.j.range_y[0]
-
-
-        if self.j.shape_dict["shape"] == "rectangle":
-            self.m.jog_relative('X', job_x_range, xy_feed_speed)
-            self.m.jog_relative('Y', job_y_range, xy_feed_speed)
-            self.m.jog_relative('X', -job_x_range, xy_feed_speed)
-            self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
-            
-        elif self.j.shape_dict["shape"] == "circle":
-            self.m.jog_relative('X', self.j.range_x[0], xy_feed_speed)
-            self.m.jog_relative('Y', self.j.range_y[0], xy_feed_speed)
-
-            self.m.jog_relative('X', job_x_range, xy_feed_speed)
-            self.m.jog_relative('Y', job_y_range, xy_feed_speed)
-            self.m.jog_relative('X', -job_x_range, xy_feed_speed)
-            self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
+        if not self.m.state().startswith('Jog'):
+            self.m.go_x_datum()
+            self.m.go_y_datum()
+    
+            xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+    
+            job_x_range = self.j.range_x[1] - self.j.range_x[0]
+            job_y_range = self.j.range_y[1] - self.j.range_y[0]
+    
+    
+            if self.j.shape_dict["shape"] == "rectangle":
+                self.m.jog_relative('X', job_x_range, xy_feed_speed)
+                self.m.jog_relative('Y', job_y_range, xy_feed_speed)
+                self.m.jog_relative('X', -job_x_range, xy_feed_speed)
+                self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
+                
+            elif self.j.shape_dict["shape"] == "circle":
+                self.m.jog_relative('X', self.j.range_x[0], xy_feed_speed)
+                self.m.jog_relative('Y', self.j.range_y[0], xy_feed_speed)
+    
+                self.m.jog_relative('X', job_x_range, xy_feed_speed)
+                self.m.jog_relative('Y', job_y_range, xy_feed_speed)
+                self.m.jog_relative('X', -job_x_range, xy_feed_speed)
+                self.m.jog_relative('Y', -job_y_range, xy_feed_speed)
+        else:
+            pass
 
     def stop_jog(self):
         self.m.quit_jog()

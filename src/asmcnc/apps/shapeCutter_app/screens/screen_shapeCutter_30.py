@@ -305,28 +305,56 @@ class ShapeCutter30ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.shapecutter_sm.previous_screen()    
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.previous_screen()
+        else:
+            pass
     
     def next_screen(self):
-        self.shapecutter_sm.next_screen()
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.next_screen()
+        else:
+            pass
     
 # Tab functions
 
     def prepare(self):
-        self.shapecutter_sm.prepare_tab()
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.prepare_tab()
+        else:
+            pass  
     
+
     def load(self):
-        self.shapecutter_sm.load_tab()
+
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.load_tab()
+        else:
+            pass  
+
     
     def define(self):
-        self.shapecutter_sm.define_tab()
+
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.define_tab()
+        else:
+            pass  
     
     def position(self):
-        self.shapecutter_sm.position_tab()
+        
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.position_tab()
+        else:
+            pass  
+
     
     def check(self):
-        self.shapecutter_sm.check_tab()
-    
+        
+        if not self.m.state().startswith('Jog'):
+            self.shapecutter_sm.check_tab()
+        else:
+            pass 
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 

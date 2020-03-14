@@ -181,7 +181,7 @@ class QuickCommands(Widget):
         if self.sm.get_screen('home').job_gcode ==[]:
             pass
 
-        elif self.m.state() != 'Idle':
+        elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
             
         elif self.m.is_machine_homed == False:
