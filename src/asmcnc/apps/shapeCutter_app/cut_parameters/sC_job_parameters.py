@@ -73,7 +73,7 @@ class ShapeCutterJobParameters(object):
 
         self.feed_rates = {
             "xy feed rate": 2500,
-            "z feed rate": 200,
+            "z feed rate": 2000,
             "spindle speed": 25000,
             "units": "mm"
             }

@@ -59,8 +59,8 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
     
-    screen_load_dt = 0.1
-    prev_screen_load_dt = 0.25
+    screen_load_dt = 0.02
+    prev_screen_load_dt = 0.045
     tab_destroy_dt = 0.75
     
     def __init__(self, app_manager, screen_manager, machine):
@@ -994,11 +994,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.get_screen('homing').cancel_to_screen = cancel_to_screen  
             self.sm.current = 'homing'
             
-            print self.j.shape_dict
-            
             self.j.generate_gCode()
-            
-            # self.j.set_job_envelope() # THIS BEASTIE IS A PROBLEM
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):
@@ -1022,156 +1018,156 @@ class ScreenManagerShapeCutter(object):
             sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
             self.sm.add_widget(sCtutorial_screen)
                 
-    def load_all_screens(self):        
-        self.load_entry_screens()
-        self.load_prepare_screens()
-        self.load_load_screens()
-        self.load_define_screens()
-        self.load_position_screens()
-        self.load_check_screens()
-      
-    def load_entry_screens(self):
-        if not self.sm.has_screen('sClanding'): 
-            sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sClanding_screen)
-        if not self.sm.has_screen('sCexit'):
-            sCexit_screen = screen_shapeCutter_exit.ShapeCutterExitScreenClass(name = 'sCexit', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sCexit_screen)
-        if not self.sm.has_screen('sCApIs'):
-            sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sCApIs_screen)
-        if not self.sm.has_screen('sCdimensions'):
-            sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sCdimensions_screen)
-    
-    def load_prepare_screens(self):     
-        if not self.sm.has_screen('sC1'):
-            sC1_screen = screen_shapeCutter_1.ShapeCutter1ScreenClass(name = 'sC1', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC1_screen)
-        if not self.sm.has_screen('sC2'):
-            sC2_screen = screen_shapeCutter_2.ShapeCutter2ScreenClass(name = 'sC2', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC2_screen)
-        if not self.sm.has_screen('sC3'):
-            sC3_screen = screen_shapeCutter_3.ShapeCutter3ScreenClass(name = 'sC3', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC3_screen)
-        if not self.sm.has_screen('sC4'):
-            sC4_screen = screen_shapeCutter_4.ShapeCutter4ScreenClass(name = 'sC4', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC4_screen)
-        if not self.sm.has_screen('sC5'):
-            sC5_screen = screen_shapeCutter_5.ShapeCutter5ScreenClass(name = 'sC5', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC5_screen)
-        if not self.sm.has_screen('sC6'):
-            sC6_screen = screen_shapeCutter_6.ShapeCutter6ScreenClass(name = 'sC6', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC6_screen)
-        if not self.sm.has_screen('sC7'):
-            sC7_screen = screen_shapeCutter_7.ShapeCutter7ScreenClass(name = 'sC7', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC7_screen)
-        if not self.sm.has_screen('sC8'):
-            sC8_screen = screen_shapeCutter_8.ShapeCutter8ScreenClass(name = 'sC8', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC8_screen)
-        if not self.sm.has_screen('sC9'):
-            sC9_screen = screen_shapeCutter_9.ShapeCutter9ScreenClass(name = 'sC9', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC9_screen)
-
-    def load_load_screens(self):
-        if not self.sm.has_screen('sC10'):
-            sC10_screen = screen_shapeCutter_10.ShapeCutter10ScreenClass(name = 'sC10', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC10_screen)
-        if not self.sm.has_screen('sC11'):
-            sC11_screen = screen_shapeCutter_11.ShapeCutter11ScreenClass(name = 'sC11', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC11_screen)
-        if not self.sm.has_screen('sC12'):
-            sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC12_screen)
-        if not self.sm.has_screen('sC13'):
-            sC13_screen = screen_shapeCutter_13.ShapeCutter13ScreenClass(name = 'sC13', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC13_screen)
-        if not self.sm.has_screen('sC14'):
-            sC14_screen = screen_shapeCutter_14.ShapeCutter14ScreenClass(name = 'sC14', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC14_screen)
-        if not self.sm.has_screen('sC15'):
-            sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC15_screen)
-        if not self.sm.has_screen('sC16'):
-            sC16_screen = screen_shapeCutter_16.ShapeCutter16ScreenClass(name = 'sC16', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC16_screen)
-
-    def load_define_screens(self):
-        if not self.sm.has_screen('sC17'):
-            sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC17_screen)
-        if not self.sm.has_screen('sC18'):
-            sC18_screen = screen_shapeCutter_18.ShapeCutter18ScreenClass(name = 'sC18', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC18_screen)
-        if not self.sm.has_screen('sC19'):
-            sC19_screen = screen_shapeCutter_19.ShapeCutter19ScreenClass(name = 'sC19', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC19_screen)
-        if not self.sm.has_screen('sC20'):
-            sC20_screen = screen_shapeCutter_20.ShapeCutter20ScreenClass(name = 'sC20', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC20_screen)
-        if not self.sm.has_screen('sC21'):
-            sC21_screen = screen_shapeCutter_21.ShapeCutter21ScreenClass(name = 'sC21', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC21_screen)
-        if not self.sm.has_screen('sC22'):
-            sC22_screen = screen_shapeCutter_22.ShapeCutter22ScreenClass(name = 'sC22', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC22_screen)
-        if not self.sm.has_screen('sC23'):
-            sC23_screen = screen_shapeCutter_23.ShapeCutter23ScreenClass(name = 'sC23', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC23_screen)
-        if not self.sm.has_screen('sC24'):
-            sC24_screen = screen_shapeCutter_24.ShapeCutter24ScreenClass(name = 'sC24', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC24_screen)
-        if not self.sm.has_screen('sC25'):
-            sC25_screen = screen_shapeCutter_25.ShapeCutter25ScreenClass(name = 'sC25', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC25_screen)
-    
-    def load_position_screens(self):
-        if not self.sm.has_screen('sC26'):
-            sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC26_screen)
-        if not self.sm.has_screen('sC27'):
-            sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC27_screen)
-        if not self.sm.has_screen('sC28'):
-            sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC28_screen)
-        if not self.sm.has_screen('sC29'):
-            sC29_screen = screen_shapeCutter_29.ShapeCutter29ScreenClass(name = 'sC29', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC29_screen)
-        if not self.sm.has_screen('sC30'):
-            sC30_screen = screen_shapeCutter_30.ShapeCutter30ScreenClass(name = 'sC30', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC30_screen)
-        if not self.sm.has_screen('sC31'):
-            sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC31_screen)
-        if not self.sm.has_screen('sC32'):
-            sC32_screen = screen_shapeCutter_32.ShapeCutter32ScreenClass(name = 'sC32', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC32_screen)
-    
-    def load_check_screens(self):
-        if not self.sm.has_screen('sC33'):
-            sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC33_screen)
-        if not self.sm.has_screen('sC34'):
-            sC34_screen = screen_shapeCutter_34.ShapeCutter34ScreenClass(name = 'sC34', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC34_screen)
-        if not self.sm.has_screen('sC35'):
-            sC35_screen = screen_shapeCutter_35.ShapeCutter35ScreenClass(name = 'sC35', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sC35_screen)
-        if not self.sm.has_screen('sC36'):
-            sC36_screen = screen_shapeCutter_36.ShapeCutter36ScreenClass(name = 'sC36', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC36_screen)
-        
-    def load_final_screens(self):
-        if not self.sm.has_screen('sCsavejob'): 
-            sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sCsavejob_screen)
-        if not self.sm.has_screen('sCfeedback'):
-            sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sCfeedback_screen)
-        if not self.sm.has_screen('sCrepeat'):
-            sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sCrepeat_screen)
+#     def load_all_screens(self):        
+#         self.load_entry_screens()
+#         self.load_prepare_screens()
+#         self.load_load_screens()
+#         self.load_define_screens()
+#         self.load_position_screens()
+#         self.load_check_screens()
+#       
+#     def load_entry_screens(self):
+#         if not self.sm.has_screen('sClanding'): 
+#             sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sClanding_screen)
+#         if not self.sm.has_screen('sCexit'):
+#             sCexit_screen = screen_shapeCutter_exit.ShapeCutterExitScreenClass(name = 'sCexit', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sCexit_screen)
+#         if not self.sm.has_screen('sCApIs'):
+#             sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sCApIs_screen)
+#         if not self.sm.has_screen('sCdimensions'):
+#             sCdimensions_screen = screen_shapeCutter_dimensions.ShapeCutterDimensionsScreenClass(name = 'sCdimensions', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sCdimensions_screen)
+#     
+#     def load_prepare_screens(self):     
+#         if not self.sm.has_screen('sC1'):
+#             sC1_screen = screen_shapeCutter_1.ShapeCutter1ScreenClass(name = 'sC1', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC1_screen)
+#         if not self.sm.has_screen('sC2'):
+#             sC2_screen = screen_shapeCutter_2.ShapeCutter2ScreenClass(name = 'sC2', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC2_screen)
+#         if not self.sm.has_screen('sC3'):
+#             sC3_screen = screen_shapeCutter_3.ShapeCutter3ScreenClass(name = 'sC3', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC3_screen)
+#         if not self.sm.has_screen('sC4'):
+#             sC4_screen = screen_shapeCutter_4.ShapeCutter4ScreenClass(name = 'sC4', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC4_screen)
+#         if not self.sm.has_screen('sC5'):
+#             sC5_screen = screen_shapeCutter_5.ShapeCutter5ScreenClass(name = 'sC5', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC5_screen)
+#         if not self.sm.has_screen('sC6'):
+#             sC6_screen = screen_shapeCutter_6.ShapeCutter6ScreenClass(name = 'sC6', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC6_screen)
+#         if not self.sm.has_screen('sC7'):
+#             sC7_screen = screen_shapeCutter_7.ShapeCutter7ScreenClass(name = 'sC7', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC7_screen)
+#         if not self.sm.has_screen('sC8'):
+#             sC8_screen = screen_shapeCutter_8.ShapeCutter8ScreenClass(name = 'sC8', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC8_screen)
+#         if not self.sm.has_screen('sC9'):
+#             sC9_screen = screen_shapeCutter_9.ShapeCutter9ScreenClass(name = 'sC9', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC9_screen)
+# 
+#     def load_load_screens(self):
+#         if not self.sm.has_screen('sC10'):
+#             sC10_screen = screen_shapeCutter_10.ShapeCutter10ScreenClass(name = 'sC10', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC10_screen)
+#         if not self.sm.has_screen('sC11'):
+#             sC11_screen = screen_shapeCutter_11.ShapeCutter11ScreenClass(name = 'sC11', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC11_screen)
+#         if not self.sm.has_screen('sC12'):
+#             sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC12_screen)
+#         if not self.sm.has_screen('sC13'):
+#             sC13_screen = screen_shapeCutter_13.ShapeCutter13ScreenClass(name = 'sC13', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC13_screen)
+#         if not self.sm.has_screen('sC14'):
+#             sC14_screen = screen_shapeCutter_14.ShapeCutter14ScreenClass(name = 'sC14', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC14_screen)
+#         if not self.sm.has_screen('sC15'):
+#             sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC15_screen)
+#         if not self.sm.has_screen('sC16'):
+#             sC16_screen = screen_shapeCutter_16.ShapeCutter16ScreenClass(name = 'sC16', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC16_screen)
+# 
+#     def load_define_screens(self):
+#         if not self.sm.has_screen('sC17'):
+#             sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC17_screen)
+#         if not self.sm.has_screen('sC18'):
+#             sC18_screen = screen_shapeCutter_18.ShapeCutter18ScreenClass(name = 'sC18', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC18_screen)
+#         if not self.sm.has_screen('sC19'):
+#             sC19_screen = screen_shapeCutter_19.ShapeCutter19ScreenClass(name = 'sC19', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC19_screen)
+#         if not self.sm.has_screen('sC20'):
+#             sC20_screen = screen_shapeCutter_20.ShapeCutter20ScreenClass(name = 'sC20', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC20_screen)
+#         if not self.sm.has_screen('sC21'):
+#             sC21_screen = screen_shapeCutter_21.ShapeCutter21ScreenClass(name = 'sC21', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC21_screen)
+#         if not self.sm.has_screen('sC22'):
+#             sC22_screen = screen_shapeCutter_22.ShapeCutter22ScreenClass(name = 'sC22', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC22_screen)
+#         if not self.sm.has_screen('sC23'):
+#             sC23_screen = screen_shapeCutter_23.ShapeCutter23ScreenClass(name = 'sC23', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC23_screen)
+#         if not self.sm.has_screen('sC24'):
+#             sC24_screen = screen_shapeCutter_24.ShapeCutter24ScreenClass(name = 'sC24', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC24_screen)
+#         if not self.sm.has_screen('sC25'):
+#             sC25_screen = screen_shapeCutter_25.ShapeCutter25ScreenClass(name = 'sC25', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC25_screen)
+#     
+#     def load_position_screens(self):
+#         if not self.sm.has_screen('sC26'):
+#             sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC26_screen)
+#         if not self.sm.has_screen('sC27'):
+#             sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC27_screen)
+#         if not self.sm.has_screen('sC28'):
+#             sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC28_screen)
+#         if not self.sm.has_screen('sC29'):
+#             sC29_screen = screen_shapeCutter_29.ShapeCutter29ScreenClass(name = 'sC29', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC29_screen)
+#         if not self.sm.has_screen('sC30'):
+#             sC30_screen = screen_shapeCutter_30.ShapeCutter30ScreenClass(name = 'sC30', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC30_screen)
+#         if not self.sm.has_screen('sC31'):
+#             sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC31_screen)
+#         if not self.sm.has_screen('sC32'):
+#             sC32_screen = screen_shapeCutter_32.ShapeCutter32ScreenClass(name = 'sC32', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC32_screen)
+#     
+#     def load_check_screens(self):
+#         if not self.sm.has_screen('sC33'):
+#             sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC33_screen)
+#         if not self.sm.has_screen('sC34'):
+#             sC34_screen = screen_shapeCutter_34.ShapeCutter34ScreenClass(name = 'sC34', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC34_screen)
+#         if not self.sm.has_screen('sC35'):
+#             sC35_screen = screen_shapeCutter_35.ShapeCutter35ScreenClass(name = 'sC35', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sC35_screen)
+#         if not self.sm.has_screen('sC36'):
+#             sC36_screen = screen_shapeCutter_36.ShapeCutter36ScreenClass(name = 'sC36', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sC36_screen)
+#         
+#     def load_final_screens(self):
+#         if not self.sm.has_screen('sCsavejob'): 
+#             sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', machine = self.m, job_parameters = self.j, shapecutter = self)
+#             self.sm.add_widget(sCsavejob_screen)
+#         if not self.sm.has_screen('sCfeedback'):
+#             sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sCfeedback_screen)
+#         if not self.sm.has_screen('sCrepeat'):
+#             sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
+#             self.sm.add_widget(sCrepeat_screen)
     
     def destroy_all_screens(self):
         if self.sm.has_screen('sClanding'): 
