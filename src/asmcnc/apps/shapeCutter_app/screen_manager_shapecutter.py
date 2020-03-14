@@ -63,6 +63,8 @@ class ScreenManagerShapeCutter(object):
     prev_screen_load_dt = 0.045
     tab_destroy_dt = 0.75
     
+    positioned = False
+    
     def __init__(self, app_manager, screen_manager, machine):
 
         self.am = app_manager
@@ -102,12 +104,16 @@ class ScreenManagerShapeCutter(object):
         Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         
     def check_tab(self):
-        if not self.sm.has_screen('sC33'):
-            sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sC33_screen) 
-        self.sm.current = 'sC33'
-        Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
+        
+        if self.positioned == True:
+            if not self.sm.has_screen('sC33'):
+                sC33_screen = screen_shapeCutter_33.ShapeCutter33ScreenClass(name = 'sC33', machine = self.m, job_parameters = self.j, shapecutter = self)
+                self.sm.add_widget(sC33_screen) 
+            self.sm.current = 'sC33'
+            Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
+            Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+        else:
+            pass  
 
     def next_screen(self):        
         if self.sm.current == 'sCtutorial':

@@ -287,6 +287,7 @@ class ShapeCutter32ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
+        self.shapecutter_sm.positioned = True
 
 # Action buttons       
     def get_info(self):
