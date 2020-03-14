@@ -166,6 +166,7 @@ class ShapeCutterRepeatScreenClass(Screen):
         self.shapecutter_sm.position_tab()
         
     def new_cut(self):
+        self.shapecutter_sm.refresh_shapecutter()
         self.shapecutter_sm.open_shapecutter()
         
     def exit(self):

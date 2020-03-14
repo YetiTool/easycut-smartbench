@@ -1520,4 +1520,102 @@ class ScreenManagerShapeCutter(object):
             if self.sm.has_screen('sC35'):
                 self.sm.remove_widget(self.sm.get_screen('sC35'))
             if self.sm.has_screen('sC36'):
-                self.sm.remove_widget(self.sm.get_screen('sC36'))     
+                self.sm.remove_widget(self.sm.get_screen('sC36'))
+                   
+    def refresh_shapecutter(self):
+        if self.sm.has_screen('sCdimensions'):
+            self.sm.remove_widget(self.sm.get_screen('sCdimensions'))
+        if self.sm.has_screen('sCApIs'):    
+            self.sm.remove_widget(self.sm.get_screen('sCApIs'))
+        if self.sm.has_screen('sC1'):
+            self.sm.remove_widget(self.sm.get_screen('sC1'))
+        if self.sm.has_screen('sC2'):
+            self.sm.remove_widget(self.sm.get_screen('sC2'))
+        if self.sm.has_screen('sC3'):
+            self.sm.remove_widget(self.sm.get_screen('sC3'))
+        if self.sm.has_screen('sC4'):
+            self.sm.remove_widget(self.sm.get_screen('sC4'))
+        if self.sm.has_screen('sC5'):
+            self.sm.remove_widget(self.sm.get_screen('sC5'))
+        if self.sm.has_screen('sC6'):   
+            self.sm.remove_widget(self.sm.get_screen('sC6'))
+        if self.sm.has_screen('sC7'):
+            self.sm.remove_widget(self.sm.get_screen('sC7'))
+        if self.sm.has_screen('sC8'):
+            self.sm.remove_widget(self.sm.get_screen('sC8'))
+        if self.sm.has_screen('sC9'):
+            self.sm.remove_widget(self.sm.get_screen('sC9'))
+        if self.sm.has_screen('sC10'):
+            self.sm.remove_widget(self.sm.get_screen('sC10'))
+        if self.sm.has_screen('sC11'):
+            self.sm.remove_widget(self.sm.get_screen('sC11'))
+        if self.sm.has_screen('sC12'):
+            self.sm.remove_widget(self.sm.get_screen('sC12'))
+        if self.sm.has_screen('sC13'):
+            self.sm.remove_widget(self.sm.get_screen('sC13'))
+        if self.sm.has_screen('sC14'):
+            self.sm.remove_widget(self.sm.get_screen('sC14'))
+        if self.sm.has_screen('sC15'):
+            self.sm.remove_widget(self.sm.get_screen('sC15'))
+        if self.sm.has_screen('sC16'):
+            self.sm.remove_widget(self.sm.get_screen('sC16'))
+        if self.sm.has_screen('sC17'):
+            self.sm.get_screen('sC17').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC17'))
+        if self.sm.has_screen('sCfilechooser'): 
+            self.sm.remove_widget(self.sm.get_screen('sCfilechooser'))
+        if self.sm.has_screen('sC18'):
+            self.sm.remove_widget(self.sm.get_screen('sC18'))
+        if self.sm.has_screen('sC19'):
+            self.sm.get_screen('sC19').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC19'))
+        if self.sm.has_screen('sC20'):
+            self.sm.remove_widget(self.sm.get_screen('sC20'))
+        if self.sm.has_screen('sC21'):
+            self.sm.remove_widget(self.sm.get_screen('sC21'))
+        if self.sm.has_screen('sC22'):
+            self.sm.get_screen('sC22').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC22'))
+        if self.sm.has_screen('sC23'):
+            self.sm.get_screen('sC23').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC23'))
+        if self.sm.has_screen('sC24'):
+            self.sm.remove_widget(self.sm.get_screen('sC24'))
+        if self.sm.has_screen('sC25'):
+            self.sm.get_screen('sC25').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC25'))
+        if self.sm.has_screen('sC26'):
+            self.sm.remove_widget(self.sm.get_screen('sC26'))
+        if self.sm.has_screen('sC27'):
+            self.sm.get_screen('sC27').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC27'))
+        if self.sm.has_screen('sC28'):
+            self.sm.get_screen('sC28').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC28'))
+        if self.sm.has_screen('sC29'):
+            self.sm.remove_widget(self.sm.get_screen('sC29'))
+        if self.sm.has_screen('sC30'):
+            self.sm.get_screen('sC30').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC30'))
+        if self.sm.has_screen('sC31'):
+            self.sm.get_screen('sC31').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC31'))
+        if self.sm.has_screen('sC32'):
+            self.sm.remove_widget(self.sm.get_screen('sC32'))
+        if self.sm.has_screen('sC33'):
+            self.sm.get_screen('sC33').clear_widgets()
+            self.sm.remove_widget(self.sm.get_screen('sC33'))
+        if self.sm.has_screen('sC34'):
+            self.sm.remove_widget(self.sm.get_screen('sC34'))
+        if self.sm.has_screen('sC35'):
+            self.sm.remove_widget(self.sm.get_screen('sC35'))
+        if self.sm.has_screen('sC36'):
+            self.sm.remove_widget(self.sm.get_screen('sC36'))
+        if self.sm.has_screen('sCsavejob'):
+            self.sm.get_screen('sCsavejob').clear_widgets() 
+            self.sm.remove_widget(self.sm.get_screen('sCsavejob'))
+        if self.sm.has_screen('sCfeedback'): 
+            self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
+        if self.sm.has_screen('sCexit'): 
+            self.sm.remove_widget(self.sm.get_screen('sCexit'))
+                
