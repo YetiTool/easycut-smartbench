@@ -1414,13 +1414,6 @@ class ScreenManagerShapeCutter(object):
                 self.sm.remove_widget(self.sm.get_screen('sC35'))
             if self.sm.has_screen('sC36'):
                 self.sm.remove_widget(self.sm.get_screen('sC36'))
-        elif self.sm.current == 'sCfeedback':
-            if self.sm.has_screen('sCsavejob'):
-                self.sm.get_screen('sCsave_job').clear_widgets()
-                self.sm.remove_widget(self.sm.get_screen('sCsavejob'))
-        elif self.sm.current == 'sCrepeat':
-            if self.sm.has_screen('sCfeedback'): 
-                self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
         
         Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         
