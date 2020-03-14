@@ -575,7 +575,13 @@ class ScreenManagerShapeCutter(object):
                 sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sClanding_screen)            
             self.sm.current = 'sClanding'
-            
+        
+        if self.sm.current == 'sCdimensions':
+            if not self.sm.has_screen('sCApIs'):
+                sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', machine = self.m, job_parameters = self.j, shapecutter = self)
+                self.sm.add_widget(sCApIs_screen)
+            self.sm.current = 'sCApIs'
+
         elif self.sm.current == 'sC1':
             if not self.sm.has_screen('sClanding'): 
                 sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)

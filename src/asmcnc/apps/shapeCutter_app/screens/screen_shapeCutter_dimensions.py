@@ -423,7 +423,6 @@ class ShapeCutterDimensionsScreenClass(Screen):
         
     def on_pre_enter(self):        
         self.info_button.opacity = 0
-        self.back_button.opacity = 0
         
         if self.j.shape_dict["units"] == 'mm':
             self.unit_toggle.active = False
@@ -488,8 +487,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         pass
     
     def go_back(self):
-        pass
-        # self.shapecutter_sm.previous_screen()
+        self.shapecutter_sm.previous_screen()
     
     def next_screen(self):
         self.shapecutter_sm.next_screen()
