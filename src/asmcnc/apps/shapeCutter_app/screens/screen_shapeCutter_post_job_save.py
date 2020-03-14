@@ -94,7 +94,6 @@ Builder.load_string("""
                                     text_size: self.size
                                     font_size: '20sp'
                                     markup: True
-                                    input_filter: 'float'
                                     multiline: False
                                     text: ''
                           

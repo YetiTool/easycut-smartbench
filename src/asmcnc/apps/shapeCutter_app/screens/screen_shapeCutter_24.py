@@ -543,27 +543,19 @@ class ShapeCutter24ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
     
-        self.stock_bottom_offset.text = str(self.j.parameter_dict["strategy parameters"]["stock bottom offset"])
-        self.step_down.text = str(self.j.parameter_dict["strategy parameters"]["step down"])
-        self.finishing_passes.text = str(self.j.parameter_dict["strategy parameters"]["finishing passes"])
+        self.stock_bottom_offset.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["stock bottom offset"]))
+        self.step_down.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["step down"]))
+        self.finishing_passes.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["finishing passes"]))
 
         if self.j.parameter_dict["strategy parameters"]["units"] == "inches":
-            print "inches"
             self.unit_toggle.active = True
             self.stock_bottom_offset_units.text = "inches"
             self.step_down_units.text = "inches"
 
-        elif self.j.parameter_dict["strategy parameters"]["units"] == "mm": 
-            print "mm"
+        elif self.j.parameter_dict["strategy parameters"]["units"] == "mm":
             self.unit_toggle.active = False
             self.stock_bottom_offset_units.text = "mm"
             self.step_down_units.text = "mm"
-
-
-#         self.unit_label.text = self.j.parameter_dict["strategy parameters"]["units"]
-
-#         self.stock_bottom_offset_units.text = self.unit_label.text
-#         self.step_down_units.text = self.unit_label.text
 
 # Action buttons       
 
@@ -600,27 +592,24 @@ class ShapeCutter24ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen specific
+
     def toggle_units(self):
-#         if self.unit_toggle.state == 'normal':
-#             self.unit_label.text = "mm"
-#             
-#         elif self.unit_toggle.state == 'down': 
-#             self.unit_label.text = "inches"
-# 
-#         self.stock_bottom_offset_units.text = self.unit_label.text + "/min"
-#         self.step_down_units.text = self.unit_label.text + "/min"
 
         if self.unit_toggle.active == True:
-            print "inches"
             self.j.parameter_dict["strategy parameters"]["units"] = "inches"
             self.stock_bottom_offset_units.text = "inches"
             self.step_down_units.text = "inches"
+            
+            if not (self.stock_bottom_offset.text == ""): self.stock_bottom_offset.text = "{:.2f}".format(float(self.stock_bottom_offset.text) / 25.4)
+            if not (self.step_down.text == ""): self.step_down.text = "{:.2f}".format(float(self.step_down.text) / 25.4)
 
-        elif self.unit_toggle.active == False: 
-            print "mm"
-            self.j.parameter_dict["strategy parameters"]["units"] = "mm"       
+        elif self.unit_toggle.active == False:
+            self.j.parameter_dict["strategy parameters"]["units"] = "mm"
             self.stock_bottom_offset_units.text = "mm"
             self.step_down_units.text = "mm"
+            
+            if not (self.stock_bottom_offset.text == ""): self.stock_bottom_offset.text = "{:.2f}".format(float(self.stock_bottom_offset.text) * 25.4)
+            if not (self.step_down.text == ""): self.step_down.text = "{:.2f}".format(float(self.step_down.text) * 25.4)
 
     def check_dimensions(self):
         if not self.stock_bottom_offset.text == "" and not self.step_down.text == "" \

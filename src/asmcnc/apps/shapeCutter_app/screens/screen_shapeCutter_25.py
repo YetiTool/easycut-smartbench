@@ -207,16 +207,16 @@ Builder.load_string("""
                                 padding: (0,0,0,5)
                                 orientation: "vertical"
 
-                                Label: 
-                                    text: "Your cut time is x minutes."
-                                    color: 0,0,0,1
-                                    font_size: 20
-                                    markup: True
-                                    halign: "center"
-                                    valign: "top"
-                                    text_size: self.size
-                                    size: self.parent.size
-                                    pos: self.parent.pos
+#                                 Label: 
+#                                     text: ""
+#                                     color: 0,0,0,1
+#                                     font_size: 20
+#                                     markup: True
+#                                     halign: "center"
+#                                     valign: "top"
+#                                     text_size: self.size
+#                                     size: self.parent.size
+#                                     pos: self.parent.pos
                                     
                                 BoxLayout: 
                                     size_hint: (None,None)

@@ -540,28 +540,19 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
-        self.xy_feed.text = str(self.j.parameter_dict["feed rates"]["xy feed rate"])
-        self.z_feed.text = str(self.j.parameter_dict["feed rates"]["z feed rate"])
-        self.spindle_speed.text= str(self.j.parameter_dict["feed rates"]["spindle speed"])
+        self.xy_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["xy feed rate"]))
+        self.z_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["z feed rate"]))
+        self.spindle_speed.text= "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["spindle speed"]))
 
         if self.j.parameter_dict["feed rates"]["units"] == "inches":
-            print "inches"
             self.unit_toggle.active = True
             self.xy_feed_units.text = "inches/min"
             self.z_feed_units.text = "inches/min"
 
-        elif self.j.parameter_dict["feed rates"]["units"] == "mm": 
-            print "mm"
+        elif self.j.parameter_dict["feed rates"]["units"] == "mm":
             self.unit_toggle.active = False
             self.xy_feed_units.text = "mm/min"
             self.z_feed_units.text = "mm/min"
-        
-        #self.unit_label.text = str(self.j.parameter_dict["feed rates"]["units"])
-
-
-
-#         self.xy_feed_units.text = self.unit_label.text + "/min"
-#         self.z_feed_units.text = self.unit_label.text + "/min"
 
 # Action buttons       
     def get_info(self):
@@ -599,28 +590,23 @@ class ShapeCutter23ScreenClass(Screen):
         
 # Screen specific
     def toggle_units(self):
-#         if self.unit_toggle.state == 'normal':
-#             self.unit_label.text = "mm"
-#             self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
-#             
-#         elif self.unit_toggle.state == 'down': 
-#             self.unit_label.text = "inches"
-#             self.j.parameter_dict["feed rates"]["units"] = self.unit_label.text
-#             
-#         self.xy_feed_units.text = self.unit_label.text + "/min"
-#         self.z_feed_units.text = self.unit_label.text + "/min"
-        
+
         if self.unit_toggle.active == True:
-            print "inches"
             self.j.parameter_dict["feed rates"]["units"] = "inches"
             self.xy_feed_units.text = "inches/min"
             self.z_feed_units.text = "inches/min"
-
-        elif self.unit_toggle.active == False: 
-            print "mm"
-            self.j.parameter_dict["feed rates"]["units"] = "mm"       
+            
+            if not (self.xy_feed.text == ""): self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) / 25.4)
+            if not (self.z_feed.text == ""): self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) / 25.4)
+ 
+        elif self.unit_toggle.active == False:
+            self.j.parameter_dict["feed rates"]["units"] = "mm"
             self.xy_feed_units.text = "mm/min"
             self.z_feed_units.text = "mm/min"
+            
+            if not (self.xy_feed.text == ""): self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) * 25.4)
+            if not (self.z_feed.text == ""): self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) * 25.4)
+          
 
     def check_dimensions(self):        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":

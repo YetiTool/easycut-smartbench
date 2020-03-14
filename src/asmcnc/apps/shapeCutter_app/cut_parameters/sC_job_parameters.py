@@ -4,11 +4,13 @@ Created 5 March 2020
 Module to store parameters and user choices for the Shape Cutter app
 '''
 
+from __builtin__ import input
 import csv
 import math
 import re
-from __builtin__ import input
+
 from docutils.io import Input
+
 
 class ShapeCutterJobParameters(object):
     
@@ -56,9 +58,9 @@ class ShapeCutterJobParameters(object):
         # parameters
         self.tabs = {
             "tabs?": "",
-            "width": "0",
-            "height": "0",
-            "spacing": "0",
+            "width": "12",
+            "height": "3",
+            "spacing": "60",
             "units": "mm"
             }
         
@@ -70,15 +72,15 @@ class ShapeCutterJobParameters(object):
             }
 
         self.feed_rates = {
-            "xy feed rate": "0",
-            "z feed rate": "0",
-            "spindle speed": "0",
+            "xy feed rate": "2500",
+            "z feed rate": "200",
+            "spindle speed": "25000",
             "units": "mm"
             }
         
         self.strategy_parameters = {
-            "stock bottom offset": "0",
-            "step down": "0",
+            "stock bottom offset": "1",
+            "step down": "3",
             "finishing passes": "0",
             "units": "mm"
             }
@@ -172,10 +174,98 @@ class ShapeCutterJobParameters(object):
             self.parameter_dict["cutter dimensions"]["shoulder length"] = input
         
         return True
+
+    def validate_tabs(self, param, input):
+       
+        if self.shape_dict["units"] == "inches" and self.parameter_dict["tabs"]["units"] == "mm": 
+            multiplier = 25.4
+        elif self.shape_dict["units"] == "mm" and self.parameter_dict["tabs"]["units"] == "inches":
+            multiplier = 1/25.4
+        else:
+            multiplier = 1
+            
+        if param == "width":
+            
+            if self.parameter_dict["cutter dimensions"]["units"] == "inches" and self.shape_dict["units"] == "mm": 
+                width_max_multiplier = 25.4
+            elif self.parameter_dict["cutter dimensions"]["units"] == "mm" and self.shape_dict["units"] == "inches":
+                width_max_multiplier = 1/25.4
+            else:
+                width_max_multiplier = 1
+                
+                
+            if self.shape_dict["shape"] == "rectangle":          
+                width_max = (min(self.shape_dict["dimensions"]["X"],self.shape_dict["dimensions"]["Y"]) \
+                                - 2*self.shape_dict["dimensions"]["R"] \
+                                - 2*self.shape_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
+            
+            elif self.shape_dict["shape"] == "circle": 
+                width_max = (math.pi()*self.shape_dict["dimensions"]["D"] \
+                - self.shape_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
+            
+            if not input > 0: return 0
+            if not input < width_max: return width_max
+            self.parameter_dict["tabs"]["width"] = input
+            
+        elif param == "height":
+            max_height = self.shape_dict["dimensions"]["Z"]*multiplier
+            if not input < max_height: return max_height
+            self.parameter_dict["tabs"]["height"] = input
         
-           
-    def validate_parameters(self):
-        pass
+        elif param == "spacing":
+
+            if self.parameter_dict["cutter dimensions"]["units"] == "inches" and self.parameter_dict["tabs"]["units"] == "mm": 
+                spacing_multiplier = 25.4
+            elif self.parameter_dict["cutter dimensions"]["units"] == "mm" and self.parameter_dict["tabs"]["units"] == "inches":
+                spacing_multiplier = 1/25.4
+            else:
+                spacing_multiplier = 1
+            
+            max_spacing = self.parameter_dict["tabs"]["width"] + \
+                        self.shape_dict["cutter dimensions"]["diameter"]*spacing_multiplier
+            
+            if not input > max_spacing: return max_spacing
+            self.parameter_dict["tabs"]["spacing"] = input
+        
+        return True
+        
+    def validate_feed_rates(self, param, input):
+
+        if param == "xy feed rate":
+            if not input > 0: return 0
+            self.parameter_dict["feed_rates"]["xy feed rate"] = input
+            
+        elif param == "z feed rate":
+            if not input > 0: return 0
+            self.parameter_dict["feed_rates"]["z feed rate"] = input
+        
+        elif param == "spindle speed":
+            if input <= 6000 or input >= 25000: return False
+            self.parameter_dict["feed_rates"]["spindle speed"] = input
+        
+        return True
+    
+    def validate_strategy_parameters(self, param, input):
+
+        if self.parameter_dict["cutter dimensions"]["units"] == "inches" and self.parameter_dict["strategy_parameters"]["units"] == "mm": 
+            multiplier = 25.4
+        elif self.parameter_dict["cutter dimensions"]["units"] == "mm" and self.parameter_dict["strategy_parameters"]["units"] == "inches":
+            multiplier = 1/25.4
+        else:
+            multiplier = 1
+
+        if param == "stock bottom offset":
+            if not input > 0: return 0
+            self.parameter_dict["strategy_parameters"]["stock bottom offset"] = input
+            
+        elif param == "step down":  
+            warning_step_down = self.parameter_dict["cutter dimensions"]*multiplier*0.5
+            
+            if not input > 0: return 0
+            if not input < warning_step_down: return warning_step_down
+            self.parameter_dict["strategy_parameterss"]["step down"] = input
+        
+        return True
  
     def load_parameters(self, filename):
         r = csv.reader(open(filename, "r"), delimiter = '\t', lineterminator = '\n')

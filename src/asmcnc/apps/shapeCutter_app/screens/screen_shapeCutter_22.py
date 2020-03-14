@@ -580,20 +580,15 @@ class ShapeCutter22ScreenClass(Screen):
 
         if self.j.parameter_dict["tabs"]["tabs?"] == True:
             self.tab_toggle.active = True
-#             self.tab_toggle.state = 'normal'
-            self.td_dimension.text = self.j.parameter_dict["tabs"]["spacing"]
-            self.th_dimension.text = self.j.parameter_dict["tabs"]["height"]
-            self.tw_dimension.text = self.j.parameter_dict["tabs"]["width"]
-#             self.unit_label.text = self.j.parameter_dict["tabs"]["units"]
+            self.td_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["spacing"]))
+            self.th_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["height"]))
+            self.tw_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["width"]))
             
             if self.j.parameter_dict["tabs"]["units"] == "inches":
                 self.unit_toggle.active = True
 
-                
-
         else:
             self.tab_toggle.active = False
-#             self.tab_toggle.state = 'down'
             self.td_dimension.text = ''
             self.th_dimension.text = ''
             self.tw_dimension.text = ''
@@ -635,30 +630,27 @@ class ShapeCutter22ScreenClass(Screen):
         
 # Screen specific
     def toggle_units(self):
+            
         if self.unit_toggle.active == True:
-            print "inches"
             self.j.parameter_dict["tabs"]["units"] = "inches"
+            
+            if not (self.td_dimension.text == ""): self.td_dimension.text = "{:.2f}".format(float(self.td_dimension.text) / 25.4)
+            if not (self.th_dimension.text == ""): self.th_dimension.text = "{:.2f}".format(float(self.th_dimension.text) / 25.4)
+            if not (self.tw_dimension.text == ""): self.tw_dimension.text = "{:.2f}".format(float(self.tw_dimension.text) / 25.4)
 
-        elif self.unit_toggle.active == False: 
-            print "mm"
+        elif self.unit_toggle.active == False:
             self.j.parameter_dict["tabs"]["units"] = "mm"
+
+            if not (self.td_dimension.text == ""): self.td_dimension.text = "{:.2f}".format(float(self.td_dimension.text) * 25.4)
+            if not (self.th_dimension.text == ""): self.th_dimension.text = "{:.2f}".format(float(self.th_dimension.text) * 25.4)
+            if not (self.tw_dimension.text == ""): self.tw_dimension.text = "{:.2f}".format(float(self.tw_dimension.text) * 25.4) 
+            
 
 
     def toggle_tabs(self):
-#         if self.tab_toggle.state == 'normal':
-#             self.tab_YN.text = "Yes"  
-#             self.j.parameter_dict["tabs"]["tabs?"] = True
-#         elif self.tab_toggle.state == 'down': 
-#             self.tab_YN.text = "No"    
-#             self.j.parameter_dict["tabs"]["tabs?"] = False    
-
         if self.tab_toggle.active == True:
-#             self.tab_YN.text = "Yes"
-            print "Yes"
             self.j.parameter_dict["tabs"]["tabs?"] = True
         elif self.tab_toggle.active == False: 
-#             self.tab_YN.text = "No"
-            print "No"
             self.j.parameter_dict["tabs"]["tabs?"] = False    
 
 
