@@ -12,6 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
 Builder.load_string("""
 
@@ -232,36 +233,7 @@ Builder.load_string("""
                                     height: dp(55)
                                     width: dp(85)
                                     padding: (2,0,0,23)
-                                                
-#                                     ToggleButton:
-#                                         id: tab_toggle
-#                                         size_hint: (None,None)
-#                                         height: dp(30)
-#                                         width: dp(75)
-#                                         background_color: hex('#F4433600')
-#                                         center: self.parent.center
-#                                         pos: self.parent.pos
-#                                         on_press: root.toggle_tabs()
-#         
-#                                         BoxLayout:
-#                                             height: dp(30)
-#                                             width: dp(75)
-#                                             canvas:
-#                                                 Rectangle: 
-#                                                     pos: self.parent.pos
-#                                                     size: self.parent.size
-#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-#                                         Label:
-#                                             id: tab_YN
-#                                             text: "Yes"
-#                                             color: 1,1,1,1
-#                                             font_size: 20
-#                                             markup: True
-#                                             halign: "center"
-#                                             valign: "middle"
-#                                             text_size: self.size
-#                                             size: self.parent.size
-#                                             pos: self.parent.pos
+
                                     Switch:
                                         id: tab_toggle
                                         size_hint: (None,None)
@@ -330,36 +302,7 @@ Builder.load_string("""
                                         height: dp(32)
                                         width: dp(120)
                                         padding: (37,0,0,0)
-                                                    
-#                                         ToggleButton:
-#                                             id: unit_toggle
-#                                             size_hint: (None,None)
-#                                             height: dp(30)
-#                                             width: dp(75)
-#                                             background_color: hex('#F4433600')
-#                                             center: self.parent.center
-#                                             pos: self.parent.pos
-#                                             on_press: root.toggle_units()
-#             
-#                                             BoxLayout:
-#                                                 height: dp(30)
-#                                                 width: dp(75)
-#                                                 canvas:
-#                                                     Rectangle: 
-#                                                         pos: self.parent.pos
-#                                                         size: self.parent.size
-#                                                         source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-#                                             Label:
-#                                                 id: unit_label
-#                                                 text: "mm"
-#                                                 color: 1,1,1,1
-#                                                 font_size: 20
-#                                                 markup: True
-#                                                 halign: "center"
-#                                                 valign: "middle"
-#                                                 text_size: self.size
-#                                                 size: self.parent.size
-#                                                 pos: self.parent.pos                       
+                                                                         
                                         Switch:
                                             id: unit_toggle
                                             size_hint: (None,None)
@@ -578,15 +521,18 @@ class ShapeCutter22ScreenClass(Screen):
         elif self.j.shape_dict["shape"] == 'rectangle':
             self.main_image.source = "./asmcnc/apps/shapeCutter_app/img/tabs_rect.png"
 
+        if self.j.parameter_dict["tabs"]["units"] == "inches":
+            self.unit_toggle.active = True
+        else:
+            self.unit_toggle.active = False
+
         if self.j.parameter_dict["tabs"]["tabs?"] == True:
             self.tab_toggle.active = True
             self.td_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["spacing"]))
             self.th_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["height"]))
             self.tw_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["width"]))
-            
-            if self.j.parameter_dict["tabs"]["units"] == "inches":
-                self.unit_toggle.active = True
 
+                
         else:
             self.tab_toggle.active = False
             self.td_dimension.text = ''
@@ -658,21 +604,43 @@ class ShapeCutter22ScreenClass(Screen):
     def check_dimensions(self):
         if self.tab_toggle.active == True:
             self.j.parameter_dict["tabs"]["tabs?"] = True
+            
             if not self.td_dimension.text == "" and not self.th_dimension.text == "" \
             and not self.tw_dimension.text == "":
-                self.j.parameter_dict["tabs"]["spacing"] = self.td_dimension.text
-                self.j.parameter_dict["tabs"]["height"] = self.th_dimension.text
-                self.j.parameter_dict["tabs"]["width"] = self.tw_dimension.text
-#                 self.j.parameter_dict["tabs"]["units"] = self.unit_label.text
+
+            
                 if self.unit_toggle.active == True:
-                    print "inches"
                     self.j.parameter_dict["tabs"]["units"] = "inches"
         
-                elif self.unit_toggle.active == False: 
-                    print "mm"
+                elif self.unit_toggle.active == False:
                     self.j.parameter_dict["tabs"]["units"] = "mm"
+            
+                units = self.j.parameter_dict["tabs"]["units"]
+                                
+                # save the dimensions
+                input_dim_list = [("width", float(self.tw_dimension.text)),
+                                  ("height", float(self.th_dimension.text)),
+                                  ("spacing", float(self.td_dimension.text))]
+                
+                for (dim, input) in input_dim_list:
+                    setting = self.j.validate_tabs(dim, input)
+                    if not setting == True:
+                        if dim == "width" or dim == "height":
+                            description = "The tab " + dim + " dimension isn't valid.\n\n" + \
+                                        "The tab " + dim + " should be greater than 0 and less" + \
+                                        " than " + "{:.2f}".format(setting) + " " + units + ".\n\n" \
+                                        + "Please re-enter your dimensions."
+                        else: 
+                            description = "The tab " + dim + " dimension isn't valid.\n\n" + \
+                                        "The tab " + dim + " value should be greater than " + "{:.2f}".format(setting) + \
+                                        " " + units + ".\n\n" \
+                                        + "Please re-enter your dimensions."    
+                                        
+                        popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                        return False
 
                 self.shapecutter_sm.next_screen()
+
             else:
                 pass
             

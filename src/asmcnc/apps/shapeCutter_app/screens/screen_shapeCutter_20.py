@@ -579,15 +579,15 @@ class ShapeCutter20ScreenClass(Screen):
                 setting = self.j.validate_cutter_dimensions(dim, input)
                 if not setting == True:
                     if dim == "shoulder length":               
-                        description = "The " + dim + " dimension isn't valid.\n\n" + \
+                        description = "The " + dim + " input isn't valid.\n\n" + \
                                     "The cutting length + shoulder length should be greater" + \
                                     " than " + "{:.2f}".format(setting) + " " + units + ".\n\n" \
-                                    + "Please re-enter your dimensions."
+                                    + "Please re-enter your parameters."
                     else: 
-                        description = "The " + dim + " dimension isn't valid.\n\n" + \
+                        description = "The " + dim + " input isn't valid.\n\n" + \
                                     dim + " value should be greater than " + "{:.2f}".format(setting) + \
                                     " " + units + ".\n\n" \
-                                    + "Please re-enter your dimensions."                   
+                                    + "Please re-enter your parameters."                   
                     popup_input_error.PopupInputError(self.shapecutter_sm, description)
                     return False
 

@@ -36,15 +36,15 @@ class ShapeCutterJobParameters(object):
  
         # shape dimensions
         self.circle_dimensions = {
-            "D": "100",
-            "Z": "6"
+            "D": 100,
+            "Z": 6
             }
         
         self.rectangle_dimensions = {
-            "X": "100",
-            "Y": "100",
-            "Z": "6",
-            "R": "10"
+            "X": 100,
+            "Y": 100,
+            "Z": 6,
+            "R": 10
             }
         
         # shape choices       
@@ -58,30 +58,30 @@ class ShapeCutterJobParameters(object):
         # parameters
         self.tabs = {
             "tabs?": "",
-            "width": "12",
-            "height": "3",
-            "spacing": "60",
+            "width": 12,
+            "height": 3,
+            "spacing": 60,
             "units": "mm"
             }
         
         self.cutter_dimensions = {
-            "diameter": "6.35",
-            "cutting length": "20",
-            "shoulder length": "30",
+            "diameter": 6.35,
+            "cutting length": 20,
+            "shoulder length": 30,
             "units": "mm"
             }
 
         self.feed_rates = {
-            "xy feed rate": "2500",
-            "z feed rate": "200",
-            "spindle speed": "25000",
+            "xy feed rate": 2500,
+            "z feed rate": 200,
+            "spindle speed": 25000,
             "units": "mm"
             }
         
         self.strategy_parameters = {
-            "stock bottom offset": "1",
-            "step down": "3",
-            "finishing passes": "0",
+            "stock bottom offset": 1,
+            "step down": 3,
+            "finishing passes": 0,
             "units": "mm"
             }
         
@@ -196,14 +196,14 @@ class ShapeCutterJobParameters(object):
                 
             if self.shape_dict["shape"] == "rectangle":          
                 width_max = (min(self.shape_dict["dimensions"]["X"],self.shape_dict["dimensions"]["Y"]) \
-                                - 2*self.shape_dict["dimensions"]["R"] \
-                                - 2*self.shape_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
+                                - 2*self.parameter_dict["dimensions"]["R"] \
+                                - 2*self.parameter_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
             
             elif self.shape_dict["shape"] == "circle": 
-                width_max = (math.pi()*self.shape_dict["dimensions"]["D"] \
-                - self.shape_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
+                width_max = (math.pi*self.shape_dict["dimensions"]["D"] \
+                - self.parameter_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
             
-            if not input > 0: return 0
+            if not input > 0: return width_max
             if not input < width_max: return width_max
             self.parameter_dict["tabs"]["width"] = input
             
@@ -221,49 +221,49 @@ class ShapeCutterJobParameters(object):
             else:
                 spacing_multiplier = 1
             
-            max_spacing = self.parameter_dict["tabs"]["width"] + \
-                        self.shape_dict["cutter dimensions"]["diameter"]*spacing_multiplier
+            min_spacing = self.parameter_dict["tabs"]["width"] + \
+                        self.parameter_dict["cutter dimensions"]["diameter"]*spacing_multiplier
             
-            if not input > max_spacing: return max_spacing
+            if not input > min_spacing: return min_spacing
             self.parameter_dict["tabs"]["spacing"] = input
-        
+
         return True
         
     def validate_feed_rates(self, param, input):
 
         if param == "xy feed rate":
             if not input > 0: return 0
-            self.parameter_dict["feed_rates"]["xy feed rate"] = input
+            self.parameter_dict["feed rates"]["xy feed rate"] = input
             
         elif param == "z feed rate":
             if not input > 0: return 0
-            self.parameter_dict["feed_rates"]["z feed rate"] = input
+            self.parameter_dict["feed rates"]["z feed rate"] = input
         
         elif param == "spindle speed":
-            if input <= 6000 or input >= 25000: return False
-            self.parameter_dict["feed_rates"]["spindle speed"] = input
+            if input < 6000 or input > 25000: return False
+            self.parameter_dict["feed rates"]["spindle speed"] = input
         
         return True
     
     def validate_strategy_parameters(self, param, input):
 
-        if self.parameter_dict["cutter dimensions"]["units"] == "inches" and self.parameter_dict["strategy_parameters"]["units"] == "mm": 
+        if self.parameter_dict["cutter dimensions"]["units"] == "inches" and self.parameter_dict["strategy parameters"]["units"] == "mm": 
             multiplier = 25.4
-        elif self.parameter_dict["cutter dimensions"]["units"] == "mm" and self.parameter_dict["strategy_parameters"]["units"] == "inches":
+        elif self.parameter_dict["cutter dimensions"]["units"] == "mm" and self.parameter_dict["strategy parameters"]["units"] == "inches":
             multiplier = 1/25.4
         else:
             multiplier = 1
 
         if param == "stock bottom offset":
             if not input > 0: return 0
-            self.parameter_dict["strategy_parameters"]["stock bottom offset"] = input
+            self.parameter_dict["strategy parameters"]["stock bottom offset"] = input
             
         elif param == "step down":  
-            warning_step_down = self.parameter_dict["cutter dimensions"]*multiplier*0.5
+            warning_step_down = self.parameter_dict["cutter dimensions"]["diameter"]*multiplier / 2
             
             if not input > 0: return 0
             if not input < warning_step_down: return warning_step_down
-            self.parameter_dict["strategy_parameterss"]["step down"] = input
+            self.parameter_dict["strategy parameters"]["step down"] = input
         
         return True
  

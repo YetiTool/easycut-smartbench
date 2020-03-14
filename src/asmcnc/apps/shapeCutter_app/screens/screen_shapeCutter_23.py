@@ -11,6 +11,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
 Builder.load_string("""
 
@@ -610,15 +611,33 @@ class ShapeCutter23ScreenClass(Screen):
 
     def check_dimensions(self):        
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
-            self.j.parameter_dict["feed rates"]["xy feed rate"] = float(self.xy_feed.text)
-            self.j.parameter_dict["feed rates"]["z feed rate"] = float(self.z_feed.text)
-            self.j.parameter_dict["feed rates"]["spindle speed"] = float(self.spindle_speed.text)
             
             if self.unit_toggle.active == True:
                 self.j.parameter_dict["feed rates"]["units"] = "inches"
             elif self.unit_toggle.active == False: 
                 self.j.parameter_dict["feed rates"]["units"] = "mm"
-                
+            
+                # save the dimensions
+            input_dim_list = [("xy feed rate", float(self.xy_feed.text)),
+                              ("z feed rate", float(self.z_feed.text)),
+                              ("spindle speed", float(self.spindle_speed.text))]
+            
+            for (dim, input) in input_dim_list:
+                setting = self.j.validate_feed_rates(dim, input)
+                if not setting == True:
+                    if dim == "spindle speed":               
+                        description = "The " + dim + " input isn't valid.\n\n" + \
+                                    "The " + dim + " should be greater than 6000" + \
+                                    " and less than 25000 RPM.\n\n" \
+                                    + "Please re-enter your parameters."
+                    else: 
+                        description = "The " + dim + " input isn't valid.\n\n" + \
+                                    dim + " value should be greater than 0.\n\n" \
+                                    + "Please re-enter your parameters."
+                                           
+                    popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                    return False
+
             self.shapecutter_sm.next_screen()
         else:
             pass
