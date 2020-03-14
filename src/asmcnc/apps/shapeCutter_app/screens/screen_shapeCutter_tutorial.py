@@ -9,12 +9,25 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
+
+from asmcnc.apps.shapeCutter_app.screens import popup_info
+from __builtin__ import False
 
 Builder.load_string("""
 
 <ShapeCutterTutorialScreenClass>
 
     info_button: info_button
+    user_instructions: user_instructions
+    back_arrow: back_arrow
+    next_arrow: next_arrow
+    
+    prepare_tab: prepare_tab
+    load_tab: load_tab 
+    define_tab: define_tab
+    position_tab: position_tab
+    check_tab: check_tab
 
     BoxLayout:
         size_hint: (None,None)
@@ -33,9 +46,11 @@ Builder.load_string("""
             orientation: "horizontal"
 
             Button:
+                id: prepare_tab
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                disabled: True
                 on_press: root.prepare()
                 BoxLayout:
                     padding: 0
@@ -46,9 +61,11 @@ Builder.load_string("""
                         size: self.parent.size
                         stretch: True
             Button:
+                id: load_tab
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                disabled: True
                 on_press: root.load()
                 BoxLayout:
                     padding: 0
@@ -59,9 +76,11 @@ Builder.load_string("""
                         size: self.parent.size
                         stretch: True
             Button:
+                id: define_tab
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                disabled: True
                 on_press: root.define()
                 BoxLayout:
                     padding: 0
@@ -74,9 +93,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                id: position_tab
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                disabled: True
                 on_press: root.position()
                 BoxLayout:
                     padding: 0
@@ -89,9 +110,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                id: check_tab
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
+                disabled: True
                 on_press: root.check()
                 BoxLayout:
                     padding: 0
@@ -152,14 +175,6 @@ Builder.load_string("""
                                 pos: self.pos
                                 size: self.size
                                 source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
-#                         Label:
-#                             text: root.screen_number
-#                             valign: "middle"
-#                             halign: "center"
-#                             font_size: 26
-#                             markup: True
-                                
-                                
                         
                     BoxLayout: #Title
                         size_hint: (None,None)
@@ -193,7 +208,7 @@ Builder.load_string("""
                         padding: 80,0,0,0
                         
                         Label:
-                            text: root.user_instructions
+                            id: user_instructions
                             color: 0,0,0,1
                             font_size: 20
                             markup: True
@@ -236,6 +251,7 @@ Builder.load_string("""
                                         allow_stretch: True
 
                         Button: 
+                            id: back_arrow
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -246,12 +262,14 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
+                                    
                                     source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
                         Button: 
+                            id: next_arrow
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -262,6 +280,7 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
+                                    
                                     source: "./asmcnc/apps/shapeCutter_app/img/arrow_next.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
@@ -276,19 +295,118 @@ class ShapeCutterTutorialScreenClass(Screen):
     
     screen_number = StringProperty("[b]I[/b]")
     title_label = StringProperty("[b]Using the app[/b]")
-    user_instructions = StringProperty("Use the Back and Next buttons to move through each section.\n\n" \
-                                       "Use the navigation tabs to move between sections.\n\n" \
-                                       "Press the [b]i[/b] if you need more information.\n\n" \
-                                       "For more help, see the video at: ")
+#     user_instructions = StringProperty()
+    
+    instructions_list = ["Use the Back and Next buttons to move through each section.\n\n",
+                                       "Use the navigation tabs to move between sections.\n\n",
+                                       "Press the [b]i[/b] if you need more information.\n\n",
+                                       "For more help, see the video at www.yetitool.com/support"]
     
     def __init__(self, **kwargs):
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
 
+    def on_pre_enter(self):
+        self.user_instructions.text = ''
+        
+        self.info_button.disabled = True
+        self.next_arrow.disabled = True
+        self.back_arrow.disabled = True
+
+    def on_enter(self):   
+        Clock.schedule_once(lambda dt: self.append_instructions(0), 0.5)
+        Clock.schedule_once(lambda dt: self.flashy_arrows(), 0.5)        
+        
+        Clock.schedule_once(lambda dt: self.append_instructions(1), 2.5)
+        Clock.schedule_once(lambda dt: self.flashy_tabs(), 2.5)
+        
+        Clock.schedule_once(lambda dt: self.append_instructions(2), 4.75)
+        Clock.schedule_once(lambda dt: self.flashy_info(), 4.75)
+        
+        Clock.schedule_once(lambda dt: self.append_instructions(3), 6.75)
+        Clock.schedule_once(lambda dt: self.enable_buttons(), 6.75)
+        
+    def append_instructions(self, n):
+        self.user_instructions.text = self.user_instructions.text + str(self.instructions_list[n])
+
+    def flashy_arrows(self):
+        arrow_flash = Clock.schedule_interval(lambda dt: arrow_opacity(), 0.2)
+        Clock.schedule_once(lambda dt: cancel_arrow_flash(), 1.9)
+        
+        def arrow_opacity():
+            if self.next_arrow.opacity == 1:
+                self.next_arrow.opacity = 0.6
+                self.back_arrow.opacity = 0.6
+            else: 
+                self.next_arrow.opacity = 1
+                self.back_arrow.opacity = 1
+                      
+        def cancel_arrow_flash():
+            Clock.unschedule(arrow_flash)
+            self.next_arrow.opacity = 1
+            self.back_arrow.opacity = 1
+
+    def flashy_tabs(self):
+        self.flash_counter = 0
+        tab_flash = Clock.schedule_interval(lambda dt: tab_opacity(), 0.4)
+        
+        def tab_opacity():
+            if self.flash_counter == 0:
+                self.flash_counter = 1
+                self.prepare_tab.opacity = 0.6
+            elif self.flash_counter == 1: 
+                self.flash_counter = 2
+                self.prepare_tab.opacity = 1
+                self.load_tab.opacity = 0.6
+            elif self.flash_counter == 2: 
+                self.flash_counter = 3
+                self.load_tab.opacity = 1
+                self.define_tab.opacity = 0.6
+            elif self.flash_counter == 3: 
+                self.flash_counter = 4
+                self.define_tab.opacity = 1
+                self.position_tab.opacity = 0.6
+            elif self.flash_counter == 4: 
+                self.flash_counter = 5
+                self.position_tab.opacity = 1
+                self.check_tab.opacity = 0.6                                             
+            elif self.flash_counter == 5: 
+                self.flash_counter = 0
+                self.check_tab.opacity = 1
+                cancel_tab_flash()
+                    
+        def cancel_tab_flash():
+            Clock.unschedule(tab_flash)
+
+
+
 # Action buttons       
+
+    def flashy_info(self):
+        info_flash = Clock.schedule_interval(lambda dt: info_opacity(), 0.2)
+        Clock.schedule_once(lambda dt: cancel_info_flash(), 1.9)
+        
+        def info_opacity():
+            if self.info_button.opacity == 1:
+                self.info_button.opacity = 0.4
+            else: 
+                self.info_button.opacity = 1
+                
+        def cancel_info_flash():
+            Clock.unschedule(info_flash)
+            self.info_button.opacity = 1
+
+    def enable_buttons(self):
+        self.info_button.disabled = False
+        self.next_arrow.disabled = False
+        self.back_arrow.disabled = False
+                
     def get_info(self):
-        pass
+        info = "Hi there! I'm a pop-up!.\n\n" \
+                "If you get stuck, I'm here to give you some handy hints and tips ;). \n\n" \
+                "Happy shaping!"
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         self.shapecutter_sm.previous_screen()
