@@ -297,7 +297,7 @@ class ShapeCutterJobParameters(object):
                 string_parameters = string_parameters + '\t' + str(param) + ':\t' + str(value) + '\n\r'
 
         return string_parameters
-
+    
     def generate_gCode(self): # Generate GCode
 
         self.generate_gCode_filename()
@@ -311,42 +311,66 @@ class ShapeCutterJobParameters(object):
         shape = self.shape_dict["shape"]
         aperture_or_island = self.shape_dict["cut_type"]
 
-    
-        material_thickness = float(self.shape_dict["dimensions"]["Z"]) #??
+        if self.shape_dict["units"] == "inches":
+            dim_unit_multiplier = 25.4
+        elif self.shape_dict["units"] == "mm":
+            dim_unit_multiplier = 1
+            
+        if self.parameter_dict["cutter dimensions"]["units"] == "inches":
+            cutter_unit_multiplier = 25.4
+        elif self.parameter_dict["cutter dimensions"]["units"] == "mm":
+            cutter_unit_multiplier = 1
+ 
+        if self.parameter_dict["tabs"]["units"] == "inches":
+            tab_unit_multiplier = 25.4
+        elif self.parameter_dict["tabs"]["units"] == "mm":
+            tab_unit_multiplier = 1
+
+        if self.parameter_dict["feed rates"]["units"] == "inches":
+            rates_unit_multiplier = 25.4
+        elif self.parameter_dict["feed rates"]["units"] == "mm":
+            rates_unit_multiplier = 1
+
+        if self.parameter_dict["strategy parameters"]["units"] == "inches":
+            strategy_unit_multiplier = 25.4
+        elif self.parameter_dict["strategy parameters"]["units"] == "mm":
+            strategy_unit_multiplier = 1
+           
+        material_thickness = float(self.shape_dict["dimensions"]["Z"])*dim_unit_multiplier #??
                 
         # RECTANGLE PARAMETERS  
         if shape == "rectangle":
-            rect_job_x = float(self.shape_dict["dimensions"]["X"])
-            rect_job_y = float(self.shape_dict["dimensions"]["Y"])
-            rect_job_rad = float(self.shape_dict["dimensions"]["R"])
+            rect_job_x = float(self.shape_dict["dimensions"]["X"])*dim_unit_multiplier
+            rect_job_y = float(self.shape_dict["dimensions"]["Y"])*dim_unit_multiplier
+            rect_job_rad = float(self.shape_dict["dimensions"]["R"])*dim_unit_multiplier
         
         # CIRCLE PARAMS
         elif shape == "circle":
-            circ_input_diameter = float(self.shape_dict["dimensions"]["D"])
+            circ_input_diameter = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier
        
         # TOOL
-        cutter_diameter = float(self.parameter_dict["cutter dimensions"]["diameter"])
+        cutter_diameter = float(self.parameter_dict["cutter dimensions"]["diameter"])*cutter_unit_multiplier
         cutter_rad = cutter_diameter/2
 
         # TAB PARAMS
         tabs = self.parameter_dict["tabs"]["tabs?"]
         
         if tabs == True:
-            tab_height = float(self.parameter_dict["tabs"]["height"])
-            tab_width = float(self.parameter_dict["tabs"]["width"])
-            tab_distance = float(self.parameter_dict["tabs"]["spacing"])
+            tab_height = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+            tab_width = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+            tab_distance = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
             tab_absolute_height = -(material_thickness - tab_height)
             tab_effective_width = cutter_diameter + tab_width
         
         # FEEDS AND SPEEDS
-        xy_feed_rate = float(self.parameter_dict["feed rates"]["xy feed rate"])
-        plunge_feed_rate = float(self.parameter_dict["feed rates"]["z feed rate"])
-        spindle_speed = float(self.parameter_dict["feed rates"]["spindle speed"])
+        xy_feed_rate = float(self.parameter_dict["feed rates"]["xy feed rate"])*rates_unit_multiplier
+        plunge_feed_rate = float(self.parameter_dict["feed rates"]["z feed rate"])*rates_unit_multiplier
+        spindle_speed = float(self.parameter_dict["feed rates"]["spindle speed"])*rates_unit_multiplier
         
         # STRATEGY
-        stock_bottom_offset = float(self.parameter_dict["strategy parameters"]["stock bottom offset"])
-        stepdown = float(self.parameter_dict["strategy parameters"]["step down"])
-        finishing_pass = float(self.parameter_dict["strategy parameters"]["finishing passes"])
+        stock_bottom_offset = float(self.parameter_dict["strategy parameters"]["stock bottom offset"])*strategy_unit_multiplier
+        stepdown = float(self.parameter_dict["strategy parameters"]["step down"])*strategy_unit_multiplier
+        finishing_pass = float(self.parameter_dict["strategy parameters"]["finishing passes"])*strategy_unit_multiplier
 
         z_max = - material_thickness - stock_bottom_offset
 
