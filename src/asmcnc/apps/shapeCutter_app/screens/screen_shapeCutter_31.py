@@ -55,7 +55,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 height: dp(90)
                 width: dp(142)
-                on_press: root.save()
+                on_press: root.load()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
