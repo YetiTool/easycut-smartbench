@@ -310,10 +310,10 @@ class ShapeCutter36ScreenClass(Screen):
         self.info_button.opacity = 0
 
         # get job info
-        self.user_instructions = ("[b]Your cut time is 13 minutes.[/b]\n\n" \
-                                           "(That\'s also the world record time to beat for fastest mile" \
-                                           " hula-hooped while balancing a milk bottle on the head. "\
-                                           "So what are you waiting for?)")
+        self.user_instructions = ("[b]You can let SmartBench do the rest of the work now.[/b]\n\n" \
+                                           "Remember when you had to cut out all these shapes by hand? Think off all the things" \
+                                           " you can do with your extra time. Learn to play the ukelele. Make some cupcakes. "\
+                                           "Finally master that backflip. So what are you waiting for?")
 
 # Action buttons
     def get_info(self):
