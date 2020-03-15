@@ -70,8 +70,6 @@ class VirtualZ31(Widget):
         self.sm=kwargs['screen_manager']
         self.j=kwargs['job_parameters']
         
-        self.start_refresh()
-        
     def refresh_widget(self, dt):
 
         self.setZones()
