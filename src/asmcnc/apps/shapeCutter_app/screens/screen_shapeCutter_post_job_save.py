@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
 Builder.load_string("""
 
@@ -224,8 +225,13 @@ class ShapeCutterSaveJobScreenClass(Screen):
         self.shapecutter_sm.next_screen()
 
     def save_file(self):
-        self.j.save_parameters(self.file_name.text)
-#         self.j.generate_gCode()
-#         self.j.save_gCode()
-        
-        self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'
+        if not self.file_name.text == '':
+            self.j.save_parameters(self.file_name.text)
+            self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'
+    #         self.j.generate_gCode()
+    #         self.j.save_gCode()
+
+        else: 
+            
+            description = "Filename input is empty.\n\nPlease enter a name for your parameter profile."
+            popup_input_error.PopupInputError(self.shapecutter_sm, description)
