@@ -10,11 +10,14 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string("""
 
 <ShapeCutter26ScreenClass>
 
     info_button: info_button
+    homing_button: homing_button
 
     BoxLayout:
         size_hint: (None,None)
@@ -264,6 +267,7 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
                         Button: 
+                            id: homing_button
                             size_hint: (None,None)
                             height: dp(100)
                             width: dp(100)
@@ -295,10 +299,14 @@ class ShapeCutter26ScreenClass(Screen):
     def __init__(self, **kwargs):
         super(ShapeCutter26ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
+        self.m = kwargs['machine']
+        self.j = kwargs['job_parameters']
         
     def on_pre_enter(self):
         self.info_button.opacity = 0
+
+    def on_enter(self):
+        self.load_gcode()
 
 # Action buttons       
     def get_info(self):
@@ -329,4 +337,20 @@ class ShapeCutter26ScreenClass(Screen):
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
+
+    def load_gcode(self):
+        
+        gcode_generated = False
+        
+        try: 
+            gcode_generated = self.j.generate_gCode()
+
+        except: 
+            description = "There was a problem generating your cut.\n\n" + \
+            "Please go back and check your parameters before continuing."
+            self.homing_button.disabled = True
+            popup_input_error.PopupInputError(self.shapecutter_sm, description)
+
+        if gcode_generated == True: 
+            self.homing_button.disabled = False
         

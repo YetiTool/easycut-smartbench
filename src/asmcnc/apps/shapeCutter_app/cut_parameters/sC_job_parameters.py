@@ -632,7 +632,9 @@ class ShapeCutterJobParameters(object):
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 preloaded_job_gcode.append(l_block)
                 
-        self.gcode_lines = preloaded_job_gcode        
+        self.gcode_lines = preloaded_job_gcode   
+        
+        return True     
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \

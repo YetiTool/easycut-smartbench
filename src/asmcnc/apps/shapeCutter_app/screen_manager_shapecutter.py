@@ -101,7 +101,7 @@ class ScreenManagerShapeCutter(object):
 
     def position_tab(self):
         if not self.sm.has_screen('sC26'):
-            sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+            sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sC26_screen)
         self.sm.current = 'sC26'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
@@ -296,7 +296,7 @@ class ScreenManagerShapeCutter(object):
                       
         elif self.sm.current == 'sC25':
             if not self.sm.has_screen('sC26'):
-                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC26_screen)
             self.sm.current = 'sC26'
             
@@ -513,7 +513,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC25_screen)
         elif self.sm.current == 'sC24':
             if not self.sm.has_screen('sC26'):
-                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC26_screen)
         elif self.sm.current == 'sC25':
             if not self.sm.has_screen('sC27'):
@@ -755,7 +755,7 @@ class ScreenManagerShapeCutter(object):
             
         elif self.sm.current == 'sC27':
             if not self.sm.has_screen('sC26'):
-                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC26_screen)
             self.sm.current = 'sC26'
                         
@@ -929,7 +929,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC25_screen)
         elif self.sm.current == 'sC28':
             if not self.sm.has_screen('sC26'):
-                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, shapecutter = self)
+                sC26_screen = screen_shapeCutter_26.ShapeCutter26ScreenClass(name = 'sC26', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC26_screen)
         elif self.sm.current == 'sC29':
             if not self.sm.has_screen('sC27'):
@@ -1023,8 +1023,6 @@ class ScreenManagerShapeCutter(object):
             self.sm.get_screen('homing').return_to_screen = return_to_screen
             self.sm.get_screen('homing').cancel_to_screen = cancel_to_screen  
             self.sm.current = 'homing'
-            
-            self.j.generate_gCode()
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):
