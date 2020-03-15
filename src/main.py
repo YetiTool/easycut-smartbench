@@ -57,7 +57,7 @@ Cmport = 'COM3'
 if sys.platform != 'win32':
     
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
-    if case.startswith() == "gpu_mem=128":
+    if case.startswith('gpu_mem=128'):
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
         os.system('sudo reboot')   
 
