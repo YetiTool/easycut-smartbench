@@ -12,6 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
 Builder.load_string("""
 
@@ -347,7 +348,7 @@ class ShapeCutter31ScreenClass(Screen):
     
     def next_screen(self):
         if not self.m.state().startswith('Jog'):
-            self.shapecutter_sm.next_screen()
+            self.bounding_box_test()
         else:
             pass
     
@@ -398,4 +399,11 @@ class ShapeCutter31ScreenClass(Screen):
             Clock.unschedule(self.z_move_widget.vitrtual_z_height_widget.VZ31F5)
         if self.work_coords_widget.work_coords_F5:
             Clock.unschedule(self.work_coords_widget.work_coords_F5)
-        
+ 
+    def bounding_box_test(self):
+        if self.j.is_job_within_bounds() == True:
+            self.shapecutter_sm.next_screen()
+        else: 
+            description = "The job is not within the bounds of SmartBench.\n\n" + \
+            "Please go back and re-set your job datums."
+            popup_input_error.PopupInputError(self.shapecutter_sm, description)

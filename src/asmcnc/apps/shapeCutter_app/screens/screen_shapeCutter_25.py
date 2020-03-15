@@ -410,7 +410,6 @@ class ShapeCutter25ScreenClass(Screen):
     #         self.j.generate_gCode()
     #         self.j.save_gCode()
 
-        else: 
-            
+        else:            
             description = "Filename input is empty.\n\nPlease enter a name for your parameter profile."
             popup_input_error.PopupInputError(self.shapecutter_sm, description)

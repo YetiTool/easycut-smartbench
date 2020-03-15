@@ -695,3 +695,38 @@ class ShapeCutterJobParameters(object):
             
             self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
 
+    def is_job_within_bounds(self):
+
+        errorfound = 0
+        
+        if self.shape_dict["shape"] == "rectangle":
+            range_0_multiplier = -1
+        elif self.shape_dict["shape"] == "circle":
+            range_0_multiplier = 1
+            
+        # Mins
+        
+        if range_0_multiplier*(self.m.x_wco()+float(self.range_x[0])) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too close to the X home position. The job will crash into the home position.")
+            errorfound += 1 
+        if range_0_multiplier*(self.m.y_wco()+float(self.range_y[0])) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too close to the Y home position. The job will crash into the home position.")
+            errorfound += 1 
+        if -(self.m.z_wco()+float(self.range_z[0])) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
+            # print("The job target is too far from the Z home position. The router will not reach that far.")
+            errorfound += 1 
+            
+        # Maxs
+
+        if self.m.x_wco()+float(self.range_x[1]) >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too far from the X home position. The router will not reach that far.")
+            errorfound += 1 
+        if self.m.y_wco()+float(self.range_y[1]) >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too far from the Y home position. The router will not reach that far.")
+            errorfound += 1 
+        if self.m.z_wco()+float(self.range_z[1]) >= -self.m.limit_switch_safety_distance:
+            # print("The job target is too close to the Z home position. The job will crash into the home position.")
+            errorfound += 1 
+
+        if errorfound > 0: return False
+        else: return True  
