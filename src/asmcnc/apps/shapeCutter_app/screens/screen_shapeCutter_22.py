@@ -514,7 +514,7 @@ class ShapeCutter22ScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
 
-    def on_enter(self):
+    def on_pre_enter(self):
         self.info_button.opacity = 1
 
         if self.j.shape_dict["shape"] == 'circle':
