@@ -4,6 +4,8 @@ Created 5 March 2020
 Module to manage screens within the shape cutter app
 '''
 
+import gc
+
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 
@@ -1088,6 +1090,7 @@ class ScreenManagerShapeCutter(object):
                 if not self.sm.has_screen('sCexit'): 
                     self.shapecutter_open = False
                     
+                    gc.collect()
                     Clock.unschedule(destruction_poll)
 
         self.destroy_nearly_all_screens()
