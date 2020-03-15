@@ -13,6 +13,7 @@ from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from __builtin__ import False
 
 Builder.load_string("""
 
@@ -513,7 +514,7 @@ class ShapeCutter22ScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
 
-    def on_pre_enter(self):
+    def on_enter(self):
         self.info_button.opacity = 1
 
         if self.j.shape_dict["shape"] == 'circle':
@@ -526,18 +527,25 @@ class ShapeCutter22ScreenClass(Screen):
         else:
             self.unit_toggle.active = False
 
-        if self.j.parameter_dict["tabs"]["tabs?"] == True:
+        print (self.j.parameter_dict["tabs"]["tabs?"])
+
+        if self.j.parameter_dict["tabs"]["tabs?"] == "True":
             self.tab_toggle.active = True
+            self.td_dimension.disabled = False
+            self.th_dimension.disabled = False
+            self.tw_dimension.disabled = False
             self.td_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["spacing"]))
             self.th_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["height"]))
             self.tw_dimension.text = "{:.2f}".format(float(self.j.parameter_dict["tabs"]["width"]))
-
-                
+                        
         else:
             self.tab_toggle.active = False
             self.td_dimension.text = ''
+            self.td_dimension.disabled = True
             self.th_dimension.text = ''
+            self.th_dimension.disabled = True
             self.tw_dimension.text = ''
+            self.tw_dimension.disabled = True
             if self.j.parameter_dict["tabs"]["units"] == "mm":
                 self.unit_toggle.active = False   
             
@@ -594,10 +602,17 @@ class ShapeCutter22ScreenClass(Screen):
     def toggle_tabs(self):
         if self.tab_toggle.active == True:
             self.j.parameter_dict["tabs"]["tabs?"] = True
+            self.td_dimension.disabled = False
+            self.th_dimension.disabled = False
+            self.tw_dimension.disabled = False           
         elif self.tab_toggle.active == False: 
             self.j.parameter_dict["tabs"]["tabs?"] = False    
-
-
+            self.td_dimension.text = ''
+            self.td_dimension.disabled = True
+            self.th_dimension.text = ''
+            self.th_dimension.disabled = True
+            self.tw_dimension.text = ''
+            self.tw_dimension.disabled = True
 
     def check_dimensions(self):
         if self.tab_toggle.active == True:

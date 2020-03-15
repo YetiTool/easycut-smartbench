@@ -61,7 +61,7 @@ class ShapeCutterJobParameters(object):
         
         # parameters
         self.tabs = {
-            "tabs?": "",
+            "tabs?": True,
             "width": 12,
             "height": 3,
             "spacing": 60,
@@ -160,7 +160,8 @@ class ShapeCutterJobParameters(object):
         else:
             multiplier = 1
             
-        min_B_and_C = self.shape_dict["dimensions"]["Z"]*multiplier
+        min_CZ = self.shape_dict["dimensions"]["Z"]*multiplier
+        min_CB = self.parameter_dict["cutter dimensions"]["cutting length"]
 
         if param == "diameter":
             if not input > 0: return 0
@@ -168,13 +169,11 @@ class ShapeCutterJobParameters(object):
             
         elif param == "cutting length":
             if not input > 0: return 0
-        
             self.parameter_dict["cutter dimensions"]["cutting length"] = input
         
         elif param == "shoulder length":
-            if not input + self.parameter_dict["cutter dimensions"]["cutting length"] > min_B_and_C:
-                return min_B_and_C
-            
+            if not input > min_CZ: return min_CZ
+            if not input > min_CB: return min_CB   
             self.parameter_dict["cutter dimensions"]["shoulder length"] = input
         
         return True
@@ -636,7 +635,7 @@ class ShapeCutterJobParameters(object):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
          + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
        
-    def save_gCode(self):    
+    def save_gCode(self):
         f = open(self.gcode_filename, "w")
         for line in self.gcode_lines:
             f.write(line + "\n")
