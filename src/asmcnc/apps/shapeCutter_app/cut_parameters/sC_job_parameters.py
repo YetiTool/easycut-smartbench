@@ -17,15 +17,7 @@ class ShapeCutterJobParameters(object):
     
     parameterCache_file_path = './asmcnc/apps/shapeCutter_app/parameter_cache/'
     jobCache_file_path = './jobCache/'
-#     profile_filename = ""
-#     
-#     # parameters
-#     parameter_string = ''
-#     
-#     # gcode
-#     gcode_lines = []
-#     gcode_filename = ''
-    
+
     # Internal settings
     z_height_for_rapid_move = 3
     
@@ -35,69 +27,6 @@ class ShapeCutterJobParameters(object):
         self.shapecutter_sm = shapecutter_sm
  
         self.refresh_parameters()
-
-#         # shape dimensions
-#         self.circle_dimensions = {
-#             "D": 100,
-#             "Z": 6
-#             }
-#         
-#         self.rectangle_dimensions = {
-#             "X": 100,
-#             "Y": 100,
-#             "Z": 6,
-#             "R": 10
-#             }
-#         
-#         # shape choices       
-#         self.shape_dict = {
-#             "shape": "",
-#             "cut_type": "",
-#             "dimensions": self.circle_dimensions,
-#             "units": "mm"
-#             }
-#         
-#         # parameters
-#         self.tabs = {
-#             "tabs?": "",
-#             "width": 12,
-#             "height": 3,
-#             "spacing": 60,
-#             "units": "mm"
-#             }
-#         
-#         self.cutter_dimensions = {
-#             "diameter": 6.35,
-#             "cutting length": 20,
-#             "shoulder length": 30,
-#             "units": "mm"
-#             }
-# 
-#         self.feed_rates = {
-#             "xy feed rate": 2500,
-#             "z feed rate": 2000,
-#             "spindle speed": 25000,
-#             "units": "mm"
-#             }
-#         
-#         self.strategy_parameters = {
-#             "stock bottom offset": 1,
-#             "step down": 3,
-#             "finishing passes": 0,
-#             "units": "mm"
-#             }
-#         
-#         self.parameter_dict = {
-#             "tabs": self.tabs,
-#             "cutter dimensions": self.cutter_dimensions,
-#             "feed rates": self.feed_rates,
-#             "strategy parameters": self.strategy_parameters         
-#             }
-# 
-#         # Bounding box
-#         self.range_x = [0,0] 
-#         self.range_y = [0,0] 
-#         self.range_z = [0,0]
 
     def refresh_parameters(self):
         self.profile_filename = ""

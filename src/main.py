@@ -9,6 +9,7 @@ www.yetitool.com
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
 import time
+import sys, os
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -52,6 +53,9 @@ from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 
 Cmport = 'COM3'
+
+if sys.platform != 'win32':
+    os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')
 
 class SkavaUI(App):
 
