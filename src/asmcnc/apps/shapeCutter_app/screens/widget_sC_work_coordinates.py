@@ -111,7 +111,6 @@ Builder.load_string("""
 class WorkCoordinates(Widget):
 
     GRBL_REPORT_INTERVAL = 0.1
-#     IP_REPORT_INTERVAL = 2
     
     cheeky_color = StringProperty('#2498f4ff')
 
@@ -120,12 +119,10 @@ class WorkCoordinates(Widget):
         super(WorkCoordinates, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
-        Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
-#         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)      # Poll for status
+        self.start_refresh()
 
-#     def on_enter(self):
-#         self.refresh_ip_label_value()
-
+    def start_refresh(self):
+        self.work_coords_F5 = Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
@@ -138,36 +135,4 @@ class WorkCoordinates(Widget):
             self.grbl_yw_label.text = 'wY:\n' + str(round(self.m.wpos_y(), 2))
             self.grbl_zw_label.text = 'wZ:\n' + str(round(self.m.wpos_z(), 2))
 
-#         else:
-#             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
 
-#     def refresh_ip_label_value(self, dt):
-# 
-#         ip_address = ''
-#         self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-# 
-# 
-#         if sys.platform == "win32":
-#             try:
-#                 hostname=socket.gethostname()
-#                 IPAddr=socket.gethostbyname(hostname)
-#                 ip_address = str(IPAddr)
-#                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-#             except:
-#                 ip_address = ''
-#                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-#         else:
-#             try:
-#                 f = os.popen('hostname -I')
-#                 first_info = f.read().strip().split(' ')[0]
-#                 if len(first_info.split('.')) == 4:
-#                     ip_address = first_info
-#                     self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-#                 else:
-#                     ip_address = ''
-#                     self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-#             except:
-#                 ip_address = ''
-#                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-# 
-#         self.ip_status_label.text = ip_address

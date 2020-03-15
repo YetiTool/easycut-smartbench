@@ -59,6 +59,8 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
     
+    shapecutter_open = False
+    
     screen_load_dt = 0.02
     prev_screen_load_dt = 0.045
     tab_destroy_dt = 0.75
@@ -85,7 +87,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC10_screen)
         self.sm.current = 'sC10'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
+        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
         
     def define_tab(self):
         if not self.sm.has_screen('sC17'):
@@ -93,7 +95,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC17_screen)            
         self.sm.current = 'sC17'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
+        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
 
     def position_tab(self):
         if not self.sm.has_screen('sC26'):
@@ -101,7 +103,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC26_screen)
         self.sm.current = 'sC26'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         
     def check_tab(self):
         
@@ -111,7 +113,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC33_screen) 
             self.sm.current = 'sC33'
             Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-            Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+            # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         else:
             pass  
 
@@ -375,7 +377,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.current = 'sCrepeat'
             
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt) 
-        self.destroy_peripheral_screens()
+        # self.destroy_peripheral_screens()
             
     def load_next_screen(self, dt):
         if self.sm.current == 'lobby':
@@ -967,11 +969,26 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sCexit_screen)
         self.sm.current = 'sCexit'
 
+    def landing(self):
+        if not self.sm.has_screen('sClanding'): 
+            sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
+            self.sm.add_widget(sClanding_screen)
+        self.sm.current = 'sClanding'
+        if not self.sm.has_screen('sCtutorial'):
+            sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
+            self.sm.add_widget(sCtutorial_screen)
+            
     def tutorial(self):        
         if not self.sm.has_screen('sCtutorial'):
             sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
             self.sm.add_widget(sCtutorial_screen)
         self.sm.current = 'sCtutorial'        
+
+    def repeat_cut(self):
+        if not self.sm.has_screen('sC27'):
+            sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', machine = self.m, job_parameters = self.j, shapecutter = self)
+            self.sm.add_widget(sC27_screen)
+        self.sm.current = 'sC27'
         
     def go_screen(self, cancel_to_screen, return_to_screen):
         
@@ -1015,21 +1032,77 @@ class ScreenManagerShapeCutter(object):
         self.sm.current = 'sCfilechooser'
             
     def return_to_EC(self):
-        if not self.sm.current == 'alarmScreen':
-            self.sm.current = 'lobby'
-            
-        self.destroy_all_screens()
-   
+           
+        def check_destruction_status(dt):
+            if not self.sm.has_screen('sCtutorial') and \
+            not self.sm.has_screen('sClanding') and \
+            not self.sm.has_screen('sCdimensions') and \
+            not self.sm.has_screen('sCApIs') and \
+            not self.sm.has_screen('sC1') and \
+            not self.sm.has_screen('sC2') and \
+            not self.sm.has_screen('sC3') and \
+            not self.sm.has_screen('sC4') and \
+            not self.sm.has_screen('sC5') and \
+            not self.sm.has_screen('sC6') and \
+            not self.sm.has_screen('sC7') and \
+            not self.sm.has_screen('sC8') and \
+            not self.sm.has_screen('sC9') and \
+            not self.sm.has_screen('sC10') and \
+            not self.sm.has_screen('sC11') and \
+            not self.sm.has_screen('sC12') and \
+            not self.sm.has_screen('sC13') and \
+            not self.sm.has_screen('sC14') and \
+            not self.sm.has_screen('sC15') and \
+            not self.sm.has_screen('sC16') and \
+            not self.sm.has_screen('sC17') and \
+            not self.sm.has_screen('sCfilechooser') and \
+            not self.sm.has_screen('sC18') and \
+            not self.sm.has_screen('sC19') and \
+            not self.sm.has_screen('sC20') and \
+            not self.sm.has_screen('sC21') and \
+            not self.sm.has_screen('sC22') and \
+            not self.sm.has_screen('sC23') and \
+            not self.sm.has_screen('sC24') and \
+            not self.sm.has_screen('sC25') and \
+            not self.sm.has_screen('sC26') and \
+            not self.sm.has_screen('sC27') and \
+            not self.sm.has_screen('sC28') and \
+            not self.sm.has_screen('sC29') and \
+            not self.sm.has_screen('sC30') and \
+            not self.sm.has_screen('sC31') and \
+            not self.sm.has_screen('sC32') and \
+            not self.sm.has_screen('sC33') and \
+            not self.sm.has_screen('sC34') and \
+            not self.sm.has_screen('sC35') and \
+            not self.sm.has_screen('sC36') and \
+            not self.sm.has_screen('sCsavejob') and \
+            not self.sm.has_screen('sCfeedback') and \
+            not self.sm.has_screen('sCrepeat'):
+
+                if not self.sm.current == 'alarmScreen':
+                    self.sm.current = 'lobby'
+                else: 
+                    self.sm.get_screen('alarmScreen').return_to_screen = 'lobby'
+    
+                self.destroy_exit_screen()
+                
+                if not self.sm.has_screen('sCexit'): 
+                    self.shapecutter_open = False
+                    
+                    Clock.unschedule(destruction_poll)
+
+        self.destroy_nearly_all_screens()
+        destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
+  
     def open_shapecutter(self):
         
-        if not self.sm.has_screen('sClanding'): 
-            sClanding_screen = screen_shapeCutter_landing.ShapeCutterLandingScreenClass(name = 'sClanding', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sClanding_screen)
-        self.sm.current = 'sClanding'
-        if not self.sm.has_screen('sCtutorial'):
-            sCtutorial_screen = screen_shapeCutter_tutorial.ShapeCutterTutorialScreenClass(name = 'sCtutorial', machine = self.m, shapecutter = self)
-            self.sm.add_widget(sCtutorial_screen)
-                
+        if self.shapecutter_open == False:
+            self.shapecutter_open = True
+            
+            self.landing()
+        
+        else: self.open_shapecutter()
+              
 #     def load_all_screens(self):        
 #         self.load_entry_screens()
 #         self.load_prepare_screens()
@@ -1181,7 +1254,7 @@ class ScreenManagerShapeCutter(object):
 #             sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
 #             self.sm.add_widget(sCrepeat_screen)
     
-    def destroy_all_screens(self):
+    def destroy_nearly_all_screens(self):
         if self.sm.has_screen('sCtutorial'): 
             self.sm.get_screen('sCtutorial').clear_widgets()
             self.sm.remove_widget(self.sm.get_screen('sCtutorial'))
@@ -1283,9 +1356,11 @@ class ScreenManagerShapeCutter(object):
             self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
         if self.sm.has_screen('sCrepeat'): 
             self.sm.remove_widget(self.sm.get_screen('sCrepeat'))
+
+    def destroy_exit_screen(self):
         if self.sm.has_screen('sCexit'): 
             self.sm.remove_widget(self.sm.get_screen('sCexit'))
-   
+
     def destroy_peripheral_screens(self):
         if self.sm.current == 'sC3':
             if self.sm.has_screen('sClanding'):

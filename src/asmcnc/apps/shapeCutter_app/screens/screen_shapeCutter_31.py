@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
 
@@ -329,6 +330,12 @@ class ShapeCutter31ScreenClass(Screen):
 
 # Action buttons       
 
+    def on_enter(self):
+        if not self.z_move_widget.vitrtual_z_height_widget.VZ31F5: 
+            self.z_move_widget.vitrtual_z_height_widget.start_refresh()
+        if not self.work_coords_widget.work_coords_F5:
+            self.work_coords_widget.start_refresh()
+
     def get_info(self):
         pass
     
@@ -385,3 +392,10 @@ class ShapeCutter31ScreenClass(Screen):
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
+
+    def on_leave(self):
+        if self.z_move_widget.vitrtual_z_height_widget.VZ31F5:
+            Clock.unschedule(self.z_move_widget.vitrtual_z_height_widget.VZ31F5)
+        if self.work_coords_widget.work_coords_F5:
+            Clock.unschedule(self.work_coords_widget.work_coords_F5)
+        

@@ -591,8 +591,6 @@ class ShapeCutter22ScreenClass(Screen):
             if not (self.th_dimension.text == ""): self.th_dimension.text = "{:.2f}".format(float(self.th_dimension.text) * 25.4)
             if not (self.tw_dimension.text == ""): self.tw_dimension.text = "{:.2f}".format(float(self.tw_dimension.text) * 25.4) 
             
-
-
     def toggle_tabs(self):
         if self.tab_toggle.active == True:
             self.j.parameter_dict["tabs"]["tabs?"] = True

@@ -69,8 +69,12 @@ class VirtualZ31(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.j=kwargs['job_parameters']
-        Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
+        
+        self.start_refresh()
 
+    def start_refresh(self):
+        self.VZ31F5 = Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
+        
     def refresh_widget(self, dt):
 
         self.setZones()

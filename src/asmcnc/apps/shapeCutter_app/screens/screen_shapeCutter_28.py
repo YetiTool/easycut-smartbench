@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed
 
@@ -302,8 +303,8 @@ class ShapeCutter28ScreenClass(Screen):
         self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        self.virtual_bed_container.add_widget(widget_sC_virtual_bed.SCVirtualBed(machine=self.m,  job_parameters = self.j, screen_manager=self.shapecutter_sm.sm))
-
+        self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(machine=self.m,  job_parameters = self.j, screen_manager=self.shapecutter_sm.sm)
+        self.virtual_bed_container.add_widget(self.virtual_bed_widget)
         self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)
         self.work_coords_container.add_widget(self.work_coords_widget)
 
@@ -311,6 +312,12 @@ class ShapeCutter28ScreenClass(Screen):
         self.info_button.opacity = 1
         self.xy_move_widget.set_jog_speeds()
 
+    def on_enter(self):
+        if not self.virtual_bed_widget.SCVBedF5: 
+            self.virtual_bed_widget.start_refresh()
+        if not self.work_coords_widget.work_coords_F5:
+            self.work_coords_widget.start_refresh()
+            
 # Action buttons
     def get_info(self):
         pass
@@ -371,3 +378,9 @@ class ShapeCutter28ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen specific
+   
+    def on_leave(self):
+        if self.virtual_bed_widget.SCVBedF5: 
+            Clock.unschedule(self.virtual_bed_widget.SCVBedF5)
+        if self.work_coords_widget.work_coords_F5:
+            Clock.unschedule(self.work_coords_widget.work_coords_F5)

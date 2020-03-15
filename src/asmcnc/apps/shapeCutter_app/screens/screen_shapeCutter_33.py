@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC_work_coordinates, widget_sC_virtual_bed
 from asmcnc.geometry import job_envelope
@@ -367,8 +368,9 @@ class ShapeCutter33ScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
 
-        self.virtual_bed_container.add_widget(widget_sC_virtual_bed.SCVirtualBed(machine=self.m, job_parameters = self.j, screen_manager=self.shapecutter_sm.sm))
-
+        self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(machine=self.m,  job_parameters = self.j, screen_manager=self.shapecutter_sm.sm)
+        self.virtual_bed_container.add_widget(self.virtual_bed_widget)
+        
         self.work_coords_widget = widget_sC_work_coordinates.WorkCoordinates(machine=self.m, screen_manager=self.shapecutter_sm.sm)
         self.work_coords_container.add_widget(self.work_coords_widget)
 
@@ -376,6 +378,12 @@ class ShapeCutter33ScreenClass(Screen):
         self.info_button.opacity = 0
 
 # Action buttons  
+
+    def on_enter(self):
+        if not self.virtual_bed_widget.SCVBedF5: 
+            self.virtual_bed_widget.start_refresh()
+        if not self.work_coords_widget.work_coords_F5:
+            self.work_coords_widget.start_refresh()
     
     def get_info(self):
         pass
@@ -468,5 +476,9 @@ class ShapeCutter33ScreenClass(Screen):
     def stop_jog(self):
         self.m.quit_jog()
 
-
+    def on_leave(self):
+        if self.virtual_bed_widget.SCVBedF5: 
+            Clock.unschedule(self.virtual_bed_widget.SCVBedF5)
+        if self.work_coords_widget.work_coords_F5:
+            Clock.unschedule(self.work_coords_widget.work_coords_F5)
         

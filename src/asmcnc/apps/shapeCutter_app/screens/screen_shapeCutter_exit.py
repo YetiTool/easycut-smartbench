@@ -69,7 +69,7 @@ class ShapeCutterExitScreenClass(Screen):
         self.m=kwargs['machine']
 
     def on_enter(self):
-        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
+        self.poll_for_success = Clock.schedule_once(self.exit_screen, 1)
  
     def exit_screen(self, dt):
         self.shapecutter_sm.return_to_EC()

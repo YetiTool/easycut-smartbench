@@ -163,11 +163,10 @@ class ShapeCutterRepeatScreenClass(Screen):
         self.m=kwargs['machine']
     
     def repeat(self):
-        self.shapecutter_sm.position_tab()
+        self.shapecutter_sm.repeat_cut()
         
     def new_cut(self):
-        self.shapecutter_sm.refresh_shapecutter()
-        self.shapecutter_sm.open_shapecutter()
+        self.shapecutter_sm.landing()
         
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
