@@ -811,7 +811,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC35_screen)            
             self.sm.current = 'sC35'
         
-        Clock.schedule_once(self.load_next_screen,self.prev_screen_load_dt)
+        Clock.schedule_once(self.load_previous_screen,self.prev_screen_load_dt)
            
     def load_previous_screen(self):    
         if self.sm.current == 'sC1':          
