@@ -702,7 +702,7 @@ class ShapeCutterJobParameters(object):
         if self.shape_dict["shape"] == "rectangle":
             range_0_multiplier = -1
         elif self.shape_dict["shape"] == "circle":
-            range_0_multiplier = 1
+            range_0_multiplier = -1
             
         # Mins
         
