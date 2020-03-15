@@ -1003,7 +1003,10 @@ class ScreenManagerShapeCutter(object):
         self.sm.get_screen('go').job_gcode = self.j.gcode_lines
         self.sm.get_screen('go').job_filename  = self.j.gcode_filename
         self.sm.current = 'go'
-        self.sm.get_screen('go').stop_start.trigger_action(0)
+        Clock.schedule_once(auto_go, 0.5)
+        
+        def auto_go(dt):
+            self.sm.get_screen('go').start_stop_button_press()
 
     def homing_screen(self, cancel_to_screen, return_to_screen):
         
