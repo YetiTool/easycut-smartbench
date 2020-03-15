@@ -542,6 +542,7 @@ class ShapeCutter24ScreenClass(Screen):
         self.j=kwargs['job_parameters']
 
     def on_pre_enter(self):
+        self.counter = 0
         self.info_button.opacity = 1
     
         self.stock_bottom_offset.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["stock bottom offset"]))
@@ -631,21 +632,26 @@ class ShapeCutter24ScreenClass(Screen):
             
             for (dim, input) in input_dim_list:
                 setting = self.j.validate_strategy_parameters(dim, input)
+                
                 if not setting == True:
-                    # if dim == "step down":
-                        # Needs to be a warning rather than a strict rule
-                                     
-#                         description = "The " + dim + " input isn't valid.\n\n" + \
-#                                     "The " + dim + " should be greater than 0" + \
-#                                     " and less than " + "{:.2f}".format(setting) + ".\n\n" \
-#                                     + "Please re-enter your parameters."
-                    #else: 
-                    description = "The " + dim + " input isn't valid.\n\n" + \
-                                dim + " value should be greater than 0.\n\n" \
-                                + "Please re-enter your parameters."
-                                           
-                    popup_input_error.PopupInputError(self.shapecutter_sm, description)
-                    return False
+
+                    if dim == "step down":
+                        description = "The " + dim + " is greater than half the cutter diameter - " + \
+                                    "this might be too big for the size of cutter.\n\n"  + \
+                                    " A good guide is to not exceed half the cutter diameter.\n\n" + \
+                                    "Clicking next again will allow you to continue. "
+                        if self.counter == 0:
+                            popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                            self.counter = 1
+                            return False
+                        
+                    else: 
+                        description = "The " + dim + " input isn't valid.\n\n" + \
+                                    dim + " value should be greater than 0.\n\n" \
+                                    + "Please re-enter your parameters."
+
+                        popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                        return False
 
             #self.j.parameter_dict["strategy parameters"]["units"] = self.unit_label.text
             self.shapecutter_sm.next_screen()

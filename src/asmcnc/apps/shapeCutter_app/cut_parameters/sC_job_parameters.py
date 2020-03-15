@@ -4,13 +4,9 @@ Created 5 March 2020
 Module to store parameters and user choices for the Shape Cutter app
 '''
 
-from __builtin__ import input
 import csv
 import math
 import re
-
-from docutils.io import Input
-
 
 class ShapeCutterJobParameters(object):
     
@@ -262,11 +258,17 @@ class ShapeCutterJobParameters(object):
             if not input > 0: return 0
             self.parameter_dict["strategy parameters"]["stock bottom offset"] = input
             
-        elif param == "step down":  
-            warning_step_down = self.parameter_dict["cutter dimensions"]["diameter"]*multiplier / 2
+        elif param == "step down":
+            
+            print "param step down"
+            
+            warning_step_down = (float(self.parameter_dict["cutter dimensions"]["diameter"])*multiplier) / 2
+            
+            print warning_step_down
+            print input
             
             if not input > 0: return 0
-            if not input < warning_step_down: return warning_step_down
+            if input > warning_step_down: return False
             self.parameter_dict["strategy parameters"]["step down"] = input
         
         return True

@@ -36,7 +36,7 @@ class PopupInputError(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,20,50,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,25,50,0])
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[50,20,50,20])
