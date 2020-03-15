@@ -119,6 +119,7 @@ class WorkCoordinates(Widget):
         super(WorkCoordinates, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
+        Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():

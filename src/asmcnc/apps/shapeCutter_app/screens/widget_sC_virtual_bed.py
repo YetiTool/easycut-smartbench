@@ -116,6 +116,7 @@ class SCVirtualBed(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.j = kwargs['job_parameters']
+        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
