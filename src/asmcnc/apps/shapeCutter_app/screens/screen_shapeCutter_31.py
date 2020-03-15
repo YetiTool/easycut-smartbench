@@ -329,14 +329,7 @@ class ShapeCutter31ScreenClass(Screen):
         self.info_button.opacity = 1
         self.z_set_go_widget.set_jog_speeds()
 
-# Action buttons       
-
-    def on_enter(self):
-        if not self.z_move_widget.vitrtual_z_height_widget.VZ31F5: 
-            self.z_move_widget.vitrtual_z_height_widget.start_refresh()
-        if not self.work_coords_widget.work_coords_F5:
-            self.work_coords_widget.start_refresh()
-
+# Action buttons
     def get_info(self):
         pass
     
@@ -393,12 +386,6 @@ class ShapeCutter31ScreenClass(Screen):
     
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-
-    def on_leave(self):
-        if self.z_move_widget.vitrtual_z_height_widget.VZ31F5:
-            Clock.unschedule(self.z_move_widget.vitrtual_z_height_widget.VZ31F5)
-        if self.work_coords_widget.work_coords_F5:
-            Clock.unschedule(self.work_coords_widget.work_coords_F5)
  
     def bounding_box_test(self):
         if self.j.is_job_within_bounds() == True:

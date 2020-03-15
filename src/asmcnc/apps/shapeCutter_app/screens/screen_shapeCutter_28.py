@@ -311,12 +311,6 @@ class ShapeCutter28ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.xy_move_widget.set_jog_speeds()
-
-    def on_enter(self):
-        if not self.virtual_bed_widget.SCVBedF5: 
-            self.virtual_bed_widget.start_refresh()
-        if not self.work_coords_widget.work_coords_F5:
-            self.work_coords_widget.start_refresh()
             
 # Action buttons
     def get_info(self):
@@ -378,9 +372,3 @@ class ShapeCutter28ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
         
 # Screen specific
-   
-    def on_leave(self):
-        if self.virtual_bed_widget.SCVBedF5: 
-            Clock.unschedule(self.virtual_bed_widget.SCVBedF5)
-        if self.work_coords_widget.work_coords_F5:
-            Clock.unschedule(self.work_coords_widget.work_coords_F5)

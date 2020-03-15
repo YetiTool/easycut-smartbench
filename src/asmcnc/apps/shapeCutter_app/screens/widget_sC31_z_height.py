@@ -71,9 +71,6 @@ class VirtualZ31(Widget):
         self.j=kwargs['job_parameters']
         
         self.start_refresh()
-
-    def start_refresh(self):
-        self.VZ31F5 = Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
         
     def refresh_widget(self, dt):
 

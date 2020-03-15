@@ -121,9 +121,6 @@ class WorkCoordinates(Widget):
         self.sm = kwargs['screen_manager']
         self.start_refresh()
 
-    def start_refresh(self):
-        self.work_coords_F5 = Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
-
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
 #             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
