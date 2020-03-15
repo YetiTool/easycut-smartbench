@@ -57,16 +57,13 @@ Cmport = 'COM3'
 if sys.platform != 'win32':
     
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
-    if case == 0:
+    if case.startswith() == "gpu_mem=128":
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
         os.system('sudo reboot')   
-    elif case == 1:
-        print "gpu mem already 256"
-    elif case == 2:
-        print "an error occured re-assigning gpu memory"
+
     else:
+        print "gpu mem already 256"
         print case
-        print "popen failed"
 
 class SkavaUI(App):
 
