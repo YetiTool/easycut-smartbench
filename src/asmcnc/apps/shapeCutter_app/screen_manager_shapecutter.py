@@ -115,7 +115,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC33_screen) 
             self.sm.current = 'sC33'
             Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-           # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+            # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         else:
             pass  
 
@@ -1093,6 +1093,7 @@ class ScreenManagerShapeCutter(object):
                     Clock.unschedule(destruction_poll)
                     gc.collect()
 
+        self.j.refresh_parameters()
         self.destroy_nearly_all_screens()
         destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
   
