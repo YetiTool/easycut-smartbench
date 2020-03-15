@@ -473,7 +473,7 @@ class ShapeCutter2ScreenClass(Screen):
         pass
     
     def go_back(self):
-        self.shapecutter_sm.prepare_tab()
+        self.shapecutter_sm.previous_screen()
     
     def next_screen(self):
         self.shapecutter_sm.next_screen()

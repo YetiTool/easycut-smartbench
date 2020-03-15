@@ -89,7 +89,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC10_screen)
         self.sm.current = 'sC10'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
+        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
         
     def define_tab(self):
         if not self.sm.has_screen('sC17'):
@@ -97,7 +97,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC17_screen)            
         self.sm.current = 'sC17'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
+        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)        
 
     def position_tab(self):
         if not self.sm.has_screen('sC26'):
@@ -105,7 +105,7 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sC26_screen)
         self.sm.current = 'sC26'
         Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-        # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+        Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         
     def check_tab(self):
         
@@ -115,7 +115,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC33_screen) 
             self.sm.current = 'sC33'
             Clock.schedule_once(self.load_next_screen,self.screen_load_dt)
-            # Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
+            Clock.schedule_once(self.destroy_last_tabful, self.tab_destroy_dt)
         else:
             pass  
 
@@ -1090,8 +1090,8 @@ class ScreenManagerShapeCutter(object):
                 if not self.sm.has_screen('sCexit'): 
                     self.shapecutter_open = False
                     
-                    gc.collect()
                     Clock.unschedule(destruction_poll)
+                    gc.collect()
 
         self.destroy_nearly_all_screens()
         destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
@@ -1100,7 +1100,7 @@ class ScreenManagerShapeCutter(object):
         
         if self.shapecutter_open == False:
             self.shapecutter_open = True
-            
+            self.positioned = False
             self.landing()
         
         else: self.open_shapecutter()
