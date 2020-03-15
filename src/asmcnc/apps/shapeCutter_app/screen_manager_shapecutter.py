@@ -813,7 +813,7 @@ class ScreenManagerShapeCutter(object):
         
         Clock.schedule_once(self.load_previous_screen,self.prev_screen_load_dt)
            
-    def load_previous_screen(self):    
+    def load_previous_screen(self, dt):    
         if self.sm.current == 'sC1':          
             if not self.sm.has_screen('sCApIs'):
                 sCApIs_screen = screen_shapeCutter_aperture_island.ShapeCutterApIsScreenClass(name = 'sCApIs', machine = self.m, job_parameters = self.j, shapecutter = self)
