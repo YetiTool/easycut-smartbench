@@ -543,7 +543,7 @@ class ShapeCutter23ScreenClass(Screen):
 
         self.xy_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["xy feed rate"]))
         self.z_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["z feed rate"]))
-        self.spindle_speed.text= "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["spindle speed"]))
+        self.spindle_speed.text= "{:.0f}".format(float(self.j.parameter_dict["feed rates"]["spindle speed"]))
 
         if self.j.parameter_dict["feed rates"]["units"] == "inches":
             self.unit_toggle.active = True
