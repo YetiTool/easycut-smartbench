@@ -1105,12 +1105,13 @@ class ScreenManagerShapeCutter(object):
   
     def open_shapecutter(self):
         
-        if self.shapecutter_open == False:
-            self.shapecutter_open = True
-            self.positioned = False
-            self.landing()
-        
-        else: self.open_shapecutter()
+        self.landing()
+#         if self.shapecutter_open == False:
+#             self.shapecutter_open = True
+#             self.positioned = False
+#             self.landing()
+#         
+#         else: self.open_shapecutter()
               
 #     def load_all_screens(self):        
 #         self.load_entry_screens()
