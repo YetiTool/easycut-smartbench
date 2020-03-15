@@ -55,7 +55,15 @@ from asmcnc.skavaUI import screen_diagnostics
 Cmport = 'COM3'
 
 if sys.platform != 'win32':
-    os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')
+    
+    case = os.popen('grep -Fxq "gpu_mem=128" /boot/config.txt').read()
+    if case == 0:
+        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
+        os.system('sudo reboot')   
+    elif case == 1:
+        print "gpu mem already 256"
+    elif case == 2:
+        print "an error occured re-assigning gpu memory"
 
 class SkavaUI(App):
 
