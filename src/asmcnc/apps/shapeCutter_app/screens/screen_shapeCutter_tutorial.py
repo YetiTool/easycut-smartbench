@@ -316,16 +316,16 @@ class ShapeCutterTutorialScreenClass(Screen):
 
     def on_enter(self):   
         Clock.schedule_once(lambda dt: self.append_instructions(0), 0.5)
-        Clock.schedule_once(lambda dt: self.flashy_arrows(), 0.5)        
+        Clock.schedule_once(lambda dt: self.flashy_arrows(), 1)        
         
-        Clock.schedule_once(lambda dt: self.append_instructions(1), 2.5)
-        Clock.schedule_once(lambda dt: self.flashy_tabs(), 2.5)
+        Clock.schedule_once(lambda dt: self.append_instructions(1), 3.5)
+        Clock.schedule_once(lambda dt: self.flashy_tabs(), 4)
         
-        Clock.schedule_once(lambda dt: self.append_instructions(2), 4.75)
-        Clock.schedule_once(lambda dt: self.flashy_info(), 4.75)
+        Clock.schedule_once(lambda dt: self.append_instructions(2), 7)
+        Clock.schedule_once(lambda dt: self.flashy_info(), 7.5)
         
-        Clock.schedule_once(lambda dt: self.append_instructions(3), 6.75)
-        Clock.schedule_once(lambda dt: self.enable_buttons(), 6.75)
+        Clock.schedule_once(lambda dt: self.append_instructions(3), 10)
+        Clock.schedule_once(lambda dt: self.enable_buttons(), 10)
         
     def append_instructions(self, n):
         self.user_instructions.text = self.user_instructions.text + str(self.instructions_list[n])

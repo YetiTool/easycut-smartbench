@@ -584,12 +584,12 @@ class ShapeCutter20ScreenClass(Screen):
                                     " than the Z dimension and the cutting length.\n\n" \
                                     + "Please re-enter your parameters."
                     elif dim == "cutting length": 
-                        description = "The " + dim + " input isn't valid.\n\n" + \
+                        description = "The " + dim + " input isn't valid.\n\nThe " + \
                                     dim + " value should be greater than " + "{:.2f}".format(setting) + \
                                     " " + units + ".\n\n" \
                                     + "Please re-enter your parameters."    
                     elif dim == "diameter": 
-                        description = "The " + dim + " input isn't valid.\n\n" + \
+                        description = "The " + dim + " input isn't valid.\n\nThe " + \
                                     dim + " value should be greater than 0 " + \
                                     "and less than " + "{:.2f}".format(setting) + \
                                     " " + units + ".\n\n" \
