@@ -1090,12 +1090,18 @@ class ScreenManagerShapeCutter(object):
                 if not self.sm.has_screen('sCexit'): 
                     self.shapecutter_open = False
                     
-                    Clock.unschedule(destruction_poll)
+                    # Clock.unschedule(destruction_poll)
                     gc.collect()
 
-        self.j.refresh_parameters()
-        self.destroy_nearly_all_screens()
-        destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
+        self.j.refresh_parameters
+#         self.destroy_nearly_all_screens()
+#         destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
+
+        if not self.sm.current == 'alarmScreen':
+            self.sm.current = 'lobby'
+        else: 
+            self.sm.get_screen('alarmScreen').return_to_screen = 'lobby'
+        gc.collect()
   
     def open_shapecutter(self):
         

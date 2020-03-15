@@ -427,7 +427,6 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_blue()
  
-
     def quit_to_home(self):
         #self.sm.transition = SlideTransition()
         #self.sm.transition.direction = 'up' 
