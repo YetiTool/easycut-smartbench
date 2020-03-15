@@ -583,11 +583,17 @@ class ShapeCutter20ScreenClass(Screen):
                                     "The cutting length + shoulder length should be greater" + \
                                     " than the Z dimension and the cutting length.\n\n" \
                                     + "Please re-enter your parameters."
-                    else: 
+                    elif dim == "cutting length": 
                         description = "The " + dim + " input isn't valid.\n\n" + \
                                     dim + " value should be greater than " + "{:.2f}".format(setting) + \
                                     " " + units + ".\n\n" \
-                                    + "Please re-enter your parameters."                   
+                                    + "Please re-enter your parameters."    
+                    elif dim == "diameter": 
+                        description = "The " + dim + " input isn't valid.\n\n" + \
+                                    dim + " value should be greater than 0 " + \
+                                    "and less than " + "{:.2f}".format(setting) + \
+                                    " " + units + ".\n\n" \
+                                    + "Please re-enter your parameters."                                                                                         
                     popup_input_error.PopupInputError(self.shapecutter_sm, description)
                     return False
 

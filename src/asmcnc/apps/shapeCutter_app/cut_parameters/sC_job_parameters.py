@@ -164,7 +164,8 @@ class ShapeCutterJobParameters(object):
         min_CB = self.parameter_dict["cutter dimensions"]["cutting length"]
 
         if param == "diameter":
-            if not input > 0: return 0
+            if not input > 0: return 26*multiplier
+            if not input <= 26*multiplier: return 26*multiplier
             self.parameter_dict["cutter dimensions"]["diameter"] = input
             
         elif param == "cutting length":
