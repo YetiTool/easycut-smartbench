@@ -57,6 +57,7 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_repeat
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_tutorial
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 
+from asmcnc.apps.shapeCutter_app.screens import popup_machine_error
 
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
@@ -1107,7 +1108,12 @@ class ScreenManagerShapeCutter(object):
   
     def open_shapecutter(self):
         
-        self.landing()
+        if self.m.state().startswith("Idle"):
+            self.landing()
+        else: 
+            popup_machine_error.PopupMachineError(self)
+            
+            
 #         if self.shapecutter_open == False:
 #             self.shapecutter_open = True
 #             self.positioned = False
