@@ -590,8 +590,9 @@ class ShapeCutterJobParameters(object):
                 # plunge and draw circle, anti-clockwise
                 lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
                 if tabs == True and z < tab_absolute_height:
+                    tab_count = 0
                     for (xy_start, xy_end, xy_next) in zip(circ_tab_start_pos, circ_tab_end_pos, circ_tab_next_start_pos):
-                        
+                        tab_count += 1
                         lines.append("(Z" + str(z) + ": Tab " + str(tab_count) + ")")
         #                 if xy_start[0] != circ_path_rad: # hack to prevent repetition of co-ordinates from triggering a 360 degree revolution (makes sure that x co-ords aren't the same before appending - only works in this template with start point position etc)
         #                     lines.append("G3 X" + str(xy_start[0]) + " Y" + str(xy_start[1]) + " I" + str(-xy_start[0]) + " J" + str(-xy_start[1]) + " F" + str(xy_feed_rate))
