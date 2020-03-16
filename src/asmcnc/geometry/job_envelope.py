@@ -35,4 +35,3 @@ class BoundingBox(object):
         self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
         self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
         file.close()
-         

@@ -53,6 +53,7 @@ Builder.load_string("""
                     id: filechooser_usb
                     path: './jobCache/'
                     filter_dirs: True
+                    dirselect: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: 
                         root.refresh_filechooser()

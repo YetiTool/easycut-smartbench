@@ -7,7 +7,6 @@ Landing Screen for the Calibration App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 
@@ -119,6 +118,7 @@ Builder.load_string("""
 class CalibrationLandingScreenClass(Screen):
     
     user_instruction = ObjectProperty()
+    return_to_screen = StringProperty()
     
     def __init__(self, **kwargs):
         super(CalibrationLandingScreenClass, self).__init__(**kwargs)
@@ -131,7 +131,7 @@ class CalibrationLandingScreenClass(Screen):
                                 '- or if the ambient temperature is hotter or cooler than usual.[/color]'
 
     def skip_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.sm.current = self.return_to_screen
         
     def next_screen(self):
         if not self.sm.has_screen('wait'):       

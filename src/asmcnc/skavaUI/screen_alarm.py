@@ -87,7 +87,7 @@ Builder.load_string("""
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 130, 0
+                padding: 150, 0
             
                 Button:
                     size_hint_y:0.9
@@ -108,7 +108,7 @@ Builder.load_string("""
                         Label:
                             #size_hint_y: 1
                             font_size: '20sp'
-                            text: 'Return to the home screen'
+                            text: 'Return'
                         
 # This is code from when the alarm screen contained an image. It's broken, but might want to come back to it:                     
 #                     Image: 
@@ -132,6 +132,7 @@ class AlarmScreenClass(Screen):
     # define alarm description to make kivy happy
     alarm_description = StringProperty()
     message = StringProperty()
+    return_to_screen = 'home'
     # alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
 
     
@@ -147,6 +148,6 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
 
     def quit_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = str(self.return_to_screen)
  
       

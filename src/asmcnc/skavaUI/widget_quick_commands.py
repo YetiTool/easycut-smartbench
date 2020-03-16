@@ -14,7 +14,7 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_stop_press
 
-
+import sys
 
 Builder.load_string("""
 
@@ -181,7 +181,7 @@ class QuickCommands(Widget):
         if self.sm.get_screen('home').job_gcode ==[]:
             pass
 
-        elif self.m.state() != 'Idle':
+        elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
             
         elif self.m.is_machine_homed == False:
@@ -189,12 +189,15 @@ class QuickCommands(Widget):
             self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
             self.sm.current = 'homingWarning'
                 
-        elif self.is_job_within_bounds() == False:                   
+        elif self.is_job_within_bounds() == False and sys.platform != "win32":                   
             self.sm.current = 'boundary'
-                    
-        else:
-            self.sm.current = 'go'
 
+        else:
+            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
+            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
+            self.sm.get_screen('go').return_to_screen = 'home'
+            self.sm.get_screen('go').cancel_to_screen = 'home'      
+            self.sm.current = 'go'
         
     def is_job_within_bounds(self):
 

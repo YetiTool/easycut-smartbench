@@ -72,6 +72,7 @@ class SerialConnection(object):
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 print('self.s. done')
+                self.suppress_error_screens = True
                 return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
@@ -400,6 +401,7 @@ class SerialConnection(object):
             
             if self.suppress_error_screens == False:
                 self.sm.get_screen('errorScreen').message = message
+                self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
@@ -438,12 +440,15 @@ class SerialConnection(object):
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+
+            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
     
             # reset go screen to go again
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
     
             # send info to the job done screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             self.sm.current = 'jobdone'
 
         else:
@@ -672,6 +677,7 @@ class SerialConnection(object):
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             self.sm.get_screen('alarmScreen').message = message
+            self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current # ineffective
             self.sm.current = 'alarmScreen'
             
 
@@ -842,7 +848,7 @@ class SerialConnection(object):
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
             # log('Console display error: ' + str(consoleDisplayError))
 
-        # Finally issue the command 
+        # Finally issue the command        
         if self.s:
             try:
                 
@@ -858,7 +864,7 @@ class SerialConnection(object):
 #                  SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 self.get_serial_screen('Could not write last command to serial buffer.')
-#                 log('Serial Error: ' + str(serialError))
+    #                 log('Serial Error: ' + str(serialError))
         
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?

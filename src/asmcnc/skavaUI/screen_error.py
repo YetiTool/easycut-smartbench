@@ -147,6 +147,8 @@ class ErrorScreenClass(Screen):
     user_instruction = StringProperty()
     button_function = StringProperty()
     
+    return_to_screen = 'home'
+    
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -163,16 +165,16 @@ class ErrorScreenClass(Screen):
         else:
             self.m.hold()
             self.user_instruction = 'Streaming to Smartbench has been paused. Returning to EasyCut will resume stream.'
-            self.button_function = 'home'
+            self.button_function = self.return_to_screen
     
     def button_press(self):
         
         if self.button_function == 'go':
             self.sm.current = 'go'
             
-        elif self.button_function == 'home':
+        elif self.button_function == self.return_to_screen:
             self.m.resume()
-            self.sm.current = 'home'             
+            self.sm.current = self.return_to_screen     
 
         
          

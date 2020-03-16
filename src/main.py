@@ -9,6 +9,7 @@ www.yetitool.com
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
 import time
+import sys, os
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -26,6 +27,7 @@ from kivy.core.window import Window
 
 from asmcnc.comms import router_machine 
 # NB: router_machine imports serial_connection
+from asmcnc.apps import app_manager
 
 from asmcnc.skavaUI import screen_initial, screen_help
 from asmcnc.skavaUI import screen_home
@@ -52,6 +54,17 @@ from asmcnc.skavaUI import screen_diagnostics
 
 Cmport = 'COM3'
 
+if sys.platform != 'win32':
+    
+    case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
+    if case.startswith('gpu_mem=128'):
+        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
+        os.system('sudo reboot')   
+
+    else:
+        print "gpu mem already 256"
+        print case
+
 class SkavaUI(App):
 
     def build(self):
@@ -65,8 +78,10 @@ class SkavaUI(App):
         
         job_gcode = []  # declare g-code object
         
+        am = app_manager.AppManagerClass(sm, m)
+        
         # initialise the screens
-        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m)
+        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
@@ -112,7 +127,7 @@ class SkavaUI(App):
         sm.add_widget(diagnostics_screen)
 
         # set screen to start on
-        sm.current = 'safety'
+        sm.current = 'lobby'
         return sm
 
 

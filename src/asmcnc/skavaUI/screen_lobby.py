@@ -20,6 +20,7 @@ from shutil import copy
 from asmcnc.comms import usb_storage
 
 from asmcnc.calibration_app import screen_landing
+from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
 
 
 Builder.load_string("""
@@ -74,7 +75,6 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-#                                source: "./asmcnc/skavaUI/img/lobby_app_freecut.png"
                                 source: "./asmcnc/skavaUI/img/lobby_pro.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
@@ -123,16 +123,13 @@ Builder.load_string("""
                     spacing: 20
                                              
                     Button:
-                        id: load_button
-                        disabled: True
+                        disabled: False
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
-                        on_release: 
-#                             root.go_to_initial_screen(1)
-#                            root.manager.current = 'template'
-#                            root.manager.current = 'vj_polygon'
+                        on_release:                 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
+                            root.shapecutter_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
@@ -140,7 +137,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_virtualjig_comingsoon.png"
+                                source: "./asmcnc/skavaUI/img/lobby_app_shapecutter.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -148,7 +145,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Virtual Jig'
+                        text: 'Shape Cutter'
                         
 #                 BoxLayout:
 #                     orientation: 'vertical'
@@ -424,23 +421,22 @@ class LobbyScreen(Screen):
         super(LobbyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
- 
+        self.am=kwargs['app_manager']
 # FLAG
     def on_enter(self):
         if not sys.platform == "win32":
             self.m.set_led_blue()
  
-
     def quit_to_home(self):
         #self.sm.transition = SlideTransition()
         #self.sm.transition.direction = 'up' 
         self.sm.current = 'home'
     
     def calibrate_smartbench(self):
-        if not self.sm.has_screen('calibration_landing'):
-            calibration_landing_screen = screen_landing.CalibrationLandingScreenClass(name = 'calibration_landing', screen_manager = self.sm, machine = self.m)
-            self.sm.add_widget(calibration_landing_screen)
-        self.sm.current = 'calibration_landing'
+        self.am.start_calibration_app('lobby')
+    
+    def shapecutter_app(self):
+        self.am.start_shapecutter_app()
     
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()
