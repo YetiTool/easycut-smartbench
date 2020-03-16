@@ -371,7 +371,9 @@ class ShapeCutter25ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.display_profile = self.j.parameters_to_string()
-
+        self.file_name.text = ''
+        self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
+        
 # Action buttons       
     def get_info(self):
         pass
