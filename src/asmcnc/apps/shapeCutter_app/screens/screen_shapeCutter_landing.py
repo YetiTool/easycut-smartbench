@@ -124,8 +124,8 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(80)
-                padding: (740,0,0,20)
-                spacing: 0
+                padding: (20,0,0,20)
+                spacing: 680
                 orientation: 'horizontal'
                 pos: self.parent.pos
                 Button:
@@ -146,6 +146,24 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
+                Button:
+                    id: exit_button
+                    size_hint: (None,None)
+                    height: dp(40)
+                    width: dp(40)
+                    background_color: hex('#F4433600')
+                    opacity: 1
+                    on_press: root.exit()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/shapeCutter_app/img/exit_icon.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True                             
 """)
 
 class ShapeCutterLandingScreenClass(Screen):
@@ -174,3 +192,6 @@ class ShapeCutterLandingScreenClass(Screen):
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
+    def exit(self):
+        self.shapecutter_sm.exit_shapecutter()
+  

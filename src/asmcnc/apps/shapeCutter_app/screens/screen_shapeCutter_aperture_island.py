@@ -53,21 +53,21 @@ Builder.load_string("""
             BoxLayout: 
                 size_hint: (None, None) 
                 width: dp(800)
-                height: dp(390)
+                height: dp(330)
                 orientation: "vertical"
                     
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(800)
-                    height: dp(110)
-                    padding: 0
+                    height: dp(85)
+                    padding: (0,10,0,0)
                     spacing: 0
                     Label:
                         size_hint: (None,None)
-                        height: dp(110)
+                        height: dp(75)
                         width: dp(800)
                         halign: "center"
-                        valign: "middle"
+                        valign: "bottom"
                         text: "Select a shape to define..."
                         color: 0,0,0,1
                         font_size: 26
@@ -76,8 +76,8 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(800)
-                    height: dp(235)
-                    padding: (150,0,150,10)
+                    height: dp(225)
+                    padding: (150,0,150,0)
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos                
@@ -139,8 +139,8 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(800)
-                    height: dp(45)
-                    padding: (150,0,150,25)
+                    height: dp(20)
+                    padding: (150,0,150,0)
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos
@@ -176,6 +176,54 @@ Builder.load_string("""
                             color: 0,0,0,1
                             font_size: 20
                             markup: True
+                            
+            # Info button
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(60)
+                padding: (20,0,0,20)
+                spacing: 680
+                orientation: 'horizontal'
+                pos: self.parent.pos
+                Button:
+                    id: info_button
+                    size_hint: (None,None)
+                    height: dp(40)
+                    width: dp(40)
+                    background_color: hex('#F4433600')
+                    opacity: 0
+#                     on_press: root.get_info()
+#                     BoxLayout:
+#                         padding: 0
+#                         size: self.parent.size
+#                         pos: self.parent.pos
+#                         Image:
+#                             source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+#                             center_x: self.parent.center_x
+#                             y: self.parent.y
+#                             size: self.parent.width, self.parent.height
+#                             allow_stretch: True
+
+                Button:
+                    id: exit_button
+                    size_hint: (None,None)
+                    height: dp(40)
+                    width: dp(40)
+                    background_color: hex('#F4433600')
+                    opacity: 1
+                    on_press: root.exit()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/shapeCutter_app/img/exit_icon.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True                       
+
 """)
 
 class ShapeCutterApIsScreenClass(Screen):
@@ -188,9 +236,6 @@ class ShapeCutterApIsScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
-        
-        
-        
         
     def on_pre_enter(self):
         if self.j.shape_dict["shape"] == "circle":
@@ -211,3 +256,6 @@ class ShapeCutterApIsScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
+    def exit(self):
+        self.shapecutter_sm.exit_shapecutter()
+    
