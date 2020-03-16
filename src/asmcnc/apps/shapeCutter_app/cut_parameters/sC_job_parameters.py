@@ -197,7 +197,7 @@ class ShapeCutterJobParameters(object):
                 
             if self.shape_dict["shape"] == "rectangle":          
                 width_max = (min(self.shape_dict["dimensions"]["X"],self.shape_dict["dimensions"]["Y"]) \
-                                - 2*self.parameter_dict["dimensions"]["R"] \
+                                - 2*self.shape_dict["dimensions"]["R"] \
                                 - 2*self.parameter_dict["cutter dimensions"]["diameter"]*width_max_multiplier)*multiplier
             
             elif self.shape_dict["shape"] == "circle": 
