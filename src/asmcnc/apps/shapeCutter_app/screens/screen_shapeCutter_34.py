@@ -17,6 +17,8 @@ Builder.load_string("""
     info_button: info_button
     vacuum_toggle: vacuum_toggle
     vacuum_image: vacuum_image
+    next_button: next_button
+    back_button: back_button
 
     BoxLayout:
         size_hint: (None,None)
@@ -253,6 +255,7 @@ Builder.load_string("""
                                         allow_stretch: True
 
                         Button: 
+                            id: back_button
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -268,7 +271,8 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-                        Button: 
+                        Button:
+                            id: next_button
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -341,11 +345,15 @@ class ShapeCutter34ScreenClass(Screen):
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
+            self.next_button.disabled = False
+            self.back_button.disabled = False
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
             print ("vac off")
             self.m.vac_off()
         else:
             print ("vac on")
+            self.next_button.disabled = True
+            self.back_button.disabled = True
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
             self.m.vac_on()
             Clock.schedule_once(self.reset_vacuum, 2)
