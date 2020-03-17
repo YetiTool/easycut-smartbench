@@ -82,6 +82,20 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True       
         
+        
+        BoxLayout:
+            size_hint_x: 2 
+            size: self.parent.size
+            pos: self.parent.pos   
+#             padding: 5
+#             spacing: 5
+#             orientation: "horizontal"
+#             canvas:
+#                 Color: 
+#                     rgba: hex('FFFFFFFF')
+#                 RoundedRectangle: 
+#                     size: self.size
+#                     pos: self.pos
 
 
         BoxLayout:
