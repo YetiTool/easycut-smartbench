@@ -396,11 +396,7 @@ class SC28XYMove(Widget):
     def cancelXYJog(self):
         if self.jogMode == 'free': 
             self.m.quit_jog()
-        
-#             if self.m.quit_jog() == True:
-# #                 self.m.quit_jog()
-#                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
- 
+
 
     def set_workzone_to_pos_xy(self):
         self.m.set_workzone_to_pos_xy()

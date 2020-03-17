@@ -259,6 +259,7 @@ class SC31XYMove(Widget):
         super(SC31XYMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
+        self.j=kwargs['job_parameters']
    
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -336,17 +337,11 @@ class SC31XYMove(Widget):
             if case == 'X-': self.m.jog_relative('X', -job_x_range, x_feed_speed)
             if case == 'Y+': self.m.jog_relative('Y', job_y_range, y_feed_speed)
             if case == 'Y-': self.m.jog_relative('Y', -job_y_range, y_feed_speed)
-        
-            
+                    
     def cancelXYJog(self):
         if self.jogMode == 'free': 
             self.m.quit_jog()
         
-#             if self.m.quit_jog() == True:
-# #                 self.m.quit_jog()
-#                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
- 
-
     def set_workzone_to_pos_xy(self):
         self.m.set_workzone_to_pos_xy()
     
