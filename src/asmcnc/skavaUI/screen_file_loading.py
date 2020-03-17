@@ -194,13 +194,26 @@ class LoadingScreen(Screen):
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
         self.load_value = 1
+
+        # cleaning parameters        
+        minimum_spindle_rpm = 3500
         
         # clean up code as it's copied into the object
         for line in job_file:
+            
             # Strip comments/spaces/new line and capitalize:
             l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
             
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                
+                # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000)
+                if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
+                    if l_block.find ('S') >= 0:
+                        rpm = int(l_block.split("S")[1])
+                        if rpm < minimum_spindle_rpm:
+                            l_block = "M3S" + str(minimum_spindle_rpm)
+
+                
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
