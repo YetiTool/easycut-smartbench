@@ -17,6 +17,8 @@ Builder.load_string("""
     info_button: info_button
     spindle_toggle: spindle_toggle
     spindle_image: spindle_image
+    next_button: next_button
+    back_button: back_button
 
     BoxLayout:
         size_hint: (None,None)
@@ -252,7 +254,8 @@ Builder.load_string("""
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
 
-                        Button: 
+                        Button:
+                            id: back_button
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -268,7 +271,8 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-                        Button: 
+                        Button:
+                            id: next_button
                             size_hint: (None,None)
                             height: dp(67)
                             width: dp(88)
@@ -338,11 +342,15 @@ class ShapeCutter35ScreenClass(Screen):
 # Screen specific
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
+        if self.spindle_toggle.state == 'normal':
+            self.next_button.disabled = False
+            self.back_button.disabled = False
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
         else: 
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.next_button.disabled = True
+            self.back_button.disabled = True
             self.m.spindle_on()
             Clock.schedule_once(self.reset_spindle, 2)
 
