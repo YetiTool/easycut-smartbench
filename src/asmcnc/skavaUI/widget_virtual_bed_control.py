@@ -25,7 +25,6 @@ Builder.load_string("""
         spacing: 20
         orientation: "horizontal"
 
-
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
