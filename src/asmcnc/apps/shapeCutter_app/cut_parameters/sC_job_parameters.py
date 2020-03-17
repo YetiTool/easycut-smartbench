@@ -99,7 +99,9 @@ class ShapeCutterJobParameters(object):
         self.range_z = [0,0]
     
     def validate_shape_dimensions(self, dim, input):
-        
+
+        self.m.get_grbl_settings()
+
         if self.shape_dict["units"] == "inches": 
             multiplier = 1/25.4
         else: 
@@ -467,7 +469,7 @@ class ShapeCutterJobParameters(object):
                 # working in rads here
                 
                 total_circumference = 2.0 * math.pi * circ_path_rad
-                circ_tabs_qty = math.floor(total_circumference / tab_distance) #rounddown
+                circ_tabs_qty = math.ceil(total_circumference / tab_distance) #rounddown
                 circ_angle_between_tabs = (2.0 * math.pi) / circ_tabs_qty
                 circ_angle_across_tab = (tab_effective_width / total_circumference) * (2.0 * math.pi)
         
@@ -478,7 +480,7 @@ class ShapeCutterJobParameters(object):
                 
                 circ_tab_start_angle = 0
         
-                while circ_tab_start_angle < (2 * math.pi):
+                while circ_tab_start_angle < (round(2 * math.pi,6)):
                     
                     # start co-ords
                     x = circ_path_rad * math.cos(circ_tab_start_angle)
@@ -590,9 +592,10 @@ class ShapeCutterJobParameters(object):
                 # plunge and draw circle, anti-clockwise
                 lines.append("G1 Z" + str(z) + " F" + str(plunge_feed_rate))
                 if tabs == True and z < tab_absolute_height:
+                    tab_count = 0
                     for (xy_start, xy_end, xy_next) in zip(circ_tab_start_pos, circ_tab_end_pos, circ_tab_next_start_pos):
-                        
-                        lines.append("(Tab)")
+                        tab_count += 1
+                        lines.append("(Z" + str(z) + ": Tab " + str(tab_count) + ")")
         #                 if xy_start[0] != circ_path_rad: # hack to prevent repetition of co-ordinates from triggering a 360 degree revolution (makes sure that x co-ords aren't the same before appending - only works in this template with start point position etc)
         #                     lines.append("G3 X" + str(xy_start[0]) + " Y" + str(xy_start[1]) + " I" + str(-xy_start[0]) + " J" + str(-xy_start[1]) + " F" + str(xy_feed_rate))
                         lines.append("G1 Z" + str(tab_absolute_height) + " F" + str(plunge_feed_rate))
