@@ -25,59 +25,6 @@ Builder.load_string("""
         spacing: 20
         orientation: "horizontal"
 
-        BoxLayout:
-            size_hint_x: 2 
-            size: self.parent.size
-            pos: self.parent.pos   
-            padding: 10
-            spacing: 10
-            orientation: "horizontal"
-            canvas:
-                Color: 
-                    rgba: hex('FFFFFFFF')
-                RoundedRectangle: 
-                    size: self.size
-                    pos: self.pos
-
-            Label:
-                size_hint_x: 1
-                text: 'VIEW:'
-                markup: True
-                color: 0,0,0,0.5
-                font_size: 20
-            Button:
-                background_color: hex('#F4433600')
-                on_release: 
-                    self.background_color = hex('#F4433600')
-                on_press: 
-                    self.background_color = hex('#F44336FF')
-                BoxLayout:
-                    padding: 0
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/zoom_pan.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True      
-
-            Button:
-                background_color: hex('#F4433600')
-                on_release: 
-                    self.background_color = hex('#F4433600')
-                on_press: 
-                    self.background_color = hex('#F44336FF')
-                BoxLayout:
-                    padding: 0
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/zoom_to_extents.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
 
         BoxLayout:
             size_hint_x: 2 
