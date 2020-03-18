@@ -558,7 +558,7 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message + " Status: " + status_parts[0])
+                log("ERROR status parse: Status invalid: " + message)
                 return
 
             # Get machine's status
@@ -667,6 +667,11 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
                 
+                elif part.startswith("Door") and self.m.is_machine_paused == False:
+                    self.m.is_machine_paused = True
+                    self.sm.get_screen('door').return_to_screen = self.sm.current 
+                    self.sm.current = 'door'
+                
                 else:
                     continue
 
@@ -679,11 +684,6 @@ class SerialConnection(object):
             self.sm.get_screen('alarmScreen').message = message
             self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
             self.sm.current = 'alarmScreen'
-            
-
-        elif message.startswith('Door:') and self.m.is_machine_paused == False:
-            self.sm.get_screen('door').return_to_screen = self.sm.current 
-            self.sm.current = 'door'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")
