@@ -33,6 +33,25 @@ Builder.load_string("""
         spacing: 10
         orientation: "vertical"
 
+        Button:
+            size_hint_y: 1
+            background_color: hex('#F4433600')
+            on_release: 
+                root.quit_to_lobby()
+                self.background_color = hex('#F4433600')
+            on_press:
+                self.background_color = hex('#F44336FF')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/skavaUI/img/quit_to_lobby_btn.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True   
+
         BoxLayout:
             size_hint_y: 1
             center: self.parent.center
@@ -60,24 +79,7 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True   
-        Button:
-            size_hint_y: 1
-            background_color: hex('#F4433600')
-            on_release: 
-                root.unlock()
-                self.background_color = hex('#F4433600')
-            on_press:
-                self.background_color = hex('#F44336FF')
-            BoxLayout:
-                padding: 0
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/skavaUI/img/unlock.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True   
+
         Button:
             size_hint_y: 1
             background_color: hex('#F4433600')
@@ -153,17 +155,15 @@ class QuickCommands(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
       
-
+    def quit_to_lobby(self):
+        self.sm.current = 'lobby'
             
     def home(self):
         self.m.home_all()
-
-    def unlock(self):
-        self.m.unlock_after_alarm()
-    
+  
     def reset(self):
         self.m.soft_reset()
-    
+        self.m.unlock_after_alarm()
     
     def stop(self):
         self.m.hold()        
