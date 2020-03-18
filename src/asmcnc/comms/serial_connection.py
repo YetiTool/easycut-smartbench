@@ -677,13 +677,13 @@ class SerialConnection(object):
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             self.sm.get_screen('alarmScreen').message = message
-            self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current # ineffective
+            self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
             self.sm.current = 'alarmScreen'
             
 
         elif message.startswith('Door:') and self.m.is_machine_paused == False:
-            self.sm.get_screen('doorScreen').return_to_screen = self.sm.current # ineffective
-            self.sm.current = 'doorScreen'
+            self.sm.get_screen('door').return_to_screen = self.sm.current 
+            self.sm.current = 'door'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")
