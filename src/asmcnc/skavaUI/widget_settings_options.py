@@ -153,7 +153,7 @@ class SettingsOptions(Widget):
     def return_to_lobby(self):
         self.sm.current = 'lobby'
 
-    def get_sw_updates(self):
+    def get_sw_update(self):
 ##        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 ##      Update SW according to latest release: 
         os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
