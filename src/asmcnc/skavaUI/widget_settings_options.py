@@ -37,17 +37,25 @@ Builder.load_string("""
         cols: 3
 
         Button:
-            text: 'Reboot'
-            on_release: root.reboot()
-        Button:
             text: 'Square axes'
             on_release: root.square_axes()
         Button:
-            text: 'Get software updates'
-            on_release: root.get_sw_updates()
+            text: 'Get software update'
+            on_release: root.get_sw_update()
         Button:
             text: 'Developer'
             on_release: root.go_to_dev()                     
+
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: ''
+            color: 0,0,0,1
+
 
         Label:
             text: 'Code base'
