@@ -558,7 +558,7 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message)
+                log("ERROR status parse: Status invalid: " + message + " Status: " + status_parts[0])
                 return
 
             # Get machine's status
@@ -680,6 +680,7 @@ class SerialConnection(object):
             self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current # ineffective
             self.sm.current = 'alarmScreen'
             
+
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")
