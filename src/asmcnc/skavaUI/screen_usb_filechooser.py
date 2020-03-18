@@ -26,7 +26,6 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser_usb:filechooser_usb
-    cut_usb_files_switch:cut_usb_files_switch
     load_button:load_button
     image_select:image_select
 
