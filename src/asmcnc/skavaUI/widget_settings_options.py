@@ -40,19 +40,11 @@ Builder.load_string("""
             text: 'Reboot'
             on_release: root.reboot()
         Button:
-            text: 'Quit to Console'
-            on_release: root.quit_to_console()
-        Button:
             text: 'Square axes'
             on_release: root.square_axes()
         Button:
-            text: 'Return to lobby'
-            on_release: root.return_to_lobby()
-                    
-        Button:
             text: 'Get software updates'
             on_release: root.get_sw_updates()
-
         Button:
             text: 'Developer'
             on_release: root.go_to_dev()                     
