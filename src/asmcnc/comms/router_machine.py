@@ -194,16 +194,22 @@ class RouterMachine(object):
 #             return False
 
     def hold(self):
-        self.is_machine_paused = True
+        self.toggle_pause()
         self.door()
     
     def resume(self):
-        self.is_machine_paused = False
+        Clock.schedule_once(lambda dt: self.toggle_pause(),0.1)
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
         if sys.platform != "win32":
             self.s.write_realtime('&', altDisplayText = 'LED restore')
-        self.set_led_colour_by_name('blue')
+            self.set_led_colour_by_name('blue')
+    
+    def toggle_pause(self):
+        if self.is_machine_paused == True:
+            self.is_machine_paused = False
+        elif self.is_machine_paused == False: 
+            self.is_machine_paused = True
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')

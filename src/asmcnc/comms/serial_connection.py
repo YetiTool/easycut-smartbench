@@ -551,7 +551,7 @@ class SerialConnection(object):
 
             if (status_parts[0] != "Idle" and
                 status_parts[0] != "Run" and
-                status_parts[0] != "Hold" and
+                not  (status_parts[0]).startswith("Hold") and
                 status_parts[0] != "Jog" and
                 status_parts[0] != "Alarm" and
                 not (status_parts[0]).startswith("Door") and
@@ -668,8 +668,7 @@ class SerialConnection(object):
                     else: self.dust_shoe_cover = False
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
-                    
-                    if part.startswith("Door:3") or part.startswith("Door:2"):
+                    if part.startswith("Door:3"):
                         pass
                     else:
                         self.m.is_machine_paused = True
