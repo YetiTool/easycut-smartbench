@@ -204,8 +204,8 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.toggle_pause(),0.1)
         self.s.write_realtime('~', altDisplayText = 'Resume')
         # Restore LEDs
-        if sys.platform != "win32":
-            self.s.write_realtime('&', altDisplayText = 'LED restore')
+#         if sys.platform != "win32":
+#             self.s.write_realtime('&', altDisplayText = 'LED restore')
 #             self.set_led_colour_by_name('blue')
         print self.is_machine_paused
         print ('door') 
