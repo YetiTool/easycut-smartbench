@@ -554,7 +554,7 @@ class SerialConnection(object):
                 status_parts[0] != "Hold" and
                 status_parts[0] != "Jog" and
                 status_parts[0] != "Alarm" and
-                status_parts[0] != "Door*" and
+                not (status_parts[0]).startswith("Door") and
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
