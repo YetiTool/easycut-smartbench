@@ -168,12 +168,15 @@ class ErrorScreenClass(Screen):
             self.button_function = self.return_to_screen
     
     def button_press(self):
+        
+        print self.return_to_screen
+        
         if self.button_function == 'go':
             pass
         else:
             self.m.resume()
             
-        self.sm.current = self.return_to_screen     
+        self.sm.current = self.return_to_screen
 
         
          
