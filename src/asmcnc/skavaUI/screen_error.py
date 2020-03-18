@@ -172,7 +172,7 @@ class ErrorScreenClass(Screen):
         if self.button_function == 'go':
             self.sm.current = 'go'
             
-        elif self.button_function == self.return_to_screen:
+        else:
             self.m.resume()
             self.sm.current = self.return_to_screen     
 
