@@ -120,7 +120,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#e6c300FF')
-                    on_release:
+                    on_press:
                         root.button_press()
                         
                     BoxLayout:
