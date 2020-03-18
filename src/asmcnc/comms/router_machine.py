@@ -198,7 +198,7 @@ class RouterMachine(object):
         self.door()
     
     def resume(self):
-        self.set_led_state(1)
+        self.m.set_led_colour_by_name('blue')
         self.is_machine_paused = False
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
