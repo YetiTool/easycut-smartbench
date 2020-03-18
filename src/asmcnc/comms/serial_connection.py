@@ -669,18 +669,11 @@ class SerialConnection(object):
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
-                        
-                        print self.m.is_machine_paused
-                        print part
-                        
                         pass
                     else:
-                        print self.m.is_machine_paused
-                        print part
-                        
-                        self.m.is_machine_paused = True
-                        self.sm.get_screen('door').return_to_screen = self.sm.current 
-                        self.sm.current = 'door'
+                        if self.sm.current != 'door':
+                            self.sm.get_screen('door').return_to_screen = self.sm.current 
+                            self.sm.current = 'door'
                 
                 else:
                     continue
