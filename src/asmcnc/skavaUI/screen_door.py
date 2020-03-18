@@ -195,7 +195,7 @@ class DoorScreen(Screen):
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.soft_reset()
         self.m.unlock_after_alarm()
-        self.m.set_led_colour_by_name('blue')
+#         self.m.set_led_colour_by_name('blue')
         self.return_to_app()
             
     def return_to_app(self):
