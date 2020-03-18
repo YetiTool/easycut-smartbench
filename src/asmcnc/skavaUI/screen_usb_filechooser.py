@@ -57,22 +57,7 @@ Builder.load_string("""
                     on_selection: 
                         root.refresh_filechooser()
                         print filechooser_usb.selection[0]
-                BoxLayout:
-                    size_hint_y: 1
-                    orientation: 'horizontal'
-                    spacing: 10
-                    Switch:
-                        size_hint_x: 2
-                        active: False
-                        id: cut_usb_files_switch
-                    Label:
-                        size_hint_x: 6
-                        halign: 'left'
-                        text: 'Remove files from USB after import'
-                    Label:
-                        size_hint_x: 8
-                        halign: 'left'
-                        text: ''
+
                
         BoxLayout:
             size_hint_y: None
@@ -192,13 +177,7 @@ class USBFileChooser(Screen):
             
             # ... to cache
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination
-            
-            # Clean USB
-            if self.cut_usb_files_switch.active:
-                os.remove(file_selection) # clean original space       
-        
-
-        self.go_to_loading_screen(file_selection)
+            self.go_to_loading_screen(file_selection)
         
 
     def quit_to_local(self):
