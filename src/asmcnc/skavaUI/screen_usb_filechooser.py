@@ -26,7 +26,6 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser_usb:filechooser_usb
-    modelPreviewImage:modelPreviewImage
     cut_usb_files_switch:cut_usb_files_switch
     load_button:load_button
     image_select:image_select
@@ -57,7 +56,6 @@ Builder.load_string("""
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: 
                         root.refresh_filechooser()
-#                         root.detect_preview_image(filechooser_usb.selection[0])
                         print filechooser_usb.selection[0]
                 BoxLayout:
                     size_hint_y: 1
@@ -71,25 +69,7 @@ Builder.load_string("""
                         size_hint_x: 6
                         halign: 'left'
                         text: 'Remove files from USB after import'
-            
-            BoxLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                padding: 10
-                size_hint_x: 5
-                canvas:
-                    Color: 
-                        rgba: 1,1,1,.1
-                    Rectangle: 
-                        size: self.size
-                        pos: self.pos
-                Image:
-                    id:modelPreviewImage
-                    source: root.no_preview_found_img_path
-                    size: self.parent.size
-                    allow_stretch: True                
-
-                
+               
         BoxLayout:
             size_hint_y: None
             height: 100
@@ -167,9 +147,6 @@ verbose = True
 class USBFileChooser(Screen):
 
 
-    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
-
-
     def __init__(self, **kwargs):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -203,33 +180,7 @@ class USBFileChooser(Screen):
 
         self.filechooser_usb._update_files()
 
-    
-    preview_image_path = None
-    
-    def detect_preview_image(self, nc_file_path):
         
-        if verbose: print "Detecting image for: " + nc_file_path
-        
-        # Assume there is no image preview to be found, so set image to default preview
-        self.preview_image_path = None
-        self.modelPreviewImage.source = self.no_preview_found_img_path
-
-        # Scan file for image identifier in gcode e.g. (preview_img=123.png)
-        try:
-            original_file = open(nc_file_path, 'r')
-            for line in original_file:
-                if line.find('(preview_img') >= 0:
-                    image_name = line.strip().split(':')[1][:-1]
-                    image_dir_path = os.path.dirname(nc_file_path)
-                    self.preview_image_path = image_dir_path + '/' + image_name
-                    if os.path.isfile(self.preview_image_path):
-                        self.modelPreviewImage.source = self.preview_image_path
-                    break
-            original_file.close()  
-        except:
-            print 'Handled error: Failed to open USB file preview image... selection too quick?'
-
-    
     def import_usb_file(self, file_selection):
         
         # Move over the nc file
@@ -242,28 +193,15 @@ class USBFileChooser(Screen):
             if self.cut_usb_files_switch.active:
                 os.remove(file_selection) # clean original space       
         
-        # Move over the preview image
-        if self.preview_image_path:
-            if os.path.isfile(self.preview_image_path):
-                
-                # ... to cache
-                copy(self.preview_image_path, job_cache_dir) # "copy" overwrites same-name file at destination
-                
-                # Clean USB
-                if self.cut_usb_files_switch.active:
-                    os.remove(self.preview_image_path) # clean original space
-            
+
         self.go_to_loading_screen(file_selection)
         
 
     def quit_to_local(self):
         self.manager.current = 'local_filechooser'
-        #self.manager.transition.direction = 'up' 
-  
-        
+          
     def quit_to_home(self):
         self.manager.current = 'home'
-        #self.manager.transition.direction = 'up'
         
     def go_to_loading_screen(self, file_selection):
 
