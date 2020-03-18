@@ -134,10 +134,6 @@ Builder.load_string("""
                     size_hint_y:0.1
                     on_press: root.send_gcode_preset("$I")
                 Button:
-                    text: "StartUp"
-                    on_press: root.send_gcode_preset("$N")
-                    size_hint_y:0.1
-                Button:
                     text: "Check $C"
                     on_press: root.toggle_check_mode()
                     size_hint_y:0.1
