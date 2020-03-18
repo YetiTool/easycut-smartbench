@@ -400,7 +400,6 @@ class SerialConnection(object):
             log('ERROR from GRBL: ' + message)
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
-                print self.sm.current
                 self.sm.get_screen('errorScreen').message = message
                 self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'

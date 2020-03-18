@@ -126,9 +126,9 @@ Builder.load_string("""
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
                                 on_release:
-                                    root.play_pause_button_press()
                                     self.background_color = hex('#F4433600')
                                 on_press:
+                                    root.play_pause_button_press()                                
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
