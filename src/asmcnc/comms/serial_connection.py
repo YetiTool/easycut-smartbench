@@ -681,6 +681,9 @@ class SerialConnection(object):
             self.sm.current = 'alarmScreen'
             
 
+        elif message.startswith('Door:') and self.m.is_machine_paused == False:
+            self.sm.get_screen('doorScreen').return_to_screen = self.sm.current # ineffective
+            self.sm.current = 'doorScreen'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")

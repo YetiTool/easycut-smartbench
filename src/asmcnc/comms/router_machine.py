@@ -32,6 +32,7 @@ class RouterMachine(object):
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     is_check_mode_enabled = False    
 
+    is_machine_paused = False
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -193,9 +194,11 @@ class RouterMachine(object):
 #             return False
 
     def hold(self):
+        self.is_machine_paused = True        
         self.door()
     
     def resume(self):
+        self.is_machine_paused = False
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
         if sys.platform != "win32":
