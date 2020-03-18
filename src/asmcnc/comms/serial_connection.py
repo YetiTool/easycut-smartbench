@@ -669,7 +669,7 @@ class SerialConnection(object):
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     
-                    if part.startswith("Door:3"):
+                    if part.startswith("Door:3") or part.startswith("Door:2"):
                         pass
                     else:
                         self.m.is_machine_paused = True
