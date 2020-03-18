@@ -194,12 +194,12 @@ class RouterMachine(object):
 #             return False
 
     def hold(self):
-        self.is_machine_paused = True        
+        self.is_machine_paused = True
         self.door()
     
     def resume(self):
-        self.set_led_colour_by_name('blue')
         self.is_machine_paused = False
+        self.set_led_colour_by_name('blue')
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
         if sys.platform != "win32":

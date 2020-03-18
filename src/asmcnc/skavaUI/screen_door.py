@@ -181,6 +181,7 @@ class DoorScreen(Screen):
                         +'Pressing [b]Stop[/b] will cancel the current operation completely. [/color]'
         
     def resume_stream(self):
+        self.m.is_machine_paused = False
         self.m.resume()
         self.return_to_app()
 
