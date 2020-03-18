@@ -199,11 +199,11 @@ class RouterMachine(object):
     
     def resume(self):
         self.is_machine_paused = False
-        self.set_led_colour_by_name('blue')
         self.s.write_realtime('~', altDisplayText = 'Resume')       
         # Restore LEDs
         if sys.platform != "win32":
             self.s.write_realtime('&', altDisplayText = 'LED restore')
+        self.set_led_colour_by_name('blue')
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')

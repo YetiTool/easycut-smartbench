@@ -668,6 +668,9 @@ class SerialConnection(object):
                     else: self.dust_shoe_cover = False
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
+                    
+                    print status_parts
+                    
                     self.m.is_machine_paused = True
                     self.sm.get_screen('door').return_to_screen = self.sm.current 
                     self.sm.current = 'door'
