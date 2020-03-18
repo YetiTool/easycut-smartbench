@@ -69,6 +69,10 @@ Builder.load_string("""
                         size_hint_x: 6
                         halign: 'left'
                         text: 'Remove files from USB after import'
+                    Label:
+                        size_hint_x: 8
+                        halign: 'left'
+                        text: ''
                
         BoxLayout:
             size_hint_y: None
