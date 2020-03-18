@@ -343,6 +343,7 @@ class GoScreen(Screen):
             
     def pause_job(self):
         self.paused = True
+        self.m.is_machine_paused = True
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
         self.m.hold()
         self.m.s.is_job_streaming = False
@@ -350,6 +351,7 @@ class GoScreen(Screen):
         
     def resume_job(self):
         self.paused = False
+        self.m.is_machine_paused = False
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         self.m.resume()
         self.m.s.is_job_streaming = True
