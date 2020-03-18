@@ -14,7 +14,6 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 import sys, os
-from time import sleep
 
 from asmcnc.skavaUI import widget_status_bar
 
