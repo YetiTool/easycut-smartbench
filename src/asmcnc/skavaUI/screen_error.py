@@ -170,6 +170,7 @@ class ErrorScreenClass(Screen):
     def button_press(self):
         
         print self.return_to_screen
+        print "goose"
         
         if self.button_function == 'go':
             self.sm.current = self.return_to_screen
