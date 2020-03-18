@@ -430,6 +430,8 @@ class LobbyScreen(Screen):
     def quit_to_home(self):
         #self.sm.transition = SlideTransition()
         #self.sm.transition.direction = 'up' 
+        self.sm.get_screen('errorScreen').return_to_screen = 'home'
+        self.sm.get_screen('alarmScreen').return_to_screen = 'home'
         self.sm.current = 'home'
     
     def calibrate_smartbench(self):
