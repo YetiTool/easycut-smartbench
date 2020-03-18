@@ -214,6 +214,7 @@ class RouterMachine(object):
     def toggle_pause(self):
         if self.is_machine_paused == True:
             self.is_machine_paused = False
+            self.set_led_colour_by_name('blue')
         elif self.is_machine_paused == False: 
             self.is_machine_paused = True
     
