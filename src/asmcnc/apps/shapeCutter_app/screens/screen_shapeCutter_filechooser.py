@@ -22,7 +22,7 @@ from asmcnc.comms import usb_storage
 Builder.load_string("""
 <SCFileChooser>:
     on_enter: root.refresh_filechooser()
-    filechooser:filechooser
+    filechooser_sc_params:filechooser_sc_params
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
@@ -42,7 +42,7 @@ Builder.load_string("""
             spacing: 10
             FileChooserListView:
                 size_hint_x: 5
-                id: filechooser
+                id: filechooser_sc_params
                 rootpath: './asmcnc/apps/shapeCutter_app/parameter_cache/'
                 filter_dirs: True
                 filters: ['*.csv', '*.CSV']
@@ -79,7 +79,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser.selection[0])
+                    root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -140,7 +140,7 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    root.return_to_SC17(filechooser.selection[0])
+                    root.return_to_SC17(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -178,7 +178,7 @@ class SCFileChooser(Screen):
     def refresh_filechooser(self):
 
         try:
-            if self.filechooser.selection[0] != 'C':
+            if self.filechooser_sc_params.selection[0] != 'C':
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -201,7 +201,7 @@ class SCFileChooser(Screen):
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
-        self.filechooser._update_files()
+        self.filechooser_sc_params._update_files()
 
 
     def return_to_SC17(self, file_selection):
