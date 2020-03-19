@@ -222,6 +222,7 @@ class SCFileChooser(Screen):
     def delete_selected(self, filename):
         if os.path.isfile(filename):
             os.remove(filename)
+            print ("Removing files: " + filename)
             Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
           
         
@@ -231,6 +232,7 @@ class SCFileChooser(Screen):
         if files_in_cache:
             for file in files_in_cache:
                 os.remove(parameter_file_dir+file)
+                print ("Removing files: " + parameter_file_dir+file)
         self.refresh_filechooser()       
 
 
