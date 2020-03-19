@@ -167,11 +167,7 @@ class ErrorScreenClass(Screen):
             self.user_instruction = 'Streaming to Smartbench has been paused. Returning to EasyCut will resume stream.'
             self.button_function = self.return_to_screen
     
-    def button_press(self):
-        
-        print self.return_to_screen
-        print "goose"
-        
+    def button_press(self):       
         if self.button_function == 'go':
             self.sm.current = self.return_to_screen
         else:

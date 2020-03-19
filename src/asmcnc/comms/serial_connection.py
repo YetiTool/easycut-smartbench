@@ -684,9 +684,10 @@ class SerialConnection(object):
 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            self.sm.get_screen('alarmScreen').message = message
-            self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
-            self.sm.current = 'alarmScreen'
+            if self.sm.current != 'alarmScreen':
+                self.sm.get_screen('alarmScreen').message = message
+                self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
+                self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")
