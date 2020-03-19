@@ -180,7 +180,7 @@ class DoorScreen(Screen):
                         +'Pressing [b]Stop[/b] will cancel the current operation completely. [/color]'
 
     def on_enter(self):
-        if self.sm.current == 'go' and self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
+        if self.return_to_screen == 'go' and self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
             self.sm.get_screen('go').pause_job()
         else: self.m.toggle_pause()
        
