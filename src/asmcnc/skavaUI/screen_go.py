@@ -346,8 +346,7 @@ class GoScreen(Screen):
     def pause_job(self):
         self.paused = True
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-        if not self.m.state().startswith('Door'):
-            self.m.hold()
+        self.m.hold()
         self.m.s.is_job_streaming = False
         self.job_in_progress = True
         
