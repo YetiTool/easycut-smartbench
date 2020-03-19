@@ -177,7 +177,7 @@ class DoorScreen(Screen):
         # Text
         self.door_label.font_size =  '19sp'
         self.door_text = '[color=000000]Pressing [b]Resume[/b] will cause the machine to continue it\'s normal operation. ' \
-                        +'Pressing [b]Stop[/b] will cancel the current operation completely. [/color]'
+                        +'Pressing [b]Cancel[/b] will cancel the current operation completely. [/color]'
 
     def on_enter(self):
         if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
