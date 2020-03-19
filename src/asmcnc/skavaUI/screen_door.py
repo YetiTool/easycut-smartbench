@@ -182,14 +182,18 @@ class DoorScreen(Screen):
     def on_enter(self):
         self.m.toggle_pause()
         if self.return_to_screen == 'go' and self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
-            self.sm.get_screen('go').pause_job()
+            self.m.s.is_job_streaming = False
             
             print self.m.is_machine_paused
             
     def resume_stream(self):
 
         if self.return_to_screen == 'go':
-
+            self.m.resume()
+            self.m.s.is_job_streaming = True
+            
+            if self.sm.get_screen('go').paused == True:
+                self.sm.get_screen('go').play_pause_button_press()
             print self.m.is_machine_paused
             self.return_to_app()
                     
@@ -205,7 +209,7 @@ class DoorScreen(Screen):
         self.m.soft_reset()
         self.m.unlock_after_alarm()
         self.m.toggle_pause()
-        self.m.set_led_colour_by_name('blue')
+#         self.m.set_led_colour_by_name('blue')
         self.return_to_app()
             
     def return_to_app(self):
