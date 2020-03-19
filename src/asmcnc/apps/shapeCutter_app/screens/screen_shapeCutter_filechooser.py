@@ -23,11 +23,11 @@ from asmcnc.comms import usb_storage
 
 Builder.load_string("""
 
-<SCFileChooser>:
+<SCfilechooser_shape_cutter_params>:
 
-    on_enter: root.refresh_filechooser()
+    on_enter: root.refresh_filechooser_shape_cutter_params()
 
-    filechooser:filechooser
+    filechooser_shape_cutter_params:filechooser_shape_cutter_params
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
@@ -47,14 +47,14 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             spacing: 10
-            FileChooserListView:
+            filechooser_shape_cutter_paramsListView:
                 size_hint_x: 5
-                id: filechooser
+                id: filechooser_shape_cutter_params
                 rootpath: './asmcnc/apps/shapeCutter_app/parameter_cache/'
                 filter_dirs: True
                 filters: ['*.csv', '*.CSV']
                 on_selection: 
-                    root.refresh_filechooser()
+                    root.refresh_filechooser_shape_cutter_params()
        
 
                 
@@ -67,7 +67,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.refresh_filechooser() 
+                    root.refresh_filechooser_shape_cutter_params() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -88,7 +88,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser.selection[0])
+                    root.delete_selected(filechooser_shape_cutter_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -149,7 +149,7 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    root.return_to_SC17(filechooser.selection[0])
+                    root.return_to_SC17(filechooser_shape_cutter_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -169,30 +169,27 @@ Builder.load_string("""
 """)
 
 # parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
-
 parameter_file_dir = '/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_app/parameter_cache/'
 
 
-
-
-class SCFileChooser(Screen):
+class SCfilechooser_shape_cutter_params(Screen):
 
     
     def __init__(self, **kwargs):
 
-        super(SCFileChooser, self).__init__(**kwargs)
+        super(SCfilechooser_shape_cutter_params, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.j = kwargs['job_parameters']
 #         self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
 #         self.usb_stick.enable() # start the object scanning for USB stick
         
     def on_enter(self):
-        self.refresh_filechooser()
+        self.refresh_filechooser_shape_cutter_params()
 
-    def refresh_filechooser(self):
+    def refresh_filechooser_shape_cutter_params(self):
 
         try:
-            if self.filechooser.selection[0] != 'C':
+            if self.filechooser_shape_cutter_params.selection[0] != 'C':
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -215,7 +212,7 @@ class SCFileChooser(Screen):
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
-        self.filechooser._update_files()
+        self.filechooser_shape_cutter_params._update_files()
 
 
     def return_to_SC17(self, file_selection):
@@ -226,7 +223,8 @@ class SCFileChooser(Screen):
     def delete_selected(self, filename):
         if os.path.isfile(filename):
             os.remove(filename)
-            Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
+            print ("Removing files: " + filename)
+            Clock.schedule_once(lambda dt: self.refresh_filechooser_shape_cutter_params(), 0.25)
           
         
     def delete_all(self):
@@ -235,7 +233,8 @@ class SCFileChooser(Screen):
         if files_in_cache:
             for file in files_in_cache:
                 os.remove(parameter_file_dir+file)
-        self.refresh_filechooser()       
+                print ("Removing files: " + parameter_file_dir+file)
+        self.refresh_filechooser_shape_cutter_params()       
 
 
     def quit_to_home(self):
