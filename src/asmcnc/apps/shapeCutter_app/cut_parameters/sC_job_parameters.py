@@ -633,7 +633,7 @@ class ShapeCutterJobParameters(object):
             # Strip comments/spaces/new line and capitalize:
             l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
             
-            if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+            if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 preloaded_job_gcode.append(l_block)
                 
         self.gcode_lines = preloaded_job_gcode   
