@@ -55,7 +55,6 @@ Builder.load_string("""
                 filters: ['*.csv', '*.CSV']
                 on_selection: 
                     root.refresh_filechooser()
-                    root.detect_preview_image(filechooser.selection[0])
        
 
                 
