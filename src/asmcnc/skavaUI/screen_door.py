@@ -181,8 +181,8 @@ class DoorScreen(Screen):
 
     def on_enter(self):
         self.m.toggle_pause()
-        if self.return_to_screen == 'go' and self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
-            self.m.s.is_job_streaming = False
+        if self.return_to_screen == 'go' and self.m.s.is_job_streaming == True:
+            self.sm.get_screen('go').start_stop_button_press()
             
             print self.m.is_machine_paused
             
