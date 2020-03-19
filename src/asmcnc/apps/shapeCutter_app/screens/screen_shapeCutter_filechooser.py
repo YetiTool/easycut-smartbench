@@ -174,6 +174,7 @@ parameter_file_dir = '/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_ap
 
 
 
+
 class SCFileChooser(Screen):
 
     
