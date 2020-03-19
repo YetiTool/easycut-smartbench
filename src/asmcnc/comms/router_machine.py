@@ -200,6 +200,7 @@ class RouterMachine(object):
             self.door()
     
     def resume(self):
+        print "Resume"
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self.s.write_realtime('~', altDisplayText = 'Resume')
         # Restore LEDs
