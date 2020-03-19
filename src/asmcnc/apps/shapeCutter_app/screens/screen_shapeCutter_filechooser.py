@@ -168,7 +168,10 @@ Builder.load_string("""
                 
 """)
 
-parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
+# parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
+
+parameter_file_dir = '/home/pi/easycut-smartbench/src/asmcnc/apps/shapeCutter_app/parameter_cache/'
+
 
 
 class SCFileChooser(Screen):
