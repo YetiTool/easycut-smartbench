@@ -671,6 +671,7 @@ class SerialConnection(object):
                     if part.startswith("Door:3"):
                         pass
                     else:
+                        self.m.hold()
                         if self.sm.current != 'door':
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
