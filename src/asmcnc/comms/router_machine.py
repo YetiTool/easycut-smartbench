@@ -195,10 +195,8 @@ class RouterMachine(object):
 
     def hold(self):
         self.set_pause(True)
-        print self.is_machine_paused
-        print ('door')
-        
-        if not self.state().startswith('Door'):
+        if not self.state().startswith('Door'): 
+            print "soft door"
             self.door()
     
     def resume(self):
@@ -208,7 +206,6 @@ class RouterMachine(object):
 #         if sys.platform != "win32":
 #             self.s.write_realtime('&', altDisplayText = 'LED restore')
 #             self.set_led_colour_by_name('blue')
-        print self.is_machine_paused
     
     def set_pause(self, pause):
         self.is_machine_paused = pause
