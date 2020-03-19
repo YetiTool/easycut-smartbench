@@ -180,30 +180,21 @@ class DoorScreen(Screen):
                         +'Pressing [b]Stop[/b] will cancel the current operation completely. [/color]'
 
     def on_enter(self):
-        if self.return_to_screen == 'go' and self.m.s.is_job_streaming == True:
-            self.sm.get_screen('go').start_stop_button_press()
-            
-        print self.m.is_machine_paused
+        if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
+            self.sm.get_screen('go').pause_job()
             
     def resume_stream(self):
-
-        self.m.resume()
-
         if self.return_to_screen == 'go':
-            self.m.s.is_job_streaming = True
-            
-            if self.sm.get_screen('go').paused == True:
-                self.sm.get_screen('go').play_pause_button_press()
-            print self.m.is_machine_paused
             self.return_to_app()
                     
-        else: 
+        else:
+            self.m.resume()
             self.return_to_app()
             
     def cancel_stream(self):
         if self.return_to_screen == 'go':
-            self.m.s.is_job_streaming = True           
-        else: 
+            self.m.s.is_job_streaming = True
+        else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.soft_reset()
         self.m.unlock_after_alarm()
