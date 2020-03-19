@@ -28,7 +28,6 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser:filechooser
-    modelPreviewImage:modelPreviewImage
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
@@ -57,22 +56,7 @@ Builder.load_string("""
                 on_selection: 
                     root.refresh_filechooser()
                     root.detect_preview_image(filechooser.selection[0])
-            BoxLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                padding: 10
-                size_hint_x: 5
-                canvas:
-                    Color: 
-                        rgba: 1,1,1,.1
-                    Rectangle: 
-                        size: self.size
-                        pos: self.pos
-                Image:
-                    id:modelPreviewImage
-                    source: root.no_preview_found_img_path
-                    size: self.parent.size
-                    allow_stretch: True                
+       
 
                 
         BoxLayout:
@@ -84,7 +68,6 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.get_FTP_files()
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
@@ -187,12 +170,10 @@ Builder.load_string("""
 """)
 
 parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
-ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
+
 
 class SCFileChooser(Screen):
 
-    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
-    preview_image_path = None
     
     def __init__(self, **kwargs):
 
@@ -232,35 +213,6 @@ class SCFileChooser(Screen):
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
         self.filechooser._update_files()
-
-    
-    def get_FTP_files(self):
-
-        if sys.platform != "win32":
-            ftp_files = os.listdir(ftp_file_dir)
-            if ftp_files:
-                for file in ftp_files:
-                    copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
-                    os.remove(ftp_file_dir + file) # clean original space
-
-        
-    def detect_preview_image(self, nc_file_path):
-        
-        # Assume there is no image preview to be found, so set image to default preview
-        self.preview_image_path = None
-        self.modelPreviewImage.source = self.no_preview_found_img_path
-        
-        # Scan file for image identifier in gcode e.g. (preview_img=123.png)
-        original_file = open(nc_file_path, 'r')
-        for line in original_file:
-            if line.find('(preview_img') >= 0:
-                image_name = line.strip().split(':')[1][:-1]
-                image_dir_path = os.path.dirname(nc_file_path)
-                self.preview_image_path = image_dir_path + '/' + image_name
-                if os.path.isfile(self.preview_image_path):
-                    self.modelPreviewImage.source = self.preview_image_path
-                break
-        original_file.close()       
 
 
     def return_to_SC17(self, file_selection):
