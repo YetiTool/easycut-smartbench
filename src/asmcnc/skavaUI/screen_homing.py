@@ -176,6 +176,7 @@ class HomingScreen(Screen):
     middle_button_label = ObjectProperty()
     left_button_label = ObjectProperty()   
     
+    poll_for_ready = None
     poll_for_success = None
     quit_home = False
     
