@@ -252,7 +252,7 @@ class GCodeMonitor(Widget):
 
     def clear_monitor(self): 
         
-        self.monitor_text_buffer = ""
+        self.monitor_text_buffer = ['Welcome to the GCode console...']
 
 #     def pause_status_toggle(self):
 #         if self.STATUS_PAUSE == False:
