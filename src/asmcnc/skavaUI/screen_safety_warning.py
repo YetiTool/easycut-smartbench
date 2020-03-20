@@ -233,10 +233,11 @@ class SafetyScreen(Screen):
         #self.m=kwargs['machine']
     
     def on_enter(self):
-        pass
+        self.button_press = False
         
     def quit_to_lobby(self):
+        self.button_press = True
         self.sm.current = 'lobby'
         
     def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('safety'))
+        if self.button_press == True: self.sm.remove_widget(self.sm.get_screen('safety'))
