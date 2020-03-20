@@ -1,5 +1,5 @@
-power_cycle_alert = False
+power_cycle_alert=False
 
-calibration_alert = False
+calibration_alert=False
 
 #tutorial_alerts etc. 
