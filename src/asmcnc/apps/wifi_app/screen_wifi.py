@@ -7,6 +7,7 @@ Wifi screen
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 import socket, sys, os
 
@@ -200,17 +201,32 @@ Builder.load_string("""
                         height: dp(40)
                         width: dp(80)
                         padding: (0,0,0,0)
-                                    
-                        TextInput: 
+                        canvas:
+                            Color:
+                                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        Spinner:
                             id: country
-                            valign: 'middle'
-                            halign: 'center'
-                            text_size: self.size
+                            size_hint: (None, None)
+                            size: 80, 40
+                            text: 'GB'
                             font_size: '20sp'
-                            markup: True
-                            input_filter: 'float'
-                            multiline: False
-                            text: '' 
+                            color: 0,0,0,1
+                            values: root.values
+                            background_normal: ''
+
+#                         TextInput: 
+#                             id: country
+#                             valign: 'middle'
+#                             halign: 'center'
+#                             text_size: self.size
+#                             font_size: '20sp'
+#                             markup: True
+#                             input_filter: 'float'
+#                             multiline: False
+#                             text: '' 
         BoxLayout:
             size_hint: (None, None)
             height: dp(290)
@@ -381,3 +397,19 @@ class WifiScreen(Screen):
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
+        
+    
+    values = ['a',
+              'b',
+              'c',
+              'd',
+              'c',
+              'e',
+              'f',
+              'g',
+              'h',
+              'i',
+              'j',
+              'h',
+              'i']
+    

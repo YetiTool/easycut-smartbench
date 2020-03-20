@@ -133,7 +133,7 @@ class SkavaUI(App):
         sm.add_widget(wifi_screen)
         
         # set screen to start on
-        sm.current = 'wifi'
+        sm.current = 'safety'
         return sm
 
 
