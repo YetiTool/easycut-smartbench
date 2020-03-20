@@ -52,6 +52,8 @@ from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 
+from asmcnc.apps.wifi_app import screen_wifi
+
 Cmport = 'COM3'
 
 if sys.platform != 'win32':
@@ -126,6 +128,10 @@ class SkavaUI(App):
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
 
+
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = sm)
+        sm.add_widget(wifi_screen)
+        
         # set screen to start on
         sm.current = 'safety'
         return sm
