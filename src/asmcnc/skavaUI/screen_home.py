@@ -43,7 +43,6 @@ Builder.load_string("""
     quick_commands_container:quick_commands_container
     virtual_bed_control_container:virtual_bed_control_container
     gcode_monitor_container:gcode_monitor_container
-    network_container:network_container
     settings_container:settings_container
     part_info_label:part_info_label
     home_tab:home_tab
@@ -94,10 +93,6 @@ Builder.load_string("""
                                     title: 'GCode monitor'
                                     collapse: False
                                     id: gcode_monitor_container
-
-                                AccordionItem:
-                                    title: 'Network'
-                                    id: network_container
 
                                 AccordionItem:
                                     title: 'Settings'
@@ -347,7 +342,6 @@ class HomeScreen(Screen):
         # Settings tab
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
-        self.network_container.add_widget(widget_network_setup.NetworkSetup(machine=self.m, screen_manager=self.sm))
         self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm)
         self.settings_container.add_widget(self.settings_widget)
         
