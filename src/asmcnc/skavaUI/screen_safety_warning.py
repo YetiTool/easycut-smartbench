@@ -230,16 +230,10 @@ class SafetyScreen(Screen):
     def __init__(self, **kwargs):
         super(SafetyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        #self.m=kwargs['machine']
-    
-    def on_enter(self):
-        self.button_press = False
-        
+            
     def quit_to_lobby(self):
-        self.button_press = True
         self.sm.current = 'lobby'
         
     def on_leave(self):
-#         if self.button_press == True: self.sm.remove_widget(self.sm.get_screen('safety'))
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen': 
-            self.sm.remove_widget(self.sm.get_screen('safety'))
+        #if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen': 
+        self.sm.remove_widget(self.sm.get_screen('safety'))

@@ -174,8 +174,10 @@ class ErrorScreenClass(Screen):
             
         elif self.button_function == self.return_to_screen:
             self.m.resume()
-            self.sm.current = self.return_to_screen     
-
+            if self.sm.has_screen(self.return_to_screen):
+                self.sm.current = self.return_to_screen     
+            else: 
+                self.sm.current = 'lobby'
         
          
   
