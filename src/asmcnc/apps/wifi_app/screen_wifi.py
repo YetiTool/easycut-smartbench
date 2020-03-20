@@ -7,10 +7,18 @@ Wifi screen
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
+import socket, sys, os
 
 Builder.load_string("""
 
 <WifiScreen>:
+    
+    network_name: network_name
+    password: password
+    country: country
+    ip_status_label: ip_status_label
+    wifi_image: wifi_image
     
     BoxLayout:
         size_hint: (None, None)
@@ -32,6 +40,7 @@ Builder.load_string("""
             spacing: 30
             orientation: 'horizontal'
             
+            # Status indicator            
             BoxLayout: 
                 size_hint: (None, None)
                 height: dp(140)
@@ -41,7 +50,7 @@ Builder.load_string("""
                 spacing: 10
                 canvas:
                     Color:
-                        rgba: [76 / 255., 175 / 255., 80 / 255., 1.]
+                        rgba: root.status_color
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -50,6 +59,7 @@ Builder.load_string("""
                     height: dp(25)
                     width: dp(150)
                     Image:
+                        id: wifi_image
                         source: "./asmcnc/skavaUI/img/wifi_on.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -63,7 +73,7 @@ Builder.load_string("""
                     orientation: 'vertical'
                     Label:
                         color: 1,1,1,1
-                        font_size: 20
+                        font_size: 18
                         markup: True
                         halign: "center"
                         valign: "middle"
@@ -72,16 +82,17 @@ Builder.load_string("""
                         pos: self.parent.pos
                         text: "IP address:"
                     Label:
+                        id: ip_status_label
                         color: 1,1,1,1
-                        font_size: 20
+                        font_size: 18
                         markup: True
                         halign: "center"
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "(ip address)"
-       
+                        text: ''
+            # Text Entry Area
             BoxLayout: 
                 size_hint: (None, None)
                 height: dp(140)
@@ -94,54 +105,144 @@ Builder.load_string("""
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                BoxLayout: 
-                    size_hint: (None, None)
-                    height: dp(100)
-                    width: dp(220)     
-                    canvas:
-                        Color:
-                            rgba: [0,1,1,1]  
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size                               
+                # SSID
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(100)
                     width: dp(220)
-                    canvas:
-                        Color:
-                            rgba: [0,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size                                              
+                    orientation: "vertical"
+                    padding: [10,0,0,20]   
+                              
+                    Label:
+                        color: 0,0,0,1
+                        font_size: 20
+                        markup: True
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        text: "Network Name"
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(40)
+                        width: dp(210)
+                        padding: (0,0,0,0)
+                                    
+                        TextInput: 
+                            id: network_name
+                            valign: 'middle'
+                            halign: 'center'
+                            text_size: self.size
+                            font_size: '20sp'
+                            markup: True
+                            input_filter: 'float'
+                            multiline: False
+                            text: ''
+
+                #Password
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(100)
-                    width: dp(80)      
-                    canvas:
-                        Color:
-                            rgba: [0,1,1,1] 
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size  
+                    width: dp(210)
+                    orientation: "vertical"
+                    padding: [0,0,0,20]   
+                              
+                    Label:
+                        color: 0,0,0,1
+                        font_size: 20
+                        markup: True
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        text: "Password"
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(40)
+                        width: dp(210)
+                        padding: (0,0,0,0)
+                                    
+                        TextInput: 
+                            id: password
+                            valign: 'middle'
+                            halign: 'center'
+                            text_size: self.size
+                            font_size: '20sp'
+                            markup: True
+                            input_filter: 'float'
+                            multiline: False
+                            text: ''                                           
+                #Country Code
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(100)
+                    width: dp(90)
+                    orientation: 'vertical'
+                    padding: [0,0,10,20]   
+                              
+                    Label:
+                        color: 0,0,0,1
+                        font_size: 20
+                        markup: True
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        text: "Country"
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(40)
+                        width: dp(80)
+                        padding: (0,0,0,0)
+                                    
+                        TextInput: 
+                            id: country
+                            valign: 'middle'
+                            halign: 'center'
+                            text_size: self.size
+                            font_size: '20sp'
+                            markup: True
+                            input_filter: 'float'
+                            multiline: False
+                            text: '' 
         BoxLayout:
             size_hint: (None, None)
             height: dp(290)
             width: dp(800)
             padding: [30,0,30,30]
-            spacing: 30
+            spacing: 10
             
+            # Doc viewer
             BoxLayout: 
                 size_hint: (None, None)
                 height: dp(260)
-                width: dp(550)
-                orientation: 'horizontal'
+                width: dp(570)
+                padding: 20
                 canvas:
                     Color:
                         rgba: [1,1,1,1]
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
+                        
+                ScrollView:
+#                     size_hint: (None, None)
+                    size: self.size
+                    pos: self.pos
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    scroll_type: ['content']
+                    RstDocument:
+                        source: './asmcnc/apps/wifi_app/wifi_documentation.rst'
+                        background_color: hex('#FFFFFF')
+                        base_font_size: 26
+                        underline_color: '000000'
                                                                                    
             BoxLayout: 
                 size_hint: (None, None)
@@ -167,7 +268,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.cut_circle()
+                        on_press: root.connect_wifi()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -190,7 +291,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-    #                         on_press: root.cut_circle()
+                        on_press: root.quit_to_lobby()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -205,8 +306,78 @@ Builder.load_string("""
 
 class WifiScreen(Screen):
     
+    IP_REPORT_INTERVAL = 2
+    status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+    
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+ 
+    def on_enter(self):
+        self.refresh_ip_label_value(1)
+                
+    def connect_wifi(self):
+
+        # get network name and password from text entered (widget)
+        self.netname = self.network_name.text
+        self.password = self.password.text
+        self.country = self.country.text 
+
+        # pass credentials to wpa_supplicant file
+        self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
+        self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
         
-        
+        #if wpanetpass.startswith('network={'):       
+
+        # put the credentials and the necessary appendages into the wpa file
+        os.system(self.wpanetpass)
+        os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+        os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+   
+        os.system(self.wpanetpasswlan0)
+        os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+        os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+        os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
+        self.sm.current = 'rebooting'        
+
+    def refresh_ip_label_value(self, dt):
+
+        ip_address = ''
+        self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+        self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        if sys.platform == "win32":
+            try:
+                hostname=socket.gethostname()
+                IPAddr=socket.gethostbyname(hostname)
+                ip_address = str(IPAddr)
+                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
+                self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+            except:
+                ip_address = ''
+                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+                self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        else:
+            try:
+                f = os.popen('hostname -I')
+                first_info = f.read().strip().split(' ')[0]
+                if len(first_info.split('.')) == 4:
+                    ip_address = first_info
+                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
+                    self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+                else:
+                    ip_address = ''
+                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+                    self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+            except:
+                ip_address = ''
+                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+                self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        self.ip_status_label.text = ip_address
+
+    def quit_to_lobby(self):
+        self.sm.current = 'lobby'
