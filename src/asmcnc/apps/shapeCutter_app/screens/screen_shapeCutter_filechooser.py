@@ -1,8 +1,6 @@
 '''
 Created on 19 Aug 2017
-
 @author: Ed
-
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 '''
 # config
@@ -22,27 +20,21 @@ from shutil import copy
 from asmcnc.comms import usb_storage
 
 Builder.load_string("""
-
 <SCFileChooser>:
-
     on_enter: root.refresh_filechooser()
-
-    filechooser:filechooser
-    modelPreviewImage:modelPreviewImage
+    filechooser_sc_params:filechooser_sc_params
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
     image_delete:image_delete
     image_delete_all:image_delete_all
     image_select:image_select
-
     BoxLayout:
         padding: 0
         spacing: 10
         size: root.size
         pos: root.pos
         orientation: "vertical"
-
         BoxLayout:
             orientation: 'horizontal'
             size: self.parent.size
@@ -50,41 +42,22 @@ Builder.load_string("""
             spacing: 10
             FileChooserListView:
                 size_hint_x: 5
-                id: filechooser
+                id: filechooser_sc_params
                 rootpath: './asmcnc/apps/shapeCutter_app/parameter_cache/'
                 filter_dirs: True
                 filters: ['*.csv', '*.CSV']
                 on_selection: 
                     root.refresh_filechooser()
-                    root.detect_preview_image(filechooser.selection[0])
-            BoxLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                padding: 10
-                size_hint_x: 5
-                canvas:
-                    Color: 
-                        rgba: 1,1,1,.1
-                    Rectangle: 
-                        size: self.size
-                        pos: self.pos
-                Image:
-                    id:modelPreviewImage
-                    source: root.no_preview_found_img_path
-                    size: self.parent.size
-                    allow_stretch: True                
-
+       
                 
         BoxLayout:
             size_hint_y: None
             height: 100
-
             Button:
                 disabled: False
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.get_FTP_files()
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
@@ -106,7 +79,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser.selection[0])
+                    root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -167,7 +140,7 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    root.return_to_SC17(filechooser.selection[0])
+                    root.return_to_SC17(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -182,17 +155,14 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
-
                 
 """)
 
 parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
-ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
+
 
 class SCFileChooser(Screen):
 
-    no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'    
-    preview_image_path = None
     
     def __init__(self, **kwargs):
 
@@ -208,7 +178,7 @@ class SCFileChooser(Screen):
     def refresh_filechooser(self):
 
         try:
-            if self.filechooser.selection[0] != 'C':
+            if self.filechooser_sc_params.selection[0] != 'C':
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -231,36 +201,7 @@ class SCFileChooser(Screen):
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
 
-        self.filechooser._update_files()
-
-    
-    def get_FTP_files(self):
-
-        if sys.platform != "win32":
-            ftp_files = os.listdir(ftp_file_dir)
-            if ftp_files:
-                for file in ftp_files:
-                    copy(ftp_file_dir + file, job_cache_dir) # "copy" overwrites same-name file at destination
-                    os.remove(ftp_file_dir + file) # clean original space
-
-        
-    def detect_preview_image(self, nc_file_path):
-        
-        # Assume there is no image preview to be found, so set image to default preview
-        self.preview_image_path = None
-        self.modelPreviewImage.source = self.no_preview_found_img_path
-        
-        # Scan file for image identifier in gcode e.g. (preview_img=123.png)
-        original_file = open(nc_file_path, 'r')
-        for line in original_file:
-            if line.find('(preview_img') >= 0:
-                image_name = line.strip().split(':')[1][:-1]
-                image_dir_path = os.path.dirname(nc_file_path)
-                self.preview_image_path = image_dir_path + '/' + image_name
-                if os.path.isfile(self.preview_image_path):
-                    self.modelPreviewImage.source = self.preview_image_path
-                break
-        original_file.close()       
+        self.filechooser_sc_params._update_files()
 
 
     def return_to_SC17(self, file_selection):
@@ -271,18 +212,17 @@ class SCFileChooser(Screen):
     def delete_selected(self, filename):
         if os.path.isfile(filename):
             os.remove(filename)
-            self.refresh_filechooser()    
+            Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
           
         
     def delete_all(self):
 
-        files_in_cache = os.listdir(job_cache_dir) # clean cache
+        files_in_cache = os.listdir(parameter_file_dir) # clean cache
         if files_in_cache:
             for file in files_in_cache:
-                os.remove(job_cache_dir+file)
+                os.remove(parameter_file_dir+file)
         self.refresh_filechooser()       
 
 
     def quit_to_home(self):
         self.shapecutter_sm.previous_screen()  
-        
