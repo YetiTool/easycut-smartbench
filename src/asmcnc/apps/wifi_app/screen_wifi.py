@@ -7,6 +7,7 @@ Wifi screen
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 import socket, sys, os
@@ -138,7 +139,6 @@ Builder.load_string("""
                             text_size: self.size
                             font_size: '20sp'
                             markup: True
-                            input_filter: 'float'
                             multiline: False
                             text: ''
 
@@ -174,7 +174,6 @@ Builder.load_string("""
                             text_size: self.size
                             font_size: '20sp'
                             markup: True
-                            input_filter: 'float'
                             multiline: False
                             text: ''                                           
                 #Country Code
@@ -248,7 +247,6 @@ Builder.load_string("""
                         size: self.size
                         
                 ScrollView:
-#                     size_hint: (None, None)
                     size: self.size
                     pos: self.pos
                     do_scroll_x: True
