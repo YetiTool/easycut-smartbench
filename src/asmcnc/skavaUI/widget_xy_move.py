@@ -366,6 +366,10 @@ class XYMove(Widget):
             if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
         
         elif self.jogMode == 'job':
+            
+            self.go_x_datum()
+            self.go_y_datum()
+            
             job_box = self.sm.get_screen('home').job_box
             job_x_range = job_box.range_x[1] - job_box.range_x[0]
             job_y_range = job_box.range_y[1] - job_box.range_y[0]

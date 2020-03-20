@@ -330,6 +330,10 @@ class SC31XYMove(Widget):
             if case == 'Y-': self.m.jog_relative('Y', -10, y_feed_speed)
         
         elif self.jogMode == 'job':
+            
+            self.go_x_datum()
+            self.go_y_datum()
+            
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]
 
