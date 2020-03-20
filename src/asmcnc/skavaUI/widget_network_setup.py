@@ -45,21 +45,21 @@ Builder.load_string("""
             id: countryTextEntry
             size_hint_y: None
             height: '32dp'
-            text: 'GB'
+            hint_text: 'GB'
             focus: False
             multiline: False
         TextInput:
             id: networkTextEntry
             size_hint_y: None
             height: '32dp'
-            text: 'Network name...'
+            hint_text: 'Network name...'
             focus: False
             multiline: False
         TextInput:
             id: passwordTextEntry
             size_hint_y: None
             height: '32dp'
-            text: 'Network password...'
+            hint_text: 'Network password...'
             focus: False
             multiline: False
         Label:

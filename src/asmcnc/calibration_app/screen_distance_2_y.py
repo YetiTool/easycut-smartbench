@@ -246,4 +246,5 @@ class DistanceScreen2yClass(Screen):
         self.sm.current = 'distance3y'
 
     def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('distance2y'))
+        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen':
+            self.sm.remove_widget(self.sm.get_screen('distance2y'))

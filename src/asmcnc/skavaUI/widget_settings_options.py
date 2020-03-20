@@ -37,25 +37,26 @@ Builder.load_string("""
         cols: 3
 
         Button:
-            text: 'Reboot'
-            on_release: root.reboot()
-        Button:
-            text: 'Quit to Console'
-            on_release: root.quit_to_console()
-        Button:
             text: 'Square axes'
             on_release: root.square_axes()
         Button:
-            text: 'Return to lobby'
-            on_release: root.return_to_lobby()
-                    
-        Button:
-            text: 'Get software updates'
-            on_release: root.get_sw_updates()
-
+            text: 'Get software update'
+            on_release: root.get_sw_update()
         Button:
             text: 'Developer'
             on_release: root.go_to_dev()                     
+
+
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: ''
+            color: 0,0,0,1
+        Label:
+            text: ''
+            color: 0,0,0,1
+
 
         Label:
             text: 'Code base'
@@ -152,7 +153,7 @@ class SettingsOptions(Widget):
     def return_to_lobby(self):
         self.sm.current = 'lobby'
 
-    def get_sw_updates(self):
+    def get_sw_update(self):
 ##        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 ##      Update SW according to latest release: 
         os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
