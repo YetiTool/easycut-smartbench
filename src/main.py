@@ -61,7 +61,7 @@ start_screen = 'safety'
 # Start up configuration
 if sys.platform != 'win32':
     
-    pc_alert = (os.popen('grep -Fx "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
+    pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
     print 'pc_alert'
     print pc_alert
     if pc_alert.startswith('power_cycle_alert=True'):
