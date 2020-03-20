@@ -241,4 +241,5 @@ class SafetyScreen(Screen):
         
     def on_leave(self):
 #         if self.button_press == True: self.sm.remove_widget(self.sm.get_screen('safety'))
-        if self.sm.current != 'alarmScreen': self.sm.remove_widget(self.sm.get_screen('safety'))
+        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen': 
+            self.sm.remove_widget(self.sm.get_screen('safety'))
