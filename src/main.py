@@ -62,6 +62,7 @@ start_screen = 'safety'
 if sys.platform != 'win32':
     
     pc_alert = (os.popen('grep -Fx "power_cycle_alert = True" /home/pi/easycut-smartbench/src/config.txt').read())
+    print pc_alert
     if pc_alert.startswith('power_cycle_alert = True'):
         os.system('sudo sed -i "s/power_cycle_alert = True/power_cycle_alert = False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
