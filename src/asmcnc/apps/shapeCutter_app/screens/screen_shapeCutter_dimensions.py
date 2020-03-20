@@ -9,7 +9,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.uix.textinput import TextInput
-from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.switch import Switch
 
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
