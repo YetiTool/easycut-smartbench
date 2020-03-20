@@ -206,14 +206,16 @@ class LoadingScreen(Screen):
             
             if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
                 
-                # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000)
+                # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
                 if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
                     if l_block.find ('S') >= 0:
-                        rpm = int(l_block.split("S")[1])
+                        
+                        # find 'S' prefix and strip out the value associated with it
+                        rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
                         if rpm < minimum_spindle_rpm:
                             l_block = "M3S" + str(minimum_spindle_rpm)
 
-                
+                print l_block
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
                 
         job_file.close()
