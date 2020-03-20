@@ -17,6 +17,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.clock import Clock
 
+
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
 PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
 PLATFORM_HOME= "/home/pi/"
@@ -116,26 +117,15 @@ class SettingsOptions(Widget):
         super(SettingsOptions, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.refresh_sw_version_label()
-        self.refresh_platform_version_label()
-        self.refresh_latest_platform_version_label()
-        self.refresh_latest_sw_version_label()
+        self.set=kwargs['settings']
+
         Clock.schedule_once(lambda dt: self.scrape_fw_version(),9)
 
-    ## Updates version labels
+        self.sw_version_label.text = self.set.sw_version
+        self.platform_version_label.text = self.set.platform_version
+        self.latest_sw_version = self.set.latest_sw_version
+        self.latest_platform_version_label.text = self.set.latest_platform_version
 
-    def refresh_sw_version_label(self):
-        sw_data = (os.popen("git describe --tags").read())
-        self.sw_version_label.text = str(sw_data) 
-
-    def refresh_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
-        self.platform_version_label.text = data
-
-    def refresh_latest_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
-        self.latest_platform_version_label.text = data
-        
     def scrape_fw_version(self):
         self.fw_version_label.text = str(self.m.s.fw_version)
         
@@ -154,17 +144,9 @@ class SettingsOptions(Widget):
         self.sm.current = 'lobby'
 
     def get_sw_update(self):
-##        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
 ##      Update SW according to latest release: 
         os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
         self.sm.current = 'rebooting'
-        
-    def refresh_latest_sw_version_label(self):
-        data = os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
-        self.latest_software_version_label.text = str(data)
-        self.latest_sw_version = str(data)
-
-
         
         ## FW flash functions: 
         
