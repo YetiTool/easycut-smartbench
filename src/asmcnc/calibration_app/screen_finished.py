@@ -85,7 +85,7 @@ class FinishedCalScreenClass(Screen):
         if not self.sm.current == 'alarmScreen':
             self.sm.current = self.return_to_screen
         
-    def on_leave(self):       
+    def on_leave(self):
         if self.sm.has_screen('calibration_complete'):
             self.sm.remove_widget(self.sm.get_screen('calibration_complete'))
             

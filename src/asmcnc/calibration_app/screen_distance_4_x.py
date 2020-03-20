@@ -288,4 +288,5 @@ class DistanceScreen4xClass(Screen):
         self.sm.current = 'tape_measure_alert'
        
     def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('distance4x'))
+        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen':
+            self.sm.remove_widget(self.sm.get_screen('distance4x'))
