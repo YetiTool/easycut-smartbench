@@ -28,6 +28,7 @@ from kivy.core.window import Window
 from asmcnc.comms import router_machine 
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager
+from settings import settings_manager
 
 from asmcnc.skavaUI import screen_initial, screen_help
 from asmcnc.skavaUI import screen_home
@@ -78,11 +79,15 @@ class SkavaUI(App):
         
         job_gcode = []  # declare g-code object
         
+        # Initialise settings object
+        set = settings_manager.Settings()
+        
+        # App manager object
         am = app_manager.AppManagerClass(sm, m)
         
         # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode)
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = set)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode)
@@ -100,7 +105,7 @@ class SkavaUI(App):
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
-        developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m)
+        developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = set)
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
 
         # add the screens to screen manager

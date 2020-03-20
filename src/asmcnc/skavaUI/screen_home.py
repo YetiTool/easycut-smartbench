@@ -323,6 +323,7 @@ class HomeScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.job_gcode = kwargs['job']
+        self.set = kwargs['settings']
 
         # Job tab
         self.gcode_preview_widget = widget_gcode_view.GCodeView()
@@ -348,7 +349,7 @@ class HomeScreen(Screen):
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         self.network_container.add_widget(widget_network_setup.NetworkSetup(machine=self.m, screen_manager=self.sm))
-        self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm)
+        self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm, settings = self.set)
         self.settings_container.add_widget(self.settings_widget)
         
         # Quick commands

@@ -291,9 +291,20 @@ class DeveloperScreen(Screen):
         super(DeveloperScreen, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.refresh_sw_version_labels()
-        self.refresh_platform_version_label()
-        self.refresh_latest_platform_version_label()
+        self.set = kwargs['settings']
+        
+#         self.refresh_sw_version_labels()
+#         self.refresh_platform_version_label()
+#         self.refresh_latest_platform_version_label()
+
+        self.sw_version_label.text = self.set.sw_version
+        self.platform_version_label.text = self.set.platform_version
+        self.latest_sw_version = self.set.latest_sw_version
+        self.latest_platform_version = self.set.latest_platform_version
+        self.sw_hash_label.text = self.set.sw_hash
+        self.sw_branch_label.text = self.set.sw_branch
+        self.pl_hash_label.text = self.set.pl_hash
+        self.pl_branch_label.text = self.set.pl_branch
     
     def on_enter(self, *args):
         self.scrape_fw_version()
