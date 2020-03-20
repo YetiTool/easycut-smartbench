@@ -52,13 +52,20 @@ from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
-
-from asmcnc.apps.wifi_app import screen_wifi
+from asmcnc.skavaUI import screen_powercycle_alert
 
 Cmport = 'COM3'
 
+start_screen = 'safety'
+
+# Start up configuration
 if sys.platform != 'win32':
     
+    pc_alert = (os.popen('grep -Fx "power_cycle_alert = True" /easycut-smartbench/src/config.txt').read())
+    if pc_alert.startswith('power_cycle_alert = True'):
+        os.system('sudo sed -i "s/power_cycle_alert = True/power_cycle_alert = False" /easycut-smartbench/src/config.txt') 
+        start_screen = 'pc_alert'
+
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
     if case.startswith('gpu_mem=128'):
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
@@ -109,6 +116,8 @@ class SkavaUI(App):
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
         developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = set)
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
+        
+        if start_screen == 'pc_alert': powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -132,13 +141,10 @@ class SkavaUI(App):
         sm.add_widget(job_done_screen)
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
+        if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
 
-
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = sm)
-        sm.add_widget(wifi_screen)
-        
         # set screen to start on
-        sm.current = 'safety'
+        sm.current = start_screen
         return sm
 
 
