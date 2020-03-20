@@ -292,10 +292,6 @@ class DeveloperScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.set = kwargs['settings']
-        
-#         self.refresh_sw_version_labels()
-#         self.refresh_platform_version_label()
-#         self.refresh_latest_platform_version_label()
 
         self.sw_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -327,22 +323,6 @@ class DeveloperScreen(Screen):
         #self.sm.transition = SlideTransition()
         #self.sm.transition.direction = 'up'
         self.sm.current = 'lobby'
-
-    def refresh_sw_version_labels(self):
-        sw_data = (os.popen("git describe --always").read()).split('-')
-        self.sw_version_label.text = str(sw_data[0])
-        self.sw_hash_label.text = str(os.popen("git rev-parse --short HEAD").read())
-        self.sw_branch_label.text = str(os.popen("git branch | grep \*").read())
-
-    def refresh_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read()
-        self.platform_version_label.text = data
-        self.pl_hash_label.text = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read())
-        self.pl_branch_label.text = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read())
-
-    def refresh_latest_platform_version_label(self):
-        data = os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()
-        self.latest_platform_version = str(data)
 
     def scrape_fw_version(self):
         self.fw_version_label.text =str(self.m.s.fw_version)
