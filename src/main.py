@@ -52,22 +52,51 @@ from asmcnc.skavaUI import screen_rebooting
 from asmcnc.skavaUI import screen_job_done
 from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
+from asmcnc.skavaUI import screen_powercycle_alert
 from asmcnc.skavaUI import screen_door
 
-from asmcnc.apps.wifi_app import screen_wifi
-
+# developer testing
 Cmport = 'COM3'
+
+# Current version active/working on
+initial_version = 'v1.1.0'
+
+# default starting screen
+start_screen = 'safety'
+
+# Config management
+def check_and_update_config():
+    
+    def ver0_configuration():
+        if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
+            os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
+            os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
+            os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
+    
+    if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
+        ver0_configuration()
+        os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
+        os.system('sudo reboot')
+
 
 if sys.platform != 'win32':
     
+    ## Easycut config
+    check_and_update_config()
+    
+    # Check whether machine needs to be power cycled (currently only after a software update)
+    pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
+    if pc_alert.startswith('power_cycle_alert=True'):
+        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
+        start_screen = 'pc_alert'
+
+    # System config (this should eventually be moved into platform management)
+    # Update GPU memory to handle more app
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
     if case.startswith('gpu_mem=128'):
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
         os.system('sudo reboot')   
 
-    else:
-        print "gpu mem already 256"
-        print case
 
 class SkavaUI(App):
 
@@ -83,14 +112,14 @@ class SkavaUI(App):
         job_gcode = []  # declare g-code object
         
         # Initialise settings object
-        set = settings_manager.Settings()
+        sett = settings_manager.Settings()
         
         # App manager object
         am = app_manager.AppManagerClass(sm, m)
         
         # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = set)
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode)
@@ -108,9 +137,11 @@ class SkavaUI(App):
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
-        developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = set)
+        developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = sett)
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
+        if start_screen == 'pc_alert': powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
+
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -134,17 +165,15 @@ class SkavaUI(App):
         sm.add_widget(job_done_screen)
         sm.add_widget(developer_screen)
         sm.add_widget(diagnostics_screen)
+        if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
         sm.add_widget(door_screen)
 
-
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = sm)
-        sm.add_widget(wifi_screen)
-        
         # set screen to start on
-        sm.current = 'safety'
+        sm.current = start_screen
         return sm
 
 
 if __name__ == '__main__':
 
     SkavaUI().run()
+    

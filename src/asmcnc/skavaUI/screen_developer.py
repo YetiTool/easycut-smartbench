@@ -327,8 +327,9 @@ class DeveloperScreen(Screen):
     def scrape_fw_version(self):
         self.fw_version_label.text =str(self.m.s.fw_version)
 
-    def get_sw_update(self):
-        os.system("cd /home/pi/easycut-smartbench/ && git pull && sudo reboot")
+    def get_sw_update(self): 
+        self.set.get_sw_update()
+        self.sm.current = 'rebooting'
 
 ## Diagnostics
 

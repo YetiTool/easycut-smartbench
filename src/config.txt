@@ -1,0 +1,5 @@
+check_config=True
+config_skipped_by_git=False
+version=0
+power_cycle_alert=True
+calibration_alert=False

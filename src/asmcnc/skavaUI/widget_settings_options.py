@@ -144,8 +144,7 @@ class SettingsOptions(Widget):
         self.sm.current = 'lobby'
 
     def get_sw_update(self):
-##      Update SW according to latest release: 
-        os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
+        self.set.get_sw_update()
         self.sm.current = 'rebooting'
         
         ## FW flash functions: 
