@@ -255,7 +255,9 @@ class CheckingScreen(Screen):
     def boundary_check(self):            
         
         # check limits
-        if self.is_job_within_bounds():
+        bounds_output = self.is_job_within_bounds()
+        
+        if bounds_output == True:
             # update screen
             self.check_outcome = 'Job is within bounds.'
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
@@ -265,7 +267,7 @@ class CheckingScreen(Screen):
             self.toggle_boundary_buttons(False)
             self.check_outcome = 'WARNING: Job is not within machine bounds!' + \
             '\n\nWARNING: Checking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.'
-            self.write_boundary_output()
+            self.write_boundary_output(bounds_output)
 
 
 ## BOUNDARY CHECK:
@@ -278,34 +280,35 @@ class CheckingScreen(Screen):
         # Mins
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            # print("The job target is too close to the X home position. The job will crash into the home position.")
+            error_message = "The job target is too close to the X home position. The job will crash into the home position."
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            # print("The job target is too close to the Y home position. The job will crash into the home position.")
+            error_message = "The job target is too close to the Y home position. The job will crash into the home position."
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            # print("The job target is too far from the Z home position. The router will not reach that far.")
+            error_message = "The job target is too far from the Z home position. The router will not reach that far."
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            # print("The job target is too far from the X home position. The router will not reach that far.")
+            error_message = "The job target is too far from the X home position. The router will not reach that far."
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            # print("The job target is too far from the Y home position. The router will not reach that far.")
+            error_message = "The job target is too far from the Y home position. The router will not reach that far."
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            # print("The job target is too close to the Z home position. The job will crash into the home position.")
+            error_message = "The job target is too close to the Z home position. The job will crash into the home position."
             errorfound += 1 
 
-        if errorfound > 0: return False
+        if errorfound > 0: return error_message
         else: return True  
   
-    def write_boundary_output(self):
+    def write_boundary_output(self, bounds_output):
         
         self.display_output = '[color=#FFFFFF][b]BOUNDARY CONFLICT[/b]\n\n' + \
-        '\n\n[color=#FFFFFF]It looks like your job is outside the bounds of the machine.\n\n' + \
+        '\n\n[color=#FFFFFF]It looks like your job is outside the bounds of the machine:\n\n' + \
+        '[color=#FFFFFF]' + bounds_output + '\n\n' + \
         '[color=#FFFFFF]To fix this, load the job now and set the datum to an appropriate location.\n\n' + \
         '[color=#FFFFFF]You will still be prompted to check your G-code before running your job.\n\n' + \
         '[color=#FFFFFF]If you have already tried to set the datum, or if the graphics on the virtual' + \
