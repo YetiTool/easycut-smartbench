@@ -56,7 +56,8 @@ class Settings(object):
                 sed_sw_version = 'sudo sed -i "s/version=' + str(self.sw_version) + '/version=' + str(dummy_latest_sw_version) + '/" /home/pi/easycut-smartbench/src/config.txt'
                 
                 print 'sw swap'
-                os.system(sed_sw_version)
+                print sed_sw_version
+#                os.system(sed_sw_version)
                 
                 print 'power cycle'
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
