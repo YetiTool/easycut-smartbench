@@ -44,6 +44,8 @@ class Settings(object):
 
     def get_sw_update(self):
         
+        print self.latest_sw_version
+        
         if sys.platform != 'win32':
             if self.latest_sw_version != '':
         ##      Update SW according to latest release: 

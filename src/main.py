@@ -89,7 +89,6 @@ if sys.platform != 'win32':
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
 
-
     # System config (this should eventually be moved into platform management)
     # Update GPU memory to handle more app
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
