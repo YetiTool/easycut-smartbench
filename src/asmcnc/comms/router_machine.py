@@ -112,22 +112,23 @@ class RouterMachine(object):
     Does not change LED state (coz that's cutom YETI).
     e.g. Door state --> Idle
     
-    
-    
     '''
-    # Machine has stopped without warning and probably lost position
+
+    # REFACTORED START/STOP COMMANDS
+
     def resume_from_alarm(self):
-        self._stop_all_streaming()
-        # Reset to get out of Alarm mode. All buffers will be dumped.
-        self._grbl_soft_reset()
+        # Machine has stopped without warning and probably lost position
+        self._stop_all_streaming()  # In case alarm happened during stream, stop that
+        self._grbl_soft_reset()     # Reset to get out of Alarm mode. All buffers will be dumped.
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         # The user should be prompted to home in the alarm message
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
 
-    # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
+
     def stop_from_gcode_error(self):
+        # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
         self._grbl_feed_hold()
         # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
@@ -135,19 +136,43 @@ class RouterMachine(object):
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
 
+
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)        
 
+        
+    def stop_for_a_stream_pause(self):
+        self.set_pause(True)  # set serial_connection flag to pause streaming
+        self.s.is_job_streaming = False
+        self._grbl_door() # send a soft-door command
+
+    def resume_after_a_stream_pause(self):
+        self._grbl_resume()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        self.s.is_job_streaming = True
+
+    def set_pause(self, pause):
+        self.is_machine_paused = pause
+
+
+#     def cancel_from_soft_stop_popup(self):
+#         self.m.s.is_job_streaming = True
+#         self.m.soft_reset() # soft-reset
+#         self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!
+#         # BUT it may have lost the file? Cancel stream flushes the input, so even if machine remembers where it is, easycut probably doesn't.  
+#         self.m.resume()
+
+
+    
+    # Internal calls
+
     # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
     def _stop_all_streaming(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() 
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
-
-    
-    # Internal grbl calls
 
     def _grbl_resume(self):
         self.s.write_realtime('~', altDisplayText = 'Resume')
@@ -218,8 +243,7 @@ class RouterMachine(object):
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
     
-    def set_pause(self, pause):
-        self.is_machine_paused = pause
+
 
     def enable_check_mode(self):
         if not self.state().startswith('Check'):
