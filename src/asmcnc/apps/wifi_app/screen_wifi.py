@@ -330,7 +330,7 @@ class WifiScreen(Screen):
  
     def on_pre_enter(self):
         if sys.platform != 'win32':
-            self.network_name.text = ((str(os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")).strip('\n','"')[1]
+            self.network_name.text = ((str(os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).strip('\n','"')).split("=")[1]
 #             self.country.text = (str(os.system('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf'))).split('=')[1]
 #         
     def on_enter(self):
