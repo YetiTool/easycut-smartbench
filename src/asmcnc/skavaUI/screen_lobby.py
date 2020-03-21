@@ -19,8 +19,7 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 
-from asmcnc.calibration_app import screen_landing
-from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -50,8 +49,8 @@ Builder.load_string("""
                             
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 70
-                spacing: 70
+                padding: [100, 90, 100, 50]
+                spacing: 20
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -64,10 +63,9 @@ Builder.load_string("""
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
-#                             root.go_to_initial_screen(1)
-                            root.quit_to_home()
                             self.background_color = hex('#FFFFFF00')
                         on_press:
+                            root.quit_to_home()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
@@ -85,37 +83,7 @@ Builder.load_string("""
                         font_size: '25sp'
                         text: 'CAD / CAM'
 
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing: 20
-    
-                    Button:
-                        size_hint_y: 8
-                        id: load_button
-                        disabled: False
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            root.calibrate_smartbench()
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_app_calibrate.png"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        size_hint_y: 1
-                        font_size: '25sp'
-                        text: 'Calibrate SmartBench'
-                        markup: True
+
                    
                 BoxLayout:
                     orientation: 'vertical'
@@ -147,44 +115,11 @@ Builder.load_string("""
                         font_size: '25sp'
                         text: 'Shape Cutter'
                         
-#                 BoxLayout:
-#                     orientation: 'vertical'
-#                     size_hint_x: 1
-#                     spacing: 20
-# 
-#                     Button:
-#                         id: load_button
-#                         disabled: True
-#                         size_hint_y: 8
-#                         background_color: hex('#FFFFFF00')
-#                         on_release: 
-# #                             root.go_to_initial_screen(1)
-#                             self.background_color = hex('#FFFFFF00')
-#                         on_press:
-#                             self.background_color = hex('#FFFFFF00')
-#                         BoxLayout:
-#                             padding: 0
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             Image:
-#                                 id: image_select
-# #                                source: "./asmcnc/skavaUI/img/lobby_app_cadcam.png"
-#                                 source: "./asmcnc/skavaUI/img/lobby_door_hole_driller_comingsoon.png"
-#                                 center_x: self.parent.center_x
-#                                 y: self.parent.y
-#                                 size: self.parent.width, self.parent.height
-#                                 allow_stretch: True 
-#                     Label:
-#                         size_hint_y: 1
-#                         font_size: '25sp'
-#                         text: 'Door Holer'
-                        
             # Carousel pane 2
-        
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 70
-                spacing: 70
+                padding: [100, 90, 100, 50]
+                spacing: 20
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -197,9 +132,9 @@ Builder.load_string("""
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
-                            root.wifi_app()
                             self.background_color = hex('#FFFFFF00')
                         on_press:
+                            root.wifi_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
@@ -216,21 +151,22 @@ Builder.load_string("""
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Wifi App'
-                        
+                
+                
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing: 20
-                                            
+    
                     Button:
+                        size_hint_y: 8
                         id: load_button
                         disabled: False
-                        size_hint_y: 8
                         background_color: hex('#FFFFFF00')
                         on_release: 
-#                             root.go_to_initial_screen(1)
                             self.background_color = hex('#FFFFFF00')
                         on_press:
+                            root.calibrate_smartbench()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
@@ -238,48 +174,16 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-#                                source: "./asmcnc/skavaUI/img/lobby_app_pillardrill.png"
-                                source: "./asmcnc/skavaUI/img/lobby_jointer.png"
+                                source: "./asmcnc/skavaUI/img/lobby_app_calibrate.png"
                                 center_x: self.parent.center_x
-                                y: self.parent.y
+                                center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Jointer'
-                        
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing: 20
-
-                    Button:
-                        id: load_button
-                        disabled: False
-                        size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-#                             root.go_to_initial_screen(1)
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-#                                source: "./asmcnc/skavaUI/img/lobby_app_counterwiz.png"
-                                source: "./asmcnc/skavaUI/img/lobby_counter_wiz.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        size_hint_y: 1
-                        font_size: '25sp'
-                        text: 'Counter Wiz'
+                        text: 'Calibrate'
+                        markup: True
 
         BoxLayout:
             size_hint_y: 6
@@ -316,49 +220,8 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
-
             Label:
                 size_hint_y: 1
-
-#             Button:
-#                 id: load_button
-#                 disabled: False
-#                 size_hint_y: 1
-#                 background_color: hex('#FFFFFF00')
-#                 on_release: 
-#                     root.quit_to_home()
-#                     self.background_color = hex('#FFFFFF00')
-#                 on_press:
-#                     self.background_color = hex('#FFFFFF00')
-#                 BoxLayout:
-#                     size: self.parent.size
-#                     pos: self.parent.pos
-#                     Image:
-#                         id: image_select
-#                         source: "./asmcnc/skavaUI/img/lobby_expert.png"
-#                         center_x: self.parent.center_x
-#                         y: self.parent.y
-#                         size: self.parent.width, self.parent.height
-#                         allow_stretch: True 
-
-#             Button:
-#                 disabled: False
-#                 size_hint_y: 1
-#                 background_color: hex('#FFFFFF00')
-#                 on_release: 
-#                     self.background_color = hex('#FFFFFF00')
-#                 on_press:
-#                     self.background_color = hex('#FFFFFF00')
-#                 BoxLayout:
-#                     size: self.parent.size
-#                     pos: self.parent.pos
-#                     Image:
-#                         id: image_cancel
-#                         source: "./asmcnc/skavaUI/img/lobby_settings.png"
-#                         center_x: self.parent.center_x
-#                         y: self.parent.y
-#                         size: self.parent.width, self.parent.height
-#                         allow_stretch: True 
 
             Button:
                 disabled: False
@@ -367,6 +230,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.help_popup()
                     self.background_color = hex('#FFFFFF00')
                 BoxLayout:
                     size: self.parent.size
@@ -425,6 +289,15 @@ class LobbyScreen(Screen):
     def on_enter(self):
         if not sys.platform == "win32":
             self.m.set_led_blue()
+
+    def help_popup(self):
+        print "pop up press"
+        
+        description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
+                    "If this is your first time, make sure you\nuse " \
+                    "the [b]Wifi[/b] and [b]Calibrate[/b] apps to set up\nSmartBench and EasyCut. \n\n " \
+                    "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
+        popup_info.PopupWelcome(self.sm, description)
  
     def quit_to_home(self):
         self.am.start_pro_app()
