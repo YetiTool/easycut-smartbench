@@ -328,9 +328,14 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
  
+    def on_pre_enter(self):
+        if sys.platform != 'win32':    
+            self.network_name.text = (os.system('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf')).split('=')[1]
+            self.country.text = (os.system('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf')).split('=')[1]
+        
     def on_enter(self):
         self.refresh_ip_label_value(1)
-                
+                    
     def connect_wifi(self):
 
         # get network name and password from text entered (widget)
