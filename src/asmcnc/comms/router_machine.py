@@ -66,6 +66,43 @@ class RouterMachine(object):
 
 # CRITICAL START/STOP
 
+'''
+Understanding what start/stop commands to use:
+
+DOOR (SOFT).
+Realtime command. Puts machine in door state.
+Use case: decelerates the XYZ to stop and turns the spindle off. This is better than a feed hold because a hold doesn't stop the spindle (and you can't do a manual gcode spindle off/on command during a stream)
+To resume: use RESUME 
+Important note: in door state, the machine will not process either the char or line buffer. It only accepts realtime commands. 
+If chars are sent, they will simply get added to the buffer (assuming there is space). Therefore ONLY send realtime commands when in this state.
+e.g. Door triggered. LED colour sent. Nothing happens, buffer capacity reduces by 5 chars. Resume triggered. LED colour activates, buffer clears.
+
+DOOR (HARD)
+Same as door soft, but triggered from the pin (hard switch). In addition it activates the yeti flashing red light - which is a problem (see below)
+
+YETI flashing red light:
+In YETI grbl 1.0.7 the hard door switch also triggers a flashing red light, operated from within grbl, which has a bug. 
+Flashing red light mode is not cleared by realtime '&' command (normally sets LED to white).
+Instead, issuing this '&' command at any point after flashing has been initiated, simply freezes it on either red or nothing. 
+To resume normal LED functions (when not in door state any more) send a normal LED command. Obviously this is a problem when streaming.
+
+RESUME:
+Realtime command.
+Use case: Intended for use in resuming from a door state. Spindle will fire up for a few seconds before continuing to operate the line buffer.
+
+
+
+
+
+RESET:
+Completely clears grbl, including buffers and state.
+Does not change LED state (coz that's cutom YETI).
+e.g. Door state --> Idle
+
+
+
+'''
+
     # On soft-reset, grbl is locked - that means it won't respond to anything until it is unlocked (or homed)
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
