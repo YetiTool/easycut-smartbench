@@ -329,7 +329,9 @@ class WifiScreen(Screen):
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
  
     def on_pre_enter(self):
-        if sys.platform != 'win32':    
+        if sys.platform != 'win32':
+            print (str(os.system('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf'))).split('=')
+            
             self.network_name.text = (str(os.system('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf'))).split('=')[1]
             self.country.text = (str(os.system('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf'))).split('=')[1]
         
