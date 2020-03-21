@@ -142,6 +142,10 @@ Builder.load_string("""
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
                 Button:
+                    text: "Reset"
+                    on_press: root.send_grbl_reset()
+                    size_hint_y:0.1
+                Button:
                     text: "Clear"
                     on_press: root.clear_monitor()
                     size_hint_y:0.1
@@ -250,14 +254,8 @@ class GCodeMonitor(Widget):
         
         self.monitor_text_buffer = ['Welcome to the GCode console...']
 
-#     def pause_status_toggle(self):
-#         if self.STATUS_PAUSE == False:
-#             self.STATUS_PAUSE = True
-#         else: 
-#             self.STATUS_PAUSE = False
-#         
-#     def unpause_status_updates(self):
-#         Clock.schedule_once(lambda dt: self.pause_status_toggle(),1.5)
+    def send_grbl_reset(self):
+        self.m._grbl_soft_reset() # Soft-reset.
 
         
         
