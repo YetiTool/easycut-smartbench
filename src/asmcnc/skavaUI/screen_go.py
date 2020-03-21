@@ -325,10 +325,6 @@ class GoScreen(Screen):
             
         else:
             
-            if self.paused == False:
-                self.m.hold()
-            
-            self.m.s.is_job_streaming = False
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
     def play_pause_button_press(self):

@@ -141,7 +141,8 @@ class RouterMachine(object):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)        
+        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
+               
 
         
     def stop_for_a_stream_pause(self):
@@ -154,17 +155,21 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self.s.is_job_streaming = True
 
-    def set_pause(self, pause):
-        self.is_machine_paused = pause
+    def set_pause(self, pauseBool):
+        self.is_machine_paused = pauseBool
 
 
-#     def cancel_from_soft_stop_popup(self):
-#         self.m.s.is_job_streaming = True
-#         self.m.soft_reset() # soft-reset
-#         self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!
-#         # BUT it may have lost the file? Cancel stream flushes the input, so even if machine remembers where it is, easycut probably doesn't.  
-#         self.m.resume()
+ 
+    def stop_from_soft_stop_cancel(self):
+        self._stop_all_streaming()
+        self._grbl_soft_reset()
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
 
+        # Could be refined - don't know if delay needed, or indeed purpose of call               
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+
+        
 
     
     # Internal calls

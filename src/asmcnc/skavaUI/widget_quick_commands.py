@@ -165,7 +165,6 @@ class QuickCommands(Widget):
         self.m.stop_from_quick_command_reset()
     
     def stop(self):
-        self.m.hold()        
         popup_stop_press.PopupStop(self.m, self.sm)
 
     def proceed_to_go_screen(self):
