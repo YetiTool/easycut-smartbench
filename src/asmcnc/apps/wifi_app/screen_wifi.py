@@ -330,7 +330,10 @@ class WifiScreen(Screen):
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
-                
+        if sys.platform != 'win32':
+            self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
+            self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
+                    
     def connect_wifi(self):
 
         # get network name and password from text entered (widget)
