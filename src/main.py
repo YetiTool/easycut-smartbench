@@ -54,28 +54,49 @@ from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 from asmcnc.skavaUI import screen_powercycle_alert
 
+# developer testing
 Cmport = 'COM3'
 
+# Current version active/working on
+version = '1.1.0'
+
+# default starting screen
 start_screen = 'safety'
 
-# Start up configuration
+
+def check_and_update_config():
+    
+    if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
+        ver0_configuration()
+        os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
+        os.system('sudo reboot')
+    
+    def ver0_configuration():
+        if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
+            os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
+            os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
+            os.system('sudo sed -i "s/version=0/version=' + version + '/" /home/pi/easycut-smartbench/src/config.txt')
+
+# Config management
 if sys.platform != 'win32':
     
+    ## Easycut config
+    check_and_update_config()
+    
+    # Check whether machine needs to be power cycled (currently only after a software update)
     pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
-    print 'pc_alert'
-    print pc_alert
     if pc_alert.startswith('power_cycle_alert=True'):
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
 
+
+    # System config (this should eventually be moved into platform management)
+    # Update GPU memory to handle more app
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
     if case.startswith('gpu_mem=128'):
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
         os.system('sudo reboot')   
 
-    else:
-        print "gpu mem already 256"
-        print case
 
 class SkavaUI(App):
 
@@ -153,3 +174,4 @@ class SkavaUI(App):
 if __name__ == '__main__':
 
     SkavaUI().run()
+    
