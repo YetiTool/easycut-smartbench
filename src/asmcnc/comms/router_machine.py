@@ -119,8 +119,9 @@ class RouterMachine(object):
         self._grbl_soft_reset()
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
+        # The user should be prompted to home in the alarm message
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        # The user should be prompted to home
+        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
 
         
     # Cancel all streams to stop EC continuing to send stuff after a reset (and then continuing to move!)

@@ -113,7 +113,6 @@ class AlarmScreenClass(Screen):
     def quit_to_home(self):
         
         self.m.resume_from_alarm()
-        self.m.set_led_blue()
         
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen     
