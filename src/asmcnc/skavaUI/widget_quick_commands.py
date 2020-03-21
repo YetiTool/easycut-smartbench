@@ -162,9 +162,7 @@ class QuickCommands(Widget):
         self.m.home_all()
   
     def reset(self):
-        self.m.soft_reset()
-        Clock.schedule_once(lambda dt: self.m.unlock_after_alarm(), 0.25)
-        
+        self.m.stop_from_quick_command_reset()
     
     def stop(self):
         self.m.hold()        

@@ -68,6 +68,10 @@ class RouterMachine(object):
 
     
     '''
+    
+    Working doc (WARNING, may not be updated):
+    https://docs.google.com/document/d/1iEII2Yl9jmwNsMWgSrnNJ-6phimv7sJFLdcrkriSAb0/edit#heading=h.jjpupza6jss
+    
     Understanding what start/stop commands to use:
     
     DOOR (SOFT).
@@ -90,7 +94,6 @@ class RouterMachine(object):
     RESUME:
     Realtime command.
     Use case: Intended for use in resuming from a door state. Spindle will fire up for a few seconds before continuing to operate the line buffer.
-    
     
     INCOMING ALARM:
     Suspends Grbl
@@ -123,18 +126,20 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
 
-
+    # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
     def stop_from_gcode_error(self):
-        
-        # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
-        
         self._grbl_feed_hold()
         # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
-        
+
+    def stop_from_quick_command_reset(self):
+        self._stop_all_streaming()
+        self._grbl_soft_reset()
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)        
 
     # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
     def _stop_all_streaming(self):
@@ -142,6 +147,26 @@ class RouterMachine(object):
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     
+    # Internal grbl calls
+
+    def _grbl_resume(self):
+        self.s.write_realtime('~', altDisplayText = 'Resume')
+
+    def _grbl_feed_hold(self):
+        self.s.write_realtime('!', altDisplayText = 'Resume')
+
+    def _grbl_soft_reset(self):
+        self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
+
+    def _grbl_door(self):
+        self.s.write_realtime('\x84', altDisplayText = 'Door')
+    
+    def _grbl_unlock(self):
+        self.s.write_command('$X')
+
+
+
+
     # LEGACY COMMANDS
 
     def soft_reset(self):
@@ -168,23 +193,6 @@ class RouterMachine(object):
     def door(self):
         self._grbl_door()
 
-
-    # Internal grbl calls
-
-    def _grbl_resume(self):
-        self.s.write_realtime('~', altDisplayText = 'Resume')
-
-    def _grbl_feed_hold(self):
-        self.s.write_realtime('!', altDisplayText = 'Resume')
-
-    def _grbl_soft_reset(self):
-        self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
-
-    def _grbl_door(self):
-        self.s.write_realtime('\x84', altDisplayText = 'Door')
-    
-    def _grbl_unlock(self):
-        self.s.write_command('$X')
 
 
 
