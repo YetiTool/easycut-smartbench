@@ -120,7 +120,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#e6c300FF')
-                    on_release:
+                    on_press:
                         root.button_press()
                         
                     BoxLayout:
@@ -167,13 +167,12 @@ class ErrorScreenClass(Screen):
             self.user_instruction = 'Streaming to Smartbench has been paused. Returning to EasyCut will resume stream.'
             self.button_function = self.return_to_screen
     
-    def button_press(self):
-        
+    def button_press(self):       
         if self.button_function == 'go':
-            self.sm.current = 'go'
-            
-        elif self.button_function == self.return_to_screen:
+            self.sm.current = self.return_to_screen
+        else:
             self.m.resume()
+            
             if self.sm.has_screen(self.return_to_screen):
                 self.sm.current = self.return_to_screen     
             else: 
