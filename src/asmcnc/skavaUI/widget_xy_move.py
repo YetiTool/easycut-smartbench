@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_virtual_bed
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -409,7 +410,9 @@ class XYMove(Widget):
             self.m.go_y_datum()
 
     def set_x_datum(self):
-        self.m.set_x_datum()
+        warning = 'Is this where you want to set your\n[b]X[/b] datum?'
+        popup_info.PopupDatum(self.sm, self.m, 'X', warning)
 
     def set_y_datum(self):
-        self.m.set_y_datum()
+        warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
+        popup_info.PopupDatum(self.sm, self.m, 'Y', warning)
