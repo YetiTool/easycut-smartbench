@@ -683,13 +683,13 @@ class SerialConnection(object):
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
 
-# 
-#         elif message.startswith('ALARM:'):
-#             log('ALARM from GRBL: ' + message)
-#             if self.sm.current != 'alarmScreen':
-#                 self.sm.get_screen('alarmScreen').message = message
-#                 self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
-#                 self.sm.current = 'alarmScreen'
+ 
+        elif message.startswith('ALARM:'):
+            log('ALARM from GRBL: ' + message)
+            if self.sm.current != 'alarmScreen':
+                self.sm.get_screen('alarmScreen').message = message
+                self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
+                self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")

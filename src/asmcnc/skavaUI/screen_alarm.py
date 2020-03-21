@@ -14,15 +14,15 @@ import sys, os
 
 ALARM_CODES = {
 
-    "ALARM:1" : "Hard limit triggered. Machine position is likely lost due to sudden and immediate halt. Re-homing is highly recommended.",
-    "ALARM:2" : "G-code motion target exceeds machine travel. Machine position safely retained. Alarm may be unlocked.",
-    "ALARM:3" : "Reset while in motion. Grbl cannot guarantee position. Lost steps are likely. Re-homing is highly recommended.",
-    "ALARM:4" : "Probe fail. The probe is not in the expected initial grbl_state before starting probe cycle, where G38.2 and G38.3 is not triggered and G38.4 and G38.5 is triggered.",
-    "ALARM:5" : "Probe fail. Probe did not contact the workpiece within the programmed travel for G38.2 and G38.4.",
+    "ALARM:1" : "An end-of-axis limit switch was triggered during a move. The machine's position was likely lost. Re-homing is highly recommended.",
+    "ALARM:2" : "The requested motion target exceeds the machine's travel.",
+    "ALARM:3" : "Machine was reset while in motion and cannot guarantee position. Lost steps are likely. Re-homing is recommended.",
+    "ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
+    "ALARM:5" : "Probe fail. Probe did not contact the workpiece within the programmed travel.",
     "ALARM:6" : "Homing fail. Reset during active homing cycle.",
-    "ALARM:7" : "Homing fail. Safety door was opened during active homing cycle.",
-    "ALARM:8" : "Homing fail. Cycle failed to clear limit switch when pulling off. Try increasing pull-off setting or check wiring.",
-    "ALARM:9" : "Homing fail. Could not find limit switch within search distance. Defined as 1.5 * max_travel on search and 5 * pull-off on locate phases.",
+    "ALARM:7" : "Homing fail. Safety switch was activated during the homing cycle.",
+    "ALARM:8" : "Homing fail. Cycle failed to clear limit switch when pulling off.",
+    "ALARM:9" : "Homing fail. Could not find limit switch within search distance.",
 
 }
 
@@ -76,7 +76,7 @@ Builder.load_string("""
                 font_size: '18sp'
                 halign: 'left'
                 valign: 'middle'
-                text: 'If the axes are near limit switches, de-power the machine and move the axes off the switches.'
+                text: 'SMARTBENCH must be re-homed before conituning'
 
             Label:
                 text_size: self.size
@@ -142,13 +142,18 @@ class AlarmScreenClass(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
+        
         # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(self.message, "")
 #        self.alarm_description = ALARM_CODES.get("ALARM:4", "") (just for testing)  
         self.m.set_state('Alarm')
 
     def quit_to_home(self):
+        
+        self.m.resume_from_alarm()
+        
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen     
         else: 
             self.sm.current = 'lobby'
+            

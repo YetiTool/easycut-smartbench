@@ -92,21 +92,45 @@ class RouterMachine(object):
     Use case: Intended for use in resuming from a door state. Spindle will fire up for a few seconds before continuing to operate the line buffer.
     
     
+    INCOMING ALARM:
+    Suspends Grbl
+    Firstly, needs a RESET. So impossible to recover a stream since the buffer gets lost - it's time to start again.
+    THEN, in addition, the machine must HOME or UNLOCK
     
-    
+    UNLOCK:
+    Not realtime: '$X'
+    If the machine has been REST after an ALARM, then it isn't allowed to move unless it is unlocked or homed
+    It has no other function
     
     RESET:
+    Realtime
     Completely clears grbl, including buffers and state.
+    If done during motion, will thro ALARM. Otherwise normal operations resume (no homing req etc).
     Does not change LED state (coz that's cutom YETI).
     e.g. Door state --> Idle
     
     
     
     '''
+    # Machine has stopped without warning and probably lost position
+    def resume_from_alarm(self):
+        self._stop_all_streaming()
+        # Reset to get out of Alarm mode. All buffers will be dumped.
+        self._grbl_soft_reset()
+        # Now grbl won't allow anything until machine is rehomed or unlocked
+        # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
+        # The user should be prompted to home
 
+        
+    # Cancel all streams to stop EC continuing to send stuff after a reset (and then continuing to move!)
+    def _stop_all_streaming(self):
+        if self.s.is_job_streaming == True: self.s.cancel_stream() 
+        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
+    
+    # LEGACY COMMANDS
 
-    # On soft-reset, grbl is locked - that means it won't respond to anything until it is unlocked (or homed)
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
@@ -132,7 +156,8 @@ class RouterMachine(object):
     def door(self):
         self._grbl_door()
 
-    # Door status: 
+
+    # Internal grbl calls
 
     def _grbl_resume(self):
         self.s.write_realtime('~', altDisplayText = 'Resume')

@@ -87,7 +87,7 @@ Builder.load_string("""
                 size_hint_y: 0.8
                 text_size: self.size
                 font_size: '24sp'
-                text: '[b]ERROR[/b]\\nSmartBench could not process the last command:'
+                text: '[b]ERROR[/b]\\nSmartBench could not process a command:'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
