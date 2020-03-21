@@ -194,4 +194,3 @@ class ShapeCutterLandingScreenClass(Screen):
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-  
