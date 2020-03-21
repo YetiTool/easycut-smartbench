@@ -126,9 +126,9 @@ Builder.load_string("""
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
                                 on_release:
-                                    root.play_pause_button_press()
                                     self.background_color = hex('#F4433600')
                                 on_press:
+                                    root.play_pause_button_press()                                
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
@@ -338,7 +338,7 @@ class GoScreen(Screen):
         if self.paused == True:
             self.pause_job()
             
-        if self.paused == False: 
+        if self.paused == False:
             self.resume_job()
             
     def pause_job(self):
@@ -363,7 +363,7 @@ class GoScreen(Screen):
 
         # Reset counter and flags
         self.start_stop_button_press_counter = 0
-        self.job_in_progress == False
+        self.job_in_progress = False
         self.paused = False
         
         # Update images

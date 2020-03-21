@@ -399,7 +399,7 @@ class SerialConnection(object):
         if message.startswith('error'):
             log('ERROR from GRBL: ' + message)
             
-            if self.suppress_error_screens == False:
+            if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
                 self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'
@@ -551,10 +551,10 @@ class SerialConnection(object):
 
             if (status_parts[0] != "Idle" and
                 status_parts[0] != "Run" and
-                status_parts[0] != "Hold" and
+                not  (status_parts[0]).startswith("Hold") and
                 status_parts[0] != "Jog" and
                 status_parts[0] != "Alarm" and
-                status_parts[0] != "Door" and
+                not (status_parts[0]).startswith("Door") and
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
@@ -667,6 +667,16 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
                 
+                elif part.startswith("Door") and self.m.is_machine_paused == False:
+                    if part.startswith("Door:3"):
+                        pass
+                    else:
+                        print "Hard " + self.m_state
+                        self.m.hold()
+                        if self.sm.current != 'door':
+                            self.sm.get_screen('door').return_to_screen = self.sm.current 
+                            self.sm.current = 'door'
+                
                 else:
                     continue
 
@@ -676,10 +686,10 @@ class SerialConnection(object):
 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            self.sm.get_screen('alarmScreen').message = message
-            self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current # ineffective
-            self.sm.current = 'alarmScreen'
-            
+            if self.sm.current != 'alarmScreen':
+                self.sm.get_screen('alarmScreen').message = message
+                self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
+                self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             setting_and_value = message.split("=")

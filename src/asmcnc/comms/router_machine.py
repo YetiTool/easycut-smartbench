@@ -32,6 +32,7 @@ class RouterMachine(object):
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     is_check_mode_enabled = False    
 
+    is_machine_paused = False
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -193,13 +194,21 @@ class RouterMachine(object):
 #             return False
 
     def hold(self):
-        self.door()
+        self.set_pause(True)
+        if not self.state().startswith('Door'): 
+            print "soft door"
+            self.door()
     
     def resume(self):
-        self.s.write_realtime('~', altDisplayText = 'Resume')       
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        self.s.write_realtime('~', altDisplayText = 'Resume')
         # Restore LEDs
-        if sys.platform != "win32":
-            self.s.write_realtime('&', altDisplayText = 'LED restore')
+#         if sys.platform != "win32":
+#             self.s.write_realtime('&', altDisplayText = 'LED restore')
+#             self.set_led_colour_by_name('blue')
+    
+    def set_pause(self, pause):
+        self.is_machine_paused = pause
     
     def spindle_on(self):
         self.s.write_command('M3 S25000')
