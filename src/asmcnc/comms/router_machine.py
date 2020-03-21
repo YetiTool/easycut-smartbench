@@ -123,8 +123,20 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
 
+
+    def stop_from_gcode_error(self):
         
-    # Cancel all streams to stop EC continuing to send stuff after a reset (and then continuing to move!)
+        # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
+        
+        self._grbl_feed_hold()
+        # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
+        Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
+
+    def resume_from_gcode_error(self):
+        Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
+        
+
+    # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
     def _stop_all_streaming(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() 
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
@@ -136,7 +148,6 @@ class RouterMachine(object):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
         self._grbl_soft_reset()
-        
 
     def hold(self):
         self.set_pause(True)
@@ -162,6 +173,9 @@ class RouterMachine(object):
 
     def _grbl_resume(self):
         self.s.write_realtime('~', altDisplayText = 'Resume')
+
+    def _grbl_feed_hold(self):
+        self.s.write_realtime('!', altDisplayText = 'Resume')
 
     def _grbl_soft_reset(self):
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
