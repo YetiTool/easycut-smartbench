@@ -476,7 +476,7 @@ class SerialConnection(object):
 #             
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
