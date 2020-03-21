@@ -58,7 +58,7 @@ from asmcnc.skavaUI import screen_powercycle_alert
 Cmport = 'COM3'
 
 # Current version active/working on
-version = '1.1.0'
+initial_version = 'v1.1.0'
 
 # default starting screen
 start_screen = 'safety'
@@ -75,7 +75,7 @@ def check_and_update_config():
         if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
             os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
             os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
-            os.system('sudo sed -i "s/version=0/version=' + version + '/" /home/pi/easycut-smartbench/src/config.txt')
+            os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')
 
 # Config management
 if sys.platform != 'win32':

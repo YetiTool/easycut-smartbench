@@ -328,9 +328,7 @@ class DeveloperScreen(Screen):
         self.fw_version_label.text =str(self.m.s.fw_version)
 
     def get_sw_update(self): 
-        os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
-        os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
-        os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt') 
+        self.set.get_sw_update()
         self.sm.current = 'rebooting'
 
 ## Diagnostics

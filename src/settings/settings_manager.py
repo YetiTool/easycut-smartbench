@@ -4,7 +4,6 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import csv
 import sys,os
 
 class Settings(object):
@@ -42,3 +41,14 @@ class Settings(object):
 
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read())
+
+    def get_sw_update(self):
+        
+        if sys.platform != 'win32':
+            if self.latest_sw_version != '':
+        ##      Update SW according to latest release: 
+                os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
+                os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
+                os.system('sudo sed -i "s/version=' + self.sw_version + '/version=' + self.latest_sw_version + '/" /home/pi/easycut-smartbench/src/config.txt')
+                os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
+            else: print "Software already up to date"
