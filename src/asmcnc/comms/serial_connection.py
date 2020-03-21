@@ -667,15 +667,15 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
                 
-                elif part.startswith("Door") and self.m.is_machine_paused == False:
-                    if part.startswith("Door:3"):
-                        pass
-                    else:
-                        print "Hard " + self.m_state
-                        self.m.hold()
-                        if self.sm.current != 'door':
-                            self.sm.get_screen('door').return_to_screen = self.sm.current 
-                            self.sm.current = 'door'
+#                 elif part.startswith("Door") and self.m.is_machine_paused == False:
+#                     if part.startswith("Door:3"):
+#                         pass
+#                     else:
+#                         print "Hard " + self.m_state
+#                         self.m.hold()
+#                         if self.sm.current != 'door':
+#                             self.sm.get_screen('door').return_to_screen = self.sm.current 
+#                             self.sm.current = 'door'
                 
                 else:
                     continue

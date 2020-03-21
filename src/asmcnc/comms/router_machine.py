@@ -72,30 +72,41 @@ class RouterMachine(object):
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
         self._grbl_soft_reset()
         
-    def _grbl_soft_reset(self):
-        self.s.write_realtime("\x18", altDisplayText = 'Soft reset') # Soft-reset. This forces the need to home when the controller starts up
-
 
     def hold(self):
         self.set_pause(True)
-        if not self.state().startswith('Door'): 
-            print "soft door"
-            self.door()
+        if not self.state().startswith('Door'): self.door()
     
     def resume(self):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.s.write_realtime('~', altDisplayText = 'Resume')
-        if sys.platform != "win32": self.s.write_realtime('&', altDisplayText = 'LED restore')
-
+        self._grbl_resume()
+        self.led_restore()
+        
     def unlock_after_alarm(self):
-        self.s.write_command('$X')
+        self._grbl_unlock()
         # Restore LEDs
         if sys.platform != "win32":
             self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
 
     def door(self):
+        self._grbl_door()
+
+    # Door status: 
+
+    def _grbl_resume(self):
+        self.s.write_realtime('~', altDisplayText = 'Resume')
+
+    def _grbl_soft_reset(self):
+        self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
+
+    def _grbl_door(self):
         self.s.write_realtime('\x84', altDisplayText = 'Door')
+    
+    def _grbl_unlock(self):
+        self.s.write_command('$X')
+
+
 
 # COMMS
 
@@ -457,6 +468,15 @@ class RouterMachine(object):
     def set_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
         
+    #### CONFIRMED ACTIVE LEDS CMDS    
+        
     def set_led_blue(self):
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
+    
+    def set_led_red(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
 
+    def led_restore(self):
+        self.s.write_realtime('&', altDisplayText = 'LED restore')

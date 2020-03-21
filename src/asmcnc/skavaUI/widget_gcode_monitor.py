@@ -121,30 +121,64 @@ Builder.load_string("""
                     text: "Settings"
                     on_press: root.send_gcode_preset("$$")
                     size_hint_y:0.1
-                Button:
-                    text: "Params"
-                    on_press: root.send_gcode_preset("$#")
-                    size_hint_y:0.1
-                Button:
-                    text: "State"
-                    on_press: root.send_gcode_preset("$G")
-                    size_hint_y:0.1
-                Button:
-                    text: "Build"
-                    size_hint_y:0.1
-                    on_press: root.send_gcode_preset("$I")
-                Button:
-                    text: "Check $C"
-                    on_press: root.toggle_check_mode()
-                    size_hint_y:0.1
-                Button:
-                    text: "Help"
-                    on_press: root.send_gcode_preset("$")
-                    size_hint_y:0.1
+
+#                 Button:
+#                     text: "Params"
+#                     on_press: root.send_gcode_preset("$#")
+#                     size_hint_y:0.1
+#                 Button:
+#                     text: "State"
+#                     on_press: root.send_gcode_preset("$G")
+#                     size_hint_y:0.1
+#                 Button:
+#                     text: "Build"
+#                     size_hint_y:0.1
+#                     on_press: root.send_gcode_preset("$I")
+#                 Button:
+#                     text: "Check $C"
+#                     on_press: root.toggle_check_mode()
+#                     size_hint_y:0.1
+#                 Button:
+#                     text: "Help"
+#                     on_press: root.send_gcode_preset("$")
+#                     size_hint_y:0.1
+ 
+######### START/STOP DEBUG
+ 
+ 
                 Button:
                     text: "Reset"
                     on_press: root.send_grbl_reset()
                     size_hint_y:0.1
+ 
+                Button:
+                    text: "Door"
+                    on_press: root.send_grbl_door()
+                    size_hint_y:0.1
+ 
+                Button:
+                    text: "Resume"
+                    on_press: root.send_grbl_resume()
+                    size_hint_y:0.1
+ 
+                Button:
+                    text: "Unlock"
+                    on_press: root.send_grbl_unlock()
+                    size_hint_y:0.1
+ 
+                Button:
+                    text: "LED red"
+                    on_press: root.send_led_red()
+                    size_hint_y:0.1
+ 
+                Button:
+                    text: "LED restore"
+                    on_press: root.send_led_restore()
+                    size_hint_y:0.1
+ 
+
+######### END ############
+ 
                 Button:
                     text: "Clear"
                     on_press: root.clear_monitor()
@@ -254,10 +288,23 @@ class GCodeMonitor(Widget):
         
         self.monitor_text_buffer = ['Welcome to the GCode console...']
 
+
+######### START/STOP DEBUG
+
     def send_grbl_reset(self):
-        self.m._grbl_soft_reset() # Soft-reset.
-
+        self.m._grbl_soft_reset()
         
-        
+    def send_grbl_door(self):    
+        self.m._grbl_door()
 
- 
+    def send_grbl_resume(self):
+        self.m._grbl_resume()
+
+    def send_grbl_unlock(self):
+        self.m._grbl_unlock()
+
+    def send_led_red(self):
+        self.m.set_led_red()
+
+    def send_led_restore(self):
+        self.m.led_restore()
