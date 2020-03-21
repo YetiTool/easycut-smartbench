@@ -47,7 +47,7 @@ class Settings(object):
         print self.latest_sw_version
         
         if sys.platform != 'win32':
-            if self.latest_sw_version != '':
+            if self.latest_sw_version != self.sw_version:
         ##      Update SW according to latest release: 
                 os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
                 os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
