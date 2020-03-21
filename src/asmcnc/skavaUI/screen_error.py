@@ -172,10 +172,11 @@ class ErrorScreenClass(Screen):
             self.sm.current = self.return_to_screen
         else:
             self.m.resume()
-            self.sm.current = self.return_to_screen
             
-        
-
+            if self.sm.has_screen(self.return_to_screen):
+                self.sm.current = self.return_to_screen     
+            else: 
+                self.sm.current = 'lobby'
         
          
   

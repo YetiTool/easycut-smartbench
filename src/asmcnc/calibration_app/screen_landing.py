@@ -150,4 +150,5 @@ class CalibrationLandingScreenClass(Screen):
         self.sm.current = 'prep'
 
     def on_leave(self):
-        self.sm.remove_widget(self.sm.get_screen('calibration_landing'))
+        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen':
+            self.sm.remove_widget(self.sm.get_screen('calibration_landing'))

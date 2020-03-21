@@ -197,7 +197,7 @@ Builder.load_string("""
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
-#                             root.go_to_initial_screen(1)
+                            root.wifi_app()
                             self.background_color = hex('#FFFFFF00')
                         on_press:
                             self.background_color = hex('#FFFFFF00')
@@ -207,8 +207,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-#                                source: "./asmcnc/skavaUI/img/lobby_app_signwriter.png"
-                                source: "./asmcnc/skavaUI/img/lobby_sign_writer.png"
+                                source: "./asmcnc/skavaUI/img/lobby_app_wifi.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -216,7 +215,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Sign Writer'
+                        text: 'Wifi App'
                         
                 BoxLayout:
                     orientation: 'vertical'
@@ -428,10 +427,7 @@ class LobbyScreen(Screen):
             self.m.set_led_blue()
  
     def quit_to_home(self):
-        #self.sm.transition = SlideTransition()
-        #self.sm.transition.direction = 'up' 
-        self.sm.get_screen('errorScreen').return_to_screen = 'home'
-        self.sm.get_screen('alarmScreen').return_to_screen = 'home'
+        self.am.start_pro_app()
         self.sm.current = 'home'
     
     def calibrate_smartbench(self):
@@ -439,6 +435,9 @@ class LobbyScreen(Screen):
     
     def shapecutter_app(self):
         self.am.start_shapecutter_app()
+
+    def wifi_app(self):
+        self.am.start_wifi_app()
     
     def go_to_initial_screen(self, dt):
         #self.sm.transition = NoTransition()
