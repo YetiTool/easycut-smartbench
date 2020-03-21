@@ -58,7 +58,7 @@ from asmcnc.skavaUI import screen_powercycle_alert
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v0.4.0'
+initial_version = 'v1.1.0'
 
 # default starting screen
 start_screen = 'safety'
