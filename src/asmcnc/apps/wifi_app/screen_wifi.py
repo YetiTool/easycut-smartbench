@@ -328,13 +328,11 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
  
-    def on_pre_enter(self):
-        if sys.platform != 'win32':
-            self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-#             self.country.text = (str(os.system('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf'))).split('=')[1]
-#         
     def on_enter(self):
         self.refresh_ip_label_value(1)
+        if sys.platform != 'win32':
+            self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
+            self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
                     
     def connect_wifi(self):
 
