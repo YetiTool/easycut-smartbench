@@ -67,23 +67,16 @@ Builder.load_string("""
 #             Label:
 #                 text_size: self.size
 #                 font_size: '18sp'
-#                 halign: 'center'
-#                 valign: 'top'
-#                 text: 'To clear the alarm state:'
-              
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'left'
-                valign: 'middle'
-                text: 'SMARTBENCH must be re-homed before conituning'
-
-            Label:
-                text_size: self.size
-                font_size: '18sp'
-                halign: 'left'
-                valign: 'middle'
-                text: 'If the axes are away from the limit switches, RESET and UNLOCK the machine.'
+#                 halign: 'left'
+#                 valign: 'middle'
+#                 text: 'SMARTBENCH must be re-homed before continuing'
+# 
+#             Label:
+#                 text_size: self.size
+#                 font_size: '18sp'
+#                 halign: 'left'
+#                 valign: 'middle'
+#                 text: 'If the axes are away from the limit switches, RESET and UNLOCK the machine.'
                 
             BoxLayout:
                 orientation: 'horizontal'
