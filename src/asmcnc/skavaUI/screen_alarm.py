@@ -33,7 +33,6 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            #rgba: hex('#0d47a1FF')
             rgba: hex('#d60000FF')
         Rectangle: 
             size: self.size
@@ -64,19 +63,6 @@ Builder.load_string("""
                 valign: 'top'
                 text: root.alarm_description 
 
-#             Label:
-#                 text_size: self.size
-#                 font_size: '18sp'
-#                 halign: 'left'
-#                 valign: 'middle'
-#                 text: 'SMARTBENCH must be re-homed before continuing'
-# 
-#             Label:
-#                 text_size: self.size
-#                 font_size: '18sp'
-#                 halign: 'left'
-#                 valign: 'middle'
-#                 text: 'If the axes are away from the limit switches, RESET and UNLOCK the machine.'
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -103,20 +89,6 @@ Builder.load_string("""
                             font_size: '20sp'
                             text: 'Return'
                         
-# This is code from when the alarm screen contained an image. It's broken, but might want to come back to it:                     
-#                     Image: 
-#                         id: image_alarming
-#                         #source: root.alarm_image
-#                         #source: "./asmcnc/skavaUI/img/popup_alarm_visual2.png"
-#                         source: "./asmcnc/skavaUI/img/lobby_pro.png"
-#                         center_x: self.parent.center_x
-#                         center_y: self.parent.center_y
-#                         #size: self.parent.width, self.parent.height
-#                         allow_stretch: False
-#                         keep_ratio: True
-#                         opacity: 1
-
-    
             
 """)
 
@@ -126,8 +98,6 @@ class AlarmScreenClass(Screen):
     alarm_description = StringProperty()
     message = StringProperty()
     return_to_screen = 'home'
-    # alarm_image = StringProperty('./asmcnc/skavaUI/img/popup_alarm_visual.png')
-
     
     def __init__(self, **kwargs):
         super(AlarmScreenClass, self).__init__(**kwargs)
@@ -136,14 +106,14 @@ class AlarmScreenClass(Screen):
     
     def on_enter(self):
         
-        # use the message to get the alarm description
         self.alarm_description = ALARM_CODES.get(self.message, "")
-#        self.alarm_description = ALARM_CODES.get("ALARM:4", "") (just for testing)  
         self.m.set_state('Alarm')
+        self.m.led_restore()
 
     def quit_to_home(self):
         
         self.m.resume_from_alarm()
+        self.m.set_led_blue()
         
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen     
