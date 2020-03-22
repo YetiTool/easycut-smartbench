@@ -6,9 +6,11 @@ Screen 18 for the Shape Cutter App
 '''
 
 from kivy.lang import Builder
+from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from asmcnc.apps.shapeCutter_app.screens import popup_machine
 
 Builder.load_string("""
 
@@ -305,7 +307,18 @@ class ShapeCutter18ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
-        self.m.jog_absolute_single_axis(self, 'Z', -19, 10000)
+        self.m.jog_absolute_single_axis('Z', -19, 10000)
+        
+        # popup 
+        popup_Zmove = popup_machine.PopupWait(self.shapecutter_sm)        
+        
+        # Clock function to check machine state
+        def check_Zmove_finished():
+            if self.m.state().startswith('Idle'):
+                Clock.unschedule(check_Zmove_status)
+                popup_Zmove.popup.dismiss()
+                
+        check_Zmove_status = Clock.schedule_interval(lambda dt: check_Zmove_finished(), 0.5)
 
 # Action buttons       
     def get_info(self):
