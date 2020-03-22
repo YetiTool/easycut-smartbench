@@ -1008,7 +1008,7 @@ class ScreenManagerShapeCutter(object):
         def auto_go(dt):
             self.sm.get_screen('go').start_stop_button_press()
             
-        Clock.schedule_once(auto_go, 0.5)
+        Clock.schedule_once(auto_go, 0.4)
 
     def homing_screen(self, cancel_to_screen, return_to_screen):
         
