@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 
 from asmcnc.skavaUI import widget_z_height
+from kivy.clock import Clock
 
 
 Builder.load_string("""
@@ -214,6 +215,8 @@ class ZMove(Widget):
      
     def set_jobstart_z(self):
         self.m.set_jobstart_z()
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+
      
     def go_to_jobstart_z(self):
         self.m.go_to_jobstart_z()
