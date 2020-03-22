@@ -657,7 +657,11 @@ class ShapeCutterJobParameters(object):
     def set_job_envelope(self, lines):
 
         # there's a bug here - needs looking at! 
- 
+        if self.shape_dict["units"] == "inches":
+            dim_unit_multiplier = 25.4
+        elif self.shape_dict["units"] == "mm":
+            dim_unit_multiplier = 1
+             
         if self.shape_dict["shape"] == "rectangle":
  
             x_values = []
@@ -686,10 +690,10 @@ class ShapeCutterJobParameters(object):
             
         elif self.shape_dict["shape"] == "circle":
             
-            self.range_x[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
-            self.range_x[1] = float(self.shape_dict["dimensions"]["D"])/2
-            self.range_y[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
-            self.range_y[1] = float(self.shape_dict["dimensions"]["D"])/2
+            self.range_x[0] = -1* float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_x[1] = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_y[0] = -1* float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_y[1] = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
             
             z_values = []
     
