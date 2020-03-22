@@ -104,7 +104,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
-                        on_press: root.set_led_yellow()
+                        on_press: root.set_led_orange()
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -223,24 +223,6 @@ Builder.load_string("""
                                             y: self.parent.y
                                             size: self.parent.width, self.parent.height
                                             allow_stretch: True
-#                                 Button:
-#                                     size_hint_x: 1
-#                                     background_color: hex('#F4433600')
-#                                     on_release:
-#                                         root.manager.current = 'template'
-#                                         self.background_color = hex('#F4433600')
-#                                     on_press:
-#                                         self.background_color = hex('#F44336FF')
-#                                     BoxLayout:
-#                                         padding: 0
-#                                         size: self.parent.size
-#                                         pos: self.parent.pos
-#                                         Image:
-#                                             source: "./asmcnc/skavaUI/img/template.png"
-#                                             center_x: self.parent.center_x
-#                                             y: self.parent.y
-#                                             size: self.parent.width, self.parent.height
-#                                             allow_stretch: True
 
                                 Label:
                                     id: file_data_label
@@ -411,4 +393,5 @@ class HomeScreen(Screen):
 
     def set_led_blue(self): self.m.set_led_blue()
     def set_led_yellow(self): self.m.set_led_yellow()
+    def set_led_orange(self): self.m.set_led_orange()
     
