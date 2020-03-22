@@ -169,6 +169,8 @@ class ZMove(Widget):
 
     def jog_z(self, case):
 
+        self.m.set_led_colour('WHITE')
+
         feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
         
         if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
