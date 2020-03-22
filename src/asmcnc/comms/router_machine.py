@@ -523,9 +523,9 @@ class RouterMachine(object):
         if situation == "datum_has_been_set":
             strobe_colour1 = 'GREEN'
             strobe_colour2 = 'OFF'
-            colour_1_period = 0.25
-            colour_2_period = 0.25
-            cycles = 4
+            colour_1_period = 0.2
+            colour_2_period = 0.2
+            cycles = 3
             end_on_colour = self.led_colour_status
         
         self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
@@ -537,7 +537,7 @@ class RouterMachine(object):
         self.set_led_colour(strobe_colour1)
         Clock.schedule_once(lambda dt: self.set_led_colour(strobe_colour2), colour_1_period)
         self.strobe_cycle_count += 1
-        if self.strobe_cycle_count <= cycles:
+        if self.strobe_cycle_count < cycles:
             Clock.schedule_once(lambda dt: self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour), colour_1_period + colour_2_period)
         else:
             self.strobe_cycle_count = 0
