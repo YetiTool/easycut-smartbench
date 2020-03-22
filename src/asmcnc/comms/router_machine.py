@@ -456,49 +456,17 @@ class RouterMachine(object):
         self.sm.current = 'homing'
 
 
-
 # LIGHTING
 
     led_colour_status = "none"
 
-    # NEVER SEND WHEN STREAMING. Unaccounted char defining RGB will fill up the serial buffer unless handled somehow
+    # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
     def set_led_colour(self, colour_name):
 
         if colour_name != self.led_colour_status:
         
-#             self.led_colour_status = colour_name 
-#             self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-#     
-#             if colour_name == 'RED':
-#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)            
-#             elif colour_name == 'GREEN':
-#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)            
-#             elif colour_name == 'BLUE':
-#                 self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
-#             elif colour_name == 'WHITE':
-#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-#                 self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-#             elif colour_name == 'YELLOW':
-#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-#             elif colour_name == 'ORANGE':
-#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-#                 self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
-#             elif colour_name == 'OFF':
-#                 print ("LEDs off\n")
-#             
-#             else: print ("Colour not recognised: " + colour_name + "\n")
- 
             self.led_colour_status = colour_name 
 
-#         if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
-#         if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
-#         if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
-#         if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
-#         if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
-
-     
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
             elif colour_name == 'GREEN':    self.s.write_command("*L00FF00")
             elif colour_name == 'BLUE':     self.s.write_command("*L0000FF")
@@ -507,14 +475,6 @@ class RouterMachine(object):
             elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L000000")
-             
-#             if colour_name == 'RED': self.s.write_realtime("*LFF0000\n")
-#             elif colour_name == 'GREEN': self.s.write_realtime("*L00FF00\n")
-#             elif colour_name == 'BLUE': self.s.write_realtime("*L0000FF\n")
-#             elif colour_name == 'WHITE': self.s.write_realtime("*LFFFFFF\n")
-#             elif colour_name == 'YELLOW':  self.s.write_realtime("*LFFFF00\n")
-#             elif colour_name == 'ORANGE': self.s.write_realtime("*LFF8000\n")
-#             elif colour_name == 'OFF': self.s.write_realtime("*L000000\n")
              
             else: print ("Colour not recognised: " + colour_name + "\n")
 
@@ -527,7 +487,11 @@ class RouterMachine(object):
         # This can be unforzen by sending any normal led command (asuming that the grbl has been release from suspension ie. with a RESUME)
         self.s.write_realtime('&', altDisplayText = 'LED restore')
 
+        
+
     def strobe_led_playlist(self, situation):
+        
+        # Can be used to generate all manners of temporary lighting effects. Well most of them anyway.
         
         if situation == "datum_has_been_set":
             strobe_colour1 = 'GREEN'
@@ -555,8 +519,6 @@ class RouterMachine(object):
             cycles = 3
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
-
-
 
         else: print "Strobe situation: " + situation + " not recognised"
             
@@ -601,16 +563,3 @@ class RouterMachine(object):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
 
-    '''
-    Here's some code for Boris' implementation of the LED cmds.
-    These do not elicit an 'ok' from GRBL, but are not realtime
-    i.e. the rgb values still get loaded into the serial char buffer like every other cmd
-    '''
-        
-#     def set_led_colour_by_name(self, colour_name):
-# 
-#         if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
-#         if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
-#         if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
-#         if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
-#         if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
