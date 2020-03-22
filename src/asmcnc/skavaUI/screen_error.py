@@ -14,9 +14,9 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
 import sys, os
-
 
 ERROR_CODES = {
 
@@ -87,7 +87,7 @@ Builder.load_string("""
                 size_hint_y: 0.8
                 text_size: self.size
                 font_size: '24sp'
-                text: '[b]ERROR[/b]\\nSmartBench could not process the last command:'
+                text: '[b]ERROR[/b]\\nSmartBench could not process a command:'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -106,7 +106,7 @@ Builder.load_string("""
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
-                text: root.user_instruction
+                text: 'The job will now be cancelled. Check the gcode file before re-running it.'
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -118,7 +118,7 @@ Builder.load_string("""
                     size: self.texture_size
                     valign: 'top'
                     halign: 'center'
-                    disabled: False
+                    disabled: True
                     background_color: hex('#e6c300FF')
                     on_press:
                         root.button_press()
@@ -155,28 +155,29 @@ class ErrorScreenClass(Screen):
         self.m=kwargs['machine']  
 
     def on_enter(self):
+
+        self.getout_button.disabled = True
+        
         # use the message to get the error description        
         self.error_description = ERROR_CODES.get(self.message, "")
-        
-        if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
-            self.sm.get_screen('go').pause_job()
-            self.user_instruction = 'Job has been paused.'
-            self.button_function = 'go'
-        else:
-            self.m.hold()
-            self.user_instruction = 'Streaming to Smartbench has been paused. Returning to EasyCut will resume stream.'
-            self.button_function = self.return_to_screen
+        self.m.stop_from_gcode_error()
+        self.m.led_restore()
+
+        self.button_function = self.return_to_screen
+        Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
+
+    
+    def enable_getout_button(self):
+        self.getout_button.disabled = False
     
     def button_press(self):       
-        if self.button_function == 'go':
-            self.sm.current = self.return_to_screen
-        else:
-            self.m.resume()
-            
-            if self.sm.has_screen(self.return_to_screen):
-                self.sm.current = self.return_to_screen     
-            else: 
-                self.sm.current = 'lobby'
+        
+        self.m.resume_from_gcode_error()
+
+        if self.sm.has_screen(self.return_to_screen):
+            self.sm.current = self.return_to_screen     
+        else: 
+            self.sm.current = 'lobby'
         
          
   

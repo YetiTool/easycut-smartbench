@@ -12,9 +12,8 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
 import sys, os
-from time import sleep
+
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -320,9 +319,7 @@ class HomingScreen(Screen):
     def pre_homing_reset(self):
         
         self.layout_during_homing() 
-        self.m.soft_reset()
-        sleep(0.2)
-        self.m.unlock_after_alarm()
+        self.m.reset_pre_homing()
         self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
         
     def is_machine_idle(self, dt):  
@@ -424,7 +421,7 @@ class HomingScreen(Screen):
         else:
             # ... will trigger an alarm screen
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-            self.m.soft_reset()
+            self.m.reset_on_cancel_homing()
             self.sm.current = self.cancel_to_screen
     
     def on_leave(self):

@@ -72,7 +72,7 @@ class SerialConnection(object):
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 print('self.s. done')
-                self.suppress_error_screens = True
+#                 self.suppress_error_screens = True
                 return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
@@ -671,9 +671,9 @@ class SerialConnection(object):
                     if part.startswith("Door:3"):
                         pass
                     else:
-                        print "Hard " + self.m_state
-                        self.m.hold()
+                        self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
+                            print "Hard " + self.m_state
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
                 
@@ -683,7 +683,7 @@ class SerialConnection(object):
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
 
-
+ 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             if self.sm.current != 'alarmScreen':
@@ -822,7 +822,7 @@ class SerialConnection(object):
             self.is_sequential_streaming = False
             log("sequential stream ended")
             if self._reset_grbl_after_stream:
-                self.m.soft_reset()
+                self.m.reset_after_sequential_stream()
                 log("GRBL Reset after sequential stream ended")
 
 
@@ -830,7 +830,7 @@ class SerialConnection(object):
         self.is_sequential_streaming = False
         _sequential_stream_buffer = []
         if reset_grbl_after_cancel:
-            self.m.soft_reset()
+            self.m.reset_after_sequential_stream()
             print "GRBL Reset after sequential stream cancelled"
 
 

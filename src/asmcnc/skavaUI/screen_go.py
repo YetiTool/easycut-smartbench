@@ -325,10 +325,6 @@ class GoScreen(Screen):
             
         else:
             
-            if self.paused == False:
-                self.m.hold()
-            
-            self.m.s.is_job_streaming = False
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
     def play_pause_button_press(self):
@@ -344,15 +340,13 @@ class GoScreen(Screen):
     def pause_job(self):
         self.paused = True
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-        self.m.hold()
-        self.m.s.is_job_streaming = False
+        self.m.stop_for_a_stream_pause()
         self.job_in_progress = True
         
     def resume_job(self):
         self.paused = False
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        self.m.resume()
-        self.m.s.is_job_streaming = True
+        self.m.resume_after_a_stream_pause()
         self.job_in_progress = True
 
     def return_to_app(self):

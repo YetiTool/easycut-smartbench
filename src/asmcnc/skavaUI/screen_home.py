@@ -351,6 +351,8 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
+        self.m.set_led_blue()
+
         # Set flag for homing screen
         self.sm.get_screen('homing').return_to_screen = 'home'
         self.sm.get_screen('homing').cancel_to_screen = 'home'  
