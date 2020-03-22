@@ -305,6 +305,7 @@ class ShapeCutter18ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
+        self.m.jog_absolute_single_axis(self, 'Z', -19, 10000)
 
 # Action buttons       
     def get_info(self):
