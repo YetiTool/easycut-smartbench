@@ -190,8 +190,7 @@ class DoorScreen(Screen):
         print self.return_to_screen
         
         if self.return_to_screen == 'go' and str(self.sm.get_screen('go').job_in_progress) == 'True':
-            print "resume scheduled"
-            Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.5)
+            Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.4)
             self.return_to_app()
 
         else:
