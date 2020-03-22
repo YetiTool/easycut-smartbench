@@ -147,7 +147,7 @@ class RouterMachine(object):
     def resume_after_a_stream_pause(self):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.s.is_job_streaming = True
+        self.s.is_job_streaming = True # what to do with you
 
     def set_pause(self, pauseBool):
         self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
@@ -157,7 +157,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)         # Don't know if this, or its delay, is needed
 
     def resume_after_a_hard_door(self):
-        self.resume_after_a_stream_pause() 
+        self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self.led_restore()
 
