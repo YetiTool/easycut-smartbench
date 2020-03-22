@@ -388,9 +388,12 @@ class ShapeCutter31ScreenClass(Screen):
         self.shapecutter_sm.exit_shapecutter()
  
     def bounding_box_test(self):
-        if self.j.is_job_within_bounds() == True:
+        bounds_output = self.j.is_job_within_bounds()
+        
+        if bounds_output == True:
             self.shapecutter_sm.next_screen()
         else: 
-            description = "The job is not within the bounds of SmartBench.\n\n" + \
+            description = "The job is not within the bounds of SmartBench." + \
+            bounds_output + '\n\n' + \
             "Please go back and re-set your job datums."
-            popup_input_error.PopupInputError(self.shapecutter_sm, description)
+            popup_input_error.PopupBoundary(self.shapecutter_sm, description)
