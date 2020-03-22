@@ -336,7 +336,7 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
-        self.m.set_led_colour('BLUE')
+        Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
         
         # Set flag for homing screen
         self.sm.get_screen('homing').return_to_screen = 'home'

@@ -340,20 +340,24 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy(self):
         self.s.write_command('G10 L20 P1 X0 Y0')
-
-    def set_standby_to_pos(self):
-        self.s.write_command('G28.1')
-
-    def set_jobstart_z(self):
-        self.s.write_command('G10 L20 P1 Z0')
-        self.get_grbl_status()
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
         self.s.write_command('G10 L20 P1 X0')
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
         self.s.write_command('G10 L20 P1 Y0')
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
                 
+    def set_jobstart_z(self):
+        self.s.write_command('G10 L20 P1 Z0')
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+        self.get_grbl_status()
+
+    def set_standby_to_pos(self):
+        self.s.write_command('G28.1')
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
     
 
@@ -428,6 +432,7 @@ class RouterMachine(object):
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
     def probe_z(self):
 
+        self.set_led_colour("WHITE")
         self.s.expecting_probe_result = True
         probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
         self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
@@ -442,6 +447,7 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.5') 
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
+        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.5)
         self.zUp()    
 
     def home_all(self):
@@ -497,6 +503,7 @@ class RouterMachine(object):
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
             elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
+            elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L000000")
              
 #             if colour_name == 'RED': self.s.write_realtime("*LFF0000\n")
@@ -522,14 +529,34 @@ class RouterMachine(object):
         
         if situation == "datum_has_been_set":
             strobe_colour1 = 'GREEN'
+            strobe_colour2 = 'GREEN'
+            colour_1_period = 1
+            colour_2_period = 0.5
+            cycles = 1
+            end_on_colour = self.led_colour_status
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+
+        if situation == "standby_pos_has_been_set":
+            strobe_colour1 = 'MAGENTA'
+            strobe_colour2 = 'MAGENTA'
+            colour_1_period = 1
+            colour_2_period = 0.5
+            cycles = 1
+            end_on_colour = self.led_colour_status
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+
+        if situation == "green_pulse":
+            strobe_colour1 = 'GREEN'
             strobe_colour2 = 'OFF'
             colour_1_period = 0.2
             colour_2_period = 0.2
             cycles = 3
             end_on_colour = self.led_colour_status
-        
-        self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
+
+
+        else: print "Strobe situation: " + situation + " not recognised"
             
     strobe_cycle_count = 0
     
