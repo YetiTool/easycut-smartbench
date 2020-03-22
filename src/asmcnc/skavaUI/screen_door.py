@@ -187,6 +187,8 @@ class DoorScreen(Screen):
     def resume_stream(self):
         if self.return_to_screen == 'go' and self.sm.get_screen('go').job_in_progress == 'True':
             self.return_to_app()
+            if self.sm.get_screen('go').paused == True:
+                self.sm.get_screen('go').play_pause_button_press()
 
         else:
             self.m.resume_after_a_hard_door()    

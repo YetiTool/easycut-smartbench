@@ -58,7 +58,6 @@ class PopupStop(Widget):
         self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen?
         self.m.stop_from_soft_stop_cancel()
 
-
     def machine_resume(self, *args):
         self.m.resume_after_a_stream_pause()
         
