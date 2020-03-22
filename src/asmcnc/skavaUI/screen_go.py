@@ -247,7 +247,7 @@ class GoScreen(Screen):
     
     start_stop_button_press_counter = 0
     paused = False    
-    job_in_progress = None
+    job_in_progress = False
     
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
@@ -315,7 +315,7 @@ class GoScreen(Screen):
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
-            
+            self.job_in_progress = True
             self.stream_job()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
             #Hide back button
