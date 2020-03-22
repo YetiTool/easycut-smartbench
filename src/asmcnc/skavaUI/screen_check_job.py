@@ -281,25 +281,25 @@ class CheckingScreen(Screen):
         # Mins
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\nThe job target is too close to the X home position. The job will crash into the home position."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too close to the X home position. The job will crash into the home position."
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\nThe job target is too close to the Y home position. The job will crash into the home position."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too close to the Y home position. The job will crash into the home position."
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\nThe job target is too far from the Z home position. The router will not reach that far."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too far from the Z home position. The router will not reach that far."
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\nThe job target is too far from the X home position. The router will not reach that far."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too far from the X home position. The router will not reach that far."
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\nThe job target is too far from the Y home position. The router will not reach that far."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too far from the Y home position. The router will not reach that far."
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\nThe job target is too close to the Z home position. The job will crash into the home position."
+            error_message = error_message + "\n\n[color=#FFFFFF]The job target is too close to the Z home position. The job will crash into the home position."
             errorfound += 1 
 
         if errorfound > 0: return error_message
