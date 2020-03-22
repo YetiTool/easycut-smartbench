@@ -486,7 +486,7 @@ class RouterMachine(object):
 
     # LED DISCO inferno
 
-    rainbow_delay = 0.05
+    rainbow_delay = 0
     led_rainbow_ending_blue = [
         'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
         'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
@@ -494,7 +494,6 @@ class RouterMachine(object):
         'B1','B2','B3','B4','B5','B6','B7','B8','B9'
         ]
 
-    print led_rainbow_ending_blue
 
     rainbow_cycle_count = 0
     rainbow_cycle_limit = len(led_rainbow_ending_blue)
@@ -509,7 +508,7 @@ class RouterMachine(object):
             if self.rainbow_cycle_count < self.rainbow_cycle_limit:
                 Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_blue(), self.rainbow_delay)
             else:
-                rainbow_cycle_count = 0 # reset for next rainbow call
+                self.rainbow_cycle_count = 0 # reset for next rainbow call
 
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
