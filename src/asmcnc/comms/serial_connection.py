@@ -359,6 +359,7 @@ class SerialConnection(object):
             # Move head out of the way before moving to the job datum in XY.
 # >>>>>>> revert-196-vac_fix
             # self.m.prepare_machine() #PROBLEM
+            self.m.set_led_colour('GREEN')
             self.m.zUp()
   
         self.FLUSH_FLAG = True

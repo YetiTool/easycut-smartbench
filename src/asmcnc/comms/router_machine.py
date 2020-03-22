@@ -122,7 +122,7 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2)
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -131,13 +131,13 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
     def resume_from_gcode_error(self):
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
 
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2) 
         
     def stop_for_a_stream_pause(self):
         self.set_pause(True)  
@@ -173,10 +173,12 @@ class RouterMachine(object):
         self._stop_all_streaming()
         self._grbl_soft_reset() 
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.2)
+        Clock.schedule_once(lambda dt: self.set_led_colour("MAGENTA"),0.2)
 
     def reset_on_cancel_homing(self):
         self._stop_all_streaming()
-        self._grbl_soft_reset()        
+        self._grbl_soft_reset() 
+        Clock.schedule_once(lambda dt: self.set_led_colour("BLUE"),0.2)
         
                 
     # Internal calls
@@ -340,20 +342,24 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy(self):
         self.s.write_command('G10 L20 P1 X0 Y0')
-
-    def set_standby_to_pos(self):
-        self.s.write_command('G28.1')
-
-    def set_jobstart_z(self):
-        self.s.write_command('G10 L20 P1 Z0')
-        self.get_grbl_status()
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
         self.s.write_command('G10 L20 P1 X0')
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
         self.s.write_command('G10 L20 P1 Y0')
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
                 
+    def set_jobstart_z(self):
+        self.s.write_command('G10 L20 P1 Z0')
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
+        self.get_grbl_status()
+
+    def set_standby_to_pos(self):
+        self.s.write_command('G28.1')
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
     
 
@@ -428,6 +434,7 @@ class RouterMachine(object):
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
     def probe_z(self):
 
+        self.set_led_colour("WHITE")
         self.s.expecting_probe_result = True
         probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
         self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
@@ -442,165 +449,117 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.5') 
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
         self.zUp()    
 
     def home_all(self):
         self.sm.current = 'homing'
 
 
-
 # LIGHTING
 
-    def set_led_state(self, dt):
-        # Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
-        
-        # Don't poll if in run, economise on comms
-        if self.state().startswith('Idle'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Hold'):
-            pass # Once on hold, can't hear command
-        elif self.state().startswith('Jog'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Door'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)        
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Sleep'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Alarm'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Unknown'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Home'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+    led_colour_status = "none"
 
-    def set_led_colour_by_name(self, colour_name):
+    # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
+    def set_led_colour(self, colour_name):
 
-        if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
-        if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
-        if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
-        if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
-        if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
+        if colour_name != self.led_colour_status:
+        
+            self.led_colour_status = colour_name 
 
-    led_state = 0
-    led_states = [
-        # Red bright > dim
-        'R1',
-        'R2',
-        'R3',
-        'R4',
-        'R5',
-        'R6',
-        'R7',
-        'R8',
-        'R9',
-        'R8',
-        'R7',
-        'R6',
-        'R5',
-        'R4',
-        'R3',
-        'R2',
-        'R1',
-        'R0',
+            if colour_name == 'RED':        self.s.write_command("*LFF0000")
+            elif colour_name == 'GREEN':    self.s.write_command("*L00FF00")
+            elif colour_name == 'BLUE':     self.s.write_command("*L0000FF")
+            elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
+            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
+            elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
+            elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
+            elif colour_name == 'OFF':      self.s.write_command("*L000000")
+             
+            else: print ("Colour not recognised: " + colour_name + "\n")
+
+
+    def led_restore(self):
+        # this is special
+        # A: It's a realtime command which can be useful when streaming, or grbl is suspended
+        # B: It's exception is a bug - when the machine is in suspended DOOR mode, triggered from a hard switch:
+        # Send the command at this point means that the flashing will freeze
+        # This can be unforzen by sending any normal led command (asuming that the grbl has been release from suspension ie. with a RESUME)
+        self.s.write_realtime('&', altDisplayText = 'LED restore')
+
         
-        # Green bright > dim
-        'G1',
-        'G2',
-        'G3',
-        'G4',
-        'G5',
-        'G6',
-        'G7',
-        'G8',
-        'G9',
-        'G8',
-        'G7',
-        'G6',
-        'G5',
-        'G4',
-        'G3',
-        'G2',
-        'G1',
-        'G0',
+
+    def strobe_led_playlist(self, situation):
         
-        # Blue bright > dim
-        'B1',
-        'B2',
-        'B3',
-        'B4',
-        'B5',
-        'B6',
-        'B7',
-        'B8',
-        'B9',
-        'B8',
-        'B7',
-        'B6',
-        'B5',
-        'B4',
-        'B3',
-        'B2',
-        'B1',
-        'B0',
+        # Can be used to generate all manners of temporary lighting effects. Well most of them anyway.
         
-        # Red and green bright > dim
-        'R1 G1',
-        'R2 G2',
-        'R3 G3',
-        'R4 G4',
-        'R5 G5',
-        'R6 G6',
-        'R7 G7',
-        'R8 G8',
-        'R9 G9',
-        'R8 G8',
-        'R7 G7',
-        'R6 G6',
-        'R5 G5',
-        'R4 G4',
-        'R3 G3',
-        'R2 G2',
-        'R1 G1',
-        'R0 G0',
-        
-        # Loops back to start
+        if situation == "datum_has_been_set":
+            strobe_colour1 = 'GREEN'
+            strobe_colour2 = 'GREEN'
+            colour_1_period = 1
+            colour_2_period = 0.5
+            cycles = 1
+            end_on_colour = self.led_colour_status
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+
+        if situation == "standby_pos_has_been_set":
+            strobe_colour1 = 'MAGENTA'
+            strobe_colour2 = 'MAGENTA'
+            colour_1_period = 1
+            colour_2_period = 0.5
+            cycles = 1
+            end_on_colour = self.led_colour_status
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+
+        if situation == "green_pulse":
+            strobe_colour1 = 'GREEN'
+            strobe_colour2 = 'OFF'
+            colour_1_period = 0.2
+            colour_2_period = 0.2
+            cycles = 3
+            end_on_colour = self.led_colour_status
+            self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
+
+        else: print "Strobe situation: " + situation + " not recognised"
+            
+    strobe_cycle_count = 0
+    
+    def _strobe_loop(self, strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour):
+        self.set_led_colour(strobe_colour1)
+        Clock.schedule_once(lambda dt: self.set_led_colour(strobe_colour2), colour_1_period)
+        self.strobe_cycle_count += 1
+        if self.strobe_cycle_count < cycles:
+            Clock.schedule_once(lambda dt: self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour), colour_1_period + colour_2_period)
+        else:
+            self.strobe_cycle_count = 0
+            Clock.schedule_once(lambda dt: self.set_led_colour(end_on_colour), colour_1_period + colour_2_period)
+    
+    # LED DISCO inferno
+
+    rainbow_delay = 0.03
+    led_rainbow_ending_blue = [
+        'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
+        'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
+        'B1','B2','B3','B4','B5','B6','B7','B8','B9'
         ]
 
 
-    def update_led_state(self, dt):
+    rainbow_cycle_count = 0
+    rainbow_cycle_limit = len(led_rainbow_ending_blue)
 
+    def run_led_rainbow_ending_blue(self):
+        
         if self.state().startswith('Idle'):
-            led_commands = self.led_states[self.led_state].split(' ')
-            for led_command in led_commands:
-                self.set_led(led_command)
+            
+            self.set_rainbow_cycle_led(self.led_rainbow_ending_blue[self.rainbow_cycle_count])
+            self.rainbow_cycle_count += 1
 
-            self.led_state += 1
-            if self.led_state == len(self.led_states):
-                self.led_state = 0
-        Clock.schedule_once(self.update_led_state, 0.1)
+            if self.rainbow_cycle_count < self.rainbow_cycle_limit:
+                Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_blue(), self.rainbow_delay)
+            else:
+                self.rainbow_cycle_count = 0 # reset for next rainbow call
 
-
-    def set_led(self, command):
+    def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
-        
-    #### CONFIRMED ACTIVE LEDS CMDS    
-        
-    def set_led_blue(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
-    
-    def set_led_red(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
 
-    def led_restore(self):
-        self.s.write_realtime('&', altDisplayText = 'LED restore')
+

@@ -76,6 +76,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
+                        on_press: root.m.set_led_colour('BLUE')
                         BoxLayout:
                             padding: 20
                             spacing: 20
@@ -103,6 +104,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
+                        on_press: root.m.set_led_colour('ORANGE')
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -143,6 +145,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
+                        on_press: root.m.set_led_colour('BLUE')
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -173,8 +176,8 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_job_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_job_up.png'
+                        on_press: root.m.set_led_colour('BLUE')
                         id: home_tab
-
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -220,24 +223,6 @@ Builder.load_string("""
                                             y: self.parent.y
                                             size: self.parent.width, self.parent.height
                                             allow_stretch: True
-#                                 Button:
-#                                     size_hint_x: 1
-#                                     background_color: hex('#F4433600')
-#                                     on_release:
-#                                         root.manager.current = 'template'
-#                                         self.background_color = hex('#F4433600')
-#                                     on_press:
-#                                         self.background_color = hex('#F44336FF')
-#                                     BoxLayout:
-#                                         padding: 0
-#                                         size: self.parent.size
-#                                         pos: self.parent.pos
-#                                         Image:
-#                                             source: "./asmcnc/skavaUI/img/template.png"
-#                                             center_x: self.parent.center_x
-#                                             y: self.parent.y
-#                                             size: self.parent.width, self.parent.height
-#                                             allow_stretch: True
 
                                 Label:
                                     id: file_data_label
@@ -351,8 +336,8 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
-        self.m.set_led_blue()
-
+        Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
+        
         # Set flag for homing screen
         self.sm.get_screen('homing').return_to_screen = 'home'
         self.sm.get_screen('homing').cancel_to_screen = 'home'  
@@ -405,3 +390,7 @@ class HomeScreen(Screen):
                 break
 
         log('DONE')
+
+    def set_led_yellow(self): self.m.set_led_yellow()
+    def set_led_orange(self): self.m.set_led_orange()
+    

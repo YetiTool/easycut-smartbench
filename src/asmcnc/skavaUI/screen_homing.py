@@ -363,7 +363,7 @@ class HomingScreen(Screen):
 
         # Because we're setting grbl configs in this function (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
-
+        
         square_homing_sequence =  [
                                   '$H', # home
                                   '$20=0', # soft limits off
@@ -409,6 +409,7 @@ class HomingScreen(Screen):
             self.return_to_app()
             
     def return_to_app(self):
+        Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
         self.sm.current = self.return_to_screen
 
     def cancel_homing(self):

@@ -275,7 +275,7 @@ class GoScreen(Screen):
         self.job_in_progress = False
         
     def on_enter(self, *args):
-        
+
         self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
         
         if self.job_in_progress == True and self.job_gcode != []:
