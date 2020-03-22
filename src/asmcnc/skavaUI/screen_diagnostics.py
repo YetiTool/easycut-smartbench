@@ -58,13 +58,13 @@ Builder.load_string("""
                 text: 'LED ring:'
             Button:
                 text: 'Red'
-                on_release: root.led('red')
+                on_release: root.led('RED')
             Button:
                 text: 'Green'
-                on_release: root.led('green')
+                on_release: root.led('GREEN')
             Button:
                 text: 'Blue'
-                on_release: root.led('blue')
+                on_release: root.led('BLUE')
             Button:
                 text: 'OFF'
                 on_release: root.led('off')
@@ -169,7 +169,7 @@ class DiagnosticsScreen(Screen):
     
     def led(self, command):
         
-        self.m.set_led_colour_by_name(command)
+        self.m.set_led_colour(command)
 
 
     def move(self, case):

@@ -122,7 +122,7 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2)
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -131,13 +131,13 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
     def resume_from_gcode_error(self):
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
 
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2) 
         
     def stop_for_a_stream_pause(self):
         self.set_pause(True)  
@@ -451,176 +451,28 @@ class RouterMachine(object):
 
 # LIGHTING
 
-    def set_led_state(self, dt):
-        # Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
-        
-        # Don't poll if in run, economise on comms
-        if self.state().startswith('Idle'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Hold'):
-            pass # Once on hold, can't hear command
-        elif self.state().startswith('Jog'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Door'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)        
-            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)        
-        elif self.state().startswith('Sleep'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Alarm'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Unknown'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-        elif self.state().startswith('Home'):
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+
+    def set_led_colour(self, colour_name):
+
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+
+        if colour_name == 'RED':
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)            
+        elif colour_name == 'GREEN':
+            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)            
+        elif colour_name == 'BLUE':
+            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
+        elif colour_name == 'WHITE':
             self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-
-    def set_led_colour_by_name(self, colour_name):
-
-        if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
-        if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
-        if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
-        if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
-        if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
-
-    led_state = 0
-    led_states = [
-        # Red bright > dim
-        'R1',
-        'R2',
-        'R3',
-        'R4',
-        'R5',
-        'R6',
-        'R7',
-        'R8',
-        'R9',
-        'R8',
-        'R7',
-        'R6',
-        'R5',
-        'R4',
-        'R3',
-        'R2',
-        'R1',
-        'R0',
-        
-        # Green bright > dim
-        'G1',
-        'G2',
-        'G3',
-        'G4',
-        'G5',
-        'G6',
-        'G7',
-        'G8',
-        'G9',
-        'G8',
-        'G7',
-        'G6',
-        'G5',
-        'G4',
-        'G3',
-        'G2',
-        'G1',
-        'G0',
-        
-        # Blue bright > dim
-        'B1',
-        'B2',
-        'B3',
-        'B4',
-        'B5',
-        'B6',
-        'B7',
-        'B8',
-        'B9',
-        'B8',
-        'B7',
-        'B6',
-        'B5',
-        'B4',
-        'B3',
-        'B2',
-        'B1',
-        'B0',
-        
-        # Red and green bright > dim
-        'R1 G1',
-        'R2 G2',
-        'R3 G3',
-        'R4 G4',
-        'R5 G5',
-        'R6 G6',
-        'R7 G7',
-        'R8 G8',
-        'R9 G9',
-        'R8 G8',
-        'R7 G7',
-        'R6 G6',
-        'R5 G5',
-        'R4 G4',
-        'R3 G3',
-        'R2 G2',
-        'R1 G1',
-        'R0 G0',
-        
-        # Loops back to start
-        ]
-
-
-    def update_led_state(self, dt):
-
-        if self.state().startswith('Idle'):
-            led_commands = self.led_states[self.led_state].split(' ')
-            for led_command in led_commands:
-                self.set_led(led_command)
-
-            self.led_state += 1
-            if self.led_state == len(self.led_states):
-                self.led_state = 0
-        Clock.schedule_once(self.update_led_state, 0.1)
-
-
-    def set_led(self, command):
-        self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
-        
-    #### CONFIRMED ACTIVE LEDS CMDS    
-        
-    def set_led_blue(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
-    
-    def set_led_red(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-
-    def set_led_green(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-
-    def set_led_yellow(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-
-    def set_led_orange(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
-
-    def set_led_white(self):
-        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+        elif colour_name == 'YELLOW':
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+        elif colour_name == 'ORANGE':
+            self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+            self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
+        else: print ("Colour not recognised: " + colour_name)
 
     def led_restore(self):
         # this is special
@@ -629,3 +481,50 @@ class RouterMachine(object):
         # Send the command at this point means that the flashing will freeze
         # This can be unforzen by sending any normal led command (asuming that the grbl has been release from suspension ie. with a RESUME)
         self.s.write_realtime('&', altDisplayText = 'LED restore')
+
+
+
+    # LED DISCO inferno
+
+    rainbow_delay = 0.05
+    led_rainbow_ending_blue = [
+        'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
+        'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
+        'B1','B2','B3','B4','B5','B6','B7','B8','B9','B8','B7','B6','B5','B4','B3','B2','B1','B0',
+        'B1','B2','B3','B4','B5','B6','B7','B8','B9'
+        ]
+
+    print led_rainbow_ending_blue
+
+    rainbow_cycle_count = 0
+    rainbow_cycle_limit = len(led_rainbow_ending_blue)
+
+    def run_led_rainbow_ending_blue(self):
+        
+        if self.state().startswith('Idle'):
+            
+            self.set_rainbow_cycle_led(self.led_rainbow_ending_blue[self.rainbow_cycle_count])
+            self.rainbow_cycle_count += 1
+
+            if self.rainbow_cycle_count < self.rainbow_cycle_limit:
+                Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_blue(), self.rainbow_delay)
+            else:
+                rainbow_cycle_count = 0 # reset for next rainbow call
+
+    def set_rainbow_cycle_led(self, command):
+        self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
+
+
+    '''
+    Here's some code for Boris' implementation of the LED cmds.
+    These do not elicit an 'ok' from GRBL, but are not realtime
+    i.e. the rgb values still get loaded into the serial char buffer like every other cmd
+    '''
+        
+#     def set_led_colour_by_name(self, colour_name):
+# 
+#         if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
+#         if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
+#         if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
+#         if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
+#         if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
