@@ -66,7 +66,6 @@ class RouterMachine(object):
 
 # CRITICAL START/STOP
 
-    
     '''
     
     Working doc (WARNING, may not be updated):
@@ -122,10 +121,8 @@ class RouterMachine(object):
         self._grbl_soft_reset()     # Reset to get out of Alarm mode. All buffers will be dumped.
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
-        # The user should be prompted to home in the alarm message
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2)
-
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -136,14 +133,11 @@ class RouterMachine(object):
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.1)
 
-
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
-               
-
         
     def stop_for_a_stream_pause(self):
         self.set_pause(True)  
@@ -156,19 +150,11 @@ class RouterMachine(object):
         self.s.is_job_streaming = True
 
     def set_pause(self, pauseBool):
-        # set serial_connection flag to pause (allows a hard door to be detected)
-        self.is_machine_paused = pauseBool
-
-
+        self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
  
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-
-        # Could be refined - don't know if delay needed, or indeed purpose of call               
-        # If not then this function is identical to self.stop_from_quick_command_reset()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-
-
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)         # Don't know if this, or its delay, is needed
 
     def resume_after_a_hard_door(self):
         self.resume_after_a_stream_pause() 
@@ -177,16 +163,26 @@ class RouterMachine(object):
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-
-        # Could be refined - don't know if delay needed, or indeed purpose of call               
-        # If not then this function is identical to self.stop_from_quick_command_reset()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)   
-
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)           # Don't know if this, or its delay, is needed
+   
+    def reset_after_sequential_stream(self):
+        self._stop_all_streaming()
+        self._grbl_soft_reset()
     
+    def reset_pre_homing(self):
+        self._stop_all_streaming()
+        self._grbl_soft_reset() 
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.2)
+
+    def reset_on_cancel_homing(self):
+        self._stop_all_streaming()
+        self._grbl_soft_reset()        
+        
+                
     # Internal calls
 
-    # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
     def _stop_all_streaming(self):
+        # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
         if self.s.is_job_streaming == True: self.s.cancel_stream() 
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
@@ -207,8 +203,8 @@ class RouterMachine(object):
 
 
 
-
-    # LEGACY COMMANDS
+    # LEGACY COMMANDS:
+    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
 
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset

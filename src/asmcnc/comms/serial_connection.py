@@ -822,7 +822,7 @@ class SerialConnection(object):
             self.is_sequential_streaming = False
             log("sequential stream ended")
             if self._reset_grbl_after_stream:
-                self.m.soft_reset()
+                self.m.reset_after_sequential_stream()
                 log("GRBL Reset after sequential stream ended")
 
 
@@ -830,7 +830,7 @@ class SerialConnection(object):
         self.is_sequential_streaming = False
         _sequential_stream_buffer = []
         if reset_grbl_after_cancel:
-            self.m.soft_reset()
+            self.m.reset_after_sequential_stream()
             print "GRBL Reset after sequential stream cancelled"
 
 
