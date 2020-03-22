@@ -187,7 +187,8 @@ class DoorScreen(Screen):
     def resume_stream(self):
         if self.return_to_screen == 'go' and self.sm.get_screen('go').job_in_progress == 'True':
             if self.sm.get_screen('go').paused == True:
-                Clock.schedule_once(lambda dt: self.sm.get_screen('go').play_pause_button_press(),0.4)
+                print "resume scheduled"
+                Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.5)
             self.return_to_app()
 
         else:
