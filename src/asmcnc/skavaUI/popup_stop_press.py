@@ -23,8 +23,7 @@ class PopupStop(Widget):
         self.m = machine
         self.sm = screen_manager
         
-        self.m.stop_for_a_stream_pause()        
-
+        self.m.stop_for_a_stream_pause()
         
         stop_description = "Is everything OK? You can resume the job, or cancel it completely."
         
