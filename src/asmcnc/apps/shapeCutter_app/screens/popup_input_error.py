@@ -137,7 +137,7 @@ class PopupBoundary(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[70,25,70,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[0,20,0,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[0,0,0,0])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
