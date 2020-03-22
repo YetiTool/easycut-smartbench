@@ -188,7 +188,7 @@ class DoorScreen(Screen):
         if self.return_to_screen == 'go' and self.sm.get_screen('go').job_in_progress == 'True':
             self.return_to_app()
             if self.sm.get_screen('go').paused == True:
-                self.sm.get_screen('go').play_pause_button_press()
+                Clock.schedule_once(lambda dt: self.sm.get_screen('go').play_pause_button_press(),0.2)
 
         else:
             self.m.resume_after_a_hard_door()    
