@@ -486,7 +486,7 @@ class RouterMachine(object):
 
     # LED DISCO inferno
 
-    rainbow_delay = 0
+    rainbow_delay = 0.025
     led_rainbow_ending_blue = [
         'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
         'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
