@@ -538,10 +538,10 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour(strobe_colour2), colour_1_period)
         self.strobe_cycle_count += 1
         if self.strobe_cycle_count <= cycles:
-            Clock.schedule_once(lambda dt: self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour), colour_2_period)
+            Clock.schedule_once(lambda dt: self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour), colour_1_period + colour_2_period)
         else:
             self.strobe_cycle_count = 0
-            Clock.schedule_once(lambda dt: self.set_led_colour(end_on_colour), colour_2_period + 0.1)
+            Clock.schedule_once(lambda dt: self.set_led_colour(end_on_colour), colour_1_period + colour_2_period)
     
     # LED DISCO inferno
 
