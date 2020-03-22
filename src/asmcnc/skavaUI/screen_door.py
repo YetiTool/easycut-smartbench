@@ -207,5 +207,8 @@ class DoorScreen(Screen):
         self.return_to_app()
             
     def return_to_app(self):
-        self.sm.current = self.return_to_screen
+        if self.sm.has_screen(self.return_to_screen):
+            self.sm.current = self.return_to_screen
+        else: 
+            self.sm.current = 'lobby'
         
