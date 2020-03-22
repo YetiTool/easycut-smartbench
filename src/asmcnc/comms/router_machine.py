@@ -453,33 +453,62 @@ class RouterMachine(object):
 
     led_colour_status = "none"
 
+    # NEVER SEND WHEN STREAMING. Unaccounted char defining RGB will fill up the serial buffer unless handled somehow
     def set_led_colour(self, colour_name):
 
         if colour_name != self.led_colour_status:
         
+#             self.led_colour_status = colour_name 
+#             self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+#     
+#             if colour_name == 'RED':
+#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)            
+#             elif colour_name == 'GREEN':
+#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)            
+#             elif colour_name == 'BLUE':
+#                 self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
+#             elif colour_name == 'WHITE':
+#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+#                 self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+#             elif colour_name == 'YELLOW':
+#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+#                 self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+#             elif colour_name == 'ORANGE':
+#                 self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+#                 self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
+#             elif colour_name == 'OFF':
+#                 print ("LEDs off\n")
+#             
+#             else: print ("Colour not recognised: " + colour_name + "\n")
+ 
             self.led_colour_status = colour_name 
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-    
-            if colour_name == 'RED':
-                self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)            
-            elif colour_name == 'GREEN':
-                self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)            
-            elif colour_name == 'BLUE':
-                self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)        
-            elif colour_name == 'WHITE':
-                self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-                self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-                self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-            elif colour_name == 'YELLOW':
-                self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-                self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
-            elif colour_name == 'ORANGE':
-                self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
-                self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
-            elif colour_name == 'OFF':
-                print ("LEDs off\n")
-            
+
+#         if colour_name == 'red': self.s.write_realtime("*LFF0000\n")
+#         if colour_name == 'green': self.s.write_realtime("*L00FF00\n")
+#         if colour_name == 'blue': self.s.write_realtime("*L0000FF\n")
+#         if colour_name == 'white': self.s.write_realtime("*LFFFFFF\n")
+#         if colour_name == 'off' or colour_name == 'dark': self.s.write_realtime("*L000000\n")
+
+     
+            if colour_name == 'RED':        self.s.write_command("*LFF0000")
+            elif colour_name == 'GREEN':    self.s.write_command("*L00FF00")
+            elif colour_name == 'BLUE':     self.s.write_command("*L0000FF")
+            elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
+            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
+            elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
+            elif colour_name == 'OFF':      self.s.write_command("*L000000")
+             
+#             if colour_name == 'RED': self.s.write_realtime("*LFF0000\n")
+#             elif colour_name == 'GREEN': self.s.write_realtime("*L00FF00\n")
+#             elif colour_name == 'BLUE': self.s.write_realtime("*L0000FF\n")
+#             elif colour_name == 'WHITE': self.s.write_realtime("*LFFFFFF\n")
+#             elif colour_name == 'YELLOW':  self.s.write_realtime("*LFFFF00\n")
+#             elif colour_name == 'ORANGE': self.s.write_realtime("*LFF8000\n")
+#             elif colour_name == 'OFF': self.s.write_realtime("*L000000\n")
+             
             else: print ("Colour not recognised: " + colour_name + "\n")
+
 
     def led_restore(self):
         # this is special
