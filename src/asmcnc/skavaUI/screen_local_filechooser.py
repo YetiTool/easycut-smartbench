@@ -70,9 +70,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.open_USB()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.open_USB()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -90,10 +90,10 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.get_FTP_files()
-                    root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.get_FTP_files()
+                    root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -133,9 +133,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_all()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.delete_all()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -173,9 +173,9 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    root.go_to_loading_screen(filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.go_to_loading_screen(filechooser.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25

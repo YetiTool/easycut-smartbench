@@ -60,20 +60,20 @@ Builder.load_string("""
 
             Button:
                 text: 'Allow Remote Access'
-#                 on_release: root.allow_access()
+#                 on_press: root.allow_access()
                 disabled: 'true'
                 
             Button:
                 text: 'Send logs'
-                on_release: root.send_logs()
+                on_press: root.send_logs()
                 
             Button:
                 text: 'E-mail state'
-                on_release: root.email_state()
+                on_press: root.email_state()
                 
             Button:
                 text: 'Diagnostics'
-                on_release: root.diagnostics()
+                on_press: root.diagnostics()
                 
         GridLayout:
             size: self.parent.size
@@ -83,20 +83,20 @@ Builder.load_string("""
                         
             Button:
                 text: 'Pull Software'
-                on_release: root.get_sw_update()
+                on_press: root.get_sw_update()
 
             Button:
                 text: 'Pull Firmware'
-                on_release: root.flash_fw()
+                on_press: root.flash_fw()
                 disabled: 'true'
 
             Button:
                 text: 'Pull Platform'
-                on_release: root.set_tag_pl_update()
+                on_press: root.set_tag_pl_update()
                 
             Button:
                 text: 'Re-run Platform Install'
-                on_release: root.ansible_service_run()
+                on_press: root.ansible_service_run()
 
         Label:
             text: 'Roll Back Updates'
@@ -117,21 +117,21 @@ Builder.load_string("""
             Button:
                 text: 'Roll Back Software'
                 disabled: 'true'
-#                 on_release: root.get_sw_update()
+#                 on_press: root.get_sw_update()
 
             Button:
                 text: 'Roll Back Firmware'
-#                 on_release: root.flash_fw()
+#                 on_press: root.flash_fw()
                 disabled: 'true'
 
             Button:
                 text: 'Roll Back Platform'
-#                 on_release: root.set_tag_pl_update()
+#                 on_press: root.set_tag_pl_update()
                 disabled: 'true'
                 
             Button:
                 text: 'Roll Back All'
-#                 on_release: root.ansible_service_run()
+#                 on_press: root.ansible_service_run()
                 disabled: 'true'
     
         GridLayout:
@@ -157,7 +157,7 @@ Builder.load_string("""
                 
             Button:
                 text: 'Bake GRBL settings'
-                on_release: root.bake_grbl_settings()
+                on_press: root.bake_grbl_settings()
 
         GridLayout:
             size: self.parent.size
@@ -202,7 +202,7 @@ Builder.load_string("""
  
             Button:
                 text: 'Go back'
-                on_release: root.go_back()               
+                on_press: root.go_back()               
 
             Label:
                 text: 'EasyCut'
@@ -210,7 +210,7 @@ Builder.load_string("""
             
             Button:
                 text: 'Quit to Console'
-                on_release: root.quit_to_console()
+                on_press: root.quit_to_console()
 
             Label:
                 text: 'EC branch'
@@ -220,7 +220,7 @@ Builder.load_string("""
             
             Button:
                 text: 'Reboot'
-                on_release: root.reboot() 
+                on_press: root.reboot() 
                 
             Label:
                 text: 'EC hash'

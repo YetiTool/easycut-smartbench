@@ -39,13 +39,13 @@ Builder.load_string("""
 
         Button:
             text: 'Square axes'
-            on_release: root.square_axes()
+            on_press: root.square_axes()
         Button:
             text: 'Get software update'
-            on_release: root.get_sw_update()
+            on_press: root.get_sw_update()
         Button:
             text: 'Developer'
-            on_release: root.go_to_dev()                     
+            on_press: root.go_to_dev()                     
 
 
         Label:

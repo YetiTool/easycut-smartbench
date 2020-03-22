@@ -35,6 +35,6 @@ class PopupJobDone(Widget):
                       size=(600, 400),
                       auto_dismiss= False)
         
-        continue_button.bind(on_release=popup.dismiss)
+        continue_button.bind(on_press=popup.dismiss)
         popup.open()
 

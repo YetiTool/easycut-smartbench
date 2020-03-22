@@ -37,9 +37,9 @@ Builder.load_string("""
             size_hint_y: 1
             background_color: hex('#F4433600')
             on_release: 
-                root.quit_to_lobby()
                 self.background_color = hex('#F4433600')
             on_press:
+                root.quit_to_lobby()
                 self.background_color = hex('#F44336FF')
             BoxLayout:
                 padding: 0
@@ -64,9 +64,9 @@ Builder.load_string("""
     
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.home()
                     self.background_color = hex('#F4433600')
                 on_press:
+                    root.home()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -84,9 +84,9 @@ Builder.load_string("""
             size_hint_y: 1
             background_color: hex('#F4433600')
             on_release: 
-                root.reset()
                 self.background_color = hex('#F4433600')
             on_press:
+                root.reset()
                 self.background_color = hex('#F44336FF')
             BoxLayout:
                 padding: 0
@@ -122,9 +122,9 @@ Builder.load_string("""
             size_hint_y: 1
             background_color: hex('#F4433600')
             on_release: 
-                root.stop()
                 self.background_color = hex('#F4433600')
             on_press:
+                root.stop()
                 self.background_color = hex('#F44336FF')
             BoxLayout:
                 padding: 0

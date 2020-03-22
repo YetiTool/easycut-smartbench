@@ -88,9 +88,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.quit_to_local()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.quit_to_local()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25

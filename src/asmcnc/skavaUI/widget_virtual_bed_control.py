@@ -49,9 +49,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.set_standby_to_pos()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -67,9 +67,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -120,9 +120,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.go_to_standby()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.go_to_standby()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -137,9 +137,9 @@ Builder.load_string("""
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.go_to_jobstart_xy()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.go_to_jobstart_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
