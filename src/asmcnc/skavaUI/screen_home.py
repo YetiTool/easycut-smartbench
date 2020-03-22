@@ -76,6 +76,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
+                        on_press: root.set_led_blue()
                         BoxLayout:
                             padding: 20
                             spacing: 20
@@ -103,6 +104,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
+                        on_press: root.set_led_yellow()
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -143,6 +145,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
+                        on_press: root.set_led_blue()
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -173,8 +176,8 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_job_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_job_up.png'
+                        on_press: root.set_led_blue()
                         id: home_tab
-
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -405,3 +408,7 @@ class HomeScreen(Screen):
                 break
 
         log('DONE')
+
+    def set_led_blue(self): self.m.set_led_blue()
+    def set_led_yellow(self): self.m.set_led_yellow()
+    

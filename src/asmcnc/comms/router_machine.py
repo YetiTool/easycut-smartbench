@@ -602,5 +602,30 @@ class RouterMachine(object):
         self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
         self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
 
+    def set_led_green(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+
+    def set_led_yellow(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+
+    def set_led_orange(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALG5', show_in_sys=False, show_in_console=False)
+
+    def set_led_white(self):
+        self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALR9', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALG9', show_in_sys=False, show_in_console=False)
+        self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
+
     def led_restore(self):
+        # this is special
+        # A: It's a realtime command which can be useful when streaming, or grbl is suspended
+        # B: It's exception is a bug - when the machine is in suspended DOOR mode, triggered from a hard switch:
+        # Send the command at this point means that the flashing will freeze
+        # This can be unforzen by sending any normal led command (asuming that the grbl has been release from suspension ie. with a RESUME)
         self.s.write_realtime('&', altDisplayText = 'LED restore')
