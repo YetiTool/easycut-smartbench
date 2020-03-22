@@ -173,10 +173,12 @@ class RouterMachine(object):
         self._stop_all_streaming()
         self._grbl_soft_reset() 
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.2)
+        Clock.schedule_once(lambda dt: self.set_led_colour("MAGENTA"),0.2)
 
     def reset_on_cancel_homing(self):
         self._stop_all_streaming()
-        self._grbl_soft_reset()        
+        self._grbl_soft_reset() 
+        Clock.schedule_once(lambda dt: self.set_led_colour("BLUE"),0.2)
         
                 
     # Internal calls
