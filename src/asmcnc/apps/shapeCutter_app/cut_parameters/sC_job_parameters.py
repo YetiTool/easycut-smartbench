@@ -712,25 +712,25 @@ class ShapeCutterJobParameters(object):
         # Mins
         
         if range_0_multiplier*(self.m.x_wco()+float(self.range_x[0])) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\nThe job target is too close to the X home position, the job will crash into the home position."
+            error_message = error_message + "\nThe job target is too close to the X home position."
             errorfound += 1 
         if range_0_multiplier*(self.m.y_wco()+float(self.range_y[0])) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\nThe job target is too close to the Y home position, the job will crash into the home position."
+            error_message = error_message + "\n\nThe job target is too close to the Y home position."
             errorfound += 1 
         if -(self.m.z_wco()+float(self.range_z[0])) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\nThe job target is too far from the Z home position, the router will not reach that far."
+            error_message = error_message + "\n\nThe job target is too far from the Z home position."
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+float(self.range_x[1]) >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\nThe job target is too far from the X home position, the router will not reach that far."
+            error_message = error_message + "\n\nThe job target is too far from the X home position."
             errorfound += 1 
         if self.m.y_wco()+float(self.range_y[1]) >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\nThe job target is too far from the Y home position, the router will not reach that far."
+            error_message = error_message + "\n\nThe job target is too far from the Y home position."
             errorfound += 1 
         if self.m.z_wco()+float(self.range_z[1]) >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\nThe job target is too close to the Z home position, the job will crash into the home position."
+            error_message = error_message + "\n\nThe job target is too close to the Z home position."
             errorfound += 1 
 
         if errorfound > 0: return error_message

@@ -393,7 +393,7 @@ class ShapeCutter31ScreenClass(Screen):
         if bounds_output == True:
             self.shapecutter_sm.next_screen()
         else: 
-            description = "The job is not within the bounds of SmartBench." + \
+            description = "The job is not within the bounds of SmartBench.\n\n" + \
             bounds_output + '\n\n' + \
             "Please go back and re-set your job datums."
             popup_input_error.PopupBoundary(self.shapecutter_sm, description)

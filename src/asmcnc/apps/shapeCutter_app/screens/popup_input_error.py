@@ -148,7 +148,7 @@ class PopupBoundary(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(600, 380),
+                      size=(600, 420),
                       auto_dismiss= False
                       )
         
