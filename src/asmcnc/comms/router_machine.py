@@ -447,7 +447,7 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.5') 
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.5)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
         self.zUp()    
 
     def home_all(self):
