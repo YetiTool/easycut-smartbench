@@ -309,7 +309,7 @@ class CheckingScreen(Screen):
         
         self.display_output = '[color=#FFFFFF][b]BOUNDARY CONFLICT[/b]\n\n' + \
         '\n\n[color=#FFFFFF]It looks like your job is outside the bounds of the machine:' + \
-        '[color=#FFFFFF]' + bounds_output + '\n\n\n' + \
+        '[color=#FFFFFF]' + bounds_output + '\n\n\n\n' + \
         '[color=#FFFFFF]To fix this, load the job now and set the datum to an appropriate location.\n\n' + \
         '[color=#FFFFFF]You will still be prompted to check your G-code before running your job.\n\n' + \
         '[color=#FFFFFF]If you have already tried to set the datum, or if the graphics on the virtual' + \

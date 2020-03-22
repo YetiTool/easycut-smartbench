@@ -128,16 +128,16 @@ class PopupBoundary(Widget):
         description = error_message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[0,20])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,25,50,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[70,25,70,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[50,20,50,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,20,20,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
