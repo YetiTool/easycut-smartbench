@@ -109,7 +109,7 @@ class RouterMachine(object):
     Realtime
     Completely clears grbl, including buffers and state.
     If done during motion, will thro ALARM. Otherwise normal operations resume (no homing req etc).
-    Does not change LED state (coz that's cutom YETI).
+    Does not change LED state (coz that's cutosm YETI).
     e.g. Door state --> Idle
     
     '''
@@ -146,7 +146,7 @@ class RouterMachine(object):
 
         
     def stop_for_a_stream_pause(self):
-        self.set_pause(True)  # set serial_connection flag to pause streaming
+        self.set_pause(True)  
         self.s.is_job_streaming = False
         self._grbl_door() # send a soft-door command
 
@@ -156,20 +156,31 @@ class RouterMachine(object):
         self.s.is_job_streaming = True
 
     def set_pause(self, pauseBool):
+        # set serial_connection flag to pause (allows a hard door to be detected)
         self.is_machine_paused = pauseBool
 
 
  
     def stop_from_soft_stop_cancel(self):
-        self._stop_all_streaming()
-        self._grbl_soft_reset()
-        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_blue(),0.2) 
+        self.resume_from_alarm() 
 
         # Could be refined - don't know if delay needed, or indeed purpose of call               
+        # If not then this function is identical to self.stop_from_quick_command_reset()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
 
-        
+
+
+    def resume_after_a_hard_door(self):
+        self.resume_after_a_stream_pause() 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        self.led_restore()
+
+    def cancel_after_a_hard_door(self):
+        self.resume_from_alarm() 
+
+        # Could be refined - don't know if delay needed, or indeed purpose of call               
+        # If not then this function is identical to self.stop_from_quick_command_reset()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)   
 
     
     # Internal calls
