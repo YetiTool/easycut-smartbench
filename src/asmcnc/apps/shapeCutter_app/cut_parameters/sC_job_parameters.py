@@ -712,7 +712,7 @@ class ShapeCutterJobParameters(object):
         # Mins
         
         if range_0_multiplier*(self.m.x_wco()+float(self.range_x[0])) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\nThe job target is too close to the X home position."
+            error_message = error_message + "\n\nThe job target is too close to the X home position."
             errorfound += 1 
         if range_0_multiplier*(self.m.y_wco()+float(self.range_y[0])) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             error_message = error_message + "\n\nThe job target is too close to the Y home position."
