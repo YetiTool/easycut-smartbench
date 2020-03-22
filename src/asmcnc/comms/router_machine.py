@@ -340,24 +340,24 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy(self):
         self.s.write_command('G10 L20 P1 X0 Y0')
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
         self.s.write_command('G10 L20 P1 X0')
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_y_datum(self):
         self.s.write_command('G10 L20 P1 Y0')
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
                 
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
         self.get_grbl_status()
 
     def set_standby_to_pos(self):
         self.s.write_command('G28.1')
-        Clock.schedule_once(lambda dt: self.m.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("standby_pos_has_been_set"), 0.2)
 
     
 
