@@ -10,11 +10,14 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
+from asmcnc.apps.shapeCutter_app.screens import widget_sC15_xy_move
+
 Builder.load_string("""
 
 <ShapeCutter15ScreenClass>
 
     info_button: info_button
+    xy_move_container: xy_move_container
 
     BoxLayout:
         size_hint: (None,None)
@@ -212,53 +215,17 @@ Builder.load_string("""
 
                         BoxLayout: #image box
                             size_hint: (None,None)
-                            height: dp(225)
+                            height: dp(270)
                             width: dp(675)
-                            padding:106,0,66,0      
-                            Image:
-                                source: "./asmcnc/apps/shapeCutter_app/img/photo_15_1.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
-                        BoxLayout: #image number box
-                            size_hint: (None,None)
-                            height: dp(45)
-                            width: dp(675)
-                            padding:216.75,2.5,176.75,12.5
-                            spacing: 221.5
-                            BoxLayout: #photo numbers
+                            padding:30,0,40,0  
+                                
+                            BoxLayout: # move widget
+                                id: xy_move_container
                                 size_hint: (None,None)
-                                padding: 0
-                                height: dp(30)
-                                width: dp(30)
-                                canvas:
-                                    Rectangle: 
-                                        pos: self.pos
-                                        size: self.size
-                                        source: "./asmcnc/apps/shapeCutter_app/img/photo_number_circle.png"
-                                Label:
-                                    text: "1"
-                                    valign: "middle"
-                                    halign: "center"
-                                    font_size: 22
-                                    markup: True
-                            BoxLayout: #photo numbers
-                                size_hint: (None,None)
-                                padding: 0
-                                height: dp(30)
-                                width: dp(30)
-                                canvas:
-                                    Rectangle: 
-                                        pos: self.pos
-                                        size: self.size
-                                        source: "./asmcnc/apps/shapeCutter_app/img/photo_number_circle.png"
-                                Label:
-                                    text: "2"
-                                    valign: "middle"
-                                    halign: "center"
-                                    font_size: 22
-                                    markup: True                            
+                                height: dp(270)
+                                width: dp(605)
+                                padding: (0,0,0,0) 
+                                orientation: "vertical"                           
                                       
 
                     BoxLayout: #action box
@@ -342,10 +309,16 @@ class ShapeCutter15ScreenClass(Screen):
         super(ShapeCutter15ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.j=kwargs['job_parameters']
+
+        self.xy_move_widget = widget_sC15_xy_move.SC15XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+        self.xy_move_container.add_widget(self.xy_move_widget)
+
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
-
+        self.xy_move_widget.set_jog_speeds()
+        
 # Action buttons       
     def get_info(self):
         pass
