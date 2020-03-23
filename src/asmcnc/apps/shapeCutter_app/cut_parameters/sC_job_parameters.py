@@ -153,15 +153,11 @@ class ShapeCutterJobParameters(object):
 
     def tabs_in_inches(self):
         
-        multiplier = 1/25.4
-        
-        self.tabs = {
-            "tabs?": True,
-            "width": 12*multiplier,
-            "height": 3*multiplier,
-            "spacing": 60*multiplier,
-            "units": "inches"
-            }
+        tab_unit_multiplier = 1/25.4
+        self.j.parameter_dict["tabs"]["units"] = "inches"
+        self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+        self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+        self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
 
     def validate_cutter_dimensions(self, param, input):
         
