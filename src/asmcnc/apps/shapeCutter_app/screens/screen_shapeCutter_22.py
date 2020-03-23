@@ -522,13 +522,6 @@ class ShapeCutter22ScreenClass(Screen):
         elif self.j.shape_dict["shape"] == 'rectangle':
             self.main_image.source = "./asmcnc/apps/shapeCutter_app/img/tabs_rect.png"
 
-        if self.j.parameter_dict["tabs"]["units"] == "inches":
-            self.unit_toggle.active = True
-        else:
-            self.unit_toggle.active = False
-
-        print (self.j.parameter_dict["tabs"]["tabs?"])
-
         if self.j.parameter_dict["tabs"]["tabs?"] == "True":
             self.tab_toggle.active = True
             self.td_dimension.disabled = False
@@ -547,7 +540,12 @@ class ShapeCutter22ScreenClass(Screen):
             self.tw_dimension.text = ''
             self.tw_dimension.disabled = True
             if self.j.parameter_dict["tabs"]["units"] == "mm":
-                self.unit_toggle.active = False   
+                self.unit_toggle.active = False 
+
+        if self.j.parameter_dict["tabs"]["units"] == "inches":
+            self.unit_toggle.active = True
+        else:
+            self.unit_toggle.active = False
             
 # Action buttons       
 

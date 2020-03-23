@@ -26,6 +26,8 @@ class ShapeCutterJobParameters(object):
         self.refresh_parameters()
 
     def refresh_parameters(self):
+        # Defaults are all in mm
+        
         self.profile_filename = ""
         
         # parameters
@@ -102,6 +104,7 @@ class ShapeCutterJobParameters(object):
 
         if self.shape_dict["units"] == "inches": 
             multiplier = 1/25.4
+            self.tabs_in_inches()
         else: 
             multiplier = 1
         
@@ -147,6 +150,18 @@ class ShapeCutterJobParameters(object):
             self.shape_dict["dimensions"]["D"] = input
         
         return True
+
+    def tabs_in_inches(self):
+        
+        multiplier = 1/25.4
+        
+        self.tabs = {
+            "tabs?": True,
+            "width": 12*multiplier,
+            "height": 3*multiplier,
+            "spacing": 60*multiplier,
+            "units": "inches"
+            }
 
     def validate_cutter_dimensions(self, param, input):
         
