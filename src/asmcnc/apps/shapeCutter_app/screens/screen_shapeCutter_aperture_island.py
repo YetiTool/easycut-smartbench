@@ -156,7 +156,7 @@ Builder.load_string("""
                             width: dp(207)
                             halign: "center"
                             valign: "middle"
-                            text: "Outer (cut an aperture)"
+                            text: "Hole (cut an aperture)"
                             color: 0,0,0,1
                             font_size: 20
                             markup: True
@@ -172,7 +172,7 @@ Builder.load_string("""
                             width: dp(207)
                             halign: "center"
                             valign: "middle"
-                            text: "Inner (cut an island)"
+                            text: "Plate (cut an island)"
                             color: 0,0,0,1
                             font_size: 20
                             markup: True
