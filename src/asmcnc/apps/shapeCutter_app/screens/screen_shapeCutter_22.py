@@ -540,7 +540,9 @@ class ShapeCutter22ScreenClass(Screen):
             self.tw_dimension.text = ''
             self.tw_dimension.disabled = True
             if self.j.parameter_dict["tabs"]["units"] == "mm":
-                self.unit_toggle.active = False 
+                self.unit_toggle.active = False
+            else: 
+                self.unit_toggle.active = True
 
         if self.j.parameter_dict["tabs"]["units"] == "inches":
             self.unit_toggle.active = True
