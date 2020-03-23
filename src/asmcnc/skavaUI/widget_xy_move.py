@@ -384,10 +384,10 @@ class XYMove(Widget):
 #             if self.m.quit_jog() == True:
 # #                 self.m.quit_jog()
 #                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
- 
 
     def set_workzone_to_pos_xy(self):
-        self.m.set_workzone_to_pos_xy()
+        warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
+        popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
         self.m.set_standby_to_pos()
