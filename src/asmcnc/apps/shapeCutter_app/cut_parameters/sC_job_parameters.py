@@ -107,6 +107,7 @@ class ShapeCutterJobParameters(object):
             self.tabs_in_inches()
         else: 
             multiplier = 1
+            self.tabs_in_mm()
         
         max_X = self.m.s.setting_130*multiplier
         max_Y = self.m.s.setting_131*multiplier
@@ -153,11 +154,21 @@ class ShapeCutterJobParameters(object):
 
     def tabs_in_inches(self):
         
-        tab_unit_multiplier = 1/25.4
-        self.parameter_dict["tabs"]["units"] = "inches"
-        self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
-        self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
-        self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
+        if self.parameter_dict["tabs"]["units"] == "mm":
+            tab_unit_multiplier = 1/25.4
+            self.parameter_dict["tabs"]["units"] = "inches"
+            self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
+
+    def tabs_in_mm(self):
+        
+        if self.parameter_dict["tabs"]["units"] == "inches":
+            tab_unit_multiplier = 25.4
+            self.parameter_dict["tabs"]["units"] = "mm"
+            self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
 
     def validate_cutter_dimensions(self, param, input):
         
