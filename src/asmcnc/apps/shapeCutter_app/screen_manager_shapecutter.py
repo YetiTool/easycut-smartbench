@@ -224,7 +224,7 @@ class ScreenManagerShapeCutter(object):
                       
         elif self.sm.current == 'sC14':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)            
             self.sm.current = 'sC15'
                       
@@ -467,7 +467,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC14_screen)            
         elif self.sm.current == 'sC13':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)            
         elif self.sm.current == 'sC14':
             if not self.sm.has_screen('sC16'):
@@ -684,7 +684,7 @@ class ScreenManagerShapeCutter(object):
                         
         elif self.sm.current == 'sC16':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)           
             self.sm.current = 'sC15'
                         
@@ -883,7 +883,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC14_screen)
         elif self.sm.current == 'sC17':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)          
         elif self.sm.current == 'sC18':
             if not self.sm.has_screen('sC16'):
