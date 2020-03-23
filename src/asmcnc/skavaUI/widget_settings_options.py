@@ -123,7 +123,7 @@ class SettingsOptions(Widget):
 
         self.sw_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
-        self.latest_sw_version = self.set.latest_sw_version
+        self.latest_sw_version_label.text = self.set.latest_sw_version
         self.latest_platform_version_label.text = self.set.latest_platform_version
 
     def scrape_fw_version(self):
