@@ -507,7 +507,10 @@ class ShapeCutterDimensionsScreenClass(Screen):
             if not (self.input_dim4.text == ""): self.input_dim4.text = "{:.2f}".format(float(self.input_dim4.text) * 25.4)
 
     def check_dimensions(self):    
+        try: self.validate_dimensions()
+        except: self.check_dimensions()
 
+    def validate_dimensions(self):
         if self.unit_toggle.active == True:
             self.j.shape_dict["units"] = "inches"
 
