@@ -100,8 +100,6 @@ class ShapeCutterJobParameters(object):
     
     def validate_shape_dimensions(self, dim, input):
 
-        self.m.get_grbl_settings()
-
         if self.shape_dict["units"] == "inches": 
             multiplier = 1/25.4
         else: 
