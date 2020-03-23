@@ -193,10 +193,6 @@ class DoorScreen(Screen):
             Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.4)
             self.return_to_app()
 
-        elif self.return_to_screen == 'sC33':
-            self.m.resume_after_a_hard_door()
-            Clock.schedule_once(lambda dt:self.sm.get_screen('sC33').trace_job(),0.4)
-            self.return_to_app()
         else:
             self.m.resume_after_a_hard_door()    
             self.return_to_app()
