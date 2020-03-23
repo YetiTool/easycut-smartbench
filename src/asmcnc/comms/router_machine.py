@@ -122,7 +122,8 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2)
+        Clock.schedule_once(lambda dt: self.led_restore(),0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.5)
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -154,16 +155,16 @@ class RouterMachine(object):
  
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)         # Don't know if this, or its delay, is needed
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        Clock.schedule_once(lambda dt: self.led_restore(),0.2)         # Don't know if this, or its delay, is needed
+        Clock.schedule_once(lambda dt: self.led_restore(),0.2)
         
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)           # Don't know if this, or its delay, is needed
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
    
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
