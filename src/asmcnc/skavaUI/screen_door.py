@@ -196,8 +196,7 @@ class DoorScreen(Screen):
         else:
             self.m.resume_after_a_hard_door()    
             self.return_to_app()
-        
-        
+               
     def cancel_stream(self):
         if self.return_to_screen == 'go':
             self.m.s.is_job_streaming = True

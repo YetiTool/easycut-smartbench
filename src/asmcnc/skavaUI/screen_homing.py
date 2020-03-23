@@ -345,9 +345,12 @@ class HomingScreen(Screen):
         # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
         self.m.set_state('Home') 
 
-        # monitor sequential stream status for completion       
-        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+        # monitor sequential stream status for completion
+        
+        def create_poll_for_success():    
+            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
    
+        Clock.schedule_once(lambda dt: create_poll_for_success(), 1)
 
     def home_normally(self):
         # home without suaring the axis
