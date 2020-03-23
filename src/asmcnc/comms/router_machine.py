@@ -159,8 +159,8 @@ class RouterMachine(object):
     def resume_after_a_hard_door(self):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.led_restore()
-
+        Clock.schedule_once(lambda dt: self.led_restore(),0.2)         # Don't know if this, or its delay, is needed
+        
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)           # Don't know if this, or its delay, is needed
@@ -468,13 +468,13 @@ class RouterMachine(object):
             self.led_colour_status = colour_name 
 
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif colour_name == 'GREEN':    self.s.write_command("*L00FF00")
-            elif colour_name == 'BLUE':     self.s.write_command("*L0000FF")
+            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+            elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
             elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
-            elif colour_name == 'OFF':      self.s.write_command("*L000000")
+            elif colour_name == 'OFF':      self.s.write_command("*L110000")
              
             else: print ("Colour not recognised: " + colour_name + "\n")
 
