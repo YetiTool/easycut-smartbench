@@ -146,9 +146,9 @@ class RouterMachine(object):
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.s.is_job_streaming = True # what to do with you
+        self.s.is_job_streaming = True
+        self._grbl_resume()
 
     def set_pause(self, pauseBool):
         self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)

@@ -175,7 +175,7 @@ class ErrorScreenClass(Screen):
         self.m.resume_from_gcode_error()
 
         if self.sm.has_screen(self.return_to_screen):
-            self.sm.current = self.return_to_screen     
+            self.sm.current = self.return_to_screen  
         else: 
             self.sm.current = 'lobby'
         

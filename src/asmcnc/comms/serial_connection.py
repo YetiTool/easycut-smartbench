@@ -402,7 +402,11 @@ class SerialConnection(object):
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
-                self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
+                
+                if self.sm.current == 'alarmScreen':
+                    self.sm.get_screen('errorScreen').return_to_screen = self.sm.get_screen('alarmScreen').return_to_screen
+                else:
+                    self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
@@ -689,7 +693,10 @@ class SerialConnection(object):
             log('ALARM from GRBL: ' + message)
             if self.sm.current != 'alarmScreen':
                 self.sm.get_screen('alarmScreen').message = message
-                self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
+                if self.sm.current == 'errorScreen':
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+                else:
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
                 self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
