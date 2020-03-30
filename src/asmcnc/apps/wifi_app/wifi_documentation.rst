@@ -9,6 +9,8 @@ If you are having trouble connecting the console to your wifi network, read thes
 Network name and password
 -------------------------
 
+* **Password MUST be between 8 and 63 characters.**
+
 * Both will be case sensitive, make sure they are exact.
 
 * Avoid the need for any special characters.
