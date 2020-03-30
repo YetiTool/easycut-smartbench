@@ -1,7 +1,0 @@
-REFACTOR NOTES for branch 304_REFACTOR
-
-Re-enable from serial_connection:
-- door screen 
-- alarm screen
-
-Uncomment gcode widget debug buttons
