@@ -128,9 +128,13 @@ class RouterMachine(object):
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
         self._grbl_feed_hold()
-        # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
+
+        # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
+        Clock.schedule_once(lambda dt: self.set_led_colour('RED'),0.5)
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
+        Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
+
 
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
@@ -465,18 +469,18 @@ class RouterMachine(object):
     def set_led_colour(self, colour_name):
 
         # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
-#         if not self.s.is_job_streaming and not self.s.is_sequential_streaming:
+        if not self.s.is_job_streaming and not self.s.is_sequential_streaming:
         
-        self.led_colour_status = colour_name 
-
-        if colour_name == 'RED':        self.s.write_command("*LFF0000")
-        elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
-        elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
-        elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
-        elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
-        elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
-        elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
-        elif colour_name == 'OFF':      self.s.write_command("*L110000")
+            self.led_colour_status = colour_name 
+    
+            if colour_name == 'RED':        self.s.write_command("*LFF0000")
+            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+            elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
+            elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
+            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
+            elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
+            elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
+            elif colour_name == 'OFF':      self.s.write_command("*L110000")
          
         else: print ("Colour not recognised: " + colour_name + "\n")
 
@@ -498,8 +502,8 @@ class RouterMachine(object):
         if situation == "datum_has_been_set":
             strobe_colour1 = 'GREEN'
             strobe_colour2 = 'GREEN'
-            colour_1_period = 1
-            colour_2_period = 1
+            colour_1_period = 0.5
+            colour_2_period = 0.5
             cycles = 1
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
