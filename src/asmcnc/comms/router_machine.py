@@ -131,9 +131,11 @@ class RouterMachine(object):
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
 
         # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
-        Clock.schedule_once(lambda dt: self.set_led_colour('RED'),0.5)
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
+
+        # Sulk
         Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
+        Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
 
     def resume_from_gcode_error(self):
