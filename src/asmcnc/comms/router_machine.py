@@ -129,6 +129,7 @@ class RouterMachine(object):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
         self._grbl_feed_hold()
         # Allow machine to decelerate in XYZ before resetting to kill spindle, or it'll alarm due to resetting in motion
+        self._stop_all_streaming()  # In case alarm happened during stream, stop that
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
     def resume_from_gcode_error(self):
@@ -193,7 +194,7 @@ class RouterMachine(object):
         self.s.write_realtime('~', altDisplayText = 'Resume')
 
     def _grbl_feed_hold(self):
-        self.s.write_realtime('!', altDisplayText = 'Resume')
+        self.s.write_realtime('!', altDisplayText = 'Feed hold')
 
     def _grbl_soft_reset(self):
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
@@ -202,7 +203,7 @@ class RouterMachine(object):
         self.s.write_realtime('\x84', altDisplayText = 'Door')
     
     def _grbl_unlock(self):
-        self.s.write_command('$X')
+        self.s.write_command('$X', altDisplayText = 'Unlock: $X')
 
 
 
@@ -461,23 +462,23 @@ class RouterMachine(object):
 
     led_colour_status = "none"
 
-    # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
     def set_led_colour(self, colour_name):
 
-        if colour_name != self.led_colour_status:
+        # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
+#         if not self.s.is_job_streaming and not self.s.is_sequential_streaming:
         
-            self.led_colour_status = colour_name 
+        self.led_colour_status = colour_name 
 
-            if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
-            elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
-            elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
-            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
-            elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
-            elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
-            elif colour_name == 'OFF':      self.s.write_command("*L110000")
-             
-            else: print ("Colour not recognised: " + colour_name + "\n")
+        if colour_name == 'RED':        self.s.write_command("*LFF0000")
+        elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+        elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
+        elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
+        elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
+        elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
+        elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
+        elif colour_name == 'OFF':      self.s.write_command("*L110000")
+         
+        else: print ("Colour not recognised: " + colour_name + "\n")
 
 
     def led_restore(self):
@@ -498,21 +499,21 @@ class RouterMachine(object):
             strobe_colour1 = 'GREEN'
             strobe_colour2 = 'GREEN'
             colour_1_period = 1
-            colour_2_period = 0.5
+            colour_2_period = 1
             cycles = 1
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
-        if situation == "standby_pos_has_been_set":
+        elif situation == "standby_pos_has_been_set":
             strobe_colour1 = 'MAGENTA'
             strobe_colour2 = 'MAGENTA'
-            colour_1_period = 1
+            colour_1_period = 0.5
             colour_2_period = 0.5
             cycles = 1
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
-        if situation == "green_pulse":
+        elif situation == "green_pulse":
             strobe_colour1 = 'GREEN'
             strobe_colour2 = 'OFF'
             colour_1_period = 0.2
