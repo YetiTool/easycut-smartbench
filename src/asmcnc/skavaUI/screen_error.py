@@ -161,7 +161,6 @@ class ErrorScreenClass(Screen):
         # use the message to get the error description        
         self.error_description = ERROR_CODES.get(self.message, "")
         self.m.stop_from_gcode_error()
-        self.m.led_restore()
 
         self.button_function = self.return_to_screen
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
