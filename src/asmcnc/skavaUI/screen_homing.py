@@ -371,11 +371,14 @@ class HomingScreen(Screen):
                                   '$H', # home
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
+                                  'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
                                   'G91', # relative coords
-                                  'G1 Y-25 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
-                                  'G1 Y25', # re-enter work area
+                                  'G1 Y-28 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
+                                  'G1 Y28', # re-enter work area
                                   'G90', # abs coords
-                                  
+                                  'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)
+
                                   # Coming up we have some $x=n commands, and the machine needs to be idle when sending these
                                   # Since it will be moving due to previous G command, we need to wait until it has stopped
                                   # The simplest way to do this is to send a G4 command (grbl pause)
