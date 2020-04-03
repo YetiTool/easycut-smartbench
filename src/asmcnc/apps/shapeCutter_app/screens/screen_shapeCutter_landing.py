@@ -176,6 +176,9 @@ class ShapeCutterLandingScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+
+    def on_enter(self):
+        self.m.get_grbl_settings()
         
     def get_info(self):
 

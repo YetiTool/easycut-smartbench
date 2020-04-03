@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 
 from asmcnc.skavaUI import widget_z_height
+from kivy.clock import Clock
 
 
 Builder.load_string("""
@@ -168,6 +169,8 @@ class ZMove(Widget):
         self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
 
     def jog_z(self, case):
+
+        self.m.set_led_colour('WHITE')
 
         feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
         

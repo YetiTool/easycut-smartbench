@@ -142,6 +142,7 @@ Builder.load_string("""
 
 """)
 
+# This screen only gets activated when the PHYSICAL door pin is activated. Firmware automatically flicks to door state.
 
 class DoorScreen(Screen):
     
@@ -184,24 +185,26 @@ class DoorScreen(Screen):
             self.sm.get_screen('go').pause_job()
             
     def resume_stream(self):
-        if self.return_to_screen == 'go':
+        
+        if self.return_to_screen == 'go' and str(self.sm.get_screen('go').job_in_progress) == 'True':
+            Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.4)
             self.return_to_app()
-                    
+
         else:
-            self.m.resume()
+            self.m.resume_after_a_hard_door()    
             self.return_to_app()
-            
+               
     def cancel_stream(self):
         if self.return_to_screen == 'go':
             self.m.s.is_job_streaming = True
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-        self.m.soft_reset()
-        self.m.unlock_after_alarm()
-        self.m.resume()
-#         self.m.set_led_colour_by_name('blue')
+        self.m.cancel_after_a_hard_door()
         self.return_to_app()
             
     def return_to_app(self):
-        self.sm.current = self.return_to_screen
+        if self.sm.has_screen(self.return_to_screen):
+            self.sm.current = self.return_to_screen
+        else: 
+            self.sm.current = 'lobby'
         

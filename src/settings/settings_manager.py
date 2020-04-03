@@ -27,7 +27,7 @@ class Settings(object):
         self.refresh_sw_version()
         
     def refresh_sw_version(self):
-        self.sw_version = str((os.popen("git describe --always").read()).split('-')[0])
+        self.sw_version = str(os.popen("git describe --tags").read())
         self.sw_hash = str(os.popen("git rev-parse --short HEAD").read())
         self.sw_branch = str(os.popen("git branch | grep \*").read())
 
@@ -35,7 +35,7 @@ class Settings(object):
         self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read())
 
     def refresh_platform_version(self):
-        self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --always").read())
+        self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read())
         self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read())
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read())
 

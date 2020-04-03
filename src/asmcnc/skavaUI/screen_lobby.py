@@ -288,7 +288,7 @@ class LobbyScreen(Screen):
 # FLAG
     def on_enter(self):
         if not sys.platform == "win32":
-            self.m.set_led_blue()
+            self.m.set_led_colour('BLUE')
 
     def help_popup(self):
         print "pop up press"
@@ -307,6 +307,7 @@ class LobbyScreen(Screen):
         self.am.start_calibration_app('lobby')
     
     def shapecutter_app(self):
+        self.m.run_led_rainbow_ending_blue()
         self.am.start_shapecutter_app()
 
     def wifi_app(self):

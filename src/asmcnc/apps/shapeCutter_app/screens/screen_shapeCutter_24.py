@@ -547,7 +547,7 @@ class ShapeCutter24ScreenClass(Screen):
     
         self.stock_bottom_offset.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["stock bottom offset"]))
         self.step_down.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["step down"]))
-        self.finishing_passes.text = "{:.2f}".format(float(self.j.parameter_dict["strategy parameters"]["finishing passes"]))
+        self.finishing_passes.text = "{:.0f}".format(float(self.j.parameter_dict["strategy parameters"]["finishing passes"]))
 
         if self.j.parameter_dict["strategy parameters"]["units"] == "inches":
             self.unit_toggle.active = True
@@ -614,6 +614,7 @@ class ShapeCutter24ScreenClass(Screen):
             if not (self.step_down.text == ""): self.step_down.text = "{:.2f}".format(float(self.step_down.text) * 25.4)
 
     def check_dimensions(self):
+        
         if not self.stock_bottom_offset.text == "" and not self.step_down.text == "" \
         and not self.finishing_passes.text == "":
             self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = float(self.stock_bottom_offset.text)

@@ -247,7 +247,7 @@ class GoScreen(Screen):
     
     start_stop_button_press_counter = 0
     paused = False    
-    job_in_progress = None
+    job_in_progress = False
     
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
@@ -275,7 +275,7 @@ class GoScreen(Screen):
         self.job_in_progress = False
         
     def on_enter(self, *args):
-        
+
         self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
         
         if self.job_in_progress == True and self.job_gcode != []:
@@ -315,7 +315,7 @@ class GoScreen(Screen):
         self.start_stop_button_press_counter += 1
 
         if self.start_stop_button_press_counter == 1:
-            
+            self.job_in_progress = True
             self.stream_job()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
             #Hide back button
@@ -325,10 +325,6 @@ class GoScreen(Screen):
             
         else:
             
-            if self.paused == False:
-                self.m.hold()
-            
-            self.m.s.is_job_streaming = False
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
     def play_pause_button_press(self):
@@ -344,15 +340,13 @@ class GoScreen(Screen):
     def pause_job(self):
         self.paused = True
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-        self.m.hold()
-        self.m.s.is_job_streaming = False
+        self.m.stop_for_a_stream_pause()
         self.job_in_progress = True
         
     def resume_job(self):
         self.paused = False
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        self.m.resume()
-        self.m.s.is_job_streaming = True
+        self.m.resume_after_a_stream_pause()
         self.job_in_progress = True
 
     def return_to_app(self):

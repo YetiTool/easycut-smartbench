@@ -57,7 +57,7 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_repeat
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_tutorial
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 
-from asmcnc.apps.shapeCutter_app.screens import popup_machine_error
+from asmcnc.apps.shapeCutter_app.screens import popup_machine
 
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
@@ -224,7 +224,7 @@ class ScreenManagerShapeCutter(object):
                       
         elif self.sm.current == 'sC14':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)            
             self.sm.current = 'sC15'
                       
@@ -467,7 +467,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC14_screen)            
         elif self.sm.current == 'sC13':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)            
         elif self.sm.current == 'sC14':
             if not self.sm.has_screen('sC16'):
@@ -684,7 +684,7 @@ class ScreenManagerShapeCutter(object):
                         
         elif self.sm.current == 'sC16':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)           
             self.sm.current = 'sC15'
                         
@@ -883,7 +883,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC14_screen)
         elif self.sm.current == 'sC17':
             if not self.sm.has_screen('sC15'):
-                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, shapecutter = self)
+                sC15_screen = screen_shapeCutter_15.ShapeCutter15ScreenClass(name = 'sC15', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC15_screen)          
         elif self.sm.current == 'sC18':
             if not self.sm.has_screen('sC16'):
@@ -1008,7 +1008,7 @@ class ScreenManagerShapeCutter(object):
         def auto_go(dt):
             self.sm.get_screen('go').start_stop_button_press()
             
-        Clock.schedule_once(auto_go, 0.5)
+        Clock.schedule_once(auto_go, 0.4)
 
     def homing_screen(self, cancel_to_screen, return_to_screen):
         
@@ -1112,7 +1112,7 @@ class ScreenManagerShapeCutter(object):
         if self.m.state().startswith("Idle"):
             self.landing()
         else: 
-            popup_machine_error.PopupMachineError(self)
+            popup_machine.PopupMachineError(self)
             
             
 #         if self.shapecutter_open == False:

@@ -26,6 +26,8 @@ class ShapeCutterJobParameters(object):
         self.refresh_parameters()
 
     def refresh_parameters(self):
+        # Defaults are all in mm
+        
         self.profile_filename = ""
         
         # parameters
@@ -100,12 +102,12 @@ class ShapeCutterJobParameters(object):
     
     def validate_shape_dimensions(self, dim, input):
 
-        self.m.get_grbl_settings()
-
         if self.shape_dict["units"] == "inches": 
             multiplier = 1/25.4
+            self.tabs_in_inches()
         else: 
             multiplier = 1
+            self.tabs_in_mm()
         
         max_X = self.m.s.setting_130*multiplier
         max_Y = self.m.s.setting_131*multiplier
@@ -149,6 +151,24 @@ class ShapeCutterJobParameters(object):
             self.shape_dict["dimensions"]["D"] = input
         
         return True
+
+    def tabs_in_inches(self):
+        
+        if self.parameter_dict["tabs"]["units"] == "mm":
+            tab_unit_multiplier = 1/25.4
+            self.parameter_dict["tabs"]["units"] = "inches"
+            self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
+
+    def tabs_in_mm(self):
+        
+        if self.parameter_dict["tabs"]["units"] == "inches":
+            tab_unit_multiplier = 25.4
+            self.parameter_dict["tabs"]["units"] = "mm"
+            self.parameter_dict["tabs"]["height"] = float(self.parameter_dict["tabs"]["height"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["width"] = float(self.parameter_dict["tabs"]["width"])*tab_unit_multiplier
+            self.parameter_dict["tabs"]["spacing"] = float(self.parameter_dict["tabs"]["spacing"])*tab_unit_multiplier
 
     def validate_cutter_dimensions(self, param, input):
         
@@ -263,12 +283,7 @@ class ShapeCutterJobParameters(object):
             
         elif param == "step down":
             
-            print "param step down"
-            
             warning_step_down = (float(self.parameter_dict["cutter dimensions"]["diameter"])*multiplier) / 2
-            
-            print warning_step_down
-            print input
             
             if not input > 0: return 0
             if input > warning_step_down: return False
@@ -347,15 +362,24 @@ class ShapeCutterJobParameters(object):
            
         material_thickness = float(self.shape_dict["dimensions"]["Z"])*dim_unit_multiplier #??
                 
+        print material_thickness
+        
         # RECTANGLE PARAMETERS  
         if shape == "rectangle":
             rect_job_x = float(self.shape_dict["dimensions"]["X"])*dim_unit_multiplier
             rect_job_y = float(self.shape_dict["dimensions"]["Y"])*dim_unit_multiplier
             rect_job_rad = float(self.shape_dict["dimensions"]["R"])*dim_unit_multiplier
         
+            print rect_job_x
+            print rect_job_y
+            print rect_job_rad                
+        
+        
         # CIRCLE PARAMS
         elif shape == "circle":
             circ_input_diameter = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier
+       
+            print circ_input_diameter
        
         # TOOL
         cutter_diameter = float(self.parameter_dict["cutter dimensions"]["diameter"])*cutter_unit_multiplier
@@ -374,12 +398,12 @@ class ShapeCutterJobParameters(object):
         # FEEDS AND SPEEDS
         xy_feed_rate = float(self.parameter_dict["feed rates"]["xy feed rate"])*rates_unit_multiplier
         plunge_feed_rate = float(self.parameter_dict["feed rates"]["z feed rate"])*rates_unit_multiplier
-        spindle_speed = float(self.parameter_dict["feed rates"]["spindle speed"])*rates_unit_multiplier
+        spindle_speed = float(self.parameter_dict["feed rates"]["spindle speed"])
         
         # STRATEGY
         stock_bottom_offset = float(self.parameter_dict["strategy parameters"]["stock bottom offset"])*strategy_unit_multiplier
         stepdown = float(self.parameter_dict["strategy parameters"]["step down"])*strategy_unit_multiplier
-        finishing_pass = float(self.parameter_dict["strategy parameters"]["finishing passes"])*strategy_unit_multiplier
+        finishing_pass = float(self.parameter_dict["strategy parameters"]["finishing passes"])
 
         z_max = - material_thickness - stock_bottom_offset
 
@@ -653,7 +677,11 @@ class ShapeCutterJobParameters(object):
     def set_job_envelope(self, lines):
 
         # there's a bug here - needs looking at! 
- 
+        if self.shape_dict["units"] == "inches":
+            dim_unit_multiplier = 25.4
+        elif self.shape_dict["units"] == "mm":
+            dim_unit_multiplier = 1
+             
         if self.shape_dict["shape"] == "rectangle":
  
             x_values = []
@@ -682,10 +710,10 @@ class ShapeCutterJobParameters(object):
             
         elif self.shape_dict["shape"] == "circle":
             
-            self.range_x[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
-            self.range_x[1] = float(self.shape_dict["dimensions"]["D"])/2
-            self.range_y[0] = -1* float(self.shape_dict["dimensions"]["D"])/2
-            self.range_y[1] = float(self.shape_dict["dimensions"]["D"])/2
+            self.range_x[0] = -1* float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_x[1] = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_y[0] = -1* float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
+            self.range_y[1] = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier/2
             
             z_values = []
     

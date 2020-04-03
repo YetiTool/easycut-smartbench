@@ -418,8 +418,6 @@ class ShapeCutterDimensionsScreenClass(Screen):
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
         
-        
-        
     def on_pre_enter(self):        
         self.info_button.opacity = 0
         
@@ -499,6 +497,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
             if not (self.input_dim2.text == ""): self.input_dim2.text = "{:.2f}".format(float(self.input_dim2.text) / 25.4)
             if not (self.input_dim3.text == ""): self.input_dim3.text = "{:.2f}".format(float(self.input_dim3.text) / 25.4)
             if not (self.input_dim4.text == ""): self.input_dim4.text = "{:.2f}".format(float(self.input_dim4.text) / 25.4)
+        
         elif self.unit_toggle.active == False:
             self.j.shape_dict["units"] = "mm"
             

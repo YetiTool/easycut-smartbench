@@ -12,9 +12,8 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
 import sys, os
-from time import sleep
+
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -320,9 +319,7 @@ class HomingScreen(Screen):
     def pre_homing_reset(self):
         
         self.layout_during_homing() 
-        self.m.soft_reset()
-        sleep(0.2)
-        self.m.unlock_after_alarm()
+        self.m.reset_pre_homing()
         self.poll_for_ready = Clock.schedule_interval(self.is_machine_idle, 1)
         
     def is_machine_idle(self, dt):  
@@ -348,9 +345,12 @@ class HomingScreen(Screen):
         # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
         self.m.set_state('Home') 
 
-        # monitor sequential stream status for completion       
-        self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+        # monitor sequential stream status for completion
+        
+        def create_poll_for_success():    
+            self.poll_for_success = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
    
+        Clock.schedule_once(lambda dt: create_poll_for_success(), 1)
 
     def home_normally(self):
         # home without suaring the axis
@@ -366,7 +366,7 @@ class HomingScreen(Screen):
 
         # Because we're setting grbl configs in this function (i.e.$x=n), we need to adopt the grbl config approach used in the serial module.
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
-
+        
         square_homing_sequence =  [
                                   '$H', # home
                                   '$20=0', # soft limits off
@@ -412,6 +412,7 @@ class HomingScreen(Screen):
             self.return_to_app()
             
     def return_to_app(self):
+        Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
         self.sm.current = self.return_to_screen
 
     def cancel_homing(self):
@@ -424,7 +425,7 @@ class HomingScreen(Screen):
         else:
             # ... will trigger an alarm screen
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-            self.m.soft_reset()
+            self.m.reset_on_cancel_homing()
             self.sm.current = self.cancel_to_screen
     
     def on_leave(self):

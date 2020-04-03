@@ -23,12 +23,14 @@ class PopupStop(Widget):
         self.m = machine
         self.sm = screen_manager
         
+        self.m.stop_for_a_stream_pause()
+        
         stop_description = "Is everything OK? You can resume the job, or cancel it completely."
         
         img = Image(size_hint_y=2, source="./asmcnc/skavaUI/img/popup_stop_visual.png", allow_stretch=True)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=stop_description)
         resume_button = Button(text='Resume')
-        cancel_button = Button(text='Cancel job')
+        cancel_button = Button(text='Cancel')
         btn_layout = BoxLayout(orientation='horizontal', spacing=20, padding=0)
         btn_layout.add_widget(resume_button)
         btn_layout.add_widget(cancel_button)
@@ -52,15 +54,12 @@ class PopupStop(Widget):
         popup.open()
     
     def machine_reset(self, *args):
-        self.m.s.is_job_streaming = True
-        self.m.soft_reset() # soft-reset
-        self.m.unlock_after_alarm() # unlocking immediately afterward, since the stop command was issued as a pause, it won't have lost position. *Think* this is ok?!
-        # BUT it may have lost the file? Cancel stream flushes the input, so even if machine remembers where it is, easycut probably doesn't.  
-        self.m.resume()
+        
+        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen?
+        self.m.stop_from_soft_stop_cancel()
 
     def machine_resume(self, *args):
-        self.m.resume()
-        self.m.s.is_job_streaming = True
+        self.m.resume_after_a_stream_pause()
         
         if self.sm.get_screen('go').paused == True:
             self.sm.get_screen('go').play_pause_button_press()

@@ -359,6 +359,7 @@ class SerialConnection(object):
             # Move head out of the way before moving to the job datum in XY.
 # >>>>>>> revert-196-vac_fix
             # self.m.prepare_machine() #PROBLEM
+            self.m.set_led_colour('GREEN')
             self.m.zUp()
   
         self.FLUSH_FLAG = True
@@ -401,7 +402,11 @@ class SerialConnection(object):
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
-                self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
+                
+                if self.sm.current == 'alarmScreen':
+                    self.sm.get_screen('errorScreen').return_to_screen = self.sm.get_screen('alarmScreen').return_to_screen
+                else:
+                    self.sm.get_screen('errorScreen').return_to_screen = self.sm.current
                 self.sm.current = 'errorScreen'
 
         # This is a special condition, used only at startup to set EEPROM settings
@@ -671,9 +676,9 @@ class SerialConnection(object):
                     if part.startswith("Door:3"):
                         pass
                     else:
-                        print "Hard " + self.m_state
-                        self.m.hold()
+                        self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
+                            print "Hard " + self.m_state
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
                 
@@ -683,12 +688,15 @@ class SerialConnection(object):
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
 
-
+ 
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             if self.sm.current != 'alarmScreen':
                 self.sm.get_screen('alarmScreen').message = message
-                self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current 
+                if self.sm.current == 'errorScreen':
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+                else:
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
                 self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
@@ -822,7 +830,7 @@ class SerialConnection(object):
             self.is_sequential_streaming = False
             log("sequential stream ended")
             if self._reset_grbl_after_stream:
-                self.m.soft_reset()
+                self.m.reset_after_sequential_stream()
                 log("GRBL Reset after sequential stream ended")
 
 
@@ -830,7 +838,7 @@ class SerialConnection(object):
         self.is_sequential_streaming = False
         _sequential_stream_buffer = []
         if reset_grbl_after_cancel:
-            self.m.soft_reset()
+            self.m.reset_after_sequential_stream()
             print "GRBL Reset after sequential stream cancelled"
 
 

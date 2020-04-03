@@ -10,7 +10,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -175,7 +175,8 @@ class VirtualBedControl(Widget):
             self.bedWidgetScatter.do_scale = False
     
     def set_workzone_to_pos_xy(self):
-        self.m.set_workzone_to_pos_xy()
+        warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
+        popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
         self.m.set_standby_to_pos()
