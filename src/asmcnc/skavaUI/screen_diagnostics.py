@@ -58,16 +58,17 @@ Builder.load_string("""
                 text: 'LED ring:'
             Button:
                 text: 'Red'
-                on_release: root.led('RED')
+                on_press: root.led('RED')
             Button:
                 text: 'Green'
-                on_release: root.led('GREEN')
+                on_press: root.led('GREEN')
             Button:
                 text: 'Blue'
-                on_release: root.led('BLUE')
+                on_press: root.led('BLUE')
+
             Button:
                 text: 'OFF'
-                on_release: root.led('off')
+                on_press: root.led('off')
 
             Label:
                 id: probe_label
@@ -85,10 +86,10 @@ Builder.load_string("""
                 text: 'X axis:'
             Button:
                 text: '-'
-                on_release: root.move('x-')
+                on_press: root.move('x-')
             Button:
                 text: '+'
-                on_release: root.move('x+')
+                on_press: root.move('x+')
             Label:
                 id: limit_x_label
                 text: 'X Min'
@@ -105,10 +106,10 @@ Builder.load_string("""
                 text: 'Y axis:'
             Button:
                 text: '-'
-                on_release: root.move('y-')
+                on_press: root.move('y-')
             Button:
                 text: '+'
-                on_release: root.move('y+')
+                on_press: root.move('y+')
             Label:
                 id: limit_y_label
                 text: 'Y Min'
@@ -125,10 +126,10 @@ Builder.load_string("""
                 text: 'Z axis:'
             Button:
                 text: '-'
-                on_release: root.move('z-')
+                on_press: root.move('z-')
             Button:
                 text: '+'
-                on_release: root.move('z+')
+                on_press: root.move('z+')
             Label:
                 id: limit_z_label
                 text: 'Z Min'
@@ -137,7 +138,7 @@ Builder.load_string("""
 
         Button:
             text: 'Return to home'
-            on_release: root.return_to_home()
+            on_press: root.return_to_home()
             
         BoxLayout:
             id: status_container

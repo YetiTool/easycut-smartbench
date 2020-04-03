@@ -98,7 +98,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: True
                     background_color: hex('#0d47a1')
-                    on_release: 
+                    on_press: 
                         root.go_to_check_job()
                         
                     BoxLayout:
@@ -119,7 +119,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: True
                     background_color: hex('#0d47a1')
-                    on_release: 
+                    on_press: 
                         root.quit_to_home()
 
                     BoxLayout:

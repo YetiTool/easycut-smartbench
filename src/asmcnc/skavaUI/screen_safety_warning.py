@@ -212,7 +212,7 @@ Builder.load_string("""
                         halign: 'right'
                         background_normal: ''
                         background_color: hex('#0d47a1')
-                        on_release:
+                        on_press:
                             root.quit_to_lobby()
                         Label:
                             text: '[color=FFFFFF]I have read the manual and understand the safety warnings[/color]'

@@ -46,10 +46,10 @@ class PopupStop(Widget):
                       size=(600, 400),
                       auto_dismiss= False)
         
-        cancel_button.bind(on_release=self.machine_reset)
-        cancel_button.bind(on_release=popup.dismiss)
-        resume_button.bind(on_release=self.machine_resume)
-        resume_button.bind(on_release=popup.dismiss)
+        cancel_button.bind(on_press=self.machine_reset)
+        cancel_button.bind(on_press=popup.dismiss)
+        resume_button.bind(on_press=self.machine_resume)
+        resume_button.bind(on_press=popup.dismiss)
         
         popup.open()
     

@@ -76,7 +76,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#a80000FF')
-                    on_release: 
+                    on_press: 
                         root.quit_to_home()
                         
                     BoxLayout:

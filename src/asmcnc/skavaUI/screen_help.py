@@ -43,9 +43,9 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.quit_to_home()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.quit_to_home()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 15

@@ -88,7 +88,7 @@ Builder.load_string("""
 #                         valign: 'top'
 #                         halign: 'center'
 #                         disabled: False
-#                         on_release:
+#                         on_press:
 #                             root.reestablish_button_press()
 #                             
 #                         BoxLayout:
@@ -112,7 +112,7 @@ Builder.load_string("""
                     valign: 'top'
                     halign: 'center'
                     disabled: False
-                    on_release:
+                    on_press:
                         root.reboot_button_press()
                         
                     BoxLayout:
@@ -139,7 +139,7 @@ Builder.load_string("""
 #                         valign: 'top'
 #                         halign: 'center'
 #                         disabled: False
-#                         on_release:
+#                         on_press:
 #                             root.quit_to_home()
 #                             
 #                         BoxLayout:
@@ -162,7 +162,7 @@ Builder.load_string("""
 #                         valign: 'top'
 #                         halign: 'center'
 #                         disabled: False
-#                         on_release:
+#                         on_press:
 #                             root.return_to_go_screen()
 #                             
 #                         BoxLayout:

@@ -147,9 +147,9 @@ Builder.load_string("""
                     background_color: hex('#FFFFFF00')
                     on_release:
                         self.background_color = hex('#FFFFFF00')
-                        root.on_ok()
                     on_press:
                         self.background_color = hex('#FFFFFFFF')
+                        root.on_ok()
                     BoxLayout:
                         padding: 20
                         size: self.parent.size
@@ -171,9 +171,9 @@ Builder.load_string("""
                     background_color: hex('#FFFFFF00')
                     on_release:
 #                        root.manager.current = 'lobby'
-                        root.sm.current = 'lobby'
                         self.background_color = hex('#FFFFFF00')
                     on_press:
+                        root.sm.current = 'lobby'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
                         padding: 20
@@ -195,9 +195,9 @@ Builder.load_string("""
                     on_release:
 #                        carousel.load_previous()
 #                        root.manager.current = 'template'
-                        root.sm.current = 'template'
                         self.background_color = hex('#FFFFFF00')
                     on_press:
+                        root.sm.current = 'template'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
                         padding: 10
@@ -218,9 +218,9 @@ Builder.load_string("""
                     background_color: hex('#FFFFFF00')
                     on_release:
 #                        carousel.load_next(mode='next')
-                        root.sm.current = 'template'
                         self.background_color = hex('#FFFFFF00')
                     on_press:
+                        root.sm.current = 'template'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
                         padding: 10

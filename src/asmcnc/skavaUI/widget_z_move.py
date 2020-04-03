@@ -41,9 +41,9 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.set_jobstart_z()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.set_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -109,9 +109,9 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.probe_z()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.probe_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -128,9 +128,9 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
-                    root.go_to_jobstart_z()
                     self.background_color = hex('#F4433600')
                 on_press: 
+                    root.go_to_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0

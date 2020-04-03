@@ -58,9 +58,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -79,9 +79,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -100,9 +100,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_all()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.delete_all()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -120,9 +120,9 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.quit_to_home()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.quit_to_home()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -140,9 +140,9 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    root.return_to_SC17(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
+                    root.return_to_SC17(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25

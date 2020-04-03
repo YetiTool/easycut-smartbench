@@ -136,7 +136,7 @@ Builder.load_string("""
                     halign: 'center'
                     disabled: False
                     background_color: hex('#0d47a1')
-                    on_release: 
+                    on_press: 
                         root.quit_to_home()
 
                     BoxLayout:
@@ -171,7 +171,7 @@ Builder.load_string("""
                 Button:
                     id: load_file_now_button
                     background_color: hex('#0d47a1')
-                    on_release:
+                    on_press:
                         root.load_file_now()
                    
                     Label:
@@ -185,7 +185,7 @@ Builder.load_string("""
                 Button:
                     id: check_gcode_button
                     background_color: hex('#0d47a1')
-                    on_release:
+                    on_press:
                         root.check_gcode()
                     
                     Label:

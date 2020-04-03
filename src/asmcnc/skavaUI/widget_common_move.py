@@ -46,7 +46,7 @@ Builder.load_string("""
 
             ToggleButton:
                 id: speed_toggle
-                on_release: root.set_jog_speeds()
+                on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
                     padding: 10
@@ -74,7 +74,7 @@ Builder.load_string("""
 
             ToggleButton:
                 id: vacuum_toggle
-                on_release: root.set_vacuum()
+                on_press: root.set_vacuum()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
                     padding: 10
@@ -91,7 +91,7 @@ Builder.load_string("""
 
             ToggleButton:
                 id: spindle_toggle
-                on_release: root.set_spindle()
+                on_press: root.set_spindle()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
                     padding: 10

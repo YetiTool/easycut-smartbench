@@ -87,7 +87,7 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     text: 'Return'
-                    on_release: 
+                    on_press: 
                         root.quit_to_home()
 
                     BoxLayout:

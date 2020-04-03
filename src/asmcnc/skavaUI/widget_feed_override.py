@@ -28,7 +28,7 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
-            on_release: root.feed_up()
+            on_press: root.feed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 10
@@ -46,7 +46,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
-                on_release: root.feed_norm()
+                on_press: root.feed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
@@ -62,7 +62,7 @@ Builder.load_string("""
                 text: "100%"           
         
         Button:
-            on_release: root.feed_down()
+            on_press: root.feed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 10
