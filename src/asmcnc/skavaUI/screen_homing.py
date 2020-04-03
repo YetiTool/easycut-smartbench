@@ -369,9 +369,10 @@ class HomingScreen(Screen):
         
         square_homing_sequence =  [
                                   '$H', # home
-                                  'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
+                                  'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
                                   'G91', # relative coords
                                   '*L11FF00',
                                   'G1 Y-28 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
