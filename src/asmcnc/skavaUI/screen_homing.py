@@ -374,10 +374,8 @@ class HomingScreen(Screen):
                                   'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
                                   'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
                                   'G91', # relative coords
-                                  '*L11FF00',
                                   'G1 Y-28 F700', # drive lower frame into legs, assumes it's starting from a 3mm pull off
                                   'G1 Y28', # re-enter work area
-                                  '*LFF00FF',
                                   'G90', # abs coords
                                   'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)
 
