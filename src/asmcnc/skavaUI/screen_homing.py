@@ -369,7 +369,7 @@ class HomingScreen(Screen):
         
         square_homing_sequence =  [
                                   '$H', # home
-                                  'G53 G0 X900', # position zHead to put CoG of X beam on the mid plane (mX: -400)
+                                  'G53 G0 X-400', # position zHead to put CoG of X beam on the mid plane (mX: -400)
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
                                   'G91', # relative coords
@@ -378,7 +378,7 @@ class HomingScreen(Screen):
                                   'G1 Y28', # re-enter work area
                                   '*LFF00FF',
                                   'G90', # abs coords
-                                  'G53 G0 X15', # position zHead to put CoG of X beam on the mid plane (mX: -400)
+                                  'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)
 
                                   # Coming up we have some $x=n commands, and the machine needs to be idle when sending these
                                   # Since it will be moving due to previous G command, we need to wait until it has stopped
