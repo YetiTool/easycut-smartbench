@@ -62,7 +62,7 @@ Cmport = 'COM3'
 initial_version = 'v1.1.3'
 
 # default starting screen
-start_screen = 'usb_filechooser'
+start_screen = 'safety'
 
 # Config management
 def check_and_update_config():
