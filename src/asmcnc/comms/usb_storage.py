@@ -59,14 +59,10 @@ class USB_storage(object):
             return False
     
     def get_path(self):
-        
         return self.usb_path
     
-    
     def start_polling_for_usb(self):
-
         self.poll_usb_event = Clock.schedule_interval(self.get_USB, .25)
- 
     
     def stop_polling_for_usb(self):
         Clock.unschedule(self.poll_usb_event)
