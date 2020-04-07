@@ -65,8 +65,8 @@ class USB_storage(object):
         self.poll_usb_event = Clock.schedule_interval(self.get_USB, 0.25)
     
     def stop_polling_for_usb(self):
-        print "I have stopped polling"
         Clock.unschedule(self.poll_usb_event)
+        if self.mount_event: Clock.unschedule(self.mount_event)
 
     is_usb_mounted_flag = False
     is_usb_mounting = False
@@ -100,7 +100,7 @@ class USB_storage(object):
                             if device == 'sda': # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
                                 self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
                                 if self.IS_USB_VERBOSE: print 'Stopped polling'
-                                Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
+                                self.mount_event = Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
             except (OSError):
                 pass
 
@@ -127,7 +127,7 @@ class USB_storage(object):
                             USB_message = 'It is now safe to remove your USB stick.'         
                             if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
                             self.is_usb_mounted_flag = False
-                            Clock.unschedule(poll_for_dismount)   
+                            Clock.unschedule(poll_for_dismount)
 #                             popup_USB.popup.dismiss()
 #                             popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
 #                             Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1)
@@ -143,6 +143,7 @@ class USB_storage(object):
     
     def mount_linux_usb(self, dt):
 
+        if self.mount_event: Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
         mount_command = "echo posys | sudo mount /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
