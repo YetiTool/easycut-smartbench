@@ -29,21 +29,20 @@ Builder.load_string("""
             pos: self.pos
             
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 50
-        size_hint_x: 1
+        orientation: 'vertical'
+        padding: 20
         size: self.parent.size
         pos: self.parent.pos
         
         BoxLayout:
+            size_hint_y: 2
+
             orientation: 'vertical'
-            spacing: 20
-            # size_hint_x: 2
+            spacing: 10
             size: self.parent.size
             pos: self.parent.pos
         
             Label:
-                size_hint_y: 0.2
                 text: '[color=000000]Safety Warning![/color]'
                 markup: True
                 font_size: '29sp' 
@@ -53,173 +52,146 @@ Builder.load_string("""
                 text_size: self.size
                 
             Label:
-                size_hint_y: 0.1
                 text: '[color=616161]\\nRead the user manual prior to use.\\nImproper use of SmartBench can cause serious injury.\\n\\n[/color]'
                 markup: True
                 font_size: '19sp' 
                 valign: 'bottom'
                 halign: 'center'
             
+        BoxLayout:
+            size_hint_y: 4
+
+            padding: 20
+            orientation: 'vertical'
             BoxLayout:
-                orientation: 'vertical'
-                BoxLayout:
-                    orientation: 'horizontal'    
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            orientation: 'right'
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            halign: 'left'
-                            text: '[color=000000]RISK OF INJURY FROM ROTATING \\nTOOLS[/color]'
-                            markup: True
-                            size:self.size
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            orientation: 'right'
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            text: '[color=000000]ALWAYS WEAR EAR DEFENDERS[/color]'
-                            markup: True    
-                            halign: 'left' 
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size    
-        
+                orientation: 'horizontal'    
                 BoxLayout:
                     orientation: 'horizontal'
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            text: '[color=000000]RISK OF INJURY BY AXIS MOTION[/color]'
-                            markup: True
-                            halign: 'left'
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            text: '[color=000000]ALWAYS WEAR EYE PROTECTION[/color]'
-                            markup: True
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            halign: 'left'
-                              
-        
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        halign: 'left'
+                        text: '[color=000000]RISK OF INJURY FROM ROTATING \\nTOOLS[/color]'
+                        markup: True
+                        size:self.size
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size
+                        
                 BoxLayout:
                     orientation: 'horizontal'
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            text: '[color=000000]NEVER PUT HANDS INTO MOVING MACHINERY[/color]'
-                            markup: True
-                            halign: 'left'
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            text: '[color=000000]ALWAYS WEAR A DUST MASK[/color]'
-                            markup: True
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            halign: 'left'
-                            
-                BoxLayout:
-                    orientation: 'horizontal'
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                            halign: 'left'
-                            size:self.texture_size
-                        Label:
-                            text: '[color=000000]  DANGER TO LIFE BY MAGNETIC FIELDS.\\n  DO NOT USE IF YOU HAVE A PACEMAKER.[/color]'
-                            markup: True
-                            halign: 'left'
-                            valign: 'middle'
-                            size:self.texture_size
-                            #text_size: self.size
-                    BoxLayout:
-                        orientation: 'horizontal'
-                        spacing:20
-                        Image:
-                            size_hint_x: 0.2
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            #source: "./asmcnc/skavaUI/img/popup_error_visual.png"
-                        Label:
-                            #text: '[color=000000]ALWAYS WEAR A DUST MASK[/color]'
-                            markup: True
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            halign: 'left'
-            
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        text: '[color=000000]ALWAYS WEAR EAR DEFENDERS, EYE PROTECTION AND DUST MASK[/color]'
+                        markup: True    
+                        halign: 'left' 
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size    
+    
             BoxLayout:
                 orientation: 'horizontal'
-                pos: self.pos
-                size_hint_y: 0.2
-                AnchorLayout:               
-                    Button:
-                        size_hint_x: 0.75
-                        pos: self.pos
-                        halign: 'right'
-                        background_normal: ''
-                        background_color: hex('#0d47a1')
-                        on_press:
-                            root.quit_to_lobby()
-                        Label:
-                            text: '[color=FFFFFF]I have read the manual and understand the safety warnings[/color]'
-                            font_size: '19sp'
-                            markup: True
-                            size: self.parent.size
-                            pos: self.parent.pos
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        text: '[color=000000]RISK OF INJURY BY AXIS MOTION[/color]'
+                        markup: True
+                        halign: 'left'
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        text: '[color=000000]NEVER PUT HANDS INTO MOVING MACHINERY[/color]'
+                        markup: True
+                        halign: 'left'
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size
+
+                        
+            BoxLayout:
+                orientation: 'horizontal'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        text: '[color=000000]DANGER TO LIFE BY MAGNETIC FIELDS.\\nDO NOT USE NEAR A PACEMAKER.[/color]'
+                        markup: True
+                        halign: 'left'
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing:20
+                    Image:
+                        size_hint_x: 1
+                        keep_ratio: True
+                        allow_stretch: True                           
+                        source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                    Label:
+                        size_hint_x: 6
+                        text: '[color=000000]ENSURE THE MACHINE IS POWERED FROM AN EARTHED SUPPLY[/color]'
+                        markup: True
+                        valign: 'middle'
+                        size:self.texture_size
+                        text_size: self.size
+                        halign: 'left'
+            
+        BoxLayout:
+            size_hint_y: 2.5
+            padding: 20
+
+            orientation: 'horizontal'
+            pos: self.pos
+            AnchorLayout:               
+                Button:
+                    pos: self.pos
+                    halign: 'right'
+                    background_normal: ''
+                    background_color: hex('#0d47a1')
+                    on_press:
+                        root.quit_to_lobby()
+                    Label:
+                        text: '[color=FFFFFF]I have read the manual and understand the safety warnings[/color]'
+                        font_size: '19sp'
+                        markup: True
+                        size: self.parent.size
+                        pos: self.parent.pos
 
               
 
