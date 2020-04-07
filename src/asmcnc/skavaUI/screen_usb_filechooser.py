@@ -134,21 +134,21 @@ verbose = True
 
 class USBFileChooser(Screen):
 
+    usb_stick = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.usb_stick = usb_storage.USB_storage()
-
     
     def on_enter(self):
         self.refresh_filechooser()
-    
-    
-    def set_USB_path(self, usb_path):      
+        
+    def on_leave(self):
+        if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
+            
+    def set_USB_path(self, usb_path):
         self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
-
 
     def refresh_filechooser(self):
 
@@ -167,16 +167,19 @@ class USBFileChooser(Screen):
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
 
         self.filechooser_usb._update_files()
-
-        
+     
     def import_usb_file(self, file_selection):
         
         # Move over the nc file
         if os.path.isfile(file_selection):
             
             # ... to cache
-            copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination
-            self.go_to_loading_screen(file_selection)
+            copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination          
+            file_name = os.path.basename(file_selection)
+            new_file_path = job_cache_dir + file_name
+            print new_file_path
+            
+            self.go_to_loading_screen(new_file_path)
         
 
     def quit_to_local(self):
@@ -186,6 +189,6 @@ class USBFileChooser(Screen):
         self.manager.current = 'home'
         
     def go_to_loading_screen(self, file_selection):
-
+        self.usb_stick.disable()
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'

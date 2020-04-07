@@ -12,7 +12,7 @@ WARNINGS:
 
 from kivy.clock import Clock
 import sys, os
-
+from asmcnc.skavaUI import popup_info
 
 class USB_storage(object):
     
@@ -21,10 +21,15 @@ class USB_storage(object):
     linux_usb_path = "/media/usb/"
 
     # For debug
-    IS_USB_VERBOSE = False
+    IS_USB_VERBOSE = True
+    
+    mount_event = None
+    stick_enabled = False
  
  
-    def __init__(self):
+    def __init__(self, screen_manager):
+        
+        self.sm = screen_manager
 
         if sys.platform == "win32":
             self.usb_path = self.windows_usb_path
@@ -33,16 +38,16 @@ class USB_storage(object):
 
  
     def enable(self):
-        
-        self.start_polling_for_usb()
-
+        if self.stick_enabled != True:
+            self.start_polling_for_usb()
+            self.stick_enabled = True
 
     def disable(self):
-        
+        self.stick_enabled = False
         self.stop_polling_for_usb()
-        if sys.platform != "win32":
-            self.unmount_linux_usb()
-
+        if self.is_usb_mounted_flag == True:
+            if sys.platform != "win32":
+                self.unmount_linux_usb()
     
     def is_available(self):
         
@@ -57,19 +62,14 @@ class USB_storage(object):
             return False
     
     def get_path(self):
-        
         return self.usb_path
     
-    
     def start_polling_for_usb(self):
-
-        self.poll_usb_event = Clock.schedule_interval(self.get_USB, .25)
- 
+        self.poll_usb_event = Clock.schedule_interval(self.get_USB, 0.25)
     
     def stop_polling_for_usb(self):
-
-        self.poll_usb_event.cancel()
-
+        Clock.unschedule(self.poll_usb_event)
+        if self.mount_event != None: Clock.unschedule(self.mount_event)
 
     is_usb_mounted_flag = False
     is_usb_mounting = False
@@ -103,23 +103,48 @@ class USB_storage(object):
                             if device == 'sda': # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
                                 self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
                                 if self.IS_USB_VERBOSE: print 'Stopped polling'
-                                Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
+                                self.mount_event = Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
             except (OSError):
                 pass
 
     def unmount_linux_usb(self):
-
-        unmount_command = 'echo posys | sudo umount '+ self.linux_usb_path
+        dismiss_event = None
+        unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
+        popup_USB = popup_info.PopupUSBInfo(self.sm, False)
+        dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 2.5)
+     
         try:
-            os.system(unmount_command) # TODO: NOT SECURE
-            self.is_usb_mounted_flag = False
-            if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
+            os.system(unmount_command)
+                       
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not UNmount USB'
+
+        def check_linux_usb_unmounted(popup_USB):
+            if sys.platform != "win32":
+
+                files_in_usb_dir = os.listdir(self.linux_usb_path)
+                
+                # If files are in directory
+                if files_in_usb_dir:
+                    self.is_usb_mounted_flag = True
+                    if self.IS_USB_VERBOSE: print 'USB: STILL MOUNTED'
+
+                # If directory is empty
+                else:      
+                    if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
+                    self.is_usb_mounted_flag = False
+                    Clock.unschedule(poll_for_dismount)
+                    if dismiss_event != None: popup_USB.popup.dismiss()
+                    new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
+                    Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 2.5)
+  
+        
+        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)
 
     
     def mount_linux_usb(self, dt):
 
+        if self.mount_event != None: Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
         mount_command = "echo posys | sudo mount /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
@@ -129,6 +154,9 @@ class USB_storage(object):
             self.is_usb_mounted_flag = True
             self.start_polling_for_usb() # restart checking for USB
             if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
+            popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
+            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 2.5)
+
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        
             self.is_usb_mounted_flag = False
