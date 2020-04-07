@@ -134,6 +134,7 @@ verbose = True
 
 class USBFileChooser(Screen):
 
+    usb_stick = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(USBFileChooser, self).__init__(**kwargs)
