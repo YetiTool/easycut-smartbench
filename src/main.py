@@ -56,7 +56,7 @@ from asmcnc.skavaUI import screen_powercycle_alert
 from asmcnc.skavaUI import screen_door
 
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v1.1.3'
