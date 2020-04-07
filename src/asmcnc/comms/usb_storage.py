@@ -62,9 +62,10 @@ class USB_storage(object):
         return self.usb_path
     
     def start_polling_for_usb(self):
-        self.poll_usb_event = Clock.schedule_interval(self.get_USB, .25)
+        self.poll_usb_event = Clock.schedule_interval(self.get_USB, 0.25)
     
     def stop_polling_for_usb(self):
+        print "I have stopped polling"
         Clock.unschedule(self.poll_usb_event)
 
     is_usb_mounted_flag = False
