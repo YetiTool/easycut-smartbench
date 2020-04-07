@@ -126,7 +126,6 @@ class PopupUSBInfo(Widget):
     def __init__(self, screen_manager, warning_message):
         
         self.sm = screen_manager
-        self.m = machine
         
         description = warning_message
         
