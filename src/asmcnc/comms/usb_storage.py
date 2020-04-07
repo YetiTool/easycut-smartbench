@@ -149,7 +149,7 @@ class USB_storage(object):
 
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
-        mount_command = "echo posys | sudo mount -ro /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
+        mount_command = "echo posys | sudo mount /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
         try:
             os.system(mount_command)
             
