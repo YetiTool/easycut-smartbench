@@ -66,7 +66,7 @@ class USB_storage(object):
     
     def stop_polling_for_usb(self):
         Clock.unschedule(self.poll_usb_event)
-        if self.mount_event: Clock.unschedule(self.mount_event)
+        if self.mount_event != None: Clock.unschedule(self.mount_event)
 
     is_usb_mounted_flag = False
     is_usb_mounting = False
@@ -143,7 +143,7 @@ class USB_storage(object):
     
     def mount_linux_usb(self, dt):
 
-        if self.mount_event: Clock.unschedule(self.mount_event)
+        if self.mount_event != None: Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
         mount_command = "echo posys | sudo mount /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
