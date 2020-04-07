@@ -45,9 +45,9 @@ class USB_storage(object):
     def disable(self):
         self.stick_enabled = False
         self.stop_polling_for_usb()
-        if sys.platform != "win32":
-            self.unmount_linux_usb()
-
+        if self.is_usb_mounted_flag == True:
+            if sys.platform != "win32":
+                self.unmount_linux_usb()
     
     def is_available(self):
         
