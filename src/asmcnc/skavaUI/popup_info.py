@@ -134,7 +134,7 @@ class PopupUSBInfo(Widget):
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 #         back_button = Button(text='[b]No[/b]', markup = True)
 #         back_button.background_normal = ''
 #         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -149,7 +149,7 @@ class PopupUSBInfo(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        self.popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -159,11 +159,11 @@ class PopupUSBInfo(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-        popup.separator_height = '4dp'
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        self.popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        self.popup.separator_height = '4dp'
+        self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=self.popup.dismiss)
 #         back_button.bind(on_press=popup.dismiss)       
 
-        popup.open()
+        self.popup.open()
