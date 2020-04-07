@@ -146,7 +146,7 @@ class USBFileChooser(Screen):
     def on_leave(self):
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
             
-    def set_USB_path(self, usb_path):      
+    def set_USB_path(self, usb_path):
         self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
