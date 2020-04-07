@@ -212,7 +212,7 @@ class LocalFileChooser(Screen):
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
     
     def on_leave(self):
-        self.poll_USB.cancel()
+        Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
     def check_USB_status(self, dt):

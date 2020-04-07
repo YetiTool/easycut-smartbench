@@ -69,8 +69,7 @@ class USB_storage(object):
  
     
     def stop_polling_for_usb(self):
-
-        self.poll_usb_event.cancel()
+        Clock.unschedule(self.poll_usb_event)
 
     is_usb_mounted_flag = False
     is_usb_mounting = False
