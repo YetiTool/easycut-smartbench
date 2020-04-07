@@ -138,12 +138,9 @@ class USBFileChooser(Screen):
     def __init__(self, **kwargs):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.usb_stick = usb_storage.USB_storage()
-
     
     def on_enter(self):
         self.refresh_filechooser()
-    
     
     def set_USB_path(self, usb_path):      
         self.filechooser_usb.path = usb_path

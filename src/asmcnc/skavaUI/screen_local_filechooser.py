@@ -204,20 +204,16 @@ class LocalFileChooser(Screen):
 
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
-        self.usb_stick.enable() # start the object scanning for USB stick
-
-
+        self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         
     def on_enter(self):
-
+        self.usb_stick.enable() # start the object scanning for USB stick
         self.refresh_filechooser()
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button        
-    
+        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
     
     def on_leave(self):
         self.poll_USB.cancel()
-#         self.usb_stick.disable()
+        self.usb_stick.disable()
 
     def check_USB_status(self, dt):
         
