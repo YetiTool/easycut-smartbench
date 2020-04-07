@@ -108,9 +108,10 @@ class USB_storage(object):
                 pass
 
     def unmount_linux_usb(self):
+        dismiss_event = None
         unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
         popup_USB = popup_info.PopupUSBInfo(self.sm, False)
-        dismiss_event = Clock.schedule_once(popup_USB.popup.dismiss(), 2.5)
+        dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 2.5)
      
         try:
             os.system(unmount_command)
