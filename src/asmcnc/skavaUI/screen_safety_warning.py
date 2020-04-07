@@ -175,7 +175,6 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 2.5
             padding: 20
-
             orientation: 'horizontal'
             pos: self.pos
             AnchorLayout:               
