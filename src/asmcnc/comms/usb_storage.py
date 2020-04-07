@@ -24,6 +24,7 @@ class USB_storage(object):
     IS_USB_VERBOSE = True
     
     mount_event = None
+    stick_enabled = False
  
  
     def __init__(self, screen_manager):
@@ -37,12 +38,12 @@ class USB_storage(object):
 
  
     def enable(self):
-        
-        self.start_polling_for_usb()
-
+        if self.stick_enabled != True:
+            self.start_polling_for_usb()
+            self.stick_enabled = True
 
     def disable(self):
-        
+        self.stick_enabled = False
         self.stop_polling_for_usb()
         if sys.platform != "win32":
             self.unmount_linux_usb()
