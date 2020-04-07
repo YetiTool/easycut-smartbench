@@ -22,6 +22,8 @@ class USB_storage(object):
 
     # For debug
     IS_USB_VERBOSE = True
+    
+    mount_event = None
  
  
     def __init__(self, screen_manager):
