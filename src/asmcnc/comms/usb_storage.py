@@ -21,7 +21,7 @@ class USB_storage(object):
     linux_usb_path = "/media/usb/"
 
     # For debug
-    IS_USB_VERBOSE = False
+    IS_USB_VERBOSE = True
  
  
     def __init__(self, screen_manager):
