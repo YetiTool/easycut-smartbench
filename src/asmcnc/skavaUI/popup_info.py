@@ -123,22 +123,27 @@ class PopupDatum(Widget):
 
 class PopupUSBInfo(Widget):
 
-    def __init__(self, screen_manager, warning_message):
+    def __init__(self, screen_manager, safe_to_remove):
         
         self.sm = screen_manager
         
-        description = warning_message
-        
+        if safe_to_remove != True:
+            description = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
+       
+            ok_button = Button(text='[b]Ok[/b]', markup = True)
+            ok_button.background_normal = ''
+            ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        elif safe_to_remove == True:
+            description = 'It is now safe to remove your USB stick.'          
+            ok_button = Button(text='[b]Ok[/b]', markup = True)
+            ok_button.background_normal = ''
+            ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
-        
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-#         back_button = Button(text='[b]No[/b]', markup = True)
-#         back_button.background_normal = ''
-#         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-
+ 
+ 
        
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
 #         btn_layout.add_widget(back_button)

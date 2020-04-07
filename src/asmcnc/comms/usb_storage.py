@@ -109,9 +109,7 @@ class USB_storage(object):
 
     def unmount_linux_usb(self):
         unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
-
-        USB_message = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
-        popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
+        popup_USB = popup_info.PopupUSBInfo(self.sm, False)
      
         try:
             os.system(unmount_command)
@@ -130,13 +128,12 @@ class USB_storage(object):
                     if self.IS_USB_VERBOSE: print 'USB: STILL MOUNTED'
 
                 # If directory is empty
-                else:
-                    USB_message = 'It is now safe to remove your USB stick.'         
+                else:      
                     if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
                     self.is_usb_mounted_flag = False
                     Clock.unschedule(poll_for_dismount)
                     popup_USB.popup.dismiss()
-                    new_popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
+                    new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
                     Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1)
   
         
