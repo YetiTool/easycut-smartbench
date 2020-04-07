@@ -177,7 +177,12 @@ class USBFileChooser(Screen):
             
             # ... to cache
             copy(file_selection, job_cache_dir) # "copy" overwrites same-name file at destination
-            self.go_to_loading_screen(file_selection)
+            
+            file_name = os.path.basename(file_selection)
+            new_file_path = job_cache_dir + file_name
+            print new_file_path
+            
+            self.go_to_loading_screen(new_file_path)
         
 
     def quit_to_local(self):
