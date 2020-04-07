@@ -445,11 +445,11 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         if error_summary == []:
-            error_summary.append('')
-        
-        # Put everything into a giant string for the ReStructed Text object        
-        self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
-        '\n\n'.join(map(str,error_summary))
+            self.display_output = ''
+        else:
+            # Put everything into a giant string for the ReStructed Text object        
+            self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
+            '\n\n'.join(map(str,error_summary))
         
 #        # If want to print all the lines of the file and oks:
 #         + \
