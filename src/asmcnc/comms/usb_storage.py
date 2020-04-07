@@ -152,6 +152,9 @@ class USB_storage(object):
             self.is_usb_mounted_flag = True
             self.start_polling_for_usb() # restart checking for USB
             if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
+            popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
+            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1)
+
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        
             self.is_usb_mounted_flag = False

@@ -127,7 +127,14 @@ class PopupUSBInfo(Widget):
         
         self.sm = screen_manager
         
-        if safe_to_remove != True:
+        if safe_to_remove == 'mounted':
+            description = 'USB stick found!\n\nPlease don\'t remove your USB stick until it is safe to do so.'
+       
+            ok_button = Button(text='[b]Ok[/b]', markup = True)
+            ok_button.background_normal = ''
+            ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        
+        elif safe_to_remove == False:
             description = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
        
             ok_button = Button(text='[b]Ok[/b]', markup = True)
