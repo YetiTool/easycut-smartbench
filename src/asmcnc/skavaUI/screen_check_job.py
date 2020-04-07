@@ -445,7 +445,7 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         if error_summary == []:
-            error_summary.append('[color=#FFFFFF]There\'s nothing here. Excellent.[/color]')
+            error_summary.append('')
         
         # Put everything into a giant string for the ReStructed Text object        
         self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
