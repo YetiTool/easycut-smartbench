@@ -109,11 +109,11 @@ class USB_storage(object):
                 pass
 
     def unmount_linux_usb(self):
-
-        unmount_command = 'echo posys | sudo umount -l -f '+ self.linux_usb_path
+        unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
+        
         try:
-            USB_message = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
-            popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
+#             USB_message = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
+#             popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
             os.system(unmount_command)
             
             def check_linux_usb_unmounted():
@@ -132,9 +132,9 @@ class USB_storage(object):
                             if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
                             self.is_usb_mounted_flag = False
                             Clock.unschedule(poll_for_dismount)   
-                            popup_USB.popup.dismiss()
-                            popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
-                            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1)
+#                             popup_USB.popup.dismiss()
+#                             popup_USB = popup_info.PopupUSBInfo(self.sm, USB_message)
+#                             Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1)
                             
                     except: pass    
             
