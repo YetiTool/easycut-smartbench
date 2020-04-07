@@ -213,7 +213,7 @@ class LocalFileChooser(Screen):
     
     def on_leave(self):
         self.poll_USB.cancel()
-        self.usb_stick.disable()
+        if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
     def check_USB_status(self, dt):
         

@@ -141,7 +141,10 @@ class USBFileChooser(Screen):
     
     def on_enter(self):
         self.refresh_filechooser()
-    
+        
+    def on_leave(self):
+        if self.sm.current != 'local_filechooser': self.usb_stick.disable()
+            
     def set_USB_path(self, usb_path):      
         self.filechooser_usb.path = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
