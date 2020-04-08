@@ -65,7 +65,7 @@ Builder.load_string("""
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
-                            root.quit_to_home()
+                            root.pro_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
@@ -150,7 +150,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Wifi App'
+                        text: 'Wifi'
                 
                 
                 BoxLayout:
@@ -185,6 +185,76 @@ Builder.load_string("""
                         text: 'Calibrate'
                         markup: True
 
+            # Carousel pane 3
+            BoxLayout:
+                orientation: 'horizontal'
+                padding: [100, 90, 100, 50]
+                spacing: 20
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+    
+                    Button:
+                        size_hint_y: 8
+                        id: load_button
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.update_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/lobby_update.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Update'
+                
+                
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+    
+                    Button:
+                        size_hint_y: 8
+                        id: load_button
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.developer_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/lobby_developer.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Developer'
+                        markup: True
+                        
         BoxLayout:
             size_hint_y: 6
             size: self.parent.size
@@ -299,21 +369,22 @@ class LobbyScreen(Screen):
                     "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
         popup_info.PopupWelcome(self.sm, description)
  
-    def quit_to_home(self):
+    def pro_app(self):
         self.am.start_pro_app()
         self.sm.current = 'home'
-    
-    def calibrate_smartbench(self):
-        self.am.start_calibration_app('lobby')
     
     def shapecutter_app(self):
         self.m.run_led_rainbow_ending_blue()
         self.am.start_shapecutter_app()
-
+    
+    def calibrate_smartbench(self):
+        self.am.start_calibration_app('lobby')
+    
     def wifi_app(self):
         self.am.start_wifi_app()
     
-    def go_to_initial_screen(self, dt):
-        #self.sm.transition = NoTransition()
-        self.sm.current = 'initial'   
-        
+    def update_app(self):
+        self.am.start_update_app()    
+    
+    def developer_app(self):
+        pass

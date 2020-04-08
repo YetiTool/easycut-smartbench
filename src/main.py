@@ -54,9 +54,6 @@ from asmcnc.skavaUI import screen_developer
 from asmcnc.skavaUI import screen_diagnostics
 from asmcnc.skavaUI import screen_powercycle_alert
 from asmcnc.skavaUI import screen_door
-
-from asmcnc.apps.SWupdater_app import screen_update_SW
-
 # developer testing
 Cmport = 'COM3'
 
@@ -117,7 +114,7 @@ class SkavaUI(App):
         sett = settings_manager.Settings()
         
         # App manager object
-        am = app_manager.AppManagerClass(sm, m)
+        am = app_manager.AppManagerClass(sm, m, sett)
         
         # initialise the screens
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
@@ -169,13 +166,9 @@ class SkavaUI(App):
         sm.add_widget(diagnostics_screen)
         if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
         sm.add_widget(door_screen)
-
-
-        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = sm)
-        sm.add_widget(update_screen)
         
         # set screen to start on
-        sm.current = 'update'
+        sm.current = 'safety'
         return sm
 
 
