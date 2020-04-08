@@ -374,7 +374,6 @@ class SWUpdateScreen(Screen):
         
         if self.wifi_image.source == self.wifi_on:
             self.set.get_sw_update()
-            self.sm.current = 'rebooting'
         else: 
             print "throw popup"
 
