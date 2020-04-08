@@ -111,7 +111,7 @@ Builder.load_string("""
                             font_size: 18
                             markup: True
                             halign: "center"
-                            valign: "middle"
+                            valign: "bottom"
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
