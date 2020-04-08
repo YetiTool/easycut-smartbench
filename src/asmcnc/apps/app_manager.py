@@ -5,6 +5,7 @@ Module to manage apps and screens
 '''
 from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.wifi_app import screen_wifi
+from asmcnc.apps.SWupdater_app import screen_update_SW
 from asmcnc.calibration_app import screen_landing
 from asmcnc.calibration_app import screen_finished
 
@@ -14,16 +15,19 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine):
+    def __init__(self, screen_manager, machine, settings):
 
         self.sm = screen_manager
         self.m = machine
+        self.set = settings
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
         
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm)
         self.sm.add_widget(wifi_screen)
+        
+
     # here are all the functions that might be called in the lobby e.g. 
     
     def start_calibration_app(self, return_to_screen):
@@ -48,4 +52,11 @@ class AppManagerClass(object):
     def start_wifi_app(self):
         self.current_app = 'wifi'
         self.sm.current = 'wifi'
+        
+    def start_update_app(self):
+        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = self.sm, settings = self.set)
+        self.sm.add_widget(update_screen)
+        
+        self.current_app = 'update'
+        self.sm.current = 'update'
     

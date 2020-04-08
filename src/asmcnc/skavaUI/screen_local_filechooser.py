@@ -209,6 +209,7 @@ class LocalFileChooser(Screen):
     def on_enter(self):
         self.usb_stick.enable() # start the object scanning for USB stick
         self.refresh_filechooser()
+        self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
     
     def on_leave(self):

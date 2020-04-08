@@ -19,7 +19,9 @@ class Settings(object):
     fw_version = ''
     latest_fw_version = ''
     
-    def __init__(self):
+    def __init__(self, screen_manager):
+        
+        self.sm = screen_manager
         
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
@@ -52,4 +54,5 @@ class Settings(object):
                 os.system(sed_sw_version)
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
                 os.system("cd /home/pi/easycut-smartbench/ && git checkout " + self.latest_sw_version)
+                self.sm.current = 'rebooting'
             else: print "Software already up to date"
