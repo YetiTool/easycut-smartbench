@@ -55,7 +55,6 @@ Builder.load_string("""
                 size_hint_y: .5
     
                 orientation: 'vertical'
-#                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos
             
@@ -67,9 +66,6 @@ Builder.load_string("""
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size
-                    
-#             Label:
-#                 size_hint_y: 0.25
                 
             BoxLayout:
                 size_hint_y: 4
@@ -190,8 +186,7 @@ Builder.load_string("""
             Button:
                 size_hint_y: 1.5
                 background_color: hex('#FFFFFF00')
-                on_press:
-                    root.go_to_next_screen()
+                on_press: root.go_to_next_screen()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos

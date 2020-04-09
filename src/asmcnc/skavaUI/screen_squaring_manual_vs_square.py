@@ -48,8 +48,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press:
-                    root.already_square()
+                on_press: root.already_square()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -61,8 +60,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 0.2
                 background_color: hex('#FFFFFF00')
-                on_press:
-                    root.popup_help()
+                on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -74,8 +72,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press:
-                    root.needs_auto_squaring()
+                on_press: root.needs_auto_squaring()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
