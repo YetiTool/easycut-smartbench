@@ -26,6 +26,7 @@ class USB_storage(object):
     mount_event = None
     stick_enabled = False
  
+    alphabet_string = 'abcdefghijklmnopqrstuvwxyz'
  
     def __init__(self, screen_manager):
         
@@ -36,7 +37,6 @@ class USB_storage(object):
         else:
             self.usb_path = self.linux_usb_path
 
- 
     def enable(self):
         if self.stick_enabled != True:
             self.start_polling_for_usb()
@@ -99,11 +99,16 @@ class USB_storage(object):
                     else:
                         # read devices dir
                         devices = os.listdir('/dev/')
-                        for device in devices:
-                            if device == 'sda': # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
+#                         for device in devices:
+                        for char in self.alphabet_string:
+                            if ('sd' + char) in devices: # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
+                                
+                                print ('sd' + char)
+                                
                                 self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
                                 if self.IS_USB_VERBOSE: print 'Stopped polling'
-                                self.mount_event = Clock.schedule_once(self.mount_linux_usb, 1) # allow time for linux to establish filesystem after os detection of device
+                                self.mount_event = Clock.schedule_once(lambda dt: self.mount_linux_usb('sd' + char), 1) # allow time for linux to establish filesystem after os detection of device
+                                break
             except (OSError):
                 pass
 
@@ -140,14 +145,13 @@ class USB_storage(object):
   
         
         poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)
-
     
-    def mount_linux_usb(self, dt):
+    def mount_linux_usb(self, device):
 
         if self.mount_event != None: Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
-        mount_command = "echo posys | sudo mount /dev/sda1 " + self.linux_usb_path # TODO: NOT SECURE
+        mount_command = "echo posys | sudo mount /dev/" + device + "1 " + self.linux_usb_path # TODO: NOT SECURE
         try:
             os.system(mount_command)
             
