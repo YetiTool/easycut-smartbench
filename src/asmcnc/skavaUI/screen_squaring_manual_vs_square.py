@@ -8,13 +8,8 @@ Squaring decision: manual or auto?
 
 import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
-from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 
 Builder.load_string("""
 
@@ -105,7 +100,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
-        self.sm.current = 'lobby'
+        self.sm.current = 'prepare_to_home'
     
     def popup_help(self):
         pass

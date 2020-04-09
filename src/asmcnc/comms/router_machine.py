@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-from asmcnc.comms import serial_connection
+from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys
 from __builtin__ import True

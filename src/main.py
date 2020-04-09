@@ -55,6 +55,9 @@ from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
+
+
 # developer testing
 Cmport = 'COM4'
 
@@ -142,6 +145,7 @@ class SkavaUI(App):
         if start_screen == 'pc_alert': powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
         squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
+        prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
 
 
 
@@ -171,6 +175,7 @@ class SkavaUI(App):
         if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
         sm.add_widget(door_screen)
         sm.add_widget(squaring_decision_screen)
+        sm.add_widget(prepare_to_home_screen)
         
         # set screen to start on
         sm.current = 'safety'
