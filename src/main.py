@@ -112,7 +112,7 @@ class SkavaUI(App):
         job_gcode = []  # declare g-code object
         
         # Initialise settings object
-        sett = settings_manager.Settings()
+        sett = settings_manager.Settings(sm)
         
         # App manager object
         am = app_manager.AppManagerClass(sm, m)

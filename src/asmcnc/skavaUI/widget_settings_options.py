@@ -145,7 +145,6 @@ class SettingsOptions(Widget):
 
     def get_sw_update(self):
         self.set.get_sw_update()
-        self.sm.current = 'rebooting'
         
         ## FW flash functions: 
         
