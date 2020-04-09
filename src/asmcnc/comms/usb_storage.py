@@ -151,7 +151,7 @@ class USB_storage(object):
         if self.mount_event != None: Clock.unschedule(self.mount_event)
         if self.IS_USB_VERBOSE: print 'Attempting to mount'
 
-        mount_command = "echo posys | sudo mount /dev/" + device + " " + self.linux_usb_path # TODO: NOT SECURE
+        mount_command = "echo posys | sudo mount /dev/" + device + "1 " + self.linux_usb_path # TODO: NOT SECURE
         try:
             os.system(mount_command)
             
