@@ -25,37 +25,37 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.comms import router_machine 
+from asmcnc.comms import router_machine  # @UnresolvedImport
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager
-from settings import settings_manager
+from asmcnc.apps import app_manager # @UnresolvedImport
+from settings import settings_manager # @UnresolvedImport
 
-from asmcnc.skavaUI import screen_initial, screen_help
-from asmcnc.skavaUI import screen_home
-from asmcnc.skavaUI import screen_local_filechooser
-from asmcnc.skavaUI import screen_usb_filechooser
-from asmcnc.skavaUI import screen_go
-from asmcnc.skavaUI import screen_template
-from asmcnc.skavaUI import screen_lobby
-from asmcnc.skavaUI import screen_vj_polygon
-from asmcnc.skavaUI import screen_file_loading
-from asmcnc.skavaUI import screen_check_job
-from asmcnc.skavaUI import screen_alarm
-from asmcnc.skavaUI import screen_error
-from asmcnc.skavaUI import screen_serial_failure
-from asmcnc.skavaUI import screen_homing
-from asmcnc.skavaUI import screen_safety_warning
-from asmcnc.skavaUI import screen_mstate_warning
-from asmcnc.skavaUI import screen_homing_warning
-from asmcnc.skavaUI import screen_boundary_warning
-from asmcnc.skavaUI import screen_rebooting
-from asmcnc.skavaUI import screen_job_done
-from asmcnc.skavaUI import screen_developer
-from asmcnc.skavaUI import screen_diagnostics
-from asmcnc.skavaUI import screen_powercycle_alert
-from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_initial, screen_help # @UnresolvedImport
+from asmcnc.skavaUI import screen_home # @UnresolvedImport
+from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
+from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
+from asmcnc.skavaUI import screen_go # @UnresolvedImport
+from asmcnc.skavaUI import screen_template # @UnresolvedImport
+from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
+from asmcnc.skavaUI import screen_vj_polygon # @UnresolvedImport
+from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
+from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
+from asmcnc.skavaUI import screen_alarm # @UnresolvedImport
+from asmcnc.skavaUI import screen_error # @UnresolvedImport
+from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing # @UnresolvedImport
+from asmcnc.skavaUI import screen_safety_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
+from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_done # @UnresolvedImport
+from asmcnc.skavaUI import screen_developer # @UnresolvedImport
+from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
+from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
+from asmcnc.skavaUI import screen_door # @UnresolvedImport
 # developer testing
-Cmport = 'COM3'
+Cmport = 'COM4'
 
 # Current version active/working on
 initial_version = 'v1.1.4'
