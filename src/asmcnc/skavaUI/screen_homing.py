@@ -15,7 +15,7 @@ from kivy.clock import Clock
 import sys, os
 
 
-from asmcnc.skavaUI import widget_status_bar
+from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 
 # Kivy UI builder:
 Builder.load_string("""
