@@ -148,7 +148,6 @@ class DoorScreen(Screen):
     
     dev_win_dt = 2
     
-    is_squaring_XY_needed_after_homing = True
     door_label = ObjectProperty()
     door_text = StringProperty()
 

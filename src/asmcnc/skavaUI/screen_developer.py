@@ -316,7 +316,7 @@ class DeveloperScreen(Screen):
         sys.exit()
 
     def square_axes(self):
-        self.sm.get_screen('homing').is_squaring_XY_needed_after_homing = True
+        self.m.is_squaring_XY_needed_after_homing = True
         self.m.home_all()
 
     def return_to_lobby(self):

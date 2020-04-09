@@ -178,37 +178,28 @@ Builder.load_string("""
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
                             size_hint_x: 6
-                            text: '[color=333333]Ensure the machine is powered from an earth supply[/color]'
+                            text: '[color=333333]Ensure the machine is powered from an earthed supply[/color]'
                             markup: True
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
 
-#             Label:
-#                 size_hint_y: 0.25
-                
-            BoxLayout:
-                size_hint_y: 1
-                padding: 
-                orientation: 'horizontal'
-                pos: self.pos
-                AnchorLayout:               
-                    Button:
-                        pos: self.pos
-                        halign: 'right'
-                        background_normal: ''
-                        background_color: hex('#1e88e5')
-                        on_press:
-                            root.quit_to_lobby()
-                        Label:
-                            text: '[color=FFFFFF]I have read the manual and understand the safety warnings[/color]'
-                            font_size: '19sp'
-                            markup: True
-                            size: self.parent.size
-                            pos: self.parent.pos
-    
-                  
+  
+
+            Button:
+                size_hint_y: 1.5
+                background_color: hex('#FFFFFF00')
+                on_press:
+                    root.go_to_next_screen()
+                BoxLayout:
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/safety_acceptance_button.png"
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True 
+              
 
 """)
 
@@ -222,10 +213,10 @@ class SafetyScreen(Screen):
         # Status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = '#1e88e5'
+        self.status_bar_widget.cheeky_color = '#1976d2'
             
-    def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+    def go_to_next_screen(self):
+        self.sm.current = 'squaring_decision'
         
     def on_leave(self):
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 

@@ -54,6 +54,7 @@ from asmcnc.skavaUI import screen_developer # @UnresolvedImport
 from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
 # developer testing
 Cmport = 'COM4'
 
@@ -130,7 +131,7 @@ class SkavaUI(App):
         alarm_screen = screen_alarm.AlarmScreenClass(name='alarmScreen', screen_manager = sm, machine = m)
         serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
         homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
-        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm)
+        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m)
         homing_warning_screen = screen_homing_warning.WarningHoming(name = 'homingWarning', screen_manager = sm, machine =m)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
@@ -140,6 +141,9 @@ class SkavaUI(App):
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
         if start_screen == 'pc_alert': powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
+        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
+
+
 
 
         # add the screens to screen manager
@@ -166,6 +170,7 @@ class SkavaUI(App):
         sm.add_widget(diagnostics_screen)
         if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
         sm.add_widget(door_screen)
+        sm.add_widget(squaring_decision_screen)
         
         # set screen to start on
         sm.current = 'safety'
