@@ -104,7 +104,7 @@ class USB_storage(object):
                             if ('sd' + char) in devices: # sda is a file to a USB storage device. Subsequent usb's = sdb, sdc, sdd etc
                                 self.stop_polling_for_usb() # temporarily stop polling for USB while mounting, and attempt to mount
                                 if self.IS_USB_VERBOSE: print 'Stopped polling'
-                                self.mount_event = Clock.schedule_once(lambda dt: self.mount_linux_usb(device), 1) # allow time for linux to establish filesystem after os detection of device
+                                self.mount_event = Clock.schedule_once(lambda dt: self.mount_linux_usb('sd' + char), 1) # allow time for linux to establish filesystem after os detection of device
                                 break
             except (OSError):
                 pass
