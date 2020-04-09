@@ -13,7 +13,7 @@ import sys, os
 
 Builder.load_string("""
 
-<HomingScreenActive>:
+<SquaringScreenActive>:
 
     canvas:
         Color: 
@@ -27,13 +27,14 @@ Builder.load_string("""
         padding: 40
         orientation: 'vertical'
 
+
         Label:
-            size_hint_y: 1
+            size_hint_y: .5
 
         BoxLayout:
             orientation: 'horizontal'
             spacing: 30
-            size_hint_y: 1.5
+            size_hint_y: 2
 
             Button:
                 size_hint_x: 1
@@ -43,13 +44,13 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/home_big.png"
+                        source: "./asmcnc/skavaUI/img/squaring_icon_big.png"
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
                         
             Label:
-                size_hint_x: .5
-                text: '[color=333333]Homing...[/color]'
+                size_hint_x: .6
+                text: '[color=333333]Squaring...[/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
@@ -60,7 +61,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.stop_homing()
+                on_press: root.stop_squaring()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -70,21 +71,34 @@ Builder.load_string("""
                         allow_stretch: True 
                         
         Label:
-            size_hint_y: 1                
+            size_hint_y: .5
+            
+        Label:
+            size_hint_y: 1
+            text: '[color=333333]This operation will over-drive the X beam into the legs. This is normal.[/color]'
+            markup: True
+            font_size: '30px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size             
+
+        Label:
+            size_hint_y: .5
 
 """)
 
 
-class HomingScreenActive(Screen):
+class SquaringScreenActive(Screen):
     
     
     def __init__(self, **kwargs):
-        super(HomingScreenActive, self).__init__(**kwargs)
+        super(SquaringScreenActive, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
     
     def windows_hack_to_procede(self):
-        self.sm.current = 'squaring_active'
+        self.sm.current = 'lobby'
     
-    def stop_homing(self):
+    def stop_squaring(self):
         pass

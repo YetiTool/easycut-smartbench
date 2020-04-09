@@ -57,6 +57,7 @@ from asmcnc.skavaUI import screen_door # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
 
 
 # developer testing
@@ -148,6 +149,7 @@ class SkavaUI(App):
         squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
         homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
+        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
 
 
 
@@ -179,9 +181,11 @@ class SkavaUI(App):
         sm.add_widget(squaring_decision_screen)
         sm.add_widget(prepare_to_home_screen)
         sm.add_widget(homing_active_screen)
+        sm.add_widget(squaring_active_screen)
         
         # set screen to start on
         sm.current = 'safety'
+#         sm.current = 'squaring_active'
         return sm
 
 

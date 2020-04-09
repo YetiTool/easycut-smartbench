@@ -61,9 +61,10 @@ class SerialConnection(object):
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
-        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = serial_error
-            self.sm.current = 'serialScreen'
+        if sys.platform != "win32":
+            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+                self.sm.get_screen('serialScreen').error_description = serial_error
+                self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
         print('start establish')
