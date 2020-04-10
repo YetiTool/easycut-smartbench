@@ -30,14 +30,11 @@ from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 
-from asmcnc.skavaUI import screen_initial, screen_help # @UnresolvedImport
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_go # @UnresolvedImport
-from asmcnc.skavaUI import screen_template # @UnresolvedImport
 from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
-from asmcnc.skavaUI import screen_vj_polygon # @UnresolvedImport
 from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
 from asmcnc.skavaUI import screen_alarm # @UnresolvedImport
@@ -128,8 +125,6 @@ class SkavaUI(App):
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode)
-        template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
-        vj_polygon_screen = screen_vj_polygon.ScreenVJPolygon(name='vj_polygon', screen_manager = sm)
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
@@ -160,8 +155,6 @@ class SkavaUI(App):
         sm.add_widget(local_filechooser)
         sm.add_widget(usb_filechooser)
         sm.add_widget(go_screen)
-        sm.add_widget(template_screen)
-        sm.add_widget(vj_polygon_screen)
         sm.add_widget(loading_screen)
         sm.add_widget(checking_screen)
         sm.add_widget(error_screen)
@@ -185,7 +178,7 @@ class SkavaUI(App):
         
         # set screen to start on
         sm.current = 'safety'
-#         sm.current = 'squaring_active'
+#         sm.current = 'squaring_decision'
         return sm
 
 

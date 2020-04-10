@@ -28,8 +28,35 @@ Builder.load_string("""
         padding: 40
         orientation: 'vertical'
 
-        Label:
-            size_hint_y: 1
+        # Cancel button
+        BoxLayout:
+            size_hint: (None,None)
+            height: dp(20)
+            padding: (20,0,20,0)
+            spacing: 680
+            orientation: 'horizontal'
+            pos: self.parent.pos
+
+            Label:
+                text: ""
+
+            Button:
+                size_hint: (None,None)
+                height: dp(50)
+                width: dp(50)
+                background_color: hex('#FFFFFF00')
+                opacity: 1
+                on_press: root.cancel()
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/cancel_btn_decision_context.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
         Label:
             size_hint_y: 1
@@ -43,7 +70,7 @@ Builder.load_string("""
 
         Label:
             size_hint_y: 1
-            text: '[color=333333]Press button to home[/color]'
+            text: '[color=333333]Then, [b]press button[/b] to home.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -73,15 +100,28 @@ Builder.load_string("""
 
 
 class HomingScreenPrepare(Screen):
+
+
+    cancel_to_screen = 'lobby'   
+    return_to_screen = 'lobby'   
     
     
     def __init__(self, **kwargs):
+        
         super(HomingScreenPrepare, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
     
+    
     def begin_homing(self):
+
+        self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
     
     
-    
+    def cancel(self):
+        
+        self.sm.current = self.cancel_to_screen
+        
+        

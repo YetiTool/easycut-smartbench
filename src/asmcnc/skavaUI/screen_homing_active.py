@@ -33,7 +33,7 @@ Builder.load_string("""
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 30
+            spacing: 20
             size_hint_y: 1.5
 
             Button:
@@ -50,7 +50,7 @@ Builder.load_string("""
                         
             Label:
                 size_hint_x: .5
-                text: '[color=333333]Homing...[/color]'
+                text: '[color=333333][b]Homing...[/b][/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
@@ -113,7 +113,6 @@ class HomingScreenActive(Screen):
      
                 # Check for completion - since it's a sequential stream, need a poll loop
                 self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
-
     
         elif self.m.state().startswith('Alarm'):
             # Alarm condition - needs to be cleared before homing can commence
@@ -143,6 +142,8 @@ class HomingScreenActive(Screen):
         self.m.is_machine_homed = True # clear this flag too
         
         if self.m.is_squaring_XY_needed_after_homing:
+            self.sm.get_screen('squaring_active').cancel_to_screen = self.cancel_to_screen
+            self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
             self.sm.current = 'squaring_active'
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)

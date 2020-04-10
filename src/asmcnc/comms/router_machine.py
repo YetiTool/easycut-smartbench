@@ -460,8 +460,6 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
         self.zUp()    
 
-    def home_all(self):
-        self.sm.current = 'homing'
 
 
 # LIGHTING

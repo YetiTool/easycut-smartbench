@@ -59,7 +59,7 @@ Builder.load_string("""
                 pos: self.parent.pos
             
                 Label:
-                    text: '[color=333333]Safety Warning[/color]'
+                    text: '[color=333333][b]Safety Warning[/b][/color]'
                     markup: True
                     font_size: '29sp' 
                     valign: 'middle'

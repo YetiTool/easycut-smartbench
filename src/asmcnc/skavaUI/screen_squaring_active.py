@@ -51,7 +51,7 @@ Builder.load_string("""
                         
             Label:
                 size_hint_x: .6
-                text: '[color=333333]Squaring...[/color]'
+                text: '[color=333333][b]Squaring...[/b][/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
@@ -76,7 +76,7 @@ Builder.load_string("""
             
         Label:
             size_hint_y: 1
-            text: '[color=333333]This operation will over-drive the X beam into the legs. This is normal.[/color]'
+            text: '[color=333333]This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -92,7 +92,8 @@ Builder.load_string("""
 
 class SquaringScreenActive(Screen):
     
-    
+    return_to_screen = 'lobby'
+    cancel_to_screen = 'lobby'     
     poll_for_completion_loop = None
     
     
@@ -112,9 +113,10 @@ class SquaringScreenActive(Screen):
 
     def on_enter(self):
 
-        self.start_auto_squaring()
-        self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
-
+        if sys.platform != 'win32':
+            self.start_auto_squaring()
+            self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+            print "Polling for completion"
 
     def start_auto_squaring(self):
 
@@ -172,11 +174,14 @@ class SquaringScreenActive(Screen):
 
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
         self.m.is_squaring_XY_needed_after_homing = False
-        Clock.schedule_once(lambda dt: self.return_to_screen('homing_active'), 0.5)
+        Clock.schedule_once(lambda dt: self.return_to_homing_active_screen(), 0.5)
 
 
-    def return_to_screen(self, screen_name):
-        self.sm.current = screen_name
+    def return_to_homing_active_screen(self):
+        
+        self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
+        self.sm.current = 'homing_active'
 
 
     def cancel_squaring(self):

@@ -67,12 +67,11 @@ class SerialConnection(object):
                 self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
-        print('start establish')
+        print('Start to establish connection...')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
-                print('self.s. done')
                 self.suppress_error_screens = True
                 return True
             except:
@@ -111,7 +110,7 @@ class SerialConnection(object):
     def initialise_grbl(self):
 
         if self.is_connected():
-            print('initialise_grbl')
+            print('Initialising grbl...')
             self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
             Clock.schedule_once(self.start_services, 5) # Delay for grbl to initialize
 
