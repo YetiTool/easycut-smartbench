@@ -66,6 +66,7 @@ class Settings(object):
                 
                 if unformatted_git_output.startswith('Note: checking out'):
                     git_output = str(unformatted_git_output).split('\n')
+                    git_output = list(filter(lambda x: x!= '', git_output))
                     
                     print git_output
                     
