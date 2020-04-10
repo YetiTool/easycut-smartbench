@@ -58,9 +58,9 @@ class Settings(object):
 
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
-                cmd  = ["cd /home/pi/easycut-smartbench/", "&&", "git checkout", self.latest_sw_version]
+                cmd  = ["cd", "/home/pi/easycut-smartbench/", "&&", "git checkout", self.latest_sw_version]
 
-                output = subprocess.Popen(cmd).communicate()[0]
+                output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
                 print output
                 self.sm.current = 'rebooting'
             else: print "Software already up to date"
