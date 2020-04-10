@@ -57,24 +57,30 @@ class Settings(object):
 #                 os.system(sed_sw_version)
 # 
 #                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
-                os.system("cd /home/pi/easycut-smartbench/")
-                cmd  = ["git", "checkout", self.latest_sw_version]
-                #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
-                p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                
-                unformatted_git_output = p.communicate()[1]
-                
-                if unformatted_git_output.startswith('Note: checking out'):
-                    git_output = str(unformatted_git_output).split('\n')
-                    git_output = list(filter(lambda x: x!= '', git_output))
-                    
-                    print git_output
-                    
-                    print str(git_output[0])
-                    print str(git_output[-1])
-                    
-                    if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
-                        description = str(git_output[0]) + '\n' + str(git_output[-1])
-                        popup_info.PopupWelcome(self.sm, description)
+
+                os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git')
+
+#                 os.system("cd /home/pi/easycut-smartbench/")
+#                 cmd  = ["git", "checkout", self.latest_sw_version]
+#                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
+#                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#                 
+#                 unformatted_git_output = p.communicate()[1]
+#                 
+#                 if unformatted_git_output.startswith('Note: checking out'):
+#                     git_output = str(unformatted_git_output).split('\n')
+#                     git_output = list(filter(lambda x: x!= '', git_output))
+#                     
+#                     print git_output
+#                     
+#                     print str(git_output[0])
+#                     print str(git_output[-1])
+#                     
+#                     if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
+#                         description = str(git_output[0]) + '\n' + str(git_output[-1])
+#                         popup_info.PopupWelcome(self.sm, description)
+#                 
+#                 else: 
+#                     print "error message!"
                 #self.sm.current = 'rebooting'
             else: print "Software already up to date"
