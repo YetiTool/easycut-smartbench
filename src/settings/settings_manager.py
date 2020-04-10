@@ -60,7 +60,7 @@ class Settings(object):
 
                 cmd  = ["cd /home/pi/easycut-smartbench/", "&&", "git checkout", self.latest_sw_version]
 
-                output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+                output = subprocess.Popen(cmd).communicate()[0]
                 print output
                 self.sm.current = 'rebooting'
             else: print "Software already up to date"
