@@ -62,8 +62,12 @@ class Settings(object):
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
-                description = p.communicate()[1]
+                git_output = p.communicate()[1]
                 
-                popup_info.PopupWelcome(self.sm, description)
+                if git_output.startswith('Note: checking out'):
+                    git_output.split('\n')
+                    if str(git_output[-1].startswith('HEAD is now at') and str(git_output[-1].endswith('updated version number'):
+                        description = str(git_output[0]) + '\n' + str(git_output[-1])
+                        popup_info.PopupWelcome(self.sm, description)
                 #self.sm.current = 'rebooting'
             else: print "Software already up to date"
