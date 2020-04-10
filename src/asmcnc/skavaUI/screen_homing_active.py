@@ -39,7 +39,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.windows_hack_to_procede()
+                on_press: root.windows_cheat_to_procede()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -91,7 +91,7 @@ class HomingScreenActive(Screen):
         self.m=kwargs['machine']
 
     
-    def windows_hack_to_procede(self):
+    def windows_cheat_to_procede(self):
 
         if sys.platform == 'win32':
             self.homing_detected_as_complete()
@@ -139,7 +139,7 @@ class HomingScreenActive(Screen):
 
     def homing_detected_as_complete(self):
 
-        self.poll_for_completion_loop.cancel()
+        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
         self.m.is_machine_homed = True # clear this flag too
         
         if self.m.is_squaring_XY_needed_after_homing:
