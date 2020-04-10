@@ -67,6 +67,8 @@ class Settings(object):
                 if git_output.startswith('Note: checking out'):
                     git_output.split('\n')
                     
+                    print git_output
+                    
                     print str(git_output[0])
                     print str(git_output[-1])
                     
