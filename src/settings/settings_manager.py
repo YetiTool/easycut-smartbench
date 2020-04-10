@@ -29,20 +29,20 @@ class Settings(object):
         self.refresh_sw_version()
         
     def refresh_sw_version(self):
-        self.sw_version = str(os.popen("git describe --tags").read())
-        self.sw_hash = str(os.popen("git rev-parse --short HEAD").read())
-        self.sw_branch = str(os.popen("git branch | grep \*").read())
+        self.sw_version = str(os.popen("git describe --tags").read()).strip('\n')
+        self.sw_hash = str(os.popen("git rev-parse --short HEAD").read()).strip('\n')
+        self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read())
+        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
     def refresh_platform_version(self):
-        self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read())
-        self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read())
-        self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read())
+        self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
+        self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
+        self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read())
+        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
     def get_sw_update(self):
         
