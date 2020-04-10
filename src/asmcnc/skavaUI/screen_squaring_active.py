@@ -150,10 +150,14 @@ class SquaringScreenActive(Screen):
                                   'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
                                   '$21=1', # soft limits on
                                   '$20=1', # soft limits off
-                                  '$H' # home - which also issues a "blocking ok" response
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
+
                                   ]
 
+        self.m.set_led_colour('ORANGE')
         self.m.s.start_sequential_stream(square_homing_sequence)
+
+        
         print "Auto squaring..."
 
 

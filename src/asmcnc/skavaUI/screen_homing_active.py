@@ -105,6 +105,7 @@ class HomingScreenActive(Screen):
             if sys.platform != 'win32':
 
                 # Issue homing command
+                self.m.set_led_colour('MAGENTA')
                 normal_homing_sequence = ['$H']
                 self.m.s.start_sequential_stream(normal_homing_sequence)
         
