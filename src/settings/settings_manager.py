@@ -64,7 +64,8 @@ class Settings(object):
                 print "output"
                 if p.returncode == 0:
                     return stdout.strip()
-                
+                    print repr(stdout)
+                    print repr(stderr)             
                 else:
                     # handle error
                     print repr(stdout)
