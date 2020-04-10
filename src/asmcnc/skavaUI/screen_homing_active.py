@@ -143,7 +143,7 @@ class HomingScreenActive(Screen):
         self.m.is_machine_homed = True # clear this flag too
         
         if self.m.is_squaring_XY_needed_after_homing:
-            self.sm = 'squaring_active'
+            self.sm.current = 'squaring_active'
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
             self.sm.current = self.return_to_screen
