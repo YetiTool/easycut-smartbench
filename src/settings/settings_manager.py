@@ -51,14 +51,15 @@ class Settings(object):
         ##      Update SW according to latest release:
                 os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
                 
-                sed_sw_version = 'sudo sed -i "s/version=' + str(self.sw_version) + '/version=' + str(self.latest_sw_version) + '/" /home/pi/easycut-smartbench/src/config.txt'
+                sed_sw_version = ''.join('sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
+                                        str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt')
 
                 print sed_sw_version
                 os.system(sed_sw_version)
 
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
-                cmd  = ["cd", "/home/pi/easycut-smartbench/", "&&", "git checkout", self.latest_sw_version]
+                cmd  = ["cd", "/home/pi/easycut-smartbench/", "&&", "git", "checkout", self.latest_sw_version]
 
                 output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
                 print output
