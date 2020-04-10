@@ -106,7 +106,8 @@ class HomingScreenActive(Screen):
 
                 # Issue homing command
                 self.m.set_led_colour('MAGENTA')
-                normal_homing_sequence = ['$H']
+                normal_homing_sequence = ['G4 P0.25', # delay, to guarantee LED command to process
+                                          '$H']
                 self.m.s.start_sequential_stream(normal_homing_sequence)
         
                 # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
