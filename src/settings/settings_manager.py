@@ -49,14 +49,14 @@ class Settings(object):
         if sys.platform != 'win32':
             if self.latest_sw_version != self.sw_version:
         ##      Update SW according to latest release:
-                os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
-                
-                sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
-                                        str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
-                os.system(sed_sw_version)
-
-                os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
-                os.system("cd /home/pi/easycut-smartbench/")
+#                 os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
+#                 
+#                 sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
+#                                         str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
+#                 os.system(sed_sw_version)
+# 
+#                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
+#                 os.system("cd /home/pi/easycut-smartbench/")
                 cmd  = ["git", "checkout", self.latest_sw_version]
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
