@@ -59,7 +59,7 @@ class Settings(object):
 #                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
                 os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup && ' +
-                'sudo rm easycut-smartbench -r && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench && ./starteasycut.sh')
+                'sudo rm easycut-smartbench -r && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench && sudo rm easycut-smartbench -r && ./starteasycut.sh')
                
 #                 os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
 #                 '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
