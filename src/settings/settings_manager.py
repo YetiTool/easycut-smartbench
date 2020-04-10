@@ -5,6 +5,7 @@ Module to get and store settings info
 '''
 
 import sys,os, subprocess
+from asmcnc.skavaUI import popup_info
 
 class Settings(object):
     
@@ -61,7 +62,8 @@ class Settings(object):
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
-                print p.communicate()[1]
-
+                description = p.communicate()[1]
+                
+                popup_info.PopupWelcome(self.sm, description)
                 #self.sm.current = 'rebooting'
             else: print "Software already up to date"
