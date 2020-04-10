@@ -127,7 +127,6 @@ class SquaringScreenActive(Screen):
         # So no direct writing to serial here, we're waiting for grbl responses before we send each line:
         
         square_homing_sequence =  [
-                                  '$H', # home
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
                                   'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
