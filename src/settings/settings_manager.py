@@ -56,21 +56,12 @@ class Settings(object):
 #                 os.system(sed_sw_version)
 # 
 #                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
-#                 os.system("cd /home/pi/easycut-smartbench/")
+                os.system("cd /home/pi/easycut-smartbench/")
                 cmd  = ["git", "checkout", self.latest_sw_version]
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
-                print p.communicate()
-                stdout, stderr = p.communicate()
-                print "output"
-                if p.returncode == 0:
-                    return stdout.strip()
-                    print repr(stdout)
-                    print repr(stderr)             
-                else:
-                    # handle error
-                    print repr(stdout)
-                    print repr(stderr)
+                print p.communicate()[1]
+
                 #self.sm.current = 'rebooting'
             else: print "Software already up to date"
