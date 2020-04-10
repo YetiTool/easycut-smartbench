@@ -357,7 +357,7 @@ class SWUpdateScreen(Screen):
  
     def on_enter(self):
         self.check_wifi_connection(1)
-        Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
+        self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
 
         self.usb_stick.enable()
         self.check_USB_status(1)
@@ -365,6 +365,7 @@ class SWUpdateScreen(Screen):
 
     def on_leave(self):
         Clock.unschedule(self.poll_USB)
+        Clock.unschedule(self.poll_wifi)
         self.usb_stick.disable()
 
     def quit_to_lobby(self):
@@ -379,7 +380,7 @@ class SWUpdateScreen(Screen):
 
     def check_wifi_connection(self, dt):
 
-        self.wifi_image.source = self.wifi_off
+        #self.wifi_image.source = self.wifi_off
 
         try:
             f = os.popen('hostname -I')
