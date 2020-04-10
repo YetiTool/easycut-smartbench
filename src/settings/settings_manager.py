@@ -58,12 +58,15 @@ class Settings(object):
 # 
 #                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
+                # How to backup a git repo & copy from the backup if clone fails
                 os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup && ' +
                 'sudo rm easycut-smartbench -r && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench && sudo rm easycut-smartbench-backup -r && ./starteasycut.sh')
-               
+ 
+                # Repair a git repo
 #                 os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
 #                 '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
 
+                # Normal update
 #                 os.system("cd /home/pi/easycut-smartbench/")
 #                 cmd  = ["git", "checkout", self.latest_sw_version]
 #                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
