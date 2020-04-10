@@ -57,8 +57,9 @@ class Settings(object):
 
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
                 os.system("cd /home/pi/easycut-smartbench/")
-                cmd  = ["git", "checkout", self.latest_sw_version]
-                output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
+ #               cmd  = ["git", "checkout", self.latest_sw_version]
+                output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
+                #output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
                 
                 print "output"
                 print output
