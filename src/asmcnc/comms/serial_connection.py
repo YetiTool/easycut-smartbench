@@ -822,7 +822,6 @@ class SerialConnection(object):
         
                 
     def _send_next_sequential_stream(self):
-        log("_send_next_sequential_stream")
         if self._sequential_stream_buffer:
             self.is_sequential_streaming = True
             self.write_direct(self._sequential_stream_buffer[0])
