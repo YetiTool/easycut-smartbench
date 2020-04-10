@@ -53,13 +53,11 @@ class Settings(object):
                 
                 sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
                                         str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
-
-                print sed_sw_version
                 os.system(sed_sw_version)
 
                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
-
-                cmd  = ["cd", "/home/pi/easycut-smartbench/", "&&", "git", "checkout", self.latest_sw_version]
+                os.system("cd /home/pi/easycut-smartbench/")
+                cmd  = ["git", "checkout", self.latest_sw_version]
 
                 print cmd
 
