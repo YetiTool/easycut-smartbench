@@ -62,10 +62,10 @@ class Settings(object):
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
-                git_output = p.communicate()[1]
+                unformatted_git_output = p.communicate()[1]
                 
-                if git_output.startswith('Note: checking out'):
-                    git_output.split('\n')
+                if unformatted_git_output.startswith('Note: checking out'):
+                    git_output = str(unformatted_git_output).split('\n')
                     
                     print git_output
                     
