@@ -60,6 +60,8 @@ class Settings(object):
                 cmd  = ["git", "checkout", self.latest_sw_version]
                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                
+                print p.communicate()
                 stdout, stderr = p.communicate()
                 print "output"
                 if p.returncode == 0:
