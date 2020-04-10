@@ -66,7 +66,7 @@ class Settings(object):
                 
                 if git_output.startswith('Note: checking out'):
                     git_output.split('\n')
-                    if str(git_output[-1].startswith('HEAD is now at') and str(git_output[-1].endswith('updated version number'):
+                    if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
                         description = str(git_output[0]) + '\n' + str(git_output[-1])
                         popup_info.PopupWelcome(self.sm, description)
                 #self.sm.current = 'rebooting'
