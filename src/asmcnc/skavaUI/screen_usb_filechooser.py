@@ -148,6 +148,7 @@ class USBFileChooser(Screen):
     
     def on_enter(self):
         self.refresh_filechooser()
+        self.filename_selected_label_text = "Select a file icon above... its full name will appear here."
         
     def on_leave(self):
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
@@ -164,9 +165,9 @@ class USBFileChooser(Screen):
                 
                 # display file selected in the filename display label
                 if sys.platform == 'win32':
-                    self.filename_selected_label_text = self.filechooser.selection[0].split("\\")[-1]
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("\\")[-1]
                 else:
-                    self.filename_selected_label_text = self.filechooser.selection[0].split("/")[-1]
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("/")[-1]
 
                 
                 self.load_button.disabled = False

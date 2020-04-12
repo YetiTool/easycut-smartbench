@@ -21,7 +21,7 @@ class USB_storage(object):
     linux_usb_path = "/media/usb/"
 
     # For debug
-    IS_USB_VERBOSE = True
+    IS_USB_VERBOSE = False
     
     mount_event = None
     stick_enabled = False

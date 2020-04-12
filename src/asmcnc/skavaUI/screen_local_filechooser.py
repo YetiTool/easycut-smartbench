@@ -224,7 +224,7 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
-        self.filename_selected_label_text = "Select a file icon above..."
+        self.filename_selected_label_text = "Select a file icon above... its full name will appear here."
     
     
     def on_leave(self):
