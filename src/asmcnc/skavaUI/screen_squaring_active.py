@@ -196,9 +196,9 @@ class SquaringScreenActive(Screen):
         # ... will trigger an alarm screen
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.reset_on_cancel_homing()
-        Clock.schedule_once(lambda dt: self.return_to_screen('squaring_decision'), 0.5)
+        self.sm.current = self.cancel_to_screen
 
-    
+
     def on_leave(self):
         
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
