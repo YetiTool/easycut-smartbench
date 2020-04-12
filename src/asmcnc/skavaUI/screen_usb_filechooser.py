@@ -9,7 +9,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
@@ -39,23 +39,28 @@ Builder.load_string("""
 
     
         BoxLayout:
-            orientation: 'horizontal'
+            orientation: 'vertical'
             size: self.parent.size
             pos: self.parent.pos
-            BoxLayout:
-                size_hint_x: 5
-                orientation: 'vertical'
-                spacing: 10
-                FileChooserListView:
-                    size_hint_y: 5
-                    id: filechooser_usb
-                    path: './jobCache/'
-                    filter_dirs: True
-                    dirselect: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                    on_selection: 
-                        root.refresh_filechooser()
-                        print filechooser_usb.selection[0]
+            spacing: 10
+            FileChooserIconView:
+                size_hint_y: 5
+                id: filechooser_usb
+                path: './jobCache/'
+                filter_dirs: True
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                on_selection: 
+                    root.refresh_filechooser()
+
+            Label:
+                id: file_selected_label
+                size_hint_y: 1
+                text: root.filename_selected_label_text
+                markup: True
+                font_size: '20sp'   
+                valign: 'middle'
+                halign: 'center'                
+
 
                
         BoxLayout:
@@ -134,6 +139,7 @@ verbose = True
 
 class USBFileChooser(Screen):
 
+    filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
 
     def __init__(self, **kwargs):
@@ -142,6 +148,7 @@ class USBFileChooser(Screen):
     
     def on_enter(self):
         self.refresh_filechooser()
+        self.filename_selected_label_text = "Select a file icon above... its full name will appear here."
         
     def on_leave(self):
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
@@ -155,6 +162,14 @@ class USBFileChooser(Screen):
         if verbose: print 'Refreshing filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
+                
+                # display file selected in the filename display label
+                if sys.platform == 'win32':
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("\\")[-1]
+                else:
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("/")[-1]
+
+                
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
             
