@@ -100,30 +100,26 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
 
-        if self.m.state().startswith('Idle'):
+        if sys.platform != 'win32':
 
-            if sys.platform != 'win32':
+            self.m.reset_pre_homing()
+            Clock.schedule_once(lambda dt: self.start_homing(),0.2)
 
-                # Issue homing command
-                self.m.set_led_colour('MAGENTA')
-                normal_homing_sequence = ['G4 P0.25', # delay, to guarantee LED command to process
-                                          '$H']
-                self.m.s.start_sequential_stream(normal_homing_sequence)
-        
-                # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
-                self.m.set_state('Home') 
-     
-                # Check for completion - since it's a sequential stream, need a poll loop
-                self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
-    
-        elif self.m.state().startswith('Alarm'):
-            # Alarm condition - needs to be cleared before homing can commence
-            pass
 
-        else:
-            # Any other machine state needs to be handled before commencing homing
-            pass
-        
+    def start_homing(self):
+
+        # Issue homing commands
+        self.m.set_led_colour('MAGENTA')
+        normal_homing_sequence = ['G4 P0.25', # delay, to guarantee LED command to process
+                                  '$H']
+        self.m.s.start_sequential_stream(normal_homing_sequence)
+
+        # Due to polling timings, and the fact grbl doesn't issues status during homing, EC may have missed the 'home' status, so we tell it.
+        self.m.set_state('Home') 
+
+        # Check for completion - since it's a sequential stream, need a poll loop
+        self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
+       
      
     def check_for_successful_completion(self, dt):
 

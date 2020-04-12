@@ -180,8 +180,7 @@ class RouterMachine(object):
     def reset_pre_homing(self):
         self._stop_all_streaming()
         self._grbl_soft_reset() 
-        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.2)
-        Clock.schedule_once(lambda dt: self.set_led_colour("MAGENTA"),0.2)
+        # Then allow 0.2 seconds for grbl to become receptive after reset
 
     def reset_on_cancel_homing(self):
         self._stop_all_streaming()
