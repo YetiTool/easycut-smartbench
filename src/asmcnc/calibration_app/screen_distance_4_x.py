@@ -278,9 +278,9 @@ class DistanceScreen4xClass(Screen):
         from asmcnc.calibration_app import screen_distance_1_x # this has to be here
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(name = 'distance1x', screen_manager = self.sm, machine = self.m)     
         self.sm.add_widget(distance_screen1x)
-        self.sm.get_screen('homing').return_to_screen = 'distance1x'
-        self.sm.get_screen('homing').cancel_to_screen = 'calibration_complete'
-        self.sm.current = 'homing'
+        self.sm.get_screen('prepare_to_home').return_to_screen = 'distance1x'
+        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'calibration_complete'
+        self.sm.current = 'prepare_to_home'
     
     def quit_calibration(self):
         self.sm.get_screen('tape_measure_alert').return_to_screen = 'calibration_complete'                
