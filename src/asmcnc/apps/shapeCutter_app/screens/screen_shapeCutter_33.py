@@ -444,7 +444,7 @@ class ShapeCutter33ScreenClass(Screen):
             self.m.go_x_datum()
             self.m.go_y_datum()
     
-            xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+            xy_feed_speed = 8000
     
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]
