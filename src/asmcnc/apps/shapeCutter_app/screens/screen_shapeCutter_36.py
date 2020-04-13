@@ -311,7 +311,7 @@ class ShapeCutter36ScreenClass(Screen):
 
         # get job info
         self.user_instructions = ("[b]You can let SmartBench do the rest of the work now.[/b]\n\n" \
-                                           "Remember when you had to cut out all these shapes by hand? Think off all the things" \
+                                           "Remember when you had to cut out all these shapes by hand? Think of all the things" \
                                            " you can do with your extra time. Learn to play the ukelele. Make some cupcakes. "\
                                            "Finally master that backflip. So what are you waiting for?")
 
