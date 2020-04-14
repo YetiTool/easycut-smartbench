@@ -46,8 +46,7 @@ Builder.load_string("""
             FileChooserIconView:
                 size_hint_y: 5
                 id: filechooser_usb
-                path: './jobCache/'
-                filter_dirs: True
+#                 path: './jobCache/'
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: 
                     root.refresh_filechooser()
@@ -154,7 +153,7 @@ class USBFileChooser(Screen):
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
             
     def set_USB_path(self, usb_path):
-        self.filechooser_usb.path = usb_path
+        self.filechooser_usb.rootpath = usb_path
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
     def refresh_filechooser(self):
