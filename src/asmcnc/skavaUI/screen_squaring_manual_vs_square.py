@@ -10,6 +10,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -169,7 +170,19 @@ class SquaringScreenDecisionManualVsSquare(Screen):
 
     def popup_help(self):
         
-        pass
+        info = "[b]Manual squaring[/b]\n" \
+                "Before power up, the user manually pushes the X beam up against the bench legs at the home end. " \
+                "The power is then switched on. " \
+                "The motor coils lock the lower beam into position with a very high degree of reliability. " \
+                "Thus, mechanical adjustments to square the beam can be repeated reliably.\n\n" \
+                "[b]Auto squaring[/b]\n" \
+                "No special preparation from the user is needed. " \
+                "When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs. " \
+                "The stalling procedure can offer a general squareness. " \
+                "But at the end of the movement, the motor coils can bounce into a different step position. " \
+                "Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring. " \
+
+        popup_info.PopupInfo(self.sm, info)
 
 
     def cancel(self):
