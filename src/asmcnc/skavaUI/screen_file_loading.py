@@ -38,7 +38,7 @@ Builder.load_string("""
 
     check_button:check_button
     home_button:home_button
-
+    filename_label:filename_label
 
     canvas:
         Color: 
@@ -65,11 +65,12 @@ Builder.load_string("""
                 markup: True
  
             Label:
+                id: filename_label
                 text_size: self.size
                 font_size: '16sp'
                 halign: 'center'
                 valign: 'bottom'
-                text: root.loading_file_name
+                text: 'Filename here'
                 
             Label:
                 text_size: self.size
@@ -155,8 +156,14 @@ class LoadingScreen(Screen):
         self.job_gcode=kwargs['job']
         
     def on_enter(self):    
-               
+
         self.job_loading_loaded = '[b]Loading Job...[/b]'
+        # display file selected in the filename display label
+        if sys.platform == 'win32':
+            self.filename_label.text = self.loading_file_name.split("\\")[-1]
+        else:
+            self.filename_label.text = self.loading_file_name.split("/")[-1]
+
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
         self.load_value = 0
         self.check_button.disabled = True
