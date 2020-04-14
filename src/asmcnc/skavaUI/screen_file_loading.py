@@ -67,14 +67,14 @@ Builder.load_string("""
             Label:
                 id: filename_label
                 text_size: self.size
-                font_size: '16sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
                 text: 'Filename here'
                 
             Label:
                 text_size: self.size
-                font_size: '22sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
                 text: 'WARNING:'
