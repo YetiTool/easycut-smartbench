@@ -45,6 +45,7 @@ Builder.load_string("""
     stop_start:stop_start
     btn_pause_play: btn_pause_play
     play_pause_button_image: play_pause_button_image
+    file_data_label:file_data_label
 
     BoxLayout:
         padding: 0
@@ -110,13 +111,13 @@ Builder.load_string("""
                             Label:
                                 size_hint_x: 5
                                 text_size: self.size
+                                font_size: '20sp'
                                 color: 0,0,0,1
                                 markup: True
                                 text: 'Load a file...'
                                 halign: 'center'
                                 valign: 'middle'
                                 id: file_data_label
-                                text: root.job_filename
                                 
                             Button:
                                 id: btn_pause_play
@@ -285,6 +286,11 @@ class GoScreen(Screen):
             self.reset_go_screen_after_job_finished()
             self.no_job = False
             self.stop_start.disabled = False
+
+            if sys.platform == 'win32':
+                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+            else:
+                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
             
         elif self.job_in_progress == False and self.job_gcode == []:
             # if job has not been loaded

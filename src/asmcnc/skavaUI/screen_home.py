@@ -226,13 +226,12 @@ Builder.load_string("""
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
+                                    font_size: '20sp'
                                     color: 0,0,0,1
                                     markup: True
                                     text: 'Load a file...'
                                     halign: 'center'
                                     valign: 'middle'
-                                    # text: 'Data'
-
 
                             BoxLayout:
                                 size_hint_y: 3
@@ -342,7 +341,12 @@ class HomeScreen(Screen):
 
         # File label at the top
         if self.job_gcode != []:
-            self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
+            
+            if sys.platform == 'win32':
+                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+            else:
+                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
+                
             # Preview file
             try: 
                 Clock.schedule_once(self.preview_job_file, 0.05)
