@@ -80,6 +80,7 @@ Builder.load_string("""
     load_file_now_label:load_file_now_label
     check_gcode_button:check_gcode_button
     check_gcode_label:check_gcode_label
+    filename_label:filename_label
 
     canvas:
         Color: 
@@ -107,6 +108,7 @@ Builder.load_string("""
                 valign: 'top'
  
             Label:
+                id: filename_label
                 text_size: self.size
                 font_size: '15sp'
                 halign: 'center'
@@ -230,6 +232,13 @@ class CheckingScreen(Screen):
     def on_enter(self):
  
         self.job_checking_checked = '[b]Checking Job...[/b]'  
+        # display file selected in the filename display label
+        if sys.platform == 'win32':
+            self.filename_label.text = self.checking_file_name.split("\\")[-1]
+        else:
+            self.filename_label.text = self.checking_file_name.split("/")[-1]
+        
+        
         self.exit_label = 'Cancel'
         
         if self.entry_screen == 'file_loading':        
