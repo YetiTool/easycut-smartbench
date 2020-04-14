@@ -148,9 +148,17 @@ class USBFileChooser(Screen):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
 
+
+    def set_USB_path(self, usb_path):
+
+        self.usb_path = usb_path
+        self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
+        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+
     
     def on_enter(self):
 
+        self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
 
@@ -158,12 +166,6 @@ class USBFileChooser(Screen):
     def on_leave(self):
 
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
-
-            
-    def set_USB_path(self, usb_path):
-
-        self.filechooser_usb.rootpath = usb_path
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
 
     def refresh_filechooser(self):
