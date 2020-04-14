@@ -18,11 +18,9 @@ import os, sys, threading
 from datetime import datetime
 from multiprocessing import Process, Manager
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar,\
-    widget_z_move, widget_xy_move, widget_common_move,\
-    widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor,\
-    widget_network_setup, widget_settings_options, widget_gcode_view
-from asmcnc.geometry import job_envelope
+from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_settings_options, widget_gcode_view # @UnresolvedImport
+from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
 
@@ -339,8 +337,8 @@ class HomeScreen(Screen):
         Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
         
         # Set flag for homing screen
-        self.sm.get_screen('homing').return_to_screen = 'home'
-        self.sm.get_screen('homing').cancel_to_screen = 'home'  
+        self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
+        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'  
 
         # File label at the top
         if self.job_gcode != []:

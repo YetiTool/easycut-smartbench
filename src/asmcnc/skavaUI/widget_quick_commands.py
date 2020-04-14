@@ -159,8 +159,15 @@ class QuickCommands(Widget):
         self.sm.current = 'lobby'
             
     def home(self):
-        self.m.home_all()
-  
+        if self.m.is_squaring_XY_needed_after_homing:
+            self.sm.get_screen('squaring_decision').cancel_to_screen = 'home'
+            self.sm.get_screen('squaring_decision').return_to_screen = 'home'
+            self.sm.current = 'squaring_decision'
+        else:
+            self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'
+            self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
+            self.sm.current = 'prepare_to_home'
+
     def reset(self):
         self.m.stop_from_quick_command_reset()
     

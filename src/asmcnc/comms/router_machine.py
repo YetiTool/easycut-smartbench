@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-from asmcnc.comms import serial_connection
+from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys
 from __builtin__ import True
@@ -180,8 +180,7 @@ class RouterMachine(object):
     def reset_pre_homing(self):
         self._stop_all_streaming()
         self._grbl_soft_reset() 
-        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.2)
-        Clock.schedule_once(lambda dt: self.set_led_colour("MAGENTA"),0.2)
+        # Then allow 0.2 seconds for grbl to become receptive after reset
 
     def reset_on_cancel_homing(self):
         self._stop_all_streaming()
@@ -460,8 +459,6 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
         self.zUp()    
 
-    def home_all(self):
-        self.sm.current = 'homing'
 
 
 # LIGHTING

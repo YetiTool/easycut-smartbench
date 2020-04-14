@@ -284,10 +284,10 @@ class DistanceScreen4yClass(Screen):
         from asmcnc.calibration_app import screen_distance_1_y
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(name = 'distance1y', screen_manager = self.sm, machine = self.m)
         self.sm.add_widget(distance_screen1y)
-        self.sm.get_screen('homing').return_to_screen = 'distance1y'
-        self.sm.get_screen('homing').cancel_to_screen = 'calibration_complete'   
+        self.sm.get_screen('prepare_to_home').return_to_screen = 'distance1y'
+        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'calibration_complete'   
 
-        self.sm.get_screen('tape_measure_alert').return_to_screen = 'homing'
+        self.sm.get_screen('tape_measure_alert').return_to_screen = 'prepare_to_home'
         self.sm.current = 'tape_measure_alert'
 
     def on_leave(self):
