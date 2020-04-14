@@ -56,7 +56,6 @@ Builder.load_string("""
                 size_hint_y: 5
                 id: filechooser
                 rootpath: './jobCache/'
-                filter_dirs: True
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: 
                     root.refresh_filechooser()
@@ -224,7 +223,7 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
-        self.filename_selected_label_text = "Select a file icon above... its full name will appear here."
+        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
     
     
     def on_leave(self):
