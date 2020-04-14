@@ -56,6 +56,7 @@ Builder.load_string("""
                 size_hint_y: 5
                 id: filechooser
                 rootpath: './jobCache/'
+                show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: 
                     root.refresh_filechooser()
