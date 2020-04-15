@@ -100,7 +100,7 @@ class Settings(object):
             backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
             backup_command_string = '[ ! -d \"/home/pi/easycut-smartbench/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench'
 
-            case = (os.popen('grep -Fx "' + backup_command_string + '" /home/pi/starteasycut.sh').read()) #current/old directory command
+            case = (os.popen('grep -F "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
             print case
             print backup_command_string
             if not case.startswith(backup_command_string):
