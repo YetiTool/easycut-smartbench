@@ -97,10 +97,12 @@ class Settings(object):
             # Update starteasycut shell script to look for backup/other folders if required
             # We really need to work on platform updates
  
-            backup_command = '\[ ! -d \"home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-            backup_command_string = '[ ! -d \"home/pi/easycut-smartbench/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench'
+            backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
+            backup_command_string = '[ ! -d \"/home/pi/easycut-smartbench/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench'
 
-            case = (os.popen('grep -Fx "' + backup_command + '" /home/pi/starteasycut.sh').read()) #current/old directory command
+            case = (os.popen('grep -Fx "' + backup_command_string + '" /home/pi/starteasycut.sh').read()) #current/old directory command
+            print case
+            print backup_command_string
             if not case.startswith(backup_command_string):
                 # if not, copy from backup
                 sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
