@@ -90,22 +90,22 @@ class Settings(object):
     
         def backup_EC():
             # check if backup directory exists, and delete it if it does
-            os.system('[ -d "/home/pi/easycut-smartbench-backup/src/" ] && sudo rm easycut-smartbench-backup -r')
+            os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm easycut-smartbench-backup -r')
             # copy EC into a backup directory
             os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup')
     
             # Update starteasycut shell script to look for backup/other folders if required
             # We really need to work on platform updates
-            case = (os.popen('grep -Fx "[ !-d " starteasycut.sh').read()) #current/old directory command
-            if not case.startswith('[ !-d '):
+            case = (os.popen('grep -Fx "[ ! -d " /home/pi/starteasycut.sh').read()) #current/old directory command
+            if not case.startswith('[ ! -d '):
                 # if not, copy from backup
-                backup_command = '[ !-d "\/home\/pi\/easycut-smartbench\/src\/" ] && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench'
+                backup_command = "[ ! -d \"/home/pi/easycut-smartbench/src/\" ] && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench"
                 os.system('sudo sed -i "/echo "start easycut"/ a ' + backup_command + '" starteasycut.sh') 
             
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/src/ /home/pi/easycut-smartbench-backup/src/'))
             if directory_diff == '': return True
             else: 
-                os.system('[ -d "/home/pi/easycut-smartbench-backup/src/" ] && sudo rm easycut-smartbench-backup -r')                
+                os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm easycut-smartbench-backup -r')                
                 return False
               
         def clone_new_EC_and_restart():
