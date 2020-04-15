@@ -70,7 +70,7 @@ class Settings(object):
                 else: 
                     description = "There was a problem updating your software. \n\n" \
                     "We can try to fix the problem, but you MUST have a stable internet connection and" \
-                    "power supply.\n\n" \
+                    " power supply.\n\n" \
                     "Would you like to repair your software now?"
                     
                     popup_info.PopupSoftwareRepair(self.sm, self, description)
