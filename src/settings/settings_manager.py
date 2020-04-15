@@ -99,11 +99,11 @@ class Settings(object):
             case = (os.popen('grep -Fx "[ ! -d " /home/pi/starteasycut.sh').read()) #current/old directory command
             if not case.startswith('[ ! -d '):
                 # if not, copy from backup
-                backup_command = '\[ ! -d \"home/pi/easycut-smartbench/src/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
+                backup_command = '\[ ! -d \"home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
                 sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
                 os.system(sed_cmd)
                 
-            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/src/ /home/pi/easycut-smartbench-backup/src/'))
+            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
             print directory_diff
             
             if directory_diff == '': return True
