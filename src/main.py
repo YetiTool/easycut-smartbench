@@ -55,7 +55,7 @@ from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v1.1.4'
@@ -64,6 +64,14 @@ initial_version = 'v1.1.4'
 start_screen = 'safety'
 
 # Config management
+def check_and_update_gpu_mem():
+    # System config (this should eventually be moved into platform management)
+    # Update GPU memory to handle more app
+    case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
+    if case.startswith('gpu_mem=128'):
+        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
+        os.system('sudo reboot')
+        
 def check_and_update_config():
     
     def ver0_configuration():
@@ -73,6 +81,7 @@ def check_and_update_config():
             os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
     
     if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
+        check_and_update_gpu_mem()
         ver0_configuration()
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
         os.system('sudo reboot')
@@ -88,14 +97,6 @@ if sys.platform != 'win32':
     if pc_alert.startswith('power_cycle_alert=True'):
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
-
-    # System config (this should eventually be moved into platform management)
-    # Update GPU memory to handle more app
-    case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
-    if case.startswith('gpu_mem=128'):
-        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
-        os.system('sudo reboot')   
-
 
 class SkavaUI(App):
 

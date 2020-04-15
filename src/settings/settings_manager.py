@@ -50,44 +50,74 @@ class Settings(object):
         if sys.platform != 'win32':
             if self.latest_sw_version != self.sw_version:
         ##      Update SW according to latest release:
-#                 os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
-#                 
-#                 sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
-#                                         str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
-#                 os.system(sed_sw_version)
-# 
-#                 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
-                # How to backup a git repo & copy from the backup if clone fails
-                os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup && ' +
-                'sudo rm easycut-smartbench -r && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench && sudo rm easycut-smartbench-backup -r && ./starteasycut.sh')
- 
-                # Repair a git repo
-#                 os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-#                 '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
-
-                # Normal update
-#                 os.system("cd /home/pi/easycut-smartbench/")
-#                 cmd  = ["git", "checkout", self.latest_sw_version]
-#                 #output = str(os.popen("git checkout " + self.latest_sw_version).read()).strip('\n')
-#                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#                 
-#                 unformatted_git_output = p.communicate()[1]
-#                 
-#                 if unformatted_git_output.startswith('Note: checking out'):
-#                     git_output = str(unformatted_git_output).split('\n')
-#                     git_output = list(filter(lambda x: x!= '', git_output))
-#                     
-#                     print git_output
-#                     
-#                     print str(git_output[0])
-#                     print str(git_output[-1])
-#                     
-#                     if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
-#                         description = str(git_output[0]) + '\n' + str(git_output[-1])
-#                         popup_info.PopupWelcome(self.sm, description)
-#                 
-#                 else: 
-#                     print "error message!"
-                #self.sm.current = 'rebooting'
+                ## Normal update
+                os.system("cd /home/pi/easycut-smartbench/")
+                cmd  = ["git", "checkout", self.latest_sw_version]
+                p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                
+                unformatted_git_output = p.communicate()[1]
+                 
+                if unformatted_git_output.startswith('Note: checking out'):
+                    self.update_config()
+                    git_output = str(unformatted_git_output).split('\n')
+                    git_output = list(filter(lambda x: x!= '', git_output))
+                     
+                    if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
+                        description = str(git_output[0]) + '\n' + str(git_output[-1])
+                        popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
+                    
+                else: 
+                    description = "There was a problem updating your software. \n\n" \
+                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                    "power supply.\n\n" \
+                    "Would you like to repair your software now?"
+                    
+                    popup_info.PopupSoftwareRepair(self.sm, self, description)
+                    
+                
             else: print "Software already up to date"
+
+    def update_config(self):
+        os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
+        sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
+                                str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
+        os.system(sed_sw_version)
+        os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
+
+    
+    def repair_EC(self):
+    
+        def backup_EC():
+            # check if backup directory exists, and delete it if it does
+            os.system('[ -d "/home/pi/easycut-smartbench-backup/src/" ] && sudo rm easycut-smartbench-backup -r')
+            # copy EC into a backup directory
+            os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup')
+    
+            # Update starteasycut shell script to look for backup/other folders if required
+            # We really need to work on platform updates
+            case = (os.popen('grep -Fx "[ !-d " starteasycut.sh').read()) #current/old directory command
+            if not case.startswith('[ !-d '):
+                # if not, copy from backup
+                backup_command = '[ !-d "\/home\/pi\/easycut-smartbench\/src\/" ] && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench'
+                os.system('sudo sed -i "/echo "start easycut"/ a ' + backup_command + '" starteasycut.sh') 
+            
+            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/src/ /home/pi/easycut-smartbench-backup/src/'))
+            if directory_diff == '': return True
+            else: 
+                os.system('[ -d "/home/pi/easycut-smartbench-backup/src/" ] && sudo rm easycut-smartbench-backup -r')                
+                return False
+              
+        def clone_new_EC_and_restart():
+
+            # Repair a git repo
+            os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
+            '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
+        
+        if backup_EC() == True:
+            clone_new_EC_and_restart()
+
+        else: 
+            description = "It was not possible to backup EC safely, please try again later.\n\n" + \
+            "If this issue persists, please contact Yeti Tool Ltd for support."
+            popup_info.PopupError(self.sm, description)
