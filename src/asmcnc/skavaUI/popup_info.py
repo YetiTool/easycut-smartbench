@@ -211,7 +211,7 @@ class PopupSoftwareUpdateSuccess(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 300),
+                      size=(500, 400),
                       auto_dismiss= False
                       )
         
@@ -264,7 +264,7 @@ class PopupSoftwareRepair(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 300),
+                      size=(500, 400),
                       auto_dismiss= False
                       )
         
@@ -306,7 +306,7 @@ class PopupError(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 300),
+                      size=(500, 400),
                       auto_dismiss= False
                       )
         

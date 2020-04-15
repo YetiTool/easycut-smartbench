@@ -96,20 +96,14 @@ class Settings(object):
     
             # Update starteasycut shell script to look for backup/other folders if required
             # We really need to work on platform updates
- 
-            backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-            backup_command_string = '[ ! -d \"/home/pi/easycut-smartbench/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench'
-
             case = (os.popen('grep "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
-            print case
             if not case.startswith('[ ! -d'):
-                # if not, copy from backup
+                backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
                 sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
                 os.system(sed_cmd)
-                
-            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
-            print directory_diff
             
+            # compare backup and current directory just in case, and return true if all is well    
+            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
             if directory_diff == '': return True
             else: 
                 os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')                
