@@ -81,11 +81,9 @@ def check_and_update_config():
             os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
     
     if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
-        check_and_update_gpu_mem()
         ver0_configuration()
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-        os.system('sudo reboot')
-
+        check_and_update_gpu_mem()
 
 if sys.platform != 'win32':
     
