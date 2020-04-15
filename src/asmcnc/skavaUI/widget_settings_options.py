@@ -38,8 +38,16 @@ Builder.load_string("""
         cols: 3
 
         Button:
-            text: 'Square axes'
+            size_hint_x: 1
+            background_color: hex('#FFFFFF00')
             on_press: root.square_axes()
+            BoxLayout:
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/skavaUI/img/squaring_icon_big.png"
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True 
         Button:
             text: 'Get software update'
             on_press: root.get_sw_update()
@@ -137,8 +145,9 @@ class SettingsOptions(Widget):
         sys.exit()
 
     def square_axes(self):
-        self.sm.get_screen('homing').is_squaring_XY_needed_after_homing = True
-        self.m.home_all()
+        self.m.is_squaring_XY_needed_after_homing = True
+        
+        self.sm.current = 'prepare_to_home'
 
     def return_to_lobby(self):
         self.sm.current = 'lobby'

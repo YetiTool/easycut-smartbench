@@ -18,11 +18,9 @@ import os, sys, threading
 from datetime import datetime
 from multiprocessing import Process, Manager
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar,\
-    widget_z_move, widget_xy_move, widget_common_move,\
-    widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor,\
-    widget_network_setup, widget_settings_options, widget_gcode_view
-from asmcnc.geometry import job_envelope
+from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_settings_options, widget_gcode_view # @UnresolvedImport
+from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
 
@@ -228,13 +226,12 @@ Builder.load_string("""
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
+                                    font_size: '20sp'
                                     color: 0,0,0,1
                                     markup: True
                                     text: 'Load a file...'
                                     halign: 'center'
                                     valign: 'middle'
-                                    # text: 'Data'
-
 
                             BoxLayout:
                                 size_hint_y: 3
@@ -339,12 +336,17 @@ class HomeScreen(Screen):
         Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
         
         # Set flag for homing screen
-        self.sm.get_screen('homing').return_to_screen = 'home'
-        self.sm.get_screen('homing').cancel_to_screen = 'home'  
+        self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
+        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'  
 
         # File label at the top
         if self.job_gcode != []:
-            self.file_data_label.text = '[b]' + self.job_filename + '[/b]'
+            
+            if sys.platform == 'win32':
+                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+            else:
+                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
+                
             # Preview file
             try: 
                 Clock.schedule_once(self.preview_job_file, 0.05)

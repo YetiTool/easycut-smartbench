@@ -444,8 +444,12 @@ class ShapeCutter33ScreenClass(Screen):
             self.m.go_x_datum()
             self.m.go_y_datum()
     
-            xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
-    
+#            Previously this call returned a VERY SLOW feedrate:
+#             xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
+#            Assuming a conversion error. As quick fix, hardcoding to force a G0 equivalent
+#            Needs investigation tho to ensure core job code is stable
+            xy_feed_speed = 8000
+                
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]
     

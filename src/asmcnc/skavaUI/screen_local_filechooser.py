@@ -11,7 +11,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
@@ -38,6 +38,7 @@ Builder.load_string("""
     image_delete:image_delete
     image_delete_all:image_delete_all
     image_select:image_select
+    file_selected_label:file_selected_label
 
     BoxLayout:
         padding: 0
@@ -47,19 +48,28 @@ Builder.load_string("""
         orientation: "vertical"
 
         BoxLayout:
-            orientation: 'horizontal'
+            orientation: 'vertical'
             size: self.parent.size
             pos: self.parent.pos
             spacing: 10
-            FileChooserListView:
-                size_hint_x: 5
+            FileChooserIconView:
+                size_hint_y: 5
                 id: filechooser
                 rootpath: './jobCache/'
-                filter_dirs: True
+                show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: 
                     root.refresh_filechooser()
-                
+
+            Label:
+                id: file_selected_label
+                size_hint_y: 1
+                text: root.filename_selected_label_text
+                markup: True
+                font_size: '20sp'   
+                valign: 'middle'
+                halign: 'center'                
+
         BoxLayout:
             size_hint_y: None
             height: 100
@@ -199,22 +209,30 @@ ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are F
 
 class LocalFileChooser(Screen):
 
+    filename_selected_label_text = StringProperty()
     
     def __init__(self, **kwargs):
 
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
+
         
     def on_enter(self):
+        
+        self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         self.usb_stick.enable() # start the object scanning for USB stick
         self.refresh_filechooser()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
+        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+    
     
     def on_leave(self):
+        
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
+
 
     def check_USB_status(self, dt):
         
@@ -239,6 +257,12 @@ class LocalFileChooser(Screen):
 
         try:
             if self.filechooser.selection[0] != 'C':
+
+                # display file selected in the filename display label
+                if sys.platform == 'win32':
+                    self.filename_selected_label_text = self.filechooser.selection[0].split("\\")[-1]
+                else:
+                    self.filename_selected_label_text = self.filechooser.selection[0].split("/")[-1]
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -275,6 +299,7 @@ class LocalFileChooser(Screen):
 
 
     def go_to_loading_screen(self, file_selection):
+
         self.usb_stick.disable()
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'

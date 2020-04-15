@@ -30,14 +30,11 @@ from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 
-from asmcnc.skavaUI import screen_initial, screen_help # @UnresolvedImport
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_go # @UnresolvedImport
-from asmcnc.skavaUI import screen_template # @UnresolvedImport
 from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
-from asmcnc.skavaUI import screen_vj_polygon # @UnresolvedImport
 from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
 from asmcnc.skavaUI import screen_alarm # @UnresolvedImport
@@ -54,6 +51,12 @@ from asmcnc.skavaUI import screen_developer # @UnresolvedImport
 from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
+from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
+from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
+
+
 # developer testing
 Cmport = 'COM3'
 
@@ -121,15 +124,13 @@ class SkavaUI(App):
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode)
-        template_screen = screen_template.TemplateScreen(name='template', screen_manager = sm)
-        vj_polygon_screen = screen_vj_polygon.ScreenVJPolygon(name='vj_polygon', screen_manager = sm)
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
         alarm_screen = screen_alarm.AlarmScreenClass(name='alarmScreen', screen_manager = sm, machine = m)
         serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
         homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
-        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm)
+        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m)
         homing_warning_screen = screen_homing_warning.WarningHoming(name = 'homingWarning', screen_manager = sm, machine =m)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
@@ -139,6 +140,12 @@ class SkavaUI(App):
         diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
         if start_screen == 'pc_alert': powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
+        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
+        prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
+        homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
+        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
+
+
 
 
         # add the screens to screen manager
@@ -147,8 +154,6 @@ class SkavaUI(App):
         sm.add_widget(local_filechooser)
         sm.add_widget(usb_filechooser)
         sm.add_widget(go_screen)
-        sm.add_widget(template_screen)
-        sm.add_widget(vj_polygon_screen)
         sm.add_widget(loading_screen)
         sm.add_widget(checking_screen)
         sm.add_widget(error_screen)
@@ -165,9 +170,14 @@ class SkavaUI(App):
         sm.add_widget(diagnostics_screen)
         if start_screen == 'pc_alert': sm.add_widget(powercycle_screen)
         sm.add_widget(door_screen)
+        sm.add_widget(squaring_decision_screen)
+        sm.add_widget(prepare_to_home_screen)
+        sm.add_widget(homing_active_screen)
+        sm.add_widget(squaring_active_screen)
         
         # set screen to start on
         sm.current = 'safety'
+#         sm.current = 'squaring_decision'
         return sm
 
 

@@ -163,7 +163,6 @@ class HomingScreen(Screen):
     
     dev_win_dt = 2
     
-    is_squaring_XY_needed_after_homing = True
     homing_label = ObjectProperty()
     homing_text = StringProperty()
 
@@ -337,7 +336,7 @@ class HomingScreen(Screen):
         self.quit_home = False
         
         # Is this first time since power cycling?
-        if self.is_squaring_XY_needed_after_homing: 
+        if self.m.is_squaring_XY_needed_after_homing: 
             self.home_with_squaring()
         else: 
             self.home_normally()
@@ -409,7 +408,7 @@ class HomingScreen(Screen):
         # if sequential_stream completes successfully
         elif self.m.s.is_sequential_streaming == False:
             print "Homing success!"
-            self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
+            self.m.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
             self.m.is_machine_homed = True # clear this flag too
             Clock.unschedule(self.poll_for_success)
             self.return_to_app()
@@ -439,7 +438,7 @@ class HomingScreen(Screen):
         
     def developer_windows_esc(self, dt):
         print "pretend Homing success!"
-        self.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
+        self.m.is_squaring_XY_needed_after_homing = False # clear flag, so this function doesn't run again
         self.m.is_machine_homed = True # clear this flag too
         self.m.set_state('Idle')
         self.return_to_app()

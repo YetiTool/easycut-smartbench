@@ -9,7 +9,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
@@ -39,23 +39,27 @@ Builder.load_string("""
 
     
         BoxLayout:
-            orientation: 'horizontal'
+            orientation: 'vertical'
             size: self.parent.size
             pos: self.parent.pos
-            BoxLayout:
-                size_hint_x: 5
-                orientation: 'vertical'
-                spacing: 10
-                FileChooserListView:
-                    size_hint_y: 5
-                    id: filechooser_usb
-                    path: './jobCache/'
-                    filter_dirs: True
-                    dirselect: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                    on_selection: 
-                        root.refresh_filechooser()
-                        print filechooser_usb.selection[0]
+            spacing: 10
+            FileChooserIconView:
+                size_hint_y: 5
+                id: filechooser_usb
+                show_hidden: False
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                on_selection: 
+                    root.refresh_filechooser()
+
+            Label:
+                id: file_selected_label
+                size_hint_y: 1
+                text: root.filename_selected_label_text
+                markup: True
+                font_size: '20sp'   
+                valign: 'middle'
+                halign: 'center'                
+
 
                
         BoxLayout:
@@ -134,27 +138,49 @@ verbose = True
 
 class USBFileChooser(Screen):
 
+
+    filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
 
+
     def __init__(self, **kwargs):
+ 
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+
+
+    def set_USB_path(self, usb_path):
+
+        self.usb_path = usb_path
+        self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
+        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+
     
     def on_enter(self):
+
+        self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
+        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+
         
     def on_leave(self):
+
         if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
-            
-    def set_USB_path(self, usb_path):
-        self.filechooser_usb.path = usb_path
-        if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
+
 
     def refresh_filechooser(self):
 
         if verbose: print 'Refreshing filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
+                
+                # display file selected in the filename display label
+                if sys.platform == 'win32':
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("\\")[-1]
+                else:
+                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("/")[-1]
+
+                
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
             
@@ -167,6 +193,7 @@ class USBFileChooser(Screen):
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
 
         self.filechooser_usb._update_files()
+
      
     def import_usb_file(self, file_selection):
         
@@ -183,12 +210,17 @@ class USBFileChooser(Screen):
         
 
     def quit_to_local(self):
+
         self.manager.current = 'local_filechooser'
+
           
     def quit_to_home(self):
+
         self.manager.current = 'home'
+
         
     def go_to_loading_screen(self, file_selection):
+
         self.usb_stick.disable()
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
