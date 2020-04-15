@@ -201,14 +201,8 @@ Builder.load_string("""
                                 Button:
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
-                                    on_release:
-                                        #root.manager.transition.direction = 'down'
-                                        # Cause re-load of job file
-                                        # root.m.job_gcode = [] # empties g-code object
-                                        root.manager.current = 'local_filechooser'
-                                        self.background_color = hex('#F4433600')
                                     on_press:
-                                        self.background_color = hex('#F44336FF')
+                                        root.manager.current = 'local_filechooser'
                                     BoxLayout:
                                         padding: 0
                                         size: self.parent.size
