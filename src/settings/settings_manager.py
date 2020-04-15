@@ -90,28 +90,31 @@ class Settings(object):
     
         def backup_EC():
             # check if backup directory exists, and delete it if it does
-            os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm easycut-smartbench-backup -r')
+            os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')
             # copy EC into a backup directory
-            os.system('cd /home/pi/ && mkdir easycut-smartbench-backup && cp -RT easycut-smartbench easycut-smartbench-backup')
+            os.system('mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
     
             # Update starteasycut shell script to look for backup/other folders if required
             # We really need to work on platform updates
             case = (os.popen('grep -Fx "[ ! -d " /home/pi/starteasycut.sh').read()) #current/old directory command
             if not case.startswith('[ ! -d '):
                 # if not, copy from backup
-                backup_command = "[ ! -d \"/home/pi/easycut-smartbench/src/\" ] && mkdir easycut-smartbench && cp -RT easycut-smartbench-backup easycut-smartbench"
-                os.system('sudo sed -i "/echo "start easycut"/ a ' + backup_command + '" starteasycut.sh') 
-            
+                backup_command = "\[ \! \-d \"/home/pi/easycut-smartbench/src/\" \] \&\& mkdir \/home\/pi\/easycut-smartbench \&& cp \-RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench"
+                sed_cmd = ('sudo sed "/echo "start easycut"/ a ' + backup_command + '" /home/pi/starteasycut.sh') 
+                
+                print sed_cmd
+                os.system(sed_cmd)
+                
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/src/ /home/pi/easycut-smartbench-backup/src/'))
             if directory_diff == '': return True
             else: 
-                os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm easycut-smartbench-backup -r')                
+                os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')                
                 return False
               
         def clone_new_EC_and_restart():
 
             # Repair a git repo
-            os.system('cd /home/pi/ && sudo rm easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
+            os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
             '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
         
         if backup_EC() == True:
