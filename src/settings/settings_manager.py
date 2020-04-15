@@ -99,8 +99,8 @@ class Settings(object):
             case = (os.popen('grep -Fx "[ ! -d " /home/pi/starteasycut.sh').read()) #current/old directory command
             if not case.startswith('[ ! -d '):
                 # if not, copy from backup
-                backup_command = "\[ \! \-d \"/home/pi/easycut-smartbench/src/\" \] \&\& mkdir \/home\/pi\/easycut-smartbench \&& cp \-RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench"
-                sed_cmd = ('sudo sed "/echo "start easycut"/ a ' + backup_command + '" /home/pi/starteasycut.sh') 
+                backup_command = "[ ! -d \"home/pi/easycut-smartbench/src/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench"
+                sed_cmd = ('sudo sed "/echo \"start easycut\"/ a ' + backup_command + '" /home/pi/starteasycut.sh') 
                 
                 print sed_cmd
                 os.system(sed_cmd)
