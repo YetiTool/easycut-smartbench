@@ -31,7 +31,6 @@ Builder.load_string("""
 
 <HomeScreen>:
 
-    home_image_preview:home_image_preview
     file_data_label:file_data_label
     virtual_bed_container:virtual_bed_container
     status_container:status_container
@@ -42,7 +41,6 @@ Builder.load_string("""
     virtual_bed_control_container:virtual_bed_control_container
     gcode_monitor_container:gcode_monitor_container
     settings_container:settings_container
-    part_info_label:part_info_label
     home_tab:home_tab
     tab_panel:tab_panel
     pos_tab:pos_tab
@@ -235,39 +233,19 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint_y: 3
-                                spacing: 20
+                                padding: 20
                                 orientation: 'horizontal'
-
+                                canvas:
+                                    Color:
+                                        rgba: 1,1,1,1
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
                                 BoxLayout:
-                                    padding: 10
-                                    size_hint_x: 1
-                                    spacing: 10
-                                    orientation: 'vertical'
-                                    canvas:
-                                        Color:
-                                            rgba: 1,1,1,1
-                                        RoundedRectangle:
-                                            size: self.size
-                                            pos: self.pos
-                                    Image:
-                                        source: root.no_image_preview_path
-                                        id: home_image_preview
-                                    Label:
-                                        text: "Test"
-                                        id: part_info_label
-                                        h_align: 'left'
-
-                                BoxLayout:
-                                    size_hint_x: 3
-                                    padding: 10
-                                    orientation: 'vertical'
-                                    canvas:
-                                        Color:
-                                            rgba: 1,1,1,1
-                                        RoundedRectangle:
-                                            size: self.size
-                                            pos: self.pos
                                     id: gcode_preview_container
+                                    size_hint_x: 1
+                                    orientation: 'vertical'
+
 
             BoxLayout:
                 size_hint_x: 0.1
@@ -380,16 +358,6 @@ class HomeScreen(Screen):
             log ('< draw_file_in_xy_plane')
         except:
             print 'Unable to draw gcode'
-
-        self.part_info_label.text = ("X: " + str(self.job_box.range_x[1]-self.job_box.range_x[0]) +
-                                     "\nY: " + str(self.job_box.range_y[1]-self.job_box.range_y[0]) +
-                                     "\nZ: " + str(self.job_box.range_z[0]))
-
-        # Search for tool listings and show
-        for line in self.job_gcode:
-            if line.find('(T') >= 0:
-                self.file_data_label.text += '\n' + line.strip()
-                break
 
         log('DONE')
 
