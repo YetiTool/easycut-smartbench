@@ -96,11 +96,14 @@ class Settings(object):
     
             # Update starteasycut shell script to look for backup/other folders if required
             # We really need to work on platform updates
-            case = (os.popen('grep -Fx "[ ! -d " /home/pi/starteasycut.sh').read()) #current/old directory command
-            if not case.startswith('[ ! -d '):
+ 
+            backup_command = '\[ ! -d \"home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
+            backup_command_string = '[ ! -d \"home/pi/easycut-smartbench/\" ] && mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench'
+
+            case = (os.popen('grep -Fx "' + backup_command + '" /home/pi/starteasycut.sh').read()) #current/old directory command
+            if not case.startswith(backup_command_string):
                 # if not, copy from backup
-                backup_command = '\[ ! -d \"home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-                sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
+               sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
                 os.system(sed_cmd)
                 
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
