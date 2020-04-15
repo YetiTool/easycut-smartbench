@@ -18,7 +18,7 @@ from kivy.clock import Clock, mainthread
 
 import os, sys
 
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
 from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_stop_press # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
@@ -38,6 +38,7 @@ Builder.load_string("""
     z_height_container:z_height_container
     gcode_path_container:gcode_path_container
     feed_override_container:feed_override_container
+    speed_override_container:speed_override_container
     start_stop_button_image:start_stop_button_image
     grbl_serial_char_capacity:grbl_serial_char_capacity
     grbl_serial_line_capacity:grbl_serial_line_capacity
@@ -168,7 +169,9 @@ Builder.load_string("""
                         spacing: 20
 
                         BoxLayout:
-                            padding: 0
+                            orientation: 'vertical'
+                            padding: 10
+                            spacing: 10
                             size_hint_x: 0.2
                             canvas:
                                 Color:
@@ -177,9 +180,65 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            id: feed_override_container
+                            Label:
+                                size_hint_y: 1.5
+                                text: '[color=333333]Feed[/color]'
+                                markup: True
+                                font_size: '18px' 
+                                valign: 'middle'
+                                halign: 'center'
+                                size:self.texture_size
+                                text_size: self.size
+
+                            BoxLayout:
+                                id: feed_override_container
+                                padding: 0
+                                size_hint_y: 9
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+    
 
                         BoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            spacing: 10
+                            size_hint_x: 0.2
+                            canvas:
+                                Color:
+                                    rgba: hex('#FFFFFFFF')
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+
+                            Label:
+                                size_hint_y: 1.5
+                                text: '[color=333333]Speed[/color]'
+                                markup: True
+                                font_size: '18px' 
+                                valign: 'middle'
+                                halign: 'center'
+                                size:self.texture_size
+                                text_size: self.size
+
+                            BoxLayout:
+                                id: speed_override_container
+                                padding: 0
+                                size_hint_y: 9
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+    
+
+                        BoxLayout:
+                            size_hint_x: 0.8
+
                             padding: 0
                             canvas:
                                 Color:
@@ -259,10 +318,12 @@ class GoScreen(Screen):
         self.job_gcode=kwargs['job']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
+        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
         self.feed_override_container.add_widget(self.feedOverride)
+        self.speed_override_container.add_widget(self.speedOverride)
         
         
         #self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
@@ -300,6 +361,7 @@ class GoScreen(Screen):
             
             
         self.feedOverride.feed_norm()
+        self.speedOverride.feed_norm()
 
 #         self.btn_pause_play.size_hint_y = None
 #         self.btn_pause_play.height = '0dp'
@@ -375,6 +437,7 @@ class GoScreen(Screen):
         self.btn_pause_play.height = '0dp'
         
         self.feedOverride.feed_norm()
+        self.speedOverride.feed_norm()
 
     def stream_job(self):
                 
