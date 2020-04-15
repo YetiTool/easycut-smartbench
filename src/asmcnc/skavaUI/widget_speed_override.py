@@ -15,7 +15,7 @@ from kivy.base import runTouchApp
 Builder.load_string("""
 
 
-<FeedOverride>
+<SpeedOverride>
 
     feed_rate_label:feed_rate_label
 
@@ -82,29 +82,29 @@ Builder.load_string("""
 """)
     
 
-class FeedOverride(Widget):
+class SpeedOverride(Widget):
 
     feed_override_percentage = NumericProperty()
     feed_rate_label = ObjectProperty()
 
     def __init__(self, **kwargs):
-        super(FeedOverride, self).__init__(**kwargs)
+        super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']     
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 10
         self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.feed_override_up_10(final_percentage=self.feed_override_percentage)
+        self.m.speed_override_up_10(final_percentage=self.feed_override_percentage)
         
     def feed_norm(self):
         self.feed_override_percentage = 100
         self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.feed_override_reset()
+        self.m.speed_override_reset()
                 
     def feed_down(self):
         if self.feed_override_percentage > 10: self.feed_override_percentage -= 10
         self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.feed_override_down_10(final_percentage=self.feed_override_percentage)        
+        self.m.speed_override_down_10(final_percentage=self.feed_override_percentage)        
 
 
