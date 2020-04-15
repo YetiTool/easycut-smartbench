@@ -103,7 +103,7 @@ class Settings(object):
             case = (os.popen('grep -Fx "' + backup_command + '" /home/pi/starteasycut.sh').read()) #current/old directory command
             if not case.startswith(backup_command_string):
                 # if not, copy from backup
-               sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
+                sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
                 os.system(sed_cmd)
                 
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
