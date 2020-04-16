@@ -300,7 +300,7 @@ class SerialConnection(object):
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
-
+    
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
@@ -366,15 +366,20 @@ class SerialConnection(object):
         
         time.sleep(0.1)
         
+        self._reset_counters()
+
+        return True
+
+
+    def _reset_counters(self):
+        
         # Reset counters & flags
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
         self.stream_start_time = time.time();
-        return True
 
-
-
+    
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.job_gcode):
@@ -455,10 +460,12 @@ class SerialConnection(object):
     
             # send info to the job done screen
             self.sm.current = 'jobdone'
+            self._reset_counters()
 
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self._reset_counters()
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -468,7 +475,8 @@ class SerialConnection(object):
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
-        
+        self._reset_counters()
+
         if not self.m.is_check_mode_enabled:
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             
@@ -628,12 +636,12 @@ class SerialConnection(object):
                     # if different from last check
                     if self.serial_chars_available != buffer_info[1]:
                         self.serial_chars_available = buffer_info[1]
-                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "C: " + self.serial_chars_available
+                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     if self.serial_blocks_available != buffer_info[0]:
                         self.serial_blocks_available = buffer_info[0]
-                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "L: " + self.serial_blocks_available
+                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     # print if change flagged

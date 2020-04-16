@@ -16,7 +16,7 @@ from __builtin__ import file, True
 from kivy.clock import Clock, mainthread
 
 
-import os, sys
+import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
 from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_stop_press # @UnresolvedImport
@@ -36,7 +36,7 @@ Builder.load_string("""
 
     status_container:status_container
     z_height_container:z_height_container
-    gcode_path_container:gcode_path_container
+    job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
     start_stop_button_image:start_stop_button_image
@@ -47,6 +47,8 @@ Builder.load_string("""
     btn_pause_play: btn_pause_play
     play_pause_button_image: play_pause_button_image
     file_data_label:file_data_label
+    run_time_label:run_time_label
+    progress_percentage_label:progress_percentage_label
 
     BoxLayout:
         padding: 0
@@ -88,7 +90,8 @@ Builder.load_string("""
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 10
+                            padding: 0
+                            spacing: 10
                             Button:
                                 id: btn_back
                                 size_hint_x: 1
@@ -113,7 +116,6 @@ Builder.load_string("""
                                 size_hint_x: 5
                                 text_size: self.size
                                 font_size: '20sp'
-                                color: 0,0,0,1
                                 markup: True
                                 text: 'Load a file...'
                                 halign: 'center'
@@ -180,15 +182,33 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Label:
+                            BoxLayout:
                                 size_hint_y: 1.5
-                                text: '[color=333333]Feed[/color]'
-                                markup: True
-                                font_size: '18px' 
-                                valign: 'middle'
-                                halign: 'center'
-                                size:self.texture_size
-                                text_size: self.size
+                                orientation: 'vertical'
+                                padding: 00
+                                spacing: 00
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+                                Label:
+                                    text: '[color=808080]Feed[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                Label:
+                                    text: '[color=808080]rate[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
 
                             BoxLayout:
                                 id: feed_override_container
@@ -214,15 +234,33 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Label:
+                            BoxLayout:
                                 size_hint_y: 1.5
-                                text: '[color=333333]Speed[/color]'
-                                markup: True
-                                font_size: '18px' 
-                                valign: 'middle'
-                                halign: 'center'
-                                size:self.texture_size
-                                text_size: self.size
+                                orientation: 'vertical'
+                                padding: 00
+                                spacing: 00
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+                                Label:
+                                    text: '[color=808080]Spindle[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                Label:
+                                    text: '[color=808080]speed[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
 
                             BoxLayout:
                                 id: speed_override_container
@@ -237,9 +275,12 @@ Builder.load_string("""
     
 
                         BoxLayout:
+                            id: job_progress_container
                             size_hint_x: 0.8
+                            orientation: 'vertical'
+                            padding: 20
+                            spacing: 00
 
-                            padding: 0
                             canvas:
                                 Color:
                                     rgba: hex('#FFFFFFFF')
@@ -247,7 +288,44 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            id: gcode_path_container
+                            Label:
+                                size_hint_y: 1
+                                text: '[color=808080]File lines streamed:[/color]'
+                                markup: True                           
+                                font_size: '16px'
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                size_hint_y: 3
+                                id: progress_percentage_label
+                                text: '[color=333333]0[size=70px] %[/size][/color]'
+                                markup: True                           
+                                font_size: '100px' 
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                size_hint_y: 1
+                                text: '[color=808080]Job time:[/color]'
+                                markup: True                           
+                                font_size: '16px' 
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                size_hint_y: 1
+                                id: run_time_label
+                                text: '[color=333333]99 hours 59 mins 59 secs[/color]'
+                                markup: True                           
+                                font_size: '20px'
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -268,20 +346,31 @@ Builder.load_string("""
 
                         id: z_height_container
 
+
                     BoxLayout:
-                        orientation: 'horizontal'
-                        size_hint_y: 0.05
+                        orientation: 'vertical'
+                        size_hint_y: 0.15
                         padding: 00
                         spacing: 00
-                        Label:
-                            id: grbl_serial_char_capacity
-                            text: 'A'
-                            color: 0,0,0,1
-                        Label:
-                            id: grbl_serial_line_capacity
-                            text: 'B'
-                            color: 0,0,0,1
 
+                        Label:
+                            text: '[color=808080]Comms buffer:[/color]'
+                            markup: True
+
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            padding: 00
+                            spacing: 00
+
+                            Label:
+                                id: grbl_serial_char_capacity
+                                text: '[color=808080]A[/color]'
+                                markup: True
+                            Label:
+                                id: grbl_serial_line_capacity
+                                text: '[color=808080]B[/color]'
+                                markup: True
+    
 
         BoxLayout:
             size_hint_y: 0.08
@@ -291,6 +380,7 @@ Builder.load_string("""
 
 
 class GoScreen(Screen):
+
 
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
     job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
@@ -308,6 +398,7 @@ class GoScreen(Screen):
     
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
+
 
     def __init__(self, **kwargs):
 
@@ -332,6 +423,7 @@ class GoScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
  
         self.job_in_progress = False
+
         
     def on_enter(self, *args):
 
@@ -349,9 +441,9 @@ class GoScreen(Screen):
             self.stop_start.disabled = False
 
             if sys.platform == 'win32':
-                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
             else:
-                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
             
         elif self.job_in_progress == False and self.job_gcode == []:
             # if job has not been loaded
@@ -363,6 +455,10 @@ class GoScreen(Screen):
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
 
+        self.poll_for_job_progress(0)
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)
+
+
 #         self.btn_pause_play.size_hint_y = None
 #         self.btn_pause_play.height = '0dp'
 #         self.paused = False
@@ -373,6 +469,10 @@ class GoScreen(Screen):
 #             
 #         else:
 #             self.stop_start.disabled = True
+
+    def on_leave(self, *args):
+        if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+
    
     def start_stop_button_press(self):
        
@@ -392,6 +492,7 @@ class GoScreen(Screen):
             
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
+
     def play_pause_button_press(self):
         
         self.paused = not self.paused
@@ -401,22 +502,28 @@ class GoScreen(Screen):
             
         if self.paused == False:
             self.resume_job()
+
             
     def pause_job(self):
+
         self.paused = True
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
         self.m.stop_for_a_stream_pause()
         self.job_in_progress = True
+ 
         
     def resume_job(self):
+ 
         self.paused = False
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         self.m.resume_after_a_stream_pause()
         self.job_in_progress = True
 
     def return_to_app(self):
+
         self.sm.current = self.cancel_to_screen
             
+
     @mainthread
     def reset_go_screen_after_job_finished(self):
 
@@ -439,6 +546,7 @@ class GoScreen(Screen):
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
 
+
     def stream_job(self):
                 
         if self.job_gcode:
@@ -460,3 +568,41 @@ class GoScreen(Screen):
 
         else:
             print('No file loaded')
+ 
+    
+    def poll_for_job_progress(self, dt):
+
+        # % progress    
+        if len(self.sm.get_screen('home').job_gcode) != 0:
+            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.sm.get_screen('home').job_gcode) + 4) * 1.0)*100.0))
+            if percent_thru_job > 100: percent_thru_job = 100
+            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
+
+        # Runtime
+        if len(self.sm.get_screen('home').job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
+
+            stream_end_time = time.time()
+            time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
+            hours = int(time_taken_seconds / (60 * 60))
+            seconds_remainder = time_taken_seconds % (60 * 60)
+            minutes = int(seconds_remainder / 60)
+            seconds = int(seconds_remainder % 60)
+
+            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+            
+            if hours > 0:
+                self.run_time_label.text = "[color=333333]" + str(hours) + " hrs " + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
+            elif minutes > 0:
+                self.run_time_label.text = "[color=333333]" + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
+            else:
+                self.run_time_label.text = "[color=333333]" + str(seconds) + " secs" + "[/color]"
+        
+        else:
+            self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
+            
+
+        
+        
+        
