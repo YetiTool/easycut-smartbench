@@ -36,7 +36,7 @@ Builder.load_string("""
 
     status_container:status_container
     z_height_container:z_height_container
-    gcode_path_container:gcode_path_container
+    job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
     start_stop_button_image:start_stop_button_image
@@ -247,7 +247,8 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            id: gcode_path_container
+                            id: job_progress_container
+                            
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -268,20 +269,31 @@ Builder.load_string("""
 
                         id: z_height_container
 
+
                     BoxLayout:
-                        orientation: 'horizontal'
-                        size_hint_y: 0.05
+                        orientation: 'vertical'
+                        size_hint_y: 0.15
                         padding: 00
                         spacing: 00
-                        Label:
-                            id: grbl_serial_char_capacity
-                            text: 'A'
-                            color: 0,0,0,1
-                        Label:
-                            id: grbl_serial_line_capacity
-                            text: 'B'
-                            color: 0,0,0,1
 
+                        Label:
+                            text: '[color=808080]Comms buffer:[/color]'
+                            markup: True
+
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            padding: 00
+                            spacing: 00
+
+                            Label:
+                                id: grbl_serial_char_capacity
+                                text: '[color=808080]A[/color]'
+                                markup: True
+                            Label:
+                                id: grbl_serial_line_capacity
+                                text: '[color=808080]B[/color]'
+                                markup: True
+    
 
         BoxLayout:
             size_hint_y: 0.08

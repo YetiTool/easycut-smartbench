@@ -300,7 +300,8 @@ class SerialConnection(object):
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
-
+    
+    total_lines_of_gcode_in_job = 0
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
@@ -340,6 +341,7 @@ class SerialConnection(object):
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
         if self.initialise_job() and self.job_gcode:
+            self.total_lines_of_gcode_in_job = len(self.job_gcode)
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
@@ -371,6 +373,7 @@ class SerialConnection(object):
         self.g_count = 0
         self.c_line = []
         self.stream_start_time = time.time();
+
         return True
 
 
@@ -628,12 +631,12 @@ class SerialConnection(object):
                     # if different from last check
                     if self.serial_chars_available != buffer_info[1]:
                         self.serial_chars_available = buffer_info[1]
-                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "C: " + self.serial_chars_available
+                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     if self.serial_blocks_available != buffer_info[0]:
                         self.serial_blocks_available = buffer_info[0]
-                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "L: " + self.serial_blocks_available
+                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     # print if change flagged
