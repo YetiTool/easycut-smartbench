@@ -47,6 +47,8 @@ Builder.load_string("""
     btn_pause_play: btn_pause_play
     play_pause_button_image: play_pause_button_image
     file_data_label:file_data_label
+    run_time_label:run_time_label
+    progress_percentage_label:progress_percentage_label
 
     BoxLayout:
         padding: 0
@@ -180,15 +182,33 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Label:
+                            BoxLayout:
                                 size_hint_y: 1.5
-                                text: '[color=333333]Feed[/color]'
-                                markup: True
-                                font_size: '18px' 
-                                valign: 'middle'
-                                halign: 'center'
-                                size:self.texture_size
-                                text_size: self.size
+                                orientation: 'vertical'
+                                padding: 00
+                                spacing: 00
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+                                Label:
+                                    text: '[color=333333]Feed[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                Label:
+                                    text: '[color=333333]rate[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
 
                             BoxLayout:
                                 id: feed_override_container
@@ -214,15 +234,33 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Label:
+                            BoxLayout:
                                 size_hint_y: 1.5
-                                text: '[color=333333]Speed[/color]'
-                                markup: True
-                                font_size: '18px' 
-                                valign: 'middle'
-                                halign: 'center'
-                                size:self.texture_size
-                                text_size: self.size
+                                orientation: 'vertical'
+                                padding: 00
+                                spacing: 00
+                                canvas:
+                                    Color:
+                                        rgba: hex('#FFFFFFFF')
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
+                                Label:
+                                    text: '[color=333333]Spindle[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
+                                Label:
+                                    text: '[color=333333]speed[/color]'
+                                    markup: True
+                                    font_size: '16px' 
+                                    valign: 'middle'
+                                    halign: 'center'
+                                    size:self.texture_size
+                                    text_size: self.size
 
                             BoxLayout:
                                 id: speed_override_container
@@ -237,9 +275,12 @@ Builder.load_string("""
     
 
                         BoxLayout:
+                            id: job_progress_container
                             size_hint_x: 0.8
+                            orientation: 'vertical'
+                            padding: 10
+                            spacing: 10
 
-                            padding: 0
                             canvas:
                                 Color:
                                     rgba: hex('#FFFFFFFF')
@@ -247,8 +288,40 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            id: job_progress_container
-                            
+                            Label:
+                                text: '[color=333333]Lines completed:[/color]'
+                                markup: True                           
+                                font_size: '18px'
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                id: progress_percentage_label
+                                text: '[color=333333]100%[/color]'
+                                markup: True                           
+                                font_size: '18px' 
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                text: '[color=333333]Run time:[/color]'
+                                markup: True                           
+                                font_size: '18px' 
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
+                            Label:
+                                id: run_time_label
+                                text: '[color=333333]99 hours 59 mins 59 secs[/color]'
+                                markup: True                           
+                                font_size: '18px'
+                                valign: 'middle'
+                                halign: 'left'
+                                size:self.texture_size
+                                text_size: self.size 
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -472,3 +545,10 @@ class GoScreen(Screen):
 
         else:
             print('No file loaded')
+    
+    def update_job_progress_stats(self):
+        self.run_time_label
+        self.progress_percentage_label
+        
+        
+        
