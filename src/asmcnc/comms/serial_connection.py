@@ -465,6 +465,7 @@ class SerialConnection(object):
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self._reset_counters()
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()

@@ -219,9 +219,8 @@ Builder.load_string("""
                                     size_hint_x: 4
                                     text_size: self.size
                                     font_size: '20sp'
-                                    color: 0,0,0,1
                                     markup: True
-                                    text: 'Load a file...'
+                                    text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
                                     valign: 'middle'
 
@@ -315,9 +314,9 @@ class HomeScreen(Screen):
         if self.job_gcode != []:
             
             if sys.platform == 'win32':
-                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
             else:
-                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
                 
             # Preview file
             try: 
@@ -326,7 +325,7 @@ class HomeScreen(Screen):
                 log('Unable to preview file')
             
         else:
-            self.file_data_label.text = '[b]Load a file...[/b]'
+            self.file_data_label.text = '[color=333333]Load a file...[/color]'
             self.job_filename = ''
   
             self.job_box.range_x[0] = 0

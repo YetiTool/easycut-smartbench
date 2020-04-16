@@ -116,7 +116,6 @@ Builder.load_string("""
                                 size_hint_x: 5
                                 text_size: self.size
                                 font_size: '20sp'
-                                color: 0,0,0,1
                                 markup: True
                                 text: 'Load a file...'
                                 halign: 'center'
@@ -195,7 +194,7 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
                                 Label:
-                                    text: '[color=333333]Feed[/color]'
+                                    text: '[color=808080]Feed[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -203,7 +202,7 @@ Builder.load_string("""
                                     size:self.texture_size
                                     text_size: self.size
                                 Label:
-                                    text: '[color=333333]rate[/color]'
+                                    text: '[color=808080]rate[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -247,7 +246,7 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
                                 Label:
-                                    text: '[color=333333]Spindle[/color]'
+                                    text: '[color=808080]Spindle[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -255,7 +254,7 @@ Builder.load_string("""
                                     size:self.texture_size
                                     text_size: self.size
                                 Label:
-                                    text: '[color=333333]speed[/color]'
+                                    text: '[color=808080]speed[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
@@ -279,8 +278,8 @@ Builder.load_string("""
                             id: job_progress_container
                             size_hint_x: 0.8
                             orientation: 'vertical'
-                            padding: 10
-                            spacing: 10
+                            padding: 20
+                            spacing: 00
 
                             canvas:
                                 Color:
@@ -290,35 +289,39 @@ Builder.load_string("""
                                     pos: self.pos
 
                             Label:
-                                text: '[color=333333]Lines completed:[/color]'
+                                size_hint_y: 1
+                                text: '[color=808080]File lines streamed:[/color]'
                                 markup: True                           
-                                font_size: '18px'
+                                font_size: '16px'
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
                                 text_size: self.size 
                             Label:
+                                size_hint_y: 3
                                 id: progress_percentage_label
-                                text: '[color=333333]0%[/color]'
+                                text: '[color=333333]0[size=70px] %[/size][/color]'
                                 markup: True                           
-                                font_size: '18px' 
+                                font_size: '100px' 
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
                                 text_size: self.size 
                             Label:
-                                text: '[color=333333]Run time:[/color]'
+                                size_hint_y: 1
+                                text: '[color=808080]Job time:[/color]'
                                 markup: True                           
-                                font_size: '18px' 
+                                font_size: '16px' 
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
                                 text_size: self.size 
                             Label:
+                                size_hint_y: 1
                                 id: run_time_label
                                 text: '[color=333333]99 hours 59 mins 59 secs[/color]'
                                 markup: True                           
-                                font_size: '18px'
+                                font_size: '20px'
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
@@ -438,9 +441,9 @@ class GoScreen(Screen):
             self.stop_start.disabled = False
 
             if sys.platform == 'win32':
-                self.file_data_label.text = '[b]' + self.job_filename.split("\\")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
             else:
-                self.file_data_label.text = '[b]' + self.job_filename.split("/")[-1] + '[/b]'
+                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
             
         elif self.job_in_progress == False and self.job_gcode == []:
             # if job has not been loaded
@@ -573,7 +576,7 @@ class GoScreen(Screen):
         if len(self.sm.get_screen('home').job_gcode) != 0:
             percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.sm.get_screen('home').job_gcode) + 4) * 1.0)*100.0))
             if percent_thru_job > 100: percent_thru_job = 100
-            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "%[/color]"
+            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
         if len(self.sm.get_screen('home').job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
@@ -590,14 +593,14 @@ class GoScreen(Screen):
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             
             if hours > 0:
-                self.run_time_label.text = "[color=333333]" + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s" + "[/color]"
+                self.run_time_label.text = "[color=333333]" + str(hours) + " hrs " + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
             elif minutes > 0:
-                self.run_time_label.text = "[color=333333]" + str(minutes) + "m " + str(seconds) + "s" + "[/color]"
+                self.run_time_label.text = "[color=333333]" + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
             else:
-                self.run_time_label.text = "[color=333333]" + str(seconds) + "s" + "[/color]"
+                self.run_time_label.text = "[color=333333]" + str(seconds) + " secs" + "[/color]"
         
         else:
-            self.run_time_label.text = "[color=333333]" + "Waiting for job to start." + "[/color]"
+            self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
             
 
         
