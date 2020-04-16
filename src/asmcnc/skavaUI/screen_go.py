@@ -90,7 +90,8 @@ Builder.load_string("""
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 10
+                            padding: 0
+                            spacing: 10
                             Button:
                                 id: btn_back
                                 size_hint_x: 1
