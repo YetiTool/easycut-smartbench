@@ -301,7 +301,6 @@ class SerialConnection(object):
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
     
-    total_lines_of_gcode_in_job = 0
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
@@ -341,7 +340,6 @@ class SerialConnection(object):
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
         if self.initialise_job() and self.job_gcode:
-            self.total_lines_of_gcode_in_job = len(self.job_gcode)
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')
@@ -368,16 +366,20 @@ class SerialConnection(object):
         
         time.sleep(0.1)
         
+        self._reset_counters()
+
+        return True
+
+
+    def _reset_counters(self):
+        
         # Reset counters & flags
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
         self.stream_start_time = time.time();
 
-        return True
-
-
-
+    
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
         while self.l_count < len(self.job_gcode):
@@ -458,6 +460,7 @@ class SerialConnection(object):
     
             # send info to the job done screen
             self.sm.current = 'jobdone'
+            self._reset_counters()
 
         else:
             self.m.disable_check_mode()
@@ -471,7 +474,8 @@ class SerialConnection(object):
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
-        
+        self._reset_counters()
+
         if not self.m.is_check_mode_enabled:
             self.sm.get_screen('go').reset_go_screen_after_job_finished()
             
