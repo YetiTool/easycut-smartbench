@@ -6,6 +6,7 @@ Module to get and store settings info
 
 import sys,os, subprocess
 from asmcnc.skavaUI import popup_info
+from __builtin__ import True
 
 class Settings(object):
     
@@ -38,7 +39,13 @@ class Settings(object):
         try:
             self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
         except: 
+            
+            def filter_tags(version):
+                if version.startswith('v'): return True
+                else: return False
+            
             sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
+            sw_version_list = filter(filter_tags, sw_version_list)
             version_numbers = map(lambda each:each.strip("v"), sw_version_list)
             max_version_number = max(version_numbers)
             self.latest_sw_version = 'v' + str(max_version_number)
