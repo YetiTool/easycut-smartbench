@@ -73,7 +73,7 @@ class Settings(object):
 #                     " power supply.\n\n" \
 #                     "Would you like to repair your software now?"
  
-                    description = str(unformatted_git_output).split('\n')
+                    description = str(unformatted_git_output)
                     popup_info.PopupSoftwareRepair(self.sm, self, description)
                     
                 
