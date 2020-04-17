@@ -132,7 +132,7 @@ class Settings(object):
         os.system(copy_command)
         
         os.system('cd /home/pi/easycut-smartbench-backup/ && git reset --hard && git checkout ' + self.latest_sw_version)
-        os.system('sudo rm /home/pi/easycut-smartbench/ -r && mkdir /home/pi/easycut-smartbench/ && cp -RT /home/pi/easycut-smartbench-backup/ /home/pi/easycut-smartbench/')
+        os.system('sudo rm /home/pi/easycut-smartbench/ -r && mkdir /home/pi/easycut-smartbench/ && cp -RT /home/pi/easycut-smartbench-backup/ /home/pi/easycut-smartbench/ && ./home/pi/starteasycut.sh')
         
         
         

@@ -378,7 +378,7 @@ class SWUpdateScreen(Screen):
         else: 
             print "throw popup"
 
-    def get_sw_update_over_USB(self):
+    def get_sw_update_over_usb(self):
         if self.usb_image.source == self.usb_on:
             self.set.get_sw_update_via_usb()
         else: 
