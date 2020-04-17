@@ -6,6 +6,7 @@ Module to get and store settings info
 
 import sys,os, subprocess
 from asmcnc.skavaUI import popup_info
+from __builtin__ import True
 
 class Settings(object):
     
@@ -36,6 +37,17 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
         self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        if not self.latest_sw_version.startswith('v'): 
+            
+            def filter_tags(version):
+                if version.startswith('v'): return True
+                else: return False
+            
+            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
+            sw_version_list = filter(filter_tags, sw_version_list)
+            version_numbers = map(lambda each:each.strip("v"), sw_version_list)
+            max_version_number = max(version_numbers)
+            self.latest_sw_version = 'v' + str(max_version_number)
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
@@ -45,8 +57,10 @@ class Settings(object):
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
-    def get_sw_update(self):
-        
+    def get_sw_update_via_wifi(self):
+        self.checkout_latest_version()
+    
+    def checkout_latest_version(self):    
         if sys.platform != 'win32':
             if self.latest_sw_version != self.sw_version:
         ##      Update SW according to latest release:
@@ -57,22 +71,22 @@ class Settings(object):
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 unformatted_git_output = p.communicate()[1]
-                 
-                if unformatted_git_output.startswith('Note: checking out'):
-                    self.update_config()
-                    git_output = str(unformatted_git_output).split('\n')
-                    git_output = list(filter(lambda x: x!= '', git_output))
+
+                git_output = str(unformatted_git_output).split('\n')
+                git_output = list(filter(lambda x: x!= '', git_output))
                      
-                    if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
-                        description = str(git_output[0]) + '\n' + str(git_output[-1])
-                        popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
+                if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
+                    self.update_config()
+                    description = str(git_output[0]) + '\n' + str(git_output[-1])
+                    popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
                     
                 else: 
                     description = "There was a problem updating your software. \n\n" \
                     "We can try to fix the problem, but you MUST have a stable internet connection and" \
                     " power supply.\n\n" \
                     "Would you like to repair your software now?"
-                    
+ 
+#                     description = str(unformatted_git_output)
                     popup_info.PopupSoftwareRepair(self.sm, self, description)
                     
                 
@@ -85,7 +99,6 @@ class Settings(object):
         os.system(sed_sw_version)
         os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
-    
     def repair_EC(self):
     
         def backup_EC():
@@ -122,3 +135,17 @@ class Settings(object):
             description = "It was not possible to backup EC safely, please try again later.\n\n" + \
             "If this issue persists, please contact Yeti Tool Ltd for support."
             popup_info.PopupError(self.sm, description)
+            
+    def get_sw_update_via_usb(self):
+         
+        dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
+        add_remote = 'cd /home/pi/easycut-smartbench && git remote add usb_easycut ' + dir_path_name
+        checkout_master_from_usb = 'cd /home/pi/easycut-smartbench && git fetch usb_easycut && git checkout usb_easycut/master'
+        os.system(add_remote)
+        os.system(checkout_master_from_usb)
+        self.checkout_latest_version()
+        rm_remote = 'git remote rm usb_easycut'
+        os.system(rm_remote)
+              
+        #unmount usb
+        
