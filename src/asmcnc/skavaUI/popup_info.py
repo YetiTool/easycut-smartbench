@@ -182,7 +182,7 @@ class PopupUSBInfo(Widget):
 
 class PopupInfo(Widget):
 
-    def __init__(self, screen_manager, description):
+    def __init__(self, screen_manager, popup_width, description):
         
         self.sm = screen_manager
         
@@ -208,7 +208,7 @@ class PopupInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(720, 400),
+                      size=(popup_width, 400),
                       auto_dismiss= False
                       )
 
