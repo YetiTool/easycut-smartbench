@@ -127,12 +127,12 @@ class Settings(object):
          
         dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add usb_easycut ' + dir_path_name
-        checkout_master_from_usb = 'cd /home/pi/easycut-smartbench && git checkout usb_easycut master'
-        rm_remote = 'git remote rm usb_easycut'
+        checkout_master_from_usb = 'cd /home/pi/easycut-smartbench && git fetch usb_easycut && git checkout usb_easycut/master'
         os.system(add_remote)
         os.system(checkout_master_from_usb)
         self.get_sw_update_via_wifi()
-        
+        rm_remote = 'git remote rm usb_easycut'
+              
         #unmount usb
         
         # do try except
