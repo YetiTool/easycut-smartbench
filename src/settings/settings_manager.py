@@ -68,11 +68,12 @@ class Settings(object):
                         popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
                     
                 else: 
-                    description = "There was a problem updating your software. \n\n" \
-                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
-                    " power supply.\n\n" \
-                    "Would you like to repair your software now?"
-                    
+#                     description = "There was a problem updating your software. \n\n" \
+#                     "We can try to fix the problem, but you MUST have a stable internet connection and" \
+#                     " power supply.\n\n" \
+#                     "Would you like to repair your software now?"
+ 
+                    description = str(unformatted_git_output).split('\n')
                     popup_info.PopupSoftwareRepair(self.sm, self, description)
                     
                 
@@ -133,4 +134,7 @@ class Settings(object):
         self.get_sw_update_via_wifi()
         os.system(rm_remote)
         
+        #unmount usb
+        
+        # do try except
         
