@@ -125,7 +125,7 @@ class Settings(object):
     def get_sw_update_via_usb(self):
          
         dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
-        add_remote = 'cd /home/pi/easycut-smartbench && git remote add usb_easycut' + dir_path_name
+        add_remote = 'cd /home/pi/easycut-smartbench && git remote add usb_easycut ' + dir_path_name
         pull_master_from_usb = 'git pull usb_easycut master' 
         rm_remote = 'git remote rm usb_easycut'
         os.system(add_remote)
