@@ -125,14 +125,15 @@ class Settings(object):
     def get_sw_update_via_usb(self):
          
         dir_path_name = os.popen('find /media/usb/ -name easycut-smartbench').read()
-        copy_command = 'cp -RT ' + str(dir_path_name) + '/home/pi/easycut-smartbench-backup/'
+        print str(dir_path_name)
+        copy_command = 'cp -RT ' + str(dir_path_name) + ' /home/pi/easycut-smartbench-backup/'
         
         os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup/ -r')
         os.system('mkdir /home/pi/easycut-smartbench-backup/')
         os.system(copy_command)
         
         os.system('cd /home/pi/easycut-smartbench-backup/ && git reset --hard && git checkout ' + self.latest_sw_version)
-        os.system('sudo rm /home/pi/easycut-smartbench/ -r && mkdir /home/pi/easycut-smartbench/ && cp -RT /home/pi/easycut-smartbench-backup/ /home/pi/easycut-smartbench/ && ./home/pi/starteasycut.sh')
+        os.system('sudo rm /home/pi/easycut-smartbench/ -r && mkdir /home/pi/easycut-smartbench/ && cp -RT /home/pi/easycut-smartbench-backup/ /home/pi/easycut-smartbench/ && cd /home/pi/ && ./starteasycut.sh')
         
         
         
