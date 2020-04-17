@@ -212,21 +212,21 @@ class MeasurementScreenClass(Screen):
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0
         self.instruction_left.size_hint_x = 0.4
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1.jpg"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_1.png"
 
     def screen_x_2(self):
         self.instruction_top.text = '[color=000000]The tape end [b](1)[/b] must push up against the guard post under the Z head [b](2)[/b].[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0        
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.jpg"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_2.png"
         
     def screen_x_3(self):
         self.instruction_top.text = '[color=000000]Use the home end plate [b](1)[/b] as an edge [b](2)[/b] to measure against.[/color]'
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0       
-        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.jpg"
+        self.image_select.source = "./asmcnc/calibration_app/img/x_measurement_img_3.png"
         
     def screen_x_4(self):
         self.instruction_top.text = '[color=000000]Make sure you make your measurement in line with the reference face.[/color]'
@@ -243,7 +243,7 @@ class MeasurementScreenClass(Screen):
         self.instruction_left.text = ''
         self.instruction_top.size_hint_y = 0.2
         self.instruction_left.size_hint_x = 0
-        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_1.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_1.png"
     
     def screen_y_2(self):
         self.instruction_left.text = '[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] ' \
@@ -252,7 +252,7 @@ class MeasurementScreenClass(Screen):
         self.instruction_top.text = ''
         self.instruction_top.size_hint_y = 0.1
         self.instruction_left.size_hint_x = 0.4
-        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_2.PNG"
+        self.image_select.source = "./asmcnc/calibration_app/img/y_measurement_img_2.png"
     
     def next_instruction(self):
         
