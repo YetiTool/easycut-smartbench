@@ -58,7 +58,9 @@ class Settings(object):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
     def get_sw_update_via_wifi(self):
-        
+        self.checkout_latest_version()
+    
+    def checkout_latest_version(self):    
         if sys.platform != 'win32':
             if self.latest_sw_version != self.sw_version:
         ##      Update SW according to latest release:
@@ -69,23 +71,22 @@ class Settings(object):
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 unformatted_git_output = p.communicate()[1]
-                 
-                if unformatted_git_output.startswith('Note: checking out'):
-                    self.update_config()
-                    git_output = str(unformatted_git_output).split('\n')
-                    git_output = list(filter(lambda x: x!= '', git_output))
+
+                git_output = str(unformatted_git_output).split('\n')
+                git_output = list(filter(lambda x: x!= '', git_output))
                      
-                    if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
-                        description = str(git_output[0]) + '\n' + str(git_output[-1])
-                        popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
+                if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
+                    self.update_config()
+                    description = str(git_output[0]) + '\n' + str(git_output[-1])
+                    popup_info.PopupSoftwareUpdateSuccess(self.sm, description)
                     
                 else: 
-#                     description = "There was a problem updating your software. \n\n" \
-#                     "We can try to fix the problem, but you MUST have a stable internet connection and" \
-#                     " power supply.\n\n" \
-#                     "Would you like to repair your software now?"
+                    description = "There was a problem updating your software. \n\n" \
+                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                    " power supply.\n\n" \
+                    "Would you like to repair your software now?"
  
-                    description = str(unformatted_git_output)
+#                     description = str(unformatted_git_output)
                     popup_info.PopupSoftwareRepair(self.sm, self, description)
                     
                 
@@ -142,10 +143,9 @@ class Settings(object):
         checkout_master_from_usb = 'cd /home/pi/easycut-smartbench && git fetch usb_easycut && git checkout usb_easycut/master'
         os.system(add_remote)
         os.system(checkout_master_from_usb)
-        self.get_sw_update_via_wifi()
+        self.checkout_latest_version()
         rm_remote = 'git remote rm usb_easycut'
+        os.system(rm_remote)
               
         #unmount usb
-        
-        # do try except
         

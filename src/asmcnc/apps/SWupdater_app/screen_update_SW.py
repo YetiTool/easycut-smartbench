@@ -382,7 +382,7 @@ class SWUpdateScreen(Screen):
         if self.usb_image.source == self.usb_on:
             self.set.get_sw_update_via_usb()
         else: 
-            print "throw popup"        
+            print "throw popup"
 
     def check_wifi_connection(self, dt):
 
