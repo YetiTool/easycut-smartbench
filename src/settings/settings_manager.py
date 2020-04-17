@@ -85,7 +85,6 @@ class Settings(object):
         os.system(sed_sw_version)
         os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
-    
     def repair_EC(self):
     
         def backup_EC():
@@ -122,3 +121,21 @@ class Settings(object):
             description = "It was not possible to backup EC safely, please try again later.\n\n" + \
             "If this issue persists, please contact Yeti Tool Ltd for support."
             popup_info.PopupError(self.sm, description)
+            
+    def get_sw_update_via_usb(self):
+         
+        dir_path_name = os.popen('find /media/usb/ -name easycut-smartbench')
+        copy_command = 'cp -RT ' + dir_path_name + '/home/pi/easycut-smartbench-backup/'
+        
+        os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup/ -r')
+        os.system('mkdir /home/pi/easycut-smartbench-backup/')
+        os.system(copy_command)
+        
+        os.system('cd /home/pi/easycut-smartbench-backup/ && git reset --hard && git checkout ' + self.latest_sw_version)
+        os.system('sudo rm /home/pi/easycut-smartbench/ -r && mkdir /home/pi/easycut-smartbench/ && cp -RT /home/pi/easycut-smartbench-backup/ /home/pi/easycut-smartbench/')
+        
+        
+        
+        
+        
+        
