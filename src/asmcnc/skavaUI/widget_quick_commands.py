@@ -13,6 +13,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_stop_press
+from asmcnc.skavaUI import popup_info
 
 import sys
 
@@ -165,7 +166,9 @@ class QuickCommands(Widget):
         # Job must be within machine bounds.
 
         if self.sm.get_screen('home').job_gcode ==[]:
-            pass
+            info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
+
+            popup_info.PopupInfo(self.sm, 400, info)
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'

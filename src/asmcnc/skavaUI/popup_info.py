@@ -185,9 +185,10 @@ class PopupInfo(Widget):
     def __init__(self, screen_manager, popup_width, description):
         
         self.sm = screen_manager
+        label_width = popup_width - 40
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(680, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
