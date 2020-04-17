@@ -36,9 +36,8 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-        try:
-            self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
-        except: 
+        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        if not self.latest_sw_version.startswith('v'): 
             
             def filter_tags(version):
                 if version.startswith('v'): return True
