@@ -182,7 +182,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
                 "But at the end of the movement, the motor coils can bounce into a different step position. " \
                 "Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring. " \
 
-        popup_info.PopupInfo(self.sm, info)
+        popup_info.PopupInfo(self.sm, 720, info)
 
 
     def cancel(self):

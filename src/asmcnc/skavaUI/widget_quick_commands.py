@@ -13,6 +13,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_stop_press
+from asmcnc.skavaUI import popup_info
 
 import sys
 
@@ -36,11 +37,7 @@ Builder.load_string("""
         Button:
             size_hint_y: 1
             background_color: hex('#F4433600')
-            on_release: 
-                self.background_color = hex('#F4433600')
-            on_press:
-                root.quit_to_lobby()
-                self.background_color = hex('#F44336FF')
+            on_press: root.quit_to_lobby()
             BoxLayout:
                 padding: 0
                 size: self.parent.size
@@ -63,11 +60,7 @@ Builder.load_string("""
                 center: self.parent.center
     
                 background_color: hex('#F4433600')
-                on_release: 
-                    self.background_color = hex('#F4433600')
-                on_press:
-                    root.home()
-                    self.background_color = hex('#F44336FF')
+                on_press: root.home()
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -83,11 +76,7 @@ Builder.load_string("""
         Button:
             size_hint_y: 1
             background_color: hex('#F4433600')
-            on_release: 
-                self.background_color = hex('#F4433600')
-            on_press:
-                root.reset()
-                self.background_color = hex('#F44336FF')
+            on_press: root.reset()
             BoxLayout:
                 padding: 0
                 size: self.parent.size
@@ -102,11 +91,8 @@ Builder.load_string("""
         Button:
             size_hint_y: 1
             background_color: hex('#F4433600')
-            on_release: 
-                root.proceed_to_go_screen()
-                self.background_color = hex('#F4433600')
             on_press:
-                self.background_color = hex('#F44336FF')
+                root.proceed_to_go_screen()
             BoxLayout:
                 padding: 0
                 size: self.parent.size
@@ -121,11 +107,7 @@ Builder.load_string("""
         Button:
             size_hint_y: 1
             background_color: hex('#F4433600')
-            on_release: 
-                self.background_color = hex('#F4433600')
-            on_press:
-                root.stop()
-                self.background_color = hex('#F44336FF')
+            on_press: root.stop()
             BoxLayout:
                 padding: 0
                 size: self.parent.size
@@ -184,7 +166,9 @@ class QuickCommands(Widget):
         # Job must be within machine bounds.
 
         if self.sm.get_screen('home').job_gcode ==[]:
-            pass
+            info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
+
+            popup_info.PopupInfo(self.sm, 400, info)
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
