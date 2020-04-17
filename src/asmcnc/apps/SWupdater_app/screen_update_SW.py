@@ -308,7 +308,7 @@ Builder.load_string("""
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.get_sw_update_over_wifi()
+                            on_press: root.get_sw_update_over_usb()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -374,9 +374,15 @@ class SWUpdateScreen(Screen):
     def get_sw_update_over_wifi(self):
         
         if self.wifi_image.source == self.wifi_on:
-            self.set.get_sw_update()
+            self.set.get_sw_update_via_wifi()
         else: 
             print "throw popup"
+
+    def get_sw_update_over_USB(self):
+        if self.usb_image.source == self.usb_on:
+            self.set.get_sw_update_via_usb()
+        else: 
+            print "throw popup"        
 
     def check_wifi_connection(self, dt):
 

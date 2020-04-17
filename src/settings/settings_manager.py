@@ -45,7 +45,7 @@ class Settings(object):
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
-    def get_sw_update(self):
+    def get_sw_update_via_wifi(self):
         
         if sys.platform != 'win32':
             if self.latest_sw_version != self.sw_version:
