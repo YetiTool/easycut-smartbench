@@ -49,6 +49,7 @@ Builder.load_string("""
     file_data_label:file_data_label
     run_time_label:run_time_label
     progress_percentage_label:progress_percentage_label
+    btn_back_img:btn_back_img
 
     BoxLayout:
         padding: 0
@@ -96,16 +97,14 @@ Builder.load_string("""
                                 id: btn_back
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
-                                on_release:
-                                    self.background_color = hex('#F4433600')
                                 on_press:
-                                    self.background_color = hex('#F44336FF')
                                     root.return_to_app()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
+                                        id: btn_back_img
                                         source: "./asmcnc/skavaUI/img/back.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
@@ -484,14 +483,17 @@ class GoScreen(Screen):
             self.stream_job()
             self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
             #Hide back button
-            self.btn_back.size_hint_y = None
-            self.btn_back.height = '0dp'
+            self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
+            self.btn_back.disabled = True
+            
             self.btn_pause_play.size_hint_y = 1
             
         else:
             
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
+    def do_nowt(self):
+        pass
 
     def play_pause_button_press(self):
         
@@ -537,8 +539,10 @@ class GoScreen(Screen):
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         
         #Show back button
-        self.btn_back.size_hint_y = 1
-        
+        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
+        self.btn_back.disabled = False
+
+                
         # Hide play/pause button
         self.btn_pause_play.size_hint_y = None
         self.btn_pause_play.height = '0dp'
