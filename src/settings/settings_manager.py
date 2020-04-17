@@ -38,7 +38,10 @@ class Settings(object):
         try:
             self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
         except: 
-            self.latest_sw_version = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))[-1]
+            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
+            version_numbers = map(lambda each:each.strip("v"), sw_version_list)
+            max_version_number = max(version_numbers)
+            self.latest_sw_version = 'v' + str(max_version_number)
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
