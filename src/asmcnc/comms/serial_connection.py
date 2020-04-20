@@ -190,93 +190,96 @@ class SerialConnection(object):
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
+    is_grbl_scanner_loop_doing_anything = True
 
     def grbl_scanner(self):
 
         while True:
-            
-            if self.FLUSH_FLAG == True:
-                self.s.flushInput()
-                self.FLUSH_FLAG = False
-            
-            # Polling 
-            if self.next_poll_time < time.time():
-                self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
-                self.next_poll_time = time.time() + self.STATUS_INTERVAL
 
-            # Process anything in the write_command and write_realtime lists,
-            # i.e. everything else.
-            
-            command_counter = 0
-            for command in self.write_command_buffer:
-                self.write_direct(*command)
-                command_counter += 1
+            if self.is_grbl_scanner_loop_doing_anything:   
+                         
+                if self.FLUSH_FLAG == True:
+                    self.s.flushInput()
+                    self.FLUSH_FLAG = False
                 
-            del self.write_command_buffer[0:(command_counter+1)]
-            
-            realtime_counter = 0
-            for realtime_command in self.write_realtime_buffer:
-                self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
-                realtime_counter += 1
+                # Polling 
+                if self.next_poll_time < time.time():
+                    self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
+                    self.next_poll_time = time.time() + self.STATUS_INTERVAL
+    
+                # Process anything in the write_command and write_realtime lists,
+                # i.e. everything else.
                 
-            del self.write_realtime_buffer[0:(realtime_counter+1)]
-
-            
-            # If there's a message received, deal with it depending on type:
-            if self.s.inWaiting():
-                # Read line in from serial buffer
-                try:
-                    rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-                    self.grbl_out = rec_temp;
-                    # print self.grbl_out
-                except Exception as e:
-                    log('serial.readline exception:\n' + str(e))
+                command_counter = 0
+                for command in self.write_command_buffer:
+                    self.write_direct(*command)
+                    command_counter += 1
+                    
+                del self.write_command_buffer[0:(command_counter+1)]
+                
+                realtime_counter = 0
+                for realtime_command in self.write_realtime_buffer:
+                    self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
+                    realtime_counter += 1
+                    
+                del self.write_realtime_buffer[0:(realtime_counter+1)]
+    
+                
+                # If there's a message received, deal with it depending on type:
+                if self.s.inWaiting():
+                    # Read line in from serial buffer
+                    try:
+                        rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
+                        self.grbl_out = rec_temp;
+                        # print self.grbl_out
+                    except Exception as e:
+                        log('serial.readline exception:\n' + str(e))
+                        rec_temp = ''
+                        self.get_serial_screen('Could not read line from serial buffer.')
+                else: 
                     rec_temp = ''
-                    self.get_serial_screen('Could not read line from serial buffer.')
-            else: 
-                rec_temp = ''
-
-            # If something received from serial buffer, process it. 
-            if len(rec_temp):  
-            
-
-                #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
-                if self.VERBOSE_ALL_RESPONSE: 
-                    if rec_temp.startswith('<'):
-                        log(rec_temp)
-                    else:
-                        log('< ' + rec_temp)
     
-                # Update the gcode monitor (may not be initialised) and console:
-                try:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
-                except:
-                    pass
+                # If something received from serial buffer, process it. 
+                if len(rec_temp):  
+                
     
-                # Process the GRBL response:
-                # NB: Sequential streaming is controlled through process_grbl_response
-                try:
-                    # If RESPONSE message (used in streaming, counting processed gcode lines)
-                    if rec_temp.startswith(('ok', 'error')):
-                        self.process_grbl_response(rec_temp)
-                    # If PUSH message
-                    else:
-                        self.process_grbl_push(rec_temp)
-                except Exception as e:
-                    log('Process response exception:\n' + str(e))
-                    self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
-                    raise # HACK allow error to cause serial comms thread to exit
-                    # What happens here? 
-                        # - this bit grinds to a halt presumably
-                        # - need to send instructions to the GUI (prior to raise?) 
-    
-                # Job streaming: stuff butter
-                if self.is_job_streaming:
-                    if self.is_stream_lines_remaining:
-                        self.stuff_buffer()
-                    else: 
-                        if self.g_count == self.l_count:
-                            self.end_stream()
+                    #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
+                    if self.VERBOSE_ALL_RESPONSE: 
+                        if rec_temp.startswith('<'):
+                            log(rec_temp)
+                        else:
+                            log('< ' + rec_temp)
+        
+                    # Update the gcode monitor (may not be initialised) and console:
+                    try:
+                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
+                    except:
+                        pass
+        
+                    # Process the GRBL response:
+                    # NB: Sequential streaming is controlled through process_grbl_response
+                    try:
+                        # If RESPONSE message (used in streaming, counting processed gcode lines)
+                        if rec_temp.startswith(('ok', 'error')):
+                            self.process_grbl_response(rec_temp)
+                        # If PUSH message
+                        else:
+                            self.process_grbl_push(rec_temp)
+                    except Exception as e:
+                        log('Process response exception:\n' + str(e))
+                        self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
+                        raise # HACK allow error to cause serial comms thread to exit
+                        # What happens here? 
+                            # - this bit grinds to a halt presumably
+                            # - need to send instructions to the GUI (prior to raise?) 
+        
+                    # Job streaming: stuff butter
+                    if self.is_job_streaming:
+                        if self.is_stream_lines_remaining:
+                            self.stuff_buffer()
+                        else: 
+                            if self.g_count == self.l_count:
+                                self.end_stream()
                     
 
 

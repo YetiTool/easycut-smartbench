@@ -195,19 +195,26 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
+        log('> BEGIN LOAD')
         log('> load_job_file')
         
         preloaded_job_gcode = []
 
         job_file = open(job_file_path, 'r')     # open file and copy each line into the object
         self.load_value = 1
-
+        
         # cleaning parameters        
         minimum_spindle_rpm = 3500
+        
+#         self.m.s.is_grbl_scanner_loop_doing_anything = False
+        lines_scrubbed = 0
+
+        log('> start to scrub file')
         
         # clean up code as it's copied into the object
         for line in job_file:
             
+            lines_scrubbed += 1
             # Strip comments/spaces/new line and capitalize:
             l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
             
@@ -223,19 +230,27 @@ class LoadingScreen(Screen):
                             l_block = "M3S" + str(minimum_spindle_rpm)
 
                 preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
+
+        log('> finished scrubbing file: ' + str(lines_scrubbed) + ' lines')
+
                 
         job_file.close()
      
         self.load_value = 2
 
-        log('< load_job_file')
-
+ 
         self.job_gcode = preloaded_job_gcode
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.get_bounding_box()
         self.job_loading_loaded = '[b]Job Loaded[/b]'
         self.check_button.disabled = False
         self.home_button.disabled = False
+
+        self.m.s.is_grbl_scanner_loop_doing_anything = True
+        log('> END LOAD')
+
+#         Clock.schedule_once(lambda dt: self.m.s.grbl_scanner(),1)
+
         
     def get_bounding_box(self):
 
