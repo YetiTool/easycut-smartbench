@@ -282,7 +282,8 @@ class SerialConnection(object):
                                 self.end_stream()
                     
 
-
+            else:
+                time.sleep(1)
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 
