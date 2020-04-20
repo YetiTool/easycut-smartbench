@@ -36,18 +36,20 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
-        if not self.latest_sw_version.startswith('v'): 
-            
-            def filter_tags(version):
-                if version.startswith('v'): return True
-                else: return False
-            
-            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
-            sw_version_list = filter(filter_tags, sw_version_list)
-            version_numbers = map(lambda each:each.strip("v"), sw_version_list)
-            max_version_number = max(version_numbers)
-            self.latest_sw_version = 'v' + str(max_version_number)
+        if sys.platform != 'win32':
+    
+            self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+            if not self.latest_sw_version.startswith('v'): 
+                
+                def filter_tags(version):
+                    if version.startswith('v'): return True
+                    else: return False
+                
+                sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
+                sw_version_list = filter(filter_tags, sw_version_list)
+                version_numbers = map(lambda each:each.strip("v"), sw_version_list)
+                max_version_number = max(version_numbers)
+                self.latest_sw_version = 'v' + str(max_version_number)
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
