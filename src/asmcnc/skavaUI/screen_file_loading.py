@@ -206,7 +206,7 @@ class LoadingScreen(Screen):
         # cleaning parameters        
         minimum_spindle_rpm = 3500
         
-#         self.m.s.is_grbl_scanner_loop_doing_anything = False
+        self.m.s.is_grbl_scanner_loop_doing_anything = False
         lines_scrubbed = 0
 
         log('> start to scrub file')
