@@ -387,4 +387,4 @@ class LobbyScreen(Screen):
         self.am.start_update_app()    
     
     def developer_app(self):
-        pass
+        self.sm.current = 'dev'
