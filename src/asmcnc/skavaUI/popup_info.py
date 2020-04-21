@@ -221,13 +221,14 @@ class PopupInfo(Widget):
 
         popup.open()
 
-
 class PopupSoftwareUpdateSuccess(Widget):
     def __init__(self, screen_manager, message):
         
         self.sm = screen_manager
         
-        description = message
+        description = "Software update was successful.\n\n Update message: " + \
+                    message + "\n\n SmartBench will now reboot.\n" + \
+                    "Please do not restart your machine until you are prompted to do so."
 
         def reboot(*args):
             self.sm.current = 'rebooting'
@@ -278,7 +279,7 @@ class PopupSoftwareRepair(Widget):
 
         def repair(*args):
     
-            self.set.repair_EC()
+            self.set.reclone_EC()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)

@@ -12,6 +12,7 @@ from kivy.clock import Clock
 import sys, os, socket
 
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -374,19 +375,67 @@ class SWUpdateScreen(Screen):
     def get_sw_update_over_wifi(self):
         
         if self.wifi_image.source == self.wifi_on:
-            self.set.get_sw_update_via_wifi()
+            outcome = self.set.get_sw_update_via_wifi()
+            
+            if outcome == False: 
+                description = "There was a problem updating your software. \n\n" \
+                "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                " power supply.\n\n" \
+                "Would you like to repair your software now?"
+                popup_info.PopupSoftwareRepair(self.sm, self, description)               
+            elif outcome == "Software already up to date!": 
+                popup_info.PopupError(self.sm, outcome)
+            else: 
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+            
         else: 
-            print "throw popup"
+            description = "No WiFi connection!"
+            popup_info.PopupError(self.sm, description)
+
+    def repair_sw_over_wifi(self):
+
+        description = "DO NOT restart your machine until you see instructions to do so on the screen."
+        popup_info.PopupError(self.sm, description)
+        
+        outcome = self.set.reclone_EC()
+        
+        if outcome == False:
+            description = "It was not possible to backup EC safely, please try again later.\n\n" + \
+            "If this issue persists, please contact Yeti Tool Ltd for support."
+            popup_info.PopupError(self.sm, description)           
 
     def get_sw_update_over_usb(self):
         if self.usb_image.source == self.usb_on:
-            self.set.get_sw_update_via_usb()
+            
+            outcome = self.set.get_sw_update_via_usb()
+            
+            if outcome == 2:
+                description = "More than one folder called easycut-smartbench was found on the USB drive.\n\n" + \
+                "Please make sure that there is only one instance of EasyCut on your USB drive, and try again."
+                popup_info.PopupError(self.sm, description)
+            elif outcome == 0:
+                description = "There was no folder called easycut-smartbench was found on the USB drive.\n\n" + \
+                "Please make sure that the folder containing EasyCut is called easycut-smartbench, and try again."
+                popup_info.PopupError(self.sm, description)
+            elif outcome == False:
+                
+                # this may need its own special bigger pop-up
+                
+                description = "It was not possible to update your software from the USB drive.\n\n" + \
+                "Please try again later, or if this problem persists you may need to connect to the " + \
+                "internet to update your software, and repair it if necessary.\n\n"
+                popup_info.PopupError(self.sm, description)              
+            
+            else:
+                self.usb_stick.disable()
+                update_success = outcome
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+            
         else: 
-            print "throw popup"
+            description = "No USB drive found!"
+            popup_info.PopupError(self.sm, description)
 
     def check_wifi_connection(self, dt):
-
-        #self.wifi_image.source = self.wifi_off
 
         try:
             f = os.popen('hostname -I')
