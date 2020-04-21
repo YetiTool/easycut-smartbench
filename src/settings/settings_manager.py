@@ -158,7 +158,7 @@ class Settings(object):
             os.system(add_remote)
             os.system(pull_master_from_usb)
         except:
-            return False
+            return "update failed"
         
         checkout_success = self.checkout_latest_version()
         rm_remote = 'git remote rm temp_repository'
@@ -169,7 +169,7 @@ class Settings(object):
             os.system(rm_temp_repo)
            
         if checkout_success == False: 
-            return False
+            return "update failed"
         else:
             return checkout_success
 

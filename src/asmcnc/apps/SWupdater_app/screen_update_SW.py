@@ -415,7 +415,7 @@ class SWUpdateScreen(Screen):
                 description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
                 "Please make sure that the folder containing EasyCut is called [b]easycut-smartbench[/b], and try again."
                 popup_info.PopupError(self.sm, description)
-            elif outcome == False:
+            elif outcome == "update failed":
                 
                 # this may need its own special bigger pop-up
                 
