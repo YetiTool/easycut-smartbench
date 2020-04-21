@@ -21,7 +21,7 @@ from kivy.clock import Clock
 from functools import partial
 
 
-import sys, os
+import sys, os, time
 from datetime import datetime
 import re
 
@@ -58,6 +58,12 @@ Builder.load_string("""
             size_hint_x: 1
             spacing: 10
              
+            Label:
+                size_hint_y: 1
+                font_size: '40sp'
+                text: root.progress_value
+                markup: True             
+
             Label:
                 size_hint_y: 1
                 font_size: '40sp'
@@ -147,7 +153,11 @@ class LoadingScreen(Screen):
     load_value = NumericProperty()
     loading_file_name = StringProperty()
     job_loading_loaded = StringProperty()
+    progress_value = StringProperty()
     objectifile = None
+
+    # scrubbing parameters        
+    minimum_spindle_rpm = 3500
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -165,7 +175,9 @@ class LoadingScreen(Screen):
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
+
         self.load_value = 0
+        self.progress_value = '0'
         self.check_button.disabled = True
         Clock.usleep(1)
         # CAD file processing sequence
@@ -195,63 +207,82 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        log('> BEGIN LOAD')
-        log('> load_job_file')
-        
-        preloaded_job_gcode = []
+        log('> LOADING...')
 
-        job_file = open(job_file_path, 'r')     # open file and copy each line into the object
+        with open(job_file_path) as f:
+            self.job_file_as_list = f.readlines()
+        
         self.load_value = 1
-        
-        # cleaning parameters        
-        minimum_spindle_rpm = 3500
-        
-        self.m.s.is_grbl_scanner_loop_doing_anything = False
-        lines_scrubbed = 0
+        log('> job file loaded as list...')
+        log('> scrubbing file...')
 
-        log('> start to scrub file')
+        # clear objects
+        self.preloaded_job_gcode = []
+        self.lines_scrubbed = 0
+        self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
+        self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
+
+        Clock.schedule_once(self._scrub_file_loop, 0)
+
+    interrupt_line_threshold = 10000
+    interrupt_delay = 0.1
+
+    def _scrub_file_loop(self, dt):
+
+        # a lot of this code is to force a break in the loops so we can allow Kivy to update
         
-        # clean up code as it's copied into the object
-        for line in job_file:
+        if self.lines_scrubbed < self.total_lines_in_job_file_pre_scrubbed:
             
-            lines_scrubbed += 1
-            # Strip comments/spaces/new line and capitalize:
-            l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
+            break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
+
+            while self.lines_scrubbed < break_threshold:
+                
+                line = self.job_file_as_list[self.lines_scrubbed]
+    
+                # Strip comments/spaces/new line and capitalize:
+                l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
+                
+                if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                    
+                    # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
+                    if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
+                        if l_block.find ('S') >= 0:
+                            
+                            # find 'S' prefix and strip out the value associated with it
+                            rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
+                            if rpm < self.minimum_spindle_rpm:
+                                l_block = "M3S" + str(self.minimum_spindle_rpm)
+    
+                    self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             
-            if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                self.lines_scrubbed += 1
+            
+            self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
+            self.progress_value = str(self.lines_scrubbed) # update progress label
+            Clock.schedule_once(self._scrub_file_loop, 0.1)
+
+        else: self._finish_up_loading()
+
+
+    def _finish_up_loading(self):
+
+        
+        log('> finished scrubbing file: ' + str(self.lines_scrubbed) + ' lines')
                 
-                # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
-                if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
-                    if l_block.find ('S') >= 0:
-                        
-                        # find 'S' prefix and strip out the value associated with it
-                        rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
-                        if rpm < minimum_spindle_rpm:
-                            l_block = "M3S" + str(minimum_spindle_rpm)
-
-                preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
-
-        log('> finished scrubbing file: ' + str(lines_scrubbed) + ' lines')
-
-                
-        job_file.close()
-     
+        self.job_gcode = self.preloaded_job_gcode
         self.load_value = 2
-
+     
  
-        self.job_gcode = preloaded_job_gcode
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.get_bounding_box()
         self.job_loading_loaded = '[b]Job Loaded[/b]'
         self.check_button.disabled = False
         self.home_button.disabled = False
 
-        self.m.s.is_grbl_scanner_loop_doing_anything = True
         log('> END LOAD')
 
-#         Clock.schedule_once(lambda dt: self.m.s.grbl_scanner(),1)
 
-        
+
     def get_bounding_box(self):
 
         job_box = job_envelope.BoundingBox()
