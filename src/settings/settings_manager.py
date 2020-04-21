@@ -137,15 +137,16 @@ class Settings(object):
                 unzip_dir = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
                 os.system(unzip_dir)
                 dir_path_name = (os.popen('find /home/pi/temp_repo/ -name easycut-smartbench').read()).strip('\n')
+
             else:
                 dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
             
-                if dir_path_name.count('easycut-smartbench') > 1:
-                    return 2
-                elif dir_path_name.count('easycut-smartbench') == 0:
-                    return 0
-                else:
-                    return dir_path_name
+            if dir_path_name.count('easycut-smartbench') > 1:
+                return 2
+            elif dir_path_name.count('easycut-smartbench') == 0:
+                return 0
+            else:
+                return dir_path_name
         
         dir_path_name = find_usb_directory()
         
