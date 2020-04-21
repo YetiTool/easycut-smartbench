@@ -37,6 +37,10 @@ Builder.load_string("""
         pos: self.parent.pos
         cols: 3
 
+        Label:
+            text: ''
+            color: 0,0,0,0
+
         Button:
             size_hint_x: 1
             background_color: hex('#FFFFFF00')
@@ -48,12 +52,16 @@ Builder.load_string("""
                     source: "./asmcnc/skavaUI/img/squaring_icon_big.png"
                     size: self.parent.width, self.parent.height
                     allow_stretch: True 
-        Button:
-            text: 'Get software update'
-            on_press: root.get_sw_update()
-        Button:
-            text: 'Developer'
-            on_press: root.go_to_dev()                     
+        Label:
+            text: ''
+            color: 0,0,0,0
+
+#         Button:
+#             text: 'Get software update'
+#             on_press: root.get_sw_update()
+#         Button:
+#             text: 'Developer'
+#             on_press: root.go_to_dev()                     
 
 
         Label:
