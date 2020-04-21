@@ -306,7 +306,7 @@ class DeveloperScreen(Screen):
         self.scrape_fw_version()
         
     def go_back(self):
-        self.sm.current = 'home'
+        self.sm.current = 'lobby'
 
     def reboot(self):
         self.sm.current = 'rebooting'
