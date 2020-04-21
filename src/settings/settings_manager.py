@@ -166,8 +166,9 @@ class Settings(object):
         except:
             return "update failed"
         
-        print did_it_fetch
-        
+        if "fatal" in did_it_fetch:
+            return "update failed"
+
         checkout_success = self.checkout_latest_version()
         rm_remote = 'git remote rm temp_repository'
         os.system(rm_remote)

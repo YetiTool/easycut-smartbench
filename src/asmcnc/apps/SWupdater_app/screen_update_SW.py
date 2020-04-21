@@ -430,7 +430,7 @@ class SWUpdateScreen(Screen):
                     # this may need its own special bigger pop-up
                     
                     description = "It was not possible to update your software from the USB drive.\n\n" + \
-                    "Please try again later, or if this problem persists you may need to connect to the " + \
+                    "Please check your EasyCut folder or try again later. If this problem persists you may need to connect to the " + \
                     "internet to update your software, and repair it if necessary.\n\n"
                     popup_info.PopupError(self.sm, description)              
                 
