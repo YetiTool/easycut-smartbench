@@ -161,16 +161,11 @@ class Settings(object):
         pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
         try: 
             os.system(add_remote)
-            did_it_fetch = (os.popen(fetch_from_usb).read()).strip('\n')
+            os.system(fetch_from_usb)
             os.system(pull_master_from_usb)
         except:
             return "update failed"
-        
-        print did_it_fetch
-        
-        if "Please make sure you have the correct access rights" in did_it_fetch:
-            return "update failed"   
-        
+               
         checkout_success = self.checkout_latest_version()
         rm_remote = 'git remote rm temp_repository'
         os.system(rm_remote)
