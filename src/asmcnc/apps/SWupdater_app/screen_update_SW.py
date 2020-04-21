@@ -112,7 +112,7 @@ Builder.load_string("""
                             font_size: 18
                             markup: True
                             halign: "center"
-                            valign: "bottom"
+                            valign: "center"
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
@@ -293,7 +293,7 @@ Builder.load_string("""
                         padding: [0,26.5,32,26.5]
                         Image:
                             id: usb_image
-                            source: "./asmcnc/apps/SWupdater_app/img/USB_on.png"
+                            source: "./asmcnc/apps/SWupdater_app/img/USB_off.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -332,8 +332,8 @@ class SWUpdateScreen(Screen):
     
     wifi_on = "./asmcnc/apps/SWupdater_app/img/wifi_on.png"
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
-    usb_on = "./asmcnc/apps/SWupdater_app/img/usb_on.png"
-    usb_off = "./asmcnc/apps/SWupdater_app/img/usb_off.png"
+    usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
+    usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
     
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
@@ -450,6 +450,5 @@ class SWUpdateScreen(Screen):
     def check_USB_status(self, dt): 
         if self.usb_stick.is_available():
             self.usb_image.source = self.usb_on
-
         else:
             self.usb_image.source = self.usb_off
