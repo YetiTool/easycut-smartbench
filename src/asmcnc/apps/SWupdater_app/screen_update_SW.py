@@ -206,7 +206,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(110)
                         width: dp(145)
-                        padding: [20,40,65,10]
+                        padding: [20,25,65,25]
                         Image:
                             id: wifi_image
                             source: root.wifi_on
@@ -293,7 +293,7 @@ Builder.load_string("""
                         padding: [0,26.5,32,26.5]
                         Image:
                             id: usb_image
-                            source: "./asmcnc/apps/SWupdater_app/img/USB_off.png"
+                            source: root.usb_off
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height

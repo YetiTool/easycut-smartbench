@@ -227,7 +227,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         self.sm = screen_manager
         
         description = "Software update was successful.\n\n Update message: " + \
-                    message + "\n\n SmartBench will now reboot.\n" + \
+                    message + \
                     "Please do not restart your machine until you are prompted to do so."
 
         def reboot(*args):
