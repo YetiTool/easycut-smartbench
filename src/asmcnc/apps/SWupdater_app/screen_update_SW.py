@@ -350,11 +350,6 @@ class SWUpdateScreen(Screen):
             self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
         else:
             self.latest_software_version_label.text = '[b]You are up to date![/b]'
-#             self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
-#             self.latest_software_version_label.text = '[b]New version available: v1.1.X[/b]'
-          
-#         self.platform_version_label.text = self.set.platform_version
-#         self.latest_platform_version_label.text = self.set.latest_platform_version
  
     def on_enter(self):
         self.check_wifi_connection(1)
