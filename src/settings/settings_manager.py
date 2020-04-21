@@ -134,6 +134,9 @@ class Settings(object):
 
             zipped_file_name = (os.popen('find /media/usb/ -name easycut-smartbench.zip').read()).strip('\n')
             if zipped_file_name != '':
+                
+                os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
+                
                 unzip_dir = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
                 os.system(unzip_dir)
                 dir_path_name = (os.popen('find /home/pi/temp_repo/ -name easycut-smartbench').read()).strip('\n')
