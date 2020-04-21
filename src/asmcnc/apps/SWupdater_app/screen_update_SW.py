@@ -408,12 +408,12 @@ class SWUpdateScreen(Screen):
             outcome = self.set.get_sw_update_via_usb()
             
             if outcome == 2:
-                description = "More than one folder called easycut-smartbench was found on the USB drive.\n\n" + \
+                description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
                 "Please make sure that there is only one instance of EasyCut on your USB drive, and try again."
                 popup_info.PopupError(self.sm, description)
             elif outcome == 0:
-                description = "There was no folder called easycut-smartbench was found on the USB drive.\n\n" + \
-                "Please make sure that the folder containing EasyCut is called easycut-smartbench, and try again."
+                description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
+                "Please make sure that the folder containing EasyCut is called [b]easycut-smartbench[/b], and try again."
                 popup_info.PopupError(self.sm, description)
             elif outcome == False:
                 
