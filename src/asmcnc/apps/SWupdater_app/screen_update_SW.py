@@ -12,6 +12,7 @@ from kivy.clock import Clock
 import sys, os, socket
 
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -111,7 +112,7 @@ Builder.load_string("""
                             font_size: 18
                             markup: True
                             halign: "center"
-                            valign: "bottom"
+                            valign: "center"
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
@@ -205,7 +206,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(110)
                         width: dp(145)
-                        padding: [20,40,65,10]
+                        padding: [20,25,65,25]
                         Image:
                             id: wifi_image
                             source: root.wifi_on
@@ -292,7 +293,7 @@ Builder.load_string("""
                         padding: [0,26.5,32,26.5]
                         Image:
                             id: usb_image
-                            source: "./asmcnc/apps/SWupdater_app/img/USB_on.png"
+                            source: root.usb_off
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -331,8 +332,8 @@ class SWUpdateScreen(Screen):
     
     wifi_on = "./asmcnc/apps/SWupdater_app/img/wifi_on.png"
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
-    usb_on = "./asmcnc/apps/SWupdater_app/img/usb_on.png"
-    usb_off = "./asmcnc/apps/SWupdater_app/img/usb_off.png"
+    usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
+    usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
     
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
@@ -349,11 +350,6 @@ class SWUpdateScreen(Screen):
             self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
         else:
             self.latest_software_version_label.text = '[b]You are up to date![/b]'
-#             self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
-#             self.latest_software_version_label.text = '[b]New version available: v1.1.X[/b]'
-          
-#         self.platform_version_label.text = self.set.platform_version
-#         self.latest_platform_version_label.text = self.set.latest_platform_version
  
     def on_enter(self):
         self.check_wifi_connection(1)
@@ -367,6 +363,7 @@ class SWUpdateScreen(Screen):
         Clock.unschedule(self.poll_USB)
         Clock.unschedule(self.poll_wifi)
         self.usb_stick.disable()
+        self.sm.remove_widget(self.sm.get_screen('update'))
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -374,19 +371,83 @@ class SWUpdateScreen(Screen):
     def get_sw_update_over_wifi(self):
         
         if self.wifi_image.source == self.wifi_on:
-            self.set.get_sw_update_via_wifi()
+            
+            popup_info.PopupWait(self.sm)
+            
+            def do_update():
+            
+                outcome = self.set.get_sw_update_via_wifi()
+                
+                if outcome == False: 
+                    description = "There was a problem updating your software. \n\n" \
+                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                    " power supply.\n\n" \
+                    "Would you like to repair your software now?"
+                    popup_info.PopupSoftwareRepair(self.sm, self, description)               
+                elif outcome == "Software already up to date!": 
+                    popup_info.PopupError(self.sm, outcome)
+                else: 
+                    popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+            
+            Clock.schedule_once(lambda dt: do_update(), 2)
+            
         else: 
-            print "throw popup"
+            description = "No WiFi connection!"
+            popup_info.PopupError(self.sm, description)
+
+    def repair_sw_over_wifi(self):
+
+        description = "DO NOT restart your machine until you see instructions to do so on the screen."
+        popup_info.PopupWarning(self.sm, description)
+               
+        def delay_clone_to_update_screen():
+            outcome = self.set.reclone_EC()
+            
+            if outcome == False:
+                description = "It was not possible to backup EC safely, please try again later.\n\n" + \
+                "If this issue persists, please contact Yeti Tool Ltd for support."
+                popup_info.PopupError(self.sm, description)           
+
+        Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
         if self.usb_image.source == self.usb_on:
-            self.set.get_sw_update_via_usb()
+            
+            popup_info.PopupWait(self.sm)
+            
+            def do_update():
+                outcome = self.set.get_sw_update_via_usb()
+                
+                if outcome == 2:
+                    description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
+                    "Please make sure that there is only one instance of EasyCut on your USB drive, and try again."
+                    popup_info.PopupError(self.sm, description)
+                elif outcome == 0:
+                    description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
+                    "Please make sure that the folder containing EasyCut is called [b]easycut-smartbench[/b], and try again."
+                    popup_info.PopupError(self.sm, description)
+                elif outcome == "update failed":
+                    
+                    # this may need its own special bigger pop-up
+                    
+                    description = "It was not possible to update your software from the USB drive.\n\n" + \
+                    "Please check your EasyCut folder or try again later. If this problem persists you may need to connect to the " + \
+                    "internet to update your software, and repair it if necessary.\n\n"
+                    popup_info.PopupError(self.sm, description)              
+                
+                else:
+                    self.usb_stick.disable()
+                    update_success = outcome
+                    popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+                
+            
+            Clock.schedule_once(lambda dt: do_update(), 2)
+            
         else: 
-            print "throw popup"
+            description = "No USB drive found!"
+            popup_info.PopupError(self.sm, description)
 
     def check_wifi_connection(self, dt):
-
-        #self.wifi_image.source = self.wifi_off
 
         try:
             f = os.popen('hostname -I')
@@ -401,6 +462,5 @@ class SWUpdateScreen(Screen):
     def check_USB_status(self, dt): 
         if self.usb_stick.is_available():
             self.usb_image.source = self.usb_on
-
         else:
             self.usb_image.source = self.usb_off
