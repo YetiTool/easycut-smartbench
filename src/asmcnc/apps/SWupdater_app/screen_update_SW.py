@@ -391,13 +391,16 @@ class SWUpdateScreen(Screen):
 
         description = "DO NOT restart your machine until you see instructions to do so on the screen."
         popup_info.PopupError(self.sm, description)
-        
-        outcome = self.set.reclone_EC()
-        
-        if outcome == False:
-            description = "It was not possible to backup EC safely, please try again later.\n\n" + \
-            "If this issue persists, please contact Yeti Tool Ltd for support."
-            popup_info.PopupError(self.sm, description)           
+               
+        def delay_clone_to_update_screen():
+            outcome = self.set.reclone_EC()
+            
+            if outcome == False:
+                description = "It was not possible to backup EC safely, please try again later.\n\n" + \
+                "If this issue persists, please contact Yeti Tool Ltd for support."
+                popup_info.PopupError(self.sm, description)           
+
+        Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
         if self.usb_image.source == self.usb_on:
