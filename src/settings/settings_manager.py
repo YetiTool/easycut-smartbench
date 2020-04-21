@@ -154,12 +154,16 @@ class Settings(object):
             return dir_path_name
 
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
-        pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository && git pull temp_repository master'
+        fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
+        pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
         try: 
             os.system(add_remote)
+            did_it_fetch = (os.popen(fetch_from_usb).read()).strip('\n')
             os.system(pull_master_from_usb)
         except:
             return "update failed"
+        
+        print did_it_fetch
         
         checkout_success = self.checkout_latest_version()
         rm_remote = 'git remote rm temp_repository'
