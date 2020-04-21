@@ -363,6 +363,7 @@ class SWUpdateScreen(Screen):
         Clock.unschedule(self.poll_USB)
         Clock.unschedule(self.poll_wifi)
         self.usb_stick.disable()
+        self.sm.remove_widget(self.sm.get_screen('update'))
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

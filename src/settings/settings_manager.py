@@ -168,7 +168,7 @@ class Settings(object):
         
         print did_it_fetch
         
-        if "fatal" in did_it_fetch:
+        if "Please make sure you have the correct access rights" in did_it_fetch:
             return "update failed"   
         
         checkout_success = self.checkout_latest_version()
