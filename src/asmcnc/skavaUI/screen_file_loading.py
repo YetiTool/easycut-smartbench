@@ -167,7 +167,7 @@ class LoadingScreen(Screen):
         
     def on_enter(self):    
 
-        self.job_loading_loaded = '[b]Loading Job...[/b]'
+        self.job_loading_loaded = '[b][/b]'
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.loading_file_name.split("\\")[-1]
@@ -211,15 +211,15 @@ class LoadingScreen(Screen):
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
+        self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
         self.load_value = 1
-        log('> job file loaded as list...')
+        log('> job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
         log('> scrubbing file...')
 
         # clear objects
         self.preloaded_job_gcode = []
         self.lines_scrubbed = 0
-        self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
 
         Clock.schedule_once(self._scrub_file_loop, 0)
@@ -258,7 +258,9 @@ class LoadingScreen(Screen):
                 self.lines_scrubbed += 1
             
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
-            self.progress_value = str(self.lines_scrubbed) # update progress label
+            percentage_progress = (self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0
+#             self.progress_value = 'Preparing ' + str('{:,}'.format(self.lines_scrubbed) + ' lines') # update progress label
+            self.progress_value = 'Loading  ' + str(percentage_progress) + ' %' # update progress label
             Clock.schedule_once(self._scrub_file_loop, 0.1)
 
         else: self._finish_up_loading()
