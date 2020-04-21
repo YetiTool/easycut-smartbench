@@ -177,7 +177,7 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
-        self.progress_value = '0'
+        self.progress_value = 'Preparing'
         self.check_button.disabled = True
         Clock.usleep(1)
         # CAD file processing sequence
@@ -258,10 +258,10 @@ class LoadingScreen(Screen):
                 self.lines_scrubbed += 1
             
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
-            percentage_progress = (self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0
+            percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
 #             self.progress_value = 'Preparing ' + str('{:,}'.format(self.lines_scrubbed) + ' lines') # update progress label
-            self.progress_value = 'Loading  ' + str(percentage_progress) + ' %' # update progress label
-            Clock.schedule_once(self._scrub_file_loop, 0.1)
+            self.progress_value = 'Preparing file: ' + str(percentage_progress) + ' %' # update progress label
+            Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
         else: self._finish_up_loading()
 
