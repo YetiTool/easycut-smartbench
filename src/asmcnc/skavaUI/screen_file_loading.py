@@ -65,12 +65,6 @@ Builder.load_string("""
                 markup: True             
 
             Label:
-                size_hint_y: 1
-                font_size: '40sp'
-                text: root.job_loading_loaded
-                markup: True
- 
-            Label:
                 id: filename_label
                 text_size: self.size
                 font_size: '20sp'
@@ -156,7 +150,6 @@ class LoadingScreen(Screen):
  
     load_value = NumericProperty()
     loading_file_name = StringProperty()
-    job_loading_loaded = StringProperty()
     progress_value = StringProperty()
     objectifile = None
 
@@ -171,7 +164,6 @@ class LoadingScreen(Screen):
         
     def on_enter(self):    
 
-        self.job_loading_loaded = '[b][/b]'
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.loading_file_name.split("\\")[-1]
@@ -191,7 +183,6 @@ class LoadingScreen(Screen):
         Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
         
         #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
-        #self.job_loading_loaded = '[b]Job Loaded[/b]'     
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
@@ -308,7 +299,8 @@ class LoadingScreen(Screen):
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         
-        self.job_loading_loaded = '[b]Job Loaded[/b]'
+        self.progress_value = '[b]Job Loaded[/b]'
+        
         self.check_button.disabled = False
         self.home_button.disabled = False
 
