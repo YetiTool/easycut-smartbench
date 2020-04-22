@@ -36,6 +36,7 @@ class RouterMachine(object):
     is_check_mode_enabled = False    
 
     is_machine_paused = False
+
             
     def __init__(self, win_serial_port, screen_manager):
 
