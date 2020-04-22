@@ -436,20 +436,20 @@ class CheckingScreen(Screen):
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = '[b]Error found[/b]'
+                self.job_checking_checked = '[b]Error found![/b]'
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
                     self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
                 self.job_ok = False
             else:
+                self.job_checking_checked = '[b]File is OK![/b]'
                 self.check_outcome =  'No errors found. You\'re good to go!'
                 self.job_ok = True
                 
                 # add job checked already flag here
                 self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
     
-            self.job_checking_checked = '[b]Job Checked[/b]'
             self.write_error_output(self.error_log)
             
             if self.job_ok == False:
