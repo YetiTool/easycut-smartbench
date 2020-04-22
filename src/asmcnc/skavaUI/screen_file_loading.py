@@ -184,9 +184,16 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
-        self.progress_value = 'Getting ready...'
+
         self.check_button.disabled = True
         self.home_button.disabled = True
+        self.progress_value = 'Getting ready...'
+        self.warning_title_label.text = ''
+        self.warning_body_label.text = ''
+        self.check_button_label.text = ''
+        self.quit_button_label.text = ''
+
+
 #         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
@@ -311,10 +318,8 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         
         self.progress_value = '[b]Job loaded[/b]'
-        
         self.warning_title_label.text = 'WARNING:'
         self.warning_body_label.text = 'We strongly recommend error-checking your job before it goes to the machine. Would you like SmartBench to check your job now?'
-        
         self.check_button_label.text = 'Yes please, check my job for errors'
         self.quit_button_label.text = 'No thanks, quit to home'
         
