@@ -190,11 +190,11 @@ class SerialConnection(object):
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
-
     def grbl_scanner(self):
 
         while True:
-            
+
+                         
             if self.FLUSH_FLAG == True:
                 self.s.flushInput()
                 self.FLUSH_FLAG = False
@@ -278,8 +278,6 @@ class SerialConnection(object):
                         if self.g_count == self.l_count:
                             self.end_stream()
                     
-
-
         # Loop this method
         #Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 

@@ -21,7 +21,7 @@ from kivy.clock import Clock
 from functools import partial
 
 
-import sys, os
+import sys, os, time
 from datetime import datetime
 import re
 
@@ -39,7 +39,11 @@ Builder.load_string("""
     check_button:check_button
     home_button:home_button
     filename_label:filename_label
-
+    warning_title_label:warning_title_label
+    warning_body_label:warning_body_label
+    quit_button_label:quit_button_label
+    check_button_label:check_button_label
+    
     canvas:
         Color: 
             rgba: hex('#0d47a1')
@@ -61,9 +65,9 @@ Builder.load_string("""
             Label:
                 size_hint_y: 1
                 font_size: '40sp'
-                text: root.job_loading_loaded
-                markup: True
- 
+                text: root.progress_value
+                markup: True             
+
             Label:
                 id: filename_label
                 text_size: self.size
@@ -73,18 +77,20 @@ Builder.load_string("""
                 text: 'Filename here'
                 
             Label:
+                id: warning_title_label
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
-                text: 'WARNING:'
+                text: ''
                 
             Label:
+                id: warning_body_label
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'top'
-                text: 'We recommend error-checking your job before it goes to the machine.\\nWould you like us to check your job now?'
+                text: ''
             
             BoxLayout:
                 orientation: 'horizontal'
@@ -108,9 +114,10 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
+                            id: check_button_label
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'Yes please, check my job for errors'
+                            text: ''
                         
                 Button:
                     size_hint_y:0.9
@@ -129,25 +136,36 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
+                            id: quit_button_label
                             #size_hint_y: 1
                             font_size: '18sp'
-                            text: 'No thanks, quit to home'
+                            text: ''
+
+
+
                             
 """)
+
 
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 
+
 def log(message):
+    
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
 
 class LoadingScreen(Screen):  
  
     load_value = NumericProperty()
     loading_file_name = StringProperty()
-    job_loading_loaded = StringProperty()
+    progress_value = StringProperty()
     objectifile = None
+
+    # scrubbing parameters        
+    minimum_spindle_rpm = 3500
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -157,7 +175,6 @@ class LoadingScreen(Screen):
         
     def on_enter(self):    
 
-        self.job_loading_loaded = '[b]Loading Job...[/b]'
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.loading_file_name.split("\\")[-1]
@@ -165,16 +182,25 @@ class LoadingScreen(Screen):
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
+
         self.load_value = 0
+
         self.check_button.disabled = True
-        Clock.usleep(1)
+        self.home_button.disabled = True
+        self.progress_value = 'Getting ready...'
+        self.warning_title_label.text = ''
+        self.warning_body_label.text = ''
+        self.check_button_label.text = ''
+        self.quit_button_label.text = ''
+
+
+#         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
         Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
         
         #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
-        #self.job_loading_loaded = '[b]Job Loaded[/b]'     
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
@@ -195,58 +221,88 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        log('> load_job_file')
-        
-        preloaded_job_gcode = []
+        log('> LOADING:')
 
-        job_file = open(job_file_path, 'r')     # open file and copy each line into the object
+        with open(job_file_path) as f:
+            self.job_file_as_list = f.readlines()
+        self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
+        
         self.load_value = 1
+        log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
+        log('> Scrubbing file...')
 
-        # cleaning parameters        
-        minimum_spindle_rpm = 3500
-        
-        # clean up code as it's copied into the object
-        for line in job_file:
-            
-            # Strip comments/spaces/new line and capitalize:
-            l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
-            
-            if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
-                
-                # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
-                if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
-                    if l_block.find ('S') >= 0:
-                        
-                        # find 'S' prefix and strip out the value associated with it
-                        rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
-                        if rpm < minimum_spindle_rpm:
-                            l_block = "M3S" + str(minimum_spindle_rpm)
+        # clear objects
+        self.preloaded_job_gcode = []
+        self.lines_scrubbed = 0
+        self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
 
-                preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
+        Clock.schedule_once(self._scrub_file_loop, 0)
+
+    interrupt_line_threshold = 10000
+    interrupt_delay = 0.1
+
+    def _scrub_file_loop(self, dt):
+
+        # clear out undesirable lines
+
+        # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
+        if self.lines_scrubbed < self.total_lines_in_job_file_pre_scrubbed:
+            
+            break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
+
+            # main scrubbing loop
+            while self.lines_scrubbed < break_threshold:
                 
-        job_file.close()
-     
+                line = self.job_file_as_list[self.lines_scrubbed]
+    
+                # Strip comments/spaces/new line and capitalize:
+                l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
+                
+                if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                    
+                    # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
+                    if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
+                        if l_block.find ('S') >= 0:
+                            
+                            # find 'S' prefix and strip out the value associated with it
+                            rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
+                            if rpm < self.minimum_spindle_rpm:
+                                l_block = "M3S" + str(self.minimum_spindle_rpm)
+    
+                    self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
+            
+                self.lines_scrubbed += 1
+
+            # take a breather and update progress report
+            self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
+            percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
+            self.progress_value = 'Preparing file: ' + str(percentage_progress) + ' %' # update progress label
+            Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
+
+        else: 
+
+            log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+            self._get_gcode_preview_and_ranges()
+
+
+    def _get_gcode_preview_and_ranges(self):
+
+        self.job_gcode = self.preloaded_job_gcode
         self.load_value = 2
-
-        log('< load_job_file')
-
-        self.job_gcode = preloaded_job_gcode
         self.sm.get_screen('home').job_gcode = self.job_gcode
-        self.get_bounding_box()
-        self.job_loading_loaded = '[b]Job Loaded[/b]'
-        self.check_button.disabled = False
-        self.home_button.disabled = False
-        
-    def get_bounding_box(self):
-
-        job_box = job_envelope.BoundingBox()
         
         # This has to be the same widget that the home screen uses, otherwise
         # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
     
         log('> get_non_modal_gcode')
-        non_modal_gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, False)
+        self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
+
+
+    def _finish_loading(self, non_modal_gcode_list):
+
+
+        job_box = job_envelope.BoundingBox()
 
         # Get bounding box
         job_box.range_x[0] = self.gcode_preview_widget.min_x
@@ -257,7 +313,21 @@ class LoadingScreen(Screen):
         job_box.range_z[1] = self.gcode_preview_widget.max_z
         
         self.sm.get_screen('home').job_box = job_box
-        
+
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
+        
+        self.progress_value = '[b]Job loaded[/b]'
+        self.warning_title_label.text = 'WARNING:'
+        self.warning_body_label.text = 'We strongly recommend error-checking your job before it goes to the machine. Would you like SmartBench to check your job now?'
+        self.check_button_label.text = 'Yes please, check my job for errors'
+        self.quit_button_label.text = 'No thanks, quit to home'
+        
+        self.check_button.disabled = False
+        self.home_button.disabled = False
+
+        log('> END LOAD')
+        
+
+
 

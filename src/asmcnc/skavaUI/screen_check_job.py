@@ -91,9 +91,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
-        size_hint_x: 1
+        padding: 50
+        spacing: 40
 
         BoxLayout:
             orientation: 'vertical'
@@ -109,18 +108,19 @@ Builder.load_string("""
  
             Label:
                 id: filename_label
+                size_hint_y: 1
                 text_size: self.size
-                font_size: '15sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'center'
                 text: root.checking_file_name
                 
             Label:
-                size_hint_y: 1.7
+                size_hint_y: 3
                 text_size: self.size
-                font_size: '15sp'
+                font_size: '20sp'
                 halign: 'center'
-                valign: 'top'
+                valign: 'middle'
                 text: root.check_outcome
                 markup: True
                 
@@ -128,6 +128,7 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 padding: 10, 0
                 #spacing: 50
+                size_hint_y: 1
                                     
                 Button:
                     id: quit_button
@@ -148,14 +149,16 @@ Builder.load_string("""
                         
                         Label:
                             #size_hint_y: 1
-                            font_size: '18sp'
+                            font_size: '20sp'
                             text: root.exit_label
         
         BoxLayout:
+            size_hint_x: 1
             orientation: 'vertical'
+            spacing: 10
                             
             ScrollView:
-                size_hint: 1.2, 1
+                size_hint: 1, 1
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 do_scroll_x: True
                 do_scroll_y: True
@@ -231,7 +234,7 @@ class CheckingScreen(Screen):
         
     def on_enter(self):
  
-        self.job_checking_checked = '[b]Checking Job...[/b]'  
+        self.job_checking_checked = '[b]Getting ready...[/b]'  
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.checking_file_name.split("\\")[-1]
@@ -239,7 +242,7 @@ class CheckingScreen(Screen):
             self.filename_label.text = self.checking_file_name.split("/")[-1]
         
         
-        self.exit_label = 'Cancel'
+        self.exit_label = 'Unload job'
         
         if self.entry_screen == 'file_loading':        
             try: self.boundary_check()
@@ -265,17 +268,19 @@ class CheckingScreen(Screen):
         
         # check limits
         bounds_output = self.is_job_within_bounds()
-        
-        if bounds_output == True:
+      
+        if bounds_output == 'job is within bounds':
+            log("In bounds...")
             # update screen
             self.check_outcome = 'Job is within bounds.'
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
             # auto check g-code? Yeah, why not.
 
         else:
+            log("Out of bounds...")
+            self.job_checking_checked = '[b]Boundary issue![/b]'
             self.toggle_boundary_buttons(False)
-            self.check_outcome = 'WARNING: Job is not within machine bounds!' + \
-            '\n\nWARNING: Checking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.'
+            self.check_outcome = '[b]The job would exceed the working volume of the machine in one or more axes. See help notes (right).[/b]'
             self.write_boundary_output(bounds_output)
 
 
@@ -290,40 +295,38 @@ class CheckingScreen(Screen):
         # Mins
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too close to the X home position. The job will crash into the home position."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too close to the Y home position. The job will crash into the home position."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too far from the Z home position. The router will not reach that far."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too far from the X home position. The router will not reach that far."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too far from the Y home position. The router will not reach that far."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFFFFF]The job target is too close to the Z home position. The job will crash into the home position."
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             errorfound += 1 
 
         if errorfound > 0: return error_message
-        else: return True  
+        else: return 'job is within bounds'  
   
     def write_boundary_output(self, bounds_output):
         
-        self.display_output = '[color=#FFFFFF][b]BOUNDARY CONFLICT[/b]\n\n' + \
-        '\n\n[color=#FFFFFF]It looks like your job is outside the bounds of the machine:' + \
-        '[color=#FFFFFF]' + bounds_output + '\n\n' + \
-        '[color=#FFFFFF]\n\n[color=#FFFFFF]To fix this, load the job now and set the datum to an appropriate location.\n\n' + \
-        '[color=#FFFFFF]You will still be prompted to check your G-code before running your job.\n\n' + \
-        '[color=#FFFFFF]If you have already tried to set the datum, or if the graphics on the virtual' + \
-        '[color=#FFFFFF] machine don\'t look right, your G-code may be corrupt.\n\n' + \
-        '[color=#FFFFFF]If this is the case, please check your G-code now. \n\n'
+        self.display_output = '[color=#FFFFFF][b]BOUNDARY CONFLICT HELP[/b]\n\n[/color]' + \
+        '[color=#FFFFFF]It looks like your job exceeds the bounds of the machine:\n\n[/color]' + \
+        '[color=#FFCC00]' + bounds_output + '\n\n[/color]' + \
+        '[color=#FFFFFF]Most likely, the machine\'s job datum is set in the wrong place. To fix this, press "Adjust datums" and then reposition the X, Y or Z datums as suggested above so that the job envelopes fall within the machine\'s boundaries. Use the manual move controls and \'set datum\' buttons to achieve this. You should then re-load the job and re-run this check.\n\n[/color]' + \
+        '[color=#FFFFFF]If you have already tried to reposition the datums, but cannot get the job to fit in the envelope, your job may simply be setup incorrectly in your CAD/CAM software. Common causes include setting the CAD/CAM job datum far away from the actual design, or exporting the job from the CAM software in the wrong units. Check your design and export settings. You should then reload the job and re-run the check.\n\n[/color]' + \
+        '[color=#FFFFFF]Finally, if you have already tried to reposition the datum, or if the graphics on the job envelopes don\'t look normal, your G-code may be corrupt. If this is the case, you many want to press "Check G-code". WARNING: Checking the job\'s G-code when it is outside of the machine bounds may trigger an alarm state.\n\n[/color]'
 
     def toggle_boundary_buttons(self, hide_boundary_buttons):
         
@@ -355,7 +358,7 @@ class CheckingScreen(Screen):
             self.check_gcode_button.width = '0dp'
     
             
-            self.load_file_now_label.text = 'Load job now'
+            self.load_file_now_label.text = 'Adjust datums'
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1 
@@ -375,38 +378,51 @@ class CheckingScreen(Screen):
             self.display_output = ''
             
             if self.m.state() == "Idle":
-                self.job_checking_checked = '[b]Checking Job...[/b]'
-                self.check_outcome = ' Looking for errors. Please wait, this can take a while.'
+                self.job_checking_checked = '[b]Checking job...[/b]'
+                self.check_outcome = 'Sniffing out any gcode errors...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
-                self.job_checking_checked = '[b]Cannot Check G-Code[/b]' 
+                self.job_checking_checked = '[b]Cannot check job[/b]' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
                 # self.quit_button.disabled = False
 
             
         else:
-            self.job_checking_checked = '[b]Cannot Check G-Code[/b]'
+            self.job_checking_checked = '[b]Cannot check job[/b]'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
             # self.quit_button.disabled = False
- 
+
+    loop_for_job_progress = None
      
     def check_grbl_stream(self, objectifile, dt):
 
         #utilise check_job from serial_conn
         self.m.s.check_job(objectifile)
+
+        self.poll_for_gcode_check_progress(0)
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 1)
         
         # display the error log when it's filled - setting up the event makes it easy to unschedule
         self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
+
+
+    def poll_for_gcode_check_progress(self, dt):
+
+        percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
+        if percent_thru_job > 100: percent_thru_job = 100
+        self.job_checking_checked = "Checking job: " + str(percent_thru_job) + "  %"
+
     
     def get_error_log(self, dt):  
     
         if self.error_log != []:
             Clock.unschedule(self.error_out_event)
+            if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
             # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
 #             del self.error_log[0]
@@ -414,20 +430,21 @@ class CheckingScreen(Screen):
             
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
-                
+
+                self.job_checking_checked = '[b]Error found![/b]'
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
                     self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
                 self.job_ok = False
             else:
+                self.job_checking_checked = '[b]File is OK![/b]'
                 self.check_outcome =  'No errors found. You\'re good to go!'
                 self.job_ok = True
                 
                 # add job checked already flag here
                 self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
     
-            self.job_checking_checked = '[b]Job Checked[/b]'
             self.write_error_output(self.error_log)
             
             if self.job_ok == False:
@@ -511,3 +528,5 @@ class CheckingScreen(Screen):
         self.error_log = []
         if self.m.s.is_job_streaming:
             self.m.s.cancel_stream()
+        if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+
