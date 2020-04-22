@@ -30,7 +30,7 @@ class RouterMachine(object):
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
 
-    is_machine_completed_the_initial_homing_decision = False
+    is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     is_check_mode_enabled = False    
@@ -457,10 +457,10 @@ class RouterMachine(object):
     def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str, force_squaring_decision = False):
         
         # Force user to decide between manual/auto squaring
-        if force_squaring_decision: self.is_machine_completed_the_initial_homing_decision = False
+        if force_squaring_decision: self.is_machine_completed_the_initial_squaring_decision = False
  
         # If squaring has already been completed and decision isn't getting forced again       
-        if self.is_machine_completed_the_initial_homing_decision:
+        if self.is_machine_completed_the_initial_squaring_decision:
             self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen_str
             self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen_str
             self.sm.current = 'prepare_to_home'  

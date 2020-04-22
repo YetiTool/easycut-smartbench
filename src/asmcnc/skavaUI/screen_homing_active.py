@@ -144,7 +144,7 @@ class HomingScreenActive(Screen):
             self.sm.get_screen('squaring_active').return_to_screen = self.return_to_screen
             self.sm.current = 'squaring_active'
         else: 
-            self.m.is_machine_completed_the_initial_homing_decision = True
+            self.m.is_machine_completed_the_initial_squaring_decision = True
             self.sm.current = self.return_to_screen
             Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
 
