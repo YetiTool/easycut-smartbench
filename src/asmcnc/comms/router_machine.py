@@ -30,6 +30,7 @@ class RouterMachine(object):
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
 
+    is_machine_completed_the_initial_homing_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
     is_check_mode_enabled = False    
@@ -214,28 +215,31 @@ class RouterMachine(object):
 
     # LEGACY COMMANDS:
     # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-
     def soft_reset(self):
         if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
         self._grbl_soft_reset()
-
+    # LEGACY COMMANDS:
+    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
     def hold(self):
         self.set_pause(True)
         if not self.state().startswith('Door'): self.door()
-    
+    # LEGACY COMMANDS:
+    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
     def resume(self):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self._grbl_resume()
         self.led_restore()
-        
+    # LEGACY COMMANDS:
+    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
     def unlock_after_alarm(self):
         self._grbl_unlock()
         # Restore LEDs
         if sys.platform != "win32":
             self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
             self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-
+    # LEGACY COMMANDS:
+    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
     def door(self):
         self._grbl_door()
 
@@ -449,6 +453,25 @@ class RouterMachine(object):
         
 # HOMING
 
+    # ensure that return and cancel args match the names of the screen names defined in the screen manager
+    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str, force_squaring_decision = False):
+        
+        # Force user to decide between manual/auto squaring
+        if force_squaring_decision: self.is_machine_completed_the_initial_homing_decision = False
+ 
+        # If squaring has already been completed and decision isn't getting forced again       
+        if self.is_machine_completed_the_initial_homing_decision:
+            self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen_str
+            self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen_str
+            self.sm.current = 'prepare_to_home'  
+
+        # If decision needs to be made again (either via forced arg, or because it's never been attempted or completed fully)
+        else:
+            self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
+            self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
+            self.sm.current = 'squaring_decision'
+
+
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
     def probe_z(self):
@@ -461,6 +484,7 @@ class RouterMachine(object):
         # Serial module then looks for probe detection
         # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
         # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
+
 
     def probe_z_detection_event(self, z_machine_coord_when_probed):
 

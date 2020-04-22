@@ -153,9 +153,7 @@ class SettingsOptions(Widget):
         sys.exit()
 
     def square_axes(self):
-        self.m.is_squaring_XY_needed_after_homing = True
-        
-        self.sm.current = 'prepare_to_home'
+        self.m.request_homing_procedure('home','home',force_squaring_decision = True)
 
     def return_to_lobby(self):
         self.sm.current = 'lobby'
