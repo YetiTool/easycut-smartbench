@@ -198,30 +198,30 @@ class QuickCommands(Widget):
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too close to the X home position. The job will crash into the home position." + '\n\n[/color]')
+            "The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b]." + '\n\n[/color]')
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too close to the Y home position. The job will crash into the home position." + '\n\n[/color]')
+            "The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b]." + '\n\n[/color]')
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too far from the Z home position. The router will not reach that far." + '\n\n[/color]')
+            "The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b]." + '\n\n[/color]')
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too far from the X home position. The router will not reach that far." + '\n\n[/color]') 
+            "The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b]." + '\n\n[/color]') 
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too far from the Y home position. The router will not reach that far." + '\n\n[/color]') 
+            "The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b]." + '\n\n[/color]') 
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job target is too close to the Z home position. The job will crash into the home position." + '\n\n[/color]')
+            "The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b]." + '\n\n[/color]')
             errorfound += 1 
 
         if errorfound > 0: return False

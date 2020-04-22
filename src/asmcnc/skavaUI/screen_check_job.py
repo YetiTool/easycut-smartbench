@@ -268,9 +268,7 @@ class CheckingScreen(Screen):
         
         # check limits
         bounds_output = self.is_job_within_bounds()
-        
-        print bounds_output
-        
+      
         if bounds_output == 'job is within bounds':
             log("In bounds...")
             # update screen
@@ -317,9 +315,6 @@ class CheckingScreen(Screen):
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             errorfound += 1 
-
-        print errorfound 
-        print error_message
 
         if errorfound > 0: return error_message
         else: return 'job is within bounds'  
