@@ -84,10 +84,8 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     on_press:
-                        root.button_press()
-                    on_release:
                         root.home_SmartBench_release()
-                        
+
                     BoxLayout:
                         padding: 20
                         size: self.parent.size
@@ -113,8 +111,6 @@ Builder.load_string("""
                     background_down: ''
                     background_color: hex('#e65100')
                     on_press:
-                        root.button_press()
-                    on_release:
                         root.return_release()
                         
                     BoxLayout:
@@ -153,13 +149,8 @@ class WarningHoming(Screen):
         else:
             self.sm.current = self.next_screen
             
-    def button_press(self):
-        self.getout_button.background_color = get_color_from_hex('#c43c00')
-                      
     def home_SmartBench_release(self):
-        self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
-        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'  
-        self.sm.current = 'prepare_to_home'
+        self.m.request_homing_procedure('home','home')
 
     def return_release(self):
         self.sm.current = 'home' 

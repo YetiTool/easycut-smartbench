@@ -1,10 +1,8 @@
 '''
 Created on 12 December 2019
 Screen to help user calibrate distances for Y axis
-
 Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfiy. 
         They will then need to go through the homing screen, and back to step 1.
-
 @author: Letty
 '''
 
@@ -18,15 +16,12 @@ from kivy.clock import Clock
 
 
 Builder.load_string("""
-
 <DistanceScreen4yClass>:
-
     title_label:title_label
     user_instructions_text: user_instructions_text
     improve_button_label:improve_button_label
     continue_button_label:continue_button_label
     right_button_id: right_button_id
-
     canvas:
         Color: 
             rgba: hex('#FFFFFF')
@@ -38,7 +33,6 @@ Builder.load_string("""
         orientation: 'vertical'
         padding: 20
         spacing: 0
-
         BoxLayout:
             orientation: 'horizontal'
             padding: 0, 0
@@ -66,7 +60,6 @@ Builder.load_string("""
                         font_size: '20sp'
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
-
             Button:
                 size_hint_y:0.9
                 id: getout_button
@@ -110,12 +103,10 @@ Builder.load_string("""
                         font_size: '20sp'
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: 20
             padding: 10
-
             BoxLayout:
                 orientation: 'vertical'
                 spacing: 0
@@ -129,7 +120,6 @@ Builder.load_string("""
                     halign: 'left'
                     valign: 'middle'
                     markup: True
-
                 ScrollView:
                     size_hint: 1, 1
                     pos_hint: {'center_x': .5, 'center_y': .5}
@@ -167,7 +157,6 @@ Builder.load_string("""
                                 font_size: '20sp'
                                 text: '[color=455A64]NO - RESTART THIS SECTION[/color]'
                                 markup: True
-
                     Button:
                         id: right_button_id
                         size_hint_y: 0.9
@@ -293,4 +282,3 @@ class DistanceScreen4yClass(Screen):
     def on_leave(self):
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen':
             self.sm.remove_widget(self.sm.get_screen('distance4y'))
-

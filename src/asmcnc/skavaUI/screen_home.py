@@ -306,10 +306,6 @@ class HomeScreen(Screen):
 
         Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
         
-        # Set flag for homing screen
-        self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
-        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'  
-
         # File label at the top
         if self.job_gcode != []:
             
