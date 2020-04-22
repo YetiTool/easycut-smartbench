@@ -706,6 +706,7 @@ class SerialConnection(object):
                 self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
+            log(message)
             setting_and_value = message.split("=")
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
