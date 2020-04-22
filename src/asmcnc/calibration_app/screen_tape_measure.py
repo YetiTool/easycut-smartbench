@@ -1,7 +1,6 @@
 '''
 Created on 17 January 2020
 Warning to remind user to remove their tape measure before homing the machine
-
 @author: Letty
 '''
 
@@ -14,11 +13,9 @@ from kivy.clock import Clock
 # from asmcnc.calibration_app import screen_prep_calibration
 
 Builder.load_string("""
-
 <TapeMeasureScreenClass>:
     
     alert_label:alert_label
-
     canvas:
         Color: 
             rgba: hex('#FFFFFF')
@@ -31,7 +28,6 @@ Builder.load_string("""
         padding: 80,30
         spacing: 0
         size_hint_x: 1
-
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.8
@@ -53,7 +49,6 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
                 size_hint_y: 1.4
-
             Label:
                 id: alert_label
                 text_size: self.size
@@ -64,7 +59,6 @@ Builder.load_string("""
                 markup: 'True'
                 #size_hint_y: 0.2
         
-
             AnchorLayout:
                 Button:
                     #size: self.texture_size

@@ -1017,18 +1017,16 @@ class ScreenManagerShapeCutter(object):
                 sC12_screen = screen_shapeCutter_12.ShapeCutter12ScreenClass(name = 'sC12', machine = self.m, shapecutter = self)
                 self.sm.add_widget(sC12_screen)
             
-            self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen
-            self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen  
-            self.sm.current = 'prepare_to_home'
+            # Cheat here, the cancel_to arg is put to be the return_to so user can cancel the homing and skip it
+            self.m.request_homing_procedure(return_to_screen, return_to_screen)
         
         elif self.sm.current == 'sC26':
             if not self.sm.has_screen('sC27'):
                 sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC27_screen)
-                
-            self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen
-            self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen  
-            self.sm.current = 'prepare_to_home'
+
+            # Cheat here, the cancel_to arg is put to be the return_to so user can cancel the homing and skip it
+            self.m.request_homing_procedure(return_to_screen, return_to_screen)
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):

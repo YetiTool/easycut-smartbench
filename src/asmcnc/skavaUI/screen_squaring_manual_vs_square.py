@@ -173,8 +173,8 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         info = "[b]Manual squaring[/b]\n" \
                 "Before power up, the user manually pushes the X beam up against the bench legs at the home end. " \
                 "The power is then switched on. " \
-                "The motor coils lock the lower beam into position with a very high degree of reliability. " \
-                "Thus, mechanical adjustments to square the beam can be repeated reliably.\n\n" \
+                "The motor coils lock the lower beam into position with a high degree of reliability. " \
+                "Thus, mechanical adjustments to square the beam can be repeated.\n\n" \
                 "[b]Auto squaring[/b]\n" \
                 "No special preparation from the user is needed. " \
                 "When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs. " \

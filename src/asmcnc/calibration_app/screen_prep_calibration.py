@@ -201,7 +201,5 @@ class PrepCalibrationScreenClass(Screen):
             self.sm.add_widget(measurement_screen)
 
         self.sm.get_screen('measurement').axis = 'X'
-        self.sm.get_screen('prepare_to_home').return_to_screen = 'measurement'
-        self.sm.get_screen('prepare_to_home').cancel_to_screen = 'calibration_complete'  
-        self.sm.current = 'prepare_to_home'
+        self.m.request_homing_procedure('measurement','calibration_complete')
 
