@@ -297,25 +297,25 @@ class CheckingScreen(Screen):
         # Mins
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the HOME end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
             errorfound += 1 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the HOME end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
             errorfound += 1 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the UPPER end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
             errorfound += 1 
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the FAR end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the FAR end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the LOWER end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
+            error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             errorfound += 1 
 
         print errorfound 
