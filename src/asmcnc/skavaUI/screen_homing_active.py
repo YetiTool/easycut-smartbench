@@ -103,7 +103,7 @@ class HomingScreenActive(Screen):
         if sys.platform != 'win32':
 
             self.m.reset_pre_homing()
-            Clock.schedule_once(lambda dt: self.start_homing(),0.2)
+            Clock.schedule_once(lambda dt: self.start_homing(),1)
 
 
     def start_homing(self):
