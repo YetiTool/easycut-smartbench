@@ -1,4 +1,4 @@
-from  kivy.app import App
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.base import runTouchApp
@@ -12,14 +12,13 @@ from kivy.uix.widget import Widget
 from kivy.uix.stencilview import StencilView
 from kivy.uix.boxlayout import BoxLayout
 import re
+from functools import partial
 
 
 Builder.load_string("""
 
 <GCodeView>:
-
     gCodePreview:gCodePreview
-
     StencilBox:
         size: self.parent.size
         pos: self.parent.pos
@@ -36,9 +35,6 @@ Builder.load_string("""
             do_rotation: False
             do_translation: True
             do_scale: True
-
-
-
 """)
 
 def log(message):
@@ -244,9 +240,15 @@ class GCodeView(Widget):
             Color(0, 1, 0, 1)
 
 
-    def get_non_modal_gcode(self, job_file_gcode, line_cap):
-
-        xy_preview_gcode = []
+    interrupt_line_threshold = 5000
+    interrupt_delay = 0.2
+   
+    def prep_for_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt):
+        
+        self.line_number = 0
+        self.lines_read = 0
+        self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
+        self.total_lines_in_job_file_pre_scrubbed = len(job_file_gcode)
 
         self.min_x = 999999
         self.max_x = -999999
@@ -256,119 +258,142 @@ class GCodeView(Widget):
         self.max_z = -999999
 
         # mode defaults
-        last_x, last_y, last_z = '0', '0', '0'
-        plane = 'G17'
-        move = '0'
-        feed_rate = 0
-        line_number = 0
-        log('> get_non_modal_gcode: process loop')
+        self.last_x, self.last_y, self.last_z = '0', '0', '0'
+        self.plane = 'G17'
+        self.move = '0'
+        self.feed_rate = 0    
+
+        self.xy_preview_gcode = []
+
+        log('> Getting non modal gcode: process loop...')
+        self.get_non_modal_gcode(job_file_gcode, line_cap, screen_manager, dt)
+         
+    
+    def get_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt):
         
-        lines_read = 0
+ 
+        # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
+        if self.lines_read < self.total_lines_in_job_file_pre_scrubbed:
+            
+            break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
+
+            # main scrubbing loop
+            while self.lines_read < break_threshold:
+
+                draw_line = job_file_gcode[self.lines_read]
         
-        for draw_line in job_file_gcode:
-            
-            lines_read += 1
-            if line_cap == True and lines_read > self.max_lines_to_read: break
-             
-            # Prevent any weird behaviour
-            line = draw_line
-            
-            # Hackiest way ever to make up for the space loss...
-            line = re.sub('Y', ' YY', line)
-            line = re.sub('X', ' XX', line)
-            line = re.sub('Z', ' ZZ', line)
-            line = re.sub('F', ' FF', line)
-            line = re.sub('I', ' II', line)
-            line = re.sub('J', ' JJ', line)
-            line = re.sub('K', ' KK', line)
-            line = re.sub('G', ' GG', line)
-
-            line_number += 1
-
-            # centers reset each loop
-            i, j, k = '0', '0', '0'
-
-            if line.startswith('(') == True: continue   # skip any lines with comments
-            elif len(line) <= 1: continue
-            
-### -------------------------------------------------------------------------------------  
-### ONLY WORKS IF G-CODE IS SPACED: 
-#          
-#             elif line.startswith('G') == True:
-#                 # find move
-#                 if line.startswith('G2 '): move = 'G2' # CW arc
-#                 elif line.startswith('G3 '): move = 'G3' # CCW arc
-#                 elif line.startswith('G0 '): move = 'G0' # Fast move, straight              
-#                 elif line.startswith('G1 '): move = 'G1' # Feed move, straight
-# 
-#                 # find plane
-#                 elif line.startswith('G17'): plane = 'G17' # 'xy'
-#                 elif line.startswith('G18'): plane = 'G18' # 'zx'
-#                 elif line.startswith('G19'): plane = 'G19' # 'yz'
-
-#             # Check every position for position information
-#             for bit in line.split(' '): # This no longer works because spaces were stripped out. 
-# ------------------------------------------------------------------------------------------------
-                                  
-            for idx, bit in enumerate(re.split('( X| Y| Z| F| I| J| K| G)', line)):
+                self.lines_read += 1
+                if line_cap == True and self.lines_read > self.max_lines_to_read: break
+                 
+                # Prevent any weird behaviour
+                line = draw_line
                 
-                if bit == '':
-                    continue
+                # Hackiest way ever to make up for the space loss...
+                line = re.sub('Y', ' YY', line)
+                line = re.sub('X', ' XX', line)
+                line = re.sub('Z', ' ZZ', line)
+                line = re.sub('F', ' FF', line)
+                line = re.sub('I', ' II', line)
+                line = re.sub('J', ' JJ', line)
+                line = re.sub('K', ' KK', line)
+                line = re.sub('G', ' GG', line)
+    
+                self.line_number += 1
+    
+                # centers reset each loop
+                i, j, k = '0', '0', '0'
+    
+                if line.startswith('(') == True: continue   # skip any lines with comments
+                elif len(line) <= 1: continue
                 
-                if idx == 2:
+    ### -------------------------------------------------------------------------------------  
+    ### ONLY WORKS IF G-CODE IS SPACED: 
+    #          
+    #             elif line.startswith('G') == True:
+    #                 # find self.move
+    #                 if line.startswith('G2 '): self.move = 'G2' # CW arc
+    #                 elif line.startswith('G3 '): self.move = 'G3' # CCW arc
+    #                 elif line.startswith('G0 '): self.move = 'G0' # Fast self.move, straight              
+    #                 elif line.startswith('G1 '): self.move = 'G1' # Feed self.move, straight
+    # 
+    #                 # find self.plane
+    #                 elif line.startswith('G17'): self.plane = 'G17' # 'xy'
+    #                 elif line.startswith('G18'): self.plane = 'G18' # 'zx'
+    #                 elif line.startswith('G19'): self.plane = 'G19' # 'yz'
+    
+    #             # Check every position for position information
+    #             for bit in line.split(' '): # This no longer works because spaces were stripped out. 
+    # ------------------------------------------------------------------------------------------------
+                                      
+                for idx, bit in enumerate(re.split('( X| Y| Z| F| I| J| K| G)', line)):
                     
-                    if bit == 'G2': move = 'G2'
-                    elif bit == 'G3': move = 'G3' # CCW arc
-                    elif bit == 'G0': move = 'G0' # Fast move, straight              
-                    elif bit == 'G1': move = 'G1' # Feed move, straight
-
-                    # find plane
-                    elif bit == 'G17': plane = 'G17' # 'xy'
-                    elif bit == 'G18': plane = 'G18' # 'zx'
-                    elif bit == 'G19': plane = 'G19' # 'yz'  
+                    if bit == '':
+                        continue
                     
-                start = bit[0]             
-
-                if start == 'X':
-                    try: 
-                        last_x = float(bit[1:])
-                        if last_x > self.max_x: self.max_x = last_x
-                        if last_x < self.min_x: self.min_x = last_x
-                        last_x = bit[1:]
-                    except: 
-                        print 'Line not for preview (' + str(line_number) + '): ' + line
-                elif start == 'Y':
-                    try: 
-                        last_y = float(bit[1:])
-                        if last_y > self.max_y: self.max_y = last_y
-                        if last_y < self.min_y: self.min_y = last_y
-                        last_y = bit[1:]
-                    except: 
-                        print 'Line not for preview (' + str(line_number) + '): ' + line                        
+                    if idx == 2:
                         
-                elif start == 'Z':
-                    try:
-                        last_z = float(bit[1:])
-                        if last_z > self.max_z: self.max_z = last_z
-                        if last_z < self.min_z: self.min_z = last_z
-                        last_z = bit[1:]
-                    except: 
-                        print 'Line not for preview (' + str(line_number) + '): ' + line
-                elif start == 'F': feed_rate = bit[1:]
-                elif start == 'I': i = bit[1:]
-                elif start == 'J': j = bit[1:]
-                elif start == 'K': k = bit[1:]
+                        if bit == 'G2': self.move = 'G2'
+                        elif bit == 'G3': self.move = 'G3' # CCW arc
+                        elif bit == 'G0': self.move = 'G0' # Fast self.move, straight              
+                        elif bit == 'G1': self.move = 'G1' # Feed self.move, straight
+    
+                        # find self.plane
+                        elif bit == 'G17': self.plane = 'G17' # 'xy'
+                        elif bit == 'G18': self.plane = 'G18' # 'zx'
+                        elif bit == 'G19': self.plane = 'G19' # 'yz'  
+                        
+                    start = bit[0]             
+    
+                    if start == 'X':
+                        try: 
+                            self.last_x = float(bit[1:])
+                            if self.last_x > self.max_x: self.max_x = self.last_x
+                            if self.last_x < self.min_x: self.min_x = self.last_x
+                            self.last_x = bit[1:]
+                        except: 
+                            print 'Line not for preview (' + str(self.line_number) + '): ' + line
+                    elif start == 'Y':
+                        try: 
+                            self.last_y = float(bit[1:])
+                            if self.last_y > self.max_y: self.max_y = self.last_y
+                            if self.last_y < self.min_y: self.min_y = self.last_y
+                            self.last_y = bit[1:]
+                        except: 
+                            print 'Line not for preview (' + str(self.line_number) + '): ' + line                        
+                            
+                    elif start == 'Z':
+                        try:
+                            self.last_z = float(bit[1:])
+                            if self.last_z > self.max_z: self.max_z = self.last_z
+                            if self.last_z < self.min_z: self.min_z = self.last_z
+                            self.last_z = bit[1:]
+                        except: 
+                            print 'Line not for preview (' + str(self.line_number) + '): ' + line
+                    elif start == 'F': self.feed_rate = bit[1:]
+                    elif start == 'I': i = bit[1:]
+                    elif start == 'J': j = bit[1:]
+                    elif start == 'K': k = bit[1:]
+    
+                if self.move == 'G0':
+                    processed_line = self.plane + ' ' + self.move + ' X' + self.last_x + ' Y' + self.last_y + ' Z' + self.last_z
+                    self.xy_preview_gcode.append(processed_line)
+                elif self.move == 'G1':
+                    processed_line = self.plane + ' ' + self.move + ' X' + self.last_x + ' Y' + self.last_y + ' Z' + self.last_z + ' F' + self.feed_rate
+                    self.xy_preview_gcode.append(processed_line)
+                elif self.move == 'G2' or self.move == 'G3':
+                    processed_line = self.plane + ' ' + self.move + ' X' + self.last_x + ' Y' + self.last_y + ' Z' + self.last_z + ' I' + i + ' J' + j + ' K' + k + ' F' + self.feed_rate
+                    self.xy_preview_gcode.append(processed_line)
+                else: print 'Line not for preview (' + str(self.line_number) + self.move + '): ' + line
 
-            if move == 'G0':
-                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z
-                xy_preview_gcode.append(processed_line)
-            elif move == 'G1':
-                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z + ' F' + feed_rate
-                xy_preview_gcode.append(processed_line)
-            elif move == 'G2' or move == 'G3':
-                processed_line = plane + ' ' + move + ' X' + last_x + ' Y' + last_y + ' Z' + last_z + ' I' + i + ' J' + j + ' K' + k + ' F' + feed_rate
-                xy_preview_gcode.append(processed_line)
-            else: print 'Line not for preview (' + str(line_number) + move + '): ' + line
 
-        log('< get_non_modal_gcode: process loop')
-        return xy_preview_gcode
+            # take a breather and update progress report
+            self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
+            percentage_progress = int((self.lines_read * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
+            screen_manager.get_screen('loading').progress_value = 'Analysing file: ' + str(percentage_progress) + ' %' # update progress label
+#             Clock.schedule_once(self.get_non_modal_gcode, self.interrupt_delay)
+            Clock.schedule_once(partial(self.get_non_modal_gcode, job_file_gcode, line_cap, screen_manager), self.interrupt_delay)
+        
+        else:
+            
+            log('> Finished getting non modal gcode')
+            screen_manager.get_screen('loading')._finish_loading(self.xy_preview_gcode)

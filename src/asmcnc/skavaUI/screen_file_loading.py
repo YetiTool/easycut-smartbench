@@ -141,12 +141,16 @@ Builder.load_string("""
                             
 """)
 
+
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 
+
 def log(message):
+    
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
 
 class LoadingScreen(Screen):  
  
@@ -177,9 +181,10 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
-        self.progress_value = 'Preparing'
+        self.progress_value = 'Getting ready...'
         self.check_button.disabled = True
-        Clock.usleep(1)
+        self.home_button.disabled = True
+#         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
@@ -207,15 +212,15 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        log('> LOADING...')
+        log('> LOADING:')
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
         self.load_value = 1
-        log('> job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
-        log('> scrubbing file...')
+        log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
+        log('> Scrubbing file...')
 
         # clear objects
         self.preloaded_job_gcode = []
@@ -229,12 +234,14 @@ class LoadingScreen(Screen):
 
     def _scrub_file_loop(self, dt):
 
-        # a lot of this code is to force a break in the loops so we can allow Kivy to update
-        
+        # clear out undesirable lines
+
+        # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
         if self.lines_scrubbed < self.total_lines_in_job_file_pre_scrubbed:
             
             break_threshold = min(self.line_threshold_to_pause_and_update_at, self.total_lines_in_job_file_pre_scrubbed)
 
+            # main scrubbing loop
             while self.lines_scrubbed < break_threshold:
                 
                 line = self.job_file_as_list[self.lines_scrubbed]
@@ -256,45 +263,37 @@ class LoadingScreen(Screen):
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             
                 self.lines_scrubbed += 1
-            
+
+            # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-#             self.progress_value = 'Preparing ' + str('{:,}'.format(self.lines_scrubbed) + ' lines') # update progress label
             self.progress_value = 'Preparing file: ' + str(percentage_progress) + ' %' # update progress label
             Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
-        else: self._finish_up_loading()
+        else: 
+
+            log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+            self._get_gcode_preview_and_ranges()
 
 
-    def _finish_up_loading(self):
+    def _get_gcode_preview_and_ranges(self):
 
-        
-        log('> finished scrubbing file: ' + str(self.lines_scrubbed) + ' lines')
-                
         self.job_gcode = self.preloaded_job_gcode
         self.load_value = 2
-     
- 
         self.sm.get_screen('home').job_gcode = self.job_gcode
-        self.get_bounding_box()
-        self.job_loading_loaded = '[b]Job Loaded[/b]'
-        self.check_button.disabled = False
-        self.home_button.disabled = False
-
-        log('> END LOAD')
-
-
-
-    def get_bounding_box(self):
-
-        job_box = job_envelope.BoundingBox()
         
         # This has to be the same widget that the home screen uses, otherwise
         # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
     
         log('> get_non_modal_gcode')
-        non_modal_gcode_list = self.gcode_preview_widget.get_non_modal_gcode(self.job_gcode, False)
+        self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
+
+
+    def _finish_loading(self, non_modal_gcode_list):
+
+
+        job_box = job_envelope.BoundingBox()
 
         # Get bounding box
         job_box.range_x[0] = self.gcode_preview_widget.min_x
@@ -305,7 +304,16 @@ class LoadingScreen(Screen):
         job_box.range_z[1] = self.gcode_preview_widget.max_z
         
         self.sm.get_screen('home').job_box = job_box
-        
+
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
+        
+        self.job_loading_loaded = '[b]Job Loaded[/b]'
+        self.check_button.disabled = False
+        self.home_button.disabled = False
+
+        log('> END LOAD')
+        
+
+
 
