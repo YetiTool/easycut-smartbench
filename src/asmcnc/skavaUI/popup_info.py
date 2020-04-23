@@ -135,7 +135,7 @@ class PopupUSBInfo(Widget):
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
         
         elif safe_to_remove == False:
-            description = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
+            description = 'Don\'t remove your USB stick yet.\n\nIf you have loaded a large file this can take a while.\n\nPlease wait...'
        
             ok_button = Button(text='[b]Ok[/b]', markup = True)
             ok_button.background_normal = ''
