@@ -165,7 +165,7 @@ class USBFileChooser(Screen):
         
     def on_pre_leave(self):
 
-        if self.sm.current != 'local_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
+        if self.sm.current != 'local_filechooser' and self.sm.current != 'loading' and self.usb_stick.is_available(): self.usb_stick.disable()
 
 
     def refresh_filechooser(self):
@@ -222,5 +222,9 @@ class USBFileChooser(Screen):
     def go_to_loading_screen(self, file_selection):
 
         self.usb_stick.disable()
-        self.manager.get_screen('loading').loading_file_name = file_selection
-        self.manager.current = 'loading'
+        
+        def load_screen():
+            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.manager.current = 'loading'
+
+        Clock.schedule_once(lambda dt: load_screen(), 1)
