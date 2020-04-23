@@ -302,14 +302,14 @@ class LocalFileChooser(Screen):
 
         def load_screen():
             
-            if not self.usb_stick.is_available():
+            if not self.usb_stick.is_usb_mounted_flag:
                 self.manager.get_screen('loading').loading_file_name = file_selection
                 self.manager.current = 'loading'
             else: self.go_to_loading_screen(file_selection)
 
-        if self.usb_stick.is_available():
+        if self.usb_stick.is_usb_mounted_flag:
             self.usb_stick.disable()
-            Clock.schedule_once(lambda dt: load_screen(), 2)
+            Clock.schedule_once(lambda dt: load_screen(), 3)
         else: load_screen()
 # ---------------------------------------------------------- DONE
         
