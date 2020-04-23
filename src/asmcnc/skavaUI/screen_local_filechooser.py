@@ -309,7 +309,7 @@ class LocalFileChooser(Screen):
 
         if self.usb_stick.is_usb_mounted_flag:
             self.usb_stick.disable()
-            Clock.schedule_once(lambda dt: load_screen(), 3)
+            Clock.schedule_once(lambda dt: load_screen(), 3.5)
         else: load_screen()
 # ---------------------------------------------------------- DONE
         
