@@ -227,5 +227,5 @@ class USBFileChooser(Screen):
 
         if self.usb_stick.is_available():
             self.usb_stick.disable()           
-            Clock.schedule_once(lambda dt: load_screen(), 2.5)
+            Clock.schedule_once(lambda dt: load_screen(), 3)
         else: load_screen()
