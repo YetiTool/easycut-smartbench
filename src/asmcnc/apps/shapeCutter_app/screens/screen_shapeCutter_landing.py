@@ -181,7 +181,6 @@ class ShapeCutterLandingScreenClass(Screen):
         self.m.get_grbl_settings()
         self.refresh_parameters()
 
-        
     def get_info(self):
 
         popup_info.PopupTutorial(self.shapecutter_sm)
