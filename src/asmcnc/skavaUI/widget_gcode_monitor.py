@@ -12,7 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
-
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -239,6 +239,8 @@ class GCodeMonitor(Widget):
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)      # Poll for status
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status    
     
+        self.popup_flag = True
+    
     def update_monitor_text_buffer(self, input_or_output, content):
         
         # Don't update if content is to be hidden
@@ -271,7 +273,13 @@ class GCodeMonitor(Widget):
         
     def send_gcode_textinput(self): 
         
-        self.m.send_any_gcode_command(str(self.gCodeInput.text))
+        if self.popup_flag == True: 
+            description = "Sending commands directly to the machine can change how it operates.\n\n" + \
+            "Please exercise caution when using this feature.\n\n"
+            popup_info.PopupWarning(self.sm, description)
+            self.popup_flag = False
+        else:
+            self.m.send_any_gcode_command(str(self.gCodeInput.text))
     
     def send_gcode_preset(self, input):
         

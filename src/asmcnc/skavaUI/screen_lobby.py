@@ -387,4 +387,4 @@ class LobbyScreen(Screen):
         self.am.start_update_app()    
     
     def developer_app(self):
-        self.sm.current = 'dev'
+        popup_info.PopupDeveloper(self.sm)
