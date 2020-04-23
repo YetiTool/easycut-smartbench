@@ -306,7 +306,7 @@ class LocalFileChooser(Screen):
 
         if self.usb_stick.is_available():
             self.usb_stick.disable()           
-            Clock.schedule_once(lambda dt: load_screen(), 2)
+            Clock.schedule_once(lambda dt: load_screen(), 2.5)
         else: load_screen()
 # ---------------------------------------------------------- DONE
         
