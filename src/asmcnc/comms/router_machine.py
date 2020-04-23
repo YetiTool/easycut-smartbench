@@ -520,7 +520,7 @@ class RouterMachine(object):
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L110000")
          
-        else: print ("LED Colour denied during stream: " + colour_name + "\n")
+        else: print ("LED Colour denied because streaming: " + colour_name + "\n")
 
 
     def led_restore(self):

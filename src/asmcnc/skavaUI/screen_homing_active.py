@@ -134,8 +134,6 @@ class HomingScreenActive(Screen):
 
     def homing_detected_as_complete(self):
 
-        self.m.get_grbl_settings()
-
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
         self.m.is_machine_homed = True # clear this flag too
         
@@ -145,8 +143,27 @@ class HomingScreenActive(Screen):
             self.sm.current = 'squaring_active'
         else: 
             self.m.is_machine_completed_the_initial_squaring_decision = True
-            self.sm.current = self.return_to_screen
-            Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
+
+            # Chosen to sync with grbl after homing. Ensures that no clash of threads on boot, and that grbl is in definte ready state. So user must home!
+            # Enter any initial grbl settings into this list
+            # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
+            # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR.
+            # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost.
+            # Sequential streaming handles this
+            grbl_settings = [
+                        '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+                        '$#', # Echo grbl modes, which will be read by sw, and internal parameters sync'd
+                        '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
+                        ]
+            self.m.s.start_sequential_stream(grbl_settings)
+            
+            # allow breather for sequential scream to process
+            Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
+            Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),1)
+
+
+    def after_successful_completion_return_to_screen(self):
+        self.sm.current = self.return_to_screen
 
 
     def cancel_homing(self):
