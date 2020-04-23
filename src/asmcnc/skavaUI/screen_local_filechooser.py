@@ -228,7 +228,7 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
     
     
-    def on_leave(self):
+    def on_pre_leave(self):
         
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser' and self.sm.current != 'loading': self.usb_stick.disable()
