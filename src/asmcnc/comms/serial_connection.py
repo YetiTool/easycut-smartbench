@@ -763,7 +763,8 @@ class SerialConnection(object):
       # Anything sending EEPROM settings (which require special attention, due to writing of values)
       # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
-
+    
+    is_sequential_streaming = False
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
 
