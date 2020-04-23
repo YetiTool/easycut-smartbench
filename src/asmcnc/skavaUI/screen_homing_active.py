@@ -134,6 +134,8 @@ class HomingScreenActive(Screen):
 
     def homing_detected_as_complete(self):
 
+        self.m.get_grbl_settings()
+
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
         self.m.is_machine_homed = True # clear this flag too
         

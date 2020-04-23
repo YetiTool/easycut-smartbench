@@ -179,6 +179,8 @@ class ShapeCutterLandingScreenClass(Screen):
 
     def on_enter(self):
         self.m.get_grbl_settings()
+        self.refresh_parameters()
+
         
     def get_info(self):
 

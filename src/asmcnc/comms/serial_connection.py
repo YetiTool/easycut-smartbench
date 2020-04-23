@@ -164,7 +164,7 @@ class SerialConnection(object):
 #                     '$130=1220.0',   #X Max travel, mm TODO: Link to a settings object
 #                     '$131=2440.0',   #Y Max travel, mm
 #                     '$132=150.0',   #Z Max travel, mm
-                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
+#                     '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
                     '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
                     ]
 
