@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 import sys, os
+from datetime import datetime
 
 from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 
@@ -198,6 +199,12 @@ Builder.load_string("""
 
 """)
 
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
+
 class SafetyScreen(Screen):
 
     def __init__(self, **kwargs):
@@ -210,8 +217,12 @@ class SafetyScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
 
+
     def on_enter(self):
-        Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 2)
+        log('Safety screen UP')
+        log('Starting services')
+
+#         Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 2)
 #         self.m.resume_from_alarm()
         
         

@@ -61,60 +61,55 @@ class SerialConnection(object):
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
-        if sys.platform != "win32":
-            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-                self.sm.get_screen('serialScreen').error_description = serial_error
-                self.sm.current = 'serialScreen'
+
+        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+            self.sm.get_screen('serialScreen').error_description = serial_error
+            self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
-        print('Start to establish connection...')
+
+        log('Start to establish connection...')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 self.suppress_error_screens = True
-                return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
-                return False
 
         else:
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
                 for line in filesForDevice: # run through all files
 
-# FLAG: This if statement is only relevant in linux environment. 
+                    # FLAG: This if statement is only relevant in linux environment. 
                     # EITHER: USB Comms hardware
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-
                     # OR: UART Comms hardware
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
-                    # When platform is updated, this needs to be moved across to the AMA0 port :)
-                    
+                        # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
-                return False
+
+        log("Serial connection status: " + str(self.is_connected()))
+
+        if self.is_connected():
+            log('Initialising grbl...')
+            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
+
 
     # is serial port connected?
     def is_connected(self):
 
-        if self.s: return True
+        if self.s != None:
+            return True
         else: 
-            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not find serial connection.'), 3)
             return False
 
 
-    def initialise_grbl(self):
-
-        if self.is_connected():
-            print('Initialising grbl...')
-            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
-            Clock.schedule_once(self.start_services, 5) # Delay for grbl to initialize
-
-
+    # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
         log('Flushing serial')
@@ -123,8 +118,17 @@ class SerialConnection(object):
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
-        log('Starting grbl_scanner thread')
+        log('Opening grbl_scanner thread')
         t.start()
+
+        self.m.resume_from_alarm() # Clear any hard switch presses that may have happened during boot
+
+#         Clock.schedule_once(self.activate_first_screen, 1) # Delay for reset call to complete
+# 
+# 
+#     def activate_first_screen(self, dt):
+#         self.sm.current = 'safety'
+
 
 
 # SCANNER: listens for responses from Grbl
@@ -140,6 +144,9 @@ class SerialConnection(object):
     VERBOSE_STATUS = False
 
     def grbl_scanner(self):
+        
+        log('Running grbl_scanner thread')
+
 
         while True:
 
