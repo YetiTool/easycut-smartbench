@@ -117,11 +117,13 @@ class SerialConnection(object):
 
     def start_services(self, dt):
 
+        log('Flushing serial')
         self.s.flushInput()  # Flush startup text in serial input
         # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
+        log('Starting grbl_scanner thread')
         t.start()
 
 

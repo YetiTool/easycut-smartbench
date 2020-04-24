@@ -211,7 +211,9 @@ class SafetyScreen(Screen):
         self.status_bar_widget.cheeky_color = '#1976d2'
 
     def on_enter(self):
-        self.m.resume_from_alarm()
+        Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 0.2)
+#         self.m.resume_from_alarm()
+        
         
     def go_to_next_screen(self):
         self.sm.current = 'squaring_decision'
