@@ -139,7 +139,6 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
-
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
 
