@@ -49,6 +49,7 @@ Builder.load_string("""
 
 
 def log(message):
+    
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
@@ -57,16 +58,23 @@ class WelcomeScreenClass(Screen):
     
     
     def __init__(self, **kwargs):
+        
         super(WelcomeScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+
     def on_enter(self):
+        
         if self.m.s.is_connected():
+            # Allow kivy to have fully loaded before doing any calls which require scheduling
             Clock.schedule_once(self.m.s.start_services, 3)
+            # Allow time for machine reset sequence
             Clock.schedule_once(self.go_to_next_screen, 4)
     
+    
     def go_to_next_screen(self, dt):
+
         self.sm.current = 'safety'
         
 

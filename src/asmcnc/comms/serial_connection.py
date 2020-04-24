@@ -113,14 +113,13 @@ class SerialConnection(object):
 
         log('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
-        # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
         t.start()
-
-        self.m.resume_from_alarm()  # Clear any hard switch presses that may have happened during boot
-
+        
+        # Clear any hard switch presses that may have happened during boot
+        self.m.resume_from_alarm()  
 
 
 
@@ -136,10 +135,10 @@ class SerialConnection(object):
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
+
     def grbl_scanner(self):
         
         log('Running grbl_scanner thread')
-
 
         while True:
 

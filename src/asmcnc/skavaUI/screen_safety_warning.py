@@ -201,13 +201,16 @@ Builder.load_string("""
 
 
 def log(message):
+    
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
 class SafetyScreen(Screen):
 
+
     def __init__(self, **kwargs):
+        
         super(SafetyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
@@ -219,15 +222,19 @@ class SafetyScreen(Screen):
 
 
     def on_enter(self):
+        
         log('Safety screen UP')
-
-#         Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 2)
-#         self.m.resume_from_alarm()
         
         
     def go_to_next_screen(self):
+        
         self.sm.current = 'squaring_decision'
         
+        
     def on_leave(self):
+        
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
             self.sm.remove_widget(self.sm.get_screen('safety'))
+            
+
+            
