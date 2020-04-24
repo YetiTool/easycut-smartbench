@@ -10,6 +10,7 @@ www.yetitool.com
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
 import time
 import sys, os
+from datetime import datetime
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -55,6 +56,7 @@ from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
+from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 
 
 # developer testing
@@ -98,6 +100,11 @@ if sys.platform != 'win32':
     if pc_alert.startswith('power_cycle_alert=True'):
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
 
 class SkavaUI(App):
 
@@ -144,6 +151,7 @@ class SkavaUI(App):
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
         homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
+        welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m)
 
 
 
@@ -174,12 +182,15 @@ class SkavaUI(App):
         sm.add_widget(prepare_to_home_screen)
         sm.add_widget(homing_active_screen)
         sm.add_widget(squaring_active_screen)
-        
-        # set screen to start on
-        sm.current = 'safety'
-#         sm.current = 'squaring_decision'
-        return sm
+        sm.add_widget(welcome_screen)
 
+        # Setting the first screen:        
+        # sm.current is set at the end of start_services in serial_connection 
+        # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
+        sm.current = 'welcome'
+
+        log('Screen manager activated')
+        return sm
 
 if __name__ == '__main__':
 
