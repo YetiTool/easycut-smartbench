@@ -63,8 +63,7 @@ class WelcomeScreenClass(Screen):
 
     def on_enter(self):
         if self.m.s.is_connected():
-            Clock.schedule_once(self.m.s.start_services, 1)
-#             self.m.s.start_services(0)
+            Clock.schedule_once(self.m.s.start_services, 2)
             Clock.schedule_once(self.go_to_next_screen, 3)
     
     def go_to_next_screen(self, dt):

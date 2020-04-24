@@ -220,7 +220,6 @@ class SafetyScreen(Screen):
 
     def on_enter(self):
         log('Safety screen UP')
-        log('Starting services')
 
 #         Clock.schedule_once(lambda dt: self.m.resume_from_alarm(), 2)
 #         self.m.resume_from_alarm()

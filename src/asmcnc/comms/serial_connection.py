@@ -99,7 +99,6 @@ class SerialConnection(object):
             log('Initialising grbl...')
             self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
-
     # is serial port connected?
     def is_connected(self):
 
@@ -112,22 +111,16 @@ class SerialConnection(object):
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
-        log('Flushing serial')
+        log('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
         # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
-        log('Opening grbl_scanner thread')
         t.start()
 
-        self.m.resume_from_alarm() # Clear any hard switch presses that may have happened during boot
+        self.m.resume_from_alarm()  # Clear any hard switch presses that may have happened during boot
 
-#         Clock.schedule_once(self.activate_first_screen, 1) # Delay for reset call to complete
-# 
-# 
-#     def activate_first_screen(self, dt):
-#         self.sm.current = 'safety'
 
 
 
