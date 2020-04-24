@@ -21,6 +21,8 @@ class ShapeCutterJobParameters(object):
  
         self.m = machine
         self.shapecutter_sm = shapecutter_sm
+        
+        self.refresh_parameters()
 
     def refresh_parameters(self):
         # Defaults are all in mm
