@@ -53,8 +53,6 @@ class RouterMachine(object):
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.s.establish_connection(win_serial_port)
-        print "Serial connection status:", self.s.is_connected()
-        self.s.initialise_grbl()
 
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
