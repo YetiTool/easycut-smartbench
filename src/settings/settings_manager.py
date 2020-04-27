@@ -79,7 +79,7 @@ class Settings(object):
                 git_output = str(unformatted_git_output).split('\n')
                 git_output = list(filter(lambda x: x!= '', git_output))
                      
-                if str(git_output[-1]).startswith('HEAD is now at') and str(git_output[-1]).endswith('updated version number'):
+                if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
                     description = str(git_output[-1])
                     return description
