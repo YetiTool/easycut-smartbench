@@ -36,28 +36,31 @@ Builder.load_string("""
         pos: root.pos
         orientation: "vertical"
 
-    
-        BoxLayout:
-            orientation: 'vertical'
-            size: self.parent.size
-            pos: self.parent.pos
-            spacing: 10
-            FileChooserIconView:
-                size_hint_y: 5
-                id: filechooser_usb
-                show_hidden: False
-                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                on_selection: 
-                    root.refresh_filechooser()
 
-            Label:
-                id: file_selected_label
-                size_hint_y: 1
-                text: root.filename_selected_label_text
-                markup: True
-                font_size: '20sp'   
-                valign: 'middle'
-                halign: 'center'                
+        Label:
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: file_selected_label
+            size_hint_y: 1
+            text: root.filename_selected_label_text
+            markup: True
+            font_size: '20sp'   
+            valign: 'middle'
+            halign: 'center'                
+
+
+        FileChooserIconView:
+            size_hint_y: 5
+            id: filechooser_usb
+            show_hidden: False
+            filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+            on_selection: 
+                root.refresh_filechooser()
+
 
 
                
