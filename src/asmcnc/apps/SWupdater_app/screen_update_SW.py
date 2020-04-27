@@ -372,7 +372,7 @@ class SWUpdateScreen(Screen):
                
         if self.wifi_image.source == self.wifi_on:
             
-            self.popup_wait = popup_info.PopupWait(self.sm)
+            popup_info.PopupWait(self.sm)
             
             def do_update():
             
@@ -402,7 +402,7 @@ class SWUpdateScreen(Screen):
     def repair_sw_over_wifi(self):
             
         description = "DO NOT restart your machine until you see instructions to do so on the screen."
-        self.popup_restart_warning = popup_info.PopupWarning(self.sm, description)
+        popup_info.PopupWarning(self.sm, description)
                
         def delay_clone_to_update_screen():
             if self.wifi_image.source == self.wifi_on:
@@ -416,8 +416,6 @@ class SWUpdateScreen(Screen):
                 description = "No WiFi connection!\n\nYou MUST have a stable wifi connection to repair your software.\n\n" + \
                 "Please try again later."
                 popup_info.PopupError(self.sm, description)
-                self.popup_wait.dismiss()
-                self.popup_restart_warning.dismiss()
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
