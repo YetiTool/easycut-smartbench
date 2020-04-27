@@ -52,19 +52,14 @@ Builder.load_string("""
             valign: 'middle'
             halign: 'center'                
 
-    
-        BoxLayout:
-            orientation: 'vertical'
-            size: self.parent.size
-            pos: self.parent.pos
-            spacing: 10
-            FileChooserIconView:
-                size_hint_y: 5
-                id: filechooser_usb
-                show_hidden: False
-                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                on_selection: 
-                    root.refresh_filechooser()
+
+        FileChooserIconView:
+            size_hint_y: 5
+            id: filechooser_usb
+            show_hidden: False
+            filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+            on_selection: 
+                root.refresh_filechooser()
 
 
 
