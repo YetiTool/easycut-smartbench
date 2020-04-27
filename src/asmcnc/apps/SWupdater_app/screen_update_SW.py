@@ -370,47 +370,52 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
                
-#        if self.wifi_image.source == self.wifi_on:
+        if self.wifi_image.source == self.wifi_on:
             
-        popup_info.PopupWait(self.sm)
-        
-        def do_update():
-        
-            outcome = self.set.get_sw_update_via_wifi()
+            popup_info.PopupWait(self.sm)
             
-            if outcome == False: 
-                description = "There was a problem updating your software. \n\n" \
-                "We can try to fix the problem, but you MUST have a stable internet connection and" \
-                " power supply.\n\n" \
-                "Would you like to repair your software now?"
-                popup_info.PopupSoftwareRepair(self.sm, self, description)               
-            elif outcome == "Software already up to date!": 
-                popup_info.PopupError(self.sm, outcome)
+            def do_update():
+            
+                outcome = self.set.get_sw_update_via_wifi()
                 
-            elif outcome == "Could not resolve host: github.com":
-                description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, outcome)
-            else: 
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
-        
-        Clock.schedule_once(lambda dt: do_update(), 2)
+                if outcome == False: 
+                    description = "There was a problem updating your software. \n\n" \
+                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                    " power supply.\n\n" \
+                    "Would you like to repair your software now?"
+                    popup_info.PopupSoftwareRepair(self.sm, self, description)               
+                elif outcome == "Software already up to date!": 
+                    popup_info.PopupError(self.sm, outcome)
+                    
+                elif outcome == "Could not resolve host: github.com":
+                    description = "Could not connect to github. Please check that your connection is stable, or try again later"
+                    popup_info.PopupError(self.sm, outcome)
+                else: 
+                    popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
             
-#         else: 
-#             description = "No WiFi connection!"
-#             popup_info.PopupError(self.sm, description)
+            Clock.schedule_once(lambda dt: do_update(), 2)
+            
+        else: 
+            description = "No WiFi connection!"
+            popup_info.PopupError(self.sm, description)
 
     def repair_sw_over_wifi(self):
-
+            
         description = "DO NOT restart your machine until you see instructions to do so on the screen."
         popup_info.PopupWarning(self.sm, description)
                
         def delay_clone_to_update_screen():
-            outcome = self.set.reclone_EC()
-            
-            if outcome == False:
-                description = "It was not possible to backup EC safely, please try again later.\n\n" + \
-                "If this issue persists, please contact Yeti Tool Ltd for support."
-                popup_info.PopupError(self.sm, description)           
+            if self.wifi_image.source == self.wifi_on:
+                outcome = self.set.reclone_EC()
+                
+                if outcome == False:
+                    description = "It was not possible to backup EC safely, please try again later.\n\n" + \
+                    "If this issue persists, please contact Yeti Tool Ltd for support."
+                    popup_info.PopupError(self.sm, description)           
+            else: 
+                description = "No WiFi connection!"
+                popup_info.PopupError(self.sm, description)
+
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
