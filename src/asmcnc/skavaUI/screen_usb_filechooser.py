@@ -3,7 +3,6 @@ Created on 19 Aug 2017
 
 @author: Ed
 '''
-# config
 
 import kivy
 from kivy.lang import Builder
@@ -164,8 +163,7 @@ class USBFileChooser(Screen):
 
         
     def on_pre_leave(self):
-
-        if self.sm.current != 'local_filechooser' and self.sm.current != 'loading' and self.usb_stick.is_available(): self.usb_stick.disable()
+        if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
 
     def refresh_filechooser(self):
@@ -220,15 +218,5 @@ class USBFileChooser(Screen):
 
         
     def go_to_loading_screen(self, file_selection):
-
-        def load_screen():
-            
-            if not self.usb_stick.is_usb_mounted_flag:
-                self.manager.get_screen('loading').loading_file_name = file_selection
-                self.manager.current = 'loading'
-            else: self.go_to_loading_screen(file_selection)
-
-        if self.usb_stick.is_usb_mounted_flag:
-            self.usb_stick.disable()
-            Clock.schedule_once(lambda dt: load_screen(), 4.5)
-        else: load_screen()
+        self.manager.get_screen('loading').loading_file_name = file_selection
+        self.manager.current = 'loading'
