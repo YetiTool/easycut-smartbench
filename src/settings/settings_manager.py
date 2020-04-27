@@ -170,7 +170,8 @@ class Settings(object):
             os.system(pull_master_from_usb)
         except:
             return "update failed"
-               
+        
+        self.refresh_latest_sw_version()
         checkout_success = self.checkout_latest_version()
         rm_remote = 'git remote rm temp_repository'
         os.system(rm_remote)

@@ -63,7 +63,7 @@ from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.2.0-beta'
+initial_version = 'v1.2.0'
 
 # default starting screen
 start_screen = 'safety'
