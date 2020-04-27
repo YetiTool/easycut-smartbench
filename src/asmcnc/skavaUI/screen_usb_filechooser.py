@@ -36,6 +36,22 @@ Builder.load_string("""
         pos: root.pos
         orientation: "vertical"
 
+
+        Label:
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: file_selected_label
+            size_hint_y: 1
+            text: root.filename_selected_label_text
+            markup: True
+            font_size: '20sp'   
+            valign: 'middle'
+            halign: 'center'                
+
     
         BoxLayout:
             orientation: 'vertical'
@@ -50,14 +66,6 @@ Builder.load_string("""
                 on_selection: 
                     root.refresh_filechooser()
 
-            Label:
-                id: file_selected_label
-                size_hint_y: 1
-                text: root.filename_selected_label_text
-                markup: True
-                font_size: '20sp'   
-                valign: 'middle'
-                halign: 'center'                
 
 
                
