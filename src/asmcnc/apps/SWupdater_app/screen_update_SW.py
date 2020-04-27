@@ -344,6 +344,11 @@ class SWUpdateScreen(Screen):
         
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
         
+        self.refresh_latest_software_version()
+        
+    def refresh_latest_software_version(self):
+        self.set.refresh_latest_sw_version()
+        
         if self.set.latest_sw_version != '':    
             self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
         elif self.wifi_image.source != self.wifi_on:
@@ -358,6 +363,7 @@ class SWUpdateScreen(Screen):
         self.usb_stick.enable()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
+        Clock.schedule_once(lambda dt: self.refresh_latest_software_version(), 1)
 
     def on_leave(self):
         Clock.unschedule(self.poll_USB)
