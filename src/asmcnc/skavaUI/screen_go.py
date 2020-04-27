@@ -512,8 +512,7 @@ class GoScreen(Screen):
         self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
         self.m.stop_for_a_stream_pause()
         self.job_in_progress = True
- 
-        
+   
     def resume_job(self):
  
         self.paused = False
@@ -525,7 +524,6 @@ class GoScreen(Screen):
 
         self.sm.current = self.cancel_to_screen
             
-
     @mainthread
     def reset_go_screen_after_job_finished(self):
 
@@ -549,8 +547,7 @@ class GoScreen(Screen):
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
-
-
+        
     def stream_job(self):
                 
         if self.job_gcode:
@@ -573,17 +570,16 @@ class GoScreen(Screen):
         else:
             print('No file loaded')
  
-    
     def poll_for_job_progress(self, dt):
 
         # % progress    
-        if len(self.sm.get_screen('home').job_gcode) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.sm.get_screen('home').job_gcode) + 4) * 1.0)*100.0))
+        if len(self.job_gcode) != 0:
+            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
             if percent_thru_job > 100: percent_thru_job = 100
             self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
-        if len(self.sm.get_screen('home').job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
+        if len(self.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
 
             stream_end_time = time.time()
             time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)

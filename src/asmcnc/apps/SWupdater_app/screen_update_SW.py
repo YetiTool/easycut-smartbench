@@ -369,7 +369,7 @@ class SWUpdateScreen(Screen):
         self.sm.current = 'lobby'
 
     def get_sw_update_over_wifi(self):
-        
+               
         if self.wifi_image.source == self.wifi_on:
             
             popup_info.PopupWait(self.sm)
@@ -386,6 +386,10 @@ class SWUpdateScreen(Screen):
                     popup_info.PopupSoftwareRepair(self.sm, self, description)               
                 elif outcome == "Software already up to date!": 
                     popup_info.PopupError(self.sm, outcome)
+                    
+                elif outcome == "Could not resolve host: github.com":
+                    description = "Could not connect to github. Please check that your connection is stable, or try again later"
+                    popup_info.PopupError(self.sm, outcome)
                 else: 
                     popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
             
@@ -396,17 +400,22 @@ class SWUpdateScreen(Screen):
             popup_info.PopupError(self.sm, description)
 
     def repair_sw_over_wifi(self):
-
+            
         description = "DO NOT restart your machine until you see instructions to do so on the screen."
         popup_info.PopupWarning(self.sm, description)
                
         def delay_clone_to_update_screen():
-            outcome = self.set.reclone_EC()
-            
-            if outcome == False:
-                description = "It was not possible to backup EC safely, please try again later.\n\n" + \
-                "If this issue persists, please contact Yeti Tool Ltd for support."
-                popup_info.PopupError(self.sm, description)           
+            if self.wifi_image.source == self.wifi_on:
+                outcome = self.set.reclone_EC()
+                
+                if outcome == False:
+                    description = "It was not possible to backup EasyCut safely, please try again later.\n\n" + \
+                    "If this issue persists, please contact Yeti Tool Ltd for support."
+                    popup_info.PopupError(self.sm, description)           
+            else: 
+                description = "No WiFi connection!\n\nYou MUST have a stable wifi connection to repair your software.\n\n" + \
+                "Please try again later."
+                popup_info.PopupError(self.sm, description)
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 

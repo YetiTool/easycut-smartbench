@@ -23,6 +23,7 @@ class USB_storage(object):
     # For debug
     IS_USB_VERBOSE = False
     
+    poll_usb_event = None
     mount_event = None
     stick_enabled = False
  
@@ -68,7 +69,7 @@ class USB_storage(object):
         self.poll_usb_event = Clock.schedule_interval(self.get_USB, 0.25)
     
     def stop_polling_for_usb(self):
-        Clock.unschedule(self.poll_usb_event)
+        if self.poll_usb_event != None: Clock.unschedule(self.poll_usb_event)
         if self.mount_event != None: Clock.unschedule(self.mount_event)
 
     is_usb_mounted_flag = False

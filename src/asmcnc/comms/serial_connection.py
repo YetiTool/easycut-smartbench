@@ -761,8 +761,8 @@ class SerialConnection(object):
     # This stream_file method waits for an 'ok' before sending the next setting
     # It does not stuff the grbl buffer
     # It is for:
-      # Anything sending EEPROM settings (which require special attention, due to writing of values)
-      # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
+    ## Anything sending EEPROM settings (which require special attention, due to writing of values)
+    ## Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
     
     is_sequential_streaming = False
