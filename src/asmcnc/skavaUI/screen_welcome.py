@@ -43,7 +43,7 @@ Builder.load_string("""
                 font_size: '40sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=455A64]Hi there :-)[/color]'
+                text: '[color=455A64]Starting EasyCut...[/color]'
                 markup: 'True'
 """)
 
