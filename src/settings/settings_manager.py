@@ -83,7 +83,10 @@ class Settings(object):
                     self.update_config()
                     description = str(git_output[-1])
                     return description
-                    
+                
+                elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
+                    return "Could not resolve host: github.com"
+
                 else:
                     return False
 
