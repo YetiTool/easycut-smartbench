@@ -21,8 +21,7 @@ class ShapeCutterJobParameters(object):
  
         self.m = machine
         self.shapecutter_sm = shapecutter_sm
- 
-        self.m.get_grbl_settings()
+        
         self.refresh_parameters()
 
     def refresh_parameters(self):

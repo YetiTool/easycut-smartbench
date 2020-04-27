@@ -61,120 +61,65 @@ class SerialConnection(object):
         print 'Destructor'
 
     def get_serial_screen(self, serial_error):
-        if sys.platform != "win32":
-            if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-                self.sm.get_screen('serialScreen').error_description = serial_error
-                self.sm.current = 'serialScreen'
+
+        if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
+            self.sm.get_screen('serialScreen').error_description = serial_error
+            self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):
-        print('Start to establish connection...')
+
+        log('Start to establish connection...')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
                 self.suppress_error_screens = True
-                return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
-                return False
 
         else:
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
                 for line in filesForDevice: # run through all files
 
-# FLAG: This if statement is only relevant in linux environment. 
+                    # FLAG: This if statement is only relevant in linux environment. 
                     # EITHER: USB Comms hardware
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-
                     # OR: UART Comms hardware
                     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
-                    # When platform is updated, this needs to be moved across to the AMA0 port :)
-                    
+                        # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        return True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
-                return False
+
+        log("Serial connection status: " + str(self.is_connected()))
+
+        if self.is_connected():
+            log('Initialising grbl...')
+            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
     # is serial port connected?
     def is_connected(self):
 
-        if self.s: return True
+        if self.s != None:
+            return True
         else: 
-            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not find serial connection.'), 3)
             return False
 
 
-    def initialise_grbl(self):
-
-        if self.is_connected():
-            print('Initialising grbl...')
-            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
-            Clock.schedule_once(self.start_services, 5) # Delay for grbl to initialize
-
-
+    # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
+        log('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
-        # Clock.schedule_once(self.grbl_scanner, 0)   # Listen for messages from grbl
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
         t.daemon = True
         t.start()
-
-        # Enter any initial settings into this list
-        # We are preparing for a sequential stream since some of these setting commands store data to the EEPROM
-        # When Grbl stores data to EEPROM, the AVR requires all interrupts to be disabled during this write process, including the serial RX ISR.
-        # This means that if a g-code or Grbl $ command writes to EEPROM, the data sent during the write may be lost.
-        # Sequential streaming handles this
-        grbl_settings = [
-#                     '$0=10',    #Step pulse, microseconds
-#                     '$1=25',    #Step idle delay, milliseconds
-#                     '$2=0',           #Step port invert, mask
-#                     '$3=1',           #Direction port invert, mask
-#                     '$4=0',           #Step enable invert, boolean
-#                     '$5=1',           #Limit pins invert, boolean
-#                     '$6=0',           #Probe pin invert, boolean
-#                     '$10=3',          #Status report, mask <----------------------
-#                     '$11=0.010',      #Junction deviation, mm
-#                     '$12=0.002',      #Arc tolerance, mm
-#                     '$13=0',          #Report inches, boolean
-#                     '$20=0',          #Soft limits, boolean <-------------------
-#                     '$21=0',          #Hard limits, boolean <------------------
-#                     '$22=0',          #Homing cycle, boolean <------------------------
-#                     '$23=3',          #Homing dir invert, mask
-#                     '$24=500.0',     #Homing feed, mm/min
-#                     '$25=10000.0',    #Homing seek, mm/min
-#                     '$26=250',        #Homing debounce, milliseconds
-#                     '$27=2.000',      #Homing pull-off, mm
-#                     '$30=1000.0',      #Max spindle speed, RPM
-#                     '$31=0.0',         #Min spindle speed, RPM
-#                     '$32=0',           #Laser mode, boolean
-#                     '$100=62.954',   #X steps/mm
-#                     '$101=68.075',   #Y steps/mm
-#                     '$102=1066.667',   #Z steps/mm
-#                     '$110=10000.0',   #X Max rate, mm/min
-#                     '$111=10000.0',   #Y Max rate, mm/min
-#                     '$112=2000.0',   #Z Max rate, mm/min
-#                     '$120=500.0',    #X Acceleration, mm/sec^2
-#                     '$121=500.0',    #Y Acceleration, mm/sec^2
-#                     '$122=100.0',    #Z Acceleration, mm/sec^2
-#                     '$130=1220.0',   #X Max travel, mm TODO: Link to a settings object
-#                     '$131=2440.0',   #Y Max travel, mm
-#                     '$132=150.0',   #Z Max travel, mm
-                    '$$', # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#' # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
-                    ]
-
-        self.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
-
-        # check version
-        self.m.send_any_gcode_command("$I")
-        # if ENABLE_STATUS_REPORTS:
-            # Clock.schedule_interval(self.poll_status, self.STATUS_INTERVAL)      # Poll for status
-
+        
+        # Clear any hard switch presses that may have happened during boot
+        self.m.resume_from_alarm()  
 
 
 
@@ -190,7 +135,10 @@ class SerialConnection(object):
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
+
     def grbl_scanner(self):
+        
+        log('Running grbl_scanner thread')
 
         while True:
 
@@ -816,7 +764,8 @@ class SerialConnection(object):
       # Anything sending EEPROM settings (which require special attention, due to writing of values)
       # Matching Error/Alarm messages to exact commands (not possible during buffer stuffing)
     # WARNING: this function is not blocking, as such, the is_sequential_streaming flag should be checked before using.
-
+    
+    is_sequential_streaming = False
     _sequential_stream_buffer = []
     _reset_grbl_after_stream = False
 

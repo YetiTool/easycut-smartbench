@@ -7,8 +7,15 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys
+from datetime import datetime
+
 from __builtin__ import True
 from kivy.uix.switch import Switch
+
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
 class RouterMachine(object):
@@ -46,8 +53,6 @@ class RouterMachine(object):
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.s.establish_connection(win_serial_port)
-        print "Serial connection status:", self.s.is_connected()
-        self.s.initialise_grbl()
 
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
@@ -139,7 +144,6 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
-
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
 
@@ -196,57 +200,29 @@ class RouterMachine(object):
 
     def _stop_all_streaming(self):
         # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
+        log('Streaming stopped.')
         if self.s.is_job_streaming == True: self.s.cancel_stream() 
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     def _grbl_resume(self):
+        log('grbl realtime cmd sent: ~ resume')
         self.s.write_realtime('~', altDisplayText = 'Resume')
 
     def _grbl_feed_hold(self):
+        log('grbl realtime cmd sent: ! feed-hold')
         self.s.write_realtime('!', altDisplayText = 'Feed hold')
 
     def _grbl_soft_reset(self):
+        log('grbl realtime cmd sent: \\x18 soft reset')
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def _grbl_door(self):
+        log('grbl realtime cmd sent: \\x84 ~ resume')
         self.s.write_realtime('\x84', altDisplayText = 'Door')
     
     def _grbl_unlock(self):
+        log('grbl realtime cmd sent: $X unlock')
         self.s.write_command('$X', altDisplayText = 'Unlock: $X')
-
-
-
-    # LEGACY COMMANDS:
-    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-    def soft_reset(self):
-        if self.s.is_job_streaming == True: self.s.cancel_stream() # Cancel stream_file to stop it continuing to send stuff after reset
-        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
-        self._grbl_soft_reset()
-    # LEGACY COMMANDS:
-    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-    def hold(self):
-        self.set_pause(True)
-        if not self.state().startswith('Door'): self.door()
-    # LEGACY COMMANDS:
-    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-    def resume(self):
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self._grbl_resume()
-        self.led_restore()
-    # LEGACY COMMANDS:
-    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-    def unlock_after_alarm(self):
-        self._grbl_unlock()
-        # Restore LEDs
-        if sys.platform != "win32":
-            self.s.write_command('AL0', show_in_sys=False, show_in_console=False)
-            self.s.write_command('ALB9', show_in_sys=False, show_in_console=False)
-    # LEGACY COMMANDS:
-    # A V O I D !!!!!!!!!!!!!!!! (needs deletion and test)
-    def door(self):
-        self._grbl_door()
-
-
 
 
 # COMMS
@@ -520,7 +496,7 @@ class RouterMachine(object):
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L110000")
          
-        else: print ("LED Colour denied during stream: " + colour_name + "\n")
+        else: print ("LED Colour denied because streaming: " + colour_name + "\n")
 
 
     def led_restore(self):

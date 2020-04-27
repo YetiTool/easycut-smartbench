@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 import sys, os
+from datetime import datetime
 
 from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 
@@ -198,9 +199,18 @@ Builder.load_string("""
 
 """)
 
+
+def log(message):
+    
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+
+
 class SafetyScreen(Screen):
 
+
     def __init__(self, **kwargs):
+        
         super(SafetyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
@@ -209,10 +219,22 @@ class SafetyScreen(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
-            
+
+
+    def on_enter(self):
+        
+        log('Safety screen UP')
+        
+        
     def go_to_next_screen(self):
+        
         self.sm.current = 'squaring_decision'
         
+        
     def on_leave(self):
+        
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
             self.sm.remove_widget(self.sm.get_screen('safety'))
+            
+
+            
