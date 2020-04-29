@@ -5,7 +5,7 @@ Landing Screen for the Calibration App
 @author: Letty
 '''
 
-import gc
+import sys, os
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -43,7 +43,7 @@ Builder.load_string("""
                 font_size: '40sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=455A64]Starting EasyCut...[/color]'
+                text: '[color=455A64]Starting SmartBench...[/color]'
                 markup: 'True'
 """)
 
@@ -67,10 +67,20 @@ class WelcomeScreenClass(Screen):
     def on_enter(self):
         
         if self.m.s.is_connected():
-            # Allow kivy to have fully loaded before doing any calls which require scheduling
-            Clock.schedule_once(self.m.s.start_services, 3)
-            # Allow time for machine reset sequence
-            Clock.schedule_once(self.go_to_next_screen, 4)
+
+            # PC boot timings
+            if sys.platform == 'win32':
+                # Allow kivy to have fully loaded before doing any calls which require scheduling
+                Clock.schedule_once(self.m.s.start_services, 1)
+                # Allow time for machine reset sequence
+                Clock.schedule_once(self.go_to_next_screen, 2)
+    
+            # RasPi boot timings: note test on hard boot, since hard boot takes longer
+            if sys.platform != 'win32':
+                # Allow kivy to have fully loaded before doing any calls which require scheduling
+                Clock.schedule_once(self.m.s.start_services, 4)
+                # Allow time for machine reset sequence
+                Clock.schedule_once(self.go_to_next_screen, 5)
     
     
     def go_to_next_screen(self, dt):
