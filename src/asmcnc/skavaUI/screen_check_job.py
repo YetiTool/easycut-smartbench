@@ -46,7 +46,7 @@ ERROR_CODES = {
     "error:12" : "(Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
     "error:13" : "Safety door detected as opened and door grbl_state initiated.",
     "error:14" : "(Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
-    "error:15" : "Jog target exceeds machine travel. Command ignored.",
+    "error:15" : "Have you homed the machine yet? If not, please do so next. Jog target exceeds machine travel. Command ignored.",
     "error:16" : "Jog command with no '=' or contains prohibited g-code.",
     "error:17" : "Laser mode requires PWM output.",
     "error:20" : "Unsupported or invalid g-code command found in block.",
