@@ -11,6 +11,9 @@ www.yetitool.com
 import time
 import sys, os
 from datetime import datetime
+import os.path
+from os import path
+
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -60,7 +63,7 @@ from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 
 
 # developer testing
-Cmport = 'COM3'
+Cmport = 'COM4'
 
 # Current version active/working on
 initial_version = 'v1.2.1'
@@ -90,6 +93,7 @@ def check_and_update_config():
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
         check_and_update_gpu_mem()
 
+
 if sys.platform != 'win32':
     
     ## Easycut config
@@ -101,6 +105,7 @@ if sys.platform != 'win32':
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
 
+
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
@@ -108,9 +113,27 @@ def log(message):
 
 class SkavaUI(App):
 
+    def check_and_update_maintenance_values_file(self):
+    
+        values_dir = os.path.join("sb_values")
+        brush_use_file_path = os.path.join(values_dir, 'brush_use.txt')
+        print brush_use_file_path
+        
+        if not os.path.exists(values_dir):
+            log("Creating sb_values dir...")
+            os.mkdir(values_dir)
+    
+        if not path.exists(brush_use_file_path):
+            log("Creating brushes file...")
+            file = open(brush_use_file_path, "w+")
+            file.close()
+
+
     def build(self):
 
-        print("Starting " + time.strftime('%H:%M:%S'))
+        log("Starting...")
+        self.check_and_update_maintenance_values_file()
+        
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
