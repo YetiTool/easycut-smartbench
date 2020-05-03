@@ -832,7 +832,11 @@ class SerialConnection(object):
                 elif realtime == True:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
                     self.s.write(serialCommand)
+
+                # SmartBench maintenance monitoring 
+                self.maintenance_value_logging(serialCommand)
                 
+
             except:
 #                  SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
@@ -909,6 +913,28 @@ class SerialConnection(object):
 #                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
 #                 log('Serial Error: ' + str(serialError))
 ## --------------------------------------------------------------------------------------------------------
+
+    from itertools import groupby
+
+    def maintenance_value_logging(self, serialCommand):
+        
+        # Record spindle up time
+        if serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
+            log("Spindle timer started")
+            self.spindle_start_time = time.time()
+        if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
+            log("Spindle timer stopped")
+            self.spindle_finish_time = time.time()
+            spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
+            try:
+                file = open(self.m.spindle_brush_use_file_path, 'r')
+                existing_value_in_file = file.readline()
+                total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
+                file = open(self.m.spindle_brush_use_file_path, 'w')
+                file.write(str(total_up_seconds))
+                file.close
+            except:
+                log("Unable to write to " + self.m.spindle_brush_use_file_path)
 
 
 

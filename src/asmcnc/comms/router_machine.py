@@ -6,8 +6,10 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
-import sys
+import sys, os
 from datetime import datetime
+import os.path
+from os import path
 
 from __builtin__ import True
 from kivy.uix.switch import Switch
@@ -44,6 +46,11 @@ class RouterMachine(object):
 
     is_machine_paused = False
 
+    # Persistent values setup
+    smartbench_values_dir = 'sb_values'
+    spindle_brush_use_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_use.txt')
+    spindle_brush_max_life_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_max_life.txt')
+    
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -53,6 +60,30 @@ class RouterMachine(object):
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.s.establish_connection(win_serial_port)
+
+        # initialise sb_value files if they don't already exist (to record persistent maintenance values)
+        self.check_presence_of_sb_values_files()
+
+
+    def check_presence_of_sb_values_files(self):
+        
+        # check folder exists
+        if not os.path.exists(self.smartbench_values_dir):
+            log("Creating sb_values dir...")
+            os.mkdir(self.smartbench_values_dir)
+        
+        # check SmartBench value files
+        if not path.exists(self.spindle_brush_use_file_path):
+            log("Creating spindle brushes use file...")
+            file = open(self.spindle_brush_use_file_path, "w+")
+            file.write("0")
+            file.close()
+        if not path.exists(self.spindle_brush_max_life_file_path):
+            log("Creating spindle brushes max life file...")
+            file = open(self.spindle_brush_max_life_file_path, "w+")
+            max_life_in_seconds = 120 * 3600 # hours of life expected, converted to seconds
+            file.write(str(max_life_in_seconds))
+            file.close()
 
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)

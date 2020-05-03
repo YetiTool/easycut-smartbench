@@ -113,26 +113,10 @@ def log(message):
 
 class SkavaUI(App):
 
-    def check_and_update_maintenance_values_file(self):
-    
-        values_dir = os.path.join("sb_values")
-        brush_use_file_path = os.path.join(values_dir, 'brush_use.txt')
-        print brush_use_file_path
-        
-        if not os.path.exists(values_dir):
-            log("Creating sb_values dir...")
-            os.mkdir(values_dir)
-    
-        if not path.exists(brush_use_file_path):
-            log("Creating brushes file...")
-            file = open(brush_use_file_path, "w+")
-            file.close()
-
 
     def build(self):
 
-        log("Starting...")
-        self.check_and_update_maintenance_values_file()
+        log("Starting App:")
         
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
