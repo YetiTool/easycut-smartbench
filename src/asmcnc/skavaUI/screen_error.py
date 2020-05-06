@@ -34,7 +34,7 @@ ERROR_CODES = {
     "error:12" : "(Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
     "error:13" : "Stop bar detected as pressed. Check all four contacts at the stop bar ends are not pressed. Pressing each switch a few times may clear the contact.",
     "error:14" : "(Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
-    "error:15" : "Have you homed the machine yet? If not, please do so next.\nJog target exceeds machine travel. Command ignored.",
+    "error:15" : "Have you homed the machine yet? If not, please do so now.\nJog target exceeds machine travel. Command ignored.",
     "error:16" : "Jog command with no '=' or contains prohibited g-code.",
     "error:17" : "Laser mode requires PWM output.",
     "error:20" : "Unsupported or invalid g-code command found in block.",
