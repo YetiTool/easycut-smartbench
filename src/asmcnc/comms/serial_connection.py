@@ -73,7 +73,7 @@ class SerialConnection(object):
         if sys.platform == "win32":
             try:
                 self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
-                self.suppress_error_screens = True
+                #self.suppress_error_screens = True
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
