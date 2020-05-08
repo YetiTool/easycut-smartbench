@@ -119,7 +119,7 @@ class SerialConnection(object):
         t.start()
         
         # Clear any hard switch presses that may have happened during boot
-        self.m.resume_from_alarm()  
+        self.m.bootup_sequence()  
 
 
 

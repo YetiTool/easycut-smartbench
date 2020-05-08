@@ -222,7 +222,7 @@ class SafetyScreen(Screen):
 
 
     def on_enter(self):
-        
+
         log('Safety screen UP')
         
         
