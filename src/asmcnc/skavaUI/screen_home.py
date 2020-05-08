@@ -100,7 +100,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
-                        on_press: root.m.set_led_colour('ORANGE')
+                        on_press: root.m.set_led_colour('BLUE')
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -350,6 +350,5 @@ class HomeScreen(Screen):
 
         log('DONE')
 
-    def set_led_yellow(self): self.m.set_led_yellow()
-    def set_led_orange(self): self.m.set_led_orange()
+
     

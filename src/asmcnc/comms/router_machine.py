@@ -181,8 +181,7 @@ class RouterMachine(object):
     def resume_after_a_hard_door(self):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        Clock.schedule_once(lambda dt: self.led_restore(),0.2)
-        
+
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
