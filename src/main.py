@@ -60,7 +60,7 @@ from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 
 
 # developer testing
-Cmport = 'COM3'
+Cmport = 'COM4'
 
 # Current version active/working on
 initial_version = 'v1.2.2'

@@ -112,6 +112,8 @@ class HomingScreenPrepare(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
     
+    def on_enter(self):
+        self.m.set_led_colour('ORANGE')
     
     def begin_homing(self):
 
