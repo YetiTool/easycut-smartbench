@@ -919,9 +919,12 @@ class SerialConnection(object):
     def maintenance_value_logging(self, serialCommand):
         
         # Record spindle up time
-        if serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
+        if serialCommand.find('M30') >= 0: 
+            pass
+        elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
             log("Spindle timer started")
             self.spindle_start_time = time.time()
+            
         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
             log("Spindle timer stopped")
             self.spindle_finish_time = time.time()
