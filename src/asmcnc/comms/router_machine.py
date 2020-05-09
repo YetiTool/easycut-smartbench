@@ -153,6 +153,14 @@ class RouterMachine(object):
 
     # REFACTORED START/STOP COMMANDS
 
+    def bootup_sequence(self):
+        self._stop_all_streaming()  # In case alarm happened during boot, stop that
+        self._grbl_soft_reset()     # Reset to get out of Alarm mode.
+        # Now grbl won't allow anything until machine is rehomed or unlocked, so...
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
+#         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.3)
+
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
@@ -204,8 +212,7 @@ class RouterMachine(object):
     def resume_after_a_hard_door(self):
         self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        Clock.schedule_once(lambda dt: self.led_restore(),0.2)
-        
+
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
@@ -218,7 +225,7 @@ class RouterMachine(object):
         self._stop_all_streaming()
         self._grbl_soft_reset() 
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1) # if awaking from an alarm state, to allow other calls to process prior to the ineveitable $H which would normally clear it
-        Clock.schedule_once(lambda dt: self.set_led_colour("MAGENTA"),0.2)
+        Clock.schedule_once(lambda dt: self.set_led_colour("ORANGE"),0.2)
         # Then allow 0.2 seconds for grbl to become receptive after reset
 
     def reset_on_cancel_homing(self):
@@ -535,7 +542,7 @@ class RouterMachine(object):
         # A: It's a realtime command which can be useful when streaming, or grbl is suspended
         # B: It's exception is a bug - when the machine is in suspended DOOR mode, triggered from a hard switch:
         # Send the command at this point means that the flashing will freeze
-        # This can be unforzen by sending any normal led command (asuming that the grbl has been release from suspension ie. with a RESUME)
+        # This can be unfrozen by sending any normal led command (assuming that the grbl has been released from suspension ie. with a RESUME)
         self.s.write_realtime('&', altDisplayText = 'LED restore')
 
         
