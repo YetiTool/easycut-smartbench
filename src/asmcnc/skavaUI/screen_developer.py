@@ -342,7 +342,7 @@ class DeveloperScreen(Screen):
             self.usb_stick.disable()
        
         def move_logs():
-            if self.usb_stick.is_available():
+            if self.usb_stick.is_usb_mounted_flag == True:
                 os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")
                 Clock.schedule_once(lambda dt: disable_USB(), 1)
             else: 
