@@ -306,6 +306,10 @@ class DeveloperScreen(Screen):
     
     def on_enter(self, *args):
         self.scrape_fw_version()
+        self.usb_stick.enable()
+
+    def on_leave(self, *args):
+        self.usb_stick.disable()
         
     def go_back(self):
         self.sm.current = 'lobby'
@@ -336,20 +340,7 @@ class DeveloperScreen(Screen):
 
     def send_logs(self):
         # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-        self.usb_stick.enable()
-
-        def disable_USB():
-            self.usb_stick.disable()
-       
-        def move_logs():
-            if self.usb_stick.is_usb_mounted_flag == True:
-                os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")
-                Clock.schedule_once(lambda dt: disable_USB(), 1)
-            else: 
-                Clock.schedule_once(lambda dt: move_logs(), 0.5)
-
-        Clock.schedule_once(lambda dt: move_logs(), 0.5)
-        
+        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")      
         
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
