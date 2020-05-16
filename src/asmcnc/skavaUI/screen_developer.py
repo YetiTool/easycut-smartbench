@@ -16,7 +16,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
+from asmcnc.comms import usb_storage
 import sys, os
 
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
@@ -64,7 +64,7 @@ Builder.load_string("""
                 disabled: 'true'
                 
             Button:
-                text: 'Send logs'
+                text: 'Download logs'
                 on_press: root.send_logs()
                 
             Button:
@@ -333,7 +333,10 @@ class DeveloperScreen(Screen):
 ## Diagnostics
 
     def send_logs(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+        # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+        self.usb_stick.enable()        
+        os.system("touch /media/usb/smartbench_logs.txt && journalctl > /media/usb/smartbench_logs.txt")
+        self.usb_stick.disable()
 
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
