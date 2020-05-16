@@ -337,7 +337,7 @@ class DeveloperScreen(Screen):
     def send_logs(self):
         # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
         self.usb_stick.enable()        
-        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")
+        os.system("journalctl > smartbench_logs.txt && sudo mv smartbench_logs.txt /media/usb/")
         self.usb_stick.disable()
 
     def email_state(self):
