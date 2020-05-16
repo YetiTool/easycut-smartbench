@@ -11,6 +11,9 @@ www.yetitool.com
 import time
 import sys, os
 from datetime import datetime
+import os.path
+from os import path
+
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -90,6 +93,7 @@ def check_and_update_config():
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
         check_and_update_gpu_mem()
 
+
 if sys.platform != 'win32':
     
     ## Easycut config
@@ -101,6 +105,7 @@ if sys.platform != 'win32':
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
         start_screen = 'pc_alert'
 
+
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
@@ -108,9 +113,11 @@ def log(message):
 
 class SkavaUI(App):
 
+
     def build(self):
 
-        print("Starting " + time.strftime('%H:%M:%S'))
+        log("Starting App:")
+        
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 

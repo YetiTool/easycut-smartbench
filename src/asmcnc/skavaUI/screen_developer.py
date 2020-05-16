@@ -16,7 +16,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-
+from asmcnc.comms import usb_storage
 import sys, os
 
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
@@ -64,7 +64,7 @@ Builder.load_string("""
                 disabled: 'true'
                 
             Button:
-                text: 'Send logs'
+                text: 'Download logs'
                 on_press: root.send_logs()
                 
             Button:
@@ -292,6 +292,8 @@ class DeveloperScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.set = kwargs['settings']
+        
+        self.usb_stick = usb_storage.USB_storage(self.sm)
 
         self.sw_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -304,6 +306,10 @@ class DeveloperScreen(Screen):
     
     def on_enter(self, *args):
         self.scrape_fw_version()
+        self.usb_stick.enable()
+
+    def on_leave(self, *args):
+        self.usb_stick.disable()
         
     def go_back(self):
         self.sm.current = 'lobby'
@@ -333,8 +339,9 @@ class DeveloperScreen(Screen):
 ## Diagnostics
 
     def send_logs(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-
+        # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")      
+        
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
 
