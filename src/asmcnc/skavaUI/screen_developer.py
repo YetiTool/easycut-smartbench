@@ -292,6 +292,8 @@ class DeveloperScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.set = kwargs['settings']
+        
+        self.usb_stick = usb_storage.USB_storage(self.sm)
 
         self.sw_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
