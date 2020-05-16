@@ -337,15 +337,19 @@ class DeveloperScreen(Screen):
     def send_logs(self):
         # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
         self.usb_stick.enable()
-       
-        def move_logs():
-            os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")
-            
+
         def disable_USB():
             self.usb_stick.disable()
+       
+        def move_logs():
+            if self.usb_stick.is_available():
+                os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")
+                Clock.schedule_once(lambda dt: disable_USB(), 1)
+            else: 
+                Clock.schedule_once(lambda dt: move_logs(), 0.5)
 
         Clock.schedule_once(lambda dt: move_logs(), 0.5)
-        Clock.schedule_once(lambda dt: disable_USB(), 1)
+        
         
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
