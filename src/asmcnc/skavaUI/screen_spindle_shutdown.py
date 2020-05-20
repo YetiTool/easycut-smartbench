@@ -10,6 +10,8 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+from kivy.clock import Clock
+from datetime import datetime
 
 
 Builder.load_string("""
@@ -71,6 +73,10 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 
 class SpindeShutdownScreen(Screen):
 
@@ -78,7 +84,9 @@ class SpindeShutdownScreen(Screen):
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'   
     reason_for_shutdown = None
-    
+    time_to_allow_spindle_to_rest = 3
+    poll_interval_between_checking_z_rest = 0.5
+    last_z_pos = 0
     
     def __init__(self, **kwargs):
         
@@ -92,6 +100,28 @@ class SpindeShutdownScreen(Screen):
         self.m.stop_for_a_stream_pause()
         self.m.set_led_colour('ORANGE')
         
+        # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
+        Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
+        
+        
+    def start_polling_for_z_rest(self, dt):
+        
+        self.poll_for_z_rest = Clock.schedule_interval(self.poll_for_z_rest, self.poll_interval_between_checking_z_rest)
+    
+    
+    def poll_for_z_rest(self, dt):
+        
+        # see if z_pos has changed since last check
+        current_z_pos = self.m.z_pos_str()
+        
+        if current_z_pos == self.last_z_pos:
+            # machine has stopped
+            self.poll_for_z_rest.cancel()  # stop polling
+            log('Safely paused')
+            
+        else:
+            self.last_z_pos = current_z_pos
+
     
     
      
