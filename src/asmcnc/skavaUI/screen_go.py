@@ -9,11 +9,12 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from __builtin__ import file, True
 from kivy.clock import Clock, mainthread
+from datetime import datetime
 
 
 import os, sys, time
@@ -40,8 +41,8 @@ Builder.load_string("""
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
     start_stop_button_image:start_stop_button_image
-    grbl_serial_char_capacity:grbl_serial_char_capacity
-    grbl_serial_line_capacity:grbl_serial_line_capacity
+#     grbl_serial_char_capacity:grbl_serial_char_capacity
+#     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
     btn_pause_play: btn_pause_play
@@ -50,7 +51,8 @@ Builder.load_string("""
     run_time_label:run_time_label
     progress_percentage_label:progress_percentage_label
     btn_back_img:btn_back_img
-
+    overload_status_label:overload_status_label
+    
     BoxLayout:
         padding: 0
         spacing: 10
@@ -329,46 +331,64 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding: 00
+                    padding: 20
                     spacing: 20
 
+                    canvas:
+                        Color:
+                            rgba: hex('#FFFFFFFF')
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
                     BoxLayout:
-                        padding: 20
                         size_hint_y: 0.95
-
-                        canvas:
-                            Color:
-                                rgba: hex('#FFFFFFFF')
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
-
                         id: z_height_container
 
 
                     BoxLayout:
                         orientation: 'vertical'
-                        size_hint_y: 0.15
+                        size_hint_y: 0.25
                         padding: 00
-                        spacing: 00
-
+                        spacing: 10
+ 
                         Label:
-                            text: '[color=808080]Comms buffer:[/color]'
+                            halign: 'center'
+                            font_size: '16px' 
+                            text: '[color=808080]Spindle\\noverload:[/color]'
                             markup: True
+                        
+                        Label:
+                            font_size: '32px' 
+                            id: overload_status_label
+                            halign: 'center'
+                            text: '[color=333333]0 %[/color]'
+                            markup: True
+                    
 
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            padding: 00
-                            spacing: 00
-
-                            Label:
-                                id: grbl_serial_char_capacity
-                                text: '[color=808080]A[/color]'
-                                markup: True
-                            Label:
-                                id: grbl_serial_line_capacity
-                                text: '[color=808080]B[/color]'
-                                markup: True
+#                     BoxLayout:
+#                         orientation: 'vertical'
+#                         size_hint_y: 0.15
+#                         padding: 00
+#                         spacing: 00
+# 
+#                         Label:
+#                             text: '[color=808080]Comms buffer:[/color]'
+#                             markup: True
+# 
+#                         BoxLayout:
+#                             orientation: 'horizontal'
+#                             padding: 00
+#                             spacing: 00
+# 
+#                             Label:
+#                                 id: grbl_serial_char_capacity
+#                                 text: '[color=808080]A[/color]'
+#                                 markup: True
+#                             Label:
+#                                 id: grbl_serial_line_capacity
+#                                 text: '[color=808080]B[/color]'
+#                                 markup: True
     
 
         BoxLayout:
@@ -377,6 +397,9 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class GoScreen(Screen):
 
@@ -457,6 +480,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)
 
+        self.update_overload_label(self.m.s.overload_state)
 
 #         self.btn_pause_play.size_hint_y = None
 #         self.btn_pause_play.height = '0dp'
@@ -472,6 +496,18 @@ class GoScreen(Screen):
     def on_leave(self, *args):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
+
+    def update_overload_label(self, state):
+        
+        if state == 0: self.overload_status_label.text = "[color=4CA82B][b]" + str(state) + "[size=25px] %[/size][b][/color]"
+        elif state == 20: self.overload_status_label.text = "[color=E6AA19][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 40: self.overload_status_label.text = "[color=E27A1D][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 60: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 80: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        else: log('Overload state not recognised: ' + str(state))
+        
    
     def start_stop_button_press(self):
        
@@ -492,8 +528,10 @@ class GoScreen(Screen):
             
             popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
+
     def do_nowt(self):
         pass
+
 
     def play_pause_button_press(self):
         

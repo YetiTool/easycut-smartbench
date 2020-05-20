@@ -30,7 +30,7 @@ GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. N
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
 class SerialConnection(object):
@@ -50,6 +50,7 @@ class SerialConnection(object):
     write_realtime_buffer = []
     
     monitor_text_buffer = ""
+    overload_state = 0
 
     def __init__(self, machine, screen_manager):
 
@@ -582,12 +583,12 @@ class SerialConnection(object):
                     # if different from last check
                     if self.serial_chars_available != buffer_info[1]:
                         self.serial_chars_available = buffer_info[1]
-                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
+#                         self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     if self.serial_blocks_available != buffer_info[0]:
                         self.serial_blocks_available = buffer_info[0]
-                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
+#                         self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     # print if change flagged
@@ -632,10 +633,37 @@ class SerialConnection(object):
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
-                            print "Hard " + self.m_state
+                            log("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
-                
+
+                elif part.startswith('Ld:'):
+                    overload_raw_mV = int(part.split(':')[1])
+                    if overload_raw_mV < 750 : overload_mV_equivalent_state = 0
+                    elif overload_raw_mV < 1750 : overload_mV_equivalent_state = 20
+                    elif overload_raw_mV < 3000 : overload_mV_equivalent_state = 40
+                    elif overload_raw_mV < 3750 : overload_mV_equivalent_state = 60
+                    elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
+                    elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
+                    elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
+#                     if overload_raw_mV < 50 : overload_mV_equivalent_state = 0
+#                     elif overload_raw_mV < 100 : overload_mV_equivalent_state = 20
+#                     elif overload_raw_mV < 150 : overload_mV_equivalent_state = 40
+#                     elif overload_raw_mV < 200 : overload_mV_equivalent_state = 60
+#                     elif overload_raw_mV < 250 : overload_mV_equivalent_state = 80
+#                     elif overload_raw_mV < 300 : overload_mV_equivalent_state = 90
+#                     elif overload_raw_mV >= 300 : overload_mV_equivalent_state = 100
+                    else: log("Overload value not recognised")
+                   
+                    if overload_mV_equivalent_state != self.overload_state:  # action if there's a change
+                        self.overload_state = overload_mV_equivalent_state
+                        log("Overload state change: " + str(self.overload_state))
+                    
+                        try:
+                            self.sm.get_screen('go').update_overload_label(self.overload_state)
+                        except:
+                            log('Unable to update_overlaod_state on go screen')
+                            
                 else:
                     continue
 
@@ -755,6 +783,9 @@ class SerialConnection(object):
                 
             elif stripped_message.startswith('ASM CNC'):
                 self.fw_version = stripped_message.split(':')[1]
+
+
+
 
 ## SEQUENTIAL STREAMING
 
