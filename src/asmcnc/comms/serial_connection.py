@@ -51,6 +51,7 @@ class SerialConnection(object):
     
     monitor_text_buffer = ""
     overload_state = 0
+    overload_shutdown_timer_has_started = False
 
     def __init__(self, machine, screen_manager):
 
@@ -638,7 +639,7 @@ class SerialConnection(object):
                             self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
-                    overload_raw_mV = int(part.split(':')[1])
+                    overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
                     if overload_raw_mV < 750 : overload_mV_equivalent_state = 0
                     elif overload_raw_mV < 1750 : overload_mV_equivalent_state = 20
                     elif overload_raw_mV < 3000 : overload_mV_equivalent_state = 40
@@ -646,13 +647,6 @@ class SerialConnection(object):
                     elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
                     elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
                     elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
-#                     if overload_raw_mV < 50 : overload_mV_equivalent_state = 0
-#                     elif overload_raw_mV < 100 : overload_mV_equivalent_state = 20
-#                     elif overload_raw_mV < 150 : overload_mV_equivalent_state = 40
-#                     elif overload_raw_mV < 200 : overload_mV_equivalent_state = 60
-#                     elif overload_raw_mV < 250 : overload_mV_equivalent_state = 80
-#                     elif overload_raw_mV < 300 : overload_mV_equivalent_state = 90
-#                     elif overload_raw_mV >= 300 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
                     if overload_mV_equivalent_state != self.overload_state:  # action if there's a change
@@ -663,6 +657,12 @@ class SerialConnection(object):
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
                         except:
                             log('Unable to update_overlaod_state on go screen')
+
+                    if self.overload_state == 100 and not self.overload_shutdown_timer_has_started:
+
+                        self.poll_for_completion_loop = Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                        self.overload_shutdown_timer_has_started = True
+
                             
                 else:
                     continue
@@ -785,6 +785,16 @@ class SerialConnection(object):
                 self.fw_version = stripped_message.split(':')[1]
 
 
+
+    def check_for_sustained_max_overload(self, dt):
+        
+        self.overload_shutdown_timer_has_started = False  # allow check to happen again in future
+        
+        if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+            self.sm.current = 'spindle_shutdown'
+        else: 
+            pass
+        
 
 
 ## SEQUENTIAL STREAMING
