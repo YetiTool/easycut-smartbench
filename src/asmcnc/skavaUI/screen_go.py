@@ -40,13 +40,11 @@ Builder.load_string("""
     job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
-    start_stop_button_image:start_stop_button_image
+    start_or_pause_button_image:start_or_pause_button_image
 #     grbl_serial_char_capacity:grbl_serial_char_capacity
 #     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
-    btn_pause_play: btn_pause_play
-    play_pause_button_image: play_pause_button_image
     file_data_label:file_data_label
     run_time_label:run_time_label
     progress_percentage_label:progress_percentage_label
@@ -124,26 +122,6 @@ Builder.load_string("""
                                 id: file_data_label
                                 
                             Button:
-                                id: btn_pause_play
-                                size_hint_x: 1
-                                background_color: hex('#F4433600')
-                                on_release:
-                                    self.background_color = hex('#F4433600')
-                                on_press:
-                                    root.play_pause_button_press()                                
-                                    self.background_color = hex('#F44336FF')
-                                BoxLayout:
-                                    padding: 0
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                    Image:
-                                        id: play_pause_button_image
-                                        source: "./asmcnc/skavaUI/img/pause.png"
-                                        center_x: self.parent.center_x
-                                        y: self.parent.y
-                                        size: self.parent.width, self.parent.height
-                                        allow_stretch: True
-                            Button:
                                 id: stop_start
                                 size_hint_x: 1
                                 disabled: True
@@ -151,14 +129,14 @@ Builder.load_string("""
                                 on_release:
                                     self.background_color = hex('#F4433600')
                                 on_press:
-                                    root.start_stop_button_press()
+                                    root.start_or_pause_button_press()
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
-                                        id: start_stop_button_image
+                                        id: start_or_pause_button_image
                                         source: "./asmcnc/skavaUI/img/go.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
@@ -397,24 +375,20 @@ Builder.load_string("""
 
 """)
 
+
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 
 class GoScreen(Screen):
 
-
-    no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
-    job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
-
-    test_property = 0
-    btn_back = ObjectProperty()
-    no_job = True
-    
-    job_filename = StringProperty()
+    job_filename = ""
     job_gcode = []
     
     start_stop_button_press_counter = 0
+
+    no_job = True
     paused = False    
     job_in_progress = False
     
@@ -438,24 +412,24 @@ class GoScreen(Screen):
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_container.add_widget(self.speedOverride)
         
-        
-        #self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
-
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
- 
-        self.job_in_progress = False
 
         
     def on_enter(self, *args):
 
         self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+
+        # All returns to this screen expect the next action to start/resume job
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         
+        # if returning mid way though a job (e.g. if the job was paused)
         if self.job_in_progress == True and self.job_gcode != []:
             self.no_job = False
             self.stop_start.disabled = False
             # If job is in progress
         
+        # if starting job from fresh start        
         elif self.job_in_progress == False and self.job_gcode != []:
             # If job is not in progress, but a job is loaded and ready to go
             self.reset_go_screen_after_job_finished()
@@ -466,34 +440,23 @@ class GoScreen(Screen):
                 self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
             else:
                 self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
-            
+
+            self.feedOverride.feed_norm()
+            self.speedOverride.feed_norm()
+ 
+        # if job has not been loaded (not sure why this would be the case, but who knows right?)
         elif self.job_in_progress == False and self.job_gcode == []:
-            # if job has not been loaded
             self.stop_start.disabled = True
-            self.btn_pause_play.size_hint_y = None
-            self.btn_pause_play.height = '0dp'
-            
-            
-        self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
 
+        # get initial values on screen loading
         self.poll_for_job_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)
-
         self.update_overload_label(self.m.s.overload_state)
 
-#         self.btn_pause_play.size_hint_y = None
-#         self.btn_pause_play.height = '0dp'
-#         self.paused = False
-                        
-#         if self.job_gcode != []:
-#             self.no_job = False
-#             self.stop_start.disabled = False
-#             
-#         else:
-#             self.stop_start.disabled = True
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
+
 
     def on_leave(self, *args):
+
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 
@@ -509,54 +472,31 @@ class GoScreen(Screen):
         else: log('Overload state not recognised: ' + str(state))
         
    
-    def start_stop_button_press(self):
-       
-        self.cancel_to_screen = self.return_to_screen
-        self.start_stop_button_press_counter += 1
+    def start_or_pause_button_press(self):
 
-        if self.start_stop_button_press_counter == 1:
+        # if ready to stop
+        if self.job_in_progress == True:
+            self.paused = True
+            self.sm.get_screen('spindle_shutdown').reason_for_shutdown = "job_pause"
+            self.sm.current = 'spindle_shutdown'
+
+        # if ready to start
+        else:
             self.job_in_progress = True
             self.stream_job()
-            self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
-            #Hide back button
+            self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+
+            # Hide back button
             self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
             self.btn_back.disabled = True
-            
-            self.btn_pause_play.size_hint_y = 1
-            
-        else:
-            
-            popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
 
-
-    def do_nowt(self):
-        pass
-
-
-    def play_pause_button_press(self):
-        
-        self.paused = not self.paused
-        
-        if self.paused == True:
-            self.pause_job()
-            
-        if self.paused == False:
-            self.resume_job()
-
-            
-    def pause_job(self):
-
-        self.paused = True
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-        self.m.stop_for_a_stream_pause()
-        self.job_in_progress = True
    
     def resume_job(self):
  
         self.paused = False
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         self.m.resume_after_a_stream_pause()
         self.job_in_progress = True
+
 
     def return_to_app(self):
 
@@ -571,17 +511,11 @@ class GoScreen(Screen):
         self.paused = False
         
         # Update images
-        self.start_stop_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         
         #Show back button
         self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
         self.btn_back.disabled = False
-
-                
-        # Hide play/pause button
-        self.btn_pause_play.size_hint_y = None
-        self.btn_pause_play.height = '0dp'
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()

@@ -77,6 +77,7 @@ class SpindeShutdownScreen(Screen):
 
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'   
+    reason_for_shutdown = None
     
     
     def __init__(self, **kwargs):
@@ -85,8 +86,14 @@ class SpindeShutdownScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
     
+    
     def on_enter(self):
+        
+        self.m.stop_for_a_stream_pause()
         self.m.set_led_colour('ORANGE')
+        
+    
+    
      
         
         

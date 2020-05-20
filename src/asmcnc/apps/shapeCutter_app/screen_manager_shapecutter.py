@@ -1006,7 +1006,7 @@ class ScreenManagerShapeCutter(object):
         self.sm.current = 'go'
         
         def auto_go(dt):
-            self.sm.get_screen('go').start_stop_button_press()
+            self.sm.get_screen('go').start_or_pause_button_press()
             
         Clock.schedule_once(auto_go, 0.4)
 
