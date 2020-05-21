@@ -51,7 +51,7 @@ class SerialConnection(object):
     
     monitor_text_buffer = ""
     overload_state = 0
-    overload_shutdown_timer_has_started = False
+    is_ready_to_assess_spindle_for_shutdown = True
 
     def __init__(self, machine, screen_manager):
 
@@ -658,11 +658,9 @@ class SerialConnection(object):
                         except:
                             log('Unable to update_overlaod_state on go screen')
 
-                    if self.overload_state == 100 and not self.overload_shutdown_timer_has_started:
-
-                        self.poll_for_completion_loop = Clock.schedule_once(self.check_for_sustained_max_overload, 1)
-                        self.overload_shutdown_timer_has_started = True
-
+                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                        Clock.schedule_once(self.check_for_sustained_max_overload, 1)
                             
                 else:
                     continue
@@ -788,13 +786,11 @@ class SerialConnection(object):
 
     def check_for_sustained_max_overload(self, dt):
         
-        self.overload_shutdown_timer_has_started = False  # allow check to happen again in future
-        
         if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
             self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
             self.sm.current = 'spindle_shutdown'
         else: 
-            pass
+            self.is_ready_to_assess_spindle_for_shutdown = True # allow assessment to happen again in future
         
 
 
