@@ -60,6 +60,7 @@ from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 
 
 # developer testing
@@ -160,6 +161,7 @@ class SkavaUI(App):
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
         welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m)
         spindle_shutdown_screen = screen_spindle_shutdown.SpindeShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
 
 
 
@@ -191,12 +193,14 @@ class SkavaUI(App):
         sm.add_widget(squaring_active_screen)
         sm.add_widget(welcome_screen)
         sm.add_widget(spindle_shutdown_screen)
+        sm.add_widget(stop_or_resume_decision_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = 'welcome'
 #         sm.current = 'spindle_shutdown'
+#         sm.current = 'stop_or_resume_job_decision'
 
         log('Screen manager activated')
         return sm

@@ -477,7 +477,7 @@ class GoScreen(Screen):
         # if ready to stop
         if self.job_in_progress == True:
             self.paused = True
-            self.sm.get_screen('spindle_shutdown').reason_for_shutdown = "job_pause"
+            self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
             self.sm.current = 'spindle_shutdown'
 
         # if ready to start

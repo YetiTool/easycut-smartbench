@@ -80,10 +80,8 @@ def log(message):
 
 class SpindeShutdownScreen(Screen):
 
-
-    cancel_to_screen = 'lobby'   
-    return_to_screen = 'lobby'   
-    reason_for_shutdown = None
+   
+    reason_for_pause = None
     time_to_allow_spindle_to_rest = 3
     poll_interval_between_checking_z_rest = 0.5
     last_z_pos = 0
@@ -117,6 +115,8 @@ class SpindeShutdownScreen(Screen):
         if current_z_pos == self.last_z_pos:
             # machine has stopped
             self.poll_for_z_rest.cancel()  # stop polling
+            self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = self.reason_for_pause
+            self.sm.current = 'stop_or_resume_job_decision'
             log('Safely paused')
             
         else:
