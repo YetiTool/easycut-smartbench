@@ -179,7 +179,7 @@ class QuickCommands(Widget):
             self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
             self.sm.get_screen('go').return_to_screen = 'home'
             self.sm.get_screen('go').cancel_to_screen = 'home'      
-            self.m.set_led_colour('BLUE')
+            self.sm.get_screen('go').pre_enter_for_first_time()
             self.sm.current = 'go'
         
     def is_job_within_bounds(self):

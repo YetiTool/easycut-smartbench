@@ -69,7 +69,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.stop()
+                on_press: root.cancel_job()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -93,7 +93,7 @@ Builder.load_string("""
             Button:
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.resume()
+                on_press: root.resume_job()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -149,14 +149,15 @@ class StopOrResumeDecisionScreen(Screen):
         if self.reason_for_pause == 'job_pause':
             self.pause_reason_label.text = "[color=333333]SmartBench is paused.[/color]" 
             self.pause_description_label.text = "[color=333333]You may resume, or cancel the job at any time.[/color]"
+
     
-    def stop(self):
+    def cancel_job(self):
         
-        pass
+        self.sm.get_screen('go').pre_enter_after_job_cancel()
+        self.sm.current = 'go'
     
     
-    
-    
-    def resume(self):
+    def resume_job(self):
         
-        pass
+        self.sm.get_screen('go').pre_enter_resume_after_pause()
+        self.sm.current = 'go'

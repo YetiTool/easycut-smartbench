@@ -82,7 +82,7 @@ class SpindeShutdownScreen(Screen):
 
    
     reason_for_pause = None
-    time_to_allow_spindle_to_rest = 3
+    time_to_allow_spindle_to_rest = 2
     poll_interval_between_checking_z_rest = 0.5
     last_z_pos = 0
     
@@ -96,16 +96,14 @@ class SpindeShutdownScreen(Screen):
     def on_enter(self):
         
         self.m.stop_for_a_stream_pause()
-        self.m.set_led_colour('ORANGE')
-        
+       
         # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
         Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
         
         
     def start_polling_for_z_rest(self, dt):
         
-        self.poll_for_z_rest = Clock.schedule_interval(self.poll_for_z_rest, self.poll_interval_between_checking_z_rest)
-    
+        self.z_rest_poll = Clock.schedule_interval(self.poll_for_z_rest, self.poll_interval_between_checking_z_rest)
     
     def poll_for_z_rest(self, dt):
         
@@ -114,7 +112,6 @@ class SpindeShutdownScreen(Screen):
         
         if current_z_pos == self.last_z_pos:
             # machine has stopped
-            self.poll_for_z_rest.cancel()  # stop polling
             self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = self.reason_for_pause
             self.sm.current = 'stop_or_resume_job_decision'
             log('Safely paused')
@@ -122,7 +119,10 @@ class SpindeShutdownScreen(Screen):
         else:
             self.last_z_pos = current_z_pos
 
-    
+    def on_leave(self):
+     
+        self.z_rest_poll.cancel()  # stop polling
+
     
      
         

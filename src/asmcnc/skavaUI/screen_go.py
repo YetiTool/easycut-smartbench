@@ -124,7 +124,7 @@ Builder.load_string("""
                             Button:
                                 id: stop_start
                                 size_hint_x: 1
-                                disabled: True
+                                disabled: False
                                 background_color: hex('#F4433600')
                                 on_release:
                                     self.background_color = hex('#F4433600')
@@ -388,9 +388,11 @@ class GoScreen(Screen):
     
     start_stop_button_press_counter = 0
 
-    no_job = True
-    paused = False    
-    job_in_progress = False
+    go_screen_state = None  # job_ready_to_start/job_is_running/job_is_paused
+
+#     # Refactored
+#     paused = False    
+#     job_in_progress = False
     
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
@@ -415,38 +417,66 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
+
+    # PRE-ENTER CONTEXTS: Call one before switching to screen
+    
+    def pre_enter_for_first_time(self, autostart = False):
+
+        self.reset_go_screen_prior_to_job_start()
+        
+        if autostart:
+            self.start_or_pause_button_press()
+
+
+    def pre_enter_resume_after_pause(self):
+        
+        self.m.resume_after_a_stream_pause()
+        self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
+
+
+    def pre_enter_after_job_cancel(self):
+
+        self.m.stop_from_soft_stop_cancel()
+        self.reset_go_screen_prior_to_job_start()
+
+
+        
+
+# TODO: refactor variables
+# paused, job_in_progress
+# TODO: refactor methods
+           
+    
+
+    def reset_go_screen_prior_to_job_start(self):
+
+        # scrape filename title
+        if sys.platform == 'win32':
+            self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
+        else:
+            self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
+        
+        # Reset counter and flags
+        self.go_screen_state = 'job_ready_to_start'  # job_ready_to_start/job_is_running/job_is_paused
+
+        self.m.set_led_colour('BLUE')
+        
+        # Update images
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+        
+        #Show back button
+        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
+        self.btn_back.disabled = False
+        
+        self.feedOverride.feed_norm()
+        self.speedOverride.feed_norm()
+
+
+    # GLOBAL ENTER/LEAVE ACTIONS
         
     def on_enter(self, *args):
 
         self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
-
-        # All returns to this screen expect the next action to start/resume job
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        
-        # if returning mid way though a job (e.g. if the job was paused)
-        if self.job_in_progress == True and self.job_gcode != []:
-            self.no_job = False
-            self.stop_start.disabled = False
-            # If job is in progress
-        
-        # if starting job from fresh start        
-        elif self.job_in_progress == False and self.job_gcode != []:
-            # If job is not in progress, but a job is loaded and ready to go
-            self.reset_go_screen_after_job_finished()
-            self.no_job = False
-            self.stop_start.disabled = False
-
-            if sys.platform == 'win32':
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
-            else:
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
-
-            self.feedOverride.feed_norm()
-            self.speedOverride.feed_norm()
- 
-        # if job has not been loaded (not sure why this would be the case, but who knows right?)
-        elif self.job_in_progress == False and self.job_gcode == []:
-            self.stop_start.disabled = True
 
         # get initial values on screen loading
         self.poll_for_job_progress(0)
@@ -459,89 +489,9 @@ class GoScreen(Screen):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
-
-    def update_overload_label(self, state):
-        
-        if state == 0: self.overload_status_label.text = "[color=4CA82B][b]" + str(state) + "[size=25px] %[/size][b][/color]"
-        elif state == 20: self.overload_status_label.text = "[color=E6AA19][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        elif state == 40: self.overload_status_label.text = "[color=E27A1D][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        elif state == 60: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        elif state == 80: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        else: log('Overload state not recognised: ' + str(state))
-        
-   
-    def start_or_pause_button_press(self):
-
-        # if ready to stop
-        if self.job_in_progress == True:
-            self.paused = True
-            self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
-            self.sm.current = 'spindle_shutdown'
-
-        # if ready to start
-        else:
-            self.job_in_progress = True
-            self.stream_job()
-            self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-
-            # Hide back button
-            self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
-            self.btn_back.disabled = True
-
-   
-    def resume_job(self):
- 
-        self.paused = False
-        self.m.resume_after_a_stream_pause()
-        self.job_in_progress = True
-
-
-    def return_to_app(self):
-
-        self.sm.current = self.cancel_to_screen
             
-    @mainthread
-    def reset_go_screen_after_job_finished(self):
-
-        # Reset counter and flags
-        self.start_stop_button_press_counter = 0
-        self.job_in_progress = False
-        self.paused = False
-        
-        # Update images
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        
-        #Show back button
-        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
-        self.btn_back.disabled = False
-        
-        self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
-        
-    def stream_job(self):
-                
-        if self.job_gcode:
-            
-            # Alternative vac_fix. Not very tidy but will probably work.
-            with_vac_job_gcode = []
-            with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-            with_vac_job_gcode.extend(self.job_gcode)
-            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-            with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
-
-            try:
-                self.m.s.run_job(with_vac_job_gcode)
-                print('Streaming')
-
-            except:
-                print('Stream failed')
-
-        else:
-            print('No file loaded')
- 
+    # SCREEN UPDATES
+    
     def poll_for_job_progress(self, dt):
 
         # % progress    
@@ -574,6 +524,74 @@ class GoScreen(Screen):
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
             
+
+    # Called from serial_connection if change in state seen
+    def update_overload_label(self, state):
+        
+        if state == 0: self.overload_status_label.text = "[color=4CA82B][b]" + str(state) + "[size=25px] %[/size][b][/color]"
+        elif state == 20: self.overload_status_label.text = "[color=E6AA19][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 40: self.overload_status_label.text = "[color=E27A1D][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 60: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 80: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        else: log('Overload state not recognised: ' + str(state))
+
+
+    # GENERAL ACTIONS
+   
+    def start_or_pause_button_press(self):
+
+        log('start/pause button pressed')
+        if self.go_screen_state == 'job_ready_to_start':
+            self._start_running_job()
+        elif self.go_screen_state == 'job_is_running':
+            self._pause_job()
+        else:
+            log('Nothing assigned for this state yet: ' + self.go_screen_state)
+
+
+    def _pause_job(self):
+        
+        self.go_screen_state = 'job_is_paused'  # job_ready_to_start/job_is_running/job_is_paused
+        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        self.sm.current = 'spindle_shutdown'
+        log('Pausing job')
+
+
+    def _start_running_job(self):
+
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        # Hide back button
+        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
+        self.btn_back.disabled = True 
+
+        # Vac_fix. Not very tidy but will probably work.
+        with_vac_job_gcode = []
+        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.extend(self.job_gcode)
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+
+        try:
+            self.m.s.run_job(with_vac_job_gcode)
+            self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
+            log('Job started ok from go screen...')
+
+        except:
+            log('Job start from go screen failed!')
+
+
+
+
+
+    def return_to_app(self):
+
+        self.sm.current = self.cancel_to_screen
+            
+
+
 
         
         
