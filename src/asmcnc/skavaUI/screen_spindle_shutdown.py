@@ -95,8 +95,6 @@ class SpindeShutdownScreen(Screen):
     
     def on_enter(self):
         
-        self.m.stop_for_a_stream_pause()
-       
         # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
         Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
         
