@@ -102,6 +102,10 @@ class SpindeShutdownScreen(Screen):
     
     def on_enter(self):
 
+        log('Pausing job...')
+        self.m.stop_for_a_stream_pause()
+
+        # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None
 
         # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move

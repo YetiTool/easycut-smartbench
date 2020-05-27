@@ -790,8 +790,6 @@ class SerialConnection(object):
         
         if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
             
-            self.m.stop_for_a_stream_pause()
-            
             self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
             self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
             self.sm.current = 'spindle_shutdown'

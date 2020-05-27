@@ -551,9 +551,6 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
-        log('Pausing job...')
-        self.m.stop_for_a_stream_pause()
-        
         self.go_screen_state = 'job_is_paused'  # job_ready_to_start/job_is_running/job_is_paused
 
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
