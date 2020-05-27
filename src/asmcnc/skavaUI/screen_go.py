@@ -430,14 +430,11 @@ class GoScreen(Screen):
 
     def pre_enter_resume_after_pause(self):
         
-        self.m.resume_after_a_stream_pause()
         self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
 
 
     def pre_enter_after_job_cancel(self):
 
-        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen?
-        self.m.stop_from_soft_stop_cancel()
         self.reset_go_screen_prior_to_job_start()
 
 

@@ -152,6 +152,9 @@ class StopOrResumeDecisionScreen(Screen):
     
     def cancel_job(self):
 
+        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen?
+        self.m.stop_from_soft_stop_cancel()
+
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
         if self.return_screen == 'go':
@@ -160,6 +163,8 @@ class StopOrResumeDecisionScreen(Screen):
 
     
     def resume_job(self):
+
+        self.m.resume_after_a_stream_pause()
 
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
 
