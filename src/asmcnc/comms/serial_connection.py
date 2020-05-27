@@ -781,7 +781,7 @@ class SerialConnection(object):
                 
             elif stripped_message.startswith('ASM CNC'):
                 self.fw_version = stripped_message.split(':')[1]
-
+                log('FW version: ' + str(self.fw_version))
 
 
     def check_for_sustained_max_overload(self, dt):
@@ -872,7 +872,7 @@ class SerialConnection(object):
                     self.s.write(serialCommand)
 
                 # SmartBench maintenance monitoring 
-                self.maintenance_value_logging(serialCommand)
+#                 self.maintenance_value_logging(serialCommand)
                 
 
             except:
@@ -952,31 +952,39 @@ class SerialConnection(object):
 #                 log('Serial Error: ' + str(serialError))
 ## --------------------------------------------------------------------------------------------------------
 
-    from itertools import groupby
-
-    def maintenance_value_logging(self, serialCommand):
-        
-        # Record spindle up time
-        if serialCommand.find('M30') >= 0: 
-            pass
-        elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
-            log("Spindle timer started")
-            self.spindle_start_time = time.time()
-            
-        if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
-            log("Spindle timer stopped")
-            self.spindle_finish_time = time.time()
-            spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
-            try:
-                file = open(self.m.spindle_brush_use_file_path, 'r')
-                existing_value_in_file = file.readline()
-                total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
-                file = open(self.m.spindle_brush_use_file_path, 'w')
-                file.write(str(total_up_seconds))
-                file.close
-            except:
-                log("Unable to write to " + self.m.spindle_brush_use_file_path)
 
 
+
+
+
+##### Warning: WIP. 
+# Dangerous conflicts. 
+# E.g. cannot handle an 'M56' command, since it acts on it as if it was an M5!!!!!!
+
+# 
+#     def maintenance_value_logging(self, serialCommand):
+#         
+#         # Record spindle up time
+#         if serialCommand.find('M30') >= 0: 
+#             pass
+#         elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
+#             log("Spindle timer started")
+#             self.spindle_start_time = time.time()
+#             
+#         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
+#             log("Spindle timer stopped")
+#             self.spindle_finish_time = time.time()
+#             spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
+#             try:
+#                 file = open(self.m.spindle_brush_use_file_path, 'r')
+#                 existing_value_in_file = file.readline()
+#                 total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
+#                 file = open(self.m.spindle_brush_use_file_path, 'w')
+#                 file.write(str(total_up_seconds))
+#                 file.close
+#             except:
+#                 log("Unable to write to " + self.m.spindle_brush_use_file_path)
+# 
+# 
 
 

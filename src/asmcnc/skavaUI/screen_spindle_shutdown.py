@@ -85,6 +85,8 @@ class SpindeShutdownScreen(Screen):
     time_to_allow_spindle_to_rest = 2
     poll_interval_between_checking_z_rest = 0.5
     last_z_pos = 0
+    spindle_decel_poll = None
+    z_rest_poll = None
     
     def __init__(self, **kwargs):
         
@@ -94,14 +96,17 @@ class SpindeShutdownScreen(Screen):
     
     
     def on_enter(self):
-        
+
+        self.z_rest_poll = None
+
         # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
-        Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
+        self.spindle_decel_poll = Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
         
         
     def start_polling_for_z_rest(self, dt):
         
         self.z_rest_poll = Clock.schedule_interval(self.poll_for_z_rest, self.poll_interval_between_checking_z_rest)
+
     
     def poll_for_z_rest(self, dt):
         
@@ -117,9 +122,13 @@ class SpindeShutdownScreen(Screen):
         else:
             self.last_z_pos = current_z_pos
 
+
     def on_leave(self):
-     
-        self.z_rest_poll.cancel()  # stop polling
+
+        if self.spindle_decel_poll != None:
+            self.spindle_decel_poll.cancel()
+        if self.z_rest_poll != None:
+            self.z_rest_poll.cancel()  # stop polling
 
     
      

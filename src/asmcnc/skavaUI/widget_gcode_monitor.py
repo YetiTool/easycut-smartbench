@@ -117,11 +117,13 @@ Builder.load_string("""
                     text: 'Hide oks'
                     on_state: root.hide_received_ok = self.state               
                     size_hint_y:0.1
+
+# FOR USER
+                    
                 Button:
                     text: "Settings"
                     on_press: root.send_gcode_preset("$$")
                     size_hint_y:0.1
-
                 Button:
                     text: "Params"
                     on_press: root.send_gcode_preset("$#")
@@ -145,37 +147,37 @@ Builder.load_string("""
  
 ######### START/STOP DEBUG
  
-#  
+  
 #                 Button:
 #                     text: "Reset"
 #                     on_press: root.send_grbl_reset()
 #                     size_hint_y:0.1
-#  
+#   
 #                 Button:
 #                     text: "Door"
 #                     on_press: root.send_grbl_door()
 #                     size_hint_y:0.1
-#  
+#   
 #                 Button:
 #                     text: "Resume"
 #                     on_press: root.send_grbl_resume()
 #                     size_hint_y:0.1
-#  
+#   
 #                 Button:
 #                     text: "Unlock"
 #                     on_press: root.send_grbl_unlock()
 #                     size_hint_y:0.1
-#  
+#   
 #                 Button:
 #                     text: "LED red"
 #                     on_press: root.send_led_red()
 #                     size_hint_y:0.1
-#  
+#   
 #                 Button:
 #                     text: "LED restore"
 #                     on_press: root.send_led_restore()
 #                     size_hint_y:0.1
-#  
+  
 
 ######### END ############
  

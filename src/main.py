@@ -202,7 +202,7 @@ class SkavaUI(App):
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = 'welcome'
-        sm.current = 'lift_z_on_pause_or_not'
+#         sm.current = 'lift_z_on_pause_or_not'
 #         sm.current = 'stop_or_resume_job_decision'
 
         log('Screen manager activated')

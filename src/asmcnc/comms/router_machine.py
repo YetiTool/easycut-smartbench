@@ -107,22 +107,22 @@ class RouterMachine(object):
 
     def fw_can_operate_zUp_on_pause(self):
 
-        log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13')))
-        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13')
+        log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')))
+        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')
     
 
-    def is_machines_fw_version_equal_to_or_greater_than_verison(self, version_to_reference):  # ref_version_parts syntax "x.x.x"
+    def is_machines_fw_version_equal_to_or_greater_than_verison(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
         
         # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
-        machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
-        ref_version_parts = version_to_reference.split('.')[:3]
+        try:
+            machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
+            ref_version_parts = version_to_reference.split('.')[:3]
         
-        # convert values to ints for comparison
-        machine_fw_parts = [int(i) for i in machine_fw_parts]
-        ref_version_parts = [int(i) for i in ref_version_parts]
-        
-        log(machine_fw_parts)
-        log(ref_version_parts)
+            # convert values to ints for comparison
+            machine_fw_parts = [int(i) for i in machine_fw_parts]
+            ref_version_parts = [int(i) for i in ref_version_parts]
+        except:
+            self.s.get_serial_screen("Couldn't process Z head FW value when checking capability: " + str(capability_decription))
         
         if machine_fw_parts[0] > ref_version_parts[0]:
             return True
@@ -296,7 +296,7 @@ class RouterMachine(object):
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def _grbl_door(self):
-        log('grbl realtime cmd sent: \\x84 ~ resume')
+        log('grbl realtime cmd sent: \\x84')
         self.s.write_realtime('\x84', altDisplayText = 'Door')
     
     def _grbl_unlock(self):

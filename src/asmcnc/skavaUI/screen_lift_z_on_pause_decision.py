@@ -124,10 +124,16 @@ class LiftZOnPauseDecisionScreen(Screen):
 
         pass
     
+    
     def decision_no(self):
         
-        pass
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution
+            self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
+        self.sm.current = 'go'
+
     
     def decision_yes(self):
-        
-        pass
+
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution
+            self.m.send_any_gcode_command("M56")  # disables Z lift on pause
+        self.sm.current = 'go'

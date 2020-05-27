@@ -396,7 +396,7 @@ class GoScreen(Screen):
     
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
-
+    loop_for_job_progress = None
 
     def __init__(self, **kwargs):
 
@@ -586,11 +586,10 @@ class GoScreen(Screen):
             log('Job start from go screen failed!')
 
 
-
-
-
     def return_to_app(self):
 
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution
+            self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
         self.sm.current = self.cancel_to_screen
             
 
