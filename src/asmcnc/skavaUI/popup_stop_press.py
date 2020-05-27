@@ -18,6 +18,7 @@ from kivy.uix.image import Image
 
 class PopupStop(Widget):
 
+
     def __init__(self, machine, screen_manager):
         
         self.m = machine
@@ -52,14 +53,14 @@ class PopupStop(Widget):
         resume_button.bind(on_press=popup.dismiss)
         
         popup.open()
+
     
     def machine_reset(self, *args):
         
-        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen?
+        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen? Refactor!
         self.m.stop_from_soft_stop_cancel()
+
 
     def machine_resume(self, *args):
         self.m.resume_after_a_stream_pause()
-        
-        if self.sm.get_screen('go').paused == True:
-            self.sm.get_screen('go').play_pause_button_press()
+

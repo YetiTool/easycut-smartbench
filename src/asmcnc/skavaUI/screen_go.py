@@ -12,7 +12,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file, True
+from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
 
@@ -388,16 +388,13 @@ class GoScreen(Screen):
     
     start_stop_button_press_counter = 0
 
-    go_screen_state = None  # job_ready_to_start/job_is_running/job_is_paused
-
-#     # Refactored
-#     paused = False    
-#     job_in_progress = False
-    
+    is_job_started_already = False
+       
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
     lift_z_on_job_pause = False
+
 
     def __init__(self, **kwargs):
 
@@ -419,7 +416,7 @@ class GoScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
 
-    # PRE-ENTER CONTEXTS: Call one before switching to screen
+### PRE-ENTER CONTEXTS: Call one before switching to screen
     
     def pre_enter_for_first_time(self, autostart = False):
 
@@ -431,22 +428,15 @@ class GoScreen(Screen):
 
     def pre_enter_resume_after_pause(self):
         
-        
-        self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
-
+        pass  # new style assumes machine is resumed on decision screen, and so nothing doing here now
+    
 
     def pre_enter_after_job_cancel(self):
 
         self.reset_go_screen_prior_to_job_start()
 
 
-        
-
-# TODO: refactor variables
-# paused, job_in_progress
-# TODO: refactor methods
-           
-    
+### COMMON SCREEN PREP METHOD
 
     def reset_go_screen_prior_to_job_start(self):
 
@@ -456,8 +446,8 @@ class GoScreen(Screen):
         else:
             self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
         
-        # Reset counter and flags
-        self.go_screen_state = 'job_ready_to_start'  # job_ready_to_start/job_is_running/job_is_paused
+        # Reset flag & light
+        self.is_job_started_already = False
 
         self.m.set_led_colour('BLUE')
         
@@ -472,7 +462,64 @@ class GoScreen(Screen):
         self.speedOverride.feed_norm()
 
 
-    # GLOBAL ENTER/LEAVE ACTIONS
+### GENERAL ACTIONS
+   
+    def start_or_pause_button_press(self):
+
+        log('start/pause button pressed')
+        if self.is_job_started_already:
+            self._pause_job()
+        else:
+            self._start_running_job()
+
+
+    def _pause_job(self):
+
+        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        self.sm.get_screen('spindle_shutdown').return_screen = "go"
+        self.sm.current = 'spindle_shutdown'
+
+
+    def _start_running_job(self):
+
+        self.is_job_started_already = True
+        log('Starting job...')
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        # Hide back button
+        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
+        self.btn_back.disabled = True 
+
+        # Vac_fix. Not very tidy but will probably work.
+        # Also inject zUp-on-pause code if needed
+
+        with_vac_job_gcode = []
+
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.extend(self.job_gcode)
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+
+        try:
+            self.m.s.run_job(with_vac_job_gcode)
+            log('Job started ok from go screen...')
+
+        except:
+            log('Job start from go screen failed!')
+
+
+    def return_to_app(self):
+
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution
+            self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
+        self.sm.current = self.cancel_to_screen
+
+
+### GLOBAL ENTER/LEAVE ACTIONS
         
     def on_enter(self, *args):
 
@@ -490,7 +537,7 @@ class GoScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
             
-    # SCREEN UPDATES
+### SCREEN UPDATES
     
     def poll_for_job_progress(self, dt):
 
@@ -538,65 +585,7 @@ class GoScreen(Screen):
         else: log('Overload state not recognised: ' + str(state))
 
 
-    # GENERAL ACTIONS
-   
-    def start_or_pause_button_press(self):
 
-        log('start/pause button pressed')
-        if self.go_screen_state == 'job_ready_to_start':
-            self._start_running_job()
-        elif self.go_screen_state == 'job_is_running':
-            self._pause_job()
-        else:
-            log('Nothing assigned for this state yet: ' + self.go_screen_state)
-
-
-    def _pause_job(self):
-
-        self.go_screen_state = 'job_is_paused'  # job_ready_to_start/job_is_running/job_is_paused
-
-        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
-        self.sm.get_screen('spindle_shutdown').return_screen = "go"
-        self.sm.current = 'spindle_shutdown'
-
-
-    def _start_running_job(self):
-
-        log('Starting job...')
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        # Hide back button
-        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
-        self.btn_back.disabled = True 
-
-        # Vac_fix. Not very tidy but will probably work.
-        # Also inject zUp-on-pause code if needed
-
-        with_vac_job_gcode = []
-
-        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.extend(self.job_gcode)
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
-        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
-
-        try:
-            self.m.s.run_job(with_vac_job_gcode)
-            self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
-            log('Job started ok from go screen...')
-
-        except:
-            log('Job start from go screen failed!')
-
-
-    def return_to_app(self):
-
-        if self.m.fw_can_operate_zUp_on_pause():  # precaution
-            self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
-        self.sm.current = self.cancel_to_screen
             
 
 
