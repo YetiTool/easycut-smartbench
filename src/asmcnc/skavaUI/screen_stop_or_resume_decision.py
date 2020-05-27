@@ -151,12 +151,18 @@ class StopOrResumeDecisionScreen(Screen):
 
     
     def cancel_job(self):
+
+        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
-        self.sm.get_screen('go').pre_enter_after_job_cancel()
+        if self.return_screen == 'go':
+            self.sm.get_screen('go').pre_enter_after_job_cancel()
         self.sm.current = self.return_screen
-    
+
     
     def resume_job(self):
-        
-        self.sm.get_screen('go').pre_enter_resume_after_pause()
+
+        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
+
+        if self.return_screen == 'go':
+            self.sm.get_screen('go').pre_enter_resume_after_pause()
         self.sm.current = self.return_screen

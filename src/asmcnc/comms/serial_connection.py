@@ -796,9 +796,9 @@ class SerialConnection(object):
             self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
             self.sm.current = 'spindle_shutdown'
 
-        else: # must have just been a blip
+        else: # must have just been a noisy blip
             
-            self.is_ready_to_assess_spindle_for_shutdown = True # allow assessment to happen again in future
+            self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
         
 
 
