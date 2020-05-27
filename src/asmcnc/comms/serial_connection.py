@@ -30,7 +30,7 @@ GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. N
 
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
 class SerialConnection(object):
@@ -50,6 +50,8 @@ class SerialConnection(object):
     write_realtime_buffer = []
     
     monitor_text_buffer = ""
+    overload_state = 0
+    is_ready_to_assess_spindle_for_shutdown = True
 
     def __init__(self, machine, screen_manager):
 
@@ -292,7 +294,7 @@ class SerialConnection(object):
                                        
         elif not self.job_gcode:
             log('Could not start job: File empty')
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
             self.is_job_finished = True
         return
 
@@ -402,7 +404,7 @@ class SerialConnection(object):
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
     
             # reset go screen to go again
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
     
             # send info to the job done screen
             self.sm.current = 'jobdone'
@@ -424,7 +426,7 @@ class SerialConnection(object):
         self._reset_counters()
 
         if not self.m.is_check_mode_enabled:
-            self.sm.get_screen('go').reset_go_screen_after_job_finished()
+            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
             
             # Flush
             self.FLUSH_FLAG = True
@@ -582,12 +584,12 @@ class SerialConnection(object):
                     # if different from last check
                     if self.serial_chars_available != buffer_info[1]:
                         self.serial_chars_available = buffer_info[1]
-                        self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
+#                         self.sm.get_screen('go').grbl_serial_char_capacity.text = "[color=808080]C: " + self.serial_chars_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     if self.serial_blocks_available != buffer_info[0]:
                         self.serial_blocks_available = buffer_info[0]
-                        self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
+#                         self.sm.get_screen('go').grbl_serial_line_capacity.text = "[color=808080]L: " + self.serial_blocks_available + "[/color]"
                         self.print_buffer_status = True # flag to print
 
                     # print if change flagged
@@ -632,10 +634,36 @@ class SerialConnection(object):
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
-                            print "Hard " + self.m_state
+                            log("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
-                
+
+                elif part.startswith('Ld:'):
+                    overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
+                    if overload_raw_mV < 750 : overload_mV_equivalent_state = 0
+                    elif overload_raw_mV < 1750 : overload_mV_equivalent_state = 20
+                    elif overload_raw_mV < 3000 : overload_mV_equivalent_state = 40
+                    elif overload_raw_mV < 3750 : overload_mV_equivalent_state = 60
+                    elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
+                    elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
+                    elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
+                    else: log("Overload value not recognised")
+                   
+                    # update stuff if there's a change
+                    if overload_mV_equivalent_state != self.overload_state:  
+                        self.overload_state = overload_mV_equivalent_state
+                        log("Overload state change: " + str(self.overload_state))
+                    
+                        try:
+                            self.sm.get_screen('go').update_overload_label(self.overload_state)
+                        except:
+                            log('Unable to update_overlaod_state on go screen')
+                    
+                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                        Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                            
                 else:
                     continue
 
@@ -755,6 +783,22 @@ class SerialConnection(object):
                 
             elif stripped_message.startswith('ASM CNC'):
                 self.fw_version = stripped_message.split(':')[1]
+                log('FW version: ' + str(self.fw_version))
+
+
+    def check_for_sustained_max_overload(self, dt):
+        
+        if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+            
+            self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+            self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
+            self.sm.current = 'spindle_shutdown'
+
+        else: # must have just been a noisy blip
+            
+            self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
+        
+
 
 ## SEQUENTIAL STREAMING
 
@@ -834,7 +878,7 @@ class SerialConnection(object):
                     self.s.write(serialCommand)
 
                 # SmartBench maintenance monitoring 
-                self.maintenance_value_logging(serialCommand)
+#                 self.maintenance_value_logging(serialCommand)
                 
 
             except:
@@ -914,31 +958,39 @@ class SerialConnection(object):
 #                 log('Serial Error: ' + str(serialError))
 ## --------------------------------------------------------------------------------------------------------
 
-    from itertools import groupby
-
-    def maintenance_value_logging(self, serialCommand):
-        
-        # Record spindle up time
-        if serialCommand.find('M30') >= 0: 
-            pass
-        elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
-            log("Spindle timer started")
-            self.spindle_start_time = time.time()
-            
-        if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
-            log("Spindle timer stopped")
-            self.spindle_finish_time = time.time()
-            spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
-            try:
-                file = open(self.m.spindle_brush_use_file_path, 'r')
-                existing_value_in_file = file.readline()
-                total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
-                file = open(self.m.spindle_brush_use_file_path, 'w')
-                file.write(str(total_up_seconds))
-                file.close
-            except:
-                log("Unable to write to " + self.m.spindle_brush_use_file_path)
 
 
+
+
+
+##### Warning: WIP. 
+# Dangerous conflicts. 
+# E.g. cannot handle an 'M56' command, since it acts on it as if it was an M5!!!!!!
+
+# 
+#     def maintenance_value_logging(self, serialCommand):
+#         
+#         # Record spindle up time
+#         if serialCommand.find('M30') >= 0: 
+#             pass
+#         elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
+#             log("Spindle timer started")
+#             self.spindle_start_time = time.time()
+#             
+#         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
+#             log("Spindle timer stopped")
+#             self.spindle_finish_time = time.time()
+#             spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
+#             try:
+#                 file = open(self.m.spindle_brush_use_file_path, 'r')
+#                 existing_value_in_file = file.readline()
+#                 total_up_seconds = int(existing_value_in_file) + spindle_session_on_seconds
+#                 file = open(self.m.spindle_brush_use_file_path, 'w')
+#                 file.write(str(total_up_seconds))
+#                 file.close
+#             except:
+#                 log("Unable to write to " + self.m.spindle_brush_use_file_path)
+# 
+# 
 
 

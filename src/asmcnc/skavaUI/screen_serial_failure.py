@@ -183,6 +183,7 @@ Builder.load_string("""
 
 class SerialFailureClass(Screen):
 
+
     # define error description to make kivy happy
     error_description = StringProperty()
     message = StringProperty()
@@ -190,33 +191,32 @@ class SerialFailureClass(Screen):
     reboot_button = ObjectProperty()
     user_instruction = StringProperty()
     button_function = StringProperty()
+
     
     def __init__(self, **kwargs):
+
         super(SerialFailureClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
-#         self.port=kwargs['win_port']
+
 
     def on_enter(self):
-        # use the message to get the error description        
-        #self.error_description = ERROR_CODES.get(self.message, "")
-        
-        if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
-            self.sm.get_screen('go').pause_job()
-            
+
         self.user_instruction = 'Please check that Z head is connected.\n' \
         'If connection with SmartBench has been interrupted, the machine may also need to be restarted.'
+
     
     def reboot_button_press(self):
+
         self.sm.current = 'rebooting'
-            
-#     def reestablish_button_press(self):
-#         self.m.s.establish_connection(self.port)
-#         self.m.s.initialise_grbl()
         
+            
     def return_to_go_screen(self):
+        
         self.sm.current = 'go'
+
         
     def quit_to_home(self):
+
         self.sm.current = 'home' 
         

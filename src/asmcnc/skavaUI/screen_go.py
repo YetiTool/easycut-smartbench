@@ -9,11 +9,12 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
-from __builtin__ import file, True
+from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
+from datetime import datetime
 
 
 import os, sys, time
@@ -39,18 +40,17 @@ Builder.load_string("""
     job_progress_container:job_progress_container
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
-    start_stop_button_image:start_stop_button_image
-    grbl_serial_char_capacity:grbl_serial_char_capacity
-    grbl_serial_line_capacity:grbl_serial_line_capacity
+    start_or_pause_button_image:start_or_pause_button_image
+#     grbl_serial_char_capacity:grbl_serial_char_capacity
+#     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
-    btn_pause_play: btn_pause_play
-    play_pause_button_image: play_pause_button_image
     file_data_label:file_data_label
     run_time_label:run_time_label
     progress_percentage_label:progress_percentage_label
     btn_back_img:btn_back_img
-
+    overload_status_label:overload_status_label
+    
     BoxLayout:
         padding: 0
         spacing: 10
@@ -122,41 +122,21 @@ Builder.load_string("""
                                 id: file_data_label
                                 
                             Button:
-                                id: btn_pause_play
-                                size_hint_x: 1
-                                background_color: hex('#F4433600')
-                                on_release:
-                                    self.background_color = hex('#F4433600')
-                                on_press:
-                                    root.play_pause_button_press()                                
-                                    self.background_color = hex('#F44336FF')
-                                BoxLayout:
-                                    padding: 0
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                    Image:
-                                        id: play_pause_button_image
-                                        source: "./asmcnc/skavaUI/img/pause.png"
-                                        center_x: self.parent.center_x
-                                        y: self.parent.y
-                                        size: self.parent.width, self.parent.height
-                                        allow_stretch: True
-                            Button:
                                 id: stop_start
                                 size_hint_x: 1
-                                disabled: True
+                                disabled: False
                                 background_color: hex('#F4433600')
                                 on_release:
                                     self.background_color = hex('#F4433600')
                                 on_press:
-                                    root.start_stop_button_press()
+                                    root.start_or_pause_button_press()
                                     self.background_color = hex('#F44336FF')
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
-                                        id: start_stop_button_image
+                                        id: start_or_pause_button_image
                                         source: "./asmcnc/skavaUI/img/go.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
@@ -329,46 +309,64 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding: 00
+                    padding: 20
                     spacing: 20
 
+                    canvas:
+                        Color:
+                            rgba: hex('#FFFFFFFF')
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
                     BoxLayout:
-                        padding: 20
                         size_hint_y: 0.95
-
-                        canvas:
-                            Color:
-                                rgba: hex('#FFFFFFFF')
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
-
                         id: z_height_container
 
 
                     BoxLayout:
                         orientation: 'vertical'
-                        size_hint_y: 0.15
+                        size_hint_y: 0.25
                         padding: 00
-                        spacing: 00
-
+                        spacing: 10
+ 
                         Label:
-                            text: '[color=808080]Comms buffer:[/color]'
+                            halign: 'center'
+                            font_size: '16px' 
+                            text: '[color=808080]Spindle\\noverload:[/color]'
                             markup: True
+                        
+                        Label:
+                            font_size: '32px' 
+                            id: overload_status_label
+                            halign: 'center'
+                            text: '[color=333333]0 %[/color]'
+                            markup: True
+                    
 
-                        BoxLayout:
-                            orientation: 'horizontal'
-                            padding: 00
-                            spacing: 00
-
-                            Label:
-                                id: grbl_serial_char_capacity
-                                text: '[color=808080]A[/color]'
-                                markup: True
-                            Label:
-                                id: grbl_serial_line_capacity
-                                text: '[color=808080]B[/color]'
-                                markup: True
+#                     BoxLayout:
+#                         orientation: 'vertical'
+#                         size_hint_y: 0.15
+#                         padding: 00
+#                         spacing: 00
+# 
+#                         Label:
+#                             text: '[color=808080]Comms buffer:[/color]'
+#                             markup: True
+# 
+#                         BoxLayout:
+#                             orientation: 'horizontal'
+#                             padding: 00
+#                             spacing: 00
+# 
+#                             Label:
+#                                 id: grbl_serial_char_capacity
+#                                 text: '[color=808080]A[/color]'
+#                                 markup: True
+#                             Label:
+#                                 id: grbl_serial_line_capacity
+#                                 text: '[color=808080]B[/color]'
+#                                 markup: True
     
 
         BoxLayout:
@@ -378,25 +376,24 @@ Builder.load_string("""
 """)
 
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
+
 class GoScreen(Screen):
 
-
-    no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
-    job_q_dir = 'jobQ/'            # where file is copied if to be used next in job
-
-    test_property = 0
-    btn_back = ObjectProperty()
-    no_job = True
-    
-    job_filename = StringProperty()
+    job_filename = ""
     job_gcode = []
     
     start_stop_button_press_counter = 0
-    paused = False    
-    job_in_progress = False
-    
+
+    is_job_started_already = False
+       
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
+    loop_for_job_progress = None
+    lift_z_on_job_pause = False
 
 
     def __init__(self, **kwargs):
@@ -415,161 +412,133 @@ class GoScreen(Screen):
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_container.add_widget(self.speedOverride)
         
-        
-        #self.my_widget = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
-
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
- 
-        self.job_in_progress = False
 
+
+### PRE-ENTER CONTEXTS: Call one before switching to screen
+    
+    def pre_enter_for_first_time(self, autostart = False):
+
+        self.reset_go_screen_prior_to_job_start()
         
-    def on_enter(self, *args):
+        if autostart:
+            self.start_or_pause_button_press()
 
-        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+
+    def pre_enter_resume_after_pause(self):
         
-        if self.job_in_progress == True and self.job_gcode != []:
-            self.no_job = False
-            self.stop_start.disabled = False
-            # If job is in progress
-        
-        elif self.job_in_progress == False and self.job_gcode != []:
-            # If job is not in progress, but a job is loaded and ready to go
-            self.reset_go_screen_after_job_finished()
-            self.no_job = False
-            self.stop_start.disabled = False
+        pass  # new style assumes machine is resumed on decision screen, and so nothing doing here now
+    
 
-            if sys.platform == 'win32':
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
-            else:
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
-            
-        elif self.job_in_progress == False and self.job_gcode == []:
-            # if job has not been loaded
-            self.stop_start.disabled = True
-            self.btn_pause_play.size_hint_y = None
-            self.btn_pause_play.height = '0dp'
-            
-            
-        self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
+    def pre_enter_after_job_cancel(self):
 
-        self.poll_for_job_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)
+        self.reset_go_screen_prior_to_job_start()
 
 
-#         self.btn_pause_play.size_hint_y = None
-#         self.btn_pause_play.height = '0dp'
-#         self.paused = False
-                        
-#         if self.job_gcode != []:
-#             self.no_job = False
-#             self.stop_start.disabled = False
-#             
-#         else:
-#             self.stop_start.disabled = True
+### COMMON SCREEN PREP METHOD
 
-    def on_leave(self, *args):
-        if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+    def reset_go_screen_prior_to_job_start(self):
 
-   
-    def start_stop_button_press(self):
-       
-        self.cancel_to_screen = self.return_to_screen
-        self.start_stop_button_press_counter += 1
-
-        if self.start_stop_button_press_counter == 1:
-            self.job_in_progress = True
-            self.stream_job()
-            self.start_stop_button_image.source = "./asmcnc/skavaUI/img/stop.png"
-            #Hide back button
-            self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
-            self.btn_back.disabled = True
-            
-            self.btn_pause_play.size_hint_y = 1
-            
+        # scrape filename title
+        if sys.platform == 'win32':
+            self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
         else:
-            
-            popup_stop_press.PopupStop(self.m, self.sm) # POPUP FLAG
-
-    def do_nowt(self):
-        pass
-
-    def play_pause_button_press(self):
+            self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
         
-        self.paused = not self.paused
-        
-        if self.paused == True:
-            self.pause_job()
-            
-        if self.paused == False:
-            self.resume_job()
+        # Reset flag & light
+        self.is_job_started_already = False
 
-            
-    def pause_job(self):
-
-        self.paused = True
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
-        self.m.stop_for_a_stream_pause()
-        self.job_in_progress = True
-   
-    def resume_job(self):
- 
-        self.paused = False
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
-        self.m.resume_after_a_stream_pause()
-        self.job_in_progress = True
-
-    def return_to_app(self):
-
-        self.sm.current = self.cancel_to_screen
-            
-    @mainthread
-    def reset_go_screen_after_job_finished(self):
-
-        # Reset counter and flags
-        self.start_stop_button_press_counter = 0
-        self.job_in_progress = False
-        self.paused = False
+        self.m.set_led_colour('BLUE')
         
         # Update images
-        self.start_stop_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        self.play_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         
         #Show back button
         self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
         self.btn_back.disabled = False
-
-                
-        # Hide play/pause button
-        self.btn_pause_play.size_hint_y = None
-        self.btn_pause_play.height = '0dp'
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
-        
-    def stream_job(self):
-                
-        if self.job_gcode:
-            
-            # Alternative vac_fix. Not very tidy but will probably work.
-            with_vac_job_gcode = []
-            with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-            with_vac_job_gcode.extend(self.job_gcode)
-            with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-            with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
 
-            try:
-                self.m.s.run_job(with_vac_job_gcode)
-                print('Streaming')
 
-            except:
-                print('Stream failed')
+### GENERAL ACTIONS
+   
+    def start_or_pause_button_press(self):
 
+        log('start/pause button pressed')
+        if self.is_job_started_already:
+            self._pause_job()
         else:
-            print('No file loaded')
- 
+            self._start_running_job()
+
+
+    def _pause_job(self):
+
+        self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        self.sm.get_screen('spindle_shutdown').return_screen = "go"
+        self.sm.current = 'spindle_shutdown'
+
+
+    def _start_running_job(self):
+
+        self.is_job_started_already = True
+        log('Starting job...')
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
+        # Hide back button
+        self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
+        self.btn_back.disabled = True 
+
+        # Vac_fix. Not very tidy but will probably work.
+        # Also inject zUp-on-pause code if needed
+
+        with_vac_job_gcode = []
+
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.extend(self.job_gcode)
+        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+
+        try:
+            self.m.s.run_job(with_vac_job_gcode)
+            log('Job started ok from go screen...')
+
+        except:
+            log('Job start from go screen failed!')
+
+
+    def return_to_app(self):
+
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution
+            self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
+        self.sm.current = self.cancel_to_screen
+
+
+### GLOBAL ENTER/LEAVE ACTIONS
+        
+    def on_enter(self, *args):
+
+        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+
+        # get initial values on screen loading
+        self.poll_for_job_progress(0)
+        self.update_overload_label(self.m.s.overload_state)
+
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
+
+
+    def on_leave(self, *args):
+
+        if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+
+            
+### SCREEN UPDATES
+    
     def poll_for_job_progress(self, dt):
 
         # % progress    
@@ -602,6 +571,24 @@ class GoScreen(Screen):
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
             
+
+    # Called from serial_connection if change in state seen
+    def update_overload_label(self, state):
+        
+        if state == 0: self.overload_status_label.text = "[color=4CA82B][b]" + str(state) + "[size=25px] %[/size][b][/color]"
+        elif state == 20: self.overload_status_label.text = "[color=E6AA19][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 40: self.overload_status_label.text = "[color=E27A1D][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 60: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 80: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
+        else: log('Overload state not recognised: ' + str(state))
+
+
+
+            
+
+
 
         
         

@@ -14,7 +14,6 @@ from datetime import datetime
 import os.path
 from os import path
 
-
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
@@ -60,6 +59,9 @@ from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
+from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 
 # developer testing
@@ -159,7 +161,9 @@ class SkavaUI(App):
         homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
         welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m)
-
+        spindle_shutdown_screen = screen_spindle_shutdown.SpindeShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
+        lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
 
 
 
@@ -190,13 +194,18 @@ class SkavaUI(App):
         sm.add_widget(homing_active_screen)
         sm.add_widget(squaring_active_screen)
         sm.add_widget(welcome_screen)
+        sm.add_widget(spindle_shutdown_screen)
+        sm.add_widget(stop_or_resume_decision_screen)
+        sm.add_widget(lift_z_on_pause_decision_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = 'welcome'
+#         sm.current = 'stop_or_resume_job_decision'
 
-        log('Screen manager activated')
+        log('Screen manager activated: ' + str(sm.current))
+
         return sm
 
 if __name__ == '__main__':
