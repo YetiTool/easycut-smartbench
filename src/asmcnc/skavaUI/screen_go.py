@@ -397,6 +397,7 @@ class GoScreen(Screen):
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
+    lift_z_on_job_pause = False
 
     def __init__(self, **kwargs):
 
@@ -568,11 +569,15 @@ class GoScreen(Screen):
 
         # Vac_fix. Not very tidy but will probably work.
         with_vac_job_gcode = []
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
         with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
         with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
         with_vac_job_gcode.extend(self.job_gcode)
         with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
         with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+        if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
+            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
 
         try:
             self.m.s.run_job(with_vac_job_gcode)
