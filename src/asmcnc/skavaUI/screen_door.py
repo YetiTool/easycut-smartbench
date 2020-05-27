@@ -162,6 +162,7 @@ class DoorScreen(Screen):
     
     return_to_screen = 'home'
     cancel_to_screen = 'home'
+
     
     def __init__(self, **kwargs):
     
@@ -179,29 +180,30 @@ class DoorScreen(Screen):
         self.door_text = '[color=000000]Pressing [b]Resume[/b] will cause the machine to continue it\'s normal operation. ' \
                         +'Pressing [b]Cancel[/b] will cancel the current operation completely. [/color]'
 
+
     def on_enter(self):
-        if self.m.s.is_job_streaming == True and self.sm.get_screen('go').paused == False:
-            self.sm.get_screen('go').pause_job()
+
+        pass
+ 
             
     def resume_stream(self):
         
-        if self.return_to_screen == 'go' and str(self.sm.get_screen('go').job_in_progress) == 'True':
-            Clock.schedule_once(lambda dt: self.sm.get_screen('go').resume_job(),0.4)
-            self.return_to_app()
+        self.m.resume_after_a_hard_door()    
+        self.return_to_app()
 
-        else:
-            self.m.resume_after_a_hard_door()    
-            self.return_to_app()
                
     def cancel_stream(self):
+        
         if self.return_to_screen == 'go':
             self.m.s.is_job_streaming = True
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.cancel_after_a_hard_door()
         self.return_to_app()
+
             
     def return_to_app(self):
+        
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen
         else: 

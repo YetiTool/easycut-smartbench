@@ -431,6 +431,7 @@ class GoScreen(Screen):
 
     def pre_enter_resume_after_pause(self):
         
+        
         self.go_screen_state = 'job_is_running'  # job_ready_to_start/job_is_running/job_is_paused
 
 
@@ -568,7 +569,10 @@ class GoScreen(Screen):
         self.btn_back.disabled = True 
 
         # Vac_fix. Not very tidy but will probably work.
+        # Also inject zUp-on-pause code if needed
+
         with_vac_job_gcode = []
+
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
         with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
