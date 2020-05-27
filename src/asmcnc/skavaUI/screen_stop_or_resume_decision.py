@@ -117,8 +117,7 @@ class StopOrResumeDecisionScreen(Screen):
     
     
     reason_for_pause = None
-#     reason_for_pause = 'spindle_overload'
- 
+    return_screen = 'lobby'
     
     def __init__(self, **kwargs):
         
@@ -154,10 +153,10 @@ class StopOrResumeDecisionScreen(Screen):
     def cancel_job(self):
         
         self.sm.get_screen('go').pre_enter_after_job_cancel()
-        self.sm.current = 'go'
+        self.sm.current = self.return_screen
     
     
     def resume_job(self):
         
         self.sm.get_screen('go').pre_enter_resume_after_pause()
-        self.sm.current = 'go'
+        self.sm.current = self.return_screen

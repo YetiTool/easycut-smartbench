@@ -45,7 +45,7 @@ Builder.load_string("""
 
         Label:
             size_hint_y: 1
-            text: '[color=333333]Please wait...[/color]'
+            text: '[color=333333]Please wait.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -80,13 +80,18 @@ def log(message):
 
 class SpindeShutdownScreen(Screen):
 
-   
+    
+    # Vars to preset before calling this screen
     reason_for_pause = None
+    return_screen = 'lobby'
+
+    
     time_to_allow_spindle_to_rest = 2
     poll_interval_between_checking_z_rest = 0.5
     last_z_pos = 0
     spindle_decel_poll = None
     z_rest_poll = None
+
     
     def __init__(self, **kwargs):
         
@@ -116,8 +121,8 @@ class SpindeShutdownScreen(Screen):
         if current_z_pos == self.last_z_pos:
             # machine has stopped
             self.sm.get_screen('stop_or_resume_job_decision').reason_for_pause = self.reason_for_pause
+            self.sm.get_screen('stop_or_resume_job_decision').return_screen = self.return_screen
             self.sm.current = 'stop_or_resume_job_decision'
-            log('Safely paused')
             
         else:
             self.last_z_pos = current_z_pos
@@ -130,6 +135,7 @@ class SpindeShutdownScreen(Screen):
         if self.z_rest_poll != None:
             self.z_rest_poll.cancel()  # stop polling
 
+        self.return_screen = 'lobby'  # in case it's not set properly in the next call, default quit to lobby
     
      
         

@@ -649,7 +649,8 @@ class SerialConnection(object):
                     elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
-                    if overload_mV_equivalent_state != self.overload_state:  # action if there's a change
+                    # update stuff if there's a change
+                    if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state
                         log("Overload state change: " + str(self.overload_state))
                     
@@ -657,7 +658,8 @@ class SerialConnection(object):
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
                         except:
                             log('Unable to update_overlaod_state on go screen')
-
+                    
+                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
@@ -787,9 +789,15 @@ class SerialConnection(object):
     def check_for_sustained_max_overload(self, dt):
         
         if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
+            
+            self.m.stop_for_a_stream_pause()
+            
             self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
+            self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
             self.sm.current = 'spindle_shutdown'
-        else: 
+
+        else: # must have just been a blip
+            
             self.is_ready_to_assess_spindle_for_shutdown = True # allow assessment to happen again in future
         
 

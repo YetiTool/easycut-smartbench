@@ -554,16 +554,19 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
+        log('Pausing job...')
         self.m.stop_for_a_stream_pause()
         
         self.go_screen_state = 'job_is_paused'  # job_ready_to_start/job_is_running/job_is_paused
+
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
+        self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
-        log('Pausing job')
 
 
     def _start_running_job(self):
 
+        log('Starting job...')
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         # Hide back button
         self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
