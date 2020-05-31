@@ -17,7 +17,7 @@ Virtual HW:
 - After clicking play button to enter the go screen, ignore popup errors and click on 'continue anyway'
 
 
-# Build Steps
+# Build steps for Windows 
 Setup of tools that allow you to play with & test out the UI with ease. 
 
 ## Important notes: 
