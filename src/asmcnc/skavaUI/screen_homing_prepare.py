@@ -16,6 +16,8 @@ Builder.load_string("""
 
 <HomingScreenPrepare>:
 
+    instruction_label:instruction_label
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -59,8 +61,9 @@ Builder.load_string("""
                         allow_stretch: True
 
         Label:
-            size_hint_y: 1
-            text: '[color=333333]Ensure SmartBench is clear[/color]'
+            id: instruction_label
+            size_hint_y: 3
+            text: ''
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -114,6 +117,10 @@ class HomingScreenPrepare(Screen):
     
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
+        if self.m.is_squaring_XY_needed_after_homing == True:
+            self.instruction_label.text = '[color=333333]Ensure SmartBench is clear\n& remove extraction hose from Z head.[/color]'
+        else:
+            self.instruction_label.text = '[color=333333]Ensure SmartBench is clear.[/color]'
     
     def begin_homing(self):
 

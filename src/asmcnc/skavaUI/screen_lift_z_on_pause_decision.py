@@ -110,13 +110,12 @@ class LiftZOnPauseDecisionScreen(Screen):
     
     def popup_help(self):
         
-        info = "[b]Allowing SmartBench to lift the Z axis during a pause... (recommended for most tools)[/b]\n\n" \
-                "SmartBench will pause when the pause button is pressed while the job is running, or a stop bar is pushed. " \
-                "Allowing SmartBench to automatically lift the tool, moves it away from the job in the event of a pause. " \
+        info = "[b]Automatic lifting during a pause... (recommended for most tools)[/b]\n\n" \
+                "If paused during a job, SmartBench can be set to automatically lift the Z axis, moving the tool away from the job. " \
                 "This can be useful to inspect the work or clear any blockages. " \
-                "Also, it allows the spindle to decelerate away from the job, avoiding burn marks." \
-                "The tool position will automatically be returned when resuming. " \
-                "Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if lifted (e.g. a biscuit cutter tool profile). " 
+                "Also, it allows the spindle to decelerate away from the job, avoiding burn marks. " \
+                "On resuming, SmartBench automatically handles returning the tool to the correct position before continuing. " \
+                "[b]Do not[/b] allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile). " 
         popup_info.PopupInfo(self.sm, 700, info)
  
     
