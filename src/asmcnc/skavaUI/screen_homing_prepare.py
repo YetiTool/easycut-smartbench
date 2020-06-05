@@ -72,7 +72,7 @@ Builder.load_string("""
             text_size: self.size
 
         Label:
-            size_hint_y: 1
+            size_hint_y: 0.5
             text: '[color=333333]Then, [b]press button[/b] to home.[/color]'
             markup: True
             font_size: '30px' 
