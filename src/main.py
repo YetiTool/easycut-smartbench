@@ -65,7 +65,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v1.2.2'
@@ -96,7 +96,7 @@ def check_and_update_config():
         check_and_update_gpu_mem()
 
 
-if sys.platform != 'win32':
+if sys.platform != 'win32' and sys.platform != 'darwin':
     
     ## Easycut config
     check_and_update_config()

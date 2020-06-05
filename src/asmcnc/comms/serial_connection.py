@@ -79,6 +79,18 @@ class SerialConnection(object):
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
+        elif sys.platform == "darwin":
+            self.suppress_error_screens = True
+            try:
+                filesForDevice = listdir('/dev/') # put all device files into list[]
+                for line in filesForDevice: # run through all files
+                    if (line.startswith('tty.usbmodem')): # look for...   
+                        # When platform is updated, this needs to be moved across to the AMA0 port :)
+                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            except:
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+
         else:
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
@@ -92,6 +104,11 @@ class SerialConnection(object):
                         # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    elif (line[:12] == 'tty.usbmodem'): # look for...   
+                        # When platform is updated, this needs to be moved across to the AMA0 port :)
+                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
