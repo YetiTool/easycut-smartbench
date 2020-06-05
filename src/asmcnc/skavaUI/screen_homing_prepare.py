@@ -82,7 +82,7 @@ Builder.load_string("""
             text_size: self.size
 
         Label:
-            size_hint_y: 1                        
+            size_hint_y: 0.5                        
 
         Button:
             size_hint_y: 4
