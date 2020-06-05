@@ -62,7 +62,7 @@ Builder.load_string("""
 
         Label:
             id: instruction_label
-            size_hint_y: 3
+            size_hint_y: 4
             text: ''
             markup: True
             font_size: '30px' 
