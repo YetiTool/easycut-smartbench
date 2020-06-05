@@ -72,7 +72,7 @@ Builder.load_string("""
             text_size: self.size
 
         Label:
-            size_hint_y: 0.5
+            size_hint_y: 1
             text: '[color=333333]Then, [b]press button[/b] to home.[/color]'
             markup: True
             font_size: '30px' 
@@ -82,10 +82,10 @@ Builder.load_string("""
             text_size: self.size
 
         Label:
-            size_hint_y: 0.5                        
+            size_hint_y: 0.1                       
 
         Button:
-            size_hint_y: 4
+            size_hint_y: 4.9
             background_color: hex('#FFFFFF00')
             on_press: root.begin_homing()
             BoxLayout:
