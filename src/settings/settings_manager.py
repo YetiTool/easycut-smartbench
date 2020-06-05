@@ -38,7 +38,7 @@ class Settings(object):
 
         self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
-        if sys.platform != 'win32':
+        if sys.platform != 'win32' and sys.platform != 'darwin':
 
             if not self.latest_sw_version.startswith('v'): 
                 
@@ -61,13 +61,13 @@ class Settings(object):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
     def get_sw_update_via_wifi(self):
-        if sys.platform != 'win32':       
+        if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
         checkout_success = self.checkout_latest_version()
         return checkout_success
     
     def checkout_latest_version(self):    
-        if sys.platform != 'win32':
+        if sys.platform != 'win32' and sys.platform != 'darwin':
             if self.latest_sw_version != self.sw_version:
                 os.system("cd /home/pi/easycut-smartbench/")
 
