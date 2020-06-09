@@ -12,11 +12,10 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-from __builtin__ import False
 
 Builder.load_string("""
 
-<MaintenanceScreenClass>
+<MaintenanceScreenClass>:
 
     BoxLayout:
         size_hint: (None,None)
@@ -37,9 +36,10 @@ Builder.load_string("""
                 id: tab_panel
                 size_hint: (None,None)
                 height: dp(90)
-                width: dp(142)
+                width: dp(800)
+                pos_hint: {'center_x': .5, 'center_y': .5}
                 do_default_tab: False
-                tab_pos: 'left_top'
+                tab_pos: 'top_left'
                 tab_height: 90
                 tab_width: 142
 
@@ -47,9 +47,12 @@ Builder.load_string("""
                     background_normal: 'asmcnc/maintenance_app/img/laser_datum_tab_blue.png'
                     background_down: 'asmcnc/maintenance_app/img/laser_datum_tab_grey.png'
                     BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(800)
+                        height: dp(390)
                         orientation: "horizontal" 
-                        padding: 0
-                        spacing: 10
+                        padding: (10, 20, 10, 10)
+                        spacing: (10)
                         canvas:
                             Color:
                                 rgba: hex('#E5E5E5FF')
@@ -59,8 +62,9 @@ Builder.load_string("""
 
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(360)
+                            height: dp(370)
                             width: dp(280)
+                            spacing: 10
                             orientation: "vertical"
                             id: left_panel
                             BoxLayout:
@@ -88,8 +92,9 @@ Builder.load_string("""
 
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(360)
+                            height: dp(370)
                             width: dp(270)
+                            spacing: 10
                             orientation: "vertical"
                             id: middle_panel
                             BoxLayout:
@@ -115,29 +120,34 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
 
-                            BoxLayout:
-                                size_hint: (None,None)
-                                height: dp(360)
-                                width: dp(210)
-                                id: z_move_container
-                                canvas:
-                                    Color:
-                                        rgba: 1,1,1,1
-                                    RoundedRectangle:
-                                        size: self.size
-                                        pos: self.pos            
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(360)
+                            width: dp(210)
+                            id: z_move_container
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos            
 
 """)
 
 class MaintenanceScreenClass(Screen):
     
-    info_button = ObjectProperty()
+#     info_button = ObjectProperty()
     
-    screen_number = StringProperty("[b]I[/b]")
-    title_label = StringProperty("[b]Using the app[/b]")
-#     user_instructions = StringProperty()
+#     screen_number = StringProperty("[b]I[/b]")
+#     title_label = StringProperty("[b]Using the app[/b]")
+# #     user_instructions = StringProperty()
     
-    instructions_list = ["Use the Back and Next buttons to move through each section.\n\n",
-                                       "Use the navigation tabs to move between sections.\n\n",
-                                       "Press the [b]i[/b] if you need more information.\n\n",
-                                       "For more help, see the video at www.yetitool.com/support"]
+#     instructions_list = ["Use the Back and Next buttons to move through each section.\n\n",
+#                                        "Use the navigation tabs to move between sections.\n\n",
+#                                        "Press the [b]i[/b] if you need more information.\n\n",
+#                                        "For more help, see the video at www.yetitool.com/support"]
+
+    def __init__(self, **kwargs):
+        super(MaintenanceScreenClass, self).__init__(**kwargs)
+        # self.m=kwargs['machine']
+        self.sm=kwargs['screen_manager']
