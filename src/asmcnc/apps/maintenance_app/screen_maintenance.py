@@ -17,129 +17,132 @@ Builder.load_string("""
 
 <MaintenanceScreenClass>:
 
-    BoxLayout:
+    # BoxLayout:
+    #     size_hint: (None,None)
+    #     width: dp(800)
+    #     height: dp(480)
+    #     padding: 0
+    #     spacing: 0
+    #     orientation: "vertical"
+
+    TabbedPanel:
+        id: tab_panel
         size_hint: (None,None)
-        width: dp(800)
         height: dp(480)
+        width: dp(800)
+        pos: (0, 0)
         padding: 0
         spacing: 0
-        orientation: "vertical"
+        do_default_tab: False
+        tab_pos: 'top_left'
+        tab_height: dp(90)
+        tab_width: dp(142)
 
-        TabbedPanel:
-            id: tab_panel
-            size_hint: (None,None)
-            height: dp(480)
-            width: dp(800)
-            pos: (0, 390)
-            do_default_tab: False
-            tab_pos: 'top_left'
-            tab_height: dp(90)
-            tab_width: dp(142)
+        TabbedPanelItem:
+            background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
 
-            TabbedPanelItem:
-                background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
-                background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(390)
+                orientation: "horizontal" 
+                padding: (10, 10, 10, 20)
+                spacing: (10)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(800)
-                    height: dp(390)
-                    orientation: "horizontal" 
-                    padding: (10, 10, 10, 10)
-                    spacing: (10)
-                    canvas:
-                        Color:
-                            rgba: hex('#E5E5E5FF')
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-
+                    height: dp(360)
+                    width: dp(280)
+                    spacing: 10
+                    orientation: "vertical"
+                    id: left_panel
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(370)
+                        height: dp(70)
                         width: dp(280)
-                        spacing: 10
-                        orientation: "vertical"
-                        id: left_panel
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(70)
-                            width: dp(280)
-                            id: title
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(280)
-                            width: dp(280)
-                            id: button_container
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(370)
-                        width: dp(270)
-                        spacing: 10
-                        orientation: "vertical"
-                        id: middle_panel
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(70)
-                            width: dp(270)
-                            id: on_off_toggle
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(280)
-                            width: dp(270)
-                            id: xy_move_container
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(370)
-                        width: dp(210)
-                        id: z_move_container
+                        id: title
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
                             RoundedRectangle:
                                 size: self.size
-                                pos: self.pos  
-            TabbedPanelItem:
-                background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
-                background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'          
+                                pos: self.pos
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(280)
+                        width: dp(280)
+                        id: button_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(800)
-                    height: dp(390)
-                    orientation: "horizontal" 
-                    padding: (10, 10, 10, 10)
-                    spacing: (10)
+                    height: dp(360)
+                    width: dp(270)
+                    spacing: 10
+                    orientation: "vertical"
+                    id: middle_panel
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(70)
+                        width: dp(270)
+                        id: on_off_toggle
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(280)
+                        width: dp(270)
+                        id: xy_move_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(360)
+                    width: dp(210)
+                    id: z_move_container
                     canvas:
                         Color:
-                            rgba: hex('#E5E5E5FF')
-                        Rectangle:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
                             size: self.size
-                            pos: self.pos
+                            pos: self.pos  
+        TabbedPanelItem:
+            background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'          
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(390)
+                orientation: "horizontal" 
+                padding: (10, 10, 10, 10)
+                spacing: (10)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
 """)
 
 class MaintenanceScreenClass(Screen):
