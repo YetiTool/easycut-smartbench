@@ -31,29 +31,17 @@ Builder.load_string("""
         height: dp(480)
         width: dp(800)
         pos: (0, 0)
-        padding: [-4,-4,-4,-8]
-        spacing: [0,-8]
+        padding: [dp(-2),dp(-2),dp(-2),dp(0)]
+        spacing: [0,dp(-4)]
         do_default_tab: False
         tab_pos: 'top_left'
         tab_height: dp(90)
         tab_width: dp(142)
-        # border: [-4,-4,-4,-4]
-        # canvas:
-        #     Color:
-        #         rgba: hex('#E5E5E5FF')
-        #     Rectangle:
-        #         size: self.size
-        #         pos: self.pos
 
 
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/shapeCutter_app/img/load_tab_blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
-            # border: [dp(-0),dp(-16),dp(0),dp(-16)]
-            # padding: [-16,-16]
-            # spacing: [0,-4]
-            border: [0,0,0,0]
-
 
             BoxLayout:
                 size_hint: (None,None)
@@ -142,8 +130,7 @@ Builder.load_string("""
                             pos: self.pos  
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'          
-            # border: [dp(-16),dp(-16),dp(0),dp(-16)]
+            background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
