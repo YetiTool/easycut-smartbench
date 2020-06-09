@@ -40,7 +40,7 @@ Builder.load_string("""
 
 
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/shapeCutter_app/img/load_tab_blue.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab__blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
 
             BoxLayout:
