@@ -11,19 +11,14 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-from asmcnc.apps.shapeCutter_app.screens import popup_info
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move
 
 Builder.load_string("""
 
 <MaintenanceScreenClass>:
 
-    # BoxLayout:
-    #     size_hint: (None,None)
-    #     width: dp(800)
-    #     height: dp(480)
-    #     padding: 0
-    #     spacing: 0
-    #     orientation: "vertical"
+    xy_move_container: xy_move_container
+    z_move_container: z_move_container
 
     TabbedPanel:
         id: tab_panel
@@ -161,5 +156,12 @@ class MaintenanceScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
-        # self.m=kwargs['machine']
+        self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+
+        self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_container.add_widget(self.xy_move_widget)
+        
+        
+        self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm)
+        self.z_move_container.add_widget(self.z_move_widget)

@@ -202,12 +202,12 @@ class SkavaUI(App):
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-        sm.current = 'welcome'
+        # sm.current = 'welcome'
 #         sm.current = 'go'
 
-        # maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm)
-        # sm.add_widget(maintenance_screen)
-        # sm.current = 'maintenance'
+        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine =m)
+        sm.add_widget(maintenance_screen)
+        sm.current = 'maintenance'
 
 
         log('Screen manager activated: ' + str(sm.current))
