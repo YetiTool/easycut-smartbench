@@ -143,7 +143,8 @@ class LaserDatumButtons(Widget):
     def save_laser_offset(self):
         # need to cleverly calculate from movements & saving calibration from maintenance screen
         self.m.write_z_head_laser_offset_values(103,2) #placeholder
-
+        self.m.read_z_head_laser_offset_values()
+        
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
             self.vacuum_image.source = "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
