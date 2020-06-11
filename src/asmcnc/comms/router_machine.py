@@ -531,8 +531,8 @@ class RouterMachine(object):
         self.s.write_command('G0 G54 Y0')
 
     def jog_spindle_to_laser_datum(self):
-        self.jog_relative('X', self.x_laser_datum_offset, 6000)
-        self.jog_relative('Y', self.y_laser_datum_offset, 6000)
+        self.jog_relative('X', self.laser_offset_x_value, 6000)
+        self.jog_relative('Y', self.laser_offset_y_value, 6000)
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
