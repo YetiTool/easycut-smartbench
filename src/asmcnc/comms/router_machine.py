@@ -70,11 +70,9 @@ class RouterMachine(object):
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
-        # sClock.schedule_once(lambda dt: self.get_persistent_values(), 0.5)
+        self.get_persistent_values()
 
     def check_presence_of_sb_values_files(self):
-        
-
 
         # check folder exists
         if not os.path.exists(self.smartbench_values_dir):
@@ -96,7 +94,8 @@ class RouterMachine(object):
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
-            file.writelines(0,0)
+            file.write("0")
+            file.write("0")
             file.close()
 
     def get_persistent_values(self):
