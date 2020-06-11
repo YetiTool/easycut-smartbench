@@ -48,12 +48,12 @@ class RouterMachine(object):
     is_machine_paused = False
 
     # Persistent values setup
-    smartbench_values_dir = 'sb_values'
+    smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
 
-    spindle_brush_use_file_path = ('/home/pi/easycut-smartbench/src').join(smartbench_values_dir, 'spindle_brush_use.txt')
-    spindle_brush_max_life_file_path = ('/home/pi/easycut-smartbench/src').join(smartbench_values_dir, 'spindle_brush_max_life.txt')
+    spindle_brush_use_file_path = smartbench_values_dir.join('spindle_brush_use.txt')
+    spindle_brush_max_life_file_path = smartbench_values_dir.join('spindle_brush_max_life.txt')
     
-    z_head_laser_offset_file_path = ('/home/pi/easycut-smartbench/src').join(smartbench_values_dir, 'z_head_laser_offset.txt')
+    z_head_laser_offset_file_path = smartbench_values_dir.join('z_head_laser_offset.txt')
 
     laser_offset_x_value = 0
     laser_offset_y_value = 0
