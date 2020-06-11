@@ -104,7 +104,7 @@ class RouterMachine(object):
     def read_z_head_laser_offset_values(self):
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
-            [self.laser_offset_x_value, self.laser_offset_y_value] = file.readlines()
+            [self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
             print self.laser_offset_x_value
             print self.laser_offset_y_value
             file.close
