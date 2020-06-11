@@ -274,7 +274,7 @@ Builder.load_string("""
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
-                            root.maintenace_app()
+                            root.maintenance_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             padding: 0
