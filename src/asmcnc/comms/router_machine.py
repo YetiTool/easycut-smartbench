@@ -457,7 +457,7 @@ class RouterMachine(object):
     def set_x_datum_with_laser(self):
         self.jog_spindle_to_laser_datum()
         
-        def wait_for_movement_to_complete(self, dt):
+        def wait_for_movement_to_complete(dt):
             if not self.state() == 'Jog':
                 Clock.unschedule(self.poll_for_success)
                 self.set_x_datum()
