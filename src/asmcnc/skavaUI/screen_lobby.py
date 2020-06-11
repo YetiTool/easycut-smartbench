@@ -254,7 +254,77 @@ Builder.load_string("""
                         font_size: '25sp'
                         text: 'Developer'
                         markup: True
-                        
+
+            # Carousel pane 4
+            BoxLayout:
+                orientation: 'horizontal'
+                padding: [100, 90, 100, 50]
+                spacing: 20
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+    
+                    Button:
+                        size_hint_y: 8
+                        id: load_button
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.maintenace_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/lobby_update.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'TEST MAINTENANCE'
+                
+                
+                # BoxLayout:
+                #     orientation: 'vertical'
+                #     size_hint_x: 1
+                #     spacing: 20
+    
+                #     Button:
+                #         size_hint_y: 8
+                #         id: load_button
+                #         disabled: False
+                #         background_color: hex('#FFFFFF00')
+                #         on_release: 
+                #             self.background_color = hex('#FFFFFF00')
+                #         on_press:
+                #             root.developer_app()
+                #             self.background_color = hex('#FFFFFF00')
+                #         BoxLayout:
+                #             padding: 0
+                #             size: self.parent.size
+                #             pos: self.parent.pos
+                #             Image:
+                #                 id: image_select
+                #                 source: "./asmcnc/skavaUI/img/lobby_developer.png"
+                #                 center_x: self.parent.center_x
+                #                 center_y: self.parent.center_y
+                #                 size: self.parent.width, self.parent.height
+                #                 allow_stretch: True 
+                #     Label:
+                #         size_hint_y: 1
+                #         font_size: '25sp'
+                #         text: 'DUMMY'
+                #         markup: True
+                       
         BoxLayout:
             size_hint_y: 6
             size: self.parent.size
@@ -388,3 +458,6 @@ class LobbyScreen(Screen):
     
     def developer_app(self):
         popup_info.PopupDeveloper(self.sm)
+
+    def maintenance_app(self):
+        self.am.start_maintenance_app() 
