@@ -112,9 +112,6 @@ class RouterMachine(object):
             log("Unable to read z head laser offset values")
 
     def write_z_head_laser_offset_values(self, X, Y):
-        
-        print (str(X + "\n" + Y))
-
         try:
             file = open(self.z_head_laser_offset_file_path, "w")
             file.write(str(X) + "\n" + str(Y))
