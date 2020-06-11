@@ -69,13 +69,14 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-        self.check_presence_of_sb_values_files()
-        self.get_persistent_values()
+        if sys.platform != "win32" and sys.platform != "darwin":
+            self.check_presence_of_sb_values_files()
+            self.get_persistent_values()
 
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
-        if not os.path.exists(self.smartbench_values_dir):
+        if not path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
         
@@ -111,11 +112,13 @@ class RouterMachine(object):
             log("Unable to read z head laser offset values")
 
     def write_z_head_laser_offset_values(self, X, Y):
+        
+        print (str(X + "\n" + Y))
+
         try:
-            # file = open(self.z_head_laser_offset_file_path, "w")
-            print (str(X + "\n" + Y))
-            # file.write(str(X + "\n" + Y))
-            # file.close()
+            file = open(self.z_head_laser_offset_file_path, "w")
+            file.write(str(X) + "\n" + str(Y))
+            file.close()
         except: 
             log("Unable to write z head laser offset values")
 
