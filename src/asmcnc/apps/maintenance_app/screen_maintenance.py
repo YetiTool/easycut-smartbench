@@ -11,7 +11,8 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons
+from asmcnc.apps.maintenance_app import widget_maintenance_laser_switch
 
 Builder.load_string("""
 
@@ -19,6 +20,8 @@ Builder.load_string("""
 
     xy_move_container: xy_move_container
     z_move_container: z_move_container
+    button_container: button_container
+    switch_container: switch_container
 
     TabbedPanel:
         id: tab_panel
@@ -70,6 +73,22 @@ Builder.load_string("""
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
+                        BoxLayout: 
+                            size_hint: (None, None)
+                            height: dp(70)
+                            width: dp(280)
+                            padding: [dp(30),0,dp(30),0]
+                            Label: 
+                                color: 0,0,0,1
+                                font_size: dp(22)
+                                markup: True
+                                halign: "center"
+                                valign: "middle"
+                                text_size: self.size
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                text: "[b]SET LASER DATUM[/b]" 
+
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(280)
@@ -93,7 +112,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(70)
                         width: dp(270)
-                        id: on_off_toggle
+                        id: switch_container
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -139,6 +158,42 @@ Builder.load_string("""
                     Rectangle:
                         size: self.size
                         pos: self.pos
+        TabbedPanelItem:
+            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            disabled: 'True'
+        TabbedPanelItem:
+            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            disabled: 'True'
+
+        TabbedPanelItem:
+            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'     
+            disabled: 'True'
+
+    BoxLayout: 
+        size_hint: (None,None)
+        pos: (dp(710), dp(390))
+        Button:
+            size_hint: (None,None)
+            height: dp(90)
+            width: dp(90)
+            background_color: [0,0,0,0]
+            center: self.parent.center
+            pos: self.parent.pos
+            on_press: root.quit_to_lobby()
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
 """)
 
 class MaintenanceScreenClass(Screen):
@@ -162,6 +217,15 @@ class MaintenanceScreenClass(Screen):
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         
-        
         self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm)
         self.z_move_container.add_widget(self.z_move_widget)
+
+        self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm)
+        self.button_container.add_widget(self.laser_datum_buttons_widget)
+
+        self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
+        self.switch_container.add_widget(self.laser_switch_widget)
+
+
+    def quit_to_lobby(self):
+        self.sm.current = 'lobby'

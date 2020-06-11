@@ -29,7 +29,6 @@ Builder.load_string("""
         orientation: 'vertical'
         padding: 10
         spacing: 10
-        # pos_hint: {'x': 0.5, 'y': 0.5}
         
         GridLayout:
             cols: 3
@@ -39,29 +38,10 @@ Builder.load_string("""
             height: self.width
     
 
-            # go x datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.go_x_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/go_datum_x.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True               
-            
-
+                pos: self.parent.pos                               
 
             Button:
                 background_color: hex('#F4433600')
@@ -83,27 +63,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
 
-            # go y datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.go_y_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/go_datum_y.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True  
                             
             Button:
                 background_color: hex('#F4433600')
@@ -162,27 +125,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
 
-            # set x datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.set_x_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/set_datum_x.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True               
+                pos: self.parent.pos  
 
             Button:
                 background_color: hex('#F4433600')
@@ -206,52 +152,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
 
-            # set y datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.set_y_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         padding: 0
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/set_datum_y.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True   
-                
-        # BoxLayout:
-        #     orientation: 'horizontal'
-        #     spacing: 10
-
-            # Button:
-            #     background_color: hex('#F4433600')
-            #     on_release: 
-            #         self.background_color = hex('#F4433600')
-            #     on_press: 
-            #         root.set_standby_to_pos()
-            #         self.background_color = hex('#F44336FF')
-            #     BoxLayout:
-            #         padding: 0
-            #         size: self.parent.size
-            #         pos: self.parent.pos      
-            #         Image:
-            #             source: "./asmcnc/skavaUI/img/set_park.png"
-            #             center_x: self.parent.center_x
-            #             y: self.parent.y
-            #             size: self.parent.width, self.parent.height
-            #             allow_stretch: True            
-
-        
+                pos: self.parent.pos 
 """)
     
 
@@ -270,29 +174,26 @@ class MaintenanceXYMove(Widget):
     def jogModeCycled(self):
 
         self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 6 == 0: 
+        if self.jog_mode_button_press_counter % 5 == 0: 
             self.jogMode = 'free'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 6 == 1: 
-            self.jogMode = 'job'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_box.png'
-        if self.jog_mode_button_press_counter % 6 == 2: 
+        if self.jog_mode_button_press_counter % 5 == 1: 
             self.jogMode = 'plus_10'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 6 == 3: 
+        if self.jog_mode_button_press_counter % 5 == 2: 
             self.jogMode = 'plus_1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 6 == 4: 
+        if self.jog_mode_button_press_counter % 5 == 3: 
             self.jogMode = 'plus_0-1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 6 == 5: 
+        if self.jog_mode_button_press_counter % 5 == 4: 
             self.jogMode = 'plus_0-01'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
     
     def buttonJogXY(self, case):
 
-        x_feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogX
-        y_feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogY
+        x_feed_speed = 6000/5
+        y_feed_speed = 6000/5
         
         if self.jogMode == 'free':
             if case == 'X-': self.m.jog_absolute_single_axis('X', 
@@ -346,39 +247,3 @@ class MaintenanceXYMove(Widget):
     def cancelXYJog(self):
         if self.jogMode == 'free': 
             self.m.quit_jog()
-        
-#             if self.m.quit_jog() == True:
-# #                 self.m.quit_jog()
-#                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
-
-    def set_workzone_to_pos_xy(self):
-        warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
-    
-    def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
-
-    def go_x_datum(self):
-        if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
-        else:
-            self.m.go_x_datum()
-
-    def go_y_datum(self):
-        if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
-        else:
-            self.m.go_y_datum()
-
-    def set_x_datum(self):
-        warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'X', warning)
-
-    def set_y_datum(self):
-        warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'Y', warning)
