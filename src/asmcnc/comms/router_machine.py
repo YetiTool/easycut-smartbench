@@ -70,7 +70,7 @@ class RouterMachine(object):
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
-        self.get_persistent_values()
+        Clock.schedule_once(lambda dt: self.get_persistent_values(), 0.5)
 
     def check_presence_of_sb_values_files(self):
         
@@ -94,8 +94,7 @@ class RouterMachine(object):
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
-            file.write("0")
-            file.write("0")
+            file.writelines(0,0)
             file.close()
 
     def get_persistent_values(self):
@@ -112,11 +111,10 @@ class RouterMachine(object):
     def write_z_head_laser_offset_values(self, X, Y):
         try:
             file = open(self.z_head_laser_offset_file_path, "w")
-            file.write(X)
-            file.write(Y)
+            file.writelines(X,Y)
             file.close()
         except: 
-            log("Unable to read z head laser offset values")
+            log("Unable to write z head laser offset values")
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):
