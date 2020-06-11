@@ -70,7 +70,7 @@ class RouterMachine(object):
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
-        Clock.schedule_once(lambda dt: self.get_persistent_values(), 0.5)
+        # sClock.schedule_once(lambda dt: self.get_persistent_values(), 0.5)
 
     def check_presence_of_sb_values_files(self):
         
