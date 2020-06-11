@@ -456,7 +456,7 @@ class RouterMachine(object):
 
     def set_x_datum_with_laser(self):
         self.jog_spindle_to_laser_datum()
-        # self.set_x_datum()
+        Clock.schedule_once(lambda dt: self.set_x_datum(), 1.5)
 
     def set_y_datum_with_laser(self):
         self.jog_spindle_to_laser_datum()
