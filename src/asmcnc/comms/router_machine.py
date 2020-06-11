@@ -94,8 +94,7 @@ class RouterMachine(object):
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
-            file.write("0")
-            file.write("0")
+            file.write("0" + "/n" + "0")
             file.close()
 
     def get_persistent_values(self):
