@@ -138,10 +138,11 @@ class LaserDatumButtons(Widget):
         self.sm=kwargs['screen_manager']
 
     def reset_laser_offset(self):
-        pass
+        self.m.write_z_head_laser_offset_values(100,0)
 
     def save_laser_offset(self):
-        pass
+        # need to cleverly calculate from movements & saving calibration from maintenance screen
+        self.m.write_z_head_laser_offset_values(103,2) #placeholder
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 

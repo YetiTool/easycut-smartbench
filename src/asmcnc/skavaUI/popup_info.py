@@ -73,7 +73,8 @@ class PopupDatum(Widget):
         def go_datum(*args):
     
             if xy == 'X':
-                self.m.set_x_datum()
+                self.m.set_x_datum_with_laser() #testing!!
+                # self.m.set_x_datum()
             elif xy == 'Y':
                 self.m.set_y_datum()
                 

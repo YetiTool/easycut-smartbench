@@ -49,9 +49,15 @@ class RouterMachine(object):
 
     # Persistent values setup
     smartbench_values_dir = 'sb_values'
+
     spindle_brush_use_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_use.txt')
     spindle_brush_max_life_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_max_life.txt')
     
+    z_head_laser_offset_file_path = os.path.join(smartbench_values_dir, 'z_head_laser_offset.txt')
+
+    laser_offset_x_value = 0
+    laser_offset_y_value = 0
+
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -64,7 +70,7 @@ class RouterMachine(object):
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
-
+        self.get_persistent_values()
 
     def check_presence_of_sb_values_files(self):
         
@@ -85,7 +91,32 @@ class RouterMachine(object):
             max_life_in_seconds = 120 * 3600 # hours of life expected, converted to seconds
             file.write(str(max_life_in_seconds))
             file.close()
+        if not path.exists(self.z_head_laser_offset_file_path):
+            log("Creating z head laser offset file...")
+            file = open(self.z_head_laser_offset_file_path, "w+")
+            file.write("0")
+            file.write("0")
+            file.close()
 
+    def get_persistent_values(self):
+        self.read_z_head_laser_offset_values()
+
+    def read_z_head_laser_offset_values(self):
+        try:
+            file = open(self.z_head_laser_offset_file_path, 'r')
+            [self.laser_offset_x_value, self.laser_offset_y_value] = file.readlines()
+            file.close
+        except: 
+            log("Unable to read z head laser offset values")
+
+    def write_z_head_laser_offset_values(self, X, Y):
+        try:
+            file = open(self.z_head_laser_offset_file_path, "w")
+            file.write(X)
+            file.write(Y)
+            file.close()
+        except: 
+            log("Unable to read z head laser offset values")
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):
@@ -419,7 +450,19 @@ class RouterMachine(object):
     def set_y_datum(self):
         self.s.write_command('G10 L20 P1 Y0')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
-                
+
+    def set_workzone_to_pos_xy_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        self.set_workzone_to_pos_xy()
+
+    def set_x_datum_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        self.set_x_datum()
+
+    def set_y_datum_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        self.set_y_datum()
+
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
@@ -485,6 +528,10 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+
+    def jog_spindle_to_laser_datum(self):
+        self.jog_relative('X', self.x_laser_datum_offset, 6000)
+        self.jog_relative('Y', self.y_laser_datum_offset, 6000)
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
