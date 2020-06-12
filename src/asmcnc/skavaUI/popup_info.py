@@ -71,15 +71,13 @@ class PopupDatum(Widget):
 
         def on_checkbox_active(checkbox, value):
           if value: 
-            laser = True
-            print('The checkbox', checkbox, 'is active')
+            popup.laser = True
           else:
-            laser = False
-            print('The checkbox', checkbox, 'is inactive')
+            popup.laser = False
 
         def set_datum(*args):
-            if laser == False: 
 
+            if popup.laser == False: 
               print "setting datum without laser"
 
               if xy == 'X':
@@ -89,8 +87,7 @@ class PopupDatum(Widget):
               elif xy == 'XY':
                   self.m.set_workzone_to_pos_xy()
 
-            if laser == True: 
-
+            elif popup.laser == True: 
               print "setting datum with laser"
 
               if xy == 'X':
