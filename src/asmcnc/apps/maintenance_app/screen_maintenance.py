@@ -209,6 +209,11 @@ class MaintenanceScreenClass(Screen):
 #                                        "Press the [b]i[/b] if you need more information.\n\n",
 #                                        "For more help, see the video at www.yetitool.com/support"]
 
+
+    laser_datum_reset_coordinate_x = 0
+    laser_datum_reset_coordinate_y = 0
+
+
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
         self.m=kwargs['machine']

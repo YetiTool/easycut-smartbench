@@ -34,27 +34,6 @@ Builder.load_string("""
             height: self.width
 
             BoxLayout: 
-				size: self.parent.size
-                pos: self.parent.pos 
-                Button:
-                    size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
-                    background_color: [0,0,0,0]
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    on_press: root.reset_laser_offset()
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/apps/maintenance_app/img/reset_button_120.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-            BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos 
                 ToggleButton:
@@ -103,6 +82,28 @@ Builder.load_string("""
                             allow_stretch: True 
 
             BoxLayout: 
+                size: self.parent.size
+                pos: self.parent.pos 
+                Button:
+                    size_hint: (None,None)
+                    height: dp(120)
+                    width: dp(120)
+                    background_color: [0,0,0,0]
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.reset_laser_offset()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/maintenance_app/img/reset_button_120.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+            BoxLayout: 
 				size: self.parent.size
                 pos: self.parent.pos 
                 Button:
@@ -138,11 +139,15 @@ class LaserDatumButtons(Widget):
         self.sm=kwargs['screen_manager']
 
     def reset_laser_offset(self):
-        self.m.write_z_head_laser_offset_values(100,0)
+        self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.pos_x
+        self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y = self.m.pos_y
 
     def save_laser_offset(self):
         # need to cleverly calculate from movements & saving calibration from maintenance screen
-        self.m.write_z_head_laser_offset_values(103,2) #placeholder
+        z_head_laser_offset_x = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x - self.m.pos_x
+        z_head_laser_offset_y = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.pos_y
+
+        self.m.write_z_head_laser_offset_values(z_head_laser_offset_x, z_head_laser_offset_y) #placeholder
         self.m.read_z_head_laser_offset_values()
         
     def set_vacuum(self):
