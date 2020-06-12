@@ -212,6 +212,8 @@ class MaintenanceScreenClass(Screen):
 
     laser_datum_reset_coordinate_x = 0
     laser_datum_reset_coordinate_y = 0
+    laser_datum_offset = 0
+    laser_datum_offset = 0
 
 
     def __init__(self, **kwargs):
