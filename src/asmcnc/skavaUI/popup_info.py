@@ -66,6 +66,7 @@ class PopupDatum(Widget):
         self.m = machine
         
         description = warning_message
+        chk_message = "Use laser datum?"
         laser = False
 
         def on_checkbox_active(checkbox, value):
@@ -96,6 +97,7 @@ class PopupDatum(Widget):
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
         checkbox = CheckBox()
 
 
@@ -110,11 +112,15 @@ class PopupDatum(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
+
+        chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        chk_layout.add_widget(chk_label)
+        chk_layout.add_widget(checkbox)        
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
-        layout_plan.add_widget(checkbox)
+        layout_plan.add_widget(chk_layout)
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
