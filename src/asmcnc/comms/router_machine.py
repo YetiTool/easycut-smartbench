@@ -452,7 +452,12 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy_with_laser(self):
         self.jog_spindle_to_laser_datum()
-        self.set_workzone_to_pos_xy()
+        def wait_for_movement_to_complete(dt):
+            if not self.state() == 'Jog':
+                Clock.unschedule(self.poll_for_success)
+                self.set_workzone_to_pos_xy()
+
+        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
     def set_x_datum_with_laser(self):
         self.jog_spindle_to_laser_datum()
@@ -466,7 +471,12 @@ class RouterMachine(object):
 
     def set_y_datum_with_laser(self):
         self.jog_spindle_to_laser_datum()
-        self.set_y_datum()
+        def wait_for_movement_to_complete(dt):
+            if not self.state() == 'Jog':
+                Clock.unschedule(self.poll_for_success)
+                self.set_y_datum()
+
+        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')

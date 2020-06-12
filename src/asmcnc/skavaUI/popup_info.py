@@ -11,15 +11,12 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty  # @UnresolvedImport
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-
-from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
 from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.uix.checkbox import CheckBox
 
 class PopupWelcome(Widget):
 
@@ -69,21 +66,39 @@ class PopupDatum(Widget):
         self.m = machine
         
         description = warning_message
+        laser = False
 
-        def go_datum(*args):
-    
-            if xy == 'X':
-                self.m.set_x_datum_with_laser() #testing!!
-                # self.m.set_x_datum()
-            elif xy == 'Y':
-                self.m.set_y_datum()
-                
-            elif xy == 'XY':
-                self.m.set_workzone_to_pos_xy()
-        
+        def on_checkbox_active(checkbox, value):
+          if value: 
+            laser = True
+          else:
+            laser = False
+
+        def set_datum(*args):
+            if laser == False: 
+              if xy == 'X':
+                  self.m.set_x_datum()
+              elif xy == 'Y':
+                  self.m.set_y_datum()
+                  
+              elif xy == 'XY':
+                  self.m.set_workzone_to_pos_xy()
+
+            if laser == True: 
+              if xy == 'X':
+                  self.m.set_x_datum_with_laser() #testing!!
+              elif xy == 'Y':
+                  self.m.set_y_datum_with_laser()
+                  
+              elif xy == 'XY':
+                  self.m.set_workzone_to_pos_xy_with_laser()
+
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
-        
+        checkbox = CheckBox()
+
+
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
@@ -99,6 +114,7 @@ class PopupDatum(Widget):
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
+        layout_plan.add_widget(checkbox)
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
@@ -107,7 +123,7 @@ class PopupDatum(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 300),
+                      size=(300, 350),
                       auto_dismiss= False
                       )
         
@@ -115,8 +131,10 @@ class PopupDatum(Widget):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
+        checkbox.bind(active=on_checkbox_active)
+
         ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=go_datum)
+        ok_button.bind(on_press=set_datum)
         back_button.bind(on_press=popup.dismiss)       
 
 

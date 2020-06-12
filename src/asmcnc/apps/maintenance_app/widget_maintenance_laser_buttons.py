@@ -144,14 +144,17 @@ class LaserDatumButtons(Widget):
 
     def save_laser_offset(self):
         # need to cleverly calculate from movements & saving calibration from maintenance screen
-        z_head_laser_offset_x = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x - self.m.mpos_x
-        z_head_laser_offset_y = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.mpos_y
+        # z_head_laser_offset_x = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x - self.m.mpos_x
+        # z_head_laser_offset_y = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.mpos_y
 
-        self.sm.get_screen('maintenance').laser_datum_offset_x = z_head_laser_offset_x
-        self.sm.get_screen('maintenance').laser_datum_offset_y = z_head_laser_offset_y
+        print self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y
+        print self.m.mpos_y
 
-        self.m.write_z_head_laser_offset_values(z_head_laser_offset_x, z_head_laser_offset_y) #placeholder
-        self.m.read_z_head_laser_offset_values()
+        # self.sm.get_screen('maintenance').laser_datum_offset_x = z_head_laser_offset_x
+        # self.sm.get_screen('maintenance').laser_datum_offset_y = z_head_laser_offset_y
+
+        # self.m.write_z_head_laser_offset_values(z_head_laser_offset_x, z_head_laser_offset_y) #placeholder
+        # self.m.read_z_head_laser_offset_values()
         
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
