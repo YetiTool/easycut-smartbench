@@ -109,6 +109,9 @@ class RouterMachine(object):
         except: 
             log("Unable to read z head laser offset values")
 
+        if self.laser_offset_x_value != '0' or self.laser_offset_x_value != '0':
+            self.laser_on()
+
     def write_z_head_laser_offset_values(self, X, Y):
         try:
             file = open(self.z_head_laser_offset_file_path, "w")
@@ -508,6 +511,12 @@ class RouterMachine(object):
     
     def spindle_off(self):
         self.s.write_command('M5')
+
+    def laser_on(self):
+        self.s.write_command('AZ')
+
+    def laser_off(self):
+        self.s.write_command('AX')
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
