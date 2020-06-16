@@ -285,10 +285,14 @@ class SerialConnection(object):
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
-        if self.initialise_job() and self.job_gcode:
+
+        def set_streaming_flags_to_true():
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
-            log('Job running')
+            log('Job running')           
+
+        if self.initialise_job() and self.job_gcode:
+            Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
                                        
         elif not self.job_gcode:
             log('Could not start job: File empty')
