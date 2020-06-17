@@ -230,4 +230,10 @@ class MaintenanceScreenClass(Screen):
         self.laser_datum_buttons_widget.enable_buttons()
 
     def disable_laser_datum_buttons(self):
-        self.laser_datum_buttons_widget.disable_buttons()        
+        self.laser_datum_buttons_widget.disable_buttons()  
+        
+    def on_enter(self):
+        if self.laser_switch_widget.laser_switch.active == True:
+            self.sm.get_screen('maintenance').enable_laser_datum_buttons()
+        else:
+            self.sm.get_screen('maintenance').disable_laser_datum_buttons()
