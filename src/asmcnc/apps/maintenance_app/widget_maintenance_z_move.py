@@ -170,10 +170,10 @@ class MaintenanceZMove(Widget):
         elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job': self.m.quit_jog()
 
     def get_info(self):
-        info = "[b]To set, if hardware is fitted:[/b]\n\n" \
-                "1. Enable laser datum (set to on)"
-                "2. On a test piece, make a mark using manual moves.\n\n" \
-                "3. Lift head and press Reset\n\n" \
-                "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" \
+        info = "[b]To set, if hardware is fitted:[/b]\n\n" + \
+                "1. Enable laser datum (set to on)" + \
+                "2. On a test piece, make a mark using manual moves.\n\n" + \
+                "3. Lift head and press Reset\n\n" + \
+                "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" + \
                 "5. Press Save"
                 popup_info.PopupInfo(self.sm, 700, info)   
