@@ -87,7 +87,7 @@ Builder.load_string("""
                         
             Button:
                 background_color: hex('#F4433600')
-                on_press: 
+                on_press: root.get_info()
                 BoxLayout:
                     padding: dp(30)
                     size_hint: (None,None)
