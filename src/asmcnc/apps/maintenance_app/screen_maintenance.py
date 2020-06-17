@@ -225,3 +225,9 @@ class MaintenanceScreenClass(Screen):
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
+
+    def enable_laser_datum_buttons(self):
+        self.laser_datum_buttons_widget.enable_buttons()
+
+    def disable_laser_datum_buttons(self):
+        self.laser_datum_buttons_widget.disable_buttons()        

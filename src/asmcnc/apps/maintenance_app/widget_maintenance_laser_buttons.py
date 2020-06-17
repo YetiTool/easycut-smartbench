@@ -17,6 +17,8 @@ Builder.load_string("""
     spindle_toggle: spindle_toggle
     vacuum_image: vacuum_image
     spindle_image: spindle_image
+    reset_button: reset_button
+    save_button: save_button
     
     BoxLayout:
     
@@ -85,6 +87,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
+                    id: reset_button
                     size_hint: (None,None)
                     height: dp(120)
                     width: dp(120)
@@ -107,6 +110,7 @@ Builder.load_string("""
 				size: self.parent.size
                 pos: self.parent.pos 
                 Button:
+                    id: save_button
                     size_hint: (None,None)
                     height: dp(120)
                     width: dp(120)
@@ -168,3 +172,15 @@ class LaserDatumButtons(Widget):
         else: 
             self.spindle_image.source = "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
             self.m.spindle_on()
+
+    def disable_buttons(self):
+        self.save_button.disabled = True
+        self.reset_button.disabled = True
+        self.spindle_toggle = True
+        self.vacuum_toggle = True
+
+    def enable_buttons(self):
+        self.save_button.disabled = False
+        self.reset_button.disabled = False
+        self.spindle_toggle = False
+        self.vacuum_toggle = False
