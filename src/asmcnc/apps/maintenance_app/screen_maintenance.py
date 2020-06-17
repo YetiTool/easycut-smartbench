@@ -197,17 +197,6 @@ Builder.load_string("""
 """)
 
 class MaintenanceScreenClass(Screen):
-    
-#     info_button = ObjectProperty()
-    
-#     screen_number = StringProperty("[b]I[/b]")
-#     title_label = StringProperty("[b]Using the app[/b]")
-# #     user_instructions = StringProperty()
-    
-#     instructions_list = ["Use the Back and Next buttons to move through each section.\n\n",
-#                                        "Use the navigation tabs to move between sections.\n\n",
-#                                        "Press the [b]i[/b] if you need more information.\n\n",
-#                                        "For more help, see the video at www.yetitool.com/support"]
 
 
     laser_datum_reset_coordinate_x = 0
