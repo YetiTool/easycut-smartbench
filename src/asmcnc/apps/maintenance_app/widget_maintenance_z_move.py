@@ -176,4 +176,4 @@ class MaintenanceZMove(Widget):
                 "3. Lift head and press Reset\n\n" + \
                 "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" + \
                 "5. Press Save"
-                popup_info.PopupInfo(self.sm, 700, info)   
+        popup_info.PopupInfo(self.sm, 700, info)   
