@@ -70,7 +70,7 @@ class LaserOnOffWidget(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
-        self.toggle_laser()
+        # self.toggle_laser()
 
     def toggle_laser(self):
         if self.laser_switch.active == True:
