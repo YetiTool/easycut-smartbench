@@ -176,11 +176,11 @@ class LaserDatumButtons(Widget):
     def disable_buttons(self):
         self.save_button.disabled = True
         self.reset_button.disabled = True
-        self.spindle_toggle = True
-        self.vacuum_toggle = True
+        self.spindle_toggle.disabled = True
+        self.vacuum_toggle.disabled = True
 
     def enable_buttons(self):
         self.save_button.disabled = False
         self.reset_button.disabled = False
-        self.spindle_toggle = False
-        self.vacuum_toggle = False
+        self.spindle_toggle.disabled = False
+        self.vacuum_toggle.disabled = False
