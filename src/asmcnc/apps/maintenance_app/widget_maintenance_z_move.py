@@ -171,9 +171,9 @@ class MaintenanceZMove(Widget):
 
     def get_info(self):
         info = "[b]To set, if hardware is fitted:[/b]\n\n" + \
-                "1. Enable laser datum (set to on)" + \
+                "1. Enable laser datum (switch to [b]on[/b]).\n\n" + \
                 "2. On a test piece, make a mark using manual moves.\n\n" + \
-                "3. Lift head and press Reset\n\n" + \
+                "3. Lift head and press [b]reset[/b].\n\n" + \
                 "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" + \
-                "5. Press Save"
+                "5. Press [b]save[/b]."
         popup_info.PopupInfo(self.sm, 700, info)   
