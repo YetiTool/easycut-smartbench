@@ -232,8 +232,14 @@ class MaintenanceScreenClass(Screen):
     def disable_laser_datum_buttons(self):
         self.laser_datum_buttons_widget.disable_buttons()  
         
-    def on_enter(self):
+    def on_pre_enter(self):
+
+        if self.m.read_z_head_laser_offset_values():
+            self.laser_switch_widget.laser_switch.active = True
+
         if self.laser_switch_widget.laser_switch.active == True:
             self.sm.get_screen('maintenance').enable_laser_datum_buttons()
         else:
             self.sm.get_screen('maintenance').disable_laser_datum_buttons()
+
+
