@@ -69,22 +69,14 @@ class PopupDatum(Widget):
       description = warning_message
       chk_message = "         Use laser datum?"
 
-      if self.sm.get_screen('home').default_datum_choice == 'spindle':
-        laser = False
-      elif self.sm.get_screen('home').default_datum_choice == 'laser':
-        laser = True
-
       def on_checkbox_active(checkbox, value):
         if value: 
-          popup.laser = True
           self.sm.get_screen('home').default_datum_choice = 'laser'
         else:
-          popup.laser = False
           self.sm.get_screen('home').default_datum_choice = 'spindle'
 
       def set_datum(*args):
-
-          if popup.laser == False: 
+          if self.sm.get_screen('home').default_datum_choice == 'spindle':
             print "setting datum without laser"
 
             if xy == 'X':
@@ -94,7 +86,7 @@ class PopupDatum(Widget):
             elif xy == 'XY':
                 self.m.set_workzone_to_pos_xy()
 
-          elif popup.laser == True: 
+          elif self.sm.get_screen('home').default_datum_choice == 'laser':
             print "setting datum with laser"
 
             if xy == 'X':
@@ -106,9 +98,9 @@ class PopupDatum(Widget):
                 self.m.set_workzone_to_pos_xy_with_laser()
 
       def set_checkbox_default():
-        if laser == False:
+        if self.sm.get_screen('home').default_datum_choice == 'spindle':
           return False
-        elif laser == True
+        elif self.sm.get_screen('home').default_datum_choice == 'laser':
           return True
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
