@@ -73,8 +73,10 @@ class PopupDatum(Widget):
         def on_checkbox_active(checkbox, value):
           if value: 
             popup.laser = True
+            self.sm.get_screen('home').default_datum_choice = 'laser'
           else:
             popup.laser = False
+            self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         def set_datum(*args):
 
@@ -99,11 +101,16 @@ class PopupDatum(Widget):
               elif xy == 'XY':
                   self.m.set_workzone_to_pos_xy_with_laser()
 
+        def set_checkbox_default():
+          if self.sm.get_screen('home').default_datum_choice == 'spindle':
+            return False
+          elif self.sm.get_screen('home').default_datum_choice == 'laser':
+            return True
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
         chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
-        checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png")
+        checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
 
 
         ok_button = Button(text='[b]Yes[/b]', markup = True)

@@ -261,7 +261,7 @@ class HomeScreen(Screen):
     gcode_has_been_checked_and_its_ok = False
     non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
-    
+    default_datum_choice = 'spindle'
 
     def __init__(self, **kwargs):
 
