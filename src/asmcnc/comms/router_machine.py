@@ -111,11 +111,9 @@ class RouterMachine(object):
 
         if self.laser_offset_x_value != '0' or self.laser_offset_x_value != '0':
             self.laser_on()
-            self.sm.get_screen('home').default_datum_choice = 'laser'
             return True
         else: 
             self.laser_off()
-            self.sm.get_screen('home').default_datum_choice = 'spindle'
             return False       
 
     def write_z_head_laser_offset_values(self, X, Y):
