@@ -142,22 +142,28 @@ Builder.load_string("""
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos  
+        # TabbedPanelItem:
+        #     background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
+        #     background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
+        #     BoxLayout:
+        #         size_hint: (None,None)
+        #         width: dp(800)
+        #         height: dp(390)
+        #         orientation: "horizontal" 
+        #         padding: (10, 10, 10, 10)
+        #         spacing: (10)
+        #         canvas:
+        #             Color:
+        #                 rgba: hex('#E5E5E5FF')
+        #             Rectangle:
+        #                 size: self.size
+        #                 pos: self.pos
+
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(390)
-                orientation: "horizontal" 
-                padding: (10, 10, 10, 10)
-                spacing: (10)
-                canvas:
-                    Color:
-                        rgba: hex('#E5E5E5FF')
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
+            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            disabled: 'True'
+        
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
             background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
