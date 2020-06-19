@@ -68,7 +68,11 @@ class PopupDatum(Widget):
       
       description = warning_message
       chk_message = "         Use laser datum?"
-      laser = False
+
+      if self.sm.get_screen('home').default_datum_choice == 'spindle':
+        laser = False
+      elif self.sm.get_screen('home').default_datum_choice == 'laser':
+        laser = True
 
       def on_checkbox_active(checkbox, value):
         if value: 
@@ -102,11 +106,9 @@ class PopupDatum(Widget):
                 self.m.set_workzone_to_pos_xy_with_laser()
 
       def set_checkbox_default():
-        if self.sm.get_screen('home').default_datum_choice == 'spindle':
-          popup.laser = False
+        if laser == False:
           return False
-        elif self.sm.get_screen('home').default_datum_choice == 'laser':
-          popup.laser = True
+        elif laser == True
           return True
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
