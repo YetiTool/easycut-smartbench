@@ -302,6 +302,9 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
+        if self.m.is_laser_on == True: self.default_datum_choice = 'laser'
+        else: self.default_datum_choice = 'spindle'
+
     def on_enter(self): 
 
         Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
@@ -337,7 +340,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print 'No G-code loaded.'
- 
+
     def preview_job_file(self, dt):
 
         # Draw gcode preview 

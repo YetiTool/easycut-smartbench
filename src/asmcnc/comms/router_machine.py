@@ -58,6 +58,8 @@ class RouterMachine(object):
     laser_offset_x_value = 0
     laser_offset_y_value = 0
 
+    is_laser_on = False
+
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -517,9 +519,11 @@ class RouterMachine(object):
         self.s.write_command('M5')
 
     def laser_on(self):
+        self.is_laser_on = True
         self.s.write_command('AZ')
 
     def laser_off(self):
+        self.is_laser_on = False
         self.s.write_command('AX')
 
     def toggle_spindle_off_overide(self, dt):
