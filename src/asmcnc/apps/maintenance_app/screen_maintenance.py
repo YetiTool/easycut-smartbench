@@ -237,6 +237,6 @@ class MaintenanceScreenClass(Screen):
         if self.m.read_z_head_laser_offset_values():
             self.laser_switch_widget.laser_switch.active = True
 
-        if self.laser_switch_widget.toggle_laser()
+        self.laser_switch_widget.toggle_laser()
 
 
