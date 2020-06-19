@@ -103,8 +103,10 @@ class PopupDatum(Widget):
 
       def set_checkbox_default():
         if self.sm.get_screen('home').default_datum_choice == 'spindle':
+          popup.laser = False
           return False
         elif self.sm.get_screen('home').default_datum_choice == 'laser':
+          popup.laser = True
           return True
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
