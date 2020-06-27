@@ -418,22 +418,12 @@ class GoScreen(Screen):
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
     
-    def pre_enter_for_first_time(self, autostart = False):
+    def on_enter(self):
 
-        self.reset_go_screen_prior_to_job_start()
-        
-        if autostart:
-            self.start_or_pause_button_press()
-
-
-    def pre_enter_resume_after_pause(self):
-        
-        pass  # new style assumes machine is resumed on decision screen, and so nothing doing here now
-    
-
-    def pre_enter_after_job_cancel(self):
-
-        self.reset_go_screen_prior_to_job_start()
+        if self.is_job_started_already: 
+            pass
+        else: 
+            self.reset_go_screen_prior_to_job_start()
 
 
 ### COMMON SCREEN PREP METHOD

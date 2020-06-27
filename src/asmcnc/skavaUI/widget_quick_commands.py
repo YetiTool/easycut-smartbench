@@ -180,13 +180,11 @@ class QuickCommands(Widget):
             self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
             self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
             self.sm.get_screen('go').return_to_screen = 'home'
-            self.sm.get_screen('go').cancel_to_screen = 'home'      
-            self.sm.get_screen('go').pre_enter_for_first_time()
+            self.sm.get_screen('go').cancel_to_screen = 'home'
             
             # is fw capable of auto Z lift?
             if self.m.fw_can_operate_zUp_on_pause():
                 self.sm.current = 'lift_z_on_pause_or_not'
-
             else:
                 self.sm.current = 'go'
 
