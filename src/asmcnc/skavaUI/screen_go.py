@@ -421,7 +421,7 @@ class GoScreen(Screen):
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):
 
         self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
 
