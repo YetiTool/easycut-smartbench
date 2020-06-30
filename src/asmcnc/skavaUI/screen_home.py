@@ -101,6 +101,7 @@ Builder.load_string("""
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
                         on_press: root.m.set_led_colour('GREEN')
+                        on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
