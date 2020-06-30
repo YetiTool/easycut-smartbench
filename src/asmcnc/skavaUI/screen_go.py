@@ -105,7 +105,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     Image:
                                         id: btn_back_img
-                                        source: "./asmcnc/skavaUI/img/back.png"
+                                        # source: "./asmcnc/skavaUI/img/back.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
@@ -137,7 +137,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     Image:
                                         id: start_or_pause_button_image
-                                        source: "./asmcnc/skavaUI/img/go.png"
+                                        # source: "./asmcnc/skavaUI/img/go.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
@@ -385,8 +385,11 @@ class GoScreen(Screen):
 
     job_filename = ""
     job_gcode = []
-    
-    start_stop_button_press_counter = 0
+
+    btn_back = ObjectProperty()
+    btn_back_img = ObjectProperty()
+    start_or_pause_button_image = ObjectProperty()
+
 
     is_job_started_already = False
        
@@ -417,28 +420,35 @@ class GoScreen(Screen):
 
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
-    
-    def pre_enter_for_first_time(self, autostart = False):
 
-        self.reset_go_screen_prior_to_job_start()
-        
-        if autostart:
-            self.start_or_pause_button_press()
+    def on_pre_enter(self, *args):
 
+        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
 
-    def pre_enter_resume_after_pause(self):
-        
-        pass  # new style assumes machine is resumed on decision screen, and so nothing doing here now
-    
+        # get initial values on screen loading
+        self.poll_for_job_progress(0)
+        self.update_overload_label(self.m.s.overload_state)
 
-    def pre_enter_after_job_cancel(self):
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
 
-        self.reset_go_screen_prior_to_job_start()
+        if self.is_job_started_already: 
+            pass
+        else: 
+            self.reset_go_screen_prior_to_job_start()
 
 
 ### COMMON SCREEN PREP METHOD
 
     def reset_go_screen_prior_to_job_start(self):
+
+        print "RESET GO SCREEN FIRES"
+
+        # Update images
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+
+        #Show back button
+        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
+        self.btn_back.disabled = False
 
         # scrape filename title
         if sys.platform == 'win32':
@@ -450,13 +460,6 @@ class GoScreen(Screen):
         self.is_job_started_already = False
 
         self.m.set_led_colour('BLUE')
-        
-        # Update images
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        
-        #Show back button
-        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
-        self.btn_back.disabled = False
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
@@ -520,17 +523,6 @@ class GoScreen(Screen):
 
 
 ### GLOBAL ENTER/LEAVE ACTIONS
-        
-    def on_enter(self, *args):
-
-        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
-
-        # get initial values on screen loading
-        self.poll_for_job_progress(0)
-        self.update_overload_label(self.m.s.overload_state)
-
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
-
 
     def on_leave(self, *args):
 
@@ -556,10 +548,6 @@ class GoScreen(Screen):
             seconds_remainder = time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
-
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             
             if hours > 0:
                 self.run_time_label.text = "[color=333333]" + str(hours) + " hrs " + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"

@@ -1003,12 +1003,15 @@ class ScreenManagerShapeCutter(object):
         self.sm.get_screen('go').cancel_to_screen = cancel_to_screen        
         self.sm.get_screen('go').job_gcode = self.j.gcode_lines
         self.sm.get_screen('go').job_filename  = self.j.gcode_filename
-        self.sm.current = 'go'
         
         def auto_go(dt):
             self.sm.get_screen('go').start_or_pause_button_press()
-            
-        Clock.schedule_once(auto_go, 0.4)
+        
+        if self.m.fw_can_operate_zUp_on_pause():
+            self.sm.current = 'lift_z_on_pause_or_not'
+        else:
+            self.sm.current = 'go'
+            Clock.schedule_once(auto_go, 0.4)
 
     def homing_screen(self, cancel_to_screen, return_to_screen):
         
