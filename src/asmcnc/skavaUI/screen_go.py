@@ -421,12 +421,12 @@ class GoScreen(Screen):
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
     
-    # def on_pre_enter(self):
+    def on_pre_enter(self):
 
-    #     if self.is_job_started_already: 
-    #         pass
-    #     else: 
-    #         self.reset_go_screen_prior_to_job_start()
+        if self.is_job_started_already: 
+            pass
+        else: 
+            self.reset_go_screen_prior_to_job_start()
 
 
 ### COMMON SCREEN PREP METHOD
