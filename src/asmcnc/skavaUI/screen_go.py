@@ -386,6 +386,11 @@ class GoScreen(Screen):
     job_filename = ""
     job_gcode = []
 
+    btn_back = ObjectProperty()
+    btn_back_img = ObjectProperty()
+    start_or_pause_button_image = ObjectProperty()
+
+
     is_job_started_already = False
        
     return_to_screen = 'home' # screen to go to after job runs
@@ -416,12 +421,12 @@ class GoScreen(Screen):
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
     
-    def on_pre_enter(self):
+    # def on_pre_enter(self):
 
-        if self.is_job_started_already: 
-            pass
-        else: 
-            self.reset_go_screen_prior_to_job_start()
+    #     if self.is_job_started_already: 
+    #         pass
+    #     else: 
+    #         self.reset_go_screen_prior_to_job_start()
 
 
 ### COMMON SCREEN PREP METHOD
@@ -429,6 +434,13 @@ class GoScreen(Screen):
     def reset_go_screen_prior_to_job_start(self):
 
         print "RESET GO SCREEN FIRES"
+
+        # Update images
+        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
+        
+        #Show back button
+        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
+        self.btn_back.disabled = False
 
         # scrape filename title
         if sys.platform == 'win32':
@@ -440,13 +452,6 @@ class GoScreen(Screen):
         self.is_job_started_already = False
 
         self.m.set_led_colour('BLUE')
-        
-        # Update images
-        self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        
-        #Show back button
-        self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
-        self.btn_back.disabled = False
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
