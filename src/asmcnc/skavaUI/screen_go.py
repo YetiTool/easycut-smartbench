@@ -549,9 +549,9 @@ class GoScreen(Screen):
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
 
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+            # self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+            # self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+            #  " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
             
             if hours > 0:
                 self.run_time_label.text = "[color=333333]" + str(hours) + " hrs " + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"

@@ -91,7 +91,7 @@ class JobDoneScreen(Screen):
     
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
-        self.sm.get_screen('go').loop_for_job_progress = None
+        # self.sm.get_screen('go').loop_for_job_progress = None
 
     def quit_to_go(self):
         self.sm.current = self.return_to_screen

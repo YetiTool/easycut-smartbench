@@ -425,7 +425,7 @@ class SerialConnection(object):
             self._reset_counters()
 
             # reset go screen to go again
-            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
+            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
         else:
             self.m.disable_check_mode()
