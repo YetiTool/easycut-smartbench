@@ -105,7 +105,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     Image:
                                         id: btn_back_img
-                                        source: "./asmcnc/skavaUI/img/back.png"
+                                        # source: "./asmcnc/skavaUI/img/back.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
@@ -137,7 +137,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     Image:
                                         id: start_or_pause_button_image
-                                        source: "./asmcnc/skavaUI/img/go.png"
+                                        # source: "./asmcnc/skavaUI/img/go.png"
                                         center_x: self.parent.center_x
                                         y: self.parent.y
                                         size: self.parent.width, self.parent.height
@@ -450,7 +450,7 @@ class GoScreen(Screen):
         # Reset flag & light
         self.is_job_started_already = False
 
-        # self.m.set_led_colour('BLUE')
+        self.m.set_led_colour('BLUE')
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
