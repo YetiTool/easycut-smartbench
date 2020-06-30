@@ -420,12 +420,12 @@ class SerialConnection(object):
             self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
     
-            # reset go screen to go again
-            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
-    
             # send info to the job done screen
             self.sm.current = 'jobdone'
             self._reset_counters()
+
+            # reset go screen to go again
+            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
         else:
             self.m.disable_check_mode()
@@ -443,7 +443,7 @@ class SerialConnection(object):
         self._reset_counters()
 
         if not self.m.is_check_mode_enabled:
-            self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
+            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
             
             # Flush
             self.FLUSH_FLAG = True

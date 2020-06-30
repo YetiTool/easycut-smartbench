@@ -420,13 +420,22 @@ class GoScreen(Screen):
 
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
-    
-    def on_pre_enter(self):
+
+    def on_enter(self, *args):
+
+        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+
+        # get initial values on screen loading
+        self.poll_for_job_progress(0)
+        self.update_overload_label(self.m.s.overload_state)
+
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
 
         if self.is_job_started_already: 
             pass
         else: 
             self.reset_go_screen_prior_to_job_start()
+
 
 ### COMMON SCREEN PREP METHOD
 
@@ -436,7 +445,7 @@ class GoScreen(Screen):
 
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
-        
+
         #Show back button
         self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"
         self.btn_back.disabled = False
@@ -514,17 +523,6 @@ class GoScreen(Screen):
 
 
 ### GLOBAL ENTER/LEAVE ACTIONS
-        
-    def on_enter(self, *args):
-
-        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
-
-        # get initial values on screen loading
-        self.poll_for_job_progress(0)
-        self.update_overload_label(self.m.s.overload_state)
-
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
-
 
     def on_leave(self, *args):
 
