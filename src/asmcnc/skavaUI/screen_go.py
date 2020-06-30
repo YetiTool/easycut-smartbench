@@ -427,7 +427,7 @@ class GoScreen(Screen):
             pass
         else: 
             self.reset_go_screen_prior_to_job_start()
-
+            self.reset_go_screen_prior_to_job_start() # test this seeing as cancelling mysteriously resets it
 
 ### COMMON SCREEN PREP METHOD
 
