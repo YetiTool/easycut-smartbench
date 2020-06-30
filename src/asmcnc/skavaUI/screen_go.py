@@ -427,7 +427,6 @@ class GoScreen(Screen):
             pass
         else: 
             self.reset_go_screen_prior_to_job_start()
-            self.reset_go_screen_prior_to_job_start() # test this seeing as cancelling mysteriously resets it
 
 ### COMMON SCREEN PREP METHOD
 
@@ -451,7 +450,7 @@ class GoScreen(Screen):
         # Reset flag & light
         self.is_job_started_already = False
 
-        self.m.set_led_colour('BLUE')
+        # self.m.set_led_colour('BLUE')
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()
