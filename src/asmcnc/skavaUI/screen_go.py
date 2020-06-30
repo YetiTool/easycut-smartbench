@@ -385,8 +385,6 @@ class GoScreen(Screen):
 
     job_filename = ""
     job_gcode = []
-    
-    start_stop_button_press_counter = 0
 
     is_job_started_already = False
        
@@ -418,7 +416,7 @@ class GoScreen(Screen):
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
     
-    def on_enter(self):
+    def on_pre_enter(self):
 
         if self.is_job_started_already: 
             pass
@@ -429,6 +427,8 @@ class GoScreen(Screen):
 ### COMMON SCREEN PREP METHOD
 
     def reset_go_screen_prior_to_job_start(self):
+
+        print "RESET GO SCREEN FIRES"
 
         # scrape filename title
         if sys.platform == 'win32':
