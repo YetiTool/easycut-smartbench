@@ -449,7 +449,7 @@ class GoScreen(Screen):
         # Reset flag & light
         self.is_job_started_already = False
 
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour('GREEN')
         
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"

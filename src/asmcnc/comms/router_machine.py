@@ -238,7 +238,7 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
 #         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.3)
 
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
@@ -248,7 +248,7 @@ class RouterMachine(object):
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.5)
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.5)
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -263,13 +263,13 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
     def resume_from_gcode_error(self):
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2) 
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
     def stop_for_a_stream_pause(self):
         self.set_pause(True)  
@@ -521,10 +521,12 @@ class RouterMachine(object):
     def laser_on(self):
         self.is_laser_on = True
         self.s.write_command('AZ')
+        self.set_led_colour('BLUE')
 
     def laser_off(self):
         self.is_laser_on = False
         self.s.write_command('AX')
+        self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
