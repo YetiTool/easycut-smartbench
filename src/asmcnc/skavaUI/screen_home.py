@@ -72,7 +72,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
-                        on_press: root.m.set_led_colour('GREEN')
+                        on_press: root.m.laser_off()
                         BoxLayout:
                             padding: 20
                             spacing: 20
@@ -100,7 +100,6 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
-                        on_press: root.m.set_led_colour('GREEN')
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
@@ -142,7 +141,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
-                        on_press: root.m.set_led_colour('GREEN')
+                        on_press: root.m.laser_off()
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -173,7 +172,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_job_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_job_up.png'
-                        on_press: root.m.set_led_colour('GREEN')
+                        on_press: root.m.laser_off()
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
@@ -354,5 +353,7 @@ class HomeScreen(Screen):
 
         log('DONE')
 
+    def on_pre_leave(self):
+        self.m.laser_off()
 
     
