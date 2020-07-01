@@ -245,4 +245,5 @@ class MaintenanceScreenClass(Screen):
 
         self.laser_switch_widget.toggle_laser()
 
-
+    def on_pre_leave(self):
+        self.m.laser_off()
