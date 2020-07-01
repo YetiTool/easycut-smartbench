@@ -50,6 +50,7 @@ Builder.load_string("""
     progress_percentage_label:progress_percentage_label
     btn_back_img:btn_back_img
     overload_status_label:overload_status_label
+    spindle_overload_container:spindle_overload_container
     
     BoxLayout:
         padding: 0
@@ -325,6 +326,7 @@ Builder.load_string("""
 
 
                     BoxLayout:
+                        id: spindle_overload_container
                         orientation: 'vertical'
                         size_hint_y: 0.25
                         padding: 00
@@ -427,7 +429,18 @@ class GoScreen(Screen):
 
         # get initial values on screen loading
         self.poll_for_job_progress(0)
-        self.update_overload_label(self.m.s.overload_state)
+
+        # show overload status if running precision pro
+        if self.m.product_code() == '12' or self.sm.get_screen('developer').developer_mode == True: # proxy product code for now
+            self.update_overload_label(self.m.s.overload_state)
+            self.spindle_overload_container.size_hint_y = 0.25
+            self.spindle_overload_container.opacity = 1
+        else: 
+            self.spindle_overload_container.size_hint_y = 0
+            self.spindle_overload_container.opacity = 0
+
+
+
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
 

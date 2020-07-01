@@ -285,6 +285,7 @@ class DeveloperScreen(Screen):
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
     scraped_grbl_settings = []
 
+    developer_mode = False
 
     def __init__(self, **kwargs):
 
