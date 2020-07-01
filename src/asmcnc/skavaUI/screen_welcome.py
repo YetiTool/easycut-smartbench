@@ -81,6 +81,9 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(self.m.s.start_services, 4)
                 # Allow time for machine reset sequence
                 Clock.schedule_once(self.go_to_next_screen, 5)
+                # Get grbl settings
+                Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.5)
+
     
     
     def go_to_next_screen(self, dt):
