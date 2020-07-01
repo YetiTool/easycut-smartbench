@@ -376,11 +376,13 @@ class RouterMachine(object):
 
 # SETTINGS GETTERS
     def product_code(self): 
-        try: return self.s.setting_50[:4]
+        try: self.s.setting_50
         except NameError: return 0
+        else: return self.s.setting_50[:4]
     def serial_number(self): 
-        try: return self.s.setting_50[5:7]
+        try: self.s.setting_50
         except NameError: return 0
+        else: return self.s.setting_50[5:7]
 
 # POSITONAL GETTERS            
         
