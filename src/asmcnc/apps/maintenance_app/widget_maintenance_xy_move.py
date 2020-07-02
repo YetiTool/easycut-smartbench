@@ -21,8 +21,8 @@ Builder.load_string("""
 <MaintenanceXYMove>
 
     jogModeButtonImage:jogModeButtonImage
-    spindle_image:spindle_image
-    spindle_toggle:spindle_toggle
+    speed_image:speed_image
+    speed_toggle:speed_toggle
 
     BoxLayout:
     
