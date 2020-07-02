@@ -158,6 +158,8 @@ Builder.load_string("""
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
+            disabled: "True"
+            background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
