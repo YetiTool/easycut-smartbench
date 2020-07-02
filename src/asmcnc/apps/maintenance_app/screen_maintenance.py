@@ -173,22 +173,22 @@ Builder.load_string("""
         #                 pos: self.pos
 
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
         
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
 
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/black_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/black_tab.png'     
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'     
             disabled: 'True'
 
     BoxLayout: 
