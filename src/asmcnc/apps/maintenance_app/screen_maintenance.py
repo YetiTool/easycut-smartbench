@@ -78,6 +78,7 @@ Builder.load_string("""
                             height: dp(70)
                             width: dp(280)
                             padding: [dp(30),0,dp(30),0]
+                            orientation: 'horizontal'
                             Label: 
                                 color: 0,0,0,1
                                 font_size: dp(22)
@@ -87,7 +88,19 @@ Builder.load_string("""
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]SET LASER DATUM[/b]" 
+                                text: "[b]LASER[/b]"
+
+                            BoxLayout:
+                                size_hint: (None,None)
+                                height: dp(70)
+                                width: dp(200)
+                                id: switch_container
+                                canvas:
+                                    Color:
+                                        rgba: 1,1,1,1
+                                    RoundedRectangle:
+                                        size: self.size
+                                        pos: self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -101,27 +114,27 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
-                BoxLayout:
-                    size_hint: (None,None)
-                    height: dp(360)
-                    width: dp(270)
-                    spacing: 10
-                    orientation: "vertical"
-                    id: middle_panel
+                # BoxLayout:
+                #     size_hint: (None,None)
+                #     height: dp(360)
+                #     width: dp(270)
+                #     spacing: 10
+                #     orientation: "vertical"
+                #     id: middle_panel
+                #     BoxLayout:
+                #         size_hint: (None,None)
+                #         height: dp(70)
+                #         width: dp(270)
+                #         id: switch_container
+                #         canvas:
+                #             Color:
+                #                 rgba: 1,1,1,1
+                #             RoundedRectangle:
+                #                 size: self.size
+                #                 pos: self.pos
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(70)
-                        width: dp(270)
-                        id: switch_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
-                    BoxLayout:
-                        size_hint: (None,None)
-                        height: dp(280)
+                        height: dp(360)
                         width: dp(270)
                         id: xy_move_container
                         canvas:

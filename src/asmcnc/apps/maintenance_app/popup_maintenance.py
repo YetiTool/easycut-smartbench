@@ -110,7 +110,7 @@ class PopupSaveOffset(Widget):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
         ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=reset_laser_datum_offset)
+        ok_button.bind(on_press=save_laser_datum_offset)
         back_button.bind(on_press=popup.dismiss)       
 
         popup.open()

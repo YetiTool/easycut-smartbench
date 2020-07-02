@@ -20,9 +20,9 @@ Builder.load_string("""
     
         size_hint: (None,None)
         height: dp(70)
-        width: dp(270)
+        width: dp(200)
         pos: self.parent.pos
-        padding: (dp(47.5), dp(0), dp(47.5), dp(0))
+        padding: (dp(12.5), dp(0), dp(12.5), dp(0))
         
         GridLayout:
             cols: 2
@@ -30,7 +30,7 @@ Builder.load_string("""
             spacing: 20
             size_hint: (None,None)
             height: dp(70)
-            width: dp(250)
+            width: dp(175)
 
             BoxLayout: 
                 size_hint: (None, None)
