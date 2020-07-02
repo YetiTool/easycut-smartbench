@@ -145,7 +145,7 @@ class LaserDatumButtons(Widget):
         self.sm=kwargs['screen_manager']
 
     def reset_button_press(self):
-        popup_maintenance.PopupResetOffset()
+        popup_maintenance.PopupResetOffset(self.sm)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
