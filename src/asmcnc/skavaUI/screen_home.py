@@ -45,6 +45,7 @@ Builder.load_string("""
     tab_panel:tab_panel
     pos_tab:pos_tab
     gcode_preview_container:gcode_preview_container
+    move_tab:move_tab
 
     BoxLayout:
         padding: 0
@@ -98,6 +99,7 @@ Builder.load_string("""
 
 
                     TabbedPanelItem:
+                        id: move_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
                         on_press: root.m.laser_on()
@@ -307,7 +309,10 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
-        Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
+        if self.tab_panel.current_tab == self.move_tab:
+            Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
+        else: 
+            Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
         
         # File label at the top
         if self.job_gcode != []:

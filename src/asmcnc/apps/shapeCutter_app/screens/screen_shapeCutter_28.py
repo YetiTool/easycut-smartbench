@@ -316,7 +316,6 @@ class ShapeCutter28ScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
 
-
 # Action buttons
     def get_info(self):
         pass

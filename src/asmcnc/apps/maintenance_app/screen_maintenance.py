@@ -178,13 +178,17 @@ Builder.load_string("""
         
         TabbedPanelItem:
             background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
         TabbedPanelItem:
-            background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             disabled: 'True'
 
         TabbedPanelItem:
-            background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'     
             disabled: 'True'
 
     BoxLayout: 
