@@ -83,7 +83,7 @@ Builder.load_string("""
                                 color: 0,0,0,1
                                 font_size: dp(22)
                                 markup: True
-                                halign: "left"
+                                halign: "center"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
