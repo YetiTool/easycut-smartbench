@@ -93,14 +93,14 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None,None)
                                 height: dp(70)
-                                width: dp(200)
+                                width: dp(180)
                                 id: switch_container
-                                canvas:
-                                    Color:
-                                        rgba: 1,1,1,1
-                                    RoundedRectangle:
-                                        size: self.size
-                                        pos: self.pos
+                                # canvas:
+                                #     Color:
+                                #         rgba: 1,1,1,1
+                                #     RoundedRectangle:
+                                #         size: self.size
+                                #         pos: self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
