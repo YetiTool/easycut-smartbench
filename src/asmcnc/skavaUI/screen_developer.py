@@ -35,6 +35,7 @@ Builder.load_string("""
     pl_hash_label:pl_hash_label
     pl_branch_label:pl_branch_label
     fw_version_label:fw_version_label
+    dev_mode_toggle: dev_mode_toggle
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -227,8 +228,10 @@ Builder.load_string("""
                 color: 1,1,1,1
                 id: sw_hash_label 
                 
-            Label: 
-                text: ''
+            ToggleButton: 
+                id: dev_mode_toggle
+                text: 'Toggle dev mode'
+                on_press: root.toggle_dev_mode()
                 
             Label: 
                 text: 'EC version'
@@ -321,6 +324,12 @@ class DeveloperScreen(Screen):
     def quit_to_console(self):
         print 'Bye!'
         sys.exit()
+
+    def toggle_dev_mode(self):
+        if self.dev_mode_toggle.state == 'normal':
+            self.developer_mode = False
+        elif self.dev_mode_toggle == 'down':
+            self.developer_mode = True
 
     def square_axes(self):
         pass
