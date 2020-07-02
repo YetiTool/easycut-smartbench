@@ -131,7 +131,7 @@ class MaintenanceZMove(Widget):
 
         self.m.set_led_colour('WHITE')
 
-        feed_speed = 750/5
+        feed_speed = self.sm.get_screen('maintenance').xy_move_widget.feedSpeedJogZ/5
         
         if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free':
             if case == 'Z-': self.m.jog_absolute_single_axis('Z', 

@@ -234,8 +234,8 @@ class MaintenanceXYMove(Widget):
     
     def buttonJogXY(self, case):
 
-        x_feed_speed = 6000/5
-        y_feed_speed = 6000/5
+        x_feed_speed = self.feedSpeedJogX/5
+        y_feed_speed = self.feedSpeedJogY/5
         
         if self.jogMode == 'free':
             if case == 'X-': self.m.jog_absolute_single_axis('X', 
