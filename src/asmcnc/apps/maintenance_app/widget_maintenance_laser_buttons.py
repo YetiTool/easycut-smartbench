@@ -9,6 +9,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
+from asmcnc.apps.maintenance_app import popup_maintenance
+
 Builder.load_string("""
 
 <LaserDatumButtons>
@@ -94,7 +96,7 @@ Builder.load_string("""
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
-                    on_press: root.reset_laser_offset()
+                    on_press: root.reset_button_press()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -141,6 +143,9 @@ class LaserDatumButtons(Widget):
         super(LaserDatumButtons, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+
+    def reset_button_press(self):
+        popup_maintenance.PopupResetOffset()
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
