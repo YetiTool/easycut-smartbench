@@ -431,16 +431,18 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if self.m.product_code() == '12' or self.sm.get_screen('dev').developer_mode == True: # proxy product code for now
+        if (self.m.product_code() == '12' or self.sm.get_screen('dev').developer_mode == True): # proxy product code for now
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
+
+            print "show overload status"
+
         else: 
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
 
-
-
+            print "don't show overload status"
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
 

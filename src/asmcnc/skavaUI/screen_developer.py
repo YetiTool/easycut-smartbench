@@ -328,7 +328,7 @@ class DeveloperScreen(Screen):
     def toggle_dev_mode(self):
         if self.dev_mode_toggle.state == 'normal':
             self.developer_mode = False
-        elif self.dev_mode_toggle == 'down':
+        elif self.dev_mode_toggle.state == 'down':
             self.developer_mode = True
 
     def square_axes(self):
