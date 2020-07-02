@@ -20,14 +20,14 @@ Builder.load_string("""
     
         size_hint: (None,None)
         height: dp(70)
-        width: dp(180)
+        width: dp(140)
         pos: self.parent.pos
-        padding: (dp(2.5), dp(0), dp(2.5), dp(0))
+        padding: (dp(0), dp(0), dp(0), dp(0))
         
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 20
+            spacing: 0
             size_hint: (None,None)
             height: dp(70)
             width: dp(175)
@@ -36,7 +36,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 pos: self.parent.pos
                 height: dp(70)
-                width: dp(100)
+                width: dp(85)
                 Switch:
                     id: laser_switch
                     background_color: [0,0,0,0]

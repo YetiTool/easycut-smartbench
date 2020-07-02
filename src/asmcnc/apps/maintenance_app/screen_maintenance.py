@@ -93,7 +93,7 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None,None)
                                 height: dp(70)
-                                width: dp(180)
+                                width: dp(140)
                                 id: switch_container
                                 # canvas:
                                 #     Color:
