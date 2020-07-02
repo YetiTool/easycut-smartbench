@@ -436,13 +436,10 @@ class GoScreen(Screen):
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
 
-            print "show overload status"
-
         else: 
+            self.spindle_overload_container.height = 0
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
-
-            print "don't show overload status"
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
 
