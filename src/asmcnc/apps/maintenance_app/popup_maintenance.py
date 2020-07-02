@@ -25,7 +25,7 @@ class PopupResetOffset(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text='[b]Yes, set reference[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button = Button(text='[b]No, go back[/b]', markup = True)
@@ -49,7 +49,7 @@ class PopupResetOffset(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 420),
+                      size=(400, 360),
                       auto_dismiss= False
                       )
         
