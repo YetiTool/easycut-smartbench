@@ -119,7 +119,7 @@ Builder.load_string("""
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
-                    on_press: root.save_laser_offset()
+                    on_press: root.save_button_press()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -146,6 +146,9 @@ class LaserDatumButtons(Widget):
 
     def reset_button_press(self):
         popup_maintenance.PopupResetOffset(self.sm)
+
+    def save_button_press(self):
+        popup_maintenance.PopupSaveOffset(self.sm)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
