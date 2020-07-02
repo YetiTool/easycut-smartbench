@@ -114,13 +114,13 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
-                # BoxLayout:
-                #     size_hint: (None,None)
-                #     height: dp(360)
-                #     width: dp(270)
-                #     spacing: 10
-                #     orientation: "vertical"
-                #     id: middle_panel
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(360)
+                    width: dp(270)
+                    spacing: 10
+                    orientation: "vertical"
+                    id: middle_panel
                 #     BoxLayout:
                 #         size_hint: (None,None)
                 #         height: dp(70)
