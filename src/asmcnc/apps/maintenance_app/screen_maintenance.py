@@ -77,13 +77,13 @@ Builder.load_string("""
                             size_hint: (None, None)
                             height: dp(70)
                             width: dp(280)
-                            padding: [dp(30),0,dp(30),0]
+                            padding: [dp(20),0,dp(20),0]
                             orientation: 'horizontal'
                             Label: 
                                 color: 0,0,0,1
                                 font_size: dp(22)
                                 markup: True
-                                halign: "center"
+                                halign: "left"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
@@ -93,7 +93,7 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None,None)
                                 height: dp(70)
-                                width: dp(140)
+                                width: dp(150)
                                 id: switch_container
                                 # canvas:
                                 #     Color:
