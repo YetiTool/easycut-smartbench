@@ -19,6 +19,8 @@ from kivy.clock import Clock
 from asmcnc.comms import usb_storage
 import sys, os
 
+from asmcnc.skavaUI import popup_info
+
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
 PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
 PLATFORM_HOME= "/home/pi/"
@@ -329,7 +331,7 @@ class DeveloperScreen(Screen):
         if self.dev_mode_toggle.state == 'normal':
             self.developer_mode = False
         elif self.dev_mode_toggle.state == 'down':
-            self.developer_mode = True
+            popup_info.PopupDevModePassword(self.sm)
 
     def square_axes(self):
         pass
