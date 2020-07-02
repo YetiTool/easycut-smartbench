@@ -33,7 +33,7 @@ Builder.load_string("""
         spacing: 10
 
         BoxLayout:
-            padding: 5
+            padding: 0
             size: self.parent.size
             pos: self.parent.pos 
 
@@ -42,7 +42,7 @@ Builder.load_string("""
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding: 0
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
