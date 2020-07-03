@@ -59,6 +59,7 @@ class RouterMachine(object):
     laser_offset_y_value = 0
 
     is_laser_on = False
+    is_laser_enabled = False
 
             
     def __init__(self, win_serial_port, screen_manager):
