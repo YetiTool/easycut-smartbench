@@ -153,7 +153,7 @@ class LaserDatumButtons(Widget):
             popup_maintenance.PopupSaveOffset(self.sm)
         else:
             warning_message = 'Could not save laser datum offset!\n\nPlease enable laser to set offset.'
-            popup_info.PopupError(self.sm, warning message)
+            popup_info.PopupError(self.sm, warning_message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
