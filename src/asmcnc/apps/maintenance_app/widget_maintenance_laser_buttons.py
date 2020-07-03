@@ -153,7 +153,7 @@ class LaserDatumButtons(Widget):
             popup_maintenance.PopupSaveOffset(self.sm)
         else:
             warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
-            'with the mark you make with the spindle.\n\nPlease enable laser to set offset.'
+            ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
             popup_info.PopupError(self.sm, warning_message)
 
     def reset_laser_offset(self):
