@@ -193,25 +193,27 @@ Builder.load_string("""
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(152), dp(390))
-        Button:
+        pos: (dp(142), dp(390))
+        # Button:
+            Image:
             size_hint: (None,None)
             height: dp(90)
             width: dp(568)
-            background_color: [0,0,0,0]
+            # background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos
+            source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
             # on_press: root.quit_to_lobby()
-            BoxLayout:
-                padding: 0
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+            # BoxLayout:
+            #     padding: 0
+            #     size: self.parent.size
+            #     pos: self.parent.pos
+            #     Image:
+            #         source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
+            #         center_x: self.parent.center_x
+            #         y: self.parent.y
+            #         size: self.parent.width, self.parent.height
+            #         allow_stretch: True
 
     BoxLayout: 
         size_hint: (None,None)
