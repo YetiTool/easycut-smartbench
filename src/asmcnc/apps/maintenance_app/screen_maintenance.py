@@ -256,12 +256,6 @@ class MaintenanceScreenClass(Screen):
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
-
-    # def enable_laser_datum_buttons(self):
-    #     self.laser_datum_buttons_widget.enable_buttons()
-
-    # def disable_laser_datum_buttons(self):
-    #     self.laser_datum_buttons_widget.disable_buttons()  
         
     def on_pre_enter(self):
 
@@ -272,3 +266,5 @@ class MaintenanceScreenClass(Screen):
 
     def on_pre_leave(self):
         self.m.laser_off()
+        if self.m.is_laser_enabled == False:
+            self.m.write_z_head_laser_offset_values(0,0)

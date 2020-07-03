@@ -113,7 +113,7 @@ class RouterMachine(object):
             log("Unable to read z head laser offset values")
 
         if self.laser_offset_x_value != '0' or self.laser_offset_x_value != '0':
-            self.laser_on()
+            self.is_laser_enabled = True
             return True
         else: 
             self.laser_off()

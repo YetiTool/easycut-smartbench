@@ -77,7 +77,7 @@ class LaserOnOffWidget(Widget):
             self.laser_image.source = "./asmcnc/apps/maintenance_app/img/laser_on.png"
             self.m.is_laser_enabled = True
             self.m.laser_on()
-            self.m.write_z_head_laser_offset_values(self.sm.get_screen('maintenance').laser_datum_offset_x, self.sm.get_screen('maintenance').laser_datum_offset_y)
+            # self.m.write_z_head_laser_offset_values(self.sm.get_screen('maintenance').laser_datum_offset_x, self.sm.get_screen('maintenance').laser_datum_offset_y)
             # if self.sm.has_screen('maintenance'): self.sm.get_screen('maintenance').enable_laser_datum_buttons()
         else:
             self.laser_image.source = "./asmcnc/apps/maintenance_app/img/laser_off.png"
