@@ -195,7 +195,7 @@ Builder.load_string("""
         size_hint: (None,None)
         pos: (dp(142), dp(390))
         # Button:
-            Image:
+        Image:
             size_hint: (None,None)
             height: dp(90)
             width: dp(568)
