@@ -236,6 +236,43 @@ Builder.load_string("""
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
+                            root.maintenance_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/apps/maintenance_app/img/lobby_maintenance.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: '25sp'
+                        text: 'Maintenance'
+
+            # Carousel pane 4
+            BoxLayout:
+                orientation: 'horizontal'
+                padding: [100, 90, 100, 50]
+                spacing: 20
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing: 20
+                
+                    Button:
+                        size_hint_y: 8
+                        id: load_button
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
                             root.developer_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
@@ -255,44 +292,6 @@ Builder.load_string("""
                         text: 'Developer'
                         markup: True
 
-            # Carousel pane 4
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: [100, 90, 100, 50]
-                spacing: 20
-
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing: 20
-    
-                    Button:
-                        size_hint_y: 8
-                        id: load_button
-                        disabled: False
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            root.maintenance_app()
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-                                source: "./asmcnc/apps/maintenance_app/img/lobby_maintenance.png"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        size_hint_y: 1
-                        font_size: '25sp'
-                        text: 'Maintenance'
-                
-                
                 # BoxLayout:
                 #     orientation: 'vertical'
                 #     size_hint_x: 1
