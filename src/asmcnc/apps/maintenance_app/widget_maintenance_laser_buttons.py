@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
 from asmcnc.apps.maintenance_app import popup_maintenance
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -148,7 +149,11 @@ class LaserDatumButtons(Widget):
         popup_maintenance.PopupResetOffset(self.sm)
 
     def save_button_press(self):
-        popup_maintenance.PopupSaveOffset(self.sm)
+        if self.m.is_laser_enabled == True:
+            popup_maintenance.PopupSaveOffset(self.sm)
+        else:
+            warning_message = 'Could not save laser datum offset!\n\nPlease enable laser to set offset.'
+            popup_info.PopupError(self.sm, warning message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
