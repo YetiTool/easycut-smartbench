@@ -520,9 +520,10 @@ class RouterMachine(object):
         self.s.write_command('M5')
 
     def laser_on(self):
-        self.is_laser_on = True
-        self.s.write_command('AZ')
-        self.set_led_colour('BLUE')
+        if self.is_laser_enabled == True: 
+            self.is_laser_on = True
+            self.s.write_command('AZ')
+            self.set_led_colour('BLUE')
 
     def laser_off(self):
         self.is_laser_on = False

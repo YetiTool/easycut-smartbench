@@ -181,14 +181,14 @@ class LaserDatumButtons(Widget):
             self.spindle_image.source = "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
             self.m.spindle_on()
 
-    def disable_buttons(self):
-        self.save_button.disabled = True
-        self.reset_button.disabled = True
-        self.spindle_toggle.disabled = True
-        self.vacuum_toggle.disabled = True
+    # def disable_buttons(self):
+    #     self.save_button.disabled = True
+    #     self.reset_button.disabled = True
+    #     self.spindle_toggle.disabled = True
+    #     self.vacuum_toggle.disabled = True
 
-    def enable_buttons(self):
-        self.save_button.disabled = False
-        self.reset_button.disabled = False
-        self.spindle_toggle.disabled = False
-        self.vacuum_toggle.disabled = False
+    # def enable_buttons(self):
+    #     self.save_button.disabled = False
+    #     self.reset_button.disabled = False
+    #     self.spindle_toggle.disabled = False
+    #     self.vacuum_toggle.disabled = False

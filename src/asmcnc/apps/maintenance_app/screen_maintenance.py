@@ -194,7 +194,6 @@ Builder.load_string("""
     BoxLayout: 
         size_hint: (None,None)
         pos: (dp(142), dp(390))
-        # Button:
         Image:
             size_hint: (None,None)
             height: dp(90)
@@ -203,17 +202,6 @@ Builder.load_string("""
             center: self.parent.center
             pos: self.parent.pos
             source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
-            # on_press: root.quit_to_lobby()
-            # BoxLayout:
-            #     padding: 0
-            #     size: self.parent.size
-            #     pos: self.parent.pos
-            #     Image:
-            #         source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
-            #         center_x: self.parent.center_x
-            #         y: self.parent.y
-            #         size: self.parent.width, self.parent.height
-            #         allow_stretch: True
 
     BoxLayout: 
         size_hint: (None,None)
@@ -269,15 +257,15 @@ class MaintenanceScreenClass(Screen):
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
 
-    def enable_laser_datum_buttons(self):
-        self.laser_datum_buttons_widget.enable_buttons()
+    # def enable_laser_datum_buttons(self):
+    #     self.laser_datum_buttons_widget.enable_buttons()
 
-    def disable_laser_datum_buttons(self):
-        self.laser_datum_buttons_widget.disable_buttons()  
+    # def disable_laser_datum_buttons(self):
+    #     self.laser_datum_buttons_widget.disable_buttons()  
         
     def on_pre_enter(self):
 
-        if self.m.read_z_head_laser_offset_values():
+        if self.m.is_laser_enabled:
             self.laser_switch_widget.laser_switch.active = True
 
         self.laser_switch_widget.toggle_laser()
