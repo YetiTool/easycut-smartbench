@@ -110,13 +110,7 @@ class RouterMachine(object):
             [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
             file.close
         except: 
-            log("Unable to read z head laser offset values")
-
-        if self.is_laser_enabled == True:
-            return True
-        else: 
-            self.laser_off()
-            return False       
+            log("Unable to read z head laser offset values") 
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
         try:

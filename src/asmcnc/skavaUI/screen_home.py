@@ -304,7 +304,7 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
-        if self.m.is_laser_on == True: self.default_datum_choice = 'laser'
+        if self.m.is_laser_enabled == True: self.default_datum_choice = 'laser'
         else: self.default_datum_choice = 'spindle'
 
     def on_enter(self): 
