@@ -98,7 +98,7 @@ class RouterMachine(object):
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
-            file.write("False" + "\n" + "0" + "\n" + "0")
+            file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
     def get_persistent_values(self):
@@ -109,6 +109,8 @@ class RouterMachine(object):
             file = open(self.z_head_laser_offset_file_path, 'r')
             [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
             file.close
+
+            print(self.is_laser_enabled)
         except: 
             log("Unable to read z head laser offset values")
 

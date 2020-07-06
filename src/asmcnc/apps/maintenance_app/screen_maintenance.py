@@ -232,9 +232,6 @@ class MaintenanceScreenClass(Screen):
 
     laser_datum_reset_coordinate_x = 0
     laser_datum_reset_coordinate_y = 0
-    laser_datum_offset_x = 0
-    laser_datum_offset_y = 0
-
 
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
@@ -253,14 +250,13 @@ class MaintenanceScreenClass(Screen):
         self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
         self.switch_container.add_widget(self.laser_switch_widget)
 
+        self.laser_datum_offset_x = self.m.laser_offset_x_value
+        self.laser_datum_offset_y = self.m.laser_offset_y_value
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
         
     def on_pre_enter(self):
-
-        laser_datum_offset_x = self.m.laser_offset_x_value
-        laser_datum_offset_y = self.m.laser_offset_y_value
 
         if self.m.is_laser_enabled:
             self.laser_switch_widget.laser_switch.active = True
