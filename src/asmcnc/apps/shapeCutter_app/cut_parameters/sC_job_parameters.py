@@ -277,7 +277,7 @@ class ShapeCutterJobParameters(object):
             multiplier = 1
 
         if param == "stock bottom offset":
-            if not input > 0: return 0
+            if input < 0: return 0
             self.parameter_dict["strategy parameters"]["stock bottom offset"] = input
             
         elif param == "step down":
