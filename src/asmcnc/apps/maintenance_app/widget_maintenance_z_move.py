@@ -89,7 +89,7 @@ Builder.load_string("""
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding: (dp(5), dp(20), dp(35), dp(20))
+                    padding: (dp(7.5), dp(20), dp(32.5), dp(20))
                     size_hint: (None,None)
                     height: dp(100)
                     width: dp(100)
