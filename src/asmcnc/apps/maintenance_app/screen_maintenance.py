@@ -88,7 +88,7 @@ Builder.load_string("""
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]LASER[/b]"
+                                text: "[b]LASER DATUM[/b]"
 
                             BoxLayout:
                                 size_hint: (None,None)
