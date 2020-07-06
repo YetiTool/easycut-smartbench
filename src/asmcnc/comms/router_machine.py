@@ -738,7 +738,7 @@ class RouterMachine(object):
             if self.rainbow_cycle_count < self.rainbow_cycle_limit:
                 Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_green(), self.rainbow_delay)
             else:
-                self.set_led_colour('GREEN')
+                Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'), self.rainbow_delay)
                 self.rainbow_cycle_count = 0 # reset for next rainbow call
 
     def set_rainbow_cycle_led(self, command):
