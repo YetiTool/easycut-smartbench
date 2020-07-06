@@ -264,6 +264,8 @@ class MaintenanceScreenClass(Screen):
 
         if self.m.is_laser_enabled:
             self.laser_switch_widget.laser_switch.active = True
+        else: 
+            self.laser_switch_widget.laser_switch.active = False
 
         self.laser_switch_widget.toggle_laser()
 

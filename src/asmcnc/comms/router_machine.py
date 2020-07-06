@@ -123,7 +123,9 @@ class RouterMachine(object):
             file = open(self.z_head_laser_offset_file_path, "w")
             file.write(str(enabled) + "\n" + str(X) + "\n" + str(Y))
             file.close()
-            Clock.schedule_once(lambda dt: self.read_z_head_laser_offset_values(), 0.1)
+            self.laser_offset_x_value = X
+            self.laser_offset_y_value = Y
+            self.is_laser_enabled = enabled
         except: 
             log("Unable to write z head laser offset values")
 
