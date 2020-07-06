@@ -250,9 +250,6 @@ class MaintenanceScreenClass(Screen):
         self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
         self.switch_container.add_widget(self.laser_switch_widget)
 
-        self.laser_datum_offset_x = self.m.laser_offset_x_value
-        self.laser_datum_offset_y = self.m.laser_offset_y_value
-
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
         
@@ -268,4 +265,4 @@ class MaintenanceScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
         if self.m.is_laser_enabled == False:
-            self.m.write_z_head_laser_offset_values('False', self.laser_datum_offset_x, self.laser_datum_offset_y)
+            self.m.write_z_head_laser_offset_values('False', self.m.laser_offset_x_value, self.m.laser_offset_y_value)
