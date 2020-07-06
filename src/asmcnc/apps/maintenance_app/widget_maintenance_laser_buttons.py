@@ -92,8 +92,8 @@ Builder.load_string("""
                 Button:
                     id: reset_button
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(135)
+                    width: dp(132)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -103,7 +103,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/apps/maintenance_app/img/reset_button_120.png"
+                            source: "./asmcnc/apps/maintenance_app/img/reset_button_132.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -115,8 +115,8 @@ Builder.load_string("""
                 Button:
                     id: save_button
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(135)
+                    width: dp(132)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -126,7 +126,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/apps/maintenance_app/img/save_button_120.png"
+                            source: "./asmcnc/apps/maintenance_app/img/save_button_132.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
