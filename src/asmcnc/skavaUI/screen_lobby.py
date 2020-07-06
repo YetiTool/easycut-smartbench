@@ -443,7 +443,7 @@ class LobbyScreen(Screen):
         self.sm.current = 'home'
     
     def shapecutter_app(self):
-        self.m.run_led_rainbow_ending_blue()
+        self.m.run_led_rainbow_ending_green()
         self.am.start_shapecutter_app()
     
     def calibrate_smartbench(self):
