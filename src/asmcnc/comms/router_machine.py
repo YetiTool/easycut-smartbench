@@ -375,11 +375,11 @@ class RouterMachine(object):
         self.s.start_sequential_stream(settings)
 
 # SETTINGS GETTERS
-    def product_code(self): 
+    def serial_number(self): 
         try: self.s.setting_50
         except: return 0
         else: return self.s.setting_50[:4]
-    def serial_number(self): 
+    def product_code(self): 
         try: self.s.setting_50
         except: return 0
         else: return self.s.setting_50[5:7]
