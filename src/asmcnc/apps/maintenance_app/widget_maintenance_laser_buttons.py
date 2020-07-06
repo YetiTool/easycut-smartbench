@@ -168,7 +168,7 @@ class LaserDatumButtons(Widget):
         self.sm.get_screen('maintenance').laser_datum_offset_x = z_head_laser_offset_x
         self.sm.get_screen('maintenance').laser_datum_offset_y = z_head_laser_offset_y
 
-        self.m.write_z_head_laser_offset_values(True, z_head_laser_offset_x, z_head_laser_offset_y)
+        self.m.write_z_head_laser_offset_values('True', z_head_laser_offset_x, z_head_laser_offset_y)
         
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 

@@ -272,4 +272,4 @@ class MaintenanceScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
         if self.m.is_laser_enabled == False:
-            self.m.write_z_head_laser_offset_values(False, self.laser_datum_offset_x, self.laser_datum_offset_y)
+            self.m.write_z_head_laser_offset_values('False', self.laser_datum_offset_x, self.laser_datum_offset_y)
