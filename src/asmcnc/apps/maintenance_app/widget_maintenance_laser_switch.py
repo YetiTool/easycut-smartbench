@@ -49,6 +49,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 height: dp(70)
                 width: dp(55)
+                padding: dp(5)
                 Image:
                     id: laser_image
                     source: "./asmcnc/apps/maintenance_app/img/laser_on.png"
