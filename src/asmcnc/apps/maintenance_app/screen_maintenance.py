@@ -259,6 +259,9 @@ class MaintenanceScreenClass(Screen):
         
     def on_pre_enter(self):
 
+        laser_datum_offset_x = self.m.laser_offset_x_value
+        laser_datum_offset_y = self.m.laser_offset_y_value
+
         if self.m.is_laser_enabled:
             self.laser_switch_widget.laser_switch.active = True
 
@@ -267,4 +270,4 @@ class MaintenanceScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
         if self.m.is_laser_enabled == False:
-            self.m.write_z_head_laser_offset_values(0,0)
+            self.m.write_z_head_laser_offset_values(False,laser_datum_offset_x,laser_datum_offset_y)

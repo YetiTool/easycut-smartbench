@@ -98,7 +98,7 @@ class RouterMachine(object):
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
-            file.write("0" + "\n" + "0")
+            file.write("False" + "\n" + "0" + "\n" + "0")
             file.close()
 
     def get_persistent_values(self):
@@ -107,23 +107,23 @@ class RouterMachine(object):
     def read_z_head_laser_offset_values(self):
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
-            [self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
+            [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
             file.close
         except: 
             log("Unable to read z head laser offset values")
 
-        if self.laser_offset_x_value != '0' or self.laser_offset_x_value != '0':
-            self.is_laser_enabled = True
+        if self.is_laser_enabled == True:
             return True
         else: 
             self.laser_off()
             return False       
 
-    def write_z_head_laser_offset_values(self, X, Y):
+    def write_z_head_laser_offset_values(self, enabled, X, Y):
         try:
             file = open(self.z_head_laser_offset_file_path, "w")
-            file.write(str(X) + "\n" + str(Y))
+            file.write(str(enabled) + "\n" + str(X) + "\n" + str(Y))
             file.close()
+            Clock.schedule_once(lambda dt: self.read_z_head_laser_offset_values(), 0.1)
         except: 
             log("Unable to write z head laser offset values")
 
