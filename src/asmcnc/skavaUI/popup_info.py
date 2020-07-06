@@ -76,17 +76,8 @@ class PopupDatum(Widget):
           self.sm.get_screen('home').default_datum_choice = 'spindle'
 
       def set_datum(*args):
-          if self.sm.get_screen('home').default_datum_choice == 'spindle':
-            print "setting datum without laser"
 
-            if xy == 'X':
-                self.m.set_x_datum()
-            elif xy == 'Y':
-                self.m.set_y_datum()
-            elif xy == 'XY':
-                self.m.set_workzone_to_pos_xy()
-
-          elif self.sm.get_screen('home').default_datum_choice == 'laser':
+          if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
             print "setting datum with laser"
 
             if xy == 'X':
@@ -96,6 +87,17 @@ class PopupDatum(Widget):
                 
             elif xy == 'XY':
                 self.m.set_workzone_to_pos_xy_with_laser()
+
+          else:
+            print "setting datum without laser"
+
+            if xy == 'X':
+                self.m.set_x_datum()
+            elif xy == 'Y':
+                self.m.set_y_datum()
+            elif xy == 'XY':
+                self.m.set_workzone_to_pos_xy()
+
 
       def set_checkbox_default():
         if self.sm.get_screen('home').default_datum_choice == 'spindle':
@@ -126,7 +128,7 @@ class PopupDatum(Widget):
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
         chk_layout.add_widget(checkbox)
-      
+
       layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
       layout_plan.add_widget(img)
       layout_plan.add_widget(label)

@@ -77,17 +77,8 @@ class PopupDatum(Widget):
           self.sm.get_screen('home').default_datum_choice = 'spindle'
 
       def set_datum(*args):
-          if self.sm.get_screen('home').default_datum_choice == 'spindle':
-            print "setting datum without laser"
 
-            if xy == 'X':
-                self.m.set_x_datum()
-            elif xy == 'Y':
-                self.m.set_y_datum()
-            elif xy == 'XY':
-                self.m.set_workzone_to_pos_xy()
-
-          elif self.sm.get_screen('home').default_datum_choice == 'laser':
+          if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
             print "setting datum with laser"
 
             if xy == 'X':
@@ -98,6 +89,17 @@ class PopupDatum(Widget):
             elif xy == 'XY':
                 self.m.set_workzone_to_pos_xy_with_laser()
 
+          else:
+            print "setting datum without laser"
+
+            if xy == 'X':
+                self.m.set_x_datum()
+            elif xy == 'Y':
+                self.m.set_y_datum()
+            elif xy == 'XY':
+                self.m.set_workzone_to_pos_xy()
+
+
       def set_checkbox_default():
         if self.sm.get_screen('home').default_datum_choice == 'spindle':
           return False
@@ -106,7 +108,7 @@ class PopupDatum(Widget):
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
-
+      
 
       ok_button = Button(text='[b]Yes[/b]', markup = True)
       ok_button.background_normal = ''
@@ -120,17 +122,18 @@ class PopupDatum(Widget):
       btn_layout.add_widget(back_button)
       btn_layout.add_widget(ok_button)
 
-      if self.m.is_laser_enabled:
+
+      if self.m.is_laser_enabled == True:
         chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
-        chk_layout.add_widget(checkbox)      
-      
+        chk_layout.add_widget(checkbox)
+
       layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
       layout_plan.add_widget(img)
       layout_plan.add_widget(label)
-      if self.m.is_laser_enabled: layout_plan.add_widget(chk_layout)
+      if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
       layout_plan.add_widget(btn_layout)
       
       popup = Popup(title='Warning!',
@@ -147,7 +150,7 @@ class PopupDatum(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
-      if self.m.is_laser_enabled: checkbox.bind(active=on_checkbox_active)
+      if self.m.is_laser_enabled == True: checkbox.bind(active=on_checkbox_active)
 
       ok_button.bind(on_press=popup.dismiss)
       ok_button.bind(on_press=set_datum)
