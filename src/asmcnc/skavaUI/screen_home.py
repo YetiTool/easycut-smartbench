@@ -143,7 +143,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
-                        on_press: root.m.laser_off()
+                        on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -309,7 +309,7 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
-        if self.tab_panel.current_tab == self.move_tab:
+        if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
