@@ -718,27 +718,26 @@ class RouterMachine(object):
     # LED DISCO inferno
 
     rainbow_delay = 0.03
-    led_rainbow_ending_blue = [
+    led_rainbow_ending_green = [
         'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
-        'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
-        'B1','B2','B3','B4','B5','B6','B7','B8','B9'
+        'B1','B2','B3','B4','B5','B6','B7','B8','B9','B8','B7','B6','B5','B4','B3','B2','B1','B0'
+        'G1','G2','G3','G4','G5','G6','G7','G8','G9'
         ]
 
 
     rainbow_cycle_count = 0
-    rainbow_cycle_limit = len(led_rainbow_ending_blue)
+    rainbow_cycle_limit = len(led_rainbow_ending_green)
 
     def run_led_rainbow_ending_green(self):
         
         if self.state().startswith('Idle'):
             
-            self.set_rainbow_cycle_led(self.led_rainbow_ending_blue[self.rainbow_cycle_count])
+            self.set_rainbow_cycle_led(self.led_rainbow_ending_green[self.rainbow_cycle_count])
             self.rainbow_cycle_count += 1
 
             if self.rainbow_cycle_count < self.rainbow_cycle_limit:
                 Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_green(), self.rainbow_delay)
             else:
-                Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'), self.rainbow_delay)
                 self.rainbow_cycle_count = 0 # reset for next rainbow call
 
     def set_rainbow_cycle_led(self, command):
