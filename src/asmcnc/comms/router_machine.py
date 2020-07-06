@@ -239,7 +239,7 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
 #         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.3)
 
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
