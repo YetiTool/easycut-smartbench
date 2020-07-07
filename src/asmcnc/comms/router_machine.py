@@ -377,7 +377,7 @@ class RouterMachine(object):
 # SETTINGS GETTERS
     def serial_number(self): 
         try: self.s.setting_50
-        except: return 0
+        except: return 0.03
         else: return self.s.setting_50
 
 # POSITONAL GETTERS            
