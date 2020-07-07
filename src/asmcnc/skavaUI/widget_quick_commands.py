@@ -186,10 +186,6 @@ class QuickCommands(Widget):
             if self.m.fw_can_operate_zUp_on_pause():
                 self.sm.current = 'lift_z_on_pause_or_not'
             else:
-
-                info = "FOR TESTING: Full serial number setting is " + str(self.m.serial_number())
-                popup_info.PopupInfo(self.sm, 400, info)               
-
                 self.sm.current = 'go'
 
 
