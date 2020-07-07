@@ -648,7 +648,7 @@ class ShapeCutter24ScreenClass(Screen):
                     
                     elif dim == "step down" and setting != 0: 
                         description = "The " + dim + " input isn't valid.\n\n" + \
-                                    dim + " value should be greater than the shape depth, Z = " + setting + " .\n\n" \
+                                    dim + " value should be greater than the shape depth, Z = " + str(setting) + " .\n\n" \
                                     + "Please re-enter your parameters."
 
                         popup_input_error.PopupInputError(self.shapecutter_sm, description)                       
