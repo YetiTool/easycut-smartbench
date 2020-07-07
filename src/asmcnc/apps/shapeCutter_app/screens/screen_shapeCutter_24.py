@@ -647,7 +647,7 @@ class ShapeCutter24ScreenClass(Screen):
                             return False
                     
                     elif dim == "step down" and setting != 0: 
-                         description = "The " + dim + " input isn't valid.\n\n" + \
+                        description = "The " + dim + " input isn't valid.\n\n" + \
                                     dim + " value should be greater than the shape depth, Z = " + setting + " .\n\n" \
                                     + "Please re-enter your parameters."
 
