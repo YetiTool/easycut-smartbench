@@ -377,13 +377,8 @@ class RouterMachine(object):
 # SETTINGS GETTERS
     def serial_number(self): 
         try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50[:len(self.s.setting_50 - 3)]
-
-    def product_code(self): 
-        try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50[len(self.s.setting_50 - 2): len(self.s.setting_50)]
+        except: return 0.03
+        else: return self.s.setting_50
 
 # POSITONAL GETTERS            
         

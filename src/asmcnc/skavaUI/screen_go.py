@@ -431,7 +431,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if (self.m.product_code() == '03' or self.sm.get_screen('dev').developer_mode == True):
+        if (str(self.m.serial_number()).endswith('03') or self.sm.get_screen('dev').developer_mode == True):
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
