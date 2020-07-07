@@ -311,7 +311,11 @@ class ShapeCutter28ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
         self.xy_move_widget.set_jog_speeds()
-            
+        self.m.laser_on()
+    
+    def on_pre_leave(self):
+        self.m.laser_off()
+
 # Action buttons
     def get_info(self):
         pass

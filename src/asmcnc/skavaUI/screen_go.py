@@ -459,7 +459,7 @@ class GoScreen(Screen):
         # Reset flag & light
         self.is_job_started_already = False
 
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour('GREEN')
         
         self.feedOverride.feed_norm()
         self.speedOverride.feed_norm()

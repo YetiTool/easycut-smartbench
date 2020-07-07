@@ -636,7 +636,7 @@ class ShapeCutter24ScreenClass(Screen):
                 
                 if not setting == True:
 
-                    if dim == "step down":
+                    if dim == "step down" and setting == False:
                         description = "The " + dim + " is greater than half the cutter diameter - " + \
                                     "this might be too big for the size of cutter.\n\n"  + \
                                     " A good guide is to not exceed half the cutter diameter.\n\n" + \
@@ -645,7 +645,15 @@ class ShapeCutter24ScreenClass(Screen):
                             popup_input_error.PopupInputError(self.shapecutter_sm, description)
                             self.counter = 1
                             return False
-                        
+                    
+                    elif dim == "step down" and setting != 0: 
+                        description = "The " + dim + " input isn't valid.\n\n" + \
+                                    dim + " value should be greater than the shape depth, Z = " + str(setting) + " mm.\n\n" \
+                                    + "Please re-enter your parameters."
+
+                        popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                        return False                   
+
                     else: 
                         description = "The " + dim + " input isn't valid.\n\n" + \
                                     dim + " value should be greater than 0.\n\n" \

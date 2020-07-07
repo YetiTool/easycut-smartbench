@@ -414,7 +414,7 @@ class HomingScreen(Screen):
             self.return_to_app()
             
     def return_to_app(self):
-        Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),0.2)
+        Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),0.2)
         self.sm.current = self.return_to_screen
 
     def cancel_homing(self):

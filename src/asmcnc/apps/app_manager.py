@@ -8,6 +8,8 @@ from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
 from asmcnc.calibration_app import screen_landing
 from asmcnc.calibration_app import screen_finished
+from asmcnc.apps.maintenance_app import screen_maintenance
+
 
 # import shape cutter managing object
 
@@ -59,4 +61,10 @@ class AppManagerClass(object):
         
         self.current_app = 'update'
         self.sm.current = 'update'
+
+    def start_maintenance_app(self):
+        if not self.sm.has_screen('maintenance'):
+            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(maintenance_screen)
+        self.sm.current = 'maintenance'
     

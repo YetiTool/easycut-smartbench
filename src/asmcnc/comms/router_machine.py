@@ -48,10 +48,19 @@ class RouterMachine(object):
     is_machine_paused = False
 
     # Persistent values setup
-    smartbench_values_dir = 'sb_values'
-    spindle_brush_use_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_use.txt')
-    spindle_brush_max_life_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_max_life.txt')
+    smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
+
+    spindle_brush_use_file_path = smartbench_values_dir + 'spindle_brush_use.txt'
+    spindle_brush_max_life_file_path = smartbench_values_dir + 'spindle_brush_max_life.txt'
     
+    z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
+
+    laser_offset_x_value = 0
+    laser_offset_y_value = 0
+
+    is_laser_on = False
+    is_laser_enabled = False
+
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -63,13 +72,14 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-        self.check_presence_of_sb_values_files()
-
+        if sys.platform != "win32" and sys.platform != "darwin":
+            self.check_presence_of_sb_values_files()
+            self.get_persistent_values()
 
     def check_presence_of_sb_values_files(self):
-        
+
         # check folder exists
-        if not os.path.exists(self.smartbench_values_dir):
+        if not path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
         
@@ -85,7 +95,33 @@ class RouterMachine(object):
             max_life_in_seconds = 120 * 3600 # hours of life expected, converted to seconds
             file.write(str(max_life_in_seconds))
             file.close()
+        if not path.exists(self.z_head_laser_offset_file_path):
+            log("Creating z head laser offset file...")
+            file = open(self.z_head_laser_offset_file_path, "w+")
+            file.write('False' + "\n" + "0" + "\n" + "0")
+            file.close()
 
+    def get_persistent_values(self):
+        self.read_z_head_laser_offset_values()
+
+    def read_z_head_laser_offset_values(self):
+        try:
+            file = open(self.z_head_laser_offset_file_path, 'r')
+            [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
+            file.close
+        except: 
+            log("Unable to read z head laser offset values") 
+
+    def write_z_head_laser_offset_values(self, enabled, X, Y):
+        try:
+            file = open(self.z_head_laser_offset_file_path, "w")
+            file.write(str(enabled) + "\n" + str(X) + "\n" + str(Y))
+            file.close()
+            self.laser_offset_x_value = X
+            self.laser_offset_y_value = Y
+            self.is_laser_enabled = enabled
+        except: 
+            log("Unable to write z head laser offset values")
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):
@@ -199,7 +235,7 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
 #         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.3)
 
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
@@ -209,7 +245,7 @@ class RouterMachine(object):
         # To prevent user frustration, we're allowing the machine to be unlocked and moved until we can add further user handling
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.5)
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.5)
 
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
@@ -224,13 +260,13 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
     def resume_from_gcode_error(self):
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.1)
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_colour('BLUE'),0.2) 
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
     def stop_for_a_stream_pause(self):
         self.set_pause(True)  
@@ -419,7 +455,35 @@ class RouterMachine(object):
     def set_y_datum(self):
         self.s.write_command('G10 L20 P1 Y0')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
-                
+
+    def set_workzone_to_pos_xy_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        def wait_for_movement_to_complete(dt):
+            if not self.state() == 'Jog':
+                Clock.unschedule(self.poll_for_success)
+                self.set_workzone_to_pos_xy()
+
+        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+    def set_x_datum_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        
+        def wait_for_movement_to_complete(dt):
+            if not self.state() == 'Jog':
+                Clock.unschedule(self.poll_for_success)
+                self.set_x_datum()
+
+        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+    def set_y_datum_with_laser(self):
+        self.jog_spindle_to_laser_datum()
+        def wait_for_movement_to_complete(dt):
+            if not self.state() == 'Jog':
+                Clock.unschedule(self.poll_for_success)
+                self.set_y_datum()
+
+        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
@@ -450,6 +514,17 @@ class RouterMachine(object):
     
     def spindle_off(self):
         self.s.write_command('M5')
+
+    def laser_on(self):
+        if self.is_laser_enabled == True: 
+            self.is_laser_on = True
+            self.s.write_command('AZ')
+            self.set_led_colour('BLUE')
+
+    def laser_off(self):
+        self.is_laser_on = False
+        self.s.write_command('AX')
+        self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
@@ -485,6 +560,10 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+
+    def jog_spindle_to_laser_datum(self):
+        self.jog_relative('X', self.laser_offset_x_value, 6000.0)
+        self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
@@ -635,25 +714,25 @@ class RouterMachine(object):
     # LED DISCO inferno
 
     rainbow_delay = 0.03
-    led_rainbow_ending_blue = [
+    led_rainbow_ending_green = [
         'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
-        'G1','G2','G3','G4','G5','G6','G7','G8','G9','G8','G7','G6','G5','G4','G3','G2','G1','G0',
-        'B1','B2','B3','B4','B5','B6','B7','B8','B9'
+        'B1','B2','B3','B4','B5','B6','B7','B8','B9','B8','B7','B6','B5','B4','B3','B2','B1','B0'
+        'G1','G2','G3','G4','G5','G6','G7','G8','G9'
         ]
 
 
     rainbow_cycle_count = 0
-    rainbow_cycle_limit = len(led_rainbow_ending_blue)
+    rainbow_cycle_limit = len(led_rainbow_ending_green)
 
-    def run_led_rainbow_ending_blue(self):
+    def run_led_rainbow_ending_green(self):
         
         if self.state().startswith('Idle'):
             
-            self.set_rainbow_cycle_led(self.led_rainbow_ending_blue[self.rainbow_cycle_count])
+            self.set_rainbow_cycle_led(self.led_rainbow_ending_green[self.rainbow_cycle_count])
             self.rainbow_cycle_count += 1
 
             if self.rainbow_cycle_count < self.rainbow_cycle_limit:
-                Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_blue(), self.rainbow_delay)
+                Clock.schedule_once(lambda dt: self.run_led_rainbow_ending_green(), self.rainbow_delay)
             else:
                 self.rainbow_cycle_count = 0 # reset for next rainbow call
 

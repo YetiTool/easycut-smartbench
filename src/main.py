@@ -63,6 +63,7 @@ from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
+from asmcnc.apps.maintenance_app import screen_maintenance
 
 # developer testing
 Cmport = 'COM3'
@@ -203,6 +204,11 @@ class SkavaUI(App):
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = 'welcome'
 #         sm.current = 'go'
+
+        # maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine =m)
+        # sm.add_widget(maintenance_screen)
+        # sm.current = 'maintenance'
+
 
         log('Screen manager activated: ' + str(sm.current))
 

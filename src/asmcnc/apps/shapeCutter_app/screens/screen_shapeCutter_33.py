@@ -376,6 +376,10 @@ class ShapeCutter33ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
+        self.m.laser_on()
+
+    def on_pre_leave(self):
+        self.m.laser_off()
 
 # Action buttons
     

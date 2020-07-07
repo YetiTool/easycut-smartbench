@@ -277,17 +277,18 @@ class ShapeCutterJobParameters(object):
             multiplier = 1
 
         if param == "stock bottom offset":
-            if not input > 0: return 0
+            if input < 0: return 0
             self.parameter_dict["strategy parameters"]["stock bottom offset"] = input
             
         elif param == "step down":
             
             warning_step_down = (float(self.parameter_dict["cutter dimensions"]["diameter"])*multiplier) / 2
             
+            if input > (float(self.shape_dict["dimensions"]["Z"])): return (float(self.shape_dict["dimensions"]["Z"]))
             if not input > 0: return 0
             if input > warning_step_down: return False
             self.parameter_dict["strategy parameters"]["step down"] = input
-        
+
         return True
  
     def load_parameters(self, filename):

@@ -159,7 +159,7 @@ class HomingScreenActive(Screen):
             
             # allow breather for sequential scream to process
             Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
-            Clock.schedule_once(lambda dt: self.m.set_led_colour("BLUE"),1)
+            Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
 
 
     def after_successful_completion_return_to_screen(self):

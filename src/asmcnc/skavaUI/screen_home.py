@@ -45,6 +45,7 @@ Builder.load_string("""
     tab_panel:tab_panel
     pos_tab:pos_tab
     gcode_preview_container:gcode_preview_container
+    move_tab:move_tab
 
     BoxLayout:
         padding: 0
@@ -72,7 +73,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
-                        on_press: root.m.set_led_colour('BLUE')
+                        on_press: root.m.laser_off()
                         BoxLayout:
                             padding: 20
                             spacing: 20
@@ -98,9 +99,10 @@ Builder.load_string("""
 
 
                     TabbedPanelItem:
+                        id: move_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_move_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_move_up.png'
-                        on_press: root.m.set_led_colour('BLUE')
+                        on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
                             padding: 20
@@ -141,7 +143,7 @@ Builder.load_string("""
                         id: pos_tab
                         background_normal: 'asmcnc/skavaUI/img/tab_pos_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_pos_up.png'
-                        on_press: root.m.set_led_colour('BLUE')
+                        on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
                             padding: 20
@@ -172,7 +174,7 @@ Builder.load_string("""
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_job_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_job_up.png'
-                        on_press: root.m.set_led_colour('BLUE')
+                        on_press: root.m.laser_off()
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
@@ -261,7 +263,7 @@ class HomeScreen(Screen):
     gcode_has_been_checked_and_its_ok = False
     non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
-    
+    default_datum_choice = 'spindle'
 
     def __init__(self, **kwargs):
 
@@ -302,9 +304,15 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
+        if self.m.is_laser_enabled == True: self.default_datum_choice = 'laser'
+        else: self.default_datum_choice = 'spindle'
+
     def on_enter(self): 
 
-        Clock.schedule_once(lambda dt: self.m.set_led_colour('BLUE'), 0.2)
+        if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
+            Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
+        else: 
+            Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
         
         # File label at the top
         if self.job_gcode != []:
@@ -337,7 +345,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print 'No G-code loaded.'
- 
+
     def preview_job_file(self, dt):
 
         # Draw gcode preview 
@@ -350,5 +358,7 @@ class HomeScreen(Screen):
 
         log('DONE')
 
+    def on_pre_leave(self):
+        self.m.laser_off()
 
     
