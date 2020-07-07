@@ -19,6 +19,8 @@ from kivy.clock import Clock
 from asmcnc.comms import usb_storage
 import sys, os
 
+from asmcnc.skavaUI import popup_info
+
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
 PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
 PLATFORM_HOME= "/home/pi/"
@@ -35,6 +37,7 @@ Builder.load_string("""
     pl_hash_label:pl_hash_label
     pl_branch_label:pl_branch_label
     fw_version_label:fw_version_label
+    dev_mode_toggle: dev_mode_toggle
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -227,8 +230,10 @@ Builder.load_string("""
                 color: 1,1,1,1
                 id: sw_hash_label 
                 
-            Label: 
-                text: ''
+            ToggleButton: 
+                id: dev_mode_toggle
+                text: 'Toggle dev mode'
+                on_press: root.toggle_dev_mode()
                 
             Label: 
                 text: 'EC version'
@@ -285,6 +290,7 @@ class DeveloperScreen(Screen):
     virtual_hw_mode = StringProperty('normal') # toggles between 'normal' or 'down'(/looks like it's been pressed)
     scraped_grbl_settings = []
 
+    developer_mode = False
 
     def __init__(self, **kwargs):
 
@@ -320,6 +326,12 @@ class DeveloperScreen(Screen):
     def quit_to_console(self):
         print 'Bye!'
         sys.exit()
+
+    def toggle_dev_mode(self):
+        if self.dev_mode_toggle.state == 'normal':
+            self.developer_mode = False
+        elif self.dev_mode_toggle.state == 'down':
+            popup_info.PopupDevModePassword(self.sm)
 
     def square_axes(self):
         pass

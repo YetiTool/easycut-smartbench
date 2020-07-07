@@ -410,7 +410,11 @@ class RouterMachine(object):
         settings = ['$22=1','$20=1','$21=1']
         self.s.start_sequential_stream(settings)
 
-
+# SETTINGS GETTERS
+    def serial_number(self): 
+        try: self.s.setting_50
+        except: return 0
+        else: return self.s.setting_50
 
 # POSITONAL GETTERS            
         
