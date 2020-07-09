@@ -522,12 +522,12 @@ class RouterMachine(object):
     def laser_on(self):
         if self.is_laser_enabled == True: 
             self.is_laser_on = True
-            self.s.write_command('AZ')
+            # self.s.write_command('AZ')
             self.set_led_colour('BLUE')
 
     def laser_off(self):
         self.is_laser_on = False
-        self.s.write_command('AX')
+        # self.s.write_command('AX')
         self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
