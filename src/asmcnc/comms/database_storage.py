@@ -20,7 +20,7 @@ if sys.platform != 'win32':
     from influxdb import InfluxDBClient # database lib
 
 def log(message):
-    timestamp = datetime.now()
+    timestamp = datetime.datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
@@ -54,7 +54,7 @@ class DatabaseStorage(object):
                 "tags": {
                     "sw_branch": self.sw_branch,
                 },
-                "time": datetime.now(),
+                "time": datetime.datetime.now(),
                 "fields": {
                     name : value,
                 }
