@@ -40,7 +40,7 @@ class DatabaseStorage(object):
     
         # Create the InfluxDB client object
         self.client = InfluxDBClient(host, port, user, password, dbname)
-        self.hostname = "SmartBench_0005" #TODO this needs to be serialised based on unique ID of SB console
+        self.hostname = "SmartBench_0006" #TODO this needs to be serialised based on unique ID of SB console
         self.sw_branch = "flurry_poc1" #TODO this is just an example of how we could track what SW we're running which is sending the data
 
 
@@ -53,10 +53,10 @@ class DatabaseStorage(object):
             {
                 "measurement": self.hostname,
                 "tags": {
-                    "sw_branch": "test",
+                    "sw_branch": self.sw_branch,
                     "grbl": "whatever"
                 },
-                "time": time.ctime(),
+                "time": datetime.datetime.now(),
                 "fields": {
                     "value": value
                 }
