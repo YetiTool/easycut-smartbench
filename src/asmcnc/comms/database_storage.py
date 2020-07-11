@@ -11,6 +11,7 @@ from datetime import datetime
 import os.path
 from os import path
 import time
+import datetime
 
 from __builtin__ import True
 from kivy.uix.switch import Switch
@@ -46,8 +47,6 @@ class DatabaseStorage(object):
 
     def set_value(self, name, value):
 
-        iso = time.ctime()
-
         # Create the JSON data structure
         data = [
         {
@@ -55,7 +54,7 @@ class DatabaseStorage(object):
                 "tags": {
                     "sw_branch": self.sw_branch,
                 },
-                "time": iso,
+                "time": datetime.datetime.now(),
                 "fields": {
                     name : value,
                 }
