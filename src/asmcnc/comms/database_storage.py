@@ -53,7 +53,7 @@ class DatabaseStorage(object):
             "measurement":self.hostname,
             "time":datetime.datetime.now(),
             "tags": {
-                "sw_branch": self.sw_branch
+                "sw_branch": "test"
                 },
                 "fields" : {
                     name : value
