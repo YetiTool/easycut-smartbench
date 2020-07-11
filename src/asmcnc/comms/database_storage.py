@@ -7,7 +7,6 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys, os
-from datetime import datetime
 import os.path
 from os import path
 import time
@@ -58,7 +57,7 @@ class DatabaseStorage(object):
                 },
                 "time": datetime.datetime.now(),
                 "fields": {
-                    name: value
+                    "value": value
                 }
             }
         ]
