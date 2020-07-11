@@ -47,7 +47,7 @@ class DatabaseStorage(object):
     def set_value(self, name, value):
 
         # Create the JSON data structure
-        log(name, value)
+        log(str(name) + ": " + str(value))
 
         data = [
             {
