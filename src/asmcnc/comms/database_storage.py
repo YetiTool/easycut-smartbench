@@ -49,17 +49,19 @@ class DatabaseStorage(object):
 
         # Create the JSON data structure
 
-        data = [{
-            "measurement":self.hostname,
-            "time":datetime.datetime.now(),
-            "tags":{
-                "sw_branch":"test",
-                "grbl":"whatever"
+        data = [
+            {
+                "measurement": self.hostname,
+                "tags": {
+                    "sw_branch": "test",
+                    "grbl": "whatever"
                 },
-                "fields" : {
-                    name:value
-                    },
-            }]
+                "time": datetime.datetime.now(),
+                "fields": {
+                    name: value
+                }
+            }
+        ]
         
         # Send the JSON data to InfluxDB
         self.client.write_points(data)      
