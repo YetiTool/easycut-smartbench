@@ -50,12 +50,12 @@ class DatabaseStorage(object):
         # Create the JSON data structure
 
         data = [{
-            'measurement':self.hostname,
-            'time':datetime.datetime.now(),
-            'tags': {
+            "measurement":self.hostname,
+            "time":datetime.datetime.now(),
+            "tags": {
                 "sw_branch": self.sw_branch,
                 },
-                'fields' : {
+                "fields" : {
                     name : value,
                     },
             }]
