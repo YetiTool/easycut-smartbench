@@ -525,12 +525,12 @@ class RouterMachine(object):
     def spindle_on(self):
         self.s.write_command('M3 S25000')
         if sys.platform != 'win32' and sys.platform != "darwin":
-            self.db.set_value("spindle_on_off", 1)
+            self.db.set_value("spindle_on_off", 1.0)
     
     def spindle_off(self):
         self.s.write_command('M5')
         if sys.platform != 'win32' and sys.platform != "darwin":
-            self.db.set_value("spindle_on_off", 0)
+            self.db.set_value("spindle_on_off", 0.0)
 
     def laser_on(self):
         if self.is_laser_enabled == True: 

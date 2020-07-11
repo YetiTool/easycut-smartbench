@@ -54,7 +54,7 @@ class DatabaseStorage(object):
                 "tags": {
                     "sw_branch": self.sw_branch,
                 },
-                "time": datetime.datetime.now(),
+                "time": datetime.now(),
                 "fields": {
                     name : value,
                 }
