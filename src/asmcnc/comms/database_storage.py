@@ -41,25 +41,25 @@ class DatabaseStorage(object):
     
         # Create the InfluxDB client object
         self.client = InfluxDBClient(host, port, user, password, dbname)
-        self.hostname = "SmartBench_0002" #TODO this needs to be serialised based on unique ID of SB console
+        self.hostname = "SmartBench_0003" #TODO this needs to be serialised based on unique ID of SB console
         self.sw_branch = "flurry_poc1" #TODO this is just an example of how we could track what SW we're running which is sending the data
 
 
     def set_value(self, name, value):
 
         # Create the JSON data structure
-        data = [
-        {
-            "measurement": self.hostname,
-                "tags": {
-                    "sw_branch": self.sw_branch,
+
+        data = [{
+            'measurement':self.hostname,
+            'time':datetime.datetime.now(),
+            'tags': {
+                "sw_branch": self.sw_branch,
                 },
-                "time": datetime.datetime.now(),
-                "fields": {
+                'fields' : {
                     name : value,
-                }
-            }
-        ]
+                    },
+            }]
+        
         # Send the JSON data to InfluxDB
         self.client.write_points(data)      
  
