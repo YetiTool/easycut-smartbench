@@ -52,11 +52,12 @@ class DatabaseStorage(object):
         data = [{
             "measurement":self.hostname,
             "time":datetime.datetime.now(),
-            "tags": {
-                "sw_branch": "test"
+            "tags":{
+                "sw_branch":"test",
+                "grbl":"whatever"
                 },
                 "fields" : {
-                    name : value
+                    name:value
                     },
             }]
         
