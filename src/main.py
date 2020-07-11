@@ -66,7 +66,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.apps.maintenance_app import screen_maintenance
 
 # developer testing
-Cmport = 'COM3'
+Cmport = 'COM4'
 
 # Current version active/working on
 initial_version = 'v1.3.1'

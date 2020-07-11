@@ -4,6 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
+
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys, os
@@ -14,6 +15,9 @@ from os import path
 from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
+
+if sys.platform != 'win32':
+    from asmcnc.comms import database_storage # @UnresolvedImport
 
 
 def log(message):
@@ -75,6 +79,11 @@ class RouterMachine(object):
         if sys.platform != "win32" and sys.platform != "darwin":
             self.check_presence_of_sb_values_files()
             self.get_persistent_values()
+        
+        # Create database object to talk to
+        if sys.platform != 'win32' and sys.platform != "darwin":
+            self.db = database_storage.DatabaseStorage()
+
 
     def check_presence_of_sb_values_files(self):
 
@@ -515,9 +524,13 @@ class RouterMachine(object):
 
     def spindle_on(self):
         self.s.write_command('M3 S25000')
+        if sys.platform != 'win32' and sys.platform != "darwin":
+            self.db.set_value("spindle_on_off", 1)
     
     def spindle_off(self):
         self.s.write_command('M5')
+        if sys.platform != 'win32' and sys.platform != "darwin":
+            self.db.set_value("spindle_on_off", 0)
 
     def laser_on(self):
         if self.is_laser_enabled == True: 
