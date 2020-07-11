@@ -56,7 +56,7 @@ class DatabaseStorage(object):
                     "sw_branch": "test",
                     "grbl": "whatever"
                 },
-                "time": datetime.datetime.now(),
+                "time": time.ctime(),
                 "fields": {
                     "value": value
                 }
