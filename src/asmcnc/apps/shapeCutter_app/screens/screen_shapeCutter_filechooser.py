@@ -160,7 +160,7 @@ Builder.load_string("""
                 
 """)
 
-parameter_file_dir = './asmcnc/apps/shapeCutter_app/parameter_cache/'
+parameter_file_dir = '/home/pi/easycut-smartbench/asmcnc/apps/shapeCutter_app/parameter_cache/'
 
 
 class SCFileChooser(Screen):
@@ -218,7 +218,7 @@ class SCFileChooser(Screen):
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):
-            os.remove(filename)
+            os.remove(parameter_file_dir+filename)
             Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
           
     def delete_all(self):
