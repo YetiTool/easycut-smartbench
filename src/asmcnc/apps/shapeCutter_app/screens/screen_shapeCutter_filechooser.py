@@ -18,6 +18,7 @@ from os.path import expanduser
 from shutil import copy
 
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <SCFileChooser>:
