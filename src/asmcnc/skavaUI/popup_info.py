@@ -592,7 +592,10 @@ class PopupDeleteFile(Widget):
         self.function = kwargs['function']
         self.file_selection = kwargs['file_selection']
         
-        description = "Are you sure you want to delete this file?"
+        if self.file_selection == 'all':
+          description = "Are you sure you want to delete these files?"
+        else:
+          description = "Are you sure you want to delete this file?"
         
         def delete(*args):
           if self.file_selection == 'all':
