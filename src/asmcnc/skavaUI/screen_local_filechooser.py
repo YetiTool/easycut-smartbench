@@ -339,16 +339,14 @@ class LocalFileChooser(Screen):
     def delete_popup(self, **kwargs):
 
         try: kwargs['file_selection']
-        except: popup_info.PopupDeleteFile(self.sm, self.delete_all)
-        else: popup_info.PopupDeleteFile(self.sm, (self.delete_selected(kwargs['file_selection'])))
-
+        except: popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_all, file_selection = 'all')
+        else: popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):        
         if os.path.isfile(filename):
             os.remove(filename)
             self.refresh_filechooser()    
-          
-        
+
     def delete_all(self):
 
         files_in_cache = os.listdir(job_cache_dir) # clean cache
