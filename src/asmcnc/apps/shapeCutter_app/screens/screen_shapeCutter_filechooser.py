@@ -81,7 +81,8 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.delete_selected(filechooser_sc_params.selection[0])
+                    root.delete_popup(file_selection = filechooser_sc_params.selection[0])
+                    # root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -102,7 +103,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.delete_all()
+                    root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -208,13 +209,17 @@ class SCFileChooser(Screen):
         self.j.load_parameters(file_selection)
         self.shapecutter_sm.next_screen()
 
+    def delete_popup(self, **kwargs):
+        if kwargs['file_selection'] == 'all':
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_all, file_selection = 'all')
+        else: 
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):
             os.remove(filename)
             Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
           
-        
     def delete_all(self):
 
         files_in_cache = os.listdir(parameter_file_dir) # clean cache
