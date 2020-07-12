@@ -212,9 +212,9 @@ class SCFileChooser(Screen):
 
     def delete_popup(self, **kwargs):
         if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_all, file_selection = 'all')
+            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, function = self.delete_all, file_selection = 'all')
         else: 
-            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
+            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):
