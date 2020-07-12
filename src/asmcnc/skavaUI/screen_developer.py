@@ -261,7 +261,7 @@ Builder.load_string("""
                 id: pl_branch_label               
 
             Label:
-                text: 'FW branch'
+                text: '-'
                 color: 1,1,1,1
                 
             Label:
@@ -270,7 +270,7 @@ Builder.load_string("""
                 id: pl_hash_label
 
             Label:
-                text: 'FW hash'
+                text: '-'
                 color: 1,1,1,1
 
             Label:
