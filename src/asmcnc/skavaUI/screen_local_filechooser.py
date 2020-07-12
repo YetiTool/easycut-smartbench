@@ -339,11 +339,10 @@ class LocalFileChooser(Screen):
 
     def delete_selected(self, filename):
         
-        if popup_info
-
-        if os.path.isfile(filename):
-            os.remove(filename)
-            self.refresh_filechooser()    
+        if popup_info.PopupDeleteFile(self.sm) == True:
+            if os.path.isfile(filename):
+                os.remove(filename)
+                self.refresh_filechooser()    
           
         
     def delete_all(self):
