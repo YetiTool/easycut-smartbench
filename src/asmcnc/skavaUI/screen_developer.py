@@ -310,6 +310,9 @@ class DeveloperScreen(Screen):
         self.pl_hash_label.text = self.set.pl_hash
         self.pl_branch_label.text = self.set.pl_branch
     
+    def on_pre_enter(self, *args):
+        self.m.send_any_gcode_command('$I')
+
     def on_enter(self, *args):
         self.scrape_fw_version()
         self.usb_stick.enable()
