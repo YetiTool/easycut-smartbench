@@ -156,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.delete_all()
+                    root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -348,7 +348,6 @@ class LocalFileChooser(Screen):
             self.refresh_filechooser()    
 
     def delete_all(self):
-
         files_in_cache = os.listdir(job_cache_dir) # clean cache
         if files_in_cache:
             for file in files_in_cache:
