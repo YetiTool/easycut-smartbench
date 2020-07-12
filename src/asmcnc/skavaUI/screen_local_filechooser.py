@@ -133,7 +133,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_popup(root.delete_selected(filechooser.selection[0]))
+                    root.delete_popup(self.delete_selected(filechooser.selection[0]))
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
