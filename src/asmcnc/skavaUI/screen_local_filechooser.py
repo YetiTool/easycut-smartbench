@@ -21,6 +21,7 @@ from shutil import copy
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -338,6 +339,8 @@ class LocalFileChooser(Screen):
 
     def delete_selected(self, filename):
         
+        if popup_info
+
         if os.path.isfile(filename):
             os.remove(filename)
             self.refresh_filechooser()    
