@@ -133,7 +133,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_popup(lambda x: print, 'hello')
+                    root.delete_popup(filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -336,8 +336,12 @@ class LocalFileChooser(Screen):
 #                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
 #-------------------------------------------------------------------
 
-    def delete_popup(self, function):
-        popup_info.PopupDeleteFile(self.sm, function)
+    def delete_popup(self, **kwargs):
+
+        try: kwargs['file selection']
+        except: popup_info.PopupDeleteFile(self.sm, self.delete_all)
+        else: popup_info.PopupDeleteFile(self.sm, self.delete_selected(kwargs['file_selection']))
+        
 
     def delete_selected(self, filename):        
         if os.path.isfile(filename):
