@@ -586,14 +586,14 @@ class PopupDevModePassword(Widget):
 
 
 class PopupDeleteFile(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, function):
         
         self.sm = screen_manager
         
-        description = "Are you sure you want to delet this file?"
+        description = "Are you sure you want to delete this file?"
         
         def delete(*args):
-          return True
+          function()
 
         def back(*args):
           return False
