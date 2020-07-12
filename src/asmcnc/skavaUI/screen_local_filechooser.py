@@ -340,8 +340,8 @@ class LocalFileChooser(Screen):
 
         try: kwargs['file selection']
         except: popup_info.PopupDeleteFile(self.sm, self.delete_all)
-        else: popup_info.PopupDeleteFile(self.sm, self.delete_selected(kwargs['file_selection']))
-        
+        else: popup_info.PopupDeleteFile(self.sm, lambda f: self.delete_selected(), kwargs['file_selection'])
+
 
     def delete_selected(self, filename):        
         if os.path.isfile(filename):
