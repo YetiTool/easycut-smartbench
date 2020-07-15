@@ -63,6 +63,13 @@ Builder.load_string("""
                 valign: 'top'
                 text: root.alarm_description 
 
+            Label:
+                size_hint_y: 1.6
+                text_size: self.size
+                font_size: '20sp'
+                halign: 'left'
+                valign: 'top'
+                text: root.message
                 
             BoxLayout:
                 orientation: 'horizontal'
