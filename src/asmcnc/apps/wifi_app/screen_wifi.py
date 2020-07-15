@@ -284,7 +284,7 @@ Builder.load_string("""
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.connect_wifi()
+                        on_press: root.check_credentials()
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -337,6 +337,21 @@ class WifiScreen(Screen):
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = 'GB'
+
+    def check_credentials(self):
+
+        if len(self.network_name) < 1: 
+
+            message = "Please enter a valid network name."
+            popup_info.PopupWarning(self.sm, message)
+
+        elif (len(self.password.text) < 8 or len(self.password.text) > 63): 
+
+            message = "Please enter a password between 8 and 63 characters."
+            popup_info.PopupWarning(self.sm, message)
+
+        else: 
+            self.connect_wifi()
 
     def connect_wifi(self):
         popup_info.PopupWait(self.sm)
