@@ -429,8 +429,8 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
-        description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
-        "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
+        description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
+        "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
         popup_info.PopupError(self.sm, description)
                     
     def help_popup(self):
