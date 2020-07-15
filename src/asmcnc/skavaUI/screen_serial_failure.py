@@ -126,7 +126,7 @@ Builder.load_string("""
                             halign: 'center'
                             text_size: self.size
                             font_size: '25sp'
-                            text: 'Reboot EasyCut'
+                            text: 'Reboot'
 #                 BoxLayout:
 #                     orientation: 'horizontal'
 #                     padding: 50, 0

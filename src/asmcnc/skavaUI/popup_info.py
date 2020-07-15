@@ -40,7 +40,7 @@ class PopupWelcome(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Welcome to EasyCut',
+        popup = Popup(title='Welcome to SmartBench',
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
@@ -338,7 +338,7 @@ class PopupSoftwareRepair(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='There was a problem updating EasyCut...',
+        popup = Popup(title='There was a problem updating the software...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -581,5 +581,68 @@ class PopupDevModePassword(Widget):
         
         ok_button.bind(on_press=check_password)
         ok_button.bind(on_press=popup.dismiss)    
+
+        popup.open()
+
+
+class PopupDeleteFile(Widget):   
+    def __init__(self, **kwargs):
+        
+        self.sm = kwargs['screen_manager']
+        self.function = kwargs['function']
+        self.file_selection = kwargs['file_selection']
+        
+        if self.file_selection == 'all':
+          description = "Are you sure you want to delete these files?"
+        else:
+          description = "Are you sure you want to delete this file?"
+        
+        def delete(*args):
+          if self.file_selection == 'all':
+            self.function()
+          else:
+            self.function(self.file_selection)
+
+        def back(*args):
+          return False
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        
+        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30,20,30,0])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title='Warning!',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 350),
+                      auto_dismiss= False
+                      )
+        
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=delete)
+        back_button.bind(on_press=popup.dismiss)
+        back_button.bind(on_press=back)
 
         popup.open()

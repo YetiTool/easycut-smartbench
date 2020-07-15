@@ -21,6 +21,7 @@ from shutil import copy
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -132,7 +133,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser.selection[0])
+                    root.delete_popup(file_selection = filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -155,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.delete_all()
+                    root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -335,16 +336,19 @@ class LocalFileChooser(Screen):
 #                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
 #-------------------------------------------------------------------
 
+    def delete_popup(self, **kwargs):
 
-    def delete_selected(self, filename):
-        
+        if kwargs['file_selection'] == 'all':
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_all, file_selection = 'all')
+        else: 
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
+
+    def delete_selected(self, filename):        
         if os.path.isfile(filename):
             os.remove(filename)
             self.refresh_filechooser()    
-          
-        
-    def delete_all(self):
 
+    def delete_all(self):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
         if files_in_cache:
             for file in files_in_cache:
