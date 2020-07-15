@@ -245,7 +245,10 @@ class GCodeMonitor(Widget):
     
     def update_monitor_text_buffer(self, input_or_output, content):
         
-        if content.startswith('<Alarm'): self.monitor_text_buffer.append(content)
+        if content.startswith('<Alarm'): 
+            self.monitor_text_buffer.append(content)
+            return
+            
         # Don't update if content is to be hidden
         if content.startswith('<') and self.hide_received_status == 'down':
             self.status_report_buffer.append(content)
