@@ -61,15 +61,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'left'
                 valign: 'top'
-                text: root.alarm_description 
-
-            Label:
-                size_hint_y: 1.6
-                text_size: self.size
-                font_size: '20sp'
-                halign: 'left'
-                valign: 'top'
-                text: root.message
+                text: root.alarm_description
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -125,4 +117,5 @@ class AlarmScreenClass(Screen):
             self.sm.current = self.return_to_screen     
         else: 
             self.sm.current = 'lobby'
+
             
