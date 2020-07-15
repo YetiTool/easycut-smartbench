@@ -688,13 +688,13 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            if self.sm.current != 'alarmScreen':
-                self.sm.get_screen('alarmScreen').message = message
-                if self.sm.current == 'errorScreen':
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-                else:
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-                self.sm.current = 'alarmScreen'
+            # if self.sm.current != 'alarmScreen':
+            #     self.sm.get_screen('alarmScreen').message = message
+            #     if self.sm.current == 'errorScreen':
+            #         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+            #     else:
+            #         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
+            #     self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             log(message)
