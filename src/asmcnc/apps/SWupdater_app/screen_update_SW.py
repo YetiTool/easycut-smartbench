@@ -415,7 +415,7 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup EasyCut safely, please try again later.\n\n" + \
+                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
                     popup_info.PopupError(self.sm, description)           
             else: 
@@ -435,18 +435,18 @@ class SWUpdateScreen(Screen):
                 
                 if outcome == 2:
                     description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
-                    "Please make sure that there is only one instance of EasyCut on your USB drive, and try again."
+                    "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
                     popup_info.PopupError(self.sm, description)
                 elif outcome == 0:
                     description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
-                    "Please make sure that the folder containing EasyCut is called [b]easycut-smartbench[/b], and try again."
+                    "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
                     popup_info.PopupError(self.sm, description)
                 elif outcome == "update failed":
                     
                     # this may need its own special bigger pop-up
                     
                     description = "It was not possible to update your software from the USB drive.\n\n" + \
-                    "Please check your EasyCut folder or try again later. If this problem persists you may need to connect to the " + \
+                    "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
                     "internet to update your software, and repair it if necessary.\n\n"
                     popup_info.PopupError(self.sm, description)              
                 

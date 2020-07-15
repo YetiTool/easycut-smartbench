@@ -429,6 +429,11 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        description = "It was not possible to update your software from the USB drive.\n\n" + \
+        "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
+        "internet to update your software, and repair it if necessary.\n\n"
+        popup_info.PopupError(self.sm, description) 
+
     def help_popup(self):
         print "pop up press"
         
