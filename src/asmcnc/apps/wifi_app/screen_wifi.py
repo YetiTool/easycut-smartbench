@@ -12,6 +12,8 @@ from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
 import socket, sys, os
 
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string("""
 
 <WifiScreen>:
@@ -337,6 +339,8 @@ class WifiScreen(Screen):
             except: self.network_name.text = 'GB'
 
     def connect_wifi(self):
+        popup_info.PopupWait(self.sm)
+
 
         # get network name and password from text entered (widget)
         self.netname = self.network_name.text
