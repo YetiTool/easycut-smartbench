@@ -679,7 +679,7 @@ class SerialConnection(object):
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
                     
-                    elif part.startswith('Alarm:'):
+                    elif part.startswith('Alarm'):
                         self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', message)
 
 
