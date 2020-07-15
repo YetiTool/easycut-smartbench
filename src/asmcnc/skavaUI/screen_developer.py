@@ -208,7 +208,7 @@ Builder.load_string("""
                 on_press: root.go_back()               
 
             Label:
-                text: 'EasyCut'
+                text: 'EasyCut-SmartBench'
                 color: 1,1,1,1
             
             Button:

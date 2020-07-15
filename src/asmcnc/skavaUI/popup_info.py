@@ -40,7 +40,7 @@ class PopupWelcome(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Welcome to EasyCut',
+        popup = Popup(title='Welcome to SmartBench',
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
@@ -338,7 +338,7 @@ class PopupSoftwareRepair(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='There was a problem updating EasyCut...',
+        popup = Popup(title='There was a problem updating the software...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

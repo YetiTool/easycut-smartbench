@@ -434,7 +434,7 @@ class LobbyScreen(Screen):
         
         description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
                     "If this is your first time, make sure you\nuse " \
-                    "the [b]Wifi[/b] and [b]Calibrate[/b] apps to set up\nSmartBench and EasyCut. \n\n " \
+                    "the [b]Wifi[/b] and [b]Calibrate[/b] apps to set up\nthe SmartBench console. \n\n " \
                     "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
         popup_info.PopupWelcome(self.sm, description)
  
