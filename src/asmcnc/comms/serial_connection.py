@@ -678,7 +678,11 @@ class SerialConnection(object):
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
-                            
+                    
+                    elif part.startswith('Alarm:'):
+                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', message)
+
+
                 else:
                     continue
 
@@ -688,13 +692,13 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            # if self.sm.current != 'alarmScreen':
-            #     self.sm.get_screen('alarmScreen').message = message
-            #     if self.sm.current == 'errorScreen':
-            #         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-            #     else:
-            #         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-            #     self.sm.current = 'alarmScreen'
+            if self.sm.current != 'alarmScreen':
+                self.sm.get_screen('alarmScreen').message = message
+                if self.sm.current == 'errorScreen':
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+                else:
+                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
+                self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             log(message)
