@@ -287,8 +287,6 @@ class HomeScreen(Screen):
         # Settings tab
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
-        # self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm, settings = self.set)
-        # self.settings_container.add_widget(self.settings_widget)
         
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
