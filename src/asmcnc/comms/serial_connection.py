@@ -526,6 +526,9 @@ class SerialConnection(object):
             # 13:09:46.178 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>
             # 13:09:46.277 < <Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|Ov:100,100,100>
 
+            # if message.startswith('<Alarm'):
+            #     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
+
             status_parts = message.translate(string.maketrans("", "", ), '<>').split('|') # fastest strip method
 
             if (status_parts[0] != "Idle" and
@@ -678,10 +681,6 @@ class SerialConnection(object):
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
-                    
-                    elif part.startswith('Alarm'):
-                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', message)
-
 
                 else:
                     continue
