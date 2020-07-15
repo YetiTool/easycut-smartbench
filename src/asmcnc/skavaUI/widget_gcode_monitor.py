@@ -251,6 +251,8 @@ class GCodeMonitor(Widget):
             return
         if content == 'ok' and self.hide_received_ok == 'down': return
         
+        if content.startswith('<Alarm'): self.monitor_text_buffer.append(content)
+
         # Update buffer with content
         if input_or_output == 'snd': self.monitor_text_buffer.append( '> ' + content)
         if input_or_output == 'rec': self.monitor_text_buffer.append(content)
