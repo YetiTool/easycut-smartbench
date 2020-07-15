@@ -84,17 +84,20 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Accordion:
-                                orientation: 'horizontal'
+                            BoxLayout:
+                                id: gcode_monitor_container
 
-                                AccordionItem:
-                                    title: 'GCode monitor'
-                                    collapse: False
-                                    id: gcode_monitor_container
+                            # Accordion:
+                            #     orientation: 'horizontal'
 
-                                # AccordionItem:
-                                #     title: 'Settings'
-                                #     id: settings_container
+                            #     AccordionItem:
+                            #         title: 'GCode monitor'
+                            #         collapse: False
+                            #         id: gcode_monitor_container
+
+                            #     # AccordionItem:
+                            #     #     title: 'Settings'
+                            #     #     id: settings_container
 
 
 
