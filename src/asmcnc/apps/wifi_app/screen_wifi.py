@@ -340,7 +340,7 @@ class WifiScreen(Screen):
 
     def check_credentials(self):
 
-        if len(self.network_name) < 1: 
+        if len(self.network_name.text) < 1: 
 
             message = "Please enter a valid network name."
             popup_info.PopupWarning(self.sm, message)
