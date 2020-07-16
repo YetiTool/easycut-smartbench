@@ -190,7 +190,8 @@ class Settings(object):
 
 
     def get_fw_update(self):
-        os.system("sudo service pigpiod start")
+        os.system("sudo pigpiod")
+        print "pigpio daemon started"
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):
@@ -204,12 +205,12 @@ class Settings(object):
 
     def flash_fw(self):
 
-        print "pigpio daemon started"
+
         pi = pigpio.pi()
         pi.set_mode(17, pigpio.ALT3)
         print(pi.get_mode(17))
         pi.stop()
-        os.system("sudo service pigpiod stop")        
+        os.system("sudo service pigpiod stop")    
         os.system("./update_fw.sh")
         sys.exit()
 
