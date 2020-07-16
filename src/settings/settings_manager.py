@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess
+import sys,os, subprocess, pigpio
 from __builtin__ import True, False
 
 class Settings(object):
@@ -184,5 +184,32 @@ class Settings(object):
             return "update failed"
         else:
             return checkout_success
+
+
+grbl_mega_dir = '/home/pi/grbl-Mega/'
+
+    def get_fw_update(self):
+        self.flash_fw()
+
+    def get_hex_file(self):
+        if not path.exists(self.grbl_mega_dir):
+            pass 
+            # clone git directory
+        # then pull latest tags
+
+    def edit_update_fw_shell_script():
+        pass
+
+    def flash_fw(self):
+        os.system("sudo service pigpiod start")
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")        
+        os.system("./update_fw.sh")
+        sys.exit()
+
+
 
             
