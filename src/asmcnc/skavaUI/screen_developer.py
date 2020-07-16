@@ -91,7 +91,6 @@ Builder.load_string("""
             Button:
                 text: 'Flash Firmware'
                 on_press: root.flash_fw()
-                disabled: 'true'
 
             Button:
                 text: 'Pull Platform'
