@@ -19,6 +19,7 @@ class Settings(object):
     latest_platform_version = ''
     fw_version = ''
     latest_fw_version = ''
+    grbl_mega_dir = '/home/pi/grbl-Mega/' 
     
     def __init__(self, screen_manager):
         
@@ -185,8 +186,6 @@ class Settings(object):
         else:
             return checkout_success
 
-
-grbl_mega_dir = '/home/pi/grbl-Mega/'
 
     def get_fw_update(self):
         self.flash_fw()
