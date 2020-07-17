@@ -89,9 +89,8 @@ Builder.load_string("""
                 on_press: root.get_sw_update()
 
             Button:
-                text: 'Pull Firmware'
+                text: 'Flash Firmware'
                 on_press: root.flash_fw()
-                disabled: 'true'
 
             Button:
                 text: 'Pull Platform'
@@ -475,7 +474,7 @@ class DeveloperScreen(Screen):
 #         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
 
     def flash_fw(self):
-        pass
+        self.set.get_fw_update()
 #         os.system("sudo service pigpiod start")
 #         pi = pigpio.pi()
 #         pi.set_mode(17, pigpio.ALT3)

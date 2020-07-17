@@ -4,8 +4,10 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess
+import sys,os, subprocess, pigpio
 from __builtin__ import True, False
+
+from kivy.clock import Clock
 
 class Settings(object):
     
@@ -19,7 +21,8 @@ class Settings(object):
     latest_platform_version = ''
     fw_version = ''
     latest_fw_version = ''
-    
+    grbl_mega_dir = '/home/pi/grbl-Mega/' 
+
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
@@ -184,5 +187,32 @@ class Settings(object):
             return "update failed"
         else:
             return checkout_success
+
+
+    def get_fw_update(self):
+        os.system("sudo pigpiod")
+        print "pigpio daemon started"
+        Clock.schedule_once(lambda dt: self.flash_fw(), 2)
+
+    def get_hex_file(self):
+        if not path.exists(self.grbl_mega_dir):
+            pass 
+            # clone git directory
+        # then pull latest tags
+
+    def edit_update_fw_shell_script():
+        pass
+
+    def flash_fw(self):
+
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")    
+        os.system("./update_fw.sh")
+        sys.exit()
+
+
 
             
