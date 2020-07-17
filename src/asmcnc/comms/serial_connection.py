@@ -100,14 +100,18 @@ class SerialConnection(object):
                     # EITHER: USB Comms hardware
                     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
                     # OR: UART Comms hardware
-                    if (line[:6] == 'ttyAMA' or line[:6] == 'ttyACM'): # look for... 
+                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
+                        # When platform is updated, this needs to be moved across to the AMA0 port :)
+                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+                    elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
                     
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                         return True
                         
                     elif (line[:12] == 'tty.usbmodem'): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 

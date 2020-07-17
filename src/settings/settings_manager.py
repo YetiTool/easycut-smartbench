@@ -205,7 +205,6 @@ class Settings(object):
 
     def flash_fw(self):
 
-
         pi = pigpio.pi()
         pi.set_mode(17, pigpio.ALT3)
         print(pi.get_mode(17))
