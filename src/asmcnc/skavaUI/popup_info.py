@@ -167,11 +167,11 @@ class PopupStop(Widget):
 
       self.sm = screen_manager
         
-      def machine_reset(self, *args):
+      def machine_reset(*args):
           self.m.stop_from_soft_stop_cancel()
 
 
-      def machine_resume(self, *args):
+      def machine_resume(*args):
           self.m.resume_from_a_soft_door()
         
       stop_description = "Is everything OK? You can resume the job, or cancel it completely."
