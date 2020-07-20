@@ -262,6 +262,10 @@ class RouterMachine(object):
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
+    def soft_stop(self):
+        self.set_pause(True)
+        self._grbl_door()
+
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
@@ -284,6 +288,10 @@ class RouterMachine(object):
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+
+    def resume_from_a_soft_door(self):
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        self._grbl_resume()
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()

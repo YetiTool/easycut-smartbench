@@ -20,7 +20,7 @@ class PopupStop(Widget):
         self.m = machine
         self.sm = screen_manager
         
-        self.m.stop_for_a_stream_pause()
+        self.m.soft_stop()
         
         stop_description = "Is everything OK? You can resume the job, or cancel it completely."
         
@@ -52,11 +52,9 @@ class PopupStop(Widget):
 
     
     def machine_reset(self, *args):
-        
-        self.m.s.is_job_streaming = True # WARNING: This line makes no sense :-) but needed to reset_the_go_screen? Refactor!
         self.m.stop_from_soft_stop_cancel()
 
 
     def machine_resume(self, *args):
-        self.m.resume_after_a_stream_pause()
+        self.m.resume_from_a_soft_door()
 
