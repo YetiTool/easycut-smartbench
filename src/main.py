@@ -87,13 +87,12 @@ def check_and_update_dtoverlay_setting():
     # System config (this should eventually be moved into platform management)
     # This disables bluetooth, which allows the console to use the AMA0 serial port, which in turn allows software updates
     case = (os.popen('grep -Fx "dtoverlay=pi3-disable-bt" /boot/config.txt').read())
+    print case
     if case.startswith('dtoverlay=pi3-disable-bt'):
         return False
     else:
         os.system('sed -i "$adtoverlay=pi3-disable-bt" /boot/config.txt')
         return True
-
-
        
 def check_and_update_config():
     
