@@ -187,10 +187,9 @@ class PopupStop(Widget):
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
      
-      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2)
-      btn_layout.add_widget(resume_button)       
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
       btn_layout.add_widget(cancel_button)
-
+      btn_layout.add_widget(resume_button)
       
       layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
       layout_plan.add_widget(img)
