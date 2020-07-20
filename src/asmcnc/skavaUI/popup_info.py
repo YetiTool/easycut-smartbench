@@ -177,7 +177,7 @@ class PopupStop(Widget):
       stop_description = "Is everything OK? You can resume the job, or cancel it completely."
       
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
       resume_button = Button(text='[b]Yes[/b]', markup = True)
       resume_button.background_normal = ''
