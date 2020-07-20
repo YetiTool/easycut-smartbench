@@ -287,11 +287,11 @@ class RouterMachine(object):
  
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
 
     def resume_from_a_soft_door(self):
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self._grbl_resume()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
