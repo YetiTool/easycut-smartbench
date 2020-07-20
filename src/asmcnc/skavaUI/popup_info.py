@@ -211,9 +211,9 @@ class PopupStop(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
-      cancel_button.bind(on_press=self.machine_reset)
+      cancel_button.bind(on_press=machine_reset)
       cancel_button.bind(on_press=popup.dismiss)
-      resume_button.bind(on_press=self.machine_resume)
+      resume_button.bind(on_press=machine_resume)
       resume_button.bind(on_press=popup.dismiss)
       
       popup.open()
