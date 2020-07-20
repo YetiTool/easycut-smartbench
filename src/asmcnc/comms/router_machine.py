@@ -16,9 +16,6 @@ from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
 
-if sys.platform != 'win32':
-    from asmcnc.comms import database_storage # @UnresolvedImport
-
 
 def log(message):
     timestamp = datetime.now()
@@ -66,9 +63,10 @@ class RouterMachine(object):
     is_laser_enabled = False
 
             
-    def __init__(self, win_serial_port, screen_manager):
+    def __init__(self, win_serial_port, screen_manager, flurry_database):
 
         self.sm = screen_manager
+        self.db = flurry_database
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
@@ -80,10 +78,6 @@ class RouterMachine(object):
             self.check_presence_of_sb_values_files()
             self.get_persistent_values()
         
-        # Create database object to talk to
-        if sys.platform != 'win32' and sys.platform != "darwin":
-            self.db = database_storage.DatabaseStorage()
-
 
     def check_presence_of_sb_values_files(self):
 
@@ -524,13 +518,11 @@ class RouterMachine(object):
 
     def spindle_on(self):
         self.s.write_command('M3 S25000')
-        if sys.platform != 'win32' and sys.platform != "darwin":
-            self.db.set_value("spindle_on_off", 1.0)
+        self.db.spindle_on()
     
     def spindle_off(self):
         self.s.write_command('M5')
-        if sys.platform != 'win32' and sys.platform != "darwin":
-            self.db.set_value("spindle_on_off", 0.0)
+        self.db.spindle_off()
 
     def laser_on(self):
         if self.is_laser_enabled == True: 

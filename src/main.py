@@ -29,6 +29,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
 from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import database_storage # @UnresolvedImport
+
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
@@ -64,6 +66,7 @@ from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 from asmcnc.apps.maintenance_app import screen_maintenance
+
 
 # developer testing
 Cmport = 'COM4'
@@ -120,12 +123,15 @@ class SkavaUI(App):
     def build(self):
 
         log("Starting App:")
+
+        # Create database object to talk to
+        db = database_storage.DatabaseStorage()
         
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm)
+        m = router_machine.RouterMachine(Cmport, sm, db)
         
         job_gcode = []  # declare g-code object
         

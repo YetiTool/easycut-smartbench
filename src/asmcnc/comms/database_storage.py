@@ -15,8 +15,6 @@ import datetime
 from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
-if sys.platform != 'win32':
-    from influxdb import InfluxDBClient # database lib
 
 def log(message):
     timestamp = datetime.datetime.now()
@@ -25,9 +23,11 @@ def log(message):
 
 class DatabaseStorage(object):
 
-    # SETUP
 
-    # Configure database (InfluxDB) connection variables
+    client = None
+    hostname = "SmartBench_0006" #TODO this needs to be serialised based on unique ID of SB console
+    sw_branch = "flurry_poc1" #TODO this is just an example of how we could track what SW we're running which is sending the data
+    
     
     def __init__(self):
 
@@ -38,31 +38,44 @@ class DatabaseStorage(object):
         dbname = "sensor_data"  # the database we created earlier
         interval = 5  # Sample period in seconds
     
-        # Create the InfluxDB client object
-        self.client = InfluxDBClient(host, port, user, password, dbname)
-        self.hostname = "SmartBench_0006" #TODO this needs to be serialised based on unique ID of SB console
-        self.sw_branch = "flurry_poc1" #TODO this is just an example of how we could track what SW we're running which is sending the data
+        try:
+            # Ansible may not have pre-installed this
+            from influxdb import InfluxDBClient # database lib
+            self.client = InfluxDBClient(host, port, user, password, dbname)
+
+        except:
+            print "Unable to initialise Flurry database. Have libs been installed? Or check DatabaseStorage credentials?"
+
+
+    def spindle_on(self):
+        self.set_value("spindle_on_off", 1)
+
+
+    def spindle_off(self):
+        self.set_value("spindle_on_off", 0)
 
 
     def set_value(self, name, value):
 
-        # Create the JSON data structure
-        log(str(name) + ": " + str(value))
+        if self.client != None:
 
-        data = [
-            {
-                "measurement": self.hostname,
-                "tags": {
-                    "sw_branch": self.sw_branch,
-                    "grbl": "whatever"
-                },
-                "time": datetime.datetime.now(),
-                "fields": {
-                    "value": value
+            # Create the JSON data structure
+            log(str(name) + ": " + str(value))
+    
+            data = [
+                {
+                    "measurement": self.hostname,
+                    "tags": {
+                        "sw_branch": self.sw_branch,
+                        "grbl": "whatever"
+                    },
+                    "time": datetime.datetime.now(),
+                    "fields": {
+                        "value": value
+                    }
                 }
-            }
-        ]
-        
-        # Send the JSON data to InfluxDB
-        self.client.write_points(data)      
- 
+            ]
+            
+            # Send the JSON data to InfluxDB
+            self.client.write_points(data)      
+     
