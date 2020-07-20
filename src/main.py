@@ -93,7 +93,7 @@ def check_and_update_dtoverlay_setting():
     elif case.startswith('dtoverlay=pi3-disable-bt'):
         return False
     else:
-        os.system('echo "dtoverlay=pi3-disable-bt" >> /boot/config.txt')
+        os.system('sed -i -e "$adtoverlay=pi3-disable-bt" /boot/config.txt')
         return True
 
 
