@@ -203,7 +203,7 @@ class PopupStop(Widget):
                     title_size = '20sp',
                     content=layout_plan,
                     size_hint=(None, None),
-                    size=(400, 350),
+                    size=(400, 300),
                     auto_dismiss= False
                     )
       
