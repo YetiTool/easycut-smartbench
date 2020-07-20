@@ -81,8 +81,23 @@ def check_and_update_gpu_mem():
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
     if case.startswith('gpu_mem=128'):
         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
-        os.system('sudo reboot')
-        
+        return True
+
+def check_and_update_dtoverlay_setting():
+    # System config (this should eventually be moved into platform management)
+    # This disables bluetooth, which allows the console to use the AMA0 serial port, which in turn allows software updates
+    case = (os.popen('grep -Fx "dtoverlay=pi3-disable-bt" /boot/config.txt').read())
+    if case.startswith('# dtoverlay=pi3-disable-bt'):
+        os.system('sudo sed -i "s/# dtoverlay=pi3-disable-bt/dtoverlay=pi3-disable-bt/" /boot/config.txt')     
+        return True
+    elif case.startswith('dtoverlay=pi3-disable-bt'):
+        return False
+    else:
+        os.system('echo "dtoverlay=pi3-disable-bt" >> /boot/config.txt')
+        return True
+
+
+       
 def check_and_update_config():
     
     def ver0_configuration():
@@ -94,7 +109,11 @@ def check_and_update_config():
     if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
         ver0_configuration()
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-        check_and_update_gpu_mem()
+        changed_mem = check_and_update_gpu_mem()
+        changed_port = check_and_update_dtoverlay_setting()
+
+        if (changed_port == True or changed_mem == True):
+            os.system('sudo reboot')
 
 
 if sys.platform != 'win32' and sys.platform != 'darwin':
