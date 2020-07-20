@@ -80,20 +80,17 @@ def check_and_update_gpu_mem():
     # Update GPU memory to handle more app
     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
     if case.startswith('gpu_mem=128'):
-        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
+        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')
         return True
 
 def check_and_update_dtoverlay_setting():
     # System config (this should eventually be moved into platform management)
     # This disables bluetooth, which allows the console to use the AMA0 serial port, which in turn allows software updates
     case = (os.popen('grep -Fx "dtoverlay=pi3-disable-bt" /boot/config.txt').read())
-    if case.startswith('# dtoverlay=pi3-disable-bt'):
-        os.system('sudo sed -i "s/# dtoverlay=pi3-disable-bt/dtoverlay=pi3-disable-bt/" /boot/config.txt')     
-        return True
-    elif case.startswith('dtoverlay=pi3-disable-bt'):
+    if case.startswith('dtoverlay=pi3-disable-bt'):
         return False
     else:
-        os.system('sed -i -e "$adtoverlay=pi3-disable-bt" /boot/config.txt')
+        os.system('sed -i "$adtoverlay=pi3-disable-bt" /boot/config.txt')
         return True
 
 
