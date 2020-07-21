@@ -507,20 +507,33 @@ class GoScreen(Screen):
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
 
-        with_vac_job_gcode = []
+        modified_job_gcode = []
 
+        # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.extend(self.job_gcode)
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+            modified_job_gcode.append("M56")  # append cleaned up gcode to object
+
+        if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+            modified_job_gcode.append("AE")  # turns vacuum on
+            modified_job_gcode.append("G4 P2")  # sends pause command
+            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
+            modified_job_gcode.append("AF")  # turns vac off
+        else:
+            modified_job_gcode.extend(self.job_gcode)
+
+        # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+            modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+        
+        # # Spindle cooldown - ideally would be good if we could get a screen to fire with this actually 
+        # if spindle_on_command in self.job_gcode:
+        #     modified_job_gcode.append("M3 S20000")
+        #     modified_job_gcode.append("G4 P10")
+        #     modified_job_gcode.append("M5")
 
         try:
-            self.m.s.run_job(with_vac_job_gcode)
+            self.m.s.run_job(modified_job_gcode)
             log('Job started ok from go screen...')
 
         except:
