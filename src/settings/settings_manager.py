@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, pigpio
+import sys,os, subprocess #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
 
 from kivy.clock import Clock
