@@ -513,9 +513,7 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
-
-        spindle_on_command = "M3"
-        if spindle_on_command in str(self.job_gcode):
+        if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)

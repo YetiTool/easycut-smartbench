@@ -411,15 +411,14 @@ class SerialConnection(object):
             # move head up and turn vac off
             # self.m.post_cut_sequence() #PROBLEM
 
-            spindle_on_command = "M3"
-            if spindle_on_command in str(self.job_gcode):
+            if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
                 self.send_stream_time_to_job_done_screen()
             else:
                 self.send_stream_time_to_job_done_screen()
                 self.sm.current = 'jobdone'
-                
+
             self._reset_counters()
 
         else:
