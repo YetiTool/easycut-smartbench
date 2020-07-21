@@ -164,7 +164,7 @@ class SkavaUI(App):
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
         welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m)
         spindle_shutdown_screen = screen_spindle_shutdown.SpindeShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
-        spindle_cooldown = screen_spindle_cooldown.SpindeCooldown(name = 'spindle_cooldown', screen_manager = sm, machine =m)
+        spindle_cooldown = screen_spindle_cooldown.SpindleCooldown(name = 'spindle_cooldown', screen_manager = sm, machine =m)
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
 
