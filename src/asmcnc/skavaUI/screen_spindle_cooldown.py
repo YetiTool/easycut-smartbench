@@ -84,11 +84,13 @@ class SpindleCooldownScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-
+    def on_pre_enter(self):
+        self.m.zUp_and_spindle_cooldown()
+        
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 10)
     
     def exit_screen(self, dt):
-        self.sm.current = return_screen
+        self.sm.current = self.return_screen
         
         

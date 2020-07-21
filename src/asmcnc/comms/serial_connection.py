@@ -411,7 +411,6 @@ class SerialConnection(object):
             # move head up and turn vac off
             # self.m.post_cut_sequence() #PROBLEM
 
-            self.m.zUp_and_spindle_cooldown()
             self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
             self.sm.current = 'spindle_cooldown'
             self.send_stream_time_to_job_done_screen()
@@ -459,10 +458,12 @@ class SerialConnection(object):
 #             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
 #             
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.self.m.zUp_and_spindle_cooldown(), 0.5)
+            #Clock.schedule_once(lambda dt: self.m.self.m.zUp_and_spindle_cooldown(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 10.5)
             self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
-            self.sm.current = 'spindle_cooldown'
+            
+            Clock.schedule_once(lambda dt: self.sm.current = 'spindle_cooldown', 0.5)
+            
 
         else:
             self.m.disable_check_mode()
