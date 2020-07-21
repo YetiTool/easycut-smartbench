@@ -515,7 +515,7 @@ class GoScreen(Screen):
 
 
         spindle_on_command = "M3"
-        if spindle_on_command in self.job_gcode:
+        if spindle_on_command in str(self.job_gcode):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)

@@ -88,7 +88,7 @@ class SpindleCooldownScreen(Screen):
         self.m.zUp_and_spindle_cooldown()
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 12)
+        Clock.schedule_once(self.exit_screen, 15)
     
     def exit_screen(self, dt):
         self.sm.current = self.return_screen
