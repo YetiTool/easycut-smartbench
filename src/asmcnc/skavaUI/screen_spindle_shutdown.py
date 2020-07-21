@@ -16,7 +16,7 @@ from datetime import datetime
 
 Builder.load_string("""
 
-<SpindeShutdownScreen>:
+<SpindleShutdownScreen>:
 
     canvas:
         Color: 
@@ -78,7 +78,7 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
-class SpindeShutdownScreen(Screen):
+class SpindleShutdownScreen(Screen):
 
     
     # Vars to preset before calling this screen
@@ -95,7 +95,7 @@ class SpindeShutdownScreen(Screen):
     
     def __init__(self, **kwargs):
         
-        super(SpindeShutdownScreen, self).__init__(**kwargs)
+        super(SpindleShutdownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
     
