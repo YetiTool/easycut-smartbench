@@ -412,8 +412,8 @@ class SerialConnection(object):
             # self.m.post_cut_sequence() #PROBLEM
 
             self.m.zUp_and_spindle_cooldown()
-            self.sm.get_screen('cooldown').return_screen = 'jobdone'
-            self.sm.current = 'cooldown'
+            self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
+            self.sm.current = 'spindle_cooldown'
             self.send_stream_time_to_job_done_screen()
             self._reset_counters()
 
