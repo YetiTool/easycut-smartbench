@@ -510,14 +510,17 @@ class GoScreen(Screen):
         with_vac_job_gcode = []
 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
+            with_vac_job_gcode.append("M56")  # append cleaned up gcode to object
+        with_vac_job_gcode.append("AE")  # turns vacuum on
+        with_vac_job_gcode.append("G4 P2")  # sends pause command
         with_vac_job_gcode.extend(self.job_gcode)
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+        with_vac_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
+        with_vac_job_gcode.append("AF")  # turns vac off
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+        with_vac_job_gcode.append("M3 S20000")
+        with_vac_job_gcode.append("G4 P10")
+        with_vac_job_gcode.append("M5")
 
         try:
             self.m.s.run_job(with_vac_job_gcode)
