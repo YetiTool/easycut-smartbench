@@ -459,10 +459,8 @@ class SerialConnection(object):
 #             
             # Move head up        
             #Clock.schedule_once(lambda dt: self.m.self.m.zUp_and_spindle_cooldown(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 10.5)
             self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
-            
-            Clock.schedule_once(lambda dt: self.sm.current = 'spindle_cooldown', 0.5)
+            self.sm.current = 'spindle_cooldown'
             
 
         else:

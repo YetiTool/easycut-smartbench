@@ -533,6 +533,7 @@ class RouterMachine(object):
         self.s.write_command('M3 S20000')
         self.s.write_command('G4 P10')
         self.s.write_command('M5')
+        self.s.write_command('AF')
 
     def laser_on(self):
         if self.is_laser_enabled == True: 
