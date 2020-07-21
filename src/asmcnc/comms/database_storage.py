@@ -16,6 +16,7 @@ from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
 
+
 def log(message):
     timestamp = datetime.datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
