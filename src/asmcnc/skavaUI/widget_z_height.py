@@ -86,6 +86,11 @@ class VirtualZ(Widget):
         self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
         self.z_cut.y = self.z_clear.y - self.z_cut.height
         
+        print ('z_clear y is: ' + str(self.z_clear.y))
+        print ('z_clear size is: ' + str(self.z_clear.size[1]))
+        print ('z_cut y is: ' + str(self.z_cut.y))
+        print ('z_cut size is: ' + str(self.z_cut.size[1]))
+
         if self.z_clear.size[1] == 0: 
             self.z_clear.size[1] = 0.2
         if self.z_cut.size[1] == 0:
