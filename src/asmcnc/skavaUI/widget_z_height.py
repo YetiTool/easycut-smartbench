@@ -93,10 +93,10 @@ class VirtualZ(Widget):
 
         if self.z_clear.size[1] == 0: 
             self.z_clear.size[1] = 5
-            self.z_clear.y = 300
+            self.z_clear.y = 305
         if self.z_cut.size[1] == 0:
             self.z_cut.size[1] = 5
-            self.z_cut.y
+            self.z_cut.y = 300
 
     def setBitPos(self):
 
