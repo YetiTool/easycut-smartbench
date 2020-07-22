@@ -26,7 +26,7 @@ class DatabaseStorage(object):
 
     
     sw_branch = "flurry_poc1" #TODO this is just an example of how we could track what SW we're running which is sending the data
-    machine_id = "SmartBench_0006" #TODO this needs to be serialised based on unique ID of SB console
+    machine_id = "SmartBench_0007" #TODO this needs to be serialised based on unique ID of SB console
     
     # LOCAL DB
     localDBClient = None
@@ -52,9 +52,10 @@ class DatabaseStorage(object):
             # Ansible may not have pre-installed this
             from influxdb import InfluxDBClient # database lib
             self.localDBClient = InfluxDBClient(local_hostname, port, user, password, dbname)
+            log("Local db intialised.")
 
         except:
-            print "Unable to initialise local database. Have libs been installed? Or check DatabaseStorage credentials?"
+            log("Unable to initialise local database. Have libs been installed? Or check DatabaseStorage credentials?")
 
         
         ### INTIALISE PIPE TO REMOTE DB
@@ -66,9 +67,10 @@ class DatabaseStorage(object):
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(host=self.remote_hostname))
             self.channel = connection.channel()
+            log("Channel to remote db intialised.")
             
         except:
-            print "Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?"
+            log("Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?")
 
                 
 
@@ -98,12 +100,11 @@ class DatabaseStorage(object):
             {
                 "measurement": self.machine_id,
                 "tags": {
-                    "sw_branch": self.sw_branch,
-                    "grbl": "whatever"
+                    "source": self.sw_branch,
                 },
                 "time": datetime.datetime.now(),
                 "fields": {
-                    "value": value
+                    name: float(value)
                 }
             }
         ]
@@ -114,9 +115,10 @@ class DatabaseStorage(object):
         
     def _send_to_remote_db(self, name, value):
         
-        message = "time:" + datetime.datetime.now() + "|machineID:" + self.machine_id + "|" + name + ":" + str(value)
+        message = "time:" + str(datetime.datetime.now()) + "|machineID:" + self.machine_id + "|" + name + ":" + str(value)
 
-        self.channel.queue_declare(queue='hello')
+        self.channel.queue_declare(queue='machine_status_1')
         
-        self.channel.basic_publish(exchange='', routing_key='hello', body=message)
+        log("Sending: " + message)
+        self.channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
 #         connection.close()
