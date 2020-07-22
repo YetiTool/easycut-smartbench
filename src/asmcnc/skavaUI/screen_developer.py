@@ -354,7 +354,7 @@ class DeveloperScreen(Screen):
 
     def send_logs(self):
         # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")      
+        os.system("journalctl \> smartbench_logs.txt \&\& mv smartbench_logs.txt /media/usb/")      
         
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
