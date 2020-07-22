@@ -353,7 +353,7 @@ class DeveloperScreen(Screen):
 ## Diagnostics
 
     def send_logs(self):
-        if usb_stick.is_usb_mounted_flag == True:
+        if self.usb_stick.is_usb_mounted_flag == True:
             # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
             os.system("journalctl > smartbench_logs.txt && sudo mv smartbench_logs.txt /media/usb/")
         
