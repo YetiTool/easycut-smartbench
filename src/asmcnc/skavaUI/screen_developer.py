@@ -353,8 +353,9 @@ class DeveloperScreen(Screen):
 ## Diagnostics
 
     def send_logs(self):
-        # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")      
+        if self.usb_stick.is_usb_mounted_flag == True:
+            # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+            os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
         
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
