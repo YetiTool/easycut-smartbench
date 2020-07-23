@@ -161,12 +161,13 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         ok_button.bind(on_press=popup.dismiss)
         popup.open()
 
-class PopupWait(Widget):   
+class PopupWait(Widget, message):  
+
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
         
-        description = "Please wait..."
+        description = "Please wait..." + message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
