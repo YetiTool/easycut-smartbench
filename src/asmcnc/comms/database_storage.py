@@ -64,8 +64,21 @@ class DatabaseStorage(object):
             # Ansible may not have pre-installed this
             import pika
 
-            connection = pika.BlockingConnection(
-                pika.ConnectionParameters(host=self.remote_hostname))
+            # LOCAL CONNECTION
+#             connection = pika.BlockingConnection(
+#                 pika.ConnectionParameters(host='localhost'))
+
+            # REMOTE CONNECTION
+            # TODO: Fix this - GUEST IS NOT SECURE
+            # Set the connection parameters to connect to rabbit-server1 on port 5672
+            # on the / virtual host using the username "guest" and password "guest"
+            credentials = pika.PlainCredentials('guest', 'guest')
+            parameters = pika.ConnectionParameters(self.remote_hostname,
+                                                   5672,
+                                                   '/',
+                                                   credentials)
+            connection = pika.BlockingConnection(parameters)
+            
             self.channel = connection.channel()
             log("Channel to remote db intialised.")
             
