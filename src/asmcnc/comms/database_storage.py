@@ -134,7 +134,7 @@ class DatabaseStorage(object):
         
     def _send_to_remote_db(self, name, value):
         
-        message = "time:" + str(datetime.datetime.now()) + "|machineID:" + self.machine_id + "|" + name + ":" + str(value)
+        message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.machine_id + "|" + name + ";" + str(value)
 
         self.channel.queue_declare(queue='machine_status_1')
         
