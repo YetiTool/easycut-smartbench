@@ -130,12 +130,12 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], height=kivy.metrics.dp(50))
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], size_hint_y = 0.1)
         btn_layout.add_widget(ok_button)
         
         rst_doc = RstDocument(source = './asmcnc/apps/shapeCutter_app/feeds_and_speeds_table.rst', background_color = [1,1,1,1], base_font_size = 26, underline_color = '000000')
 
-        rst_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'])
+        rst_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'], size_hint_y = 0.9)
         rst_layout.add_widget(rst_doc)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
