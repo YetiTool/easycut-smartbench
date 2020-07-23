@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
+from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
@@ -235,35 +236,7 @@ Builder.load_string("""
                                     padding: (342,0,170,0)
                                     orientation: "horizontal"
                                                     
-#                                     ToggleButton:
-#                                         id: unit_toggle
-#                                         size_hint: (None,None)
-#                                         height: dp(30)
-#                                         width: dp(75)
-#                                         background_color: hex('#F4433600')
-#                                         center: self.parent.center
-#                                         pos: self.parent.pos
-#                                         on_press: root.toggle_units()
-#         
-#                                         BoxLayout:
-#                                             height: dp(30)
-#                                             width: dp(75)
-#                                             canvas:
-#                                                 Rectangle: 
-#                                                     pos: self.parent.pos
-#                                                     size: self.parent.size
-#                                                     source: "./asmcnc/apps/shapeCutter_app/img/mm_inches_toggle.png"  
-#                                         Label:
-#                                             id: unit_label
-#                                             text: "mm"
-#                                             color: 1,1,1,1
-#                                             font_size: 20
-#                                             markup: True
-#                                             halign: "center"
-#                                             valign: "middle"
-#                                             text_size: self.size
-#                                             size: self.parent.size
-#                                             pos: self.parent.pos                       
+                      
                                     Switch:
                                         id: unit_toggle
                                         size_hint: (None,None)
@@ -557,12 +530,15 @@ class ShapeCutter23ScreenClass(Screen):
 
 # Action buttons       
     def get_info(self):
-        info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
-        "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
-        "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
-        "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
-        popup_info.PopupInfo(self.shapecutter_sm, info)
-            
+        # info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
+        # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
+        # "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
+        # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
+        message = ", loading feeds and speeds look-up table..."
+        popup_info.PopupWait(self.shapecutter_sm, message)
+        # popup_info.PopupInfo(self.shapecutter_sm, info)
+        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1.5)
+
     def go_back(self):
         self.shapecutter_sm.previous_screen()
     
