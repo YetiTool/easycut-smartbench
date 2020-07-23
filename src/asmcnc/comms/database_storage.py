@@ -148,9 +148,8 @@ class DatabaseStorage(object):
         self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
         channel = self.rabbitMQ_connection.channel()
         channel.queue_declare(queue='machine_status_1')
-        
         log("Sending: " + message)
-        self.channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
+        channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
         self.rabbitMQ_connection.close()
 #         except:
 #             log("Problem sending to remote db:" )
