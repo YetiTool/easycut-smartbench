@@ -557,10 +557,11 @@ class ShapeCutter23ScreenClass(Screen):
 
 # Action buttons       
     def get_info(self):
-        info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
-        "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
-        "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
-        "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
+        # info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
+        # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
+        # "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
+        # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
+        popup_info.PopupInfo(self.shapecutter_sm, 'one sec...')
         # popup_info.PopupInfo(self.shapecutter_sm, info)
         popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm)
 
