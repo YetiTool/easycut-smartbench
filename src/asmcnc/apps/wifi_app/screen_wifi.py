@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
+from kivy import StringProperty
 import socket, sys, os
 
 from asmcnc.skavaUI import popup_info
@@ -217,17 +218,7 @@ Builder.load_string("""
                             color: 0,0,0,1
                             values: root.values
                             background_normal: ''
-
-#                         TextInput: 
-#                             id: country
-#                             valign: 'middle'
-#                             halign: 'center'
-#                             text_size: self.size
-#                             font_size: '20sp'
-#                             markup: True
-#                             input_filter: 'float'
-#                             multiline: False
-#                             text: '' 
+ 
         BoxLayout:
             size_hint: (None, None)
             height: dp(290)
@@ -324,6 +315,7 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+    password.text = StringProperty()
     
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
@@ -345,7 +337,7 @@ class WifiScreen(Screen):
             message = "Please enter a valid network name."
             popup_info.PopupWarning(self.sm, message)
 
-        elif (len(self.password.text) < 8 or len(self.password.text) > 63): 
+        elif (len(str(self.password.text)) < 8 or len(str(self.password.text)) > 63): 
 
             message = "Please enter a password between 8 and 63 characters."
             popup_info.PopupWarning(self.sm, message)
