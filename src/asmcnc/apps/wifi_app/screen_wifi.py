@@ -10,7 +10,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner
 from kivy.clock import Clock
-from kivy import StringProperty
 import socket, sys, os
 
 from asmcnc.skavaUI import popup_info
@@ -315,7 +314,7 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-    password.text = StringProperty()
+    password.text = ''
     
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
