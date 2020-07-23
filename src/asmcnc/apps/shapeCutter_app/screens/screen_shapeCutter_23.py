@@ -536,7 +536,7 @@ class ShapeCutter23ScreenClass(Screen):
         # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
         popup_info.PopupWait(self.shapecutter_sm)
         # popup_info.PopupInfo(self.shapecutter_sm, info)
-        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1)
+        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 2)
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
