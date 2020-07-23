@@ -1,11 +1,11 @@
 .. _top:
 
 
-XY Feed Rate: Feed used in cutting moves.
+**XY Feed Rate:** Feed used in cutting moves.
 
-Z Feed Rate (Plunge Rate): Feed when vertically plunging into stock.
+**Z Feed Rate (Plunge Rate):** Feed when vertically plunging into stock.
 
-Spindle Speed: Rotational speed of the tool.
+**Spindle Speed:** Rotational speed of the tool.
 
 SMARTBENCH STARTING FEEDS QUICK LOOKUP TABLE
 --------------------------------------------
@@ -27,6 +27,9 @@ SMARTBENCH STARTING FEEDS QUICK LOOKUP TABLE
 +------------+-----------+--------------------------+----------------+
 | Dibond     | 0.75 mm   | 400mm/min (15.7''/min)   | 12,000 RPM     |
 +------------+-----------+--------------------------+----------------+
+
+
+
 
 For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds
 
