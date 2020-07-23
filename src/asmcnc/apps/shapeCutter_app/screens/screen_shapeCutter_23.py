@@ -537,7 +537,7 @@ class ShapeCutter23ScreenClass(Screen):
         message = ", loading feeds and speeds look-up table..."
         popup_info.PopupWait(self.shapecutter_sm, message)
         # popup_info.PopupInfo(self.shapecutter_sm, info)
-        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1)
+        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1.5)
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()

@@ -199,7 +199,7 @@ class PopupWait(Widget):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
         ok_button.bind(on_press=popup.dismiss)    
-        Clock.schedule_once(lambda dt: popup.dismiss(), 2)
+        Clock.schedule_once(lambda dt: popup.dismiss(), 2.5)
         popup.open()
 
         
