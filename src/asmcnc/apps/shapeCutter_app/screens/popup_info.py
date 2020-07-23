@@ -131,7 +131,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], size_hint_y = 0.8)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], height=dp(50))
         btn_layout.add_widget(ok_button)
         
         rst_doc = RstDocument(source = './asmcnc/apps/shapeCutter_app/feeds_and_speeds_table.rst', background_color = [1,1,1,1], base_font_size = 26, underline_color = '000000')
