@@ -72,11 +72,16 @@ class DatabaseStorage(object):
             # TODO: Fix this - GUEST IS NOT SECURE
             # Set the connection parameters to connect to rabbit-server1 on port 5672
             # on the / virtual host using the username "guest" and password "guest"
-            credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
-            parameters = pika.ConnectionParameters(self.remote_hostname,
-                                                   5672,
-                                                   '/',
-                                                   credentials)
+#             credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
+#             parameters = pika.ConnectionParameters(self.remote_hostname,
+#                                                    5672,
+#                                                    '/',
+#                                                    credentials)
+            
+            # Set the connection parameters to connect to rabbit-server1 on port 5672
+            # on the / virtual host using the username "guest" and password "guest"
+            parameters = pika.URLParameters('amqp://tempAdmin:jtdBWr3G7Bc7qUyN@flurry.yetitool.com:5672/%2F')
+            
             connection = pika.BlockingConnection(parameters)
             
             self.channel = connection.channel()
