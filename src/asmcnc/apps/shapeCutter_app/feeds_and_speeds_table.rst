@@ -1,16 +1,14 @@
 .. _top:
 
 
-
 XY Feed Rate: Feed used in cutting moves.
-----
+
 Z Feed Rate (Plunge Rate): Feed when vertically plunging into stock.
-----
+
 Spindle Speed: Rotational speed of the tool.
-----
 
 SMARTBENCH STARTING FEEDS QUICK LOOKUP TABLE
-=============
+--------------------------------------------
 
 +------------+-----------+--------------------------+----------------+
 | Material   | Step down | Feed rate                | Spindle speed  |
