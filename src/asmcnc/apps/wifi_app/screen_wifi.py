@@ -398,7 +398,7 @@ class WifiScreen(Screen):
                 os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
         # self.sm.current = 'rebooting'        
-        os.system('sudo ip link set wlan0 down && sudo ip link set wlan0 up')
+        os.system('sudo service networking restart')
 
     def refresh_ip_label_value(self, dt):
 
