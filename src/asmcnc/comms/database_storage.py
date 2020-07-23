@@ -137,9 +137,13 @@ class DatabaseStorage(object):
         
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
         try:
-            import pika
             message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.machine_id + "|" + name + ";" + str(value)
-    
+
+            self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
+            self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
+                                                   5672,
+                                                   '/',
+                                                   self.credentials)    
             self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
             channel = self.rabbitMQ_connection.channel()
             channel.queue_declare(queue='machine_status_1')
@@ -148,4 +152,4 @@ class DatabaseStorage(object):
             self.channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
             self.rabbitMQ_connection.close()
         except:
-            log("Unable to send to remote db:" )
+            log("Problem sending to remote db:" )
