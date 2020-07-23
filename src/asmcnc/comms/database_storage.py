@@ -32,7 +32,7 @@ class DatabaseStorage(object):
     localDBClient = None
     
     # PIPE TO REMOTE DB
-    channel = None
+    rabbitMQ_connection = None
     remote_hostname = "flurry.yetitool.com"
     
     
@@ -61,32 +61,33 @@ class DatabaseStorage(object):
         ### INTIALISE PIPE TO REMOTE DB
         
         try:
-            # Ansible may not have pre-installed this
+            # Ansible may not have pre-installed this, hence try the import
             import pika
 
             # LOCAL CONNECTION
-#             connection = pika.BlockingConnection(
+#             rabbitMQ_connection = pika.BlockingConnection(
 #                 pika.ConnectionParameters(host='localhost'))
 
             # REMOTE CONNECTION
             # TODO: Fix this - GUEST IS NOT SECURE
-            # Set the connection parameters to connect to rabbit-server1 on port 5672
+            # Set the rabbitMQ_connection parameters to connect to rabbit-server1 on port 5672
             # on the / virtual host using the username "guest" and password "guest"
-            credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
-            parameters = pika.ConnectionParameters(self.remote_hostname,
+            self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
+            self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
                                                    5672,
                                                    '/',
-                                                   credentials)
+                                                   self.credentials)
             
             # ALTERNATIVE REMOTE CONNECTION MECHANISM
-            # Set the connection parameters to connect to rabbit-server1 on port 5672
+            # Set the rabbitMQ_connection parameters to connect to rabbit-server1 on port 5672
             # on the / virtual host using the username "guest" and password "guest"
 #             parameters = pika.URLParameters('amqp://tempAdmin:jtdBWr3G7Bc7qUyN@flurry.yetitool.com:5672/%2F')
             
-            connection = pika.BlockingConnection(parameters)
-            
-            self.channel = connection.channel()
+            self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
             log("Channel to remote db intialised.")
+
+            # OK, now we know it works, close it to prevent timeouts
+            self.rabbitMQ_connection.close()
             
         except:
             log("Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?")
@@ -106,7 +107,7 @@ class DatabaseStorage(object):
         if self.localDBClient != None:
             self._record_in_local_db(name, value)
             
-        if self.channel != None:
+        if self.rabbitMQ_connection != None:
             self._send_to_remote_db(name, value)
   
     
@@ -134,10 +135,14 @@ class DatabaseStorage(object):
         
     def _send_to_remote_db(self, name, value):
         
+        # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
+        
         message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.machine_id + "|" + name + ";" + str(value)
 
-        self.channel.queue_declare(queue='machine_status_1')
+        self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
+        channel = self.rabbitMQ_connection.channel()
+        channel.queue_declare(queue='machine_status_1')
         
         log("Sending: " + message)
         self.channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
-#         connection.close()
+        self.rabbitMQ_connection.close()
