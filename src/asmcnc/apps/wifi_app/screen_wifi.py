@@ -314,7 +314,6 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-    password.text = ''
     
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
