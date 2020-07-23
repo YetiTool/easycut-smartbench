@@ -534,7 +534,7 @@ class ShapeCutter23ScreenClass(Screen):
         # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
         # "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
         # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
-        popup_info.PopupInfo(self.shapecutter_sm, 'one sec...')
+        popup_info.PopupWait(self.shapecutter_sm)
         # popup_info.PopupInfo(self.shapecutter_sm, info)
         Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1)
 
