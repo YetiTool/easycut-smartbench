@@ -20,6 +20,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 from kivy.uix.rst import RstDocument
+from kivy.uix.scrollview import ScrollView
 
 
 class PopupInfo(Widget):
@@ -139,7 +140,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         
         rst_doc = RstDocument(source = './asmcnc/apps/shapeCutter_app/feeds_and_speeds_table.rst', background_color = [1,1,1,1], base_font_size = 26, underline_color = '000000')
 
-        rst_layout = Scrollview(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'])
+        rst_layout = ScrollView(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'])
         rst_layout.add_widget(rst_doc)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
