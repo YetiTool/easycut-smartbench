@@ -161,9 +161,9 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         ok_button.bind(on_press=popup.dismiss)
         popup.open()
 
-class PopupWait(Widget, message):  
+class PopupWait(Widget):  
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, message):
         
         self.sm = screen_manager
         
