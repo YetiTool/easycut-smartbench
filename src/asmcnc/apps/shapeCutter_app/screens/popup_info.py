@@ -137,7 +137,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
         btn_layout.add_widget(ok_button)
         
-        rst_doc = RstDocument(source = './asmcnc/apps/shapeCutter_app/feeds_and_speeds_table.rst', background_color = hex('#FFFFFF'), base_font_size = 26, underline_color = '000000')
+        rst_doc = RstDocument(source = './asmcnc/apps/shapeCutter_app/feeds_and_speeds_table.rst', background_color = [1,1,1,1], base_font_size = 26, underline_color = [0,0,0,1])
 
         rst_layout = Scrollview(do_scroll_x = True, do_scroll_y = True, scroll_type = ['content'])
         rst_layout.add_widget(rst_doc)
