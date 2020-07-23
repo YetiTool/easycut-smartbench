@@ -122,10 +122,9 @@ class PopupTutorial(Widget):
 
 class PopupFeedsAndSpeedsLookupTable(Widget):
 
-    def __init__(self, screen_manage):
+    def __init__(self, screen_manager):
         
         self.shapecutter_sm = screen_manager
-        
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         # label = Label(size_hint_y=2, text_size=(360, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
