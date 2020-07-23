@@ -11,7 +11,7 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty  # @UnresolvedImport
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-from kivy.metrics import MetricsBase
+from kivy.metrics.dp import dp
 
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
