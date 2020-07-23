@@ -331,12 +331,17 @@ class WifiScreen(Screen):
 
     def check_credentials(self):
 
-        if len(self.network_name.text) < 1: 
+        # get network name and password from text entered (widget)
+        self.netname = self.network_name.text
+        self.password = self.password.text
+        self.country = self.country.text 
+
+        if len(self.netname) < 1: 
 
             message = "Please enter a valid network name."
             popup_info.PopupWarning(self.sm, message)
 
-        elif (len(str(self.password.text)) < 8 or len(str(self.password.text)) > 63): 
+        elif (len(self.password) < 8 or len(self.password) > 63): 
 
             message = "Please enter a password between 8 and 63 characters."
             popup_info.PopupWarning(self.sm, message)
@@ -346,12 +351,6 @@ class WifiScreen(Screen):
 
     def connect_wifi(self):
         popup_info.PopupWait(self.sm)
-
-
-        # get network name and password from text entered (widget)
-        self.netname = self.network_name.text
-        self.password = self.password.text
-        self.country = self.country.text 
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
