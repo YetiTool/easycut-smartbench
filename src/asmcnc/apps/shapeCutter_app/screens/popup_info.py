@@ -19,7 +19,7 @@ from kivy.uix.label import Label
 from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
-from kivy.uix.rst import rst
+from kivy.uix.rst import RstDocument
 
 
 class PopupInfo(Widget):
