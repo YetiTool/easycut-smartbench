@@ -407,7 +407,8 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        self.sm.current = 'rebooting'        
+        # self.sm.current = 'rebooting'        
+        os.system('wpa_cli -i wlan0 reconfigure')
 
     def refresh_ip_label_value(self, dt):
 
