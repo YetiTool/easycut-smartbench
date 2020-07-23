@@ -19,7 +19,7 @@ Builder.load_string("""
 <WifiScreen>:
     
     network_name: network_name
-    password: password
+    _password: _password
     country: country
     ip_status_label: ip_status_label
     wifi_image: wifi_image
@@ -170,7 +170,7 @@ Builder.load_string("""
                         padding: (0,0,0,0)
                                     
                         TextInput: 
-                            id: password
+                            id: _password
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
@@ -327,13 +327,13 @@ class WifiScreen(Screen):
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = 'GB'
-        self.password.text = ''
+        self._password.text = ''
 
     def check_credentials(self):
 
         # get network name and password from text entered (widget)
         self.netname = self.network_name.text
-        self.password = self.password.text
+        self.password = self._password.text
         self.country = self.country.text 
 
         if len(self.netname) < 1: 
