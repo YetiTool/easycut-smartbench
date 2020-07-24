@@ -406,7 +406,7 @@ class WifiScreen(Screen):
         def wifi_down():
             os.system('sudo ifconfig wlan0 down')
 
-        def reconfigure_wlan()
+        def reconfigure_wlan():
             os.system('wpa_cli -i wlan0 reconfigure')
 
         def wifi_up():
