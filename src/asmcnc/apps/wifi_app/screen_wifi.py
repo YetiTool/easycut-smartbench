@@ -178,7 +178,8 @@ Builder.load_string("""
                             font_size: '20sp'
                             markup: True
                             multiline: False
-                            text: ''                                           
+                            text: ''
+
                 #Country Code
                 BoxLayout: 
                     size_hint: (None, None)
@@ -315,22 +316,20 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-    
-    _password = ObjectProperty()
-    _password.text = StringProperty('')
 
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
- 
+        self._password.text = StringProperty('')
+
     def on_enter(self):
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-            except: self.network_name.text = 'GB'
+            except: self.country.text = 'GB'
         self._password.text = ''
 
     def check_credentials(self):
