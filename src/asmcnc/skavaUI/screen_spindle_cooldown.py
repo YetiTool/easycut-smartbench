@@ -18,6 +18,8 @@ Builder.load_string("""
 
 <SpindleCooldownScreen>:
 
+    countdown: countdown
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -63,11 +65,20 @@ Builder.load_string("""
             BoxLayout:
                 size: self.parent.size
                 pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True 
-                        
+                # Image:
+                #     source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
+                #     size: self.parent.width, self.parent.height
+                #     allow_stretch: True 
+                Label:
+                    id: countdown
+                    markup: True
+                    font_size: '40px' 
+                    valign: 'middle'
+                    halign: 'center'
+                    size:self.texture_size
+                    text_size: self.size  
+                    text: '0'                 
+
         Label:
             size_hint_y: 1                
 
@@ -77,6 +88,7 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
+    seconds = 0
 
     def __init__(self, **kwargs):
         
@@ -89,8 +101,14 @@ class SpindleCooldownScreen(Screen):
 
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 15)
+        Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
         self.sm.current = self.return_screen
+
+    def update_timer(self, dt):
+        seconds = seconds + 1
+        self.countdown.text = str(seconds)
+
         
         
