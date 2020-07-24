@@ -115,5 +115,5 @@ class SpindleCooldownScreen(Screen):
         self.m.spindle_off()
         self.m.vac_off()
         Clock.unschedule(self.update_timer_event)
-        
+        self.seconds = 0
         
