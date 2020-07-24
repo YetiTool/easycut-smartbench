@@ -72,12 +72,13 @@ Builder.load_string("""
                 Label:
                     id: countdown
                     markup: True
-                    font_size: '40px' 
+                    font_size: '70px' 
                     valign: 'middle'
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size  
-                    text: '0'                 
+                    text: '0'
+                    color: [0,0,0,1]       
 
         Label:
             size_hint_y: 1                
@@ -88,7 +89,6 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
-    seconds = 0
 
     def __init__(self, **kwargs):
         
@@ -98,9 +98,10 @@ class SpindleCooldownScreen(Screen):
 
     def on_pre_enter(self):
         self.m.zUp_and_spindle_cooldown()
+        self.seconds = 0
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 15)
+        Clock.schedule_once(self.exit_screen, 11)
         Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
