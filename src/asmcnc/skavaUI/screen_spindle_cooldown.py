@@ -98,7 +98,6 @@ class SpindleCooldownScreen(Screen):
 
     def on_pre_enter(self):
         self.m.zUp_and_spindle_on()
-        self.seconds = 0
 
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 10)
@@ -116,4 +115,5 @@ class SpindleCooldownScreen(Screen):
         self.m.vac_off()
         Clock.unschedule(self.update_timer_event)
         self.seconds = 0
+        self.countdown.text = 0
         
