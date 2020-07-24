@@ -406,11 +406,15 @@ class WifiScreen(Screen):
         def wifi_down():
             os.system('sudo ifconfig wlan0 down')
 
+        def reconfigure_wlan()
+            os.system('wpa_cli -i wlan0 reconfigure')
+
         def wifi_up():
             os.system('sudo ifconfig wlan0 up')
 
         Clock.schedule_once(lambda dt: wifi_down(), 1)
-        Clock.schedule_once(lambda dt: wifi_up(), 2)
+        Clock.schedule_once(lambda dt: reconfigure_wlan(), 2)
+        Clock.schedule_once(lambda dt: wifi_up(), 3)
 
     def refresh_ip_label_value(self, dt):
 
