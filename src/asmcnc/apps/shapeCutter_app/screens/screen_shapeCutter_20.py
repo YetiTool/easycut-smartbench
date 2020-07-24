@@ -580,7 +580,7 @@ class ShapeCutter20ScreenClass(Screen):
                 if not setting == True:
                     if dim == "shoulder length":               
                         description = "The " + dim + " input isn't valid.\n\n" + \
-                                    "The cutting length + shoulder length should be greater" + \
+                                    "The shoulder length should be greater" + \
                                     " than the Z dimension and the cutting length.\n\n" \
                                     + "Please re-enter your parameters."
                     elif dim == "cutting length": 
