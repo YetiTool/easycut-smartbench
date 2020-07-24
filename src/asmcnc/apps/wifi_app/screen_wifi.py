@@ -317,6 +317,10 @@ class WifiScreen(Screen):
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
+    network_name = ObjectProperty()
+    _password = ObjectProperty()
+    country = ObjectProperty()
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -399,7 +403,14 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        os.system('sudo ifconfig wlan0 udown && sudo ifconfig wlan0 up')
+        def wifi_down(dt):
+            os.system('sudo ifconfig wlan0 down')
+
+        def wifi_up(dt)
+            os.system('sudo ifconfig wlan0 up')
+
+        Clock.schedule_once(wifi_down,1)
+        Clock.schedule_once(wifi_up,2)
 
     def refresh_ip_label_value(self, dt):
 
