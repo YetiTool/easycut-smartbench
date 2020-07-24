@@ -218,16 +218,6 @@ Builder.load_string("""
                             values: root.values
                             background_normal: ''
 
-#                         TextInput: 
-#                             id: country
-#                             valign: 'middle'
-#                             halign: 'center'
-#                             text_size: self.size
-#                             font_size: '20sp'
-#                             markup: True
-#                             input_filter: 'float'
-#                             multiline: False
-#                             text: '' 
         BoxLayout:
             size_hint: (None, None)
             height: dp(290)
