@@ -81,7 +81,7 @@ Builder.load_string("""
                     color: [0,0,0,1]       
 
         Label:
-            size_hint_y: 1                
+            size_hint_y: 1
 
 """)
 
@@ -114,5 +114,6 @@ class SpindleCooldownScreen(Screen):
     def on_leave(self):
         self.m.spindle_off()
         self.m.vac_off()
+        self.seconds = 0
         
         
