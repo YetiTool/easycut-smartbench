@@ -89,6 +89,7 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
+    seconds = 0
 
     def __init__(self, **kwargs):
         
