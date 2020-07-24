@@ -102,7 +102,7 @@ class SpindleCooldownScreen(Screen):
 
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 10)
-        Clock.schedule_interval(self.update_timer, 1)
+        self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
         self.sm.current = self.return_screen
@@ -114,6 +114,6 @@ class SpindleCooldownScreen(Screen):
     def on_leave(self):
         self.m.spindle_off()
         self.m.vac_off()
-        self.seconds = 0
+        Clock.unschedule(self.update_timer_event)
         
         
