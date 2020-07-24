@@ -55,6 +55,10 @@ class Settings(object):
                 max_version_number = max(version_numbers)
                 self.latest_sw_version = 'v' + str(max_version_number)
 
+                if self.latest_sw_version.endswith('-beta'):
+                    if max_version_number.strip('-beta') in version_numbers:
+                        self.latest_sw_version = self.latest_sw_version.strip('-beta')
+
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
         self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
