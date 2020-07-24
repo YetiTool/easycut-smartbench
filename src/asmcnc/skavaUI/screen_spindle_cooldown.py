@@ -72,7 +72,7 @@ Builder.load_string("""
                 Label:
                     id: countdown
                     markup: True
-                    font_size: '70px' 
+                    font_size: '80px' 
                     valign: 'middle'
                     halign: 'center'
                     size:self.texture_size
@@ -101,7 +101,7 @@ class SpindleCooldownScreen(Screen):
         self.seconds = 0
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 11)
+        Clock.schedule_once(self.exit_screen, 15)
         Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
