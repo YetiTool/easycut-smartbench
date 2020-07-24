@@ -97,11 +97,11 @@ class SpindleCooldownScreen(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.m.zUp_and_spindle_cooldown()
+        self.m.zUp_and_spindle_on()
         self.seconds = 0
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 15)
+        Clock.schedule_once(self.exit_screen, 10)
         Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
@@ -111,5 +111,8 @@ class SpindleCooldownScreen(Screen):
         self.seconds = self.seconds + 1
         self.countdown.text = str(self.seconds)
 
+    def on_leave(self):
+        self.m.spindle_off()
+        self.m.vac_off()
         
         
