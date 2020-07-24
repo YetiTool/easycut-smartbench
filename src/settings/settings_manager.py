@@ -56,7 +56,7 @@ class Settings(object):
                 self.latest_sw_version = 'v' + str(max_version_number)
 
                 if self.latest_sw_version.endswith('-beta'):
-                    
+                    pass
                 if max_version_number.strip('-beta') in version_numbers:
                     self.latest_sw_version = self.latest_sw_version.strip('-beta')
 
