@@ -321,7 +321,6 @@ class WifiScreen(Screen):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
-        self._password.text = StringProperty()
 
     def on_enter(self):
         self.refresh_ip_label_value(1)
