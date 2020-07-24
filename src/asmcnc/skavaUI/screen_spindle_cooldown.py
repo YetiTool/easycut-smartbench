@@ -107,8 +107,8 @@ class SpindleCooldownScreen(Screen):
         self.sm.current = self.return_screen
 
     def update_timer(self, dt):
-        seconds = seconds + 1
-        self.countdown.text = str(seconds)
+        self.seconds = self.seconds + 1
+        self.countdown.text = str(self.seconds)
 
         
         
