@@ -121,6 +121,7 @@ Builder.load_string("""
                         size_hint: (None, None) 
                         orientation: "horizontal"
                         Label:
+                            width: dp(171)
                             color: 0,0,0,1
                             font_size: 20
                             markup: True
