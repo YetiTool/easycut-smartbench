@@ -26,7 +26,6 @@ Builder.load_string("""
     background_color: [1,1,1,1]
     height: dp(40)
     color: 0,0,0,1
-    font_size: '19sp'
 
 <WifiScreen>:
     
