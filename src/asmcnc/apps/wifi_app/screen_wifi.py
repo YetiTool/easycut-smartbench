@@ -25,11 +25,10 @@ Builder.load_string("""
     background_normal: ''
     background_color: [1,1,1,1]
     height: dp(40)
+    color: 0,0,0,1
 
 <WifiScreen>:
     
-
-
     network_name: network_name
     password: password
     country: country
@@ -196,7 +195,8 @@ Builder.load_string("""
                             color: 0,0,0,1
                             values: root.SSID_list
                             option_cls: Factory.get("NetworkSpinner")
-
+                            background_normal: ''
+                            background_color: [1,1,1,1]
 
                         # TextInput: 
                         #     id: network_name
