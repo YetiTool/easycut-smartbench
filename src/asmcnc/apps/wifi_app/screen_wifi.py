@@ -16,6 +16,12 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
+<NetworkSpinne@SpinnerOption>
+
+    background_normal: ''
+    background_color: [1,1,1,1]
+    height: dp(40)
+
 <WifiScreen>:
     
     network_name: network_name
@@ -183,7 +189,7 @@ Builder.load_string("""
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.SSID_list
-                            option_cls: root.NetworkSpinner
+                            option_cls: Factory.get("NetworkSpinner")
 
 
                         # TextInput: 
@@ -362,14 +368,6 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
 """)
-
-class NetworkSpinner(SpinnerOption):
-    def __init__(self, **kwargs):
-        super(SpinnerOptions, self).__init__(**kwargs)
-        background_normal = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        background_color = [1,1,1,1]
-        height = dp(40)
-
 
 class WifiScreen(Screen):
     
