@@ -6,6 +6,7 @@ Wifi screen
 '''
 
 from kivy.lang import Builder
+from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner, SpinnerOption
