@@ -117,7 +117,7 @@ Builder.load_string("""
                     orientation: "vertical"
                     padding: [10,0,0,20]   
                     
-                    BoxLayount: 
+                    BoxLayout: 
                         size_hint: (None, None) 
                         orientation: "horizontal"
                         Label:
