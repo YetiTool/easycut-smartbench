@@ -339,7 +339,7 @@ class WifiScreen(Screen):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
-        self.SSID_list = self.get_available_networks()
+        self.network_name.values = self.get_available_networks()
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
@@ -349,7 +349,6 @@ class WifiScreen(Screen):
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
-        self.network_name.values = self.get_available_networks()
 
     # def on_leave(self):
     #     Clock.unschedule(self.refresh_networks_event)
