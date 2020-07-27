@@ -350,8 +350,8 @@ class WifiScreen(Screen):
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = 'GB'
 
-    def on_leave(self):
-        Clock.unschedule(self.refresh_networks_event)
+    # def on_leave(self):
+    #     Clock.unschedule(self.refresh_networks_event)
 
     def check_credentials(self):
 
