@@ -20,7 +20,7 @@ Builder.load_string("""
 #:import Factory kivy.factory.Factory
 
 
-<NetworkSpinne@SpinnerOption>
+<NetworkSpinner@SpinnerOption>
 
     background_normal: ''
     background_color: [1,1,1,1]
