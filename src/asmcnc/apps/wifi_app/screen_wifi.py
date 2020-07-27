@@ -466,7 +466,7 @@ class WifiScreen(Screen):
     
     def get_available_networks(self):
         raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
-        SSID_list = raw_SSID_list.replace('\tSSID: ','').split('\n')
+        SSID_list = raw_SSID_list.replace('\tSSID: ','').strip().split('\n')
         if '' in SSID_list: SSID_list.remove('')
         return SSID_list
 
