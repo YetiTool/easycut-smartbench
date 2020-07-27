@@ -331,13 +331,14 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+    SSID_list = []
 
-    SSID_list = self.get_available_networks()
     
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+        SSID_list = self.get_available_networks()
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
