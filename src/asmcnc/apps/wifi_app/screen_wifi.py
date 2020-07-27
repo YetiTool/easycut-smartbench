@@ -183,7 +183,7 @@ Builder.load_string("""
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.SSID_list
-                            option_cls: NetworkSpinner
+                            option_cls: root.NetworkSpinner
 
 
                         # TextInput: 
