@@ -186,6 +186,8 @@ Builder.load_string("""
                             SpinnerOption:
                                 background_normal: './asmcnc/apps/shapeCutter_app/img/popup_background.png'
                                 background_color: [1,1,1,1]
+                                center: self.parent.center
+                                pos: self.parent.pos
 
                         # TextInput: 
                         #     id: network_name
