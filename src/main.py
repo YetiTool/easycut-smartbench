@@ -97,7 +97,7 @@ def check_and_update_config():
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
         check_and_update_gpu_mem()
 
-def launch powercycle_screen()
+def check_and_launch_powercycle_screen()
     # Check whether machine needs to be power cycled (currently only after a software update)
     pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
     if pc_alert.startswith('power_cycle_alert=True'):
@@ -110,6 +110,8 @@ if sys.platform != 'win32' and sys.platform != 'darwin':
     ## Easycut config
     check_and_update_config()
 
+    # if software update has happened, launch the power cycle screen instead
+    check_and_launch_powercycle_screen()
 
 def log(message):
     timestamp = datetime.now()
