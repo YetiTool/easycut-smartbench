@@ -105,7 +105,8 @@ def check_and_launch_powercycle_screen():
     pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
     if pc_alert.startswith('power_cycle_alert=True'):
         os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
-        global start_screen = 'pc_alert'
+        global start_screen
+        start_screen = 'pc_alert'
 
 
 if sys.platform != 'win32' and sys.platform != 'darwin':
