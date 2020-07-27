@@ -183,8 +183,9 @@ Builder.load_string("""
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.SSID_list
-                            option_cls.background_normal: './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-                            background_color: [1,1,1,1]
+                            SpinnerOption:
+                                background_normal: ''
+                                background_color: [1,1,1,1]
 
                         # TextInput: 
                         #     id: network_name
