@@ -41,8 +41,6 @@ Builder.load_string("""
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
     start_or_pause_button_image:start_or_pause_button_image
-#     grbl_serial_char_capacity:grbl_serial_char_capacity
-#     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
     file_data_label:file_data_label
@@ -344,32 +342,6 @@ Builder.load_string("""
                             halign: 'center'
                             text: '[color=333333]0 %[/color]'
                             markup: True
-                    
-
-#                     BoxLayout:
-#                         orientation: 'vertical'
-#                         size_hint_y: 0.15
-#                         padding: 00
-#                         spacing: 00
-# 
-#                         Label:
-#                             text: '[color=808080]Comms buffer:[/color]'
-#                             markup: True
-# 
-#                         BoxLayout:
-#                             orientation: 'horizontal'
-#                             padding: 00
-#                             spacing: 00
-# 
-#                             Label:
-#                                 id: grbl_serial_char_capacity
-#                                 text: '[color=808080]A[/color]'
-#                                 markup: True
-#                             Label:
-#                                 id: grbl_serial_line_capacity
-#                                 text: '[color=808080]B[/color]'
-#                                 markup: True
-    
 
         BoxLayout:
             size_hint_y: 0.08
@@ -526,11 +498,8 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
         
-        # # Spindle cooldown - ideally would be good if we could get a screen to fire with this actually 
-        # if spindle_on_command in self.job_gcode:
-        #     modified_job_gcode.append("M3 S20000")
-        #     modified_job_gcode.append("G4 P10")
-        #     modified_job_gcode.append("M5")
+        # # Remove end of file command for spindle cooldown to operate smoothly
+        if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
 
         try:
             self.m.s.run_job(modified_job_gcode)
