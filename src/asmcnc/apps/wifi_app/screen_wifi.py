@@ -6,7 +6,7 @@ Wifi screen
 '''
 
 from kivy.lang import Builder
-from kivy.factory.Factory import Factory
+from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner, SpinnerOption
@@ -17,6 +17,9 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
+#:import Factory kivy.factory.Factory
+
+
 <NetworkSpinne@SpinnerOption>
 
     background_normal: ''
@@ -25,6 +28,8 @@ Builder.load_string("""
 
 <WifiScreen>:
     
+
+
     network_name: network_name
     password: password
     country: country
