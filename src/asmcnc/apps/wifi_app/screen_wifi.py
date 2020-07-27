@@ -131,24 +131,28 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             text: "Network Name"
-                        Button:
-                            size_hint: (None,None)
-                            height: dp(40)
+                        BoxLayout: 
+                            size_hint: (None, None) 
+                            orientation: "horizontal"
                             width: dp(39)
-                            background_color: hex('#F4433600')
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            on_press: root.refresh_available_networks()
-                            BoxLayout:
-                                padding: 0
-                                size: self.parent.size
+                            Button:
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(39)
+                                background_color: hex('#F4433600')
+                                center: self.parent.center
                                 pos: self.parent.pos
-                                Image:
-                                    source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
+                                on_press: root.refresh_available_networks()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
 
 
                     BoxLayout:
