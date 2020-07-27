@@ -142,8 +142,8 @@ Builder.load_string("""
                         Spinner:
                             id: network_name
                             size_hint: (None, None)
-                            size: 80, 40
-                            text: 'GB'
+                            size: 210, 40
+                            text: ''
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.SSID_list
@@ -338,11 +338,12 @@ class WifiScreen(Screen):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
-        SSID_list = self.get_available_networks()
+        self.SSID_list = self.get_available_networks()
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
-        self.refresh_networks_event = Clock.schedule_interval(self.refresh_available_networks, 1)
+        self.SSID_list = self.get_available_networks()
+        # self.refresh_networks_event = Clock.schedule_interval(self.refresh_available_networks, 1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = ''
