@@ -506,8 +506,8 @@ class WifiScreen(Screen):
 
     def refresh_available_networks(self):
         wait_popup = popup_info.PopupWait(self.sm)
-        Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 1.2)
-        
+        Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.8)
+
         def get_networks():
             self.network_name.values = self.get_available_networks()
 
