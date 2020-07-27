@@ -141,6 +141,7 @@ Builder.load_string("""
                                 size: self.size
                         Spinner:
                             id: network_name
+                            halign: 'left'
                             size_hint: (None, None)
                             size: 210, 40
                             text: ''
@@ -342,13 +343,13 @@ class WifiScreen(Screen):
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
-        self.SSID_list = self.get_available_networks()
         # self.refresh_networks_event = Clock.schedule_interval(self.refresh_available_networks, 1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-            except: self.network_name.text = 'GB'
+            except: self.country.text = 'GB'
+        self.network_name.values = self.get_available_networks()
 
     # def on_leave(self):
     #     Clock.unschedule(self.refresh_networks_event)
