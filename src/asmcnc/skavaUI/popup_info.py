@@ -538,7 +538,7 @@ class PopupWait(Widget):
         self.popup.separator_height = '4dp'
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=popup.dismiss)    
+        ok_button.bind(on_press=self.popup.dismiss)    
 
         self.popup.open()
 
