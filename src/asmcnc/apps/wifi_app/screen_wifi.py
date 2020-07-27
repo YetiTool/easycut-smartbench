@@ -6,15 +6,26 @@ Wifi screen
 '''
 
 from kivy.lang import Builder
+from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.textinput import TextInput
-from kivy.uix.spinner import Spinner
+from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 import socket, sys, os
 
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
+
+#:import Factory kivy.factory.Factory
+
+
+<NetworkSpinner@SpinnerOption>
+
+    background_normal: ''
+    background_color: [1,1,1,1]
+    height: dp(40)
+    color: 0,0,0,1
 
 <WifiScreen>:
     
@@ -115,34 +126,87 @@ Builder.load_string("""
                     height: dp(100)
                     width: dp(220)
                     orientation: "vertical"
-                    padding: [10,0,0,20]   
-                              
-                    Label:
-                        color: 0,0,0,1
-                        font_size: 20
-                        markup: True
-                        halign: "left"
-                        valign: "middle"
-                        text_size: self.size
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        text: "Network Name"
+                    padding: [10,0,20,20]   
+                    
+                    BoxLayout: 
+                        size_hint: (None, None) 
+                        orientation: "horizontal"
+                        width: dp(210)
+                        height: dp(40)
+                        BoxLayout: 
+                            size_hint: (None, None) 
+                            orientation: "vertical"
+                            width: dp(151)
+                            height: dp(40)
+                            Label:
+                                width: dp(151)
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                text: "Network Name"
+                        BoxLayout: 
+                            size_hint: (None, None) 
+                            orientation: "vertical"
+                            width: dp(39)
+                            height: dp(40)
+                            Button:
+                                size_hint: (None,None)
+                                height: dp(40)
+                                width: dp(39)
+                                background_color: hex('#F4433600')
+                                center: self.parent.center
+                                pos: self.parent.pos
+                                on_press: root.refresh_available_networks()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
+
 
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
                         padding: (0,0,0,0)
-                                    
-                        TextInput: 
+                        canvas:
+                            Color:
+                                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        Spinner:
                             id: network_name
-                            valign: 'middle'
-                            halign: 'center'
-                            text_size: self.size
-                            font_size: '20sp'
-                            markup: True
-                            multiline: False
+                            halign: 'left'
+                            size_hint: (None, None)
+                            size: 210, 40
                             text: ''
+                            font_size: '20sp'
+                            color: 0,0,0,1
+                            values: root.SSID_list
+                            option_cls: Factory.get("NetworkSpinner")
+                            background_normal: ''
+                            background_color: [1,1,1,1]
+
+                        # TextInput: 
+                        #     id: network_name
+                        #     valign: 'middle'
+                        #     halign: 'center'
+                        #     text_size: self.size
+                        #     font_size: '20sp'
+                        #     markup: True
+                        #     multiline: False
+                        #     text: ''
 
                 #Password
                 BoxLayout: 
@@ -217,6 +281,8 @@ Builder.load_string("""
                             color: 0,0,0,1
                             values: root.values
                             background_normal: ''
+                            background_color: [1,1,1,1]
+                            option_cls: Factory.get("NetworkSpinner")
 
         BoxLayout:
             size_hint: (None, None)
@@ -314,19 +380,26 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+    SSID_list = []
+
     
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+        self.network_name.values = self.get_available_networks()
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
+        # self.refresh_networks_event = Clock.schedule_interval(self.refresh_available_networks, 1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-            except: self.network_name.text = 'GB'
+            except: self.country.text = 'GB'
+
+    # def on_leave(self):
+    #     Clock.unschedule(self.refresh_networks_event)
 
     def check_credentials(self):
 
@@ -438,4 +511,20 @@ class WifiScreen(Screen):
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
     
+    def get_available_networks(self):
+        raw_SSID_list = os.popen('sudo iw dev wlan0 scan | grep SSID').read()
+        SSID_list = raw_SSID_list.replace('\tSSID: ','').strip().split('\n')
+        if '' in SSID_list: SSID_list.remove('')
+        return SSID_list
+
+    def refresh_available_networks(self):
+        wait_popup = popup_info.PopupWait(self.sm)
+        Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.5)
+
+        def get_networks():
+            self.network_name.values = self.get_available_networks()
+
+        Clock.schedule_once(lambda dt: get_networks(), 0.2)        
+        
+
     values = ['GB' , 'US' , 'AF' , 'AX' , 'AL' , 'DZ' , 'AS' , 'AD' , 'AO' , 'AI' , 'AQ' , 'AG' , 'AR' , 'AM' , 'AW' , 'AU' , 'AT' , 'AZ' , 'BH' , 'BS' , 'BD' , 'BB' , 'BY' , 'BE' , 'BZ' , 'BJ' , 'BM' , 'BT' , 'BO' , 'BQ' , 'BA' , 'BW' , 'BV' , 'BR' , 'IO' , 'BN' , 'BG' , 'BF' , 'BI' , 'KH' , 'CM' , 'CA' , 'CV' , 'KY' , 'CF' , 'TD' , 'CL' , 'CN' , 'CX' , 'CC' , 'CO' , 'KM' , 'CG' , 'CD' , 'CK' , 'CR' , 'CI' , 'HR' , 'CU' , 'CW' , 'CY' , 'CZ' , 'DK' , 'DJ' , 'DM' , 'DO' , 'EC' , 'EG' , 'SV' , 'GQ' , 'ER' , 'EE' , 'ET' , 'FK' , 'FO' , 'FJ' , 'FI' , 'FR' , 'GF' , 'PF' , 'TF' , 'GA' , 'GM' , 'GE' , 'DE' , 'GH' , 'GI' , 'GR' , 'GL' , 'GD' , 'GP' , 'GU' , 'GT' , 'GG' , 'GN' , 'GW' , 'GY' , 'HT' , 'HM' , 'VA' , 'HN' , 'HK' , 'HU' , 'IS' , 'IN' , 'ID' , 'IR' , 'IQ' , 'IE' , 'IM' , 'IL' , 'IT' , 'JM' , 'JP' , 'JE' , 'JO' , 'KZ' , 'KE' , 'KI' , 'KP' , 'KR' , 'KW' , 'KG' , 'LA' , 'LV' , 'LB' , 'LS' , 'LR' , 'LY' , 'LI' , 'LT' , 'LU' , 'MO' , 'MK' , 'MG' , 'MW' , 'MY' , 'MV' , 'ML' , 'MT' , 'MH' , 'MQ' , 'MR' , 'MU' , 'YT' , 'MX' , 'FM' , 'MD' , 'MC' , 'MN' , 'ME' , 'MS' , 'MA' , 'MZ' , 'MM' , 'NA' , 'NR' , 'NP' , 'NL' , 'NC' , 'NZ' , 'NI' , 'NE' , 'NG' , 'NU' , 'NF' , 'MP' , 'NO' , 'OM' , 'PK' , 'PW' , 'PS' , 'PA' , 'PG' , 'PY' , 'PE' , 'PH' , 'PN' , 'PL' , 'PT' , 'PR' , 'QA' , 'RE' , 'RO' , 'RU' , 'RW' , 'BL' , 'SH' , 'KN' , 'LC' , 'MF' , 'PM' , 'VC' , 'WS' , 'SM' , 'ST' , 'SA' , 'SN' , 'RS' , 'SC' , 'SL' , 'SG' , 'SX' , 'SK' , 'SI' , 'SB' , 'SO' , 'ZA' , 'GS' , 'SS' , 'ES' , 'LK' , 'SD' , 'SR' , 'SJ' , 'SZ' , 'SE' , 'CH' , 'SY' , 'TW' , 'TJ' , 'TZ' , 'TH' , 'TL' , 'TG' , 'TK' , 'TO' , 'TT' , 'TN' , 'TR' , 'TM' , 'TC' , 'TV' , 'UG' , 'UA' , 'AE' , 'UM' , 'UY' , 'UZ' , 'VU' , 'VE' , 'VN' , 'VG' , 'VI' , 'WF' , 'EH' , 'YE' , 'ZM' , 'ZW']
