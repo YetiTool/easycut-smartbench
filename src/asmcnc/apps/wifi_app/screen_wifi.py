@@ -431,8 +431,8 @@ class WifiScreen(Screen):
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
         self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
 
-        self.deletepass = 'sudo sed -i "s/\#psk="' + self.password + '"//" /etc/wpa_supplicant/wpa_supplicant.conf'
-        self.deletepasswlan0 = 'sudo sed -i "s/\#psk="' + self.password + '"//" /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
+        self.deletepass = 'sudo sed "3d" /etc/wpa_supplicant/wpa_supplicant.conf'
+        self.deletepasswlan0 = 'sudo sed "3d" /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
 
         # put the credentials and the necessary appendages into the wpa file
         try: 
