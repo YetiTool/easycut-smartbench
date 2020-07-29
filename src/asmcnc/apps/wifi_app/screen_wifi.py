@@ -440,14 +440,12 @@ class WifiScreen(Screen):
             os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
-            os.system(self.deletepass)
 
 
             os.system(self.wpanetpasswlan0)
             os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-            os.system(self.deletepasswlan0)
 
         except: 
             try: 
@@ -483,6 +481,8 @@ class WifiScreen(Screen):
             os.system('wpa_cli -i wlan0 reconfigure')
 
         def wifi_up():
+            os.system(self.deletepasswlan0)
+            os.system(self.deletepass)
             os.system('sudo ifconfig wlan0 up')
 
         Clock.schedule_once(lambda dt: wifi_down(), 1)
