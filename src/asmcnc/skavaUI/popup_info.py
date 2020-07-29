@@ -524,7 +524,7 @@ class PopupWait(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Please Wait...',
+        self.popup = Popup(title='Please Wait...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -534,13 +534,13 @@ class PopupWait(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
-        popup.separator_height = '4dp'
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        self.popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        self.popup.separator_height = '4dp'
+        self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=popup.dismiss)    
+        ok_button.bind(on_press=self.popup.dismiss)    
 
-        popup.open()
+        self.popup.open()
 
 class PopupDeveloper(Widget):   
     def __init__(self, screen_manager):

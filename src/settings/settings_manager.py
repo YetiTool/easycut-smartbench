@@ -31,6 +31,8 @@ class Settings(object):
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
+
+## VERSION REFRESH
         
     def refresh_sw_version(self):
         self.sw_version = str(os.popen("git describe --tags").read()).strip('\n')
@@ -55,6 +57,11 @@ class Settings(object):
                 max_version_number = max(version_numbers)
                 self.latest_sw_version = 'v' + str(max_version_number)
 
+                if self.latest_sw_version.endswith('-beta'):
+
+                    if max_version_number.strip('-beta') in version_numbers:
+                        self.latest_sw_version = self.latest_sw_version.strip('-beta')
+
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
         self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
@@ -62,6 +69,9 @@ class Settings(object):
 
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+
+
+## GET SOFTWARE UPDATES
 
     def get_sw_update_via_wifi(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
@@ -135,7 +145,9 @@ class Settings(object):
             clone_new_EC_and_restart()
 
         else: return False
-            
+
+
+## USB SOFTWARE UPDATE            
     def get_sw_update_via_usb(self):
     
         def find_usb_directory():
@@ -189,6 +201,8 @@ class Settings(object):
             return checkout_success
 
 
+
+## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
         print "pigpio daemon started"

@@ -18,6 +18,8 @@ Builder.load_string("""
 
 <SpindleCooldownScreen>:
 
+    countdown: countdown
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -63,13 +65,23 @@ Builder.load_string("""
             BoxLayout:
                 size: self.parent.size
                 pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True 
-                        
+                # Image:
+                #     source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
+                #     size: self.parent.width, self.parent.height
+                #     allow_stretch: True 
+                Label:
+                    id: countdown
+                    markup: True
+                    font_size: '80px' 
+                    valign: 'middle'
+                    halign: 'center'
+                    size:self.texture_size
+                    text_size: self.size  
+                    text: '0'
+                    color: [0,0,0,1]       
+
         Label:
-            size_hint_y: 1                
+            size_hint_y: 1
 
 """)
 
@@ -77,6 +89,7 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
+    seconds = 0
 
     def __init__(self, **kwargs):
         
@@ -85,12 +98,23 @@ class SpindleCooldownScreen(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.m.zUp_and_spindle_cooldown()
+        self.m.zUp_and_spindle_on()
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 15)
+        Clock.schedule_once(self.exit_screen, 10)
+        self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
         self.sm.current = self.return_screen
-        
+
+    def update_timer(self, dt):
+        self.seconds = self.seconds + 1
+        self.countdown.text = str(self.seconds)
+
+    def on_leave(self):
+        self.m.spindle_off()
+        self.m.vac_off()
+        Clock.unschedule(self.update_timer_event)
+        self.seconds = 0
+        self.countdown.text = '0'
         
