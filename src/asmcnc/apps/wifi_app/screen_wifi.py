@@ -430,8 +430,9 @@ class WifiScreen(Screen):
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
         self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-        
-        #if wpanetpass.startswith('network={'):       
+
+        self.deletepass = 'sudo sed -i "s/\#psk="' + self.password + '"//" /etc/wpa_supplicant/wpa_supplicant.conf'
+        self.deletepasswlan0 = 'sudo sed -i "s/\#psk="' + self.password + '"//" /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
 
         # put the credentials and the necessary appendages into the wpa file
         try: 
@@ -439,12 +440,15 @@ class WifiScreen(Screen):
             os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+            os.system(self.deletepass)
+
 
             os.system(self.wpanetpasswlan0)
             os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-        
+            os.system(self.deletepasswlan0)
+
         except: 
             try: 
                 self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
