@@ -511,10 +511,16 @@ class DeveloperScreen(Screen):
         f.close()
 
     def restore_grbl_settings(self):
-        
-        g = open('saved_grbl_settings_params.txt', 'r')
+
+        if self.usb_stick.is_usb_mounted_flag == True:
+            g = open("/media/usb/saved_grbl_settings_params.txt", 'r')
+        else:        
+            g = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'r')
+
         settings_to_restore = g.read()
         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+
+
 
     def flash_fw(self):
         self.set.get_fw_update()
