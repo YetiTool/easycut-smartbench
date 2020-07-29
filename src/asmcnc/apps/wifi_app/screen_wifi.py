@@ -431,9 +431,6 @@ class WifiScreen(Screen):
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
         self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
 
-        self.deletepass = 'sudo sed "3d" /etc/wpa_supplicant/wpa_supplicant.conf'
-        self.deletepasswlan0 = 'sudo sed "3d" /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-
         # put the credentials and the necessary appendages into the wpa file
         try: 
             os.system(self.wpanetpass)
@@ -474,20 +471,8 @@ class WifiScreen(Screen):
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        def wifi_down():
-            os.system('sudo ifconfig wlan0 down')
 
-        def reconfigure_wlan():
-            os.system('wpa_cli -i wlan0 reconfigure')
-
-        def wifi_up():
-            os.system(self.deletepasswlan0)
-            os.system(self.deletepass)
-            os.system('sudo ifconfig wlan0 up')
-
-        Clock.schedule_once(lambda dt: wifi_down(), 1)
-        Clock.schedule_once(lambda dt: reconfigure_wlan(), 2)
-        Clock.schedule_once(lambda dt: wifi_up(), 3)
+        os.system("sudo reboot")
 
     def refresh_ip_label_value(self, dt):
 
