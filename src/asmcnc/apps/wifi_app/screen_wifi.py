@@ -12,6 +12,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 import socket, sys, os
+from kivy.properties import StringProperty, ObjectProperty
 
 from asmcnc.skavaUI import popup_info
 
@@ -30,7 +31,7 @@ Builder.load_string("""
 <WifiScreen>:
     
     network_name: network_name
-    password: password
+    _password: _password
     country: country
     ip_status_label: ip_status_label
     wifi_image: wifi_image
@@ -234,14 +235,15 @@ Builder.load_string("""
                         padding: (0,0,0,0)
                                     
                         TextInput: 
-                            id: password
+                            id: _password
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
                             font_size: '20sp'
                             markup: True
                             multiline: False
-                            text: ''                                           
+                            text: ''
+
                 #Country Code
                 BoxLayout: 
                     size_hint: (None, None)
@@ -380,9 +382,12 @@ class WifiScreen(Screen):
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+    network_name = ObjectProperty()
+    _password = ObjectProperty()
+    country = ObjectProperty()
     SSID_list = []
 
-    
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -397,18 +402,21 @@ class WifiScreen(Screen):
             except: self.network_name.text = ''
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
+        self._password.text = ''
 
-    # def on_leave(self):
-    #     Clock.unschedule(self.refresh_networks_event)
 
     def check_credentials(self):
 
-        if len(self.network_name.text) < 1: 
+        # get network name and password from text entered (widget)
+        self.netname = self.network_name.text
+        self.password = self._password.text
+
+        if len(self.netname) < 1: 
 
             message = "Please enter a valid network name."
             popup_info.PopupWarning(self.sm, message)
 
-        elif (len(self.password.text) < 8 or len(self.password.text) > 63): 
+        elif (len(self.password) < 8 or len(self.password) > 63): 
 
             message = "Please enter a password between 8 and 63 characters."
             popup_info.PopupWarning(self.sm, message)
@@ -419,58 +427,52 @@ class WifiScreen(Screen):
     def connect_wifi(self):
         popup_info.PopupWait(self.sm)
 
-
-        # get network name and password from text entered (widget)
-        self.netname = self.network_name.text
-        self.password = self.password.text
-        self.country = self.country.text 
-
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
         self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
-        
-        #if wpanetpass.startswith('network={'):       
 
         # put the credentials and the necessary appendages into the wpa file
         try: 
             os.system(self.wpanetpass)
             os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
-            os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+            os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+
 
             os.system(self.wpanetpasswlan0)
             os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
             os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-            os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-        
+            os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
         except: 
             try: 
                 self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
                 os.system(self.wpanetpass)
                 os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
-                os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+                os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
 
                 self.wpanetpasswlan0 = 'wpa_passphrase "' + self.netname + '" "invalidPassword" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
                 os.system(self.wpanetpasswlan0)
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-                os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+                os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
             except:
                 self.wpanetpass = 'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
                 os.system(self.wpanetpass)
                 os.system('echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
-                os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
+                os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant.conf')
 
                 self.wpanetpasswlan0 = 'wpa_passphrase "" "" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
                 os.system(self.wpanetpasswlan0)
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-                os.system('echo "country="' + self.country + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+                os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
-        self.sm.current = 'rebooting'        
+
+        self.sm.current = 'rebooting'
 
     def refresh_ip_label_value(self, dt):
 
