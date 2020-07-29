@@ -144,20 +144,14 @@ Builder.load_string("""
 
             Button:
                 text: 'Download settings'
-                background_normal: ''
-                background_color: [0,0,0,0]
                 on_press: root.download_grbl_settings()
                         
             Button:
                 text: 'Save Settings'
-                background_normal: ''
-                background_color: [0,0,0,0]
                 on_press: root.save_grbl_settings()
                            
             Button:
                 text: 'Restore Settings'
-                background_normal: ''
-                background_color: [0,0,0,0]
                 on_press: root.restore_grbl_settings()
                 
             Button:
@@ -470,7 +464,7 @@ class DeveloperScreen(Screen):
                         '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
                         '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
                         '$132=' + str(self.m.s.setting_132),   #Z Max travel, mm
-                        'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
                 ]
         else:
             grbl_settings_and_params = [
@@ -509,7 +503,7 @@ class DeveloperScreen(Screen):
                         '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
                         '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
                         '$132=' + str(self.m.s.setting_132),   #Z Max travel, mm
-                        'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
                 ]
 
         f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
