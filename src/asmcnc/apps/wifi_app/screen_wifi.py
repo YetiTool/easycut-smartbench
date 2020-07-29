@@ -472,7 +472,7 @@ class WifiScreen(Screen):
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
 
 
-        os.system("sudo reboot")
+        self.sm.current = 'rebooting'
 
     def refresh_ip_label_value(self, dt):
 
