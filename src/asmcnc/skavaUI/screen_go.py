@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_stop_press # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -41,8 +41,6 @@ Builder.load_string("""
     feed_override_container:feed_override_container
     speed_override_container:speed_override_container
     start_or_pause_button_image:start_or_pause_button_image
-#     grbl_serial_char_capacity:grbl_serial_char_capacity
-#     grbl_serial_line_capacity:grbl_serial_line_capacity
     btn_back: btn_back
     stop_start:stop_start
     file_data_label:file_data_label
@@ -344,32 +342,6 @@ Builder.load_string("""
                             halign: 'center'
                             text: '[color=333333]0 %[/color]'
                             markup: True
-                    
-
-#                     BoxLayout:
-#                         orientation: 'vertical'
-#                         size_hint_y: 0.15
-#                         padding: 00
-#                         spacing: 00
-# 
-#                         Label:
-#                             text: '[color=808080]Comms buffer:[/color]'
-#                             markup: True
-# 
-#                         BoxLayout:
-#                             orientation: 'horizontal'
-#                             padding: 00
-#                             spacing: 00
-# 
-#                             Label:
-#                                 id: grbl_serial_char_capacity
-#                                 text: '[color=808080]A[/color]'
-#                                 markup: True
-#                             Label:
-#                                 id: grbl_serial_line_capacity
-#                                 text: '[color=808080]B[/color]'
-#                                 markup: True
-    
 
         BoxLayout:
             size_hint_y: 0.08
@@ -507,20 +479,30 @@ class GoScreen(Screen):
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
 
-        with_vac_job_gcode = []
+        modified_job_gcode = []
 
+        # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AE")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.extend(self.job_gcode)
-        with_vac_job_gcode.append("G4 P2")  #append cleaned up gcode to object
-        with_vac_job_gcode.append("AF")  #append cleaned up gcode to object  
+            modified_job_gcode.append("M56")  # append cleaned up gcode to object
+
+        if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+            modified_job_gcode.append("AE")  # turns vacuum on
+            modified_job_gcode.append("G4 P2")  # sends pause command
+            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
+            modified_job_gcode.append("AF")  # turns vac off
+        else:
+            modified_job_gcode.extend(self.job_gcode)
+
+        # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
-            with_vac_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+            modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
+        
+        # # Remove end of file command for spindle cooldown to operate smoothly
+        if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
 
         try:
-            self.m.s.run_job(with_vac_job_gcode)
+            self.m.s.run_job(modified_job_gcode)
             log('Job started ok from go screen...')
 
         except:

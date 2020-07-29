@@ -140,9 +140,13 @@ class USB_storage(object):
                     if self.IS_USB_VERBOSE: print 'USB: UNMOUNTED'
                     self.is_usb_mounted_flag = False
                     Clock.unschedule(poll_for_dismount)
-                    if dismiss_event != None: popup_USB.popup.dismiss()
-                    new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
-                    Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 2.5)
+
+                    def tell_user_safe_to_remove_usb():
+                        if dismiss_event != None: popup_USB.popup.dismiss()
+                        new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
+                        Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 2.5)
+
+                    Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 1)
   
         
         poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)

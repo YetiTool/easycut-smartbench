@@ -85,7 +85,15 @@ class VirtualZ(Widget):
         self.z_clear.size[1] = ( z_max/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
         self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
         self.z_cut.y = self.z_clear.y - self.z_cut.height
-        
+
+        if self.sm.get_screen('home').job_filename == '':
+            if self.z_clear.size[1] == 0: 
+                self.z_clear.size[1] = 4
+                self.z_clear.y = 304
+            if self.z_cut.size[1] == 0:
+                self.z_cut.size[1] = 4
+                self.z_cut.y = 300
+
     def setBitPos(self):
 
         self.z_bit.y = (self.z_bit.parent.y + self.z_bit.parent.size[1] 

@@ -12,7 +12,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
-from asmcnc.skavaUI import popup_stop_press
 from asmcnc.skavaUI import popup_info
 
 import sys
@@ -147,7 +146,7 @@ class QuickCommands(Widget):
         self.m.stop_from_quick_command_reset()
     
     def stop(self):
-        popup_stop_press.PopupStop(self.m, self.sm)
+        popup_info.PopupStop(self.m, self.sm)
 
     def proceed_to_go_screen(self):
         

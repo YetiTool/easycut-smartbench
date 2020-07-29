@@ -25,7 +25,7 @@ import sys, os, time
 from datetime import datetime
 import re
 
-from asmcnc.skavaUI import screen_check_job, widget_gcode_view
+from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
 
 # from asmcnc.comms import usb_storage
@@ -225,6 +225,13 @@ class LoadingScreen(Screen):
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
+
+        if len(self.job_file_as_list) == 0:
+            file_empty_warning = 'File is empty!\n\nPlease load a different file.'
+            popup_info.PopupError(self.sm, file_empty_warning)
+            self.sm.current = 'local_filechooser'
+            return
+
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
         self.load_value = 1

@@ -411,28 +411,15 @@ class SerialConnection(object):
             # move head up and turn vac off
             # self.m.post_cut_sequence() #PROBLEM
 
-            self.m.zUp()
-    
-            # Tell user the job has finished
-            log("G-code streaming finished!")
-            self.stream_end_time = time.time()
-            time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+            if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+                self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
+                self.sm.current = 'spindle_cooldown'
+                self.send_stream_time_to_job_done_screen()
+            else:
+                self.send_stream_time_to_job_done_screen()
+                self.sm.current = 'jobdone'
 
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-    
-            # send info to the job done screen
-            self.sm.current = 'jobdone'
             self._reset_counters()
-
-            # reset go screen to go again
-            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
         else:
             self.m.disable_check_mode()
@@ -441,8 +428,24 @@ class SerialConnection(object):
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
-            self.buffer_monitor_file = None
+            self.buffer_monitor_file = None 
 
+    def send_stream_time_to_job_done_screen(self):
+
+            # Tell user the job has finished
+            log("G-code streaming finished!")
+            self.stream_end_time = time.time()
+            time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
+            hours = int(time_taken_seconds / (60 * 60))
+            seconds_remainder = time_taken_seconds % (60 * 60)
+            minutes = int(seconds_remainder / 60)
+            seconds = int(seconds_remainder % 60)
+            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+
+            # send info to the job done screen
+            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
 
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
@@ -460,8 +463,12 @@ class SerialConnection(object):
 #             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
 #             
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.self.m.vac_off(), 1)
+            # self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
+            # self.sm.current = 'spindle_cooldown'
+            
+
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False

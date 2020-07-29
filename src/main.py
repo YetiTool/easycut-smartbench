@@ -60,6 +60,7 @@ from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
@@ -72,7 +73,7 @@ Cmport = 'COM3'
 initial_version = 'v1.3.1'
 
 # default starting screen
-start_screen = 'safety'
+start_screen = 'welcome'
 
 # Config management
 def check_and_update_gpu_mem():
@@ -111,18 +112,24 @@ def check_and_update_config():
         if (changed_port == True or changed_mem == True):
             os.system('sudo reboot')
 
+        # if software update has happened, launch the power cycle screen instead
+        check_and_launch_powercycle_screen()        
+
+def check_and_launch_powercycle_screen():
+    # Check whether machine needs to be power cycled (currently only after a software update)
+    pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
+    if pc_alert.startswith('power_cycle_alert=True'):
+        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
+        global start_screen
+        start_screen = 'pc_alert'
+
 
 if sys.platform != 'win32' and sys.platform != 'darwin':
     
     ## Easycut config
     check_and_update_config()
-    
-    # Check whether machine needs to be power cycled (currently only after a software update)
-    pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
-    if pc_alert.startswith('power_cycle_alert=True'):
-        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
-        start_screen = 'pc_alert'
 
+    print start_screen
 
 def log(message):
     timestamp = datetime.now()
@@ -177,7 +184,8 @@ class SkavaUI(App):
         homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
         welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m)
-        spindle_shutdown_screen = screen_spindle_shutdown.SpindeShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
+        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
+        spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
 
@@ -211,19 +219,14 @@ class SkavaUI(App):
         sm.add_widget(squaring_active_screen)
         sm.add_widget(welcome_screen)
         sm.add_widget(spindle_shutdown_screen)
+        sm.add_widget(spindle_cooldown_screen)
         sm.add_widget(stop_or_resume_decision_screen)
         sm.add_widget(lift_z_on_pause_decision_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-        sm.current = 'welcome'
-#         sm.current = 'go'
-
-        # maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm, machine =m)
-        # sm.add_widget(maintenance_screen)
-        # sm.current = 'maintenance'
-
+        sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
 
