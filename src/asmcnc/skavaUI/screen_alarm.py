@@ -201,10 +201,10 @@ class AlarmScreenClass(Screen):
         self.m.reset_from_alarm()
 
         def trigger_popup():
-            details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[3:8])
+            details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[3:])
             popup_info.PopupInfo(self.sm, 600, details)
 
-        Clock.schedule_once(lambda dt: trigger_popup(), 0.5)
+        Clock.schedule_once(lambda dt: trigger_popup(), 0.45)
 
 
     def quit_to_home(self):
