@@ -202,13 +202,13 @@ class AlarmScreenClass(Screen):
 
         def trigger_popup():
             details = self.m.s.grbl_out
-            details = details + self.m.s.grbl_out
-            details = details + self.m.s.grbl_out
-
+            details = details + '\n' + self.m.s.grbl_out
+            details = details + '\n' + self.m.s.grbl_out
+            details = details + '\n' + self.m.s.grbl_out
             popup_info.PopupInfo(self.sm, 600, details)
 
         Clock.schedule_once(lambda dt: trigger_popup(), 0.3)
-        
+
     def quit_to_home(self):
         
         self.m.resume_from_alarm()
