@@ -199,19 +199,16 @@ class AlarmScreenClass(Screen):
 
     def show_details(self):
         self.m.reset_from_alarm()
-        self.details = self.m.s.grbl_out
-
-        def update_description():
-            self.details = self.details + '\n' + self.m.s.grbl_out
-            print self.details
 
         def trigger_popup():
-            popup_info.PopupInfo(self.sm, 600, self.details)
+            details = self.m.s.grbl_out
+            details = details + self.m.s.grbl_out
+            details = details + self.m.s.grbl_out
 
-        update_details_event = Clock.schedule_interval(lambda dt: update_description(), 0.1)
+            popup_info.PopupInfo(self.sm, 600, details)
+
         Clock.schedule_once(lambda dt: trigger_popup(), 0.3)
-        Clock.unschedule(update_details_event)
-
+        
     def quit_to_home(self):
         
         self.m.resume_from_alarm()
