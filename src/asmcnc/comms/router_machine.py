@@ -237,6 +237,11 @@ class RouterMachine(object):
 #         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
         Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.3)
 
+    def reset_from_alarm(self):
+        # Machine has stopped without warning and probably lost position
+        self._stop_all_streaming()  # In case alarm happened during stream, stop that
+        self._grbl_soft_reset()     # Reset to get out of Alarm mode. All buffers will be dumped.
+        
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
