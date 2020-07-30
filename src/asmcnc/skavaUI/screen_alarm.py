@@ -202,7 +202,7 @@ class AlarmScreenClass(Screen):
         self.details = ''
 
         def update_description():
-            self.details = self.details + self.m.s.grbl_out
+            self.details = self.details + '\n' + self.m.s.grbl_out
 
         def trigger_popup():
             popup_info.PopupInfo(self.sm, 600, self.details)
