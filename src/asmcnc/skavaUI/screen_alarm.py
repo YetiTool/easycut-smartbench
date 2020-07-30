@@ -201,7 +201,7 @@ class AlarmScreenClass(Screen):
         self.m.reset_from_alarm()
 
         def trigger_popup():
-            details = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+            details = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[3:7].join('\n')
             popup_info.PopupInfo(self.sm, 600, details)
 
         Clock.schedule_once(lambda dt: trigger_popup(), 0.3)
