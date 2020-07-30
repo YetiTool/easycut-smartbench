@@ -79,10 +79,12 @@ class WelcomeScreenClass(Screen):
             if sys.platform != 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
+                # Get grbl FW version
+                Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I', 5)
                 # Allow time for machine reset sequence
-                Clock.schedule_once(self.go_to_next_screen, 5)
+                Clock.schedule_once(self.go_to_next_screen, 5.5)
                 # Get grbl settings
-                Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.5)
+                Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.6)
 
     
     
