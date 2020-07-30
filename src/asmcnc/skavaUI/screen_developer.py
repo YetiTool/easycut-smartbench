@@ -341,7 +341,7 @@ class DeveloperScreen(Screen):
         self.sm.current = 'lobby'
 
     def scrape_fw_version(self):
-        self.fw_version_label.text =str(self.m.s.fw_version)
+        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def get_sw_update(self): 
         self.set.get_sw_update()
