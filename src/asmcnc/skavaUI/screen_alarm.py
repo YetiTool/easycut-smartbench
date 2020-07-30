@@ -199,7 +199,7 @@ class AlarmScreenClass(Screen):
 
     def show_details(self):
         self.m.reset_from_alarm()
-        self.details = ''
+        self.details = self.m.s.grbl_out
 
         def update_description():
             self.details = self.details + '\n' + self.m.s.grbl_out
