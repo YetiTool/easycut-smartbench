@@ -811,9 +811,7 @@ class SerialConnection(object):
                 self.expecting_probe_result = False # clear flag
                 
             elif stripped_message.startswith('ASM CNC'):
-                fw_and_hw_versions = str(stripped_message.split(':')[1]).split('; HW Ver:')
-                self.fw_version = fw_and_hw_versions[0]
-                self.hw_version = fw_and_hw_versions[1]
+                self.fw_version = stripped_message.split(':')[1]
                 log('FW version: ' + str(self.fw_version))
 
 
