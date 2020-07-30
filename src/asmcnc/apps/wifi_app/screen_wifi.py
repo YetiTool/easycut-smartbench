@@ -392,7 +392,9 @@ class WifiScreen(Screen):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
-        self.network_name.values = self.get_available_networks()
+
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+            self.network_name.values = self.get_available_networks()
  
     def on_enter(self):
         self.refresh_ip_label_value(1)
