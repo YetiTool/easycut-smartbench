@@ -211,7 +211,7 @@ class SkavaUI(App):
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-        sm.current = 'alarmScreen'
+        sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
 
