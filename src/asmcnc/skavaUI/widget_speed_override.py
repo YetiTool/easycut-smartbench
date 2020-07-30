@@ -75,7 +75,14 @@ Builder.load_string("""
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
-            
+        # Label:
+        #     id: spindle_rpm
+        #     text: 'speed'
+        #     font_size: '16px' 
+        #     valign: 'middle'
+        #     halign: 'center'
+        #     size:self.texture_size
+        #     text_size: self.size            
         
          
         

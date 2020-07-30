@@ -141,6 +141,12 @@ class RouterMachine(object):
 
 # HW/FW VERSION CAPABILITY
 
+    def fw_can_operate_laser_commands(self):
+
+        log('FW version able to operate laser commands AX and AZ: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')))
+        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')       
+
+
     def fw_can_operate_zUp_on_pause(self):
 
         log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')))
@@ -540,12 +546,16 @@ class RouterMachine(object):
     def laser_on(self):
         if self.is_laser_enabled == True: 
             self.is_laser_on = True
-            # self.s.write_command('AZ')
+
+            if self.fw_can_operate_laser_commands():
+                self.s.write_command('AZ')
+
             self.set_led_colour('BLUE')
 
     def laser_off(self):
         self.is_laser_on = False
-        # self.s.write_command('AX')
+        if self.fw_can_operate_laser_commands():
+            self.s.write_command('AX')
         self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
