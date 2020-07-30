@@ -208,7 +208,7 @@ class AlarmScreenClass(Screen):
         def trigger_popup(details):
             popup_info.PopupInfo(self.sm, 600, details)
 
-        details_event = Clock.schedule_interva(lambda dt: update_details(), 0.1)
+        details_event = Clock.schedule_interval(lambda dt: update_details(), 0.1)
         Clock.schedule_once(lambda dt: trigger_popup(self.details), 0.3)
         Clock.unschedule(details_event)
 
