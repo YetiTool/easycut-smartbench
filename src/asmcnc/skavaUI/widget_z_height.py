@@ -89,10 +89,9 @@ class VirtualZ(Widget):
         if self.sm.get_screen('home').job_filename == '':
             if self.z_clear.size[1] == 0: 
                 self.z_clear.size[1] = 4
-                self.z_clear.y = 304
+                
             if self.z_cut.size[1] == 0:
                 self.z_cut.size[1] = 4
-                self.z_cut.y = 300
 
     def setBitPos(self):
 
