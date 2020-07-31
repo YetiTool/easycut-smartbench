@@ -367,7 +367,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         
         popup.open()
         
-        Clock.schedule_once(reboot, 3)
+        Clock.schedule_once(reboot, 6)
     
 class PopupSoftwareRepair(Widget):   
     def __init__(self, screen_manager, settings_manager, warning_message):
