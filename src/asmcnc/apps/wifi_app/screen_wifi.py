@@ -181,10 +181,10 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,20,0,0)
+                        padding: (0,10,0,10)
                         canvas:
                             Color:
-                                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                                rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
