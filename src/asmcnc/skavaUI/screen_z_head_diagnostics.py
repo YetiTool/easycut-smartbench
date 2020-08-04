@@ -24,6 +24,9 @@ Builder.load_string("""
     z_home_check: z_home_check
     probe_check: probe_check
     cycle_test: cycle_test
+    spindle_toggle: spindle_toggle
+    laser_toggle: laser_toggle
+    cycle_limit_check: cycle_limit_check
 
     GridLayout:
         size: self.parent.size
