@@ -181,7 +181,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,0,0,0)
+                        padding: (0,20,0,0)
                         canvas:
                             Color:
                                 rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
@@ -191,12 +191,12 @@ Builder.load_string("""
                         Spinner:
                             id: network_name
                             halign: 'left'
-                            valign: 'middle'
+                            valign: 'top'
                             markup: True
                             size_hint: (None, None)
-                            size: 210, 40
+                            size: 210, 20
                             text: ''
-                            font_size: '18sp'
+                            font_size: '20sp'
                             text_size: self.size
                             multiline: False
                             color: 0,0,0,1
