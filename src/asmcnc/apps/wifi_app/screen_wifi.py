@@ -191,10 +191,12 @@ Builder.load_string("""
                         Spinner:
                             id: network_name
                             halign: 'left'
+                            markup: 'True'
                             size_hint: (None, None)
                             size: 210, 40
                             text: ''
                             font_size: '20sp'
+                            text_size: self.size
                             color: 0,0,0,1
                             values: root.SSID_list
                             option_cls: Factory.get("NetworkSpinner")
