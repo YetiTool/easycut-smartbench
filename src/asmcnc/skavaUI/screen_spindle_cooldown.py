@@ -77,7 +77,7 @@ Builder.load_string("""
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size  
-                    text: '0'
+                    text: '10'
                     color: [0,0,0,1]       
 
         Label:
