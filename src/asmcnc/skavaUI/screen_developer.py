@@ -64,7 +64,6 @@ Builder.load_string("""
             Button:
                 text: 'Z Head Diagnostics'
                 on_press: root.z_head_diagnostics()
-                disabled: 'true'
                 
             Button:
                 text: 'Download logs'

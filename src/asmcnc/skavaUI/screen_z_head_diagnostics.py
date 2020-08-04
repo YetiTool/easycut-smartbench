@@ -427,10 +427,10 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
     def x_motor_up(self):
-        pass
+        self.m.s.write_command('G0 X50')
 
     def x_motor_down(self):
-        pass
+        self.m.s.write_command('G0 X-50')
 
     def z_motor_up(self):
         pass
@@ -462,33 +462,33 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def dust_shoe_switch(self):
         if self.m.s.dust_shoe_cover:
-            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
-        else:
             self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def x_home_switch(self):
         if self.m.s.limit_x:
-            self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
-        else:
             self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def x_max_switch(self):
         if self.m.s.limit_X:
-            self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
-        else:
             self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def z_home_switch(self):
         if self.m.s.limit_z:
-            self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
-        else:
             self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def probe(self):
         if self.m.s.probe:
-            self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
-        else:
             self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def set_laser(self):
         if self.spindle_toggle.state == 'normal': 
