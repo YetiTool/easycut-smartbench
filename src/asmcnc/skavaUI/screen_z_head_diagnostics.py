@@ -195,7 +195,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-            	text: 'Z limit'
+            	text: 'Z Home'
             	color: 1,1,1,1          
 
             Image:
@@ -279,6 +279,7 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
+            on_press: root.set_spindle()
 
         GridLayout:
             size: self.parent.size
@@ -303,9 +304,10 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True		
 
-        ToggleButton: 
+        Button: 
             id: do_cycle
             text: 'Cycle'
+            on_press: root.do_cycle()
 
 # Row 6
 
@@ -345,6 +347,7 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
+            on_press: root.set_laser()
 
 	    ScrollableLabelStatus:
 	        size_hint_y: 0.2        
@@ -366,6 +369,8 @@ class ZHeadDiagnosticsScreen(Screen):
         super(ZHeadDiagnosticsScreen, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+
+        self.z_limit_set = False
 
     def on_enter(self, *args):
         self.scrape_fw_version()
@@ -435,10 +440,10 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.write_command('G0 X-50')
 
     def z_motor_up(self):
-        pass
+        self.m.s.write_command('G0 Z50')
 
     def z_motor_down(self):
-        pass
+        self.m.s.write_command('G0 Z-50')
 
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
@@ -461,9 +466,9 @@ class ZHeadDiagnosticsScreen(Screen):
         self.x_max_switch()
         self.z_home_switch()
         self.probe()
-
-        if self.m.state == 'Alarm':
-            self.m.resume_from_alarm()
+        
+        if self.cycle_test.state != 'normal':
+            self.cycle_limit_check()
 
     def dust_shoe_switch(self):
         if self.m.s.dust_shoe_cover:
@@ -496,19 +501,26 @@ class ZHeadDiagnosticsScreen(Screen):
             self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def set_laser(self):
-        if self.spindle_toggle.state == 'normal': 
+        if self.laser_toggle.state == 'normal': 
             self.m.laser_off()
         else: 
             self.m.laser_on()
 
-    def cycle_test(self):
-        pass
+    def cycle_limit_check(self):
+        if self.m.s.limit_z:
+            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.z_limit_set = True
+        else:
+            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
 
     def exit(self):
         self.sm.current = 'lobby'
 
     def do_cycle(self):
-        pass
+        if self.cycle_test.state != 'normal' and self.z_limit_set = True and not self.m.s.limit_z:
+
+            pass
+
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text

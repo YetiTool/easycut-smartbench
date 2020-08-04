@@ -645,7 +645,7 @@ class SerialConnection(object):
                     if 'Y' in pins_info: self.limit_Y = True
                     else: self.limit_Y = False
                     
-                    if 'z' in pins_info: self.limit_z = True
+                    if 'Z' in pins_info: self.limit_z = True
                     else: self.limit_z = False
 
                     if 'P' in pins_info: self.probe = True
