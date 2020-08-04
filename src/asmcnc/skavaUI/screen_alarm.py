@@ -146,7 +146,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/skavaUI/img/show_details.png"
+                            source: "./asmcnc/skavaUI/img/show_details_blue.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
