@@ -157,10 +157,11 @@ Builder.load_string("""
                             orientation: "vertical"
                             width: dp(39)
                             height: dp(40)
+                            padding: [5,5,5,5]
                             Button:
                                 size_hint: (None,None)
-                                height: dp(40)
-                                width: dp(39)
+                                height: dp(30)
+                                width: dp(29)
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
                                 pos: self.parent.pos
@@ -204,16 +205,6 @@ Builder.load_string("""
                             option_cls: Factory.get("NetworkSpinner")
                             background_normal: ''
                             background_color: [1,1,1,1]
-
-                        # TextInput: 
-                        #     id: network_name
-                        #     valign: 'middle'
-                        #     halign: 'center'
-                        #     text_size: self.size
-                        #     font_size: '20sp'
-                        #     markup: True
-                        #     multiline: False
-                        #     text: ''
 
                 #Password
                 BoxLayout: 
