@@ -203,7 +203,7 @@ Builder.load_string("""
                             option_cls: Factory.get("NetworkSpinner")
                             background_normal: ''
                             background_color: [1,1,1,1]
-                            on_value: 
+                            on_text: 
                                 root.adjust_network_font_size()
 
                         # TextInput: 
