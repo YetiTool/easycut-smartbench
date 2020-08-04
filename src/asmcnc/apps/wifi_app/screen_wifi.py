@@ -203,6 +203,8 @@ Builder.load_string("""
                             option_cls: Factory.get("NetworkSpinner")
                             background_normal: ''
                             background_color: [1,1,1,1]
+                            on_value: 
+                                root.adjust_network_font_size()
 
                         # TextInput: 
                         #     id: network_name
@@ -410,6 +412,13 @@ class WifiScreen(Screen):
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
+
+
+    def adjust_network_font_size(self):
+        if len(self.network_name.text) > 18: 
+            self.network_name.halign = 'center'
+        else: 
+            self.network_name.halign = 'left'
 
 
     def check_credentials(self):
