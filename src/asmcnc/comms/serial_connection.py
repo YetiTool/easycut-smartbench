@@ -44,6 +44,8 @@ class SerialConnection(object):
     job_gcode = []
     response_log = []
     suppress_error_screens = False
+    suppress_alarm_screens = False
+    suppress_door_screens = False
     FLUSH_FLAG = False
     
     write_command_buffer = []
@@ -663,8 +665,10 @@ class SerialConnection(object):
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
                             log("Hard " + self.m_state)
-                            self.sm.get_screen('door').return_to_screen = self.sm.current 
-                            self.sm.current = 'door'
+
+                            if self.suppress_door_screens == False:
+                                self.sm.get_screen('door').return_to_screen = self.sm.current 
+                                self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
                     overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
@@ -701,13 +705,14 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            if self.sm.current != 'alarmScreen':
-                self.sm.get_screen('alarmScreen').message = message
-                if self.sm.current == 'errorScreen':
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-                else:
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-                self.sm.current = 'alarmScreen'
+            if self.suppress_alarm_screens == False:
+                if self.sm.current != 'alarmScreen':
+                    self.sm.get_screen('alarmScreen').message = message
+                    if self.sm.current == 'errorScreen':
+                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+                    else:
+                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
+                    self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             log(message)

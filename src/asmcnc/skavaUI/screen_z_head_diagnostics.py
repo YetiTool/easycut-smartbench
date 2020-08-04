@@ -29,7 +29,7 @@ Builder.load_string("""
         pos: self.parent.pos
         cols: 3
         rows: 6
-        cols_minimum: {0: 280, 1: 120, 2: 400}
+        cols_minimum: {0: 250, 1: 200, 2: 350}
 
 # Row 1
 
@@ -324,13 +324,16 @@ Builder.load_string("""
 
             Button: 
             	text: 'R'
+                on_press: root.dust_shoe_red()
 
             Button: 
             	text: 'G'
+                on_press: root.dust_shoe_green()
 
             Button:
             	text: 'B'
-
+                on_press: root.dust_shoe_blue()
+                
         ToggleButton: 
             id: laser_toggle
             text: '  12. Laser'
@@ -364,6 +367,9 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def on_enter(self, *args):
         self.scrape_fw_version()
+        self.m.s.suppress_error_screens = True
+        self.m.s.suppress_alarm_screens = True
+        self.m.s.suppress_door_screens = True
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
         self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for status
 
@@ -371,6 +377,9 @@ class ZHeadDiagnosticsScreen(Screen):
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
         Clock.unschedule(self.poll_for_checks)
+        self.m.s.suppress_error_screens = False
+        self.m.s.suppress_alarm_screens = False
+        self.m.s.suppress_door_screens = False
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
@@ -455,31 +464,31 @@ class ZHeadDiagnosticsScreen(Screen):
         if self.m.s.dust_shoe_cover:
             self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
+            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def x_home_switch(self):
         if self.m.s.limit_x:
             self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
+            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
 
     def x_max_switch(self):
         if self.m.s.limit_X:
             self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
+            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
 
     def z_home_switch(self):
         if self.m.s.limit_z:
             self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
+            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
 
     def probe(self):
         if self.m.s.probe:
             self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
+            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
 
     def set_laser(self):
         if self.spindle_toggle.state == 'normal': 
