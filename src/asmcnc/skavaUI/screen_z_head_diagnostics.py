@@ -29,7 +29,7 @@ Builder.load_string("""
         pos: self.parent.pos
         cols: 3
         rows: 6
-        cols_minimum: {0: 300, 1: 80, 2: 420}
+        cols_minimum: {0: 280, 1: 120, 2: 400}
 
 # Row 1
 
@@ -365,9 +365,12 @@ class ZHeadDiagnosticsScreen(Screen):
     def on_enter(self, *args):
         self.scrape_fw_version()
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
+        self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for status
+
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
+        Clock.unschedule(self.poll_for_checks)
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
@@ -441,7 +444,7 @@ class ZHeadDiagnosticsScreen(Screen):
     def dust_shoe_blue(self):
         self.m.set_led_colour('BLUE')
 
-    def update_checkboxes(self):
+    def update_checkboxes(self, dt):
         self.dust_shoe_switch()
         self.x_home_switch()
         self.x_max_switch()
@@ -482,7 +485,7 @@ class ZHeadDiagnosticsScreen(Screen):
         if self.spindle_toggle.state == 'normal': 
             self.m.laser_off()
         else: 
-            self.m.laser_on()        
+            self.m.laser_on()
 
     def cycle_test(self):
         pass
