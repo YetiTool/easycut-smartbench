@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.apps.maintenance_app import screen_maintenance
+from asmcnc.skavaUI import screen_z_head_diagnostics
 
 
 class ScreenTest(App):
@@ -21,9 +21,9 @@ class ScreenTest(App):
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
-		maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = sm)
-		sm.add_widget(maintenance_screen)
-		sm.current = 'maintenance'
+		z_head_diagnostics_screen = screen_z_head_diagnostics.ZHeadDiagnosticsScreen(name = 'z_head_diagnostics', screen_manager = sm)
+		sm.add_widget(z_head_diagnostics_screen)
+		sm.current = 'z_head_diagnostics'
 		return sm
 
 ScreenTest().run()

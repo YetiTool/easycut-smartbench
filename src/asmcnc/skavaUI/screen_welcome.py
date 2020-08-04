@@ -90,7 +90,7 @@ class WelcomeScreenClass(Screen):
     
     def go_to_next_screen(self, dt):
 
-        self.sm.current = 'safety'
+        self.sm.current = 'z_head_diagnostics'
         
 
  

@@ -66,6 +66,8 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 from asmcnc.apps.maintenance_app import screen_maintenance
 
+from asmcnc.skavaUI import screen_z_head_diagnostics
+
 # developer testing
 Cmport = 'COM3'
 
@@ -173,7 +175,7 @@ class SkavaUI(App):
         spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
-
+        z_head_diagnostics_screen = screen_z_head_diagnostics.ZHeadDiagnosticsScreen(name = 'z_head_diagnostics', screen_manager = sm, machine = m)
 
 
         # add the screens to screen manager
@@ -207,11 +209,13 @@ class SkavaUI(App):
         sm.add_widget(spindle_cooldown_screen)
         sm.add_widget(stop_or_resume_decision_screen)
         sm.add_widget(lift_z_on_pause_decision_screen)
+        sm.add_widget(z_head_diagnostics_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = start_screen
+  
 
         log('Screen manager activated: ' + str(sm.current))
 

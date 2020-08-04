@@ -62,8 +62,8 @@ Builder.load_string("""
             size_hint_y: 0.4
 
             Button:
-                text: 'Allow Remote Access'
-#                 on_press: root.allow_access()
+                text: 'Z Head Diagnostics'
+                on_press: root.z_head_diagnostics()
                 disabled: 'true'
                 
             Button:
@@ -534,4 +534,7 @@ class DeveloperScreen(Screen):
 #         # sys.exit()
 #     
 
+
+    def z_head_diagnostics(self):
+        sm.current = 'z_head_diagnostics'
 
