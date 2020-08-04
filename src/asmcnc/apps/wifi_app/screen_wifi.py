@@ -181,7 +181,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,10,0,10)
+                        padding: (0,8,0,10)
                         canvas:
                             Color:
                                 rgba: [1, 1, 1, 1]
@@ -194,7 +194,7 @@ Builder.load_string("""
                             valign: 'top'
                             markup: True
                             size_hint: (None, None)
-                            size: 210, 20
+                            size: 210, 22
                             text: ''
                             font_size: '20sp'
                             text_size: self.size
