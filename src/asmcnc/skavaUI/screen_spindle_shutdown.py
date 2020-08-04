@@ -59,7 +59,6 @@ Builder.load_string("""
         Button:
             size_hint_y: 4
             background_color: hex('#FFFFFF00')
-            on_press: root.begin_homing()
             BoxLayout:
                 size: self.parent.size
                 pos: self.parent.pos
