@@ -229,8 +229,10 @@ Builder.load_string("""
 
             Button: 
             	text: 'Up'
+                on_press: root.z_motor_up()
             Button: 
             	text: 'Down'
+                on_press: root.z_motor_down()
 
         GridLayout:
             size: self.parent.size
@@ -378,9 +380,8 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def on_enter(self, *args):
         self.scrape_fw_version()
-        self.m.s.suppress_error_screens = True
-        self.m.s.suppress_alarm_screens = True
-        self.m.s.suppress_door_screens = True
+        self.m.is_laser_enabled = True
+        self.m.s.write_command('$21 = 0')
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
         self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for status
 
@@ -388,9 +389,7 @@ class ZHeadDiagnosticsScreen(Screen):
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
         Clock.unschedule(self.poll_for_checks)
-        self.m.s.suppress_error_screens = False
-        self.m.s.suppress_alarm_screens = False
-        self.m.s.suppress_door_screens = False
+        self.m.s.write_command('$21 = 1')
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
@@ -472,7 +471,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.probe()
         
         if self.cycle_test.state != 'normal':
-            self.cycle_limit_check()
+            self.cycle_limit_switch()
 
     def dust_shoe_switch(self):
         if self.m.s.dust_shoe_cover:
@@ -510,7 +509,7 @@ class ZHeadDiagnosticsScreen(Screen):
         else: 
             self.m.laser_on()
 
-    def cycle_limit_check(self):
+    def cycle_limit_switch(self):
         if self.m.s.limit_z:
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.z_limit_set = True
