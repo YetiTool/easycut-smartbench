@@ -161,8 +161,10 @@ Builder.load_string("""
 
             Button: 
             	text: 'Up'
+                on_press: root.x_motor_up()
             Button: 
             	text: 'Down'
+                on_press: root.x_motor_down()
 
         GridLayout:
             size: self.parent.size
