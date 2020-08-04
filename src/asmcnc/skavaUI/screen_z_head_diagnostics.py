@@ -22,7 +22,8 @@ Builder.load_string("""
     x_home_check: x_home_check
     x_max_check: x_max_check
     z_home_check: z_home_check
-    probe_check: probe_check    
+    probe_check: probe_check
+    cycle_test: cycle_test
 
     GridLayout:
         size: self.parent.size
