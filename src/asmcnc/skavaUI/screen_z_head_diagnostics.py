@@ -470,7 +470,7 @@ class ZHeadDiagnosticsScreen(Screen):
         if self.m.s.limit_x:
             self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
+            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def x_max_switch(self):
         if self.m.s.limit_X:
