@@ -517,7 +517,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.sm.current = 'lobby'
 
     def do_cycle(self):
-        if self.cycle_test.state != 'normal' and self.z_limit_set = True and not self.m.s.limit_z:
+        if self.cycle_test.state != 'normal' and self.z_limit_set == True and not self.m.s.limit_z:
 
             pass
 
