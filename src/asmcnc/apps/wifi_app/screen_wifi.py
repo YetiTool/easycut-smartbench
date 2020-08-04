@@ -191,6 +191,7 @@ Builder.load_string("""
                         Spinner:
                             id: network_name
                             halign: 'left'
+                            valign: 'bottom'
                             markup: 'True'
                             size_hint: (None, None)
                             size: 210, 40
