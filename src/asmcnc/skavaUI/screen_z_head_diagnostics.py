@@ -476,19 +476,19 @@ class ZHeadDiagnosticsScreen(Screen):
         if self.m.s.limit_X:
             self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
+            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def z_home_switch(self):
         if self.m.s.limit_z:
             self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
+            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def probe(self):
         if self.m.s.probe:
             self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.ßpng"
+            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def set_laser(self):
         if self.spindle_toggle.state == 'normal': 
