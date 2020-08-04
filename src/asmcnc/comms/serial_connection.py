@@ -457,14 +457,10 @@ class SerialConnection(object):
             
             # Flush
             self.FLUSH_FLAG = True
-
-# >>>>>>> revert-196-vac_fix        
-#             # Move head up and turn vac off after a delay
-#             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
-#             
+     
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
             # self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
             # self.sm.current = 'spindle_cooldown'
             

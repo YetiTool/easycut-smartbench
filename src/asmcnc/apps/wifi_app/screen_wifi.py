@@ -27,6 +27,8 @@ Builder.load_string("""
     background_color: [1,1,1,1]
     height: dp(40)
     color: 0,0,0,1
+    halign: 'left'
+    markup: 'True'
 
 <WifiScreen>:
     
@@ -155,10 +157,11 @@ Builder.load_string("""
                             orientation: "vertical"
                             width: dp(39)
                             height: dp(40)
+                            padding: [5,5,5,5]
                             Button:
                                 size_hint: (None,None)
-                                height: dp(40)
-                                width: dp(39)
+                                height: dp(30)
+                                width: dp(29)
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
                                 pos: self.parent.pos
@@ -179,35 +182,29 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,0,0,0)
+                        padding: (0,8,0,8)
                         canvas:
                             Color:
-                                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                                rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
                         Spinner:
                             id: network_name
                             halign: 'left'
+                            valign: 'top'
+                            markup: True
                             size_hint: (None, None)
-                            size: 210, 40
+                            size: 210, 24
                             text: ''
                             font_size: '20sp'
+                            text_size: self.size
+                            multiline: False
                             color: 0,0,0,1
                             values: root.SSID_list
                             option_cls: Factory.get("NetworkSpinner")
                             background_normal: ''
                             background_color: [1,1,1,1]
-
-                        # TextInput: 
-                        #     id: network_name
-                        #     valign: 'middle'
-                        #     halign: 'center'
-                        #     text_size: self.size
-                        #     font_size: '20sp'
-                        #     markup: True
-                        #     multiline: False
-                        #     text: ''
 
                 #Password
                 BoxLayout: 

@@ -112,7 +112,7 @@ Builder.load_string("""
                 text: root.alarm_description
                 color: [0,0,0,1]
                 markup: True
-                halign: 'left'
+                halign: 'center'
                 valign: 'middle'
                 text_size: self.size
                 size: self.parent.size
@@ -146,7 +146,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/skavaUI/img/show_details.png"
+                            source: "./asmcnc/skavaUI/img/show_details_blue.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -170,7 +170,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/skavaUI/img/red_exit.png"
+                            source: "./asmcnc/skavaUI/img/quit_to_lobby_btn.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height

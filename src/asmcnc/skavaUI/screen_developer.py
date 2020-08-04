@@ -441,9 +441,9 @@ class DeveloperScreen(Screen):
                         '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
                         '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
                         '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
                         '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
                         '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
-                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
                         '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
                         '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
                         '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
@@ -479,9 +479,9 @@ class DeveloperScreen(Screen):
                         '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
                         '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
                         '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------                        
                         '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
                         '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
-                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
                         '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
                         '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
                         '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
