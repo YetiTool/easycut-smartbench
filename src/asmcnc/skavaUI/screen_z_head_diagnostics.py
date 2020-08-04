@@ -455,31 +455,31 @@ class ZHeadDiagnosticsScreen(Screen):
         if self.m.s.dust_shoe_cover:
             self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_active.png"
+            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
 
     def x_home_switch(self):
         if self.m.s.limit_x:
             self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_active.png"
+            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
 
     def x_max_switch(self):
         if self.m.s.limit_X:
             self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_active.png"
+            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
 
     def z_home_switch(self):
         if self.m.s.limit_z:
             self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.z_home_check.source = "./asmcnc/skavaUI/img/checkbox_active.png"
+            self.z_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
 
     def probe(self):
         if self.m.s.probe:
             self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
         else:
-            self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_active.png"
+            self.probe_check.source = "./asmcnc/skavaUI/img/file_select_select.png.png"
 
     def set_laser(self):
         if self.spindle_toggle.state == 'normal': 
