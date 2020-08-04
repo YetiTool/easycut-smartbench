@@ -124,12 +124,14 @@ Builder.load_string("""
                                 id: stop_start
                                 size_hint_x: 1
                                 disabled: False
-                                background_color: hex('#F4433600')
+                                background_color: hex('#FFFFFFFF')
                                 on_release:
-                                    self.background_color = hex('#F4433600')
+                                    self.background_color = hex('#FFFFFFFF')
+                                    
                                 on_press:
                                     root.start_or_pause_button_press()
-                                    self.background_color = hex('#F44336FF')
+                                    self.background_color = hex('#FFFFFFFF')
+
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
