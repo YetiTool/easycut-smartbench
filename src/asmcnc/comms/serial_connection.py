@@ -57,8 +57,7 @@ class SerialConnection(object):
 
     def __init__(self, machine, screen_manager):
 
-        self.sm = screen_manager
-        # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...       
+        self.sm = screen_manager   
         self.m = machine
         
     def __del__(self):
@@ -713,6 +712,8 @@ class SerialConnection(object):
                     else:
                         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
                     self.sm.current = 'alarmScreen'
+            elif self.suppress_alarm_screens == True:
+                self.m.resume_from_alarm()
 
         elif message.startswith('$'):
             log(message)

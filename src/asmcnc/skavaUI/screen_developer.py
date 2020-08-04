@@ -535,5 +535,5 @@ class DeveloperScreen(Screen):
 
 
     def z_head_diagnostics(self):
-        sm.current = 'z_head_diagnostics'
+        self.sm.current = 'z_head_diagnostics'
 
