@@ -460,6 +460,9 @@ class ZHeadDiagnosticsScreen(Screen):
         self.z_home_switch()
         self.probe()
 
+        if self.m.state == 'Alarm':
+            self.m.resume_from_alarm()
+
     def dust_shoe_switch(self):
         if self.m.s.dust_shoe_cover:
             self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"

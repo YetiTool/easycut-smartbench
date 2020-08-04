@@ -712,8 +712,6 @@ class SerialConnection(object):
                     else:
                         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
                     self.sm.current = 'alarmScreen'
-            elif self.suppress_alarm_screens == True:
-                self.m.resume_from_alarm()
 
         elif message.startswith('$'):
             log(message)
