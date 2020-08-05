@@ -523,7 +523,7 @@ class ZHeadDiagnosticsScreen(Screen):
     def stop(self):
         popup_info.PopupStop(self.m, self.sm)
 
-    def quit_jog():
+    def quit_jog(self):
         self.m.quit_jog()
 
     def do_cycle(self):
