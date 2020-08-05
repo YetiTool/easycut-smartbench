@@ -169,6 +169,8 @@ Builder.load_string("""
 
 	        Button: 
 	        	text: 'Up'
+                on_press: root.z_drive_to_limit()
+                on_release: root.quit_jog()
 
 # Row 3
 
@@ -185,9 +187,11 @@ Builder.load_string("""
             Button: 
             	text: 'Up'
                 on_press: root.x_motor_up()
+                on_release: root.quit_jog()
             Button: 
             	text: 'Down'
                 on_press: root.x_motor_down()
+                on_release: root.quit_jog()
 
         GridLayout:
             size: self.parent.size
@@ -249,9 +253,12 @@ Builder.load_string("""
             Button: 
             	text: 'Up'
                 on_press: root.z_motor_up()
+                on_release: root.quit_jog()
+
             Button: 
             	text: 'Down'
                 on_press: root.z_motor_down()
+                on_release: root.quit_jog()
 
         GridLayout:
             size: self.parent.size
@@ -293,6 +300,9 @@ Builder.load_string("""
 
 	        Button: 
 	        	text: 'Down'
+                on_press: root.z_drive_away_from_limit()
+                on_release: root.quit_jog()
+
 # Row 5
 
         ToggleButton: 
@@ -559,6 +569,15 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm)
+
+    def z_drive_to_limit(self):
+        self.m.jog_relative('Z', 1, 300)
+
+    def z_drive_away_from_limit(self):
+        self.m.jog_relative('Z', -1, 300)
+
+    def quit_jog():
+        self.m.quit_jog()
 
     def do_cycle(self):
         if self.cycle_test.state != 'normal' and self.z_limit_set == True and not self.m.s.limit_z:
