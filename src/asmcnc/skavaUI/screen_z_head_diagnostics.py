@@ -12,6 +12,8 @@ from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string("""
 
 <ZHeadDiagnosticsScreen>:
@@ -89,26 +91,43 @@ Builder.load_string("""
                 text: '13. Z cycle test'
 
             Button:
-                text: '  EXIT'
+                text: '  STOP'
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
                 markup: 'True'
                 halign: 'left'
                 valign: 'middle'
-                on_press: root.exit()
+                on_press: root.stop()
+                background_color: [1,0,0,1]
+                background_normal: ''
 
 
 # Row 2
 
-	    Button:
-	    	text: '  2. Bake GRBL Settings'
-        	text_size: self.size
+        GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
+            cols: 2
+
+    	    Button:
+    	    	text: '  2. Bake GRBL Settings'
+            	text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+
+            Button:
+                text: '  2b. HOME'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.home()     
 
         GridLayout:
             size: self.parent.size
@@ -139,7 +158,7 @@ Builder.load_string("""
             cols: 2
 
 	        Label: 
-	        	text: 'Drive Z to limit switch'
+	        	text: '13a. Drive Z to limit switch'
 	        	color: 1,1,1,1
             	text_size: self.size
 	            size: self.parent.size
@@ -263,7 +282,7 @@ Builder.load_string("""
             cols: 2
 	
 	        Label: 
-	        	text: 'Drive Z off limit switch'
+	        	text: '13b. Drive Z off limit switch'
 	        	color: 1,1,1,1
             	text_size: self.size
 	            size: self.parent.size
@@ -310,10 +329,28 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True		
 
-        Button: 
-            id: do_cycle
-            text: 'Cycle'
-            on_press: root.do_cycle()
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 2
+
+
+            Button: 
+                id: do_cycle
+                text: '13c. Cycle'
+                on_press: root.do_cycle()
+
+            Button:
+                text: '  14. EXIT'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.exit()
+
+
 
 # Row 6
 
@@ -436,17 +473,21 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
+    def home(self):
+        self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.request_homing_procedure('z_head_diagnostics','z_head_diagnostics', False)
+
     def x_motor_up(self):
-        self.m.s.write_command('G0 X50')
+        self.m.jog_relative('X', 50, 6000)
 
     def x_motor_down(self):
-        self.m.s.write_command('G0 X-50')
+        self.m.jog_relative('X', -50, 6000)
 
     def z_motor_up(self):
-        self.m.s.write_command('G0 Z50')
+        self.m.jog_relative('Z', 20, 750)
 
     def z_motor_down(self):
-        self.m.s.write_command('G0 Z-50')
+        self.m.jog_relative('Z', -20, 750)
 
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
@@ -516,14 +557,38 @@ class ZHeadDiagnosticsScreen(Screen):
         else:
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
 
-    def exit(self):
-        self.sm.current = 'lobby'
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm)
 
     def do_cycle(self):
         if self.cycle_test.state != 'normal' and self.z_limit_set == True and not self.m.s.limit_z:
 
-            pass
+            def cycle_10_times():
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
+                self.m.s.write_command('G0 Z-150')
+                self.m.s.write_command('G0 Z-1')
 
+            cycle_10_times()
+
+    def exit(self):
+        self.sm.current = 'lobby'
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text

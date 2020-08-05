@@ -182,7 +182,7 @@ Builder.load_string("""
 class AlarmScreenClass(Screen):
 
     # define alarm description to make kivy happy
-    alarm_description = "An end-of-axis limit switch was triggered during a move. The machine's position was likely lost. Re-homing is highly recommended." #StringProperty()
+    alarm_description = StringProperty()
     message = StringProperty()
     return_to_screen = 'home'
     
