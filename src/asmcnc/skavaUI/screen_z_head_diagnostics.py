@@ -237,27 +237,17 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
 
-
-
-        GridLayout:
+	
+        Label: 
+        	text: ''
+        	color: 1,1,1,1
+        	text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
-            cols: 2
-	
-	        Label: 
-	        	text: '  13b. Drive Z off limit switch'
-	        	color: 1,1,1,1
-            	text_size: self.size
-	            size: self.parent.size
-	            pos: self.parent.pos
-	            markup: 'True'
-	            halign: 'left'
-	            valign: 'middle'
+            markup: 'True'
+            halign: 'left'
+            valign: 'middle'
 
-	        Button: 
-	        	text: 'Down'
-                on_press: root.z_drive_away_from_limit()
-                on_release: root.quit_jog()
 
 # Row 5
 
