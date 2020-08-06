@@ -311,8 +311,7 @@ class LocalFileChooser(Screen):
 
     def go_to_loading_screen(self, file_selection):
 
-        if os.path.isfile(job_file_path):
-
+        if os.path.isfile(file_selection):
             self.manager.get_screen('loading').loading_file_name = file_selection
             self.manager.current = 'loading'
 
