@@ -207,8 +207,13 @@ class SCFileChooser(Screen):
 
 
     def return_to_SC17(self, file_selection):
-        self.j.load_parameters(file_selection)
-        self.shapecutter_sm.next_screen()
+
+        if os.path.isfile(file_selection):
+            self.j.load_parameters(file_selection)
+            self.shapecutter_sm.next_screen()
+        else:
+            error_message = 'File selected does not exist!'
+            popup_info.PopupError(self.sm, error_message)
 
     def delete_popup(self, **kwargs):
         if kwargs['file_selection'] == 'all':
