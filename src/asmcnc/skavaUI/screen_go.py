@@ -499,6 +499,7 @@ class GoScreen(Screen):
         
         # # Remove end of file command for spindle cooldown to operate smoothly
         if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
+        if "M2" in modified_job_gcode: modified_job_gcode.remove("M2")
 
         try:
             self.m.s.run_job(modified_job_gcode)
