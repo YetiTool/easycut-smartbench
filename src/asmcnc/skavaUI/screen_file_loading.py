@@ -198,9 +198,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
-        
-        #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
@@ -244,6 +242,7 @@ class LoadingScreen(Screen):
         self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
 
         Clock.schedule_once(self._scrub_file_loop, 0)
+
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
