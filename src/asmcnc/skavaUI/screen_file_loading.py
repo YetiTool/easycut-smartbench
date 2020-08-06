@@ -221,7 +221,7 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        if os.path.is_file(job_file_path):
+        if os.path.isfile(job_file_path):
 
             log('> LOADING:')
 
