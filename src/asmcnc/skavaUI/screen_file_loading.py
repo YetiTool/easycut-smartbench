@@ -221,29 +221,36 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        log('> LOADING:')
+        if os.path.is_file(job_file_path):
 
-        with open(job_file_path) as f:
-            self.job_file_as_list = f.readlines()
+            log('> LOADING:')
 
-        if len(self.job_file_as_list) == 0:
-            file_empty_warning = 'File is empty!\n\nPlease load a different file.'
-            popup_info.PopupError(self.sm, file_empty_warning)
-            self.sm.current = 'local_filechooser'
-            return
+            with open(job_file_path) as f:
+                self.job_file_as_list = f.readlines()
 
-        self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
-        
-        self.load_value = 1
-        log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
-        log('> Scrubbing file...')
+            if len(self.job_file_as_list) == 0:
+                file_empty_warning = 'File is empty!\n\nPlease load a different file.'
+                popup_info.PopupError(self.sm, file_empty_warning)
+                self.sm.current = 'local_filechooser'
+                return
 
-        # clear objects
-        self.preloaded_job_gcode = []
-        self.lines_scrubbed = 0
-        self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
+            self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
+            
+            self.load_value = 1
+            log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
+            log('> Scrubbing file...')
 
-        Clock.schedule_once(self._scrub_file_loop, 0)
+            # clear objects
+            self.preloaded_job_gcode = []
+            self.lines_scrubbed = 0
+            self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
+
+            Clock.schedule_once(self._scrub_file_loop, 0)
+
+        else: 
+            error_message = 'File selected does not exist!'
+            popup_info.PopupError(self.sm, error_message)
+
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
