@@ -15,6 +15,8 @@ from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
 
+from asmcnc.skavaUI import popup_info
+
 
 def log(message):
     timestamp = datetime.now()
@@ -166,7 +168,11 @@ class RouterMachine(object):
                 machine_fw_parts = [int(i) for i in machine_fw_parts]
                 ref_version_parts = [int(i) for i in ref_version_parts]
             except:
-                self.s.get_serial_screen("Couldn't process Z head FW value when checking capability: " + str(capability_decription))
+                error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
+                ".\n\n Please check Z Head connection."
+                popup_info.PopupError(self.sm, error_description)
+
+                return False
             
             if machine_fw_parts[0] > ref_version_parts[0]:
                 return True
