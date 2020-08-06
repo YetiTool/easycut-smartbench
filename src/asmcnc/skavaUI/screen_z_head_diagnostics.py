@@ -109,6 +109,7 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
+            on_press: root.bake_grbl_settings()
 
 
         GridLayout:
