@@ -155,33 +155,37 @@ class RouterMachine(object):
 
     def is_machines_fw_version_equal_to_or_greater_than_verison(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
         
-        # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
-        try:
-            machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
-            ref_version_parts = version_to_reference.split('.')[:3]
-        
-            # convert values to ints for comparison
-            machine_fw_parts = [int(i) for i in machine_fw_parts]
-            ref_version_parts = [int(i) for i in ref_version_parts]
-        except:
-            self.s.get_serial_screen("Couldn't process Z head FW value when checking capability: " + str(capability_decription))
-        
-        if machine_fw_parts[0] > ref_version_parts[0]:
-            return True
-        elif machine_fw_parts[0] < ref_version_parts[0]:
-            return False
-        else: # equal so far
-            if machine_fw_parts[1] > ref_version_parts[1]:
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
+            try:
+                machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
+                ref_version_parts = version_to_reference.split('.')[:3]
+            
+                # convert values to ints for comparison
+                machine_fw_parts = [int(i) for i in machine_fw_parts]
+                ref_version_parts = [int(i) for i in ref_version_parts]
+            except:
+                self.s.get_serial_screen("Couldn't process Z head FW value when checking capability: " + str(capability_decription))
+            
+            if machine_fw_parts[0] > ref_version_parts[0]:
                 return True
-            elif machine_fw_parts[1] < ref_version_parts[1]:
+            elif machine_fw_parts[0] < ref_version_parts[0]:
                 return False
             else: # equal so far
-                if machine_fw_parts[2] > ref_version_parts[2]:
+                if machine_fw_parts[1] > ref_version_parts[1]:
                     return True
-                elif machine_fw_parts[2] < ref_version_parts[2]:
+                elif machine_fw_parts[1] < ref_version_parts[1]:
                     return False
-                else: 
-                    return True # equal
+                else: # equal so far
+                    if machine_fw_parts[2] > ref_version_parts[2]:
+                        return True
+                    elif machine_fw_parts[2] < ref_version_parts[2]:
+                        return False
+                    else: 
+                        return True # equal
+
+        else: return False
         
         
 # CRITICAL START/STOP
@@ -549,7 +553,6 @@ class RouterMachine(object):
 
             if self.fw_can_operate_laser_commands():
                 self.s.write_command('AZ')
-
             self.set_led_colour('BLUE')
 
     def laser_off(self):
