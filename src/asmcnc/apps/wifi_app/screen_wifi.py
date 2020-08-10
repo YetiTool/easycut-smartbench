@@ -294,7 +294,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         canvas:
                             Color:
-                                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                                rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -319,7 +319,8 @@ Builder.load_string("""
                                 size_hint: (None,None)
                                 height: dp(24)
                                 width: dp(20)
-                                background_color: hex('#F4433600')
+                                background_color: [1,1,1,1]
+                                background_normal: ''
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 # on_press: root.open_network_spinner()
