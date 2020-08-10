@@ -587,7 +587,7 @@ class ZHeadDiagnosticsScreen(Screen):
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
 
-        Clock.schedule_once(lambda dt: show_outcome(), 12.6)
+        Clock.schedule_once(lambda dt: show_outcome(), 8)
 
 
     def spindle_check(self, M3_command, expected_mV):
