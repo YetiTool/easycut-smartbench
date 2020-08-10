@@ -219,6 +219,7 @@ Builder.load_string("""
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 on_press: root.open_network_spinner()
+                                on_release: root.open_network_spinner()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
