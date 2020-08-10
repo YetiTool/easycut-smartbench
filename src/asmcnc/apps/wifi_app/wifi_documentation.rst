@@ -37,7 +37,7 @@ Check all details are exact.
 
 * Connecting via a wifi router
 
-* If you are having problems, power cycle the router.
+* If you are having problems, reset and restart the router.
 
 * Make sure the console is in range - you can use a wifi scanner app to check signal.
 
@@ -57,7 +57,7 @@ To connect to an Apple device, try the following steps.
 
 * Power off SmartBench
 
-* Power cycle iPhone
+* Restart iPhone
 
 * When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
 

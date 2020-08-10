@@ -328,7 +328,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         
         description = "Software update was successful.\n\n Update message: " + \
                     message + \
-                    "\nPlease do not power cycle your machine until you are prompted to do so."
+                    "\nPlease do not restart your machine until you are prompted to do so."
 
         def reboot(*args):
             self.sm.current = 'rebooting'
