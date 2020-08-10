@@ -151,7 +151,7 @@ Builder.load_string("""
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "Network Name"
+                                text: "[b]Network Name[/b]"
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
@@ -223,7 +223,7 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "Password"
+                        text: "[b]Password[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -258,7 +258,7 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "Country"
+                        text: "[b]Country[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
