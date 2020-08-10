@@ -246,7 +246,7 @@ Builder.load_string("""
             cols: 2
 
             Button: 
-                text: '14. Spindle Speed Check (wait 13 seconds)'
+                text: '14. Spindle Speed Check (wait 8 seconds)'
                 color: 1,1,1,1
                 on_press: root.run_spindle_check()
                 text_size: self.size
@@ -567,16 +567,16 @@ class ZHeadDiagnosticsScreen(Screen):
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4200), 2.5)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6300), 5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5500), 5)
 
         # 20000 RPM = 7.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8400), 7.5)
+        # Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8400), 7.5)
 
-        # 250000 RPM = 10 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10600), 10)
+        # # 250000 RPM = 10 V
+        # Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10600), 10)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 12.5)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 7.5)
 
 
         def show_outcome():
