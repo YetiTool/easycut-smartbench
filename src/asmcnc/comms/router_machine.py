@@ -1,4 +1,4 @@
-7'''
+'''
 Created on 31 Jan 2018
 @author: Ed
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
