@@ -27,6 +27,7 @@ Builder.load_string("""
     probe_check: probe_check
     spindle_toggle: spindle_toggle
     laser_toggle: laser_toggle
+    spindle_speed_check: spindle_speed_check
 
     GridLayout:
         size: self.parent.size
@@ -239,15 +240,29 @@ Builder.load_string("""
                 allow_stretch: True
 
 	
-        Label: 
-        	text: ''
-        	color: 1,1,1,1
-        	text_size: self.size
+        GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
+            cols: 2
+
+            Button: 
+                text: '14. Spindle Speed Check (wait 13 seconds)'
+                color: 1,1,1,1
+                on_press: root.run_spindle_check()
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'center'
+                valign: 'middle'
+
+            Image:
+                id: spindle_speed_check
+                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
 
 
 # Row 5
@@ -302,7 +317,7 @@ Builder.load_string("""
 
 
         Button:
-            text: '  14. EXIT'
+            text: '  15. EXIT'
             text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
@@ -371,6 +386,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.sm=kwargs['screen_manager']
 
         self.z_limit_set = False
+        self.spindle_pass_fail_list = []
 
     def on_enter(self, *args):
         self.scrape_fw_version()
@@ -540,6 +556,55 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.write_command('G0 Z-150')
         self.m.s.write_command('G0 Z-1')
 
+
+    def run_spindle_check(self):
+        
+        # Send command:
+        # 5000 RPM = 1.2 V
+        self.spindle_check('M3 S5000', 1200)
+
+        # 10000 RPM = 3.4 - 3.6 V 
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3500), 2.5)
+
+        # 15000 RPM = 5.6 - 5.8 V
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5700), 5)
+
+        # 20000 RPM = 7.8 V
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 7800), 7.5)
+
+        # 250000 RPM = 10 V
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10000), 10)
+
+        # Spindle off
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 12.5)
+
+
+        def show_outcome():
+
+            if 'False' in self.spindle_pass_fail_list:
+                self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            else: 
+                self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+
+        Clock.schedule_once(lambda dt: show_outcome(), 12.6)
+
+
+    def spindle_check(self, M3_command, expected_mV):
+
+        def overload_check(mid_range_mV):
+            if (self.m.s.overload_pin_mV > mid_range_mV - 200) and (self.m.s.overload_pin_mV < mid_range_mV + 200):
+                self.spindle_pass_fail_list.append('True')
+
+            else: self.spindle_pass_fail_list.append('False')
+
+
+        Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
+
+        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV), 0.5)
+
+        Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 1.8)
+        
 
     def exit(self):
         self.sm.current = 'lobby'

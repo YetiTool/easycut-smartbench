@@ -55,6 +55,9 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
+    # For Z Head Diagnostics only:
+    overload_pin_mV = 0
+
     def __init__(self, machine, screen_manager):
 
         self.sm = screen_manager   
@@ -680,6 +683,8 @@ class SerialConnection(object):
                     elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
+
+                    self.overload_pin_mV = overload_raw_mV
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state
