@@ -218,8 +218,8 @@ Builder.load_string("""
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
                                 pos: self.parent.pos
-                                on_press: root.open_network_spinner()
-                                on_release: root.open_network_spinner()
+                                # on_press: root.open_network_spinner()
+                                # on_release: root.open_network_spinner()
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -291,6 +291,7 @@ Builder.load_string("""
                         height: dp(40)
                         width: dp(80)
                         padding: (0,0,0,0)
+                        orientation: 'horizontal'
                         canvas:
                             Color:
                                 rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
@@ -300,7 +301,7 @@ Builder.load_string("""
                         Spinner:
                             id: country
                             size_hint: (None, None)
-                            size: 80, 40
+                            size: 60, 40
                             text: 'GB'
                             font_size: '20sp'
                             color: 0,0,0,1
@@ -308,6 +309,31 @@ Builder.load_string("""
                             background_normal: ''
                             background_color: [1,1,1,1]
                             option_cls: Factory.get("NetworkSpinner")
+
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(20)
+                            padding: [0,8,0,8]                            
+                            Button:
+                                size_hint: (None,None)
+                                height: dp(24)
+                                width: dp(20)
+                                background_color: hex('#F4433600')
+                                center: self.parent.center
+                                pos: self.parent.pos
+                                # on_press: root.open_network_spinner()
+                                # on_release: root.open_network_spinner()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/skavaUI/img/dropdown_button.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
 
         BoxLayout:
             size_hint: (None, None)
