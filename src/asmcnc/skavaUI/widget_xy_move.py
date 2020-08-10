@@ -240,7 +240,7 @@ Builder.load_string("""
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 10
+                    padding: [20, 20, 0, 20]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -258,7 +258,7 @@ Builder.load_string("""
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 10
+                    padding: [0, 20, 20, 20]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
