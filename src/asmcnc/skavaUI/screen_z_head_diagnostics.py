@@ -561,19 +561,19 @@ class ZHeadDiagnosticsScreen(Screen):
         
         # Send command:
         # 5000 RPM = 1.2 V
-        self.spindle_check('M3 S5000', 1200)
+        self.spindle_check('M3 S5000', 2100)
 
         # 10000 RPM = 3.4 - 3.6 V 
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3500), 2.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4200), 2.5)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5700), 5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6300), 5)
 
         # 20000 RPM = 7.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 7800), 7.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8400), 7.5)
 
         # 250000 RPM = 10 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10000), 10)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10600), 10)
 
         # Spindle off
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 12.5)
@@ -593,7 +593,8 @@ class ZHeadDiagnosticsScreen(Screen):
     def spindle_check(self, M3_command, expected_mV):
 
         def overload_check(mid_range_mV):
-            if (self.m.s.overload_pin_mV > mid_range_mV - 500) and (self.m.s.overload_pin_mV < mid_range_mV + 500):
+            tolerance = mid_range_mV*0.05
+            if (self.m.s.overload_pin_mV > mid_range_mV - tolerance) and (self.m.s.overload_pin_mV < mid_range_mV + tolerance):
                 self.spindle_pass_fail_list.append('True')
 
             else: self.spindle_pass_fail_list.append('False')
