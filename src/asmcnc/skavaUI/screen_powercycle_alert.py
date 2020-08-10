@@ -37,7 +37,7 @@ Builder.load_string("""
             Label:
                 text_size: self.size
                 size_hint_y: 0.5
-                text: "Please power cycle SmartBench now"
+                text: "Please restart SmartBench now"
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
