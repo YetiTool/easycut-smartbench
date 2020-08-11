@@ -57,42 +57,68 @@ Builder.load_string("""
                 text_size: self.size
 
             BoxLayout: 
-                spacing: 100
-                padding: 0
-                orientation: 'vertical'                 
+                spacing: 0
+                padding: [100, 0, 100, 130]
+                orientation: 'horizontal'          
+                size_hint: (None, None)
+                height: 251
+                width: 800
+                pos: self.parent.pos
 
-                Image:
-                    id: spindle_icon
-                    # source: "./asmcnc/skavaUI/img/alarm_icon.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-                    # size_hint: (None, None)
-                    # height: dp(130)
-                    # width: dp(130)
 
-                Label:
-                    id: countdown
-                    markup: True
-                    font_size: '80px' 
-                    valign: 'middle'
-                    halign: 'center'
-                    size:self.texture_size
-                    text_size: self.size  
-                    text: '10'
-                    color: [0,0,0,1]
+                BoxLayout: 
+                    spacing: 0
+                    padding: [8, 0, 57, 0]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 180
+                    Image:
+                        id: spindle_icon
+                        source: "./asmcnc/skavaUI/img/spindle_cooldown_on.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+                        size_hint: (None, None)
+                        height: dp(121)
+                        width: dp(115) 
 
-                Image:
-                    id: countdown_icon
-                    # source: "./asmcnc/skavaUI/img/alarm_icon.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-                    # size_hint: (None, None)
-                    # height: dp(130)
-                    # width: dp(130) 
+                BoxLayout: 
+                    spacing: 0
+                    padding: [0, 0, 0, 0]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 200
+                    Label:
+                        id: countdown
+                        markup: True
+                        font_size: '80px' 
+                        valign: 'middle'
+                        halign: 'center'
+                        size:self.texture_size
+                        text_size: self.size  
+                        text: '10'
+                        color: [0,0,0,1]
+
+                BoxLayout: 
+                    spacing: 0
+                    padding: [70, 0, 10, 3]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 180
+                    Image:
+                        id: countdown_icon
+                        source: "./asmcnc/skavaUI/img/countdown_big.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+                        size_hint: (None, None)
+                        height: dp(118)
+                        width: dp(100) 
 
 
 """)
@@ -107,10 +133,10 @@ class SpindleCooldownScreen(Screen):
         
         super(SpindleCooldownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-    #     self.m=kwargs['machine']
+        self.m=kwargs['machine']
 
-    # def on_pre_enter(self):
-    #     self.m.zUp_and_spindle_on()
+    def on_pre_enter(self):
+        self.m.zUp_and_spindle_on()
 
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 10)
