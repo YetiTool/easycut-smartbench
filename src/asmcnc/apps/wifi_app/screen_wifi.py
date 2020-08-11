@@ -24,6 +24,15 @@ Builder.load_string("""
 <NetworkSpinner@SpinnerOption>
 
     background_normal: ''
+    # background_color: [1,1,1,1]
+    height: dp(40)
+    color: 0,0,0,1
+    halign: 'left'
+    markup: 'True'
+
+<CountrySpinner@SpinnerOption>
+
+    background_normal: ''
     background_color: [1,1,1,1]
     height: dp(40)
     color: 0,0,0,1
@@ -181,61 +190,57 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,8,0,8)
+                        # padding: (0,8,0,8)
                         orientation: 'horizontal'
                         canvas:
                             Color:
                                 rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
-                                size: self.size
+                                size: self.size                       
+                        Spinner:
+                            id: network_name
+                            halign: 'left'
+                            valign: 'top'
+                            markup: True
+                            size_hint: (None, None)
+                            size: 210, 40
+                            pos: 230, 358
+                            text: ''
+                            font_size: '20sp'
+                            text_size: self.size
+                            multiline: False
+                            color: 0,0,0,1
+                            values: root.SSID_list
+                            option_cls: Factory.get("NetworkSpinner")
+                            background_normal: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
+                            background_color: [1,1,1,1]
 
-                        FloatLayout:
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(210)                           
-                            Spinner:
-                                id: network_name
-                                halign: 'left'
-                                valign: 'top'
-                                markup: True
-                                size_hint: (None, None)
-                                size: 210, 24
-                                pos: 230, 358
-                                text: ''
-                                font_size: '20sp'
-                                text_size: self.size
-                                multiline: False
-                                color: 0,0,0,1
-                                values: root.SSID_list
-                                option_cls: Factory.get("NetworkSpinner")
-                                background_normal: ''
-                                background_color: [1,1,1,1]
-                            BoxLayout:
-                                size_hint: (None,None)
-                                height: dp(24)
-                                width: dp(20)
-                                padding: 0
-                                pos: 420, 358                      
-                                Button:
-                                    size_hint: (None,None)
-                                    height: dp(24)
-                                    width: dp(20)
-                                    background_color: hex('#F4433600')
-                                    center: self.parent.center
-                                    pos: self.parent.pos
-                                    on_press: root.open_network_spinner()
-                                    on_release: root.open_network_spinner()
-                                    BoxLayout:
-                                        padding: 0
-                                        size: self.parent.size
-                                        pos: self.parent.pos
-                                        Image:
-                                            source: "./asmcnc/skavaUI/img/dropdown_button.png"
-                                            center_x: self.parent.center_x
-                                            y: self.parent.y
-                                            size: self.parent.width, self.parent.height
-                                            allow_stretch: True
+                            # BoxLayout:
+                            #     size_hint: (None,None)
+                            #     height: dp(24)
+                            #     width: dp(20)
+                            #     padding: 0
+                            #     pos: 420, 358                      
+                            #     Button:
+                            #         size_hint: (None,None)
+                            #         height: dp(24)
+                            #         width: dp(20)
+                            #         background_color: hex('#F4433600')
+                            #         center: self.parent.center
+                            #         pos: self.parent.pos
+                            #         on_press: root.open_network_spinner()
+                            #         on_release: root.open_network_spinner()
+                            #         BoxLayout:
+                            #             padding: 0
+                            #             size: self.parent.size
+                            #             pos: self.parent.pos
+                            #             Image:
+                            #                 source: "./asmcnc/skavaUI/img/dropdown_button.png"
+                            #                 center_x: self.parent.center_x
+                            #                 y: self.parent.y
+                            #                 size: self.parent.width, self.parent.height
+                            #                 allow_stretch: True
 
 
                 #Password
@@ -272,6 +277,7 @@ Builder.load_string("""
                             markup: True
                             multiline: False
                             text: ''
+                            background_normal: "./asmcnc/apps/wifi_app/img/password_bg.png"
 
                 #Country Code
                 BoxLayout: 
@@ -307,40 +313,40 @@ Builder.load_string("""
                         Spinner:
                             id: country
                             size_hint: (None, None)
-                            size: 60, 40
+                            size: 80, 40
                             text: 'GB'
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.values
-                            background_normal: ''
+                            background_normal: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
                             background_color: [1,1,1,1]
                             option_cls: Factory.get("NetworkSpinner")
 
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(20)
-                            padding: [0,8,0,8]                            
-                            Button:
-                                size_hint: (None,None)
-                                height: dp(24)
-                                width: dp(20)
-                                background_color: [1,1,1,1]
-                                background_normal: ''
-                                center: self.parent.center
-                                pos: self.parent.pos
-                                # on_press: root.open_network_spinner()
-                                # on_release: root.open_network_spinner()
-                                BoxLayout:
-                                    padding: 0
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                    Image:
-                                        source: "./asmcnc/skavaUI/img/dropdown_button.png"
-                                        center_x: self.parent.center_x
-                                        y: self.parent.y
-                                        size: self.parent.width, self.parent.height
-                                        allow_stretch: True
+                        # BoxLayout:
+                        #     size_hint: (None,None)
+                        #     height: dp(40)
+                        #     width: dp(20)
+                        #     padding: [0,8,0,8]                            
+                        #     Button:
+                        #         size_hint: (None,None)
+                        #         height: dp(24)
+                        #         width: dp(20)
+                        #         background_color: [1,1,1,1]
+                        #         background_normal: ''
+                        #         center: self.parent.center
+                        #         pos: self.parent.pos
+                        #         # on_press: root.open_network_spinner()
+                        #         # on_release: root.open_network_spinner()
+                        #         BoxLayout:
+                        #             padding: 0
+                        #             size: self.parent.size
+                        #             pos: self.parent.pos
+                        #             Image:
+                        #                 source: "./asmcnc/skavaUI/img/dropdown_button.png"
+                        #                 center_x: self.parent.center_x
+                        #                 y: self.parent.y
+                        #                 size: self.parent.width, self.parent.height
+                        #                 allow_stretch: True
 
         BoxLayout:
             size_hint: (None, None)
