@@ -418,7 +418,7 @@ class ZHeadDiagnosticsScreen(Screen):
                     '$12=0.002',      #Arc tolerance, mm
                     '$13=0',          #Report inches, boolean
                     '$20=1',          #Soft limits, boolean <-------------------
-                    '$21=1',          #Hard limits, boolean <------------------
+                    # '$21=1',          #Hard limits, boolean <------------------
                     '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
                     '$24=600.0',      #Homing feed, mm/min
@@ -600,7 +600,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
             print ('Voltage out: ' + str(self.m.s.overload_pin_mV))
 
-            tolerance = mid_range_mV*0.05
+            tolerance = mid_range_mV
             if (self.m.s.overload_pin_mV > mid_range_mV - tolerance) and (self.m.s.overload_pin_mV < mid_range_mV + tolerance):
                 self.spindle_pass_fail_list.append('True')
 
