@@ -278,7 +278,7 @@ Builder.load_string("""
                             halign: 'left'
                             valign: 'middle'
                             markup: True
-                            size: 70, 40
+                            size: 65, 40
                             text: 'GB'
                             font_size: '20sp'
                             color: 0,0,0,1
