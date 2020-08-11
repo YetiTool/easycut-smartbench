@@ -50,7 +50,7 @@ Builder.load_string("""
                 text: 'Cooling down spindle...'
                 color: [0,0,0,1]
                 markup: True
-                font_size: '24px' 
+                font_size: '30px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -94,7 +94,7 @@ Builder.load_string("""
                     Label:
                         id: countdown
                         markup: True
-                        font_size: '80px' 
+                        font_size: '100px' 
                         valign: 'middle'
                         halign: 'center'
                         size:self.texture_size
