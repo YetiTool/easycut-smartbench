@@ -593,6 +593,9 @@ class ZHeadDiagnosticsScreen(Screen):
     def spindle_check(self, M3_command, expected_mV):
 
         def overload_check(mid_range_mV):
+
+            print 'Voltage out: ' + mid_range_mV
+
             tolerance = mid_range_mV*0.05
             if (self.m.s.overload_pin_mV > mid_range_mV - tolerance) and (self.m.s.overload_pin_mV < mid_range_mV + tolerance):
                 self.spindle_pass_fail_list.append('True')
@@ -601,6 +604,8 @@ class ZHeadDiagnosticsScreen(Screen):
 
 
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
+
+        print 'Spindle speed: ' + M3_command
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV), 0.5)
 
