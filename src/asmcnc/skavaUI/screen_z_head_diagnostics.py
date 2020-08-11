@@ -600,7 +600,12 @@ class ZHeadDiagnosticsScreen(Screen):
 
             print ('Voltage out: ' + str(self.m.s.overload_pin_mV))
 
-            tolerance = mid_range_mV
+            if mid_range_mV == 2100: tolerance = mid_range_mV*0.1
+            else: tolerance = mid_range_mV*0.05
+
+            print ('Min: ' + str(mid_range_mV - tolerance))
+            print ('Max: ' + str(mid_range_mV + tolerance))
+
             if (self.m.s.overload_pin_mV >= mid_range_mV - tolerance) and (self.m.s.overload_pin_mV <= mid_range_mV + tolerance):
                 self.spindle_pass_fail_list.append('True')
 
