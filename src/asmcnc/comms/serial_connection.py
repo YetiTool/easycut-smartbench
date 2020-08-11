@@ -685,20 +685,20 @@ class SerialConnection(object):
                    
 
                     self.overload_pin_mV = overload_raw_mV
-                    # update stuff if there's a change
-                    if overload_mV_equivalent_state != self.overload_state:  
-                        self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
+                    # # update stuff if there's a change
+                    # if overload_mV_equivalent_state != self.overload_state:  
+                    #     self.overload_state = overload_mV_equivalent_state
+                    #     log("Overload state change: " + str(self.overload_state))
                     
-                        try:
-                            self.sm.get_screen('go').update_overload_label(self.overload_state)
-                        except:
-                            log('Unable to update_overlaod_state on go screen')
+                    #     try:
+                    #         self.sm.get_screen('go').update_overload_label(self.overload_state)
+                    #     except:
+                    #         log('Unable to update_overlaod_state on go screen')
                     
-                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
-                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                    # # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                    # if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                    #     self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                    #     Clock.schedule_once(self.check_for_sustained_max_overload, 1)
 
                 else:
                     continue
