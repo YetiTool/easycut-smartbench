@@ -265,7 +265,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(80)
-                        padding: (10,0,5,0)
+                        padding: (20,0,5,0)
                         orientation: 'horizontal'
                         canvas:
                             Rectangle:
@@ -278,7 +278,7 @@ Builder.load_string("""
                             halign: 'left'
                             valign: 'middle'
                             markup: True
-                            size: 65, 40
+                            size: 55, 40
                             text: 'GB'
                             font_size: '20sp'
                             text_size: self.size
