@@ -190,22 +190,27 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        # padding: (0,8,0,8)
+                        padding: (0,8,5,8)
                         orientation: 'horizontal'
                         canvas:
-                            Color:
-                                rgba: [1, 1, 1, 1]
+                            # Color:
+                            #     rgba: [1, 1, 1, 1]
+                            # Image: 
+                            #     "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
                             Rectangle:
                                 pos: self.pos
-                                size: self.size                       
+                                size: self.size
+                                source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
+
+
                         Spinner:
                             id: network_name
                             halign: 'left'
                             valign: 'top'
                             markup: True
                             size_hint: (None, None)
-                            size: 210, 40
-                            pos: 230, 358
+                            size: 205, 24
+                            # pos: 230, 358
                             text: ''
                             font_size: '20sp'
                             text_size: self.size
@@ -213,8 +218,8 @@ Builder.load_string("""
                             color: 0,0,0,1
                             values: root.SSID_list
                             option_cls: Factory.get("NetworkSpinner")
-                            background_normal: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
-                            background_color: [1,1,1,1]
+                            background_normal: ''
+                            background_color: [1,1,1,0]
 
                             # BoxLayout:
                             #     size_hint: (None,None)
@@ -302,24 +307,25 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(80)
-                        padding: (0,0,0,0)
+                        padding: (0,0,5,0)
                         orientation: 'horizontal'
                         canvas:
-                            Color:
-                                rgba: [1, 1, 1, 1]
+                            # Color:
+                            #     rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
+                                source: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
                         Spinner:
                             id: country
                             size_hint: (None, None)
-                            size: 80, 40
+                            size: 75, 40
                             text: 'GB'
                             font_size: '20sp'
                             color: 0,0,0,1
                             values: root.values
-                            background_normal: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
-                            background_color: [1,1,1,1]
+                            # background_normal: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
+                            background_color: [1,1,1,0]
                             option_cls: Factory.get("NetworkSpinner")
 
                         # BoxLayout:
