@@ -177,26 +177,25 @@ Builder.load_string("""
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
 
-
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (0,8,0,8)
+                        padding: (5,8,5,8)
                         orientation: 'horizontal'
                         canvas:
-                            Color:
-                                rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
+                                source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
+
                         Spinner:
                             id: network_name
                             halign: 'left'
                             valign: 'top'
                             markup: True
                             size_hint: (None, None)
-                            size: 190, 24
+                            size: 200, 24
                             text: ''
                             font_size: '20sp'
                             text_size: self.size
@@ -205,32 +204,7 @@ Builder.load_string("""
                             values: root.SSID_list
                             option_cls: Factory.get("NetworkSpinner")
                             background_normal: ''
-                            background_color: [1,1,1,1]
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(24)
-                            width: dp(20)
-                            padding: 0                            
-                            Button:
-                                size_hint: (None,None)
-                                height: dp(24)
-                                width: dp(20)
-                                background_color: hex('#F4433600')
-                                center: self.parent.center
-                                pos: self.parent.pos
-                                # on_press: root.open_network_spinner()
-                                # on_release: root.open_network_spinner()
-                                BoxLayout:
-                                    padding: 0
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                    Image:
-                                        source: "./asmcnc/skavaUI/img/dropdown_button.png"
-                                        center_x: self.parent.center_x
-                                        y: self.parent.y
-                                        size: self.parent.width, self.parent.height
-                                        allow_stretch: True
-
+                            background_color: [1,1,1,0]
 
                 #Password
                 BoxLayout: 
@@ -266,6 +240,7 @@ Builder.load_string("""
                             markup: True
                             multiline: False
                             text: ''
+                            background_normal: "./asmcnc/apps/wifi_app/img/password_bg.png"
 
                 #Country Code
                 BoxLayout: 
@@ -290,51 +265,27 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(80)
-                        padding: (0,0,0,0)
+                        padding: (20,0,5,0)
                         orientation: 'horizontal'
                         canvas:
-                            Color:
-                                rgba: [1, 1, 1, 1]
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
+                                source: "./asmcnc/apps/wifi_app/img/country_spinner_bg.png"
                         Spinner:
                             id: country
                             size_hint: (None, None)
-                            size: 60, 40
+                            halign: 'left'
+                            valign: 'middle'
+                            markup: True
+                            size: 55, 40
                             text: 'GB'
                             font_size: '20sp'
+                            text_size: self.size
                             color: 0,0,0,1
                             values: root.values
-                            background_normal: ''
-                            background_color: [1,1,1,1]
+                            background_color: [1,1,1,0]
                             option_cls: Factory.get("NetworkSpinner")
-
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(40)
-                            width: dp(20)
-                            padding: [0,8,0,8]                            
-                            Button:
-                                size_hint: (None,None)
-                                height: dp(24)
-                                width: dp(20)
-                                background_color: [1,1,1,1]
-                                background_normal: ''
-                                center: self.parent.center
-                                pos: self.parent.pos
-                                # on_press: root.open_network_spinner()
-                                # on_release: root.open_network_spinner()
-                                BoxLayout:
-                                    padding: 0
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                                    Image:
-                                        source: "./asmcnc/skavaUI/img/dropdown_button.png"
-                                        center_x: self.parent.center_x
-                                        y: self.parent.y
-                                        size: self.parent.width, self.parent.height
-                                        allow_stretch: True
 
         BoxLayout:
             size_hint: (None, None)
