@@ -281,6 +281,7 @@ Builder.load_string("""
                             size: 65, 40
                             text: 'GB'
                             font_size: '20sp'
+                            text_size: self.size
                             color: 0,0,0,1
                             values: root.values
                             background_color: [1,1,1,0]
