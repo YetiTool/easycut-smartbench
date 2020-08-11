@@ -20,68 +20,106 @@ Builder.load_string("""
 
     countdown: countdown
 
-    canvas:
-        Color: 
-            rgba: hex('#E5E5E5FF')
-        Rectangle: 
-            size: self.size
-            pos: self.pos         
-
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding: 20
         orientation: 'vertical'
+        size_hint: (None, None)
+        height: 480
+        width: 800
+        canvas:
+            Color: 
+                rgba: hex('#E5E5E5FF')
+            Rectangle: 
+                size: self.size
+                pos: self.pos         
 
-        Label:
-            size_hint_y: 1 
+        BoxLayout: 
+            spacing: 0
+            padding: 
+            orientation: 'vertical'
+            canvas:
+                Color: 
+                    rgba: [1,1,1,1]
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos    
             
-        Label:
-            size_hint_y: 1
-            text: '[color=333333]SmartBench is cooling down the spindle after the job.[/color]'
-            markup: True
-            font_size: '30px' 
-            valign: 'middle'
-            halign: 'center'
-            size:self.texture_size
-            text_size: self.size
+            Label:
+                size_hint_y: 1
+                text: 'Cooling down spindle...'
+                color: [0,0,0,1]
+                markup: True
+                font_size: '30px' 
+                valign: 'middle'
+                halign: 'center'
+                size:self.texture_size
+                text_size: self.size
 
-        Label:
-            size_hint_y: 1
-            text: '[color=333333]Please wait.[/color]'
-            markup: True
-            font_size: '30px' 
-            valign: 'middle'
-            halign: 'center'
-            size:self.texture_size
-            text_size: self.size
-
-        Label:
-            size_hint_y: 1                        
-
-        Button:
-            size_hint_y: 4
-            background_color: hex('#FFFFFF00')
-            on_press: root.begin_homing()
-            BoxLayout:
-                size: self.parent.size
+            BoxLayout: 
+                spacing: 0
+                padding: [100, 0, 100, 130]
+                orientation: 'horizontal'          
+                size_hint: (None, None)
+                height: 251
+                width: 800
                 pos: self.parent.pos
-                # Image:
-                #     source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
-                #     size: self.parent.width, self.parent.height
-                #     allow_stretch: True 
-                Label:
-                    id: countdown
-                    markup: True
-                    font_size: '80px' 
-                    valign: 'middle'
-                    halign: 'center'
-                    size:self.texture_size
-                    text_size: self.size  
-                    text: '10'
-                    color: [0,0,0,1]       
 
-        Label:
-            size_hint_y: 1
+
+                BoxLayout: 
+                    spacing: 0
+                    padding: [8, 0, 57, 0]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 180
+                    Image:
+                        id: spindle_icon
+                        source: "./asmcnc/skavaUI/img/spindle_cooldown_on.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+                        size_hint: (None, None)
+                        height: dp(121)
+                        width: dp(115) 
+
+                BoxLayout: 
+                    spacing: 0
+                    padding: [0, 0, 0, 0]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 200
+                    Label:
+                        id: countdown
+                        markup: True
+                        font_size: '100px' 
+                        valign: 'middle'
+                        halign: 'center'
+                        size:self.texture_size
+                        text_size: self.size  
+                        text: '10'
+                        color: [0,0,0,1]
+
+                BoxLayout: 
+                    spacing: 0
+                    padding: [70, 0, 10, 3]
+                    orientation: 'horizontal'          
+                    size_hint: (None, None)
+                    height: 121
+                    width: 180
+                    Image:
+                        id: countdown_icon
+                        source: "./asmcnc/skavaUI/img/countdown_big.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+                        size_hint: (None, None)
+                        height: dp(118)
+                        width: dp(100) 
+
 
 """)
 
