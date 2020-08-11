@@ -20,55 +20,58 @@ Builder.load_string("""
 
     countdown: countdown
 
-    canvas:
-        Color: 
-            rgba: hex('#E5E5E5FF')
-        Rectangle: 
-            size: self.size
-            pos: self.pos         
-
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding: 20
         orientation: 'vertical'
+        size_hint: (None, None)
+        height: 480
+        width: 800
+        canvas:
+            Color: 
+                rgba: hex('#E5E5E5FF')
+            Rectangle: 
+                size: self.size
+                pos: self.pos         
 
-        Label:
-            size_hint_y: 1 
+        BoxLayout: 
+            spacing: 0
+            padding: 
+            orientation: 'vertical'
+            canvas:
+                Color: 
+                    rgba: [1,1,1,1]
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos    
             
-        Label:
-            size_hint_y: 1
-            text: '[color=333333]SmartBench is cooling down the spindle after the job.[/color]'
-            markup: True
-            font_size: '30px' 
-            valign: 'middle'
-            halign: 'center'
-            size:self.texture_size
-            text_size: self.size
+            Label:
+                size_hint_y: 1
+                text: 'Cooling down spindle...'
+                color: [0,0,0,1]
+                markup: True
+                font_size: '24px' 
+                valign: 'middle'
+                halign: 'center'
+                size:self.texture_size
+                text_size: self.size
 
-        Label:
-            size_hint_y: 1
-            text: '[color=333333]Please wait.[/color]'
-            markup: True
-            font_size: '30px' 
-            valign: 'middle'
-            halign: 'center'
-            size:self.texture_size
-            text_size: self.size
+            BoxLayout: 
+                spacing: 100
+                padding: 0
+                orientation: 'vertical'                 
 
-        Label:
-            size_hint_y: 1                        
+                Image:
+                    id: spindle_icon
+                    # source: "./asmcnc/skavaUI/img/alarm_icon.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+                    # size_hint: (None, None)
+                    # height: dp(130)
+                    # width: dp(130)
 
-        Button:
-            size_hint_y: 4
-            background_color: hex('#FFFFFF00')
-            on_press: root.begin_homing()
-            BoxLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                # Image:
-                #     source: "./asmcnc/skavaUI/img/spindle_shutdown_wait.png"
-                #     size: self.parent.width, self.parent.height
-                #     allow_stretch: True 
                 Label:
                     id: countdown
                     markup: True
@@ -78,10 +81,19 @@ Builder.load_string("""
                     size:self.texture_size
                     text_size: self.size  
                     text: '10'
-                    color: [0,0,0,1]       
+                    color: [0,0,0,1]
 
-        Label:
-            size_hint_y: 1
+                Image:
+                    id: countdown_icon
+                    # source: "./asmcnc/skavaUI/img/alarm_icon.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+                    # size_hint: (None, None)
+                    # height: dp(130)
+                    # width: dp(130) 
+
 
 """)
 
@@ -95,10 +107,10 @@ class SpindleCooldownScreen(Screen):
         
         super(SpindleCooldownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
+    #     self.m=kwargs['machine']
 
-    def on_pre_enter(self):
-        self.m.zUp_and_spindle_on()
+    # def on_pre_enter(self):
+    #     self.m.zUp_and_spindle_on()
 
     def on_enter(self):
         Clock.schedule_once(self.exit_screen, 10)
