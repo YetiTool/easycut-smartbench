@@ -265,7 +265,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(80)
-                        padding: (5,0,5,0)
+                        padding: (10,0,5,0)
                         orientation: 'horizontal'
                         canvas:
                             Rectangle:
@@ -275,6 +275,9 @@ Builder.load_string("""
                         Spinner:
                             id: country
                             size_hint: (None, None)
+                            halign: 'left'
+                            valign: 'middle'
+                            markup: True
                             size: 70, 40
                             text: 'GB'
                             font_size: '20sp'
