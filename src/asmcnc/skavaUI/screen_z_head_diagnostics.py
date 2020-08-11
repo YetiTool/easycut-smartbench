@@ -586,6 +586,8 @@ class ZHeadDiagnosticsScreen(Screen):
             else: 
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
+            print self.spindle_pass_fail_list
+
             self.spindle_pass_fail_list = []
 
 
@@ -596,7 +598,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         def overload_check(mid_range_mV):
 
-            print ('Voltage out: ' + str(mid_range_mV))
+            print ('Voltage out: ' + str(self.m.s.overload_pin_mV))
 
             tolerance = mid_range_mV*0.05
             if (self.m.s.overload_pin_mV > mid_range_mV - tolerance) and (self.m.s.overload_pin_mV < mid_range_mV + tolerance):
