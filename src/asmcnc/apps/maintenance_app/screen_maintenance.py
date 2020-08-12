@@ -263,6 +263,9 @@ class MaintenanceScreenClass(Screen):
         self.laser_switch_widget.toggle_laser()
 
     def on_pre_leave(self):
+        self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
+
+        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        else: self.sm.get_screen('home').default_datum_choice = 'spindle'
+
         self.m.laser_off()
-        if self.m.is_laser_enabled == False:
-            self.m.write_z_head_laser_offset_values('False', self.m.laser_offset_x_value, self.m.laser_offset_y_value)
