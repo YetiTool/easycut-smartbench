@@ -89,12 +89,7 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(self.go_to_next_screen, 5.5)
 
 
-    
-    
     def go_to_next_screen(self, dt):
-
-        print(self.m.is_laser_enabled)
-
         self.sm.current = 'safety'
         
 

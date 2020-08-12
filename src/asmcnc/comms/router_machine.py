@@ -109,8 +109,16 @@ class RouterMachine(object):
     def read_z_head_laser_offset_values(self):
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
-            [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
+            [read_is_laser_enabled, read_laser_offset_x_value, read_laser_offset_y_value] = file.read().splitlines()
             file.close
+
+            # file read brings value in as a string, so need to do conversions to appropriate variables: 
+            if read_is_laser_enabled == "True": self.is_laser_enabled = True
+            else: self.is_laser_enabled = False
+
+            self.laser_offset_x_value = float(read_laser_offset_x_value)
+            self.laser_offset_y_value = float(read_laser_offset_y_value)
+
 
             print(self.is_laser_enabled)
             print(self.laser_offset_x_value)
@@ -559,15 +567,13 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
 
     def laser_on(self):
-
-        print (self.is_laser_enabled)
-
         if self.is_laser_enabled == True: 
-            self.is_laser_on = True
 
             if self.fw_can_operate_laser_commands():
                 self.s.write_command('AZ')
             self.set_led_colour('BLUE')
+
+            self.is_laser_on = True
 
     def laser_off(self):
         self.is_laser_on = False
