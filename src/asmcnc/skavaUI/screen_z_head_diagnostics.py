@@ -561,13 +561,13 @@ class ZHeadDiagnosticsScreen(Screen):
         
         # Send command:
         # 5000 RPM = 1.2 V
-        self.spindle_check('M3 S5000', 2100)
+        self.spindle_check('M3 S5000', 2000)
 
         # 10000 RPM = 3.4 - 3.6 V 
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4200), 2.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3900), 2.5)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5500), 5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5750), 5)
 
         # 20000 RPM = 7.8 V
         # Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8400), 7.5)
@@ -600,8 +600,14 @@ class ZHeadDiagnosticsScreen(Screen):
 
             print ('Voltage out: ' + str(self.m.s.overload_pin_mV))
 
-            if mid_range_mV == 2100: tolerance = mid_range_mV*0.1
-            else: tolerance = mid_range_mV*0.05
+
+            # 5000 RPM = 1.7V - 2.3V
+            # 10000 RPM = 3.3V - 4.5V
+            # 15000 RPM = 5.0V - 6.5V
+
+            if mid_range_mV == 2000: tolerance = 300
+            elif mid_range_mV == 3900: tolerance = 600
+            elif mid_range_mV == 5750: tolerance = 750
 
             print ('Min: ' + str(mid_range_mV - tolerance))
             print ('Max: ' + str(mid_range_mV + tolerance))
