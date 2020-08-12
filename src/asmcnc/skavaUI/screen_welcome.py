@@ -84,7 +84,7 @@ class WelcomeScreenClass(Screen):
                 # Get grbl settings
                 Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.2)
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first                
-                Clock.schedule_once(self.set_value_driven_user_settings,5.4)
+                Clock.schedule_once(self.set_machine_value_driven_user_settings,5.4)
                 # Allow time for machine reset sequence
                 Clock.schedule_once(self.go_to_next_screen, 5.5)
 
@@ -96,6 +96,6 @@ class WelcomeScreenClass(Screen):
         self.sm.current = 'safety'
         
 
-    def set_value_driven_user_settings(self, dt):
+    def set_machine_value_driven_user_settings(self, dt):
         if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'

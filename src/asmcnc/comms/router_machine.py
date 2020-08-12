@@ -109,6 +109,9 @@ class RouterMachine(object):
     def read_z_head_laser_offset_values(self):
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
+
+            print(file.read().splitlines())
+
             [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
             file.close
         except: 
