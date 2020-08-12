@@ -52,11 +52,11 @@ Builder.load_string("""
     
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: 0
         orientation: "vertical"
 
         BoxLayout:
-            size_hint_y: 0.9
+            size_hint_y: 0.92
             padding: 0
             spacing: 10
             orientation: "horizontal"
