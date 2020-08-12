@@ -93,6 +93,8 @@ class WelcomeScreenClass(Screen):
     
     def go_to_next_screen(self, dt):
 
+        print(self.m.is_laser_enabled)
+
         self.sm.current = 'safety'
         
 

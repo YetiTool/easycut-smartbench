@@ -559,6 +559,9 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
 
     def laser_on(self):
+
+        print (self.is_laser_enabled)
+
         if self.is_laser_enabled == True: 
             self.is_laser_on = True
 
