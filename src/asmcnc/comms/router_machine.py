@@ -105,6 +105,12 @@ class RouterMachine(object):
 
     def get_persistent_values(self):
         self.read_z_head_laser_offset_values()
+        self.set_value_driven_user_settings()
+
+    def set_value_driven_user_settings(self):
+        if self.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        else: self.default_datum_choice = 'spindle'
+
 
     def read_z_head_laser_offset_values(self):
         try:
