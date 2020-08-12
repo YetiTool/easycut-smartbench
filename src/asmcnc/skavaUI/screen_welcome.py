@@ -93,5 +93,8 @@ class WelcomeScreenClass(Screen):
         self.sm.current = 'safety'
         
     def set_machine_value_driven_user_settings(self, dt):
+
+        # Laser settings
+        self.laser_off()
         if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'

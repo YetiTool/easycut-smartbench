@@ -120,11 +120,6 @@ class RouterMachine(object):
             self.laser_offset_x_value = float(read_laser_offset_x_value)
             self.laser_offset_y_value = float(read_laser_offset_y_value)
 
-
-            print(self.is_laser_enabled)
-            print(self.laser_offset_x_value)
-            print(self.laser_offset_y_value)
-
         except: 
             log("Unable to read z head laser offset values") 
 
@@ -265,7 +260,6 @@ class RouterMachine(object):
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         # Set lights
-        Clock.schedule_once(lambda dt: self.laser_off(), 0.3)
         Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
 
     def reset_from_alarm(self):
