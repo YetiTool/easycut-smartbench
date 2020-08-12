@@ -107,6 +107,7 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
 
     def read_z_head_laser_offset_values(self):
+
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
             [read_is_laser_enabled, read_laser_offset_x_value, read_laser_offset_y_value] = file.read().splitlines()
@@ -263,8 +264,9 @@ class RouterMachine(object):
         self._grbl_soft_reset()     # Reset to get out of Alarm mode.
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-#         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.3)
+        # Set lights
+        Clock.schedule_once(lambda dt: self.laser_off(), 0.3)
+        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
 
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
