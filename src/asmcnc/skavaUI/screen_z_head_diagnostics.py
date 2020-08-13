@@ -20,7 +20,7 @@ Builder.load_string("""
 
     fw_version_label: fw_version_label
     consoleStatusText: consoleStatusText
-    dust_shoe_check: dust_shoe_check
+    # dust_shoe_check: dust_shoe_check
     x_home_check: x_home_check
     x_max_check: x_max_check
     z_home_check: z_home_check
@@ -112,33 +112,43 @@ Builder.load_string("""
             valign: 'middle'
             on_press: root.bake_grbl_settings()
 
-
-        GridLayout:
+        Label: 
+            text: 'Limit switches:'
+            color: 1,1,1,1
+            text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
-            cols: 2
+            markup: 'True'
+            halign: 'center'
+            valign: 'middle' 
 
-            Label: 
-                text: '  7. Dust shoe         switch'
-                color: 1,1,1,1
-                text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'       
 
-            Image:
-                id: dust_shoe_check
-                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
+        # GridLayout:
+        #     size: self.parent.size
+        #     pos: self.parent.pos
+        #     cols: 2
+
+        #     Label: 
+        #         text: '  7. Dust shoe         switch'
+        #         color: 1,1,1,1
+        #         text_size: self.size
+        #         size: self.parent.size
+        #         pos: self.parent.pos
+        #         markup: 'True'
+        #         halign: 'left'
+        #         valign: 'middle'       
+
+        #     Image:
+        #         id: dust_shoe_check
+        #         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+        #         center_x: self.parent.center_x
+        #         y: self.parent.y
+        #         size: self.parent.width, self.parent.height
+        #         allow_stretch: True
 
         ToggleButton: 
             id: laser_toggle
-            text: '  12. Laser'
+            text: '  11. Laser'
             text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
@@ -166,7 +176,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  8. X Home'
+                text: '  7. X Home'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -185,7 +195,7 @@ Builder.load_string("""
 
         Button: 
             id: do_cycle
-            text: '  13c. Cycle'
+            text: '  12. Cycle'
             on_press: root.do_cycle()
             text_size: self.size
             size: self.parent.size
@@ -222,7 +232,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  9. X Max'
+                text: '  8. X Max'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -246,7 +256,7 @@ Builder.load_string("""
             cols: 2
 
             Button: 
-                text: '14. Spindle Speed Check (wait 8 seconds)'
+                text: '13. Spindle Speed Check (wait 8 seconds)'
                 color: 1,1,1,1
                 on_press: root.run_spindle_check()
                 text_size: self.size
@@ -298,7 +308,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  10. Z Home'
+                text: '  9. Z Home'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -317,7 +327,7 @@ Builder.load_string("""
 
 
         Button:
-            text: '  15. EXIT'
+            text: '  14. EXIT'
             text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
@@ -347,7 +357,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  11. Probe'
+                text: '  10. Probe'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -478,17 +488,17 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.set_led_colour('BLUE')
 
     def update_checkboxes(self, dt):
-        self.dust_shoe_switch()
+        # self.dust_shoe_switch()
         self.x_home_switch()
         self.x_max_switch()
         self.z_home_switch()
         self.probe()
 
-    def dust_shoe_switch(self):
-        if self.m.s.dust_shoe_cover:
-            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        else:
-            self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+    # def dust_shoe_switch(self):
+    #     if self.m.s.dust_shoe_cover:
+    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+    #     else:
+    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def x_home_switch(self):
         if self.m.s.limit_x:
