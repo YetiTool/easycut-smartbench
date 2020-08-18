@@ -37,6 +37,8 @@ Builder.load_string("""
         tab_width: dp(142)
 
 
+        # LASER DATUM SETTINGS
+
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
@@ -95,12 +97,6 @@ Builder.load_string("""
                                 height: dp(70)
                                 width: dp(150)
                                 id: switch_container
-                                # canvas:
-                                #     Color:
-                                #         rgba: 1,1,1,1
-                                #     RoundedRectangle:
-                                #         size: self.size
-                                #         pos: self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -121,17 +117,7 @@ Builder.load_string("""
                     spacing: 10
                     orientation: "vertical"
                     id: middle_panel
-                #     BoxLayout:
-                #         size_hint: (None,None)
-                #         height: dp(70)
-                #         width: dp(270)
-                #         id: switch_container
-                #         canvas:
-                #             Color:
-                #                 rgba: 1,1,1,1
-                #             RoundedRectangle:
-                #                 size: self.size
-                #                 pos: self.pos
+
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(360)
@@ -154,29 +140,109 @@ Builder.load_string("""
                             rgba: 1,1,1,1
                         RoundedRectangle:
                             size: self.size
-                            pos: self.pos  
-        # TabbedPanelItem:
-        #     background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-        #     background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
-        #     disabled: "True"
-        #     background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-        #     BoxLayout:
-        #         size_hint: (None,None)
-        #         width: dp(800)
-        #         height: dp(390)
-        #         orientation: "horizontal" 
-        #         padding: (10, 10, 10, 10)
-        #         spacing: (10)
-        #         canvas:
-        #             Color:
-        #                 rgba: hex('#E5E5E5FF')
-        #             Rectangle:
-        #                 size: self.size
-        #                 pos: self.pos
+                            pos: self.pos
+        
+
+        # BRUSH MONITOR
 
         TabbedPanelItem:
-            background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            disabled: 'True'
+            background_normal: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_grey.png'
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(390)
+                orientation: "vertical" 
+                padding: (20, 20, 20, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(80)
+                    width: dp(760)
+                    id: monitor strip
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(80)
+                        width: dp(760)
+                        padding: [dp(5),0,dp(5),0]
+                        orientation: 'horizontal'
+                        Label: 
+                            color: 0,0,0,1
+                            font_size: dp(22)
+                            markup: True
+                            halign: "center"
+                            valign: "middle"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            text: "[b]BRUSH MONITOR[/b]"
+
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(70)
+                            width: dp(650)
+                            id: monitor_container
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(760)
+                    height: dp(250)
+                    orientation: "horizontal" 
+                    padding: 0
+                    spacing: (20)
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(250)
+                        width: dp(280)
+                        id: brush_use_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(250)
+                        width: dp(280)
+                        id: brush_life_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(250)
+                        width: dp(160)
+                        id: brush_save_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+
+
+
         
         TabbedPanelItem:
             background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
