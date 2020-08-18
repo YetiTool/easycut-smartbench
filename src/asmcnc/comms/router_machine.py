@@ -503,10 +503,10 @@ class RouterMachine(object):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
-                    Clock.unschedule(self.poll_for_success)
+                    Clock.unschedule(poll_for_success)
                     self.set_workzone_to_pos_xy()
 
-            self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
             popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
