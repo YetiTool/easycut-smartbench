@@ -499,15 +499,21 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_workzone_to_pos_xy()
+        
+        if self.jog_spindle_to_laser_datum(): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(self.poll_for_success)
+                    self.set_workzone_to_pos_xy()
+
+            self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nPlease choose a different datum.")
 
     def set_x_datum_with_laser(self):
+
         self.jog_spindle_to_laser_datum()
         
         def wait_for_movement_to_complete(dt):
@@ -613,8 +619,20 @@ class RouterMachine(object):
         self.s.write_command('G0 G54 Y0')
 
     def jog_spindle_to_laser_datum(self):
-        self.jog_relative('X', self.laser_offset_x_value, 6000.0)
-        self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+
+        if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+        and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+            self.jog_relative('X', self.laser_offset_x_value, 6000.0)
+
+        else: return False
+
+        if (self.mpos_y() + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+        and self.mpos_y() + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+            self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+
+        else: return False
+
+        return True
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
