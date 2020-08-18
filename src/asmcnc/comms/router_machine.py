@@ -499,32 +499,44 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_workzone_to_pos_xy()
+        if self.jog_spindle_to_laser_datum('XY'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(xy_poll_for_success)
+                    self.set_workzone_to_pos_xy()
+
+            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_x_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_x_datum()
+        if self.jog_spindle_to_laser_datum('X'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(x_poll_for_success)
+                    self.set_x_datum()
+
+            x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_y_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_y_datum()
+        if self.jog_spindle_to_laser_datum('Y'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(y_poll_for_success)
+                    self.set_y_datum()
+
+            y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+
 
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
@@ -612,9 +624,27 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
 
-    def jog_spindle_to_laser_datum(self):
-        self.jog_relative('X', self.laser_offset_x_value, 6000.0)
-        self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+    def jog_spindle_to_laser_datum(self, axis):
+
+        if axis == 'X' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+            and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+
+                self.jog_relative('X', self.laser_offset_x_value, 6000.0)
+
+            else: return False
+
+        if axis == 'Y' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_y() + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+            and self.mpos_y() + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+
+                self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+
+            else: return False
+
+        return True
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
