@@ -503,10 +503,10 @@ class RouterMachine(object):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
-                    Clock.unschedule(poll_for_success)
+                    Clock.unschedule(xy_poll_for_success)
                     self.set_workzone_to_pos_xy()
 
-            poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
             popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
@@ -516,10 +516,10 @@ class RouterMachine(object):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
-                    Clock.unschedule(self.poll_for_success)
+                    Clock.unschedule(x_poll_for_success)
                     self.set_x_datum()
 
-            self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
             popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
@@ -529,10 +529,10 @@ class RouterMachine(object):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
-                    Clock.unschedule(self.poll_for_success)
+                    Clock.unschedule(y_poll_for_success)
                     self.set_y_datum()
 
-            self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
             popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
