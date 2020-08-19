@@ -11,8 +11,9 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons
-from asmcnc.apps.maintenance_app import widget_maintenance_laser_switch, widget_maintenance_brush_use
+from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
+widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
+widget_maintenance_brush_save
 
 Builder.load_string("""
 
@@ -25,7 +26,10 @@ Builder.load_string("""
     switch_container: switch_container
 
     # Brush maintenance widgets
+    brush_monitor_container: brush_monitor_container
     brush_use_container: brush_use_container
+    brush_life_container: brush_life_container
+    brush_save_container: brush_save_container
 
 
     TabbedPanel:
@@ -171,7 +175,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(80)
                     width: dp(760)
-                    id: monitor strip
+                    id: monitor_strip
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -199,7 +203,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(70)
                             width: dp(600)
-                            id: monitor_container
+                            id: brush_monitor_container
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -328,6 +332,14 @@ class MaintenanceScreenClass(Screen):
         self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(machine=self.m, screen_manager=self.sm)
         self.brush_use_container.add_widget(self.brush_use_widget)
 
+        self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_life_container.add_widget(self.brush_life_widget)
+
+        self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_save_container.add_widget(self.brush_save_widget)
+
+        self.brush_monitor_widget = widget_maintenance_brush_monitor.BrushMonitorWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_monitor_container.add_widget(self.brush_monitor_widget)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

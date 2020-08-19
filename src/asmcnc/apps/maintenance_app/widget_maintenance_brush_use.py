@@ -1,5 +1,5 @@
 '''
-Created on 10 June 2020
+Created on 17 August 2020
 @author: Letty
 widget to hold brush use input and buttons
 '''
@@ -16,8 +16,9 @@ Builder.load_string("""
 
 <BrushUseWidget>
     
-    restore_button: restore_button
-    
+    restore_button:restore_button
+    reset_0:reset_0
+    brush_use:brush_use
     
     BoxLayout:
         size_hint: (None, None)
@@ -43,13 +44,9 @@ Builder.load_string("""
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
-                # size: self.parent.size
-                # pos: self.parent.pos
                 text: "[b]BRUSH USE[/b]"
 
             BoxLayout: 
-                # size: self.parent.size
-                # pos: self.parent.pos
                 orientation: 'horizontal'
                 padding: [0,dp(5),0,0]
                 spacing: 10
@@ -63,7 +60,6 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(50)
                     width: dp(120)
-                    # center: self.parent.center
 
                 Label: 
                     color: 0,0,0,1
@@ -72,15 +68,12 @@ Builder.load_string("""
                     halign: "left"
                     valign: "middle"
                     text_size: self.size
-                    # size: self.parent.size
-                    # pos: self.parent.pos
                     text: "hrs"
 
         GridLayout:
             cols: 2
             rows: 1
             spacing: 13.3
-            # height: self.width
             size_hint: (None, None)
             height: dp(120)
             width: dp(253.3)
@@ -90,7 +83,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 ToggleButton:
                     id: restore_button
-                    # on_press: root.set_vacuum()
+                    on_press: root.restore()
                     size_hint: (None,None)
                     height: dp(120)
                     width: dp(120)
@@ -98,7 +91,6 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        # padding: 10
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -114,7 +106,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 ToggleButton:
                     id: reset_0
-                    # on_press: root.set_spindle()
+                    on_press: root.reset_to_0()
                     size_hint: (None,None)
                     height: dp(120)
                     width: dp(120)
@@ -122,7 +114,6 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        # padding: 10
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -144,3 +135,27 @@ class BrushUseWidget(Widget):
         super(BrushUseWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+
+    def restore(self):
+        pass
+
+        # puts hours in brush_use.text back to whatever they are stored as
+
+
+    def reset_to_0(self):
+        pass
+
+        # resets brush use hours to 0
+
+
+# These values probs need to go into router_machine somewhere and ofc persistent sb values
+
+
+
+
+
+
+
+
+
+
