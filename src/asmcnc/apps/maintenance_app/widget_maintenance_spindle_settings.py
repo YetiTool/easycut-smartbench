@@ -65,7 +65,7 @@ Builder.load_string("""
                 markup: True
                 size_hint: (None, None)
                 size: 200, 24
-                text: ''
+                text: 'spinner'
                 font_size: '20sp'
                 text_size: self.size
                 multiline: False
