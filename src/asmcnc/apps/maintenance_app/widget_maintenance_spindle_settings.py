@@ -61,12 +61,12 @@ Builder.load_string("""
             Spinner:
                 id: spindle_brand
                 halign: 'left'
-                valign: 'top'
+                valign: 'middle'
                 markup: True
                 size_hint: (None, None)
-                size: 200, 24
+                size: 300, 70
                 text: 'spinner'
-                font_size: '20sp'
+                font_size: '30sp'
                 text_size: self.size
                 multiline: False
                 color: 0,0,0,1
