@@ -62,7 +62,7 @@ Builder.load_string("""
             # pos: self.parent.pos
             height: dp(70)
             width: dp(160)
-            padding: [dp(48.5), dp(3), dp(48.5), dp(3)]
+            padding: [dp(53), dp(3), dp(53), dp(3)]
 
             Image:
                 id: countdown_image
