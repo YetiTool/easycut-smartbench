@@ -47,7 +47,7 @@ Builder.load_string("""
             # pos: self.parent.pos
             height: dp(85)
             width: dp(300)
-            padding: [dp(0), 15, dp(20), 0]
+            padding: [dp(0), dp(15), dp(20), 0]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
@@ -61,7 +61,7 @@ Builder.load_string("""
             # pos: self.parent.pos
             height: dp(70)
             width: dp(160)
-            padding: [dp(48.5), 3, dp(48.5), 3]
+            padding: [dp(48.5), dp(3), dp(48.5), dp(3)]
 
             Image:
                 id: countdown_image
@@ -105,7 +105,7 @@ Builder.load_string("""
             # pos: self.parent.pos
             height: dp(85)
             width: dp(300)
-            padding: [dp(0), 0, dp(20), 15]
+            padding: [dp(0), 0, dp(20), dp(15)]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
