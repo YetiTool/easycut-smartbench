@@ -45,13 +45,13 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(85)
             width: dp(300)
-            padding: [dp(0), 10, dp(20), 0]
+            padding: [dp(0), 15, dp(20), 0]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
-	            height: dp(60)
+	            height: dp(70)
 	            width: dp(300)
 
         # ROW 2
@@ -74,13 +74,13 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(60)
+            height: dp(70)
             width: dp(300)
             padding: [dp(0), 0, dp(20), 0]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
-	            height: dp(60)
+	            height: dp(70)
 	            width: dp(300)
 
         # ROW 3
@@ -103,13 +103,13 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(85)
             width: dp(300)
-            padding: [dp(0), 0, dp(20), 10]
+            padding: [dp(0), 0, dp(20), 15]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
-	            height: dp(60)
+	            height: dp(70)
 	            width: dp(300)
 
 
