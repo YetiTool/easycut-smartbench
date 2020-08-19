@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_spindle_cooldown
+from asmcnc.skavaUI import screen_door_test
 
 
 class ScreenTest(App):
@@ -21,9 +21,9 @@ class ScreenTest(App):
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
-		spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm)
-		sm.add_widget(spindle_cooldown_screen)
-		sm.current = 'spindle_cooldown'
+		door_test_screen = screen_door_test.DoorScreen(name = 'door', screen_manager = sm)
+		sm.add_widget(door_test_screen)
+		sm.current = 'door'
 		return sm
 
 ScreenTest().run()
