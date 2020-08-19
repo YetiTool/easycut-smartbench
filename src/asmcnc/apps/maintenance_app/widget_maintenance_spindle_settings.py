@@ -20,19 +20,19 @@ Builder.load_string("""
         cols: 2
         rows: 3
         size_hint: (None, None)
-        height: dp(240)
+        height: dp(280)
         width: dp(580)
         cols_minimum: {0: dp(160), 1: dp(470)}
-        spacing: dp(10)
+        spacing: dp(20)
 
         # ROW 1
 
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(85) # 62 high image
             width: dp(160)
-            padding: [dp(51), 8, dp(51), 0]
+            padding: [dp(51), 19, dp(51), 4] # 15 padding
 
             Image:
                 id: spindle_image
@@ -59,9 +59,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(64)
+            height: dp(70)
             width: dp(160)
-            padding: [dp(48.5), 0, dp(48.5), 0]
+            padding: [dp(48.5), 3, dp(48.5), 3]
 
             Image:
                 id: countdown_image
@@ -88,9 +88,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(85)
             width: dp(160)
-            padding: [dp(48), dp(11), dp(48), dp(21)]
+            padding: [dp(48), dp(16), dp(48), dp(31)]
 
             Image:
                 id: spindle_image
