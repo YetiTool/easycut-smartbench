@@ -14,6 +14,15 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
+<SpindleSpinner@SpinnerOption>
+
+    background_normal: ''
+    background_color: [1,1,1,1]
+    height: dp(40)
+    color: 0,0,0,1
+    halign: 'left'
+    markup: 'True'
+
 <SpindleSettingsWidget>
 
     GridLayout:
@@ -49,11 +58,22 @@ Builder.load_string("""
             height: dp(70)
             width: dp(320)
             padding: [dp(0), dp(0), dp(20), 0]
-	        TextInput:
-	            id: brush_life
-	            size_hint: (None, None)
-	            height: dp(70)
-	            width: dp(300)
+            Spinner:
+                id: spindle_brand
+                halign: 'left'
+                valign: 'top'
+                markup: True
+                size_hint: (None, None)
+                size: 200, 24
+                text: ''
+                font_size: '20sp'
+                text_size: self.size
+                multiline: False
+                color: 0,0,0,1
+                # values: root.SSID_list
+                option_cls: Factory.get("SpindleSpinner")
+                background_normal: ''
+                background_color: [1,1,1,0]
 
         # ROW 2
 
