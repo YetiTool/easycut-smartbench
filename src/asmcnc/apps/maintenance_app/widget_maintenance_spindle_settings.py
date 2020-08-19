@@ -46,7 +46,7 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(85)
-            width: dp(300)
+            width: dp(320)
             padding: [dp(0), dp(15), dp(20), 0]
 	        TextInput:
 	            id: brush_life
@@ -75,7 +75,7 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(70)
-            width: dp(300)
+            width: dp(320)
             padding: [dp(0), 0, dp(20), 0]
 	        TextInput:
 	            id: brush_life
@@ -104,7 +104,7 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(85)
-            width: dp(300)
+            width: dp(320)
             padding: [dp(0), 0, dp(20), dp(15)]
 	        TextInput:
 	            id: brush_life
