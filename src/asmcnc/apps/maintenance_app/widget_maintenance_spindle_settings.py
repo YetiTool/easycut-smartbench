@@ -23,8 +23,8 @@ Builder.load_string("""
         height: dp(280)
         width: dp(580)
         cols_minimum: {0: dp(160), 1: dp(400)}
-        rows_minimum: {0: dp(70), 1: dp(70), 2: dp(85)}
-        spacing: [dp(20), dp(20)]
+        rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
+        spacing: [dp(20), dp(17.5)]
 
         # ROW 1
 
@@ -89,9 +89,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(85)
+            height: dp(70)
             width: dp(160)
-            padding: [dp(48), dp(16), dp(48), dp(31)]
+            padding: [dp(48), dp(16), dp(48), dp(16)]
 
             Image:
                 id: spindle_image
@@ -104,9 +104,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(85)
+            height: dp(70)
             width: dp(320)
-            padding: [dp(0), 0, dp(20), dp(15)]
+            padding: [dp(0), 0, dp(20), dp(0)]
 	        TextInput:
 	            id: brush_life
 	            size_hint: (None, None)
