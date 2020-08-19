@@ -12,16 +12,21 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons
-from asmcnc.apps.maintenance_app import widget_maintenance_laser_switch
+from asmcnc.apps.maintenance_app import widget_maintenance_laser_switch, widget_maintenance_brush_use
 
 Builder.load_string("""
 
 <MaintenanceScreenClass>:
 
+    # Laser Datum Widgets
     xy_move_container: xy_move_container
     z_move_container: z_move_container
-    button_container: button_container
+    laser_button_container: laser_button_container
     switch_container: switch_container
+
+    # Brush maintenance widgets
+    brush_use_container: brush_use_container
+
 
     TabbedPanel:
         id: tab_panel
@@ -102,7 +107,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(280)
                         width: dp(280)
-                        id: button_container
+                        id: laser_button_container
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -177,13 +182,13 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(80)
                         width: dp(760)
-                        padding: [dp(5),0,dp(5),0]
+                        padding: [dp(10),dp(5),dp(5),dp(5)]
                         orientation: 'horizontal'
                         Label: 
                             color: 0,0,0,1
                             font_size: dp(22)
                             markup: True
-                            halign: "center"
+                            halign: "left"
                             valign: "middle"
                             text_size: self.size
                             size: self.parent.size
@@ -193,7 +198,7 @@ Builder.load_string("""
                         BoxLayout:
                             size_hint: (None,None)
                             height: dp(70)
-                            width: dp(650)
+                            width: dp(600)
                             id: monitor_container
 
                 BoxLayout:
@@ -259,15 +264,16 @@ Builder.load_string("""
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(142), dp(390))
+        pos: (dp(284), dp(390))
         Image:
             size_hint: (None,None)
             height: dp(90)
-            width: dp(568)
+            width: dp(426)
             # background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos
             source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
+            allow_stretch: True
 
     BoxLayout: 
         size_hint: (None,None)
@@ -304,17 +310,24 @@ class MaintenanceScreenClass(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
+        # LASER DATUM WIDGETS
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
-        
+    
         self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm)
         self.z_move_container.add_widget(self.z_move_widget)
 
         self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm)
-        self.button_container.add_widget(self.laser_datum_buttons_widget)
+        self.laser_button_container.add_widget(self.laser_datum_buttons_widget)
 
         self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
         self.switch_container.add_widget(self.laser_switch_widget)
+
+
+        # BRUSH MONITOR WIDGETS
+        self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_use_container.add_widget(self.brush_use_widget)
+
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
