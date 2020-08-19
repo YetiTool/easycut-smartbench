@@ -23,7 +23,8 @@ Builder.load_string("""
         height: dp(280)
         width: dp(580)
         cols_minimum: {0: dp(160), 1: dp(400)}
-        spacing: dp(20)
+        rows_minimum: {0: dp(85), 1: dp(70), 2: dp(85)}
+        spacing: [dp(20), dp(20)]
 
         # ROW 1
 
