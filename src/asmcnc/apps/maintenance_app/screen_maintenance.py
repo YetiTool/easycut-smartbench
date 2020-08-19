@@ -13,7 +13,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save
+widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings
 
 Builder.load_string("""
 
@@ -31,6 +31,9 @@ Builder.load_string("""
     brush_life_container: brush_life_container
     brush_save_container: brush_save_container
 
+    # Spindle settings widgets
+    spindle_save_container: spindle_save_container
+    spindle_settings_container: spindle_settings_container
 
     TabbedPanel:
         id: tab_panel
@@ -249,13 +252,87 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
-
-
-
+        # Spindle cooldown settings
         
         TabbedPanelItem:
-            background_disabled_image: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            disabled: 'True'
+            background_normal: 'asmcnc/apps/maintenance_app/img/spindle_settings_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/spindle_settings_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(390)
+                orientation: "vertical" 
+                padding: (20, 20, 20, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(50)
+                    width: dp(760)
+                    id: monitor_strip
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(50)
+                        width: dp(760)
+                        padding: [dp(10),dp(5),dp(5),dp(5)]
+                        orientation: 'horizontal'
+                        Label: 
+                            color: 0,0,0,1
+                            font_size: dp(22)
+                            markup: True
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            text: "[b]SPINDLE COOLDOWN SETTINGS[/b]"
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(760)
+                    height: dp(280)
+                    orientation: "horizontal" 
+                    padding: dp(0)
+                    spacing: dp(20)
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(280)
+                        width: dp(580)
+                        id: spindle_settings_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(280)
+                        width: dp(160)
+                        id: spindle_save_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
             background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
@@ -268,11 +345,11 @@ Builder.load_string("""
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(284), dp(390))
+        pos: (dp(426), dp(390))
         Image:
             size_hint: (None,None)
             height: dp(90)
-            width: dp(426)
+            width: dp(284)
             # background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos
@@ -340,6 +417,15 @@ class MaintenanceScreenClass(Screen):
 
         self.brush_monitor_widget = widget_maintenance_brush_monitor.BrushMonitorWidget(machine=self.m, screen_manager=self.sm)
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
+
+
+        # SPINDLE SETTINGS WIDGET
+
+        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.spindle_save_container.add_widget(self.spindle_save_widget)       
+
+        self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm)
+        self.spindle_settings_container.add_widget(self.spindle_settings_widget)   
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
