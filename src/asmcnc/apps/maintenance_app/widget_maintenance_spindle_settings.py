@@ -22,7 +22,7 @@ Builder.load_string("""
         size_hint: (None, None)
         height: dp(280)
         width: dp(580)
-        cols_minimum: {0: dp(160), 1: dp(470)}
+        cols_minimum: {0: dp(160), 1: dp(400)}
         spacing: dp(20)
 
         # ROW 1
