@@ -110,7 +110,7 @@ class RouterMachine(object):
         if not path.exists(self.spindle_brush_values_file_path):
             log("Creating spindle brush values file...")
             file = open(self.spindle_brush_values_file_path, "w+")
-            file.write(str(self.brush_use_seconds) + "\n" + str(self.brush_lifetime_seconds))
+            file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
             file.close()
 
         if not path.exists(self.spindle_cooldown_settings_file_path):
