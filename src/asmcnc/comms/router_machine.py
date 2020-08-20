@@ -49,19 +49,34 @@ class RouterMachine(object):
 
     is_machine_paused = False
 
-    # Persistent values setup
+
+    # PERSISTENT MACHINE VALUES
+
+    ## PERSISTENT VALUES SETUP
     smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
-
-    spindle_brush_use_file_path = smartbench_values_dir + 'spindle_brush_use.txt'
-    spindle_brush_max_life_file_path = smartbench_values_dir + 'spindle_brush_max_life.txt'
     
+    ### Individual files to hold persistent values
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
+    spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
+    spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
 
+    ## LASER VALUES
     laser_offset_x_value = 0
     laser_offset_y_value = 0
 
     is_laser_on = False
     is_laser_enabled = False
+
+    ## BRUSH VALUES
+    spindle_brush_use_seconds = float(0*3600)
+    spindle_brush_lifetime_seconds = float(120*3600)
+
+    ## SPINDLE COOLDOWN OPTIONS
+    spindle_brand = 'YETI' # String to hold brand name
+    spindle_voltage = 230 # Options are 230V or 110V
+    spindle_digital = False #spindle can be manual or digital
+    spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
+    spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
             
     def __init__(self, win_serial_port, screen_manager):
@@ -78,34 +93,45 @@ class RouterMachine(object):
             self.check_presence_of_sb_values_files()
             self.get_persistent_values()
 
+# PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
         if not path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
-        
-        # check SmartBench value files
-        if not path.exists(self.spindle_brush_use_file_path):
-            log("Creating spindle brushes use file...")
-            file = open(self.spindle_brush_use_file_path, "w+")
-            file.write("0")
-            file.close()
-        if not path.exists(self.spindle_brush_max_life_file_path):
-            log("Creating spindle brushes max life file...")
-            file = open(self.spindle_brush_max_life_file_path, "w+")
-            max_life_in_seconds = 120 * 3600 # hours of life expected, converted to seconds
-            file.write(str(max_life_in_seconds))
-            file.close()
+
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
             file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
+        if not path.exists(self.spindle_brush_values_file_path):
+            log("Creating spindle brush values file...")
+            file = open(self.spindle_brush_values_file_path, "w+")
+            file.write(str(self.brush_use_seconds) + "\n" + str(self.brush_lifetime_seconds))
+            file.close()
+
+        if not path.exists(self.spindle_cooldown_settings_file_path):
+            log("Creating spindle cooldown settings file...")
+            file = open(self.spindle_cooldown_settings_file_path, "w+")
+            file.write(
+                str(self.spindle_brand) + "\n" + 
+                str(self.spindle_voltage) + "\n" + 
+                str(self.spindle_digital) + "\n" + 
+                str(self.spindle_cooldown_time_seconds) + "\n" +
+                str(self.spindle_cooldown_rpm)
+                )
+            file.close()
+
+
     def get_persistent_values(self):
         self.read_z_head_laser_offset_values()
+        self.read_spindle_brush_values()
+        self.read_spindle_cooldown_settings()
 
+    ## LASER DATUM OFFSET
     def read_z_head_laser_offset_values(self):
 
         try:
@@ -133,6 +159,83 @@ class RouterMachine(object):
             self.is_laser_enabled = enabled
         except: 
             log("Unable to write z head laser offset values")
+
+    ## SPINDLE BRUSH MONITOR
+    def read_spindle_brush_values(self):
+
+        try:
+            file = open(self.spindle_brush_values_file_path, 'r')
+            [read_spindle_brush_use_value,read_spindle_brush_lifetime_value] = file.read().splitlines()
+            file.close
+
+            self.spindle_brush_use_seconds = float(read_spindle_brush_use_value)
+            self.spindle_brush_lifetime_seconds = float(read_spindle_brush_lifetime_value)
+
+        except: 
+            log("Unable to read spindle brush use and lifetime values") 
+
+    def write_spindle_brush_values(self, use, lifetime):
+        try:
+            file = open(self.spindle_brush_values_file_path, "w")
+            file.write(str(use) + "\n" + str(lifetime))
+            file.close()
+
+            self.spindle_brush_use_seconds = float(use)
+            self.spindle_brush_lifetime_seconds = float(lifetime)
+
+        except: 
+            log("Unable to write spindle brush use and lifetime values")
+
+
+    ## SPINDLE COOLDOWN OPTIONS
+    def read_spindle_cooldown_settings(self):
+
+        try:
+            file = open(self.spindle_brush_values_file_path, 'r')
+            # this might throw errors, not sure? might need to define list first and then read but let's try
+            [
+            read_spindle_brand,
+            read_spindle_voltage,
+            read_spindle_digital,
+            read_spindle_cooldown_time_seconds,
+            read_spindle_rpm
+            ] = file.read().splitlines()
+            file.close
+
+            self.spindle_brand = float(read_spindle_brand)
+            self.spindle_voltage = (read_spindle_voltage)
+            if read_spindle_digital == 'True': self.spindle_digital = True
+            else: self.spindle_digital == False
+            self.spindle_cooldown_time_seconds = float(read_spindle_cooldown_time_seconds)
+            self.spindle_rpm = float(read_spindle_rpm)
+
+        except: 
+            log("Unable to read spindle cooldown settings") 
+
+    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
+        try:
+            file = open(self.spindle_brush_values_file_path, "w")
+            file.write(
+                str(self.brand) + "\n" +
+                str(self.voltage) + "\n" +
+                str(self.digital) + "\n" +
+                str(self.time_seconds) + "\n" +
+                str(self.rpm)
+                )
+            file.close()
+
+            self.spindle_brand = brand
+            self.spindle_voltage = voltage
+            self.spindle_digital = digital
+            self.spindle_cooldown_time_seconds = time_seconds
+            self.spindle_rpm = rpm
+
+        except: 
+            log("Unable to write spindle cooldown settings")   
+
+
+
+# ABSOLUTE MACHINE LIMITS
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):

@@ -60,6 +60,7 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(50)
                     width: dp(120)
+                    font_size: dp(28)
 
                 Label: 
                     color: 0,0,0,1
@@ -136,19 +137,15 @@ class BrushUseWidget(Widget):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+    def on_enter(self):
+        self.brush_use.text = str(self.m.spindle_brush_use_seconds/3600)
+        
     def restore(self):
-        pass
-
-        # puts hours in brush_use.text back to whatever they are stored as
-
+        self.brush_use.text = str(self.m.spindle_brush_use_seconds/3600) # convert back to hrs for user
 
     def reset_to_0(self):
-        pass
+        self.brush_use.text = '0'
 
-        # resets brush use hours to 0
-
-
-# These values probs need to go into router_machine somewhere and ofc persistent sb values
 
 
 

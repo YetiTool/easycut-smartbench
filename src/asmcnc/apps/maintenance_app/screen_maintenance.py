@@ -383,8 +383,10 @@ Builder.load_string("""
 class MaintenanceScreenClass(Screen):
 
 
+    # LASER DATUM OFFSET
     laser_datum_reset_coordinate_x = 0
     laser_datum_reset_coordinate_y = 0
+
 
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
@@ -415,7 +417,8 @@ class MaintenanceScreenClass(Screen):
         self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm)
         self.brush_save_container.add_widget(self.brush_save_widget)
 
-        self.brush_monitor_widget = widget_maintenance_brush_monitor.BrushMonitorWidget(machine=self.m, screen_manager=self.sm)
+        self.monitor_percentage = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        self.brush_monitor_widget = widget_maintenance_brush_monitor.BrushMonitorWidget(machine=self.m, screen_manager=self.sm, input_percentage = self.monitor_percentage)
         self.brush_monitor_container.add_widget(self.brush_monitor_widget)
 
 
@@ -432,6 +435,7 @@ class MaintenanceScreenClass(Screen):
         
     def on_pre_enter(self):
 
+        # LASER
         if self.m.is_laser_enabled == True:
             self.laser_switch_widget.laser_switch.active = True
         else: 
@@ -439,10 +443,39 @@ class MaintenanceScreenClass(Screen):
 
         self.laser_switch_widget.toggle_laser()
 
+    # def on_enter(self):
+        # BRUSHES
+        self.brush_use_widget.brush_use.text = str(self.m.spindle_brush_use_seconds/3600)
+        self.brush_life_widget.brush_life.text = str(self.m.spindle_brush_lifetime_seconds/3600)
+
+        value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        self.brush_monitor_widget.set_percentage(value)
+
+        # SPINDLE
+
+
+
     def on_pre_leave(self):
+
+        # LASER DATUM
         self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
 
         if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         self.m.laser_off()
+
+
+
+
+        # SPINDLE SETTINGS WIDGET
+
+
+
+        # ADD SPINDLE OPTIONS
+
+        # Mafell - digital or manual; each one of those 110 or 230V - 4 variants total.
+
+        # AMB - 100V or 230V manual, 230V digital
+
+        # Maybe Custom option? M/D and 110/230

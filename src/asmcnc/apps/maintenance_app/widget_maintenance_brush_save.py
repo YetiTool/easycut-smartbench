@@ -79,7 +79,36 @@ class BrushSaveWidget(Widget):
         self.m=kwargs['machine']
 
     def get_info(self):
-    	pass
+        popup_info.PopupInfo(self.sm, 500, 'stuff')
 
     def save(self):
-    	pass
+
+        # TIME FOR DATA VALIDATION
+
+        # Read from screen and convert hours into seconds
+        use = float(self.sm.get_screen('maintenance').brush_use_widget.brush_use.text)*3600
+        lifetime = float(self.sm.get_screen('maintenance').brush_life_widget.brush_life.text)*3600 
+
+
+        # Brush use
+        if use >= 0 and use <= 999*3600: pass # all good, carry on
+        else: 
+            # throw popup, return without saving
+            popup_info.PopupError(self.sm, 'screaming brush use')
+            return
+
+
+        # Brush life
+        if lifetime >= 100*3600 and lifetime <= 999*3600: pass # all good, carry on
+        else: 
+            # throw popup, return without saving
+            popup_info.PopupError(self.sm, 'screaming brush use')
+            return
+
+        # read in values
+        self.m.write_spindle_brush_values(use, lifetime)
+
+        # Update the monitor :)
+        value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
+

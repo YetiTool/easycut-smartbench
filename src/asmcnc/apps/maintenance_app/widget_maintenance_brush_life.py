@@ -60,6 +60,7 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(50)
                     width: dp(120)
+                    font_size: dp(28)
 
                 Label: 
                     color: 0,0,0,1
@@ -137,18 +138,10 @@ class BrushLifeWidget(Widget):
         self.m=kwargs['machine']
 
     def restore(self):
-        pass
-
-        # puts hours in brush_life.text back to whatever they are stored as
-
+        self.brush_life.text = str(self.m.spindle_brush_lifetime_seconds/3600)
 
     def reset_to_120(self):
-        pass
-
-        # resets brush lifetime to 120 hrs
-
-
-# These values probs need to go into router_machine somewhere and ofc persistent sb values
+        self.brush_life.text = '120'
 
 
 
