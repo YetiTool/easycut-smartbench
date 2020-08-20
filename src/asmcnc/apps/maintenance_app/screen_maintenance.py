@@ -353,7 +353,7 @@ Builder.load_string("""
             # background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos
-            source: "./asmcnc/apps/maintenance_app/img/long_blue_tab.png"
+            source: "./asmcnc/apps/maintenance_app/img/long_blue_2_tabs.png"
             allow_stretch: True
 
     BoxLayout: 
