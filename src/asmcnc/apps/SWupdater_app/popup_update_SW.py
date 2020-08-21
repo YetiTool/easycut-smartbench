@@ -25,9 +25,9 @@ class PopupBetaUpdate(Widget):
         
         description = "The update you are trying to install is a beta release.\n" + \
         "This is a version of the software that allows our developers and product testers to " + \
-        "try out new features and identify any bugs prior to the next customer release.\n\n" + \
-        "This release might not be stable, and it is recommended that you wait until the full" + \
-        "update. If you do update to a beta release, and you have any issues, please contact Yeti Tool support.\n\n" + \
+        "try out new features and identify any bugs before the next customer release.\n\n" + \
+        "This release might not be stable, and it is recommended that you wait until the full " + \
+        "update..\n\nIf you do update to a beta release, and you have any issues, please contact Yeti Tool support.\n\n" + \
         "Do you want to continue? "
         
         def do_update(*args):
@@ -37,7 +37,7 @@ class PopupBetaUpdate(Widget):
             	self.sm.get_screen('update').get_sw_update_over_usb()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(500, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=2, text_size=(620, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
@@ -62,7 +62,7 @@ class PopupBetaUpdate(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(600, 400),
+                      size=(700, 440),
                       auto_dismiss= False
                       )
         
