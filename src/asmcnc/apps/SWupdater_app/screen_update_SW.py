@@ -404,7 +404,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
-        # popup_info.PopupWait(self.sm)
+        popup_info.PopupWait(self.sm)
 
         def do_sw_update():
 
@@ -451,7 +451,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_usb(self):
 
-        # popup_info.PopupWait(self.sm)
+        popup_info.PopupWait(self.sm)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()

@@ -18,7 +18,7 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
-from asmcnc.skavaUI import popup_info
+# from asmcnc.skavaUI import popup_info
 
 class PopupBetaUpdate(Widget):
 	
@@ -34,8 +34,6 @@ class PopupBetaUpdate(Widget):
         "Do you want to continue?"
         
         def do_update(*args):
-            popup_info.PopupWait(self.sm)
-
 			if wifi_or_usb == 'wifi': self.sm.get_screen('update').get_sw_update_over_wifi()
 			elif wifi_or_usb == 'usb': self.sm.get_screen('update').get_sw_update_over_usb()
 
