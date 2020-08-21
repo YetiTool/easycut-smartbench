@@ -97,16 +97,7 @@ Builder.load_string("""
                         width: dp(213)
                         orientation: "vertical"
                         padding: [0,0,30,0]
-#                         Label: 
-#                             color: 0,0,0,1
-#                             font_size: 18
-#                             markup: True
-#                             halign: "center"
-#                             valign: "bottom"
-#                             text_size: self.size
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             text: "[b]Available Version[/b]"
+
                         Label: 
                             id: latest_software_version_label
                             color: 0,0,0,1
@@ -378,12 +369,15 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_wifi(self):
 
+        wait_popup = popup_info.PopupWait(self.sm)
+
         if self.wifi_image.source != self.wifi_on:
             description = "No WiFi connection!"
             popup_info.PopupError(self.sm, description)
             return
 
         if self.set.latest_sw_version.endswith('beta'):
+            wait_popup.popup.dismiss()
             popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
             return
 
@@ -392,12 +386,15 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_usb(self):
 
+        wait_popup = popup_info.PopupWait(self.sm)
+
         if self.usb_image.source != self.usb_on:
             description = "No USB drive found!"
             popup_info.PopupError(self.sm, description)
             return
 
         if self.set.latest_sw_version.endswith('beta'):
+            wait_popup.popup.dismiss()
             popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
             return       
 
@@ -407,7 +404,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
-        popup_info.PopupWait(self.sm)
+        # popup_info.PopupWait(self.sm)
 
         def do_sw_update():
 
@@ -454,7 +451,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_usb(self):
 
-        popup_info.PopupWait(self.sm)
+        # popup_info.PopupWait(self.sm)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
