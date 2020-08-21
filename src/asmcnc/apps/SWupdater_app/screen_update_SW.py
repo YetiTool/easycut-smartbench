@@ -381,13 +381,15 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: do_the_refresh(), 0.1)
  
     def on_enter(self):
+
+        # Keep tabs on wifi connection
         self.check_wifi_connection(1)
         self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
 
+        # Set up and keep tabs on usb connection
         self.usb_stick.enable()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
-        Clock.schedule_once(lambda dt: self.refresh_latest_software_version(True), 1)
 
     def on_leave(self):
         Clock.unschedule(self.poll_USB)

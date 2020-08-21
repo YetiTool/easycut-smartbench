@@ -26,7 +26,10 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
-        
+    
+
+## REFRESH EVERYTHING AT START UP    
+    def refresh_all()
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
