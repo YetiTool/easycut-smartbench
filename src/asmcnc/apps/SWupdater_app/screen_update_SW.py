@@ -377,10 +377,7 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_wifi(self):
 
-        if self.wifi_image.source == self.wifi_on:
-            popup_info.PopupWait(self.sm)
-
-        else: 
+        if self.wifi_image.source != self.wifi_on:
             description = "No WiFi connection!"
             popup_info.PopupError(self.sm, description)
             return
@@ -389,15 +386,13 @@ class SWUpdateScreen(Screen):
             popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
             return
 
+        popup_info.PopupWait(self.sm)
         Clock.schedule_once(lambda dt: self.get_sw_update_over_wifi(), 2)
 
 
     def prep_for_sw_update_over_usb(self):
 
-        if self.usb_image.source == self.usb_on:
-            popup_info.PopupWait(self.sm)
-
-        else:
+        if self.usb_image.source != self.usb_on:
             description = "No USB drive found!"
             popup_info.PopupError(self.sm, description)
             return
@@ -406,6 +401,7 @@ class SWUpdateScreen(Screen):
             popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
             return       
 
+        popup_info.PopupWait(self.sm)
         Clock.schedule_once(lambda dt: self.get_sw_update_over_usb(), 2)
 
         
