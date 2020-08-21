@@ -67,7 +67,7 @@ Builder.load_string("""
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
-                        width: dp(385)
+                        width: dp(375)
                         orientation: "vertical"
                         padding: [0,0,30,0]
                         Label: 
@@ -94,9 +94,34 @@ Builder.load_string("""
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
-                        width: dp(213)
-                        orientation: "vertical"
+                        width: dp(223)
+                        orientation: "horizontal"
                         padding: [0,0,30,0]
+
+                        BoxLayout: 
+                            size_hint: (None, None) 
+                            orientation: "vertical"
+                            height: dp(100)
+                            width: dp(49)
+                            padding: [5,35,15,35]
+                            Button:
+                                size_hint: (None,None)
+                                height: dp(30)
+                                width: dp(29)
+                                background_color: hex('#F4433600')
+                                center: self.parent.center
+                                pos: self.parent.pos
+                                on_press: root.refresh_latest_software_version()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
 
                         Label: 
                             id: latest_software_version_label
@@ -338,7 +363,7 @@ class SWUpdateScreen(Screen):
         
         self.refresh_latest_software_version(False)
         
-    def refresh_latest_software_version(self, after_enter):
+    def refresh_latest_software_version(self, after_enter = True):
         if after_enter == True: 
             self.set.refresh_latest_sw_version()
         
@@ -371,20 +396,20 @@ class SWUpdateScreen(Screen):
 
         wait_popup = popup_info.PopupWait(self.sm)
 
-        # def check_connection_and_version():
-        #     if self.wifi_image.source != self.wifi_on:
-        #         description = "No WiFi connection!"
-        #         popup_info.PopupError(self.sm, description)
-        #         return
+        def check_connection_and_version():
+            if self.wifi_image.source != self.wifi_on:
+                description = "No WiFi connection!"
+                popup_info.PopupError(self.sm, description)
+                return
 
-        #     if self.set.latest_sw_version.endswith('beta'):
-        #         wait_popup.popup.dismiss()
-        #         popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
-        #         return
+            if self.set.latest_sw_version.endswith('beta'):
+                wait_popup.popup.dismiss()
+                popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
+                return
 
-        #     self.get_sw_update_over_wifi()
+            self.get_sw_update_over_wifi()
 
-        # Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
+        Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
         Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 3)
 
     def prep_for_sw_update_over_usb(self):
