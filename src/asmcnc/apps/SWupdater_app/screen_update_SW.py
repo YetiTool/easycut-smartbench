@@ -402,7 +402,7 @@ class SWUpdateScreen(Screen):
             popup_info.PopupError(self.sm, description)
             return
 
-         if self.set.latest_sw_version.endswith('beta'):
+        if self.set.latest_sw_version.endswith('beta'):
             popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
             return       
 
