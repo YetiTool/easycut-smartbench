@@ -41,7 +41,7 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
 
-        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        # self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
         # for testing: 
         self.latest_sw_version = 'v1.3.2-beta'
