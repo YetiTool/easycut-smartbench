@@ -35,11 +35,9 @@ class PopupBetaUpdate(Widget):
         def do_update(*args):
 
         	if wifi_or_usb == 'wifi':
-            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_wifi(), 2)
+            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_wifi(), 1)
 			elif wifi_or_usb == 'usb':
-            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_usb(), 2)
-
-        	popup_info.PopupWait(self.sm)
+            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_usb(), 1)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(620, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)

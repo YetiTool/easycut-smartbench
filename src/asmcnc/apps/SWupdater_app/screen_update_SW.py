@@ -386,8 +386,7 @@ class SWUpdateScreen(Screen):
             popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
             return
 
-        popup_info.PopupWait(self.sm)
-        Clock.schedule_once(lambda dt: self.get_sw_update_over_wifi(), 2)
+        self.get_sw_update_over_wifi()
 
 
     def prep_for_sw_update_over_usb(self):
@@ -401,31 +400,36 @@ class SWUpdateScreen(Screen):
             popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
             return       
 
-        popup_info.PopupWait(self.sm)
-        Clock.schedule_once(lambda dt: self.get_sw_update_over_usb(), 2)
+        self.get_sw_update_over_usb()
 
         
 
     def get_sw_update_over_wifi(self):
-            
-        outcome = self.set.get_sw_update_via_wifi()
-        
-        if outcome == False: 
-            description = "There was a problem updating your software. \n\n" \
-            "We can try to fix the problem, but you MUST have a stable internet connection and" \
-            " power supply.\n\n" \
-            "Would you like to repair your software now?"
-            popup_info.PopupSoftwareRepair(self.sm, self, description)
 
-        elif outcome == "Software already up to date!": 
-            popup_info.PopupError(self.sm, outcome)
-            
-        elif outcome == "Could not resolve host: github.com":
-            description = "Could not connect to github. Please check that your connection is stable, or try again later"
-            popup_info.PopupError(self.sm, outcome)
 
-        else: 
-            popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+        def do_update():
+
+            outcome = self.set.get_sw_update_via_wifi()
+            
+            if outcome == False: 
+                description = "There was a problem updating your software. \n\n" \
+                "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                " power supply.\n\n" \
+                "Would you like to repair your software now?"
+                popup_info.PopupSoftwareRepair(self.sm, self, description)
+
+            elif outcome == "Software already up to date!": 
+                popup_info.PopupError(self.sm, outcome)
+                
+            elif outcome == "Could not resolve host: github.com":
+                description = "Could not connect to github. Please check that your connection is stable, or try again later"
+                popup_info.PopupError(self.sm, outcome)
+
+            else: 
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+
+        popup_info.PopupWait(self.sm)
+        Clock.schedule_once(lambda dt: do_update(), 2)
 
     def repair_sw_over_wifi(self):
             
@@ -449,31 +453,35 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_usb(self):
 
-        outcome = self.set.get_sw_update_via_usb()
-        
-        if outcome == 2:
-            description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
-            "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
-            popup_info.PopupError(self.sm, description)
-
-        elif outcome == 0:
-            description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
-            "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
-            popup_info.PopupError(self.sm, description)
-
-        elif outcome == "update failed":
+        def do_update():
+            outcome = self.set.get_sw_update_via_usb()
             
-            # this may need its own special bigger pop-up
+            if outcome == 2:
+                description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
+                "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
+                popup_info.PopupError(self.sm, description)
+
+            elif outcome == 0:
+                description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
+                "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
+                popup_info.PopupError(self.sm, description)
+
+            elif outcome == "update failed":
+                
+                # this may need its own special bigger pop-up
+                
+                description = "It was not possible to update your software from the USB drive.\n\n" + \
+                "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
+                "internet to update your software, and repair it if necessary.\n\n"
+                popup_info.PopupError(self.sm, description)              
             
-            description = "It was not possible to update your software from the USB drive.\n\n" + \
-            "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
-            "internet to update your software, and repair it if necessary.\n\n"
-            popup_info.PopupError(self.sm, description)              
-        
-        else:
-            self.usb_stick.disable()
-            update_success = outcome
-            popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+            else:
+                self.usb_stick.disable()
+                update_success = outcome
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+
+        popup_info.PopupWait(self.sm)
+        Clock.schedule_once(lambda dt: do_update(), 2)
                 
     def check_wifi_connection(self, dt):
 
