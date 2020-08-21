@@ -36,7 +36,7 @@ class PopupBetaUpdate(Widget):
 
         	popup_info.PopupWait(self.sm)
 
-            if wifi_or_usb == 'wifi':
+        	if wifi_or_usb == 'wifi':
             	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_wifi(), 2)
             elif wifi_or_usb == 'usb':
             	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_usb(), 2)
