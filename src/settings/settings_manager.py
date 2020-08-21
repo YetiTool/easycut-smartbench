@@ -29,7 +29,7 @@ class Settings(object):
     
 
 ## REFRESH EVERYTHING AT START UP    
-    def refresh_all():
+    def refresh_all(self):
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
