@@ -18,8 +18,6 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
-from asmcnc.skavaUI import popup_info
-
 class PopupBetaUpdate(Widget):   
     def __init__(self, screen_manager, wifi_or_usb):
         
@@ -29,16 +27,12 @@ class PopupBetaUpdate(Widget):
         "This is a version of the software that allows our developers and product testers to " + \
         "try out new features and identify any bugs before the next customer release.\n\n" + \
         "This release might not be stable, and it is recommended that you wait until the full " + \
-        "update.\n\nIf you decide to update and you have any issues, please contact Yeti Tool support.\n\n" + \
-        "Do you want to continue? "
+        "update. If you decide to update and you have any issues, please contact Yeti Tool support.\n\n" + \
+        "Do you want to continue?"
         
         def do_update(*args):
-
-        	if wifi_or_usb == 'wifi':
-            	self.sm.get_screen('update').get_sw_update_over_wifi()
-
-			elif wifi_or_usb == 'usb':
-            	self.sm.get_screen('update').get_sw_update_over_usb()
+			if wifi_or_usb == 'wifi': self.sm.get_screen('update').get_sw_update_over_wifi()
+			elif wifi_or_usb == 'usb': self.sm.get_screen('update').get_sw_update_over_usb()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(620, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
