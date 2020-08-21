@@ -18,7 +18,8 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
-class PopupBetaUpdate(Widget):   
+class PopupBetaUpdate(Widget):
+	
     def __init__(self, screen_manager, wifi_or_usb):
         
         self.sm = screen_manager
