@@ -371,35 +371,41 @@ class SWUpdateScreen(Screen):
 
         wait_popup = popup_info.PopupWait(self.sm)
 
-        if self.wifi_image.source != self.wifi_on:
-            description = "No WiFi connection!"
-            popup_info.PopupError(self.sm, description)
-            return
+        def check_connection_and_version():
+            if self.wifi_image.source != self.wifi_on:
+                description = "No WiFi connection!"
+                popup_info.PopupError(self.sm, description)
+                return
 
-        if self.set.latest_sw_version.endswith('beta'):
-            wait_popup.popup.dismiss()
-            popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
-            return
+            if self.set.latest_sw_version.endswith('beta'):
+                wait_popup.popup.dismiss()
+                popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
+                return
 
-        self.get_sw_update_over_wifi()
+            self.get_sw_update_over_wifi()
 
+        Clock.schedule_once(lambda dt: check_connection_and_version(), 2)
+        Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 3)
 
     def prep_for_sw_update_over_usb(self):
 
         wait_popup = popup_info.PopupWait(self.sm)
 
-        if self.usb_image.source != self.usb_on:
-            description = "No USB drive found!"
-            popup_info.PopupError(self.sm, description)
-            return
+        def check_connection_and_version():
+            if self.usb_image.source != self.usb_on:
+                description = "No USB drive found!"
+                popup_info.PopupError(self.sm, description)
+                return False
 
-        if self.set.latest_sw_version.endswith('beta'):
-            wait_popup.popup.dismiss()
-            popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
-            return       
 
-        self.get_sw_update_over_usb()
+            if self.set.latest_sw_version.endswith('beta'):
+                popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
+                return False
 
+            self.get_sw_update_over_usb()
+
+        Clock.schedule_once(lambda dt: check_connection_and_version(), 2)
+        Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 3)
         
 
     def get_sw_update_over_wifi(self):
