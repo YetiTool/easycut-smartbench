@@ -18,6 +18,8 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
+from asmcnc.skavaUI import popup_info
+
 class PopupBetaUpdate(Widget):   
     def __init__(self, screen_manager, wifi_or_usb):
         
@@ -31,10 +33,13 @@ class PopupBetaUpdate(Widget):
         "Do you want to continue? "
         
         def do_update(*args):
+
+        	popup_info.PopupWait(self.sm)
+
             if wifi_or_usb == 'wifi':
-            	self.sm.get_screen('update').get_sw_update_over_wifi()
+            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_wifi(), 2)
             elif wifi_or_usb == 'usb':
-            	self.sm.get_screen('update').get_sw_update_over_usb()
+            	Clock.schedule_once(lambda dt: self.sm.get_screen('update').get_sw_update_over_usb(), 2)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(620, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
