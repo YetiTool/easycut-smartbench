@@ -18,8 +18,6 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 
-# from asmcnc.skavaUI import popup_info
-
 class PopupBetaUpdate(Widget):
 	
     def __init__(self, screen_manager, wifi_or_usb):
