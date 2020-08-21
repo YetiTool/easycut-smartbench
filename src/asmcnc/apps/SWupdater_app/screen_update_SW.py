@@ -407,6 +407,7 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
+        popup_info.PopupWait(self.sm)
 
         def do_sw_update():
 
@@ -429,7 +430,6 @@ class SWUpdateScreen(Screen):
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
 
-        popup_info.PopupWait(self.sm)
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
     def repair_sw_over_wifi(self):
@@ -453,6 +453,8 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
+
+        popup_info.PopupWait(self.sm)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
@@ -481,7 +483,6 @@ class SWUpdateScreen(Screen):
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
 
-        popup_info.PopupWait(self.sm)
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
                 
     def check_wifi_connection(self, dt):
