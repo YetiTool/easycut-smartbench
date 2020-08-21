@@ -30,8 +30,8 @@ class Settings(object):
 
 ## REFRESH EVERYTHING AT START UP    
     def refresh_all(self):
-        self.refresh_latest_platform_version()
-        self.refresh_platform_version()
+        # self.refresh_latest_platform_version()
+        # self.refresh_platform_version()
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
 
@@ -44,7 +44,7 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
         try: 
-            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git tag --sort=-refname |head -n 2").read()).split('\n'))[0:2]
+            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git tag --sort=-refname |head -n 2").read()).split('\n'))
 
             if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
                 self.latest_sw_version = str(sw_version_list[1])
