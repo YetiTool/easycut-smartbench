@@ -364,15 +364,21 @@ class SWUpdateScreen(Screen):
         self.refresh_latest_software_version(False)
         
     def refresh_latest_software_version(self, after_enter = True):
-        if after_enter == True: 
-            self.set.refresh_latest_sw_version()
-        
-        if self.set.latest_sw_version != '':    
-            self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
-        elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
-        else:
-            self.latest_software_version_label.text = '[b]You are up to date![/b]'
+
+        self.latest_software_version_label.text = '[b]Refreshing...[/b]'
+
+        def do_the_refresh():
+            if after_enter == True:
+                self.set.refresh_latest_sw_version()
+            
+            if self.set.latest_sw_version != '':    
+                self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
+            elif self.wifi_image.source != self.wifi_on:
+                self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
+            else:
+                self.latest_software_version_label.text = '[b]You are up to date![/b]'
+
+        Clock.schedule_once(lambda dt: do_the_refresh(), 0.1)
  
     def on_enter(self):
         self.check_wifi_connection(1)
