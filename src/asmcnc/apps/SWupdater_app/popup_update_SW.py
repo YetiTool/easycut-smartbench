@@ -23,11 +23,11 @@ class PopupBetaUpdate(Widget):
         
         self.sm = screen_manager
         
-        description = "The update you are trying to install is a beta release.\n" + \
+        description = "The update you are trying to install is a beta release.\n\n" + \
         "This is a version of the software that allows our developers and product testers to " + \
         "try out new features and identify any bugs before the next customer release.\n\n" + \
         "This release might not be stable, and it is recommended that you wait until the full " + \
-        "update..\n\nIf you do update to a beta release, and you have any issues, please contact Yeti Tool support.\n\n" + \
+        "update.\n\nIf you decide to update and you have any issues, please contact Yeti Tool support.\n\n" + \
         "Do you want to continue? "
         
         def do_update(*args):
@@ -62,7 +62,7 @@ class PopupBetaUpdate(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(700, 440),
+                      size=(700, 450),
                       auto_dismiss= False
                       )
         
