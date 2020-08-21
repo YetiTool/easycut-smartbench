@@ -29,9 +29,9 @@ class Settings(object):
     
 
 ## REFRESH EVERYTHING AT START UP    
-    def refresh_all(self):
-        # self.refresh_latest_platform_version()
-        # self.refresh_platform_version()
+    # def refresh_all(self):
+        self.refresh_latest_platform_version()
+        self.refresh_platform_version()
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
 
@@ -44,7 +44,8 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
         try: 
-            sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git tag --sort=-refname |head -n 2").read()).split('\n'))
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
+            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
 
             if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
                 self.latest_sw_version = str(sw_version_list[1])
@@ -52,15 +53,18 @@ class Settings(object):
         except: 
             print "Could not fetch software version tags"
 
+
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
         self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        if self.sm.current == 'dev':
+            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
+        self.latest_platform_version = str(os.popen("git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
-
+            
 ## GET SOFTWARE UPDATES
 
     def get_sw_update_via_wifi(self):

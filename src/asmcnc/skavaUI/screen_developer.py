@@ -366,13 +366,7 @@ class DeveloperScreen(Screen):
         self.set.refresh_latest_platform_version()
         self.set.refresh_platform_version()
 
-        self.platform_version_label.text = self.set.platform_version
-        self.latest_platform_version = self.set.latest_platform_version
-        self.pl_hash_label.text = self.set.pl_hash
-        self.pl_branch_label.text = self.set.pl_branch
-
-
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.set.latest_platform_version)
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def ansible_service_run(self):

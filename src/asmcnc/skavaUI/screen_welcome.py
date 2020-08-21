@@ -81,8 +81,6 @@ class WelcomeScreenClass(Screen):
             if sys.platform != 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
-                # Get software and platform versions
-                Clock.schedule_once(lambda dt: self.set.refresh_all(), 4.5)
                 # Get grbl firmware version loaded into serial comms
                 Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I'), 5.5)
                 # Get grbl settings loaded into serial comms
