@@ -360,13 +360,17 @@ class SWUpdateScreen(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm)
         
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
+        self.update_screen_with_latest_version()
+
         
     def refresh_latest_software_version(self):
 
         self.latest_software_version_label.text = '[b]Refreshing...[/b]'
 
         self.set.refresh_latest_sw_version()
-            
+        self.update_screen_with_latest_version()
+    
+    def update_screen_with_latest_version(self):
         if self.set.latest_sw_version != '':    
             self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
         elif self.wifi_image.source != self.wifi_on:
