@@ -367,11 +367,11 @@ class SWUpdateScreen(Screen):
 
         self.latest_software_version_label.text = '[b]Refreshing...[/b]'
 
-        do_refresh():
+        def do_refresh():
             self.set.refresh_latest_sw_version()
             self.update_screen_with_latest_version()
 
-        Clock.schedule_once(lambda dt: do_refresh(),0.5) 
+        Clock.schedule_once(lambda dt: do_refresh(),0.5)
     
     def update_screen_with_latest_version(self):
         if self.set.latest_sw_version != '':    
