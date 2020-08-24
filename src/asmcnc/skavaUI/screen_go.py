@@ -515,7 +515,6 @@ class GoScreen(Screen):
         modified_job_gcode = filter(filterGcodes, modified_job_gcode)
 
 
-
         try:
             self.m.s.run_job(modified_job_gcode)
             log('Job started ok from go screen...')
