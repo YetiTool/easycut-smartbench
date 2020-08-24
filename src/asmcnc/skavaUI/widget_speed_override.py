@@ -100,9 +100,9 @@ class SpeedOverride(Widget):
         self.sm=kwargs['screen_manager']     
 
     def feed_up(self):
-        if self.feed_override_percentage < 200: self.feed_override_percentage += 10
+        if self.feed_override_percentage < 200: self.feed_override_percentage += 5
         self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_up_10(final_percentage=self.feed_override_percentage)
+        self.m.speed_override_up_5(final_percentage=self.feed_override_percentage)
         
     def feed_norm(self):
         self.feed_override_percentage = 100
@@ -110,8 +110,8 @@ class SpeedOverride(Widget):
         self.m.speed_override_reset()
                 
     def feed_down(self):
-        if self.feed_override_percentage > 10: self.feed_override_percentage -= 10
+        if self.feed_override_percentage > 10: self.feed_override_percentage -= 5
         self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_down_10(final_percentage=self.feed_override_percentage)        
+        self.m.speed_override_down_5(final_percentage=self.feed_override_percentage)        
 
 
