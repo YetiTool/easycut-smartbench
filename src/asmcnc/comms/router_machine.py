@@ -650,20 +650,20 @@ class RouterMachine(object):
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
-    def feed_override_up_10(self, final_percentage=''):
+    def feed_override_up_5(self, final_percentage=''):
         self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
 
-    def feed_override_down_10(self, final_percentage=''):
+    def feed_override_down_5(self, final_percentage=''):
         self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     # Realtime spindle speed adjustment
     def speed_override_reset(self):
         self.s.write_realtime('\x99', altDisplayText = 'Speed override RESET')
 
-    def speed_override_up_10(self, final_percentage=''):
+    def speed_override_up_5(self, final_percentage=''):
         self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
 
-    def speed_override_down_10(self, final_percentage=''):
+    def speed_override_down_5(self, final_percentage=''):
         self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
 
