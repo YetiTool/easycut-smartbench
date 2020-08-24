@@ -484,6 +484,7 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
+        # Turn vac on if spindle gets turned on during job
         if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
@@ -500,6 +501,7 @@ class GoScreen(Screen):
         # # Remove end of file command for spindle cooldown to operate smoothly
         if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
         if "M2" in modified_job_gcode: modified_job_gcode.remove("M2")
+        if "S0" in modified_job_gcode: modified_job_gcode.remove("S0")
 
         try:
             self.m.s.run_job(modified_job_gcode)
