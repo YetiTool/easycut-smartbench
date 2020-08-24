@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from datetime import datetime
 
+from asmcnc.skavaUI import popup_info
 # from asmcnc.calibration_app import screen_prep_calibration
 
 Builder.load_string("""
@@ -62,6 +63,7 @@ class WelcomeScreenClass(Screen):
         super(WelcomeScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.set=kwargs['settings']
 
 
     def on_enter(self):
@@ -79,9 +81,9 @@ class WelcomeScreenClass(Screen):
             if sys.platform != 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
-                # Get grbl FW version
+                # Get grbl firmware version loaded into serial comms
                 Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I'), 5.5)
-                # Get grbl settings
+                # Get grbl settings loaded into serial comms
                 Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.6)
                 # Allow time for machine reset sequence
                 Clock.schedule_once(self.go_to_next_screen, 6)
@@ -99,3 +101,13 @@ class WelcomeScreenClass(Screen):
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         self.m.laser_off()
+
+
+        # SW Update available?
+        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta'):
+            update_message = "New software update available for download!\n\n" + \
+            "Please use the [b]Update[/b] app to get the latest version."
+
+            popup_info.PopupInfo(self.sm, 450, update_message)
+
+

@@ -363,7 +363,10 @@ class DeveloperScreen(Screen):
     ## Platform updates
 
     def set_tag_pl_update(self):
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+        self.set.refresh_latest_platform_version()
+        self.set.refresh_platform_version()
+
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.set.latest_platform_version)
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def ansible_service_run(self):

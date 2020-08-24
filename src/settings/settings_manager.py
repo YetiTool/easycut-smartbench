@@ -26,7 +26,10 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
-        
+    
+
+## REFRESH EVERYTHING AT START UP    
+    # def refresh_all(self):
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
@@ -41,26 +44,16 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
 
-        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        try: 
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
+            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
 
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+            if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
+                self.latest_sw_version = str(sw_version_list[1])
+            else: self.latest_sw_version = str(sw_version_list[0])
+        except: 
+            print "Could not fetch software version tags"
 
-            if not self.latest_sw_version.startswith('v'): 
-                
-                def filter_tags(version):
-                    if version.startswith('v'): return True
-                    else: return False
-                
-                sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
-                sw_version_list = filter(filter_tags, sw_version_list)
-                version_numbers = map(lambda each:each.strip("v"), sw_version_list)
-                max_version_number = max(version_numbers)
-                self.latest_sw_version = 'v' + str(max_version_number)
-
-                if self.latest_sw_version.endswith('-beta'):
-
-                    if max_version_number.strip('-beta') in version_numbers:
-                        self.latest_sw_version = self.latest_sw_version.strip('-beta')
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
@@ -68,9 +61,11 @@ class Settings(object):
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        if self.sm.current == 'dev':
+            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
+        self.latest_platform_version = str(os.popen("git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
-
+            
 ## GET SOFTWARE UPDATES
 
     def get_sw_update_via_wifi(self):
