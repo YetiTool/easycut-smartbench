@@ -365,7 +365,7 @@ class SWUpdateScreen(Screen):
         
     def refresh_latest_software_version(self):
 
-        self.latest_software_version_label.text = '[b]Refreshing...[/b]'
+        self.latest_software_version_label.text = '[b]Refreshing...\n\nPlease wait.[/b]'
 
         def do_refresh():
             self.set.refresh_latest_sw_version()

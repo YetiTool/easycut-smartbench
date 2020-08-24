@@ -43,15 +43,17 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-        try: 
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
-            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
+        self.latest_sw_version = 'v1.3.2-beta'
 
-            if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
-                self.latest_sw_version = str(sw_version_list[1])
-            else: self.latest_sw_version = str(sw_version_list[0])
-        except: 
-            print "Could not fetch software version tags"
+        # try: 
+        #     os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
+        #     sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
+
+        #     if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
+        #         self.latest_sw_version = str(sw_version_list[1])
+        #     else: self.latest_sw_version = str(sw_version_list[0])
+        # except: 
+        #     print "Could not fetch software version tags"
 
 
     def refresh_platform_version(self):
