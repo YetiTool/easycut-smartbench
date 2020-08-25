@@ -102,7 +102,7 @@ class FeedOverride(Widget):
         self.sm=kwargs['screen_manager']
 
     def update_feed_rate_label(self):
-        self.feed_absolute.text = str(self.m.feed_rate()) + 'mm/min'
+        self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 5
