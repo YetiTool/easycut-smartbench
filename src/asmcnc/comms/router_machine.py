@@ -45,6 +45,7 @@ class RouterMachine(object):
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
+
     is_check_mode_enabled = False    
 
     is_machine_paused = False
@@ -402,22 +403,16 @@ class RouterMachine(object):
 
 
     def enable_check_mode(self):
-        if not self.state().startswith('Check'):
+        if not self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode ON')
-            self.is_check_mode_enabled = True
         else:
-            print 'Check mode already enabled'
-            self.is_check_mode_enabled = True           
+            print 'Check mode already enabled'        
 
     def disable_check_mode(self):
-        if self.state().startswith('Check') \
-            or (self.state().startswith('Alarm') and self.is_check_mode_enabled == True) \
-            or (self.state().startswith('Error') and self.is_check_mode_enabled == True): 
+        if self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
-            self.is_check_mode_enabled = False
         else:
             print 'Check mode already disabled'
-            self.is_check_mode_enabled = False 
 
     def get_switch_states(self):
         
