@@ -79,7 +79,7 @@ Builder.load_string("""
             
         Label:
             id: feed_absolute
-            size_hint_y: 0.2
+            size_hint_y: 0.22
             text: '0'
             font_size: '16px' 
             valign: 'middle'
