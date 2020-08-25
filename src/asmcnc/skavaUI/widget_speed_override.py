@@ -86,7 +86,7 @@ Builder.load_string("""
             size:self.texture_size
             text_size: self.size
             opacity: 1
-            color = [0,0,0,1]
+            color: [0,0,0,1]
         
          
         
