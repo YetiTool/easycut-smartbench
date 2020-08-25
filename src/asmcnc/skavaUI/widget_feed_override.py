@@ -94,17 +94,17 @@ class FeedOverride(Widget):
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.m.feed_rate())
         self.m.feed_override_up_5(final_percentage=self.feed_override_percentage)
         
     def feed_norm(self):
         self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.m.feed_rate())
         self.m.feed_override_reset()
                 
     def feed_down(self):
         if self.feed_override_percentage > 10: self.feed_override_percentage -= 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.m.feed_rate())
         self.m.feed_override_down_5(final_percentage=self.feed_override_percentage)        
 
 
