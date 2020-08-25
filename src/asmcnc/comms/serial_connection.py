@@ -328,9 +328,6 @@ class SerialConnection(object):
     def initialise_job(self):
             
         if not self.m.is_check_mode_enabled:
-            # Move head out of the way before moving to the job datum in XY.
-# >>>>>>> revert-196-vac_fix
-            # self.m.prepare_machine() #PROBLEM
             self.m.set_led_colour('GREEN')
             self.m.zUp()
   
@@ -407,10 +404,6 @@ class SerialConnection(object):
 
         if not self.m.is_check_mode_enabled:
 
-# >>>>>>> revert-196-vac_fix           
-            # move head up and turn vac off
-            # self.m.post_cut_sequence() #PROBLEM
-
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
@@ -453,17 +446,13 @@ class SerialConnection(object):
         self._reset_counters()
 
         if not self.m.is_check_mode_enabled:
-            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
             
             # Flush
             self.FLUSH_FLAG = True
      
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
-            # self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
-            # self.sm.current = 'spindle_cooldown'
-            
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)            
 
         else:
             self.m.disable_check_mode()
@@ -504,6 +493,10 @@ class SerialConnection(object):
     g28_x = '0.0'
     g28_y = '0.0'
     g28_z = '0.0'
+
+    # Feeds and speeds
+    spindle_speed = '0.0'
+    feed_rate = '0.0'
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -688,6 +681,11 @@ class SerialConnection(object):
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
 
+                elif part.startswith('FS:'):
+                    feed_speed = part[3:].split(',')
+                    self.feed_rate = feed_speed[0]
+                    self.spindle_speed = feed_speed[1]
+
                 else:
                     continue
 
@@ -772,6 +770,7 @@ class SerialConnection(object):
 
         # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:],
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
+
         elif message.startswith('['):
                       
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
@@ -809,6 +808,12 @@ class SerialConnection(object):
             elif stripped_message.startswith('ASM CNC'):
                 self.fw_version = stripped_message.split(':')[1]
                 log('FW version: ' + str(self.fw_version))
+
+            elif stripped_message.startswith('MSG:Enabled'):
+                self.m.is_check_mode_enabled = True
+
+            elif stripped_message.startswith('MSG:Disabled'):
+                self.m.is_check_mode_enabled = False
 
 
     def check_for_sustained_max_overload(self, dt):

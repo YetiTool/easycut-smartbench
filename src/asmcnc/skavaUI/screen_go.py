@@ -369,6 +369,7 @@ class GoScreen(Screen):
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
+    loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
 
 
@@ -413,6 +414,7 @@ class GoScreen(Screen):
             self.spindle_overload_container.opacity = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
+        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
 
         if self.is_job_started_already: 
             pass
@@ -445,7 +447,7 @@ class GoScreen(Screen):
         self.m.set_led_colour('GREEN')
         
         self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
+        self.speedOverride.speed_norm()
 
 
 ### GENERAL ACTIONS
@@ -536,6 +538,7 @@ class GoScreen(Screen):
     def on_leave(self, *args):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+        if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
             
 ### SCREEN UPDATES
@@ -567,7 +570,13 @@ class GoScreen(Screen):
         
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
-            
+    
+    def poll_for_feeds_and_speeds(self, dt):
+        # Spindle speed and feed rate
+
+        self.speedOverride.update_spindle_speed_label()
+        self.feedOverride.update_feed_rate_label()
+
 
     # Called from serial_connection if change in state seen
     def update_overload_label(self, state):
