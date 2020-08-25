@@ -75,14 +75,14 @@ Builder.load_string("""
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
-        # Label:
-        #     id: spindle_rpm
-        #     text: 'speed'
-        #     font_size: '16px' 
-        #     valign: 'middle'
-        #     halign: 'center'
-        #     size:self.texture_size
-        #     text_size: self.size            
+        Label:
+            id: spindle_rpm
+            text: 'speed'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size            
         
          
         
@@ -99,19 +99,22 @@ class SpeedOverride(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']     
 
+    def update_spindle_speed_label(self):
+        self.spindle_rpm.text = str(self.m.spindle_speed())
+
     def speed_up(self):
         if self.speed_override_percentage < 200: self.speed_override_percentage += 5
-        self.speed_rate_label.text = str(self.m.spindle_speed())
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
         
     def speed_norm(self):
         self.speed_override_percentage = 100
-        self.speed_rate_label.text = str(self.m.spindle_speed())
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
                 
     def speed_down(self):
         if self.speed_override_percentage > 10: self.speed_override_percentage -= 5
-        self.speed_rate_label.text = str(self.m.spindle_speed())
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
 
 

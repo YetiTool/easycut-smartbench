@@ -482,7 +482,6 @@ class RouterMachine(object):
     def feed_rate(self): return int(self.s.feed_rate)
     def spindle_speed(self): return int(self.s.spindle_speed)
 
-
 # POSITIONAL SETTERS
 
     def set_workzone_to_pos_xy(self):
