@@ -560,6 +560,7 @@ class GoScreen(Screen):
         # Spindle speed and feed rate
 
         self.speedOverride.update_spindle_speed_label()
+        self.feedOverride.update_feed_rate_label()
 
 
     # Called from serial_connection if change in state seen

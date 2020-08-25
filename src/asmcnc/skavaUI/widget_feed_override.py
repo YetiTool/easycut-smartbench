@@ -18,6 +18,7 @@ Builder.load_string("""
 <FeedOverride>
 
     feed_rate_label:feed_rate_label
+    feed_absolute:feed_absolute
 
     BoxLayout:
         size: self.parent.size
@@ -76,7 +77,16 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
             
-        
+        Label:
+            id: feed_absolute
+            size_hiny_y: 0.1
+            text: '0'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]       
          
         
 """)
@@ -90,7 +100,10 @@ class FeedOverride(Widget):
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']     
+        self.sm=kwargs['screen_manager']
+
+    def update_feed_rate_label(self):
+        self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 5
