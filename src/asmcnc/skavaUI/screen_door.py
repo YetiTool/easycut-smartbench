@@ -244,7 +244,7 @@ class DoorScreen(Screen):
     
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        # self.m=kwargs['machine']
+        self.m=kwargs['machine']
 
         # # Text
         # self.door_label.font_size =  '19sp'
