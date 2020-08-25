@@ -18,6 +18,7 @@ Builder.load_string("""
 <SpeedOverride>
 
     speed_rate_label:speed_rate_label
+    spindle_rpm:spindle_rpm
 
     BoxLayout:
         size: self.parent.size
