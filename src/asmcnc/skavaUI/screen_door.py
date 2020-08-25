@@ -280,21 +280,16 @@ class DoorScreen(Screen):
         self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
-        # if not str(self.m.state()).startswith('Door:3'):
+        if str(self.m.state()) == 'Door:0':
 
-        print 'HELLO'
-        print str(self.m.state())
+            Clock.unschedule(self.poll_for_resume)
 
-        self.anim_spindle_label.text = str(self.m.state())
+            self.anim_spindle_label.stop(self.spindle_raise_label)
+            self.anim_countdown_img.stop(self.countdown_image)
+            self.anim_spindle_label_end.start(self.spindle_raise_label)
+            self.anim_countdown_img_end.start(self.countdown_image)
 
-        # Clock.unschedule(self.poll_for_resume)
-
-        self.anim_spindle_label.stop(self.spindle_raise_label)
-        self.anim_countdown_img.stop(self.countdown_image)
-        self.anim_spindle_label_end.start(self.spindle_raise_label)
-        self.anim_countdown_img_end.start(self.countdown_image)
-
-        self.start_x_beam_animation(1.5)
+            self.start_x_beam_animation(1.5)
 
             
     def resume_stream(self):
