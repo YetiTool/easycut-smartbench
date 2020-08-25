@@ -503,16 +503,17 @@ class GoScreen(Screen):
         # if "M2" in modified_job_gcode: modified_job_gcode.remove("M2")
         # if "S0" in modified_job_gcode: modified_job_gcode.remove("S0")
 
-        def filterGcodes(line):
+        def mapGcodes(line):
+            culprits = ['M30', 'M2']
 
-            culprits = ['M30', 'M2', 'S0']
-
+            if 'S0' in line:
+                line.replace('S0','')
             if line in culprits:
-                return False
-            else:
-                return True
+                line = ''
 
-        modified_job_gcode = filter(filterGcodes, modified_job_gcode)
+            return line
+
+        modified_job_gcode = map(mapGcodes, modified_job_gcode)
 
 
         try:
