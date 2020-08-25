@@ -800,10 +800,10 @@ class SerialConnection(object):
                 self.fw_version = stripped_message.split(':')[1]
                 log('FW version: ' + str(self.fw_version))
 
-            elif stripped_message.startswith('MSG:Enabled')
+            elif stripped_message.startswith('MSG:Enabled'):
                 self.m.is_check_mode_enabled = True
 
-            elif stripped_message.startswith('MSG:Disabled')
+            elif stripped_message.startswith('MSG:Disabled'):
                 self.m.is_check_mode_enabled = False
 
 
