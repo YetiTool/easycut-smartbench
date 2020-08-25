@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_door_test
+from asmcnc.skavaUI import screen_door_test_2
 
 
 class ScreenTest(App):
@@ -21,7 +21,7 @@ class ScreenTest(App):
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
-		door_test_screen = screen_door_test.DoorScreen(name = 'door', screen_manager = sm)
+		door_test_screen = screen_door_test_2.DoorScreen(name = 'door', screen_manager = sm)
 		sm.add_widget(door_test_screen)
 		sm.current = 'door'
 		return sm
