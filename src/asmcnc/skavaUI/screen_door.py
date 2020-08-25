@@ -228,10 +228,6 @@ class DoorScreen(Screen):
     # poll_for_success = None
     # quit_home = False
     
-        # # Text
-        # self.door_label.font_size =  '19sp'
-        # self.door_text = '[color=000000]Pressing [b]Resume[/b] will cause the machine to continue it\'s normal operation. ' \
-        #                 +'Pressing [b]Cancel[/b] will cancel the current operation completely. [/color]'
     
     return_to_screen = 'home'
     cancel_to_screen = 'home'
@@ -258,7 +254,7 @@ class DoorScreen(Screen):
         self.anim_countdown_img.repeat = True
         self.anim_stop_bar = Animation(x = 153, duration = 0.5) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 2) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
         # self.anim_stop_bar.repeat = True
-        self.anim_stop_img = Animation(opacity = 0, duration = 0.5) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.4) + Animation(opacity = 0, duration = 1) + Animation(opacity = 0, duration = 3)
+        self.anim_stop_img = Animation(opacity = 0, duration = 0.5) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.4) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
         # self.anim_stop_img.repeat = True
 
         self.anim_spindle_label_end = Animation(opacity = 0, duration = 1.5)
@@ -269,7 +265,7 @@ class DoorScreen(Screen):
         self.start_x_beam_animation(0)
         Clock.schedule_once(self.start_spindle_label_animation, 2.4)
 
-        self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.5)
+        self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
 
     def on_pre_leave(self):
         self.anim_stop_bar.repeat = False
@@ -301,7 +297,7 @@ class DoorScreen(Screen):
             self.anim_spindle_label_end.start(self.spindle_raise_label)
             self.anim_countdown_img_end.start(self.countdown_image)
 
-            self.spindle_raise_label.text = 'Ready to resume'
+            self.spindle_raise_label.text = '...ready to resume'
 
             self.start_x_beam_animation(1.5)
 
