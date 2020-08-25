@@ -46,7 +46,7 @@ Builder.load_string("""
         size_hint: (None, None)
         height: dp(350)
         width: dp(496)
-        pos: (dp(140), dp(80))
+        pos: (dp(148), dp(80))
         Image:
             id: x_beam
             source: "./asmcnc/skavaUI/img/door_x_beam.png"
@@ -256,9 +256,9 @@ class DoorScreen(Screen):
         self.anim_spindle_label.repeat = True
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
         self.anim_countdown_img.repeat = True
-        self.anim_stop_bar = Animation(x = 153, duration = 1) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 2) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
+        self.anim_stop_bar = Animation(x = 153, duration = 0.5) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 2) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
         # self.anim_stop_bar.repeat = True
-        self.anim_stop_img = Animation(opacity = 0, duration = 1) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.4) + Animation(opacity = 0, duration = 1) + Animation(opacity = 0, duration = 3)
+        self.anim_stop_img = Animation(opacity = 0, duration = 0.5) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.4) + Animation(opacity = 0, duration = 1) + Animation(opacity = 0, duration = 3)
         # self.anim_stop_img.repeat = True
 
         self.anim_spindle_label_end = Animation(opacity = 0, duration = 1.5)
@@ -280,7 +280,7 @@ class DoorScreen(Screen):
         self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self, dt):
-        if str(self.m.state()) == 'Door:3':
+        if str(self.m.state()) != 'Door:3':
             Clock.unschedule(self.poll_for_resume)
 
             self.anim_spindle_label.stop(self.spindle_raise_label)
