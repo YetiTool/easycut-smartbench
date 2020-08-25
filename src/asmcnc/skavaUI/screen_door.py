@@ -146,7 +146,7 @@ Builder.load_string("""
                     id: spindle_raise_label
                     size_hint: (None, None)
                     font_size: '24sp'
-                    text: 'Spindle is being raised, please wait...'
+                    text: 'Getting ready to resume...'
                     color: [0,0,0,1]
                     markup: True
                     halign: 'center'
@@ -271,6 +271,10 @@ class DoorScreen(Screen):
 
         self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.5)
 
+    def on_pre_leave(self):
+        self.anim_stop_bar.repeat = False
+        self.anim_stop_img.repeat = False       
+
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
         self.anim_stop_img.start(self.stop_img)
@@ -287,15 +291,17 @@ class DoorScreen(Screen):
 
         print(str(self.m.state()))
 
-        if str(self.m.state()) == 'Door:0':
+        if str(self.m.state()).startswith('Door:0'):
 
             Clock.unschedule(self.poll_for_resume)
             self.anim_spindle_label.repeat = False
             self.anim_countdown_img.repeat = False
-            self.anim_spindle_label.stop(self.spindle_raise_label)
-            self.anim_countdown_img.stop(self.countdown_image)
+            self.anim_spindle_label.cancel(self.spindle_raise_label)
+            self.anim_countdown_img.cancel(self.countdown_image)
             self.anim_spindle_label_end.start(self.spindle_raise_label)
             self.anim_countdown_img_end.start(self.countdown_image)
+
+            self.spindle_raise_label.text = 'Ready to resume'
 
             self.start_x_beam_animation(1.5)
 
