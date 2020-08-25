@@ -244,7 +244,7 @@ class DoorScreen(Screen):
     
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
+        # self.m=kwargs['machine']
 
         # # Text
         # self.door_label.font_size =  '19sp'
@@ -269,7 +269,7 @@ class DoorScreen(Screen):
         self.start_x_beam_animation(0)
         Clock.schedule_once(self.start_spindle_label_animation, 2.4)
 
-        self.poll_for_resume = Clock.schedule_interval(self.check_spindle_has_raised, 0.5)
+        self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.5)
 
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
@@ -279,11 +279,15 @@ class DoorScreen(Screen):
         self.anim_spindle_label.start(self.spindle_raise_label)
         self.anim_countdown_img.start(self.countdown_image)
 
-    def check_spindle_has_raised(self, dt):
+    def check_spindle_has_raised(self):
         # if not str(self.m.state()).startswith('Door:3'):
+
+        print 'HELLO'
+        print str(self.m.state())
+
         self.anim_spindle_label.text = str(self.m.state())
 
-        Clock.unschedule(self.poll_for_resume)
+        # Clock.unschedule(self.poll_for_resume)
 
         self.anim_spindle_label.stop(self.spindle_raise_label)
         self.anim_countdown_img.stop(self.countdown_image)
