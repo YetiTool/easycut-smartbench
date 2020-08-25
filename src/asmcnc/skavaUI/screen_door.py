@@ -33,6 +33,8 @@ Builder.load_string("""
     spindle_raise_label: spindle_raise_label
     x_beam: x_beam
     stop_img: stop_img
+    resume_button: resume_button
+    cancel_button: cancel_button
 
 
     canvas:
@@ -185,9 +187,11 @@ Builder.load_string("""
             #         pos: self.pos           
 
             Button:
+                id: cancel_button
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.cancel_stream()
+                disabled: True
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -196,9 +200,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                id: resume_button
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.resume_stream()
+                disabled: True
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -273,6 +279,7 @@ class DoorScreen(Screen):
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
+        if self.
         self.anim_stop_bar.repeat = False
         self.anim_stop_img.repeat = False       
 
@@ -303,6 +310,8 @@ class DoorScreen(Screen):
 
 
     def ready_to_resume(self): 
+        self.resume_button.disabled = False
+        self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
         self.spindle_raise_label.text = '...ready to resume'
