@@ -146,16 +146,16 @@ Builder.load_string("""
                     id: spindle_raise_label
                     size_hint: (None, None)
                     font_size: '24sp'
-                    text: 'Getting ready to resume...'
+                    text: 'Preparing to resume, please wait...'
                     color: [0,0,0,1]
                     markup: True
                     halign: 'center'
                     valign: 'middle'
                     height: dp(50)
-                    width: dp(700)
+                    width: dp(720)
                     text_size: self.size
                     size: self.parent.size
-                    x: self.parent.x + 100
+                    x: self.parent.x + 80
                     y: self.parent.y
                     opacity: 0
 
@@ -252,9 +252,9 @@ class DoorScreen(Screen):
         self.anim_spindle_label.repeat = True
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
         self.anim_countdown_img.repeat = True
-        self.anim_stop_bar = Animation(x = 153, duration = 0.5) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 1.6) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
+        self.anim_stop_bar = Animation(x = 150, duration = 0.3) + Animation(x = 153, duration = 0.2) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 1.6) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
         # self.anim_stop_bar.repeat = True
-        self.anim_stop_img = Animation(opacity = 1, duration = 0.5) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
+        self.anim_stop_img = Animation(opacity = 0, duration = 0.3) +Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
         # self.anim_stop_img.repeat = True
 
         self.anim_spindle_label_end = Animation(opacity = 0, duration = 1.5)
