@@ -280,6 +280,9 @@ class DoorScreen(Screen):
         self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
+
+        print(str(self.m.state()))
+
         if str(self.m.state()) == 'Door:0':
 
             Clock.unschedule(self.poll_for_resume)
