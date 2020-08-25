@@ -556,7 +556,7 @@ class GoScreen(Screen):
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
     
-    def poll_for_feeds_and_speeds(self):
+    def poll_for_feeds_and_speeds(self, dt):
         # Spindle speed and feed rate
 
         self.speedOverride.update_spindle_speed_label()

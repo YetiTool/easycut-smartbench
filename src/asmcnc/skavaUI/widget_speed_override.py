@@ -77,12 +77,13 @@ Builder.load_string("""
                     allow_stretch: True  
         Label:
             id: spindle_rpm
-            text: 'speed'
+            text: [color=808080]0 RPM[/color]
             font_size: '16px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
-            text_size: self.size            
+            text_size: self.size
+            color:         
         
          
         
@@ -100,7 +101,7 @@ class SpeedOverride(Widget):
         self.sm=kwargs['screen_manager']     
 
     def update_spindle_speed_label(self):
-        self.spindle_rpm.text = str(self.m.spindle_speed())
+        self.spindle_rpm.text = '[color=808080]' + str(self.m.spindle_speed()) + ' RPM'+ '[/color]'
 
     def speed_up(self):
         if self.speed_override_percentage < 200: self.speed_override_percentage += 5
