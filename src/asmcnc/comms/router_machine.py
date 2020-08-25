@@ -403,13 +403,13 @@ class RouterMachine(object):
 
 
     def enable_check_mode(self):
-        if not self.m.is_check_mode_enabled:
+        if not self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode ON')
         else:
             print 'Check mode already enabled'        
 
     def disable_check_mode(self):
-        if self.m.is_check_mode_enabled:
+        if self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
         else:
             print 'Check mode already disabled'
