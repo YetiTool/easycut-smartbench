@@ -445,7 +445,7 @@ class GoScreen(Screen):
         self.m.set_led_colour('GREEN')
         
         self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
+        self.speedOverride.speed_norm()
 
 
 ### GENERAL ACTIONS
