@@ -726,7 +726,8 @@ class RouterMachine(object):
             self.led_colour_status = colour_name 
     
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
             elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
