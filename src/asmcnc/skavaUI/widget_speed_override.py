@@ -78,13 +78,14 @@ Builder.load_string("""
                     allow_stretch: True  
         Label:
             id: spindle_rpm
+            size_hiny_y: 0.2
             text: '[color=808080]0 RPM[/color]'
             font_size: '16px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
             text_size: self.size
-            color:         
+            opacity: 1       
         
          
         
