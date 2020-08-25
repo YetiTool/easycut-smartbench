@@ -78,7 +78,7 @@ Builder.load_string("""
                     allow_stretch: True  
         Label:
             id: spindle_rpm
-            size_hint_y: 0.1
+            size_hint_y: 0.
             text: '0 RPM'
             font_size: '16px' 
             valign: 'middle'
