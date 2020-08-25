@@ -87,7 +87,15 @@ Builder.load_string("""
             size:self.texture_size
             text_size: self.size
             color: [0,0,0,0.5]
-        
+        Label:
+            size_hint_y: 0.15
+            text: 'mm/min'
+            font_size: '12px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]      
 """)
     
 

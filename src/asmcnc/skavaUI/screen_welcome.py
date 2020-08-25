@@ -104,7 +104,7 @@ class WelcomeScreenClass(Screen):
 
 
         # SW Update available?
-        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta'):
+        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
             update_message = "New software update available for download!\n\n" + \
             "Please use the [b]Update[/b] app to get the latest version."
 
