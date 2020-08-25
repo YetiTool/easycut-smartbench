@@ -18,6 +18,7 @@ Builder.load_string("""
 <FeedOverride>
 
     feed_rate_label:feed_rate_label
+    feed_absolute:feed_absolute
 
     BoxLayout:
         size: self.parent.size
@@ -76,8 +77,16 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
             
-        
-         
+        Label:
+            id: feed_absolute
+            size_hint_y: 0.22
+            text: '0'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]
         
 """)
     
@@ -90,21 +99,24 @@ class FeedOverride(Widget):
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']     
+        self.sm=kwargs['screen_manager']
+
+    def update_feed_rate_label(self):
+        self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
         if self.feed_override_percentage < 200: self.feed_override_percentage += 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_up_5(final_percentage=self.feed_override_percentage)
         
     def feed_norm(self):
         self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
                 
     def feed_down(self):
         if self.feed_override_percentage > 10: self.feed_override_percentage -= 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_down_5(final_percentage=self.feed_override_percentage)        
 
 

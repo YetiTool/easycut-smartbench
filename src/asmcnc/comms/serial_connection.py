@@ -494,6 +494,10 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # Feeds and speeds
+    spindle_speed = '0.0'
+    feed_rate = '0.0'
+
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
     limit_X = False # convention: MAX is UPPER_CASE
@@ -676,6 +680,11 @@ class SerialConnection(object):
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+
+                elif part.startswith('FS:'):
+                    feed_speed = part[3:].split(',')
+                    self.feed_rate = feed_speed[0]
+                    self.spindle_speed = feed_speed[1]
 
                 else:
                     continue

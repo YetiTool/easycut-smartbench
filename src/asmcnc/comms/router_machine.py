@@ -478,6 +478,9 @@ class RouterMachine(object):
     def g28_y(self): return float(self.s.g28_y)
     def g28_z(self): return float(self.s.g28_z)
 
+# SPEED AND FEED GETTERS
+    def feed_rate(self): return int(self.s.feed_rate)
+    def spindle_speed(self): return int(self.s.spindle_speed)
 
 # POSITIONAL SETTERS
 
