@@ -262,10 +262,13 @@ class DoorScreen(Screen):
 
     def on_enter(self):
 
-        self.start_x_beam_animation(0)
-        Clock.schedule_once(self.start_spindle_label_animation, 2.4)
+        if not str(self.m.state()).startswith('Door:0'):
+            Clock.schedule_once(self.start_spindle_label_animation, 2.4)
+            self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
 
-        self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
+        else: self.ready_to_resume()
+
+        self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
         self.anim_stop_bar.repeat = False
@@ -274,10 +277,6 @@ class DoorScreen(Screen):
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
         self.anim_stop_img.start(self.stop_img)
-
-        if dt > 0:
-            self.anim_stop_bar.repeat = True
-            self.anim_stop_img.repeat = True
 
     def start_spindle_label_animation(self, dt):
         self.anim_spindle_label.start(self.spindle_raise_label)
@@ -297,11 +296,14 @@ class DoorScreen(Screen):
             self.anim_spindle_label_end.start(self.spindle_raise_label)
             self.anim_countdown_img_end.start(self.countdown_image)
 
-            self.spindle_raise_label.text = '...ready to resume'
-
+            self.ready_to_resume()
             self.start_x_beam_animation(1.5)
 
-            
+    def ready_to_resume(self): 
+        self.anim_stop_bar.repeat = True
+        self.anim_stop_img.repeat = True
+        self.spindle_raise_label.text = '...ready to resume'
+
     def resume_stream(self):
         self.m.resume_after_a_hard_door()    
         self.return_to_app()
