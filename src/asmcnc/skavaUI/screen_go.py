@@ -509,7 +509,7 @@ class GoScreen(Screen):
             culprits = ['M30', 'M2']
 
             if 'S0' in line:
-                line.replace('S0','')
+                line = line.replace('S0','')
             if line in culprits:
                 line = ''
 
