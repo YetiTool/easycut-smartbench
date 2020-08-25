@@ -85,8 +85,8 @@ Builder.load_string("""
             halign: 'center'
             size:self.texture_size
             text_size: self.size
-            opacity: 1
-            color: [128/255,128/255,128/255,1]
+            opacity: 0.5
+            color: [0,0,0,0.5
         
          
         
