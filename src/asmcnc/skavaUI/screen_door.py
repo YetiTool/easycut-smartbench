@@ -249,9 +249,9 @@ class DoorScreen(Screen):
 
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
-        self.anim_spindle_label.repeat = True
+        # self.anim_spindle_label.repeat = True
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
-        self.anim_countdown_img.repeat = True
+        # self.anim_countdown_img.repeat = True
         self.anim_stop_bar = Animation(x = 150, duration = 0.3) + Animation(x = 153, duration = 0.2) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 1.6) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
         # self.anim_stop_bar.repeat = True
         self.anim_stop_img = Animation(opacity = 0, duration = 0.3) +Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
@@ -263,6 +263,8 @@ class DoorScreen(Screen):
     def on_enter(self):
 
         if not str(self.m.state()).startswith('Door:0'):
+            self.anim_countdown_img.repeat = True
+            self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 2.4)
             self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
 
@@ -298,6 +300,7 @@ class DoorScreen(Screen):
 
             self.ready_to_resume()
             self.start_x_beam_animation(1.5)
+
 
     def ready_to_resume(self): 
         self.anim_stop_bar.repeat = True
