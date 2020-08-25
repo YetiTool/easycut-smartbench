@@ -494,6 +494,10 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # Feeds and speeds
+    spindle_speed = '0.0'
+    feed_rate = '0.0'
+
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
     limit_X = False # convention: MAX is UPPER_CASE
