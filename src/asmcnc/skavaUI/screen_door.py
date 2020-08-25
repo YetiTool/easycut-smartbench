@@ -231,7 +231,7 @@ class DoorScreen(Screen):
     # right_button_label = ObjectProperty()
     # left_button_label = ObjectProperty()   
     
-    # poll_for_success = None
+    poll_for_resume = None
     # quit_home = False
     
     
@@ -279,7 +279,7 @@ class DoorScreen(Screen):
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
-        if self.
+        if self.poll_for_resume != None: Clock.unschedule(self.poll_for_resume)
         self.anim_stop_bar.repeat = False
         self.anim_stop_img.repeat = False       
 
