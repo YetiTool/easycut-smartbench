@@ -25,6 +25,10 @@ Builder.load_string("""
 
 <SpindleSettingsWidget>
 
+    spindle_brand: spindle_brand
+    spindle_cooldown_speed: spindle_cooldown_speed
+    spindle_cooldown_time: spindle_cooldown_time
+    
     GridLayout:
         cols: 2
         rows: 3
@@ -35,18 +39,60 @@ Builder.load_string("""
         rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
         spacing: [dp(20), dp(17.5)]
 
+        # # ROW 1
+
+        # BoxLayout: 
+        #     size_hint: (None, None)
+        #     # pos: self.parent.pos
+        #     height: dp(70) # 62 high image
+        #     width: dp(160)
+        #     padding: [dp(51), 4, dp(51), 4] # 15 padding
+
+        #     Image:
+        #         id: spindle_image
+        #         source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
+        #         center_x: self.parent.center_x
+        #         y: self.parent.y
+        #         size: self.parent.width, self.parent.height
+        #         allow_stretch: True
+
+        # BoxLayout: 
+        #     size_hint: (None, None)
+        #     # pos: self.parent.pos
+        #     height: dp(70)
+        #     width: dp(300)
+        #     padding: [dp(0), dp(5), dp(20), dp(5)]
+        #     Spinner:
+        #         id: spindle_brand
+        #         halign: 'left'
+        #         valign: 'middle'
+        #         markup: True
+        #         size_hint: (None, None)
+        #         size: 280, 60
+        #         text: 'spinner'
+        #         font_size: '30sp'
+        #         text_size: self.size
+        #         multiline: False
+        #         color: 0,0,0,1
+        #         values: root.brand_list
+        #         option_cls: Factory.get("SpindleSpinner")
+        #         background_normal: ''
+        #         background_color: [1,1,1,0]
+
+
+
         # ROW 1
 
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70) # 62 high image
+            height: dp(70)
             width: dp(160)
-            padding: [dp(51), 4, dp(51), 4] # 15 padding
+            padding: [dp(48), dp(16), dp(48), dp(16)]
 
             Image:
                 id: spindle_image
-                source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
+                source: "./asmcnc/apps/maintenance_app/img/speed_dial.png"
                 center_x: self.parent.center_x
                 y: self.parent.y
                 size: self.parent.width, self.parent.height
@@ -56,24 +102,29 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(70)
-            width: dp(320)
-            padding: [dp(0), dp(0), dp(20), 0]
-            Spinner:
-                id: spindle_brand
-                halign: 'left'
-                valign: 'middle'
+            width: dp(400)
+            padding: [dp(0), dp(5), dp(20), dp(5)]
+            spacing: dp(10)
+	        TextInput:
+	            id: spindle_cooldown_speed
+	            size_hint: (None, None)
+	            height: dp(60)
+	            width: dp(250)
+                font_size: dp(30)
+                valign: "bottom"
                 markup: True
-                size_hint: (None, None)
-                size: 300, 70
-                text: 'spinner'
-                font_size: '30sp'
-                text_size: self.size
-                multiline: False
+                halign: "left"
+
+            Label:
                 color: 0,0,0,1
-                # values: root.SSID_list
-                option_cls: Factory.get("SpindleSpinner")
-                background_normal: ''
-                background_color: [1,1,1,0]
+                font_size: dp(30)
+                markup: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                text: "RPM"
 
         # ROW 2
 
@@ -96,26 +147,42 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(70)
-            width: dp(320)
-            padding: [dp(0), 0, dp(20), 0]
-	        TextInput:
-	            id: brush_life
-	            size_hint: (None, None)
-	            height: dp(70)
-	            width: dp(300)
+            width: dp(400)
+            padding: [dp(0), dp(5), dp(20), dp(5)]
+            spacing: dp(10)
+            TextInput:
+                id: spindle_cooldown_time
+                size_hint: (None, None)
+                height: dp(60)
+                width: dp(250)
+                font_size: dp(30)
+                valign: "bottom"
+                markup: True
+                halign: "left"
+
+            Label:
+                color: 0,0,0,1
+                font_size: dp(30)
+                markup: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                text: "seconds"
 
         # ROW 3
 
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(70) # 62 high image
             width: dp(160)
-            padding: [dp(48), dp(16), dp(48), dp(16)]
+            padding: [dp(51), 4, dp(51), 4] # 15 padding
 
             Image:
                 id: spindle_image
-                source: "./asmcnc/apps/maintenance_app/img/speed_dial.png"
+                source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
                 center_x: self.parent.center_x
                 y: self.parent.y
                 size: self.parent.width, self.parent.height
@@ -125,23 +192,36 @@ Builder.load_string("""
             size_hint: (None, None)
             # pos: self.parent.pos
             height: dp(70)
-            width: dp(320)
-            padding: [dp(0), 0, dp(20), dp(0)]
-	        TextInput:
-	            id: brush_life
-	            size_hint: (None, None)
-	            height: dp(70)
-	            width: dp(300)
-
-
+            width: dp(400)
+            padding: [dp(0), dp(5), dp(20), dp(5)]
+            Spinner:
+                id: spindle_brand
+                halign: 'left'
+                valign: 'middle'
+                markup: True
+                size_hint: (None, None)
+                size: 380, 60
+                text: 'spinner'
+                font_size: '30sp'
+                text_size: self.size
+                multiline: False
+                color: 0,0,0,1
+                values: root.brand_list
+                option_cls: Factory.get("SpindleSpinner")
+                background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
+                # background_color: [1,1,1,0]
 
 
 """)
 
 class SpindleSettingsWidget(Widget):
 
+    brand_list = [' YETI digital 230V', ' YETI digital 110V', ' YETI manual 230V', ' YETI manual 110V', ' AMB digital 230V', ' AMB manual 230V', ' AMB manual 110V']
+
     def __init__(self, **kwargs):
     
         super(SpindleSettingsWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+
+

@@ -174,39 +174,39 @@ Builder.load_string("""
                         size: self.size
                         pos: self.pos
 
-                BoxLayout:
-                    size_hint: (None,None)
-                    height: dp(80)
-                    width: dp(760)
-                    id: monitor_strip
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(80)
-                        width: dp(760)
-                        padding: [dp(10),dp(5),dp(5),dp(5)]
-                        orientation: 'horizontal'
-                        Label: 
-                            color: 0,0,0,1
-                            font_size: dp(22)
-                            markup: True
-                            halign: "left"
-                            valign: "middle"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            text: "[b]BRUSH MONITOR[/b]"
+                # BoxLayout:
+                #     size_hint: (None,None)
+                #     height: dp(80)
+                #     width: dp(760)
+                #     id: monitor_strip
+                #     canvas:
+                #         Color:
+                #             rgba: 1,1,1,1
+                #         RoundedRectangle:
+                #             size: self.size
+                #             pos: self.pos
+                #     BoxLayout: 
+                #         size_hint: (None, None)
+                #         height: dp(80)
+                #         width: dp(760)
+                #         padding: [dp(10),dp(5),dp(5),dp(5)]
+                #         orientation: 'horizontal'
+                #         Label: 
+                #             color: 0,0,0,1
+                #             font_size: dp(22)
+                #             markup: True
+                #             halign: "left"
+                #             valign: "middle"
+                #             text_size: self.size
+                #             size: self.parent.size
+                #             pos: self.parent.pos
+                #             text: "[b]BRUSH MONITOR[/b]"
 
-                        BoxLayout:
-                            size_hint: (None,None)
-                            height: dp(70)
-                            width: dp(600)
-                            id: brush_monitor_container
+                #         BoxLayout:
+                #             size_hint: (None,None)
+                #             height: dp(70)
+                #             width: dp(600)
+                #             id: brush_monitor_container
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -251,6 +251,40 @@ Builder.load_string("""
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(80)
+                    width: dp(760)
+                    id: monitor_strip
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(80)
+                        width: dp(760)
+                        padding: [dp(10),dp(5),dp(5),dp(5)]
+                        orientation: 'horizontal'
+                        Label: 
+                            color: 0,0,0,1
+                            font_size: dp(22)
+                            markup: True
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            text: "[b]BRUSH MONITOR[/b]"
+
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(70)
+                            width: dp(600)
+                            id: brush_monitor_container
 
         # Spindle cooldown settings
         
@@ -443,7 +477,7 @@ class MaintenanceScreenClass(Screen):
 
         self.laser_switch_widget.toggle_laser()
 
-    # def on_enter(self):
+
         # BRUSHES
         self.brush_use_widget.brush_use.text = str(self.m.spindle_brush_use_seconds/3600)
         self.brush_life_widget.brush_life.text = str(self.m.spindle_brush_lifetime_seconds/3600)
@@ -452,7 +486,12 @@ class MaintenanceScreenClass(Screen):
         self.brush_monitor_widget.set_percentage(value)
 
         # SPINDLE
+        if self.m.spindle_digital: string_digital = 'digital'
+        else: string_digital = 'manual'
 
+        self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
+        self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
+        self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
 
 
     def on_pre_leave(self):
@@ -464,18 +503,3 @@ class MaintenanceScreenClass(Screen):
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         self.m.laser_off()
-
-
-
-
-        # SPINDLE SETTINGS WIDGET
-
-
-
-        # ADD SPINDLE OPTIONS
-
-        # Mafell - digital or manual; each one of those 110 or 230V - 4 variants total.
-
-        # AMB - 100V or 230V manual, 230V digital
-
-        # Maybe Custom option? M/D and 110/230

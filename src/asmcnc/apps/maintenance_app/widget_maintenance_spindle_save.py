@@ -79,7 +79,65 @@ class SpindleSaveWidget(Widget):
         self.m=kwargs['machine']
 
     def get_info(self):
-    	pass
+        popup_info.PopupInfo(self.sm, 500, 'stuff')
 
     def save(self):
-    	pass
+
+        [brand, digital, voltage] = (self.sm.get_screen('maintenance').spindle_settings_widget.spindle_brand.text).split()
+        time = float(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
+        speed = float(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_speed.text)
+
+        voltage = voltage.strip('V')
+
+        print brand
+
+        if digital == 'digital': digital = True
+        elif digital =='manual': digital = False
+        else:
+            popup_info.PopupError(self.sm, 'screaming brand')
+            return            
+
+        if (time >= 10 or time <= 60): pass
+        else:             
+            popup_info.PopupError(self.sm, 'screaming time')
+            return
+
+        if (speed >= 10000 or speed <= 20000): pass
+        else:             
+            popup_info.PopupError(self.sm, 'screaming speed')
+            return
+
+
+        self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed)
+
+        # brands = ['YETI digital 230V', 'YETI digital 110V', 'YETI manual 230V', 'YETI manual 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
+
+
+    # spindle_brand = 'YETI' # String to hold brand name
+    # spindle_voltage = 230 # Options are 230V or 110V
+    # spindle_digital = False #spindle can be manual or digital
+    # spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
+    # spindle_cooldown_rpm = 20000 # YETI value is 20k 
+
+
+# Mafell (YETI) - digital or manual; each one of those 110 or 230V - 4 variants total.
+
+# AMB - 110V or 230V manual, 230V digital
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
