@@ -650,7 +650,7 @@ class RouterMachine(object):
 
     def feed_override_up_5(self, final_percentage=''): 
 
-        if final_percentage = '5': final_percentage = '1'
+        if final_percentage == '5': final_percentage = '1'
 
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
@@ -660,7 +660,7 @@ class RouterMachine(object):
 
     def feed_override_down_5(self, final_percentage=''):
 
-        if final_percentage = '5': final_percentage = '1'
+        if final_percentage == '5': final_percentage = '1'
 
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
@@ -674,7 +674,7 @@ class RouterMachine(object):
 
     def speed_override_up_5(self, final_percentage=''):
 
-        if final_percentage = '5': final_percentage = '1'
+        if final_percentage == '5': final_percentage = '1'
 
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
@@ -684,7 +684,7 @@ class RouterMachine(object):
 
     def speed_override_down_5(self, final_percentage=''):
 
-        if final_percentage = '5': final_percentage = '1'
+        if final_percentage == '5': final_percentage = '1'
 
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
