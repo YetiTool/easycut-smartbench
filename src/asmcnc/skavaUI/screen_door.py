@@ -263,7 +263,7 @@ class DoorScreen(Screen):
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)
             self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
 
-        else: self.ready_to_resume()
+        else: Clock.schedule_once(self.ready_to_resume, 0.2)
 
         self.start_x_beam_animation(0)
 
@@ -297,11 +297,11 @@ class DoorScreen(Screen):
             self.anim_countdown_img.cancel(self.countdown_image)
             self.anim_countdown_img_end.start(self.countdown_image)
 
-            self.ready_to_resume()
+            Clock.schedule_once(self.ready_to_resume, 0.2)
             self.start_x_beam_animation(1.5)
 
 
-    def ready_to_resume(self): 
+    def ready_to_resume(self, dt): 
         self.resume_button.disabled = False
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
