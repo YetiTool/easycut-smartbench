@@ -46,7 +46,7 @@ Builder.load_string("""
 
     FloatLayout:
         size_hint: (None, None)
-        height: dp(350)
+        height: dp(351)
         width: dp(496)
         pos: (dp(148), dp(80))
         Image:
