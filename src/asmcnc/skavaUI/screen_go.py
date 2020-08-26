@@ -369,6 +369,7 @@ class GoScreen(Screen):
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
+    loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
 
 
@@ -413,6 +414,7 @@ class GoScreen(Screen):
             self.spindle_overload_container.opacity = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
+        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
 
         if self.is_job_started_already: 
             pass
@@ -445,7 +447,7 @@ class GoScreen(Screen):
         self.m.set_led_colour('GREEN')
         
         self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
+        self.speedOverride.speed_norm()
 
 
 ### GENERAL ACTIONS
@@ -484,6 +486,7 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
+        # Turn vac on if spindle gets turned on during job
         if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
@@ -497,9 +500,23 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
         
-        # # Remove end of file command for spindle cooldown to operate smoothly
-        if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
-        if "M2" in modified_job_gcode: modified_job_gcode.remove("M2")
+        # # # Remove end of file command for spindle cooldown to operate smoothly
+        # if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
+        # if "M2" in modified_job_gcode: modified_job_gcode.remove("M2")
+        # if "S0" in modified_job_gcode: modified_job_gcode.remove("S0")
+
+        def mapGcodes(line):
+            culprits = ['M30', 'M2']
+
+            if 'S0' in line:
+                line = line.replace('S0','')
+            if line in culprits:
+                line = ''
+
+            return line
+
+        modified_job_gcode = map(mapGcodes, modified_job_gcode)
+
 
         try:
             self.m.s.run_job(modified_job_gcode)
@@ -521,6 +538,7 @@ class GoScreen(Screen):
     def on_leave(self, *args):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+        if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
             
 ### SCREEN UPDATES
@@ -552,7 +570,13 @@ class GoScreen(Screen):
         
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
-            
+    
+    def poll_for_feeds_and_speeds(self, dt):
+        # Spindle speed and feed rate
+
+        self.speedOverride.update_spindle_speed_label()
+        self.feedOverride.update_feed_rate_label()
+
 
     # Called from serial_connection if change in state seen
     def update_overload_label(self, state):

@@ -17,7 +17,8 @@ Builder.load_string("""
 
 <SpeedOverride>
 
-    feed_rate_label:feed_rate_label
+    speed_rate_label:speed_rate_label
+    spindle_rpm:spindle_rpm
 
     BoxLayout:
         size: self.parent.size
@@ -28,7 +29,7 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
-            on_press: root.feed_up()
+            on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 2
@@ -46,7 +47,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
-                on_press: root.feed_norm()
+                on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
@@ -56,13 +57,13 @@ Builder.load_string("""
                 size: self.parent.size
                 allow_stretch: True  
             Label:
-                id: feed_rate_label
+                id: speed_rate_label
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
                 text: "100%"           
         
         Button:
-            on_press: root.feed_down()
+            on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 2
@@ -75,43 +76,54 @@ Builder.load_string("""
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
-        # Label:
-        #     id: spindle_rpm
-        #     text: 'speed'
-        #     font_size: '16px' 
-        #     valign: 'middle'
-        #     halign: 'center'
-        #     size:self.texture_size
-        #     text_size: self.size            
-        
-         
-        
+        Label:
+            id: spindle_rpm
+            size_hint_y: 0.22
+            text: '0'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]
+        Label:
+            size_hint_y: 0.15
+            text: 'RPM'
+            font_size: '12px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]  
 """)
     
 
 class SpeedOverride(Widget):
 
-    feed_override_percentage = NumericProperty()
-    feed_rate_label = ObjectProperty()
+    speed_override_percentage = NumericProperty()
+    speed_rate_label = ObjectProperty()
 
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']     
 
-    def feed_up(self):
-        if self.feed_override_percentage < 200: self.feed_override_percentage += 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_up_10(final_percentage=self.feed_override_percentage)
+    def update_spindle_speed_label(self):
+        self.spindle_rpm.text = str(self.m.spindle_speed())
+
+    def speed_up(self):
+        if self.speed_override_percentage < 200: self.speed_override_percentage += 5
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+        self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
         
-    def feed_norm(self):
-        self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+    def speed_norm(self):
+        self.speed_override_percentage = 100
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
                 
-    def feed_down(self):
-        if self.feed_override_percentage > 10: self.feed_override_percentage -= 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_down_10(final_percentage=self.feed_override_percentage)        
+    def speed_down(self):
+        if self.speed_override_percentage > 10: self.speed_override_percentage -= 5
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+        self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
 
 

@@ -45,6 +45,7 @@ class RouterMachine(object):
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
+
     is_check_mode_enabled = False    
 
     is_machine_paused = False
@@ -424,15 +425,15 @@ class RouterMachine(object):
 
     def resume_from_a_soft_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
    
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
@@ -505,22 +506,16 @@ class RouterMachine(object):
 
 
     def enable_check_mode(self):
-        if not self.state().startswith('Check'):
+        if not self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode ON')
-            self.is_check_mode_enabled = True
         else:
-            print 'Check mode already enabled'
-            self.is_check_mode_enabled = True           
+            print 'Check mode already enabled'        
 
     def disable_check_mode(self):
-        if self.state().startswith('Check') \
-            or (self.state().startswith('Alarm') and self.is_check_mode_enabled == True) \
-            or (self.state().startswith('Error') and self.is_check_mode_enabled == True): 
+        if self.is_check_mode_enabled:
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
-            self.is_check_mode_enabled = False
         else:
             print 'Check mode already disabled'
-            self.is_check_mode_enabled = False 
 
     def get_switch_states(self):
         
@@ -586,6 +581,9 @@ class RouterMachine(object):
     def g28_y(self): return float(self.s.g28_y)
     def g28_z(self): return float(self.s.g28_z)
 
+# SPEED AND FEED GETTERS
+    def feed_rate(self): return int(self.s.feed_rate)
+    def spindle_speed(self): return int(self.s.spindle_speed)
 
 # POSITIONAL SETTERS
 
@@ -602,32 +600,44 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_workzone_to_pos_xy()
+        if self.jog_spindle_to_laser_datum('XY'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(xy_poll_for_success)
+                    self.set_workzone_to_pos_xy()
+
+            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_x_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_x_datum()
+        if self.jog_spindle_to_laser_datum('X'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(x_poll_for_success)
+                    self.set_x_datum()
+
+            x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_y_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_y_datum()
+        if self.jog_spindle_to_laser_datum('Y'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(y_poll_for_success)
+                    self.set_y_datum()
+
+            y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+
 
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
@@ -715,28 +725,46 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
 
-    def jog_spindle_to_laser_datum(self):
-        self.jog_relative('X', self.laser_offset_x_value, 6000.0)
-        self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+    def jog_spindle_to_laser_datum(self, axis):
+
+        if axis == 'X' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+            and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+
+                self.jog_relative('X', self.laser_offset_x_value, 6000.0)
+
+            else: return False
+
+        if axis == 'Y' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_y() + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+            and self.mpos_y() + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+
+                self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+
+            else: return False
+
+        return True
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
-    def feed_override_up_10(self, final_percentage=''):
+    def feed_override_up_5(self, final_percentage=''):
         self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
 
-    def feed_override_down_10(self, final_percentage=''):
+    def feed_override_down_5(self, final_percentage=''):
         self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     # Realtime spindle speed adjustment
     def speed_override_reset(self):
         self.s.write_realtime('\x99', altDisplayText = 'Speed override RESET')
 
-    def speed_override_up_10(self, final_percentage=''):
+    def speed_override_up_5(self, final_percentage=''):
         self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
 
-    def speed_override_down_10(self, final_percentage=''):
+    def speed_override_down_5(self, final_percentage=''):
         self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
 
@@ -799,7 +827,8 @@ class RouterMachine(object):
             self.led_colour_status = colour_name 
     
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
             elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
