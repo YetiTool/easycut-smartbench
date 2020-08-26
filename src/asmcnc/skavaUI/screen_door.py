@@ -307,7 +307,6 @@ class DoorScreen(Screen):
             self.anim_countdown_img.repeat = False
             self.anim_spindle_label.cancel(self.spindle_raise_label)
             self.anim_countdown_img.cancel(self.countdown_image)
-            self.anim_spindle_label_end.start(self.spindle_raise_label)
             self.anim_countdown_img_end.start(self.countdown_image)
 
             self.ready_to_resume()
