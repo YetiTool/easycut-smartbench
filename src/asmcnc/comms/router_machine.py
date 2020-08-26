@@ -649,9 +649,6 @@ class RouterMachine(object):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
     def feed_override_up_5(self, final_percentage=''): 
-
-        if final_percentage == '5': final_percentage = '1'
-
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
@@ -659,9 +656,6 @@ class RouterMachine(object):
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
 
     def feed_override_down_5(self, final_percentage=''):
-
-        if final_percentage == '5': final_percentage = '1'
-
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
@@ -673,9 +667,6 @@ class RouterMachine(object):
         self.s.write_realtime('\x99', altDisplayText = 'Speed override RESET')
 
     def speed_override_up_5(self, final_percentage=''):
-
-        if final_percentage == '5': final_percentage = '1'
-
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
@@ -683,9 +674,6 @@ class RouterMachine(object):
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
 
     def speed_override_down_5(self, final_percentage=''):
-
-        if final_percentage == '5': final_percentage = '1'
-
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
