@@ -263,8 +263,8 @@ class DoorScreen(Screen):
         self.anim_stop_img = Animation(opacity = 0, duration = 0.3) +Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
         # self.anim_stop_img.repeat = True
 
-        self.anim_spindle_label_end = Animation(opacity = 0, duration = 1.5)
-        self.anim_countdown_img_end = Animation(opacity = 0, duration = 1.5)
+        self.anim_spindle_label_end = Animation(opacity = 0, duration = 0.5)
+        self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
 
     def on_enter(self):
 
@@ -320,6 +320,7 @@ class DoorScreen(Screen):
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
         self.spindle_raise_label.text = '...ready to resume'
+        self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):
         self.m.resume_after_a_hard_door()    
