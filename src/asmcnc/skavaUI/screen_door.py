@@ -219,21 +219,9 @@ Builder.load_string("""
 # This screen only gets activated when the PHYSICAL door pin is activated. Firmware automatically flicks to door state.
 
 class DoorScreen(Screen):
-    
-    # dev_win_dt = 2
-    
-    # door_label = ObjectProperty()
-    # door_text = StringProperty()
 
-    # right_button = ObjectProperty()
-    # left_button = ObjectProperty()
     
-    # right_button_label = ObjectProperty()
-    # left_button_label = ObjectProperty()   
-    
-    poll_for_resume = None
-    # quit_home = False
-    
+    poll_for_resume = None  
     
     return_to_screen = 'home'
     cancel_to_screen = 'home'
@@ -255,16 +243,16 @@ class DoorScreen(Screen):
 
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
-        # self.anim_spindle_label.repeat = True
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
-        # self.anim_countdown_img.repeat = True
         self.anim_stop_bar = Animation(x = 150, duration = 0.3) + Animation(x = 153, duration = 0.2) + Animation(x = 151, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 0.2) + Animation(x = 152, duration = 1.6) + Animation(x = 140, duration = 2) + Animation(x = 140, duration = 2)
-        # self.anim_stop_bar.repeat = True
         self.anim_stop_img = Animation(opacity = 0, duration = 0.3) +Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 0.8, duration = 0.2) + Animation(opacity = 1, duration = 0.2) + Animation(opacity = 1, duration = 1.6) + Animation(opacity = 0, duration = 2) + Animation(opacity = 0, duration = 2)
-        # self.anim_stop_img.repeat = True
 
         self.anim_spindle_label_end = Animation(opacity = 0, duration = 0.5)
         self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
+
+    def on_pre_enter(self):
+        self.resume_button.disabled = True
+        self.cancel_button.disabled = True
 
     def on_enter(self):
 
