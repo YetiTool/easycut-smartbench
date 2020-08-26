@@ -272,7 +272,7 @@ class DoorScreen(Screen):
             print(str(self.m.state()))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
-            Clock.schedule_once(self.start_spindle_label_animation, 2.4)
+            Clock.schedule_once(self.start_spindle_label_animation, 1.4)
             self.poll_for_resume = Clock.schedule_interval(lambda dt: self.check_spindle_has_raised(), 0.2)
 
         else: self.ready_to_resume()
@@ -292,8 +292,9 @@ class DoorScreen(Screen):
         self.anim_stop_img.start(self.stop_img)
 
     def start_spindle_label_animation(self, dt):
-        self.anim_spindle_label.start(self.spindle_raise_label)
-        self.anim_countdown_img.start(self.countdown_image)
+        if not str(self.m.state()).startswith('Door:0'):
+            self.anim_spindle_label.start(self.spindle_raise_label)
+            self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
 
