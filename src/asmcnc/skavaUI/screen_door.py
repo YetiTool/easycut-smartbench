@@ -317,6 +317,7 @@ class DoorScreen(Screen):
     def cancel_stream(self):
         if self.return_to_screen == 'go':
             self.m.s.is_job_streaming = True
+            self.sm.get_screen('go').is_job_started_already = False
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.cancel_after_a_hard_door()
@@ -326,6 +327,5 @@ class DoorScreen(Screen):
     def return_to_app(self):
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen
-        else: 
-            self.sm.current = 'lobby'
+        else: self.sm.current = 'lobby'
         

@@ -321,15 +321,15 @@ class RouterMachine(object):
 
     def resume_from_a_soft_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
    
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
