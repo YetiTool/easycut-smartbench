@@ -195,6 +195,7 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(use)
             self.spindle_brush_lifetime_seconds = float(lifetime)
 
+            log("Spindle brush use and lifetime written to file")
             return True
 
         except: 
@@ -236,11 +237,9 @@ class RouterMachine(object):
 
             print "opened file"
 
-            file.write(str(self.brand) + "\n" + \
-                str(self.voltage) + "\n" + \
-                str(self.digital) + "\n" + \
-                str(self.time_seconds) + "\n" + \
-                str(self.rpm))
+            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm)
+
+            file.write(file_string)
             file.close()
 
             print "wrote settings"
@@ -253,6 +252,7 @@ class RouterMachine(object):
 
             print "read settings into router machine"
 
+            log("Spindle cooldown settings written to file")
             return True
 
         except: 
