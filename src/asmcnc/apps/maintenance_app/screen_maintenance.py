@@ -490,8 +490,8 @@ class MaintenanceScreenClass(Screen):
         else: string_digital = 'manual'
 
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
-        self.spindle_settings_widget.spindle_cooldown_time.text = int(self.m.spindle_cooldown_time_seconds)
-        self.spindle_settings_widget.spindle_cooldown_speed.text = int(self.m.spindle_cooldown_rpm)
+        self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
+        self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
 
 
     def on_pre_leave(self):
