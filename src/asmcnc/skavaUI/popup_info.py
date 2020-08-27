@@ -770,8 +770,7 @@ class PopupReminder(Widget):
               self.am.start_calibration_app('go')
 
             elif go_to == 'brushes':
-              self.am.start_maintenance_app()
-              self.sm.get_screen('maintenance').tab_panel.current = self.sm.get_screen('maintenance').brush_tab
+              self.am.start_maintenance_app('brush_tab')
 
             elif go_to == 'lubrication': 
               self.m.write_z_head_maintenance_settings(0)
@@ -796,7 +795,7 @@ class PopupReminder(Widget):
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0], size_hint_y = 0.2)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0], size_hint_y = 0.6)
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
