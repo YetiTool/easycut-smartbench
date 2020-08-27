@@ -777,7 +777,7 @@ class PopupReminder(Widget):
 
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,10], markup = True)
+        label = Label(size_hint_y=1.8, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,0], markup = True)
 
         if go_to == 'calibration':
           ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
@@ -799,7 +799,7 @@ class PopupReminder(Widget):
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,20,10,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,10,10,5])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)

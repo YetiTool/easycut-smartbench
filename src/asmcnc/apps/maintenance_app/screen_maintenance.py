@@ -429,6 +429,7 @@ class MaintenanceScreenClass(Screen):
     laser_datum_reset_coordinate_x = 0
     laser_datum_reset_coordinate_y = 0
 
+    landing_tab = StringProperty()
 
     def __init__(self, **kwargs):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
@@ -477,6 +478,16 @@ class MaintenanceScreenClass(Screen):
         
     def on_pre_enter(self):
 
+        # TAB TO LAND ON
+        if self.landing_tab == 'brush_tab':
+            self.tab_panel.switch_to(self.brush_tab)
+        elif self.landing_tab == 'laser_tab':
+            self.tab_panel.switch_to(self.laser_tab)
+        elif self.landing_tab == 'spindle_tab':
+            self.tab_panel.switch_to(self.spindle_tab)
+        else: 
+            self.landing_tab = self.tab_panel.current
+
         # LASER
         if self.m.is_laser_enabled == True:
             self.laser_switch_widget.laser_switch.active = True
@@ -484,7 +495,6 @@ class MaintenanceScreenClass(Screen):
             self.laser_switch_widget.laser_switch.active = False
 
         self.laser_switch_widget.toggle_laser()
-
 
         # BRUSHES
         self.brush_use_widget.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600))
