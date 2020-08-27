@@ -771,14 +771,14 @@ class PopupReminder(Widget):
 
             elif go_to == 'brushes':
               self.am.start_maintenance_app()
-              self.sm.get_screen('maintenance').tab_panel.current = self.get_screen('maintenance').brush_tab
+              self.sm.get_screen('maintenance').tab_panel.current = self.sm.get_screen('maintenance').brush_tab
 
             elif go_to == 'lubrication': 
               self.m.write_z_head_maintenance_settings(0)
 
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(560, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
 
         if go_to == 'calibration':
           ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
@@ -796,7 +796,7 @@ class PopupReminder(Widget):
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0], size_hint_y = 0.2)
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
@@ -812,7 +812,7 @@ class PopupReminder(Widget):
                       title_size = '22sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(600, 420),
+                      size=(700, 460),
                       auto_dismiss= False
                       )
         
