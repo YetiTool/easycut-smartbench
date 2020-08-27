@@ -165,7 +165,12 @@ class LaserDatumButtons(Widget):
         self.m.laser_offset_x_value = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x - self.m.mpos_x()
         self.m.laser_offset_y_value = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.mpos_y()
 
-        self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value)
+        if self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value):
+            popup_info.PopupMiniInfo("Settings saved!")
+        else:
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+            popup_info.PopupError(self.sm, warning_message)
         
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 

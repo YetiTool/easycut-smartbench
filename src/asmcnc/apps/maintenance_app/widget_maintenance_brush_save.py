@@ -111,8 +111,13 @@ class BrushSaveWidget(Widget):
             popup_info.PopupError(self.sm, brush_life_validation_error)
             return
 
-        # read in values
-        self.m.write_spindle_brush_values(use, lifetime)
+        # write new values to file
+        if self.m.write_spindle_brush_values(use, lifetime):
+            popup_info.PopupMiniInfo("Settings saved!")
+        else:
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+            popup_info.PopupError(self.sm, warning_message)
 
         # Update the monitor :)
         value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)

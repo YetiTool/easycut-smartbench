@@ -114,7 +114,8 @@ class SpindleSaveWidget(Widget):
 
             time = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
 
-            if (time >= 10 and time <= 60): pass
+            if (time >= 10 and time <= 60):
+                pass
             else:
                 time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
                 "Please enter a new value."
@@ -123,7 +124,6 @@ class SpindleSaveWidget(Widget):
                 return
 
         except: 
-
             time_validation_error = "The spindle cooldown time should be a number between 10 and 20 seconds.\n\n" + \
             "Please enter a new value."
 
@@ -136,9 +136,10 @@ class SpindleSaveWidget(Widget):
 
             speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_speed.text)
 
-            if (speed >= 10000 and speed <= 20000): pass
-            else:
+            if (speed >= 10000 and speed <= 20000):
+                pass
 
+            else:
                 speed_validation_error = "The spindle cooldown speed should be between 10,000 and 20,000 RPM.\n\n" + \
                 "Please enter a new value."
 
@@ -146,7 +147,6 @@ class SpindleSaveWidget(Widget):
                 return
 
         except:
-
             speed_validation_error = "The spindle cooldown speed should be a number between 10,000 and 20,000 RPM.\n\n" + \
             "Please enter a new value."
 
@@ -154,7 +154,14 @@ class SpindleSaveWidget(Widget):
             return
 
 
-        self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed)
+        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed):
+            popup_info.PopupMiniInfo("Settings saved!")
+
+        else:
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+
+            popup_info.PopupError(self.sm, warning_message)
 
         # brands = ['YETI digital 230V', 'YETI digital 110V', 'YETI manual 230V', 'YETI manual 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
 

@@ -147,8 +147,11 @@ class RouterMachine(object):
             self.laser_offset_x_value = float(read_laser_offset_x_value)
             self.laser_offset_y_value = float(read_laser_offset_y_value)
 
+            return True
+
         except: 
             log("Unable to read z head laser offset values") 
+            return False
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
         try:
@@ -158,8 +161,12 @@ class RouterMachine(object):
             self.laser_offset_x_value = X
             self.laser_offset_y_value = Y
             self.is_laser_enabled = enabled
+
+            return True
+
         except: 
             log("Unable to write z head laser offset values")
+            return False
 
     ## SPINDLE BRUSH MONITOR
     def read_spindle_brush_values(self):
@@ -172,8 +179,12 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(read_spindle_brush_use_value)
             self.spindle_brush_lifetime_seconds = float(read_spindle_brush_lifetime_value)
 
+            return True
+
         except: 
-            log("Unable to read spindle brush use and lifetime values") 
+
+            log("Unable to read spindle brush use and lifetime values")
+            return False
 
     def write_spindle_brush_values(self, use, lifetime):
         try:
@@ -184,8 +195,11 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(use)
             self.spindle_brush_lifetime_seconds = float(lifetime)
 
+            return True
+
         except: 
             log("Unable to write spindle brush use and lifetime values")
+            return False
 
 
     ## SPINDLE COOLDOWN OPTIONS
@@ -210,8 +224,11 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = float(read_spindle_cooldown_time_seconds)
             self.spindle_rpm = float(read_spindle_rpm)
 
+            return True
+
         except: 
-            log("Unable to read spindle cooldown settings") 
+            log("Unable to read spindle cooldown settings")
+            return False
 
     def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
         try:
@@ -231,8 +248,11 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = time_seconds
             self.spindle_rpm = rpm
 
+            return True
+
         except: 
-            log("Unable to write spindle cooldown settings")   
+            log("Unable to write spindle cooldown settings")
+            return False
 
 
 
