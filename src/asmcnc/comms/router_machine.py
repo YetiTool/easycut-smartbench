@@ -138,7 +138,7 @@ class RouterMachine(object):
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
             [read_is_laser_enabled, read_laser_offset_x_value, read_laser_offset_y_value] = file.read().splitlines()
-            file.close
+            file.close()
 
             # file read brings value in as a string, so need to do conversions to appropriate variables: 
             if read_is_laser_enabled == "True": self.is_laser_enabled = True
@@ -174,7 +174,7 @@ class RouterMachine(object):
         try:
             file = open(self.spindle_brush_values_file_path, 'r')
             read_brush = file.read().splitlines()
-            file.close
+            file.close()
 
             self.spindle_brush_use_seconds = float(read_brush[0])
             self.spindle_brush_lifetime_seconds = float(read_brush[1])
@@ -210,7 +210,7 @@ class RouterMachine(object):
             file = open(self.spindle_brush_values_file_path, 'r')
             # this might throw errors, not sure? might need to define list first and then read but let's try
             read_spindle = file.read().splitlines()
-            file.close
+            file.close()
 
             print read_spindle
 
