@@ -68,11 +68,11 @@ class AppManagerClass(object):
             self.sm.add_widget(maintenance_screen)
 
         if landing_tab == 'brush_tab':
-            self.sm.get_screen('maintenance').tab_panel.current = self.sm.get_screen('maintenance').brush_tab
+            self.sm.get_screen('maintenance').tab_panel.switch_to(self.sm.get_screen('maintenance').brush_tab)
         elif landing_tab == 'laser_tab':
-            self.sm.get_screen('maintenance').tab_panel.current = self.sm.get_screen('maintenance').laser_tab
+            self.sm.get_screen('maintenance').tab_panel.switch_to(self.sm.get_screen('maintenance').laser_tab)
         elif landing_tab == 'spindle_tab':
-            self.sm.get_screen('maintenance').tab_panel.current = self.sm.get_screen('maintenance').spindle_tab
+            self.sm.get_screen('maintenance').tab_panel.switch_to(self.sm.get_screen('maintenance').spindle_tab)
 
         self.sm.current = 'maintenance'
     
