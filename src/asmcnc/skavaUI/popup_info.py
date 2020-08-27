@@ -771,14 +771,14 @@ class PopupReminder(Widget):
 
             elif go_to == 'brushes':
               self.am.start_maintenance_app()
-              self.get_screen('maintenance').tab_panel.current = self.get_screen('maintenance').brush_tab
+              self.sm.get_screen('maintenance').tab_panel.current = self.get_screen('maintenance').brush_tab
 
             elif go_to == 'lubrication': 
               self.m.write_z_head_maintenance_settings(0)
 
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(560, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
 
         if go_to == 'calibration':
           ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
