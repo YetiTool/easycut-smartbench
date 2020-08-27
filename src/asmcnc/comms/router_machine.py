@@ -147,6 +147,8 @@ class RouterMachine(object):
             self.laser_offset_x_value = float(read_laser_offset_x_value)
             self.laser_offset_y_value = float(read_laser_offset_y_value)
 
+
+            log("Read in z head laser offset values")
             return True
 
         except: 
@@ -179,6 +181,8 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(read_brush[0])
             self.spindle_brush_lifetime_seconds = float(read_brush[1])
 
+
+            log("Read in spindle brush use and lifetime")
             return True
 
         except: 
@@ -207,7 +211,7 @@ class RouterMachine(object):
     def read_spindle_cooldown_settings(self):
 
         try:
-            file = open(self.spindle_brush_values_file_path, 'r')
+            file = open(self.spindle_cooldown_settings_file_path, 'r')
             # this might throw errors, not sure? might need to define list first and then read but let's try
             read_spindle = file.read().splitlines()
             file.close()
@@ -227,6 +231,7 @@ class RouterMachine(object):
 
             print self.spindle_brand
 
+            log("Read in spindle cooldown settings")
             return True
 
         except: 
@@ -237,7 +242,7 @@ class RouterMachine(object):
         try:
 
 
-            file = open(self.spindle_brush_values_file_path, "w")
+            file = open(self.spindle_cooldown_settings_file_path, "w")
 
             print "opened file"
 
