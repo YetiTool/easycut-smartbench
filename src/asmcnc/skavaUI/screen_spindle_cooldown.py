@@ -127,7 +127,7 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
-    seconds = 10
+    seconds = self.m.spindle_cooldown_time_seconds
 
     def __init__(self, **kwargs):
         
@@ -137,9 +137,11 @@ class SpindleCooldownScreen(Screen):
 
     def on_pre_enter(self):
         self.m.zUp_and_spindle_on()
+        self.seconds = self.m.spindle_cooldown_time_seconds
+        self.countdown.text = str(self.seconds)
 
     def on_enter(self):
-        Clock.schedule_once(self.exit_screen, 10)
+        Clock.schedule_once(self.exit_screen, self.seconds)
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
     
     def exit_screen(self, dt):
@@ -153,6 +155,6 @@ class SpindleCooldownScreen(Screen):
         self.m.spindle_off()
         self.m.vac_off()
         Clock.unschedule(self.update_timer_event)
-        self.seconds = 10
-        self.countdown.text = '10'
+        self.seconds = self.m.spindle_cooldown_time_seconds
+        self.countdown.text = str(self.seconds)
         
