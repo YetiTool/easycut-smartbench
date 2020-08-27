@@ -212,6 +212,8 @@ class RouterMachine(object):
             read_spindle = file.read().splitlines()
             file.close
 
+            print read_spindle
+
             print "Read from file spindle cooldown"
 
             self.spindle_brand = str(read_spindle[0])
@@ -222,6 +224,8 @@ class RouterMachine(object):
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
             print "Read in values"
+
+            print self.spindle_brand
 
             return True
 
