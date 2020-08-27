@@ -57,9 +57,17 @@ class RouterMachine(object):
     smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
     
     ### Individual files to hold persistent values
+    calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
+    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'   
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+
+    ## CALIBRATION SETTINGS
+    time_since_calibration_seconds = float(320*3600)
+
+    ## Z HEAD MAINTENANCE SETTINGS
+    time_since_z_head_lubricated_seconds = float(50*3600)
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -79,9 +87,6 @@ class RouterMachine(object):
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
-    ## OTHER MAINENANCE SETTINGS
-    time_since_calibration_seconds = float(320*3600)
-    time_since_z_head_lubed = float(50*3600)
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -129,11 +134,88 @@ class RouterMachine(object):
                 )
             file.close()
 
+        if not path.exists(self.calibration_settings_file_path):
+            log('Creating calibration settings file...')
+            file = open(self.calibration_settings_file_path, 'w+')
+            file.write(str(self.time_since_calibration_seconds))
+            file.close()
+
+        if not path.exists(self.z_head_maintenance_settings_file_path):
+            log('Creating z head maintenance settings file...')
+            file = open(self.z_head_maintenance_settings_file_path, 'w+')
+            file.write(str(self.time_since_z_head_lubricated_seconds))
+            file.close()
 
     def get_persistent_values(self):
+        self.read_calibration_settings()
+        self.read_z_head_maintenance_settings()
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+
+
+    ## CALIBRATION SETTINGS
+
+    def read_calibration_settings(self):
+
+        try: 
+            file = open(self.calibration_settings_file_path, 'r')
+            self.time_since_calibration_seconds  = float(file.read())
+            file.close()
+
+            log("Read in calibration setings")
+            return True
+
+        except:
+            log("Unable to read calibration settings")
+            return False
+
+    def write_calibration_settings(self, value):
+
+        try:
+            file = open(self.calibration_settings_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.m.time_since_calibration_seconds = value
+            log("Write calibration settings")
+            return True
+
+        except:
+            log("Unable to write calibration settings")
+            return False
+
+    ## Z HEAD MAINTENANCE SETTINGS REMINDER
+
+    def read_z_head_maintenance_settings(self):
+
+        try: 
+            file = open(self.z_head_maintenance_settings_file_path, 'r')
+            self.time_since_z_head_lubricated_seconds  = float(file.read())
+            file.close()
+
+            log("Read in z head maintenance settings")
+            return True
+
+        except: 
+            log("Unable to read z head maintenance settings")
+            return False
+
+    def write_z_head_maintenance_settings(self, value):
+
+        try:
+            file = open(self.z_head_maintenance_settings_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.time_since_z_head_lubricated_seconds = value
+
+            log("Write z head maintenance settings")
+            return True
+
+        except: 
+            log("Unable to write z head maintenance settings")
+            return False
 
     ## LASER DATUM OFFSET
     def read_z_head_laser_offset_values(self):
@@ -183,7 +265,6 @@ class RouterMachine(object):
 
             self.spindle_brush_use_seconds = float(read_brush[0])
             self.spindle_brush_lifetime_seconds = float(read_brush[1])
-
 
             log("Read in spindle brush use and lifetime")
             return True
