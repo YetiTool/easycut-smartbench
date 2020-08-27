@@ -756,7 +756,7 @@ class PopupDeleteFile(Widget):
 
 class PopupReminder(Widget):
 
-    def __init__(self, screen_manager, app_manager, machine, messsage, go_to):
+    def __init__(self, screen_manager, app_manager, machine, message, go_to):
         
         self.sm = screen_manager
         self.am = app_manager
@@ -769,11 +769,11 @@ class PopupReminder(Widget):
             if go_to == 'calibration':
               self.am.start_calibration_app('go')
 
-            if go_to == 'brushes':
+            elif go_to == 'brushes':
               self.am.start_maintenance_app()
               self.get_screen('maintenance').tab_panel.current = self.get_screen('maintenance').brush_tab
 
-            else: 
+            elif go_to == 'lubrication': 
               self.m.write_z_head_maintenance_settings(0)
 
         
