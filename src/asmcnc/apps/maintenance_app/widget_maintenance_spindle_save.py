@@ -114,7 +114,7 @@ class SpindleSaveWidget(Widget):
 
             time = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
 
-            if (time >= 10 or time <= 60): pass
+            if (time >= 10 and time <= 60): pass
             else:
                 time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
                 "Please enter a new value."
@@ -136,7 +136,7 @@ class SpindleSaveWidget(Widget):
 
             speed = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_speed.text)
 
-            if (speed >= 10000 or speed <= 20000): pass
+            if (speed >= 10000 and speed <= 20000): pass
             else:
 
                 speed_validation_error = "The spindle cooldown speed should be between 10,000 and 20,000 RPM.\n\n" + \
