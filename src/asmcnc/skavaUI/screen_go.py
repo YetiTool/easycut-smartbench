@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -421,6 +421,17 @@ class GoScreen(Screen):
         else: 
             self.reset_go_screen_prior_to_job_start()
 
+    def on_enter(self):
+
+        # Check brush use and lifetime: 
+
+        if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
+            brush_warning = "Check your spindle brushes before starting your job!\n\n" + \
+            "You have run SmartBench for " + str(self.m.spindle_brush_use_seconds/3600) + " hours " + \
+            "since you last set your spindle brush settings, and you told us that they only have lifetime of " + \
+            str(self.m.spindle_brush_lifetime_seconds/3600) + " hours!\n\n" + \
+            "Maybe it's time for a change?"
+            popup_info.PopupWarning(self.sm, message)
 
 ### COMMON SCREEN PREP METHOD
 

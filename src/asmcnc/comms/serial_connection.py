@@ -435,6 +435,9 @@ class SerialConnection(object):
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
+            # Add time taken in seconds to brush use: 
+            self.m.spindle_brush_use_seconds += time_taken_seconds
+
             # send info to the job done screen
             self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
             self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
