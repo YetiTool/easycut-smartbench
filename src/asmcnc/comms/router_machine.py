@@ -173,11 +173,11 @@ class RouterMachine(object):
 
         try:
             file = open(self.spindle_brush_values_file_path, 'r')
-            [read_spindle_brush_use_value,read_spindle_brush_lifetime_value] = file.read().splitlines()
+            read_brush = file.read().splitlines()
             file.close
 
-            self.spindle_brush_use_seconds = float(read_spindle_brush_use_value)
-            self.spindle_brush_lifetime_seconds = float(read_spindle_brush_lifetime_value)
+            self.spindle_brush_use_seconds = float(read_brush[0])
+            self.spindle_brush_lifetime_seconds = float(read_brush[1])
 
             return True
 
@@ -208,23 +208,17 @@ class RouterMachine(object):
         try:
             file = open(self.spindle_brush_values_file_path, 'r')
             # this might throw errors, not sure? might need to define list first and then read but let's try
-            [
-            read_spindle_brand,
-            read_spindle_voltage,
-            read_spindle_digital,
-            read_spindle_cooldown_time_seconds,
-            read_spindle_rpm
-            ] = file.read().splitlines()
+            read_spindle = file.read().splitlines()
             file.close
 
             print "Read from file spindle cooldown"
 
-            self.spindle_brand = str(read_spindle_brand)
-            self.spindle_voltage = int(read_spindle_voltage)
-            if read_spindle_digital == 'True': self.spindle_digital = True
+            self.spindle_brand = str(read_spindle[0])
+            self.spindle_voltage = int(read_spindle[1])
+            if read_spindle[2] == 'True': self.spindle_digital = True
             else: self.spindle_digital == False
-            self.spindle_cooldown_time_seconds = int(read_spindle_cooldown_time_seconds)
-            self.spindle_cooldown_rpm = int(read_spindle_rpm)
+            self.spindle_cooldown_time_seconds = int(read_spindle[3])
+            self.spindle_cooldown_rpm = int(read_spindle[4])
 
             print "Read in values"
 
@@ -242,13 +236,11 @@ class RouterMachine(object):
 
             print "opened file"
 
-            file.write(
-                str(self.brand) + "\n" +
-                str(self.voltage) + "\n" +
-                str(self.digital) + "\n" +
-                str(self.time_seconds) + "\n" +
-                str(self.rpm)
-                )
+            file.write(str(self.brand) + "\n" + \
+                str(self.voltage) + "\n" + \
+                str(self.digital) + "\n" + \
+                str(self.time_seconds) + "\n" + \
+                str(self.rpm))
             file.close()
 
             print "wrote settings"
