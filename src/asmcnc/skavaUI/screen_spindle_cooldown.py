@@ -136,7 +136,7 @@ class SpindleCooldownScreen(Screen):
         self.m=kwargs['machine']
 
     def on_pre_enter(self):
-        self.m.zUp_and_spindle_on()
+        self.m.cooldown_zUp_and_spindle_on()
         self.seconds = self.m.spindle_cooldown_time_seconds
         self.countdown.text = str(self.seconds)
 

@@ -696,9 +696,9 @@ class RouterMachine(object):
     def spindle_off(self):
         self.s.write_command('M5')
 
-    def zUp_and_spindle_on(self):
+    def cooldown_zUp_and_spindle_on(self):
         self.s.write_command('AE')
-        self.s.write_command('M3 S20000')
+        self.s.write_command('M3 S' + str(self.m.spindle_cooldown_rpm))
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
 
     def laser_on(self):
