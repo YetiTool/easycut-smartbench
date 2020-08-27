@@ -503,8 +503,6 @@ class MaintenanceScreenClass(Screen):
 
     def on_enter(self):
 
-        print self.landing_tab
-
         # TAB TO LAND ON
         if self.landing_tab == 'brush_tab':
             self.tab_panel.switch_to(self.brush_tab)
