@@ -127,13 +127,14 @@ Builder.load_string("""
 class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
-    seconds = self.m.spindle_cooldown_time_seconds
+    seconds = '10'
 
     def __init__(self, **kwargs):
         
         super(SpindleCooldownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.seconds = self.m.spindle_cooldown_time_seconds
 
     def on_pre_enter(self):
         self.m.cooldown_zUp_and_spindle_on()
