@@ -163,7 +163,7 @@ class RouterMachine(object):
             self.time_since_calibration_seconds  = float(file.read())
             file.close()
 
-            log("Read in calibration setings")
+            log("Read in calibration settings")
             return True
 
         except:

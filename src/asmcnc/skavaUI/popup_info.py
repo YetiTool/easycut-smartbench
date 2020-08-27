@@ -780,13 +780,13 @@ class PopupReminder(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
 
-        if go_to_app == 'calibration':
+        if go_to == 'calibration':
           ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
 
-        if go_to_app == 'lubrication':
+        if go_to == 'lubrication':
           ok_button = Button(text='[b]Ok! Z-head lubricated![/b]', markup = True)
 
-        if go_to_app == 'brushes':
+        if go_to == 'brushes':
           ok_button = Button(text='[b]Change brushes now![/b]', markup = True)
 
         ok_button.background_normal = ''
