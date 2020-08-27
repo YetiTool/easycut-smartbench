@@ -79,6 +79,9 @@ class RouterMachine(object):
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
+    ## OTHER MAINENANCE SETTINGS
+    time_since_calibration_seconds = float(320*3600)
+    time_since_z_head_lubed = float(50*3600)
             
     def __init__(self, win_serial_port, screen_manager):
 

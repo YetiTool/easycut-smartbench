@@ -426,7 +426,7 @@ class GoScreen(Screen):
         # Check brush use and lifetime: 
 
         if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
-            brush_warning = "Check your spindle brushes before starting your job!\n\n" + \
+            brush_warning = "[b]Check your spindle brushes before starting your job![/b]\n\n" + \
             "You have used SmartBench for [b]" + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours[/b] " + \
             "since you updated your spindle brush settings, and you told us that they only have lifetime of [b]" + \
             str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours[/b]!"
