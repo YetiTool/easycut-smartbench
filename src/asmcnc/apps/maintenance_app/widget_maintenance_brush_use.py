@@ -139,10 +139,10 @@ class BrushUseWidget(Widget):
         self.m=kwargs['machine']
         
     def restore(self):
-        self.brush_use.text = int(self.m.spindle_brush_use_seconds/3600) # convert back to hrs for user
+        self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
 
     def reset_to_0(self):
-        self.brush_use.text = 0
+        self.brush_use.text = '0'
 
 
 

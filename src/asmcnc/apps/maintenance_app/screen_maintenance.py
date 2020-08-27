@@ -479,8 +479,8 @@ class MaintenanceScreenClass(Screen):
 
 
         # BRUSHES
-        self.brush_use_widget.brush_use.text = str(self.m.spindle_brush_use_seconds/3600)
-        self.brush_life_widget.brush_life.text = str(self.m.spindle_brush_lifetime_seconds/3600)
+        self.brush_use_widget.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600))
+        self.brush_life_widget.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
 
         value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
         self.brush_monitor_widget.set_percentage(value)
