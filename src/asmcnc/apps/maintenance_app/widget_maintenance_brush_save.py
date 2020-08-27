@@ -113,7 +113,7 @@ class BrushSaveWidget(Widget):
 
         # write new values to file
         if self.m.write_spindle_brush_values(use, lifetime):
-            popup_info.PopupMiniInfo("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."

@@ -217,12 +217,12 @@ class RouterMachine(object):
             ] = file.read().splitlines()
             file.close
 
-            self.spindle_brand = float(read_spindle_brand)
-            self.spindle_voltage = (read_spindle_voltage)
+            self.spindle_brand = str(read_spindle_brand)
+            self.spindle_voltage = int(read_spindle_voltage)
             if read_spindle_digital == 'True': self.spindle_digital = True
             else: self.spindle_digital == False
-            self.spindle_cooldown_time_seconds = float(read_spindle_cooldown_time_seconds)
-            self.spindle_rpm = float(read_spindle_rpm)
+            self.spindle_cooldown_time_seconds = int(read_spindle_cooldown_time_seconds)
+            self.spindle_cooldown_rpm = int(read_spindle_rpm)
 
             return True
 
@@ -232,6 +232,8 @@ class RouterMachine(object):
 
     def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
         try:
+
+
             file = open(self.spindle_brush_values_file_path, "w")
             file.write(
                 str(self.brand) + "\n" +
@@ -246,7 +248,7 @@ class RouterMachine(object):
             self.spindle_voltage = voltage
             self.spindle_digital = digital
             self.spindle_cooldown_time_seconds = time_seconds
-            self.spindle_rpm = rpm
+            self.spindle_cooldown_rpm = rpm
 
             return True
 

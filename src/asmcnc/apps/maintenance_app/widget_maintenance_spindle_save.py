@@ -155,7 +155,7 @@ class SpindleSaveWidget(Widget):
 
 
         if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed):
-            popup_info.PopupMiniInfo("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
