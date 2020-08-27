@@ -19,19 +19,24 @@ Builder.load_string("""
 
 <MaintenanceScreenClass>:
 
+    tab_panel:tab_panel
+
     # Laser Datum Widgets
+    laser_tab: laser_tab
     xy_move_container: xy_move_container
     z_move_container: z_move_container
     laser_button_container: laser_button_container
     switch_container: switch_container
 
     # Brush maintenance widgets
+    brush_tab: brush_tab
     brush_monitor_container: brush_monitor_container
     brush_use_container: brush_use_container
     brush_life_container: brush_life_container
     brush_save_container: brush_save_container
 
     # Spindle settings widgets
+    spindle_tab: spindle_tab
     spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
 
@@ -52,6 +57,7 @@ Builder.load_string("""
         # LASER DATUM SETTINGS
 
         TabbedPanelItem:
+            id: laser_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/laser_datum_tab_grey.png'
 
@@ -158,6 +164,7 @@ Builder.load_string("""
         # BRUSH MONITOR
 
         TabbedPanelItem:
+            id: brush_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_grey.png'
             BoxLayout:
@@ -289,6 +296,7 @@ Builder.load_string("""
         # Spindle cooldown settings
         
         TabbedPanelItem:
+            id: spindle_tab
             background_normal: 'asmcnc/apps/maintenance_app/img/spindle_settings_tab_blue.png'
             background_down: 'asmcnc/apps/maintenance_app/img/spindle_settings_tab_grey.png'
 
