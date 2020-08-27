@@ -61,6 +61,7 @@ Builder.load_string("""
                     height: dp(50)
                     width: dp(120)
                     font_size: dp(28)
+                    input_filter: 'int'
 
                 Label: 
                     color: 0,0,0,1
@@ -138,10 +139,10 @@ class BrushLifeWidget(Widget):
         self.m=kwargs['machine']
 
     def restore(self):
-        self.brush_life.text = str(self.m.spindle_brush_lifetime_seconds/3600)
+        self.brush_life.text = int(self.m.spindle_brush_lifetime_seconds/3600)
 
     def reset_to_120(self):
-        self.brush_life.text = '120'
+        self.brush_life.text = 120
 
 
 

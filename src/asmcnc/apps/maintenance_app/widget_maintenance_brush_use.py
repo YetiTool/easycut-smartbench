@@ -61,6 +61,7 @@ Builder.load_string("""
                     height: dp(50)
                     width: dp(120)
                     font_size: dp(28)
+                    input_filter: 'int'
 
                 Label: 
                     color: 0,0,0,1
@@ -136,15 +137,12 @@ class BrushUseWidget(Widget):
         super(BrushUseWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
-    def on_enter(self):
-        self.brush_use.text = str(self.m.spindle_brush_use_seconds/3600)
         
     def restore(self):
-        self.brush_use.text = str(self.m.spindle_brush_use_seconds/3600) # convert back to hrs for user
+        self.brush_use.text = int(self.m.spindle_brush_use_seconds/3600) # convert back to hrs for user
 
     def reset_to_0(self):
-        self.brush_use.text = '0'
+        self.brush_use.text = 0
 
 
 

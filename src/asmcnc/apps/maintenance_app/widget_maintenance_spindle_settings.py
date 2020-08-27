@@ -39,47 +39,6 @@ Builder.load_string("""
         rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
         spacing: [dp(20), dp(17.5)]
 
-        # # ROW 1
-
-        # BoxLayout: 
-        #     size_hint: (None, None)
-        #     # pos: self.parent.pos
-        #     height: dp(70) # 62 high image
-        #     width: dp(160)
-        #     padding: [dp(51), 4, dp(51), 4] # 15 padding
-
-        #     Image:
-        #         id: spindle_image
-        #         source: "./asmcnc/apps/maintenance_app/img/spindle_small.png"
-        #         center_x: self.parent.center_x
-        #         y: self.parent.y
-        #         size: self.parent.width, self.parent.height
-        #         allow_stretch: True
-
-        # BoxLayout: 
-        #     size_hint: (None, None)
-        #     # pos: self.parent.pos
-        #     height: dp(70)
-        #     width: dp(300)
-        #     padding: [dp(0), dp(5), dp(20), dp(5)]
-        #     Spinner:
-        #         id: spindle_brand
-        #         halign: 'left'
-        #         valign: 'middle'
-        #         markup: True
-        #         size_hint: (None, None)
-        #         size: 280, 60
-        #         text: 'spinner'
-        #         font_size: '30sp'
-        #         text_size: self.size
-        #         multiline: False
-        #         color: 0,0,0,1
-        #         values: root.brand_list
-        #         option_cls: Factory.get("SpindleSpinner")
-        #         background_normal: ''
-        #         background_color: [1,1,1,0]
-
-
 
         # ROW 1
 
@@ -114,6 +73,7 @@ Builder.load_string("""
                 valign: "bottom"
                 markup: True
                 halign: "left"
+                input_filter: 'int'
 
             Label:
                 color: 0,0,0,1
@@ -159,6 +119,7 @@ Builder.load_string("""
                 valign: "bottom"
                 markup: True
                 halign: "left"
+                input_filter: 'int'
 
             Label:
                 color: 0,0,0,1
