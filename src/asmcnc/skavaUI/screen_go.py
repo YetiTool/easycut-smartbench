@@ -427,11 +427,11 @@ class GoScreen(Screen):
 
         if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
             brush_warning = "Check your spindle brushes before starting your job!\n\n" + \
-            "You have run SmartBench for " + str(self.m.spindle_brush_use_seconds/3600) + " hours " + \
+            "You have run SmartBench for " + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours " + \
             "since you last set your spindle brush settings, and you told us that they only have lifetime of " + \
-            str(self.m.spindle_brush_lifetime_seconds/3600) + " hours!\n\n" + \
+            str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours!\n\n" + \
             "Maybe it's time for a change?"
-            popup_info.PopupWarning(self.sm, message)
+            popup_info.PopupWarning(self.sm, brush_warning)
 
 ### COMMON SCREEN PREP METHOD
 
