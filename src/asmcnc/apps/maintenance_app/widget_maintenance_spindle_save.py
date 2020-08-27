@@ -94,17 +94,28 @@ class SpindleSaveWidget(Widget):
         if digital == 'digital': digital = True
         elif digital =='manual': digital = False
         else:
-            popup_info.PopupError(self.sm, 'screaming brand')
+            brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
+            "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
+
+            popup_info.PopupError(self.sm, brand_validation_error)
             return            
 
         if (time >= 10 or time <= 60): pass
-        else:             
-            popup_info.PopupError(self.sm, 'screaming time')
+        else:
+
+            time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
+            "Please enter a new value."
+
+            popup_info.PopupError(self.sm, time_validation_error)
             return
 
         if (speed >= 10000 or speed <= 20000): pass
-        else:             
-            popup_info.PopupError(self.sm, 'screaming speed')
+        else:
+
+            speed_validation_error = "The spindle cooldown speed should be between 10,000 and 20,000 RPM.\n\n" + \
+            "Please enter a new value."
+
+            popup_info.PopupError(self.sm, speed_validation_error)
             return
 
 

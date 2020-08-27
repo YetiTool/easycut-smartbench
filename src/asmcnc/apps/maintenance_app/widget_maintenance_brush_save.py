@@ -94,7 +94,10 @@ class BrushSaveWidget(Widget):
         if use >= 0 and use <= 999*3600: pass # all good, carry on
         else: 
             # throw popup, return without saving
-            popup_info.PopupError(self.sm, 'screaming brush use')
+            brush_use_validation_error = "The number of hours the brushes have been used for should be between 0 and 999.\n\n" + \
+            "Please enter a new value."
+
+            popup_info.PopupError(self.sm, brush_use_validation_error)
             return
 
 
@@ -102,7 +105,10 @@ class BrushSaveWidget(Widget):
         if lifetime >= 100*3600 and lifetime <= 999*3600: pass # all good, carry on
         else: 
             # throw popup, return without saving
-            popup_info.PopupError(self.sm, 'screaming brush use')
+            brush_life_validation_error = "The maximum brush lifetime should be between 100 and 999 hours.\n\n" + \
+            "Please enter a new value."
+
+            popup_info.PopupError(self.sm, brush_life_validation_error)
             return
 
         # read in values
