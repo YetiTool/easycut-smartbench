@@ -478,16 +478,6 @@ class MaintenanceScreenClass(Screen):
         
     def on_pre_enter(self):
 
-        # TAB TO LAND ON
-        if self.landing_tab == 'brush_tab':
-            self.tab_panel.switch_to(self.brush_tab)
-        elif self.landing_tab == 'laser_tab':
-            self.tab_panel.switch_to(self.laser_tab)
-        elif self.landing_tab == 'spindle_tab':
-            self.tab_panel.switch_to(self.spindle_tab)
-        else: 
-            self.landing_tab = self.tab_panel.current
-
         # LASER
         if self.m.is_laser_enabled == True:
             self.laser_switch_widget.laser_switch.active = True
@@ -511,6 +501,19 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
 
+    def on_enter(self):
+
+        print self.landing_tab
+
+        # TAB TO LAND ON
+        if self.landing_tab == 'brush_tab':
+            self.tab_panel.switch_to(self.brush_tab)
+        elif self.landing_tab == 'laser_tab':
+            self.tab_panel.switch_to(self.laser_tab)
+        elif self.landing_tab == 'spindle_tab':
+            self.tab_panel.switch_to(self.spindle_tab)
+        else: 
+            self.landing_tab = self.tab_panel.current
 
     def on_pre_leave(self):
 
