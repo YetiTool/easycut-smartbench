@@ -19,6 +19,8 @@ Builder.load_string("""
 
     speed_rate_label:speed_rate_label
     spindle_rpm:spindle_rpm
+    up_5: up_5
+    down_5: down_5
 
     BoxLayout:
         size: self.parent.size
@@ -29,6 +31,7 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
+            id: up_5
             on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -63,6 +66,7 @@ Builder.load_string("""
                 text: "100%"           
         
         Button:
+            id: down_5
             on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -112,9 +116,13 @@ class SpeedOverride(Widget):
         self.spindle_rpm.text = str(self.m.spindle_speed())
 
     def speed_up(self):
-        if self.speed_override_percentage < 200: self.speed_override_percentage += 5
-        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
-        self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
+        if self.speed_override_percentage < 200:
+            self.up_5.disabled = True
+            self.speed_override_percentage += 5
+            self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+            get_return = self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
+            if get_return: 
+                self.up_5.disabled = False
         
     def speed_norm(self):
         self.speed_override_percentage = 100
@@ -122,8 +130,11 @@ class SpeedOverride(Widget):
         self.m.speed_override_reset()
                 
     def speed_down(self):
-        if self.speed_override_percentage > 10: self.speed_override_percentage -= 5
-        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
-        self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
-
+        if self.speed_override_percentage > 10:
+            self.down_5.disabled = True
+            self.speed_override_percentage -= 5
+            self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+            get_return = self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
+            if get_return: 
+                self.down_5.disabled = False
 

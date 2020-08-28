@@ -19,6 +19,8 @@ Builder.load_string("""
 
     feed_rate_label:feed_rate_label
     feed_absolute:feed_absolute
+    up_5: up_5
+    down_5: down_5
 
     BoxLayout:
         size: self.parent.size
@@ -29,6 +31,7 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
+            id: up_5
             on_press: root.feed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -63,6 +66,7 @@ Builder.load_string("""
                 text: "100%"           
         
         Button:
+            id: down_5
             on_press: root.feed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -113,18 +117,25 @@ class FeedOverride(Widget):
         self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
-        if self.feed_override_percentage < 200: self.feed_override_percentage += 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
-        self.m.feed_override_up_5(final_percentage=self.feed_override_percentage)
-        
+        if self.feed_override_percentage < 200: 
+            self.up_5.disabled = True
+            self.feed_override_percentage += 5
+            self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
+            get_return = self.m.feed_override_up_5(final_percentage=self.feed_override_percentage)
+            if get_return: 
+                self.up_5.disabled = False
+
     def feed_norm(self):
         self.feed_override_percentage = 100
         self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
                 
     def feed_down(self):
-        if self.feed_override_percentage > 10: self.feed_override_percentage -= 5
-        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
-        self.m.feed_override_down_5(final_percentage=self.feed_override_percentage)        
-
+        if self.feed_override_percentage > 10:
+            self.down_5.disabled = True
+            self.feed_override_percentage -= 5
+            self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
+            get_return = self.m.feed_override_down_5(final_percentage=self.feed_override_percentage)        
+            if get_return: 
+                self.down_5.disabled = False
 
