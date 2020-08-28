@@ -185,16 +185,15 @@ class SerialConnection(object):
                 self.write_direct(*command)
                 command_counter += 1
                 
-            del self.write_command_buffer[0:(command_counter+1)]
-            
+            del self.write_command_buffer[0:(command_counter)]
+
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
-                
-            del self.write_realtime_buffer[0:(realtime_counter+1)]
 
-            
+            del self.write_realtime_buffer[0:(realtime_counter)]
+
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
                 # Read line in from serial buffer
@@ -898,7 +897,7 @@ class SerialConnection(object):
         # Finally issue the command        
         if self.s:
             try:
-                
+
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
                     self.s.write(serialCommand + '\n')
@@ -917,6 +916,9 @@ class SerialConnection(object):
                 self.get_serial_screen('Could not write last command to serial buffer.')
     #                 log('Serial Error: ' + str(serialError))
         
+        else: 
+
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
