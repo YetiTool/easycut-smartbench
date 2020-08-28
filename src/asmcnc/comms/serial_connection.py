@@ -187,8 +187,9 @@ class SerialConnection(object):
                 
             del self.write_command_buffer[0:(command_counter)]
 
-            print "Buffer"
+
             if self.write_realtime_buffer != []:
+                print "Buffer"
                 print self.write_realtime_buffer
 
             realtime_counter = 0
