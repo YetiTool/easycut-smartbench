@@ -187,6 +187,9 @@ class SerialConnection(object):
                 
             del self.write_command_buffer[0:(command_counter)]
 
+
+            print self.write_realtime_buffer
+
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
