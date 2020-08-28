@@ -679,11 +679,11 @@ class RouterMachine(object):
         return True
 
     def speed_override_down_5(self, final_percentage=''):
-        self.s.write_realtime('\x9D\x9D\x9D\x9D\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        # self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        # self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        # self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        # self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
         return True
 
         

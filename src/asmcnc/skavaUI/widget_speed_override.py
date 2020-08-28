@@ -117,12 +117,11 @@ class SpeedOverride(Widget):
 
     def speed_up(self):
         if self.speed_override_percentage < 200:
-            self.up_5.disabled = True
+            self.disable_buttons()
             self.speed_override_percentage += 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
             get_return = self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
-            if get_return: 
-                self.up_5.disabled = False
+            Clock.schedule_once(self.enable_buttons, 0.1)
         
     def speed_norm(self):
         self.speed_override_percentage = 100
@@ -131,10 +130,16 @@ class SpeedOverride(Widget):
                 
     def speed_down(self):
         if self.speed_override_percentage > 10:
-            self.down_5.disabled = True
+            self.disable_buttons()
             self.speed_override_percentage -= 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
             get_return = self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
-            if get_return: 
-                self.down_5.disabled = False
+            Clock.schedule_once(self.enable_buttons, 0.1)
 
+    def disable_buttons(self):
+        self.down_5.disabled = True
+        self.up_5.disabled = True
+
+    def enable_buttons(self, dt):
+        self.down_5.disabled = False
+        self.up_5.disabled = False
