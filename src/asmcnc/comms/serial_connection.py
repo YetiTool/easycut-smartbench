@@ -912,8 +912,8 @@ class SerialConnection(object):
         if self.s:
             try:
 
+                print serialCommand
 
-                
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
                     self.s.write(serialCommand + '\n')
@@ -934,7 +934,7 @@ class SerialConnection(object):
         
         else: 
 
-            print ("command lost! : " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
