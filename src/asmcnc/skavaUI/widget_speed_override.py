@@ -10,6 +10,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
+from kivy.clock import Clock
 
 
 Builder.load_string("""
