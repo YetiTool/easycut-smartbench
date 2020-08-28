@@ -108,7 +108,7 @@ class FeedOverride(Widget):
     feed_override_percentage = NumericProperty()
     feed_rate_label = ObjectProperty()
 
-    enable_button_time = 0.25
+    enable_button_time = 0.3
     push = 0
 
     def __init__(self, **kwargs):
