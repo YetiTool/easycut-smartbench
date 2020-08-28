@@ -188,26 +188,14 @@ class SerialConnection(object):
             del self.write_command_buffer[0:(command_counter)]
 
 
-            if self.write_realtime_buffer != []:
-                print "Buffer"
-                print self.write_realtime_buffer
-
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
-                
-            if self.write_realtime_buffer != []:
-                print "Buffer"
-                print self.write_realtime_buffer
 
             del self.write_realtime_buffer[0:(realtime_counter)]
 
-            if self.write_realtime_buffer != []:
-                print "Buffer"
-                print self.write_realtime_buffer
 
-            
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
                 # Read line in from serial buffer
@@ -911,8 +899,6 @@ class SerialConnection(object):
         # Finally issue the command        
         if self.s:
             try:
-
-                print str(serialCommand)
 
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)

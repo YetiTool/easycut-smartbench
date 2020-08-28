@@ -647,44 +647,22 @@ class RouterMachine(object):
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
-        return True
 
-    def feed_override_up_5(self, final_percentage=''): 
+    def feed_override_up_1(self, final_percentage=''): 
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
-        return True
 
-    def feed_override_down_5(self, final_percentage=''):
+    def feed_override_down_1(self, final_percentage=''):
         self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
-        return True
 
     # Realtime spindle speed adjustment
     def speed_override_reset(self):
         self.s.write_realtime('\x99', altDisplayText = 'Speed override RESET')
-        return True
 
-    def speed_override_up_5(self, final_percentage=''):
+    def speed_override_up_1(self, final_percentage=''):
         self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
-        self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
-        return True
 
-    def speed_override_down_5(self, final_percentage=''):
+    def speed_override_down_1(self, final_percentage=''):
         self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
-        return True
 
         
 # HOMING
