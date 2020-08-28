@@ -912,7 +912,7 @@ class SerialConnection(object):
         if self.s:
             try:
 
-                print serialCommand
+                print str(serialCommand)
 
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
