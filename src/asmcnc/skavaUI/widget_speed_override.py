@@ -108,6 +108,8 @@ class SpeedOverride(Widget):
     speed_override_percentage = NumericProperty()
     speed_rate_label = ObjectProperty()
 
+    enable_button_time = 0.15
+
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
@@ -122,7 +124,7 @@ class SpeedOverride(Widget):
             self.speed_override_percentage += 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
             get_return = self.m.speed_override_up_5(final_percentage=self.speed_override_percentage)
-            Clock.schedule_once(self.enable_buttons, 0.1)
+            Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
     def speed_norm(self):
         self.speed_override_percentage = 100
@@ -135,7 +137,7 @@ class SpeedOverride(Widget):
             self.speed_override_percentage -= 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
             get_return = self.m.speed_override_down_5(final_percentage=self.speed_override_percentage)        
-            Clock.schedule_once(self.enable_buttons, 0.1)
+            Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def disable_buttons(self):
         self.down_5.disabled = True
