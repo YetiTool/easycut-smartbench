@@ -108,7 +108,8 @@ class SpeedOverride(Widget):
     speed_override_percentage = NumericProperty()
     speed_rate_label = ObjectProperty()
 
-    enable_button_time = 0.55
+    enable_button_time = 0.4
+    push = 0
 
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
@@ -119,7 +120,8 @@ class SpeedOverride(Widget):
         self.spindle_rpm.text = str(self.m.spindle_speed())
 
     def speed_up(self):
-        if self.speed_override_percentage < 200:
+        self.push =+ 1 
+        if self.speed_override_percentage < 200 and self.push < 2:
             self.disable_buttons()
             self.speed_override_percentage += 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
@@ -132,7 +134,8 @@ class SpeedOverride(Widget):
         self.m.speed_override_reset()
                 
     def speed_down(self):
-        if self.speed_override_percentage > 10:
+        self.push =+ 1 
+        if self.speed_override_percentage > 10 and self.push < 2:          
             self.disable_buttons()
             self.speed_override_percentage -= 5
             self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
@@ -146,3 +149,4 @@ class SpeedOverride(Widget):
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
+        self.push = 0

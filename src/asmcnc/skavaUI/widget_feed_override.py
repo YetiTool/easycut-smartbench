@@ -108,7 +108,8 @@ class FeedOverride(Widget):
     feed_override_percentage = NumericProperty()
     feed_rate_label = ObjectProperty()
 
-    enable_button_time = 0.55
+    enable_button_time = 0.4
+    push = 0
 
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
@@ -119,27 +120,27 @@ class FeedOverride(Widget):
         self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
-        if self.feed_override_percentage < 200: 
+        self.push =+ 1
+        if self.feed_override_percentage < 200 and self.push < 2:
             self.disable_buttons()
             self.feed_override_percentage += 5
             self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
             get_return = self.m.feed_override_up_5(final_percentage=self.feed_override_percentage)
             Clock.schedule_once(self.enable_buttons, self.enable_button_time)
                 
-
     def feed_norm(self):
         self.feed_override_percentage = 100
         self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
                 
     def feed_down(self):
-        if self.feed_override_percentage > 10:
+        self.push =+ 1 
+        if self.feed_override_percentage > 10 and self.push < 2:
             self.disable_buttons()
             self.feed_override_percentage -= 5
             self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
             get_return = self.m.feed_override_down_5(final_percentage=self.feed_override_percentage)
             Clock.schedule_once(self.enable_buttons, self.enable_button_time)
-                
 
     def disable_buttons(self):
         self.down_5.disabled = True
@@ -148,3 +149,4 @@ class FeedOverride(Widget):
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
+        self.push = 0
