@@ -360,7 +360,7 @@ class DeveloperScreen(Screen):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
             os.system("git pull")
-            # self.sm.current = 'rebooting'
+            self.sm.current = 'rebooting'
 
 ## Diagnostics
 
