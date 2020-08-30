@@ -289,8 +289,8 @@ class LoadingScreen(Screen):
                                 l_block = "M3S" + str(self.minimum_spindle_rpm)
 
 
-                                print "converted rpm: "
-                                print(l_block)
+                            print "converted rpm: "
+                            print(l_block)
 
                     elif l_block.find('S0'):
                         l_block = l_block.replace('S0','')

@@ -320,8 +320,6 @@ class RouterMachine(object):
 
             file = open(self.spindle_cooldown_settings_file_path, "w")
 
-            print "opened file"
-
             file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm)
 
             file.write(file_string)
@@ -332,8 +330,6 @@ class RouterMachine(object):
             self.spindle_digital = digital
             self.spindle_cooldown_time_seconds = time_seconds
             self.spindle_cooldown_rpm = rpm
-
-            print "read settings into router machine"
 
             log("Spindle cooldown settings written to file")
             return True
