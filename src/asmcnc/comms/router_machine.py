@@ -177,6 +177,8 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
+            log("Written to file")
+
             self.m.time_since_calibration_seconds = value
             log("Write calibration settings")
             return True
@@ -425,15 +427,19 @@ class RouterMachine(object):
     # 'green' refers to 110V line
 
     def convert_from_110_to_230(self, rpm_green):
-        v_green = (float(rpm_green) - 9375)/1562.5
-        rpm_red = (2187.5*float(v_green)) + 3125
-        return float(rpm_red)
+        if float(rpm_green) != 0:
+            v_green = (float(rpm_green) - 9375)/1562.5
+            rpm_red = (2187.5*float(v_green)) + 3125
+            return float(rpm_red)
+        else: return 0
 
     def convert_from_230_to_110(self, rpm_red):
-        v_red = (float(rpm_red) - 3125)/2187.5
-        rpm_green = (1562.5*float(v_red)) + 9375
-        return float(rpm_green)
-        
+        if float(rpm_red) != 0:
+            v_red = (float(rpm_red) - 3125)/2187.5
+            rpm_green = (1562.5*float(v_red)) + 9375
+            return float(rpm_green)
+        else: return 0
+
 # CRITICAL START/STOP
 
     '''
