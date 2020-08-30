@@ -174,11 +174,12 @@ class SpindleSaveWidget(Widget):
 
         if voltage == '110':
             spindle_voltage_info = "When using a 110V spindle as part of your SmartBench, please be aware of the following:\n\n" + \
+            "110V spindles have a minimum speed of ~10,000 RPM.\n\n" + \
             "SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure " + \
-            "the machine code we send is adjusted for a 110V spindle.\n\n" + \
+            "the machine code we send is adjusted to control a 110V spindle.\n\n" + \
             "However, the 5% spindle speed adjustments in the go screen cannot be converted in the same way, so they will not be able to adjust the speed by exactly 5%. " + \
-            "You will still be able to use the real time spindle speed feedback feature, to assist your adjustment.\n\n" + \
-            "Please be aware that 110V spindle has a minimum speed of ~10,000 RPM, so any commands for lower spindle speeds will be adjusted to match this."
+            "You will still be able to use the real time spindle speed feedback feature, to assist your adjustment.\n\n"
+            
             popup_info.PopupInfo(self.sm, 700, spindle_voltage_info)
 
         # brands = ['YETI digital 230V', 'YETI digital 110V', 'YETI manual 230V', 'YETI manual 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
