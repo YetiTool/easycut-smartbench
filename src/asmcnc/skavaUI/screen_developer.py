@@ -93,6 +93,7 @@ Builder.load_string("""
                 TextInput:
                     id: user_branch
                     text: 'branch'
+                    multiline: False
                         
                 Button:
                     text: 'CO & Pull'
@@ -316,7 +317,7 @@ class DeveloperScreen(Screen):
         self.pl_hash_label.text = self.set.pl_hash
         self.pl_branch_label.text = self.set.pl_branch
 
-        self.user_branch.text = self.set.sw_branch
+        self.user_branch.text = (self.set.sw_branch).strip('*')
     
     def on_pre_enter(self, *args):
         self.m.send_any_gcode_command('$I')
