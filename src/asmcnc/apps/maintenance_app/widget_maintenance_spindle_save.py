@@ -178,7 +178,7 @@ class SpindleSaveWidget(Widget):
             "SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure " + \
             "the machine code we send is adjusted to control a 110V spindle.\n\n" + \
             "The 5% spindle speed adjustments in the go screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%. " + \
-            "You will still be able to use the real time spindle speed feedback feature, to assist your adjustment."
+            "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
             
             popup_info.PopupInfo(self.sm, 700, spindle_voltage_info)
 
