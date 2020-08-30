@@ -273,20 +273,21 @@ class LoadingScreen(Screen):
                             
                             # find 'S' prefix and strip out the value associated with it
                             rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
-                            if rpm < self.minimum_spindle_rpm:
-                                l_block = "M3S" + str(self.minimum_spindle_rpm)
-
-
-                            # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
-                            # in order for the electronics to send the right voltage for the desired RPM
 
                             print "spinlde voltage: "
                             print (self.m.spindle_voltage)
 
+                            # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
+                            # in order for the electronics to send the right voltage for the desired RPM
                             if self.m.spindle_voltage == 110:
                                 # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
-                                rpm_red = self.m.convert_from_110_to_230(rpm)
-                                l_block = "M3S" + str(rpm_red)
+                                rpm = self.m.convert_from_110_to_230(rpm)
+                                l_block = "M3S" + str(rpm)
+
+                            # Ensure all rpms are above the minimum (assuming a 230V spindle)
+                            if rpm < self.minimum_spindle_rpm:
+                                l_block = "M3S" + str(self.minimum_spindle_rpm)
+
 
                                 print "converted rpm: "
                                 print(l_block)
