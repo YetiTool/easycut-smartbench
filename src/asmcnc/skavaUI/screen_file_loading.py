@@ -173,9 +173,6 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
 
-        if self.m.spindle_voltage == 110:
-            self.minimum_spindle_rpm = 10000
-        
     def on_enter(self):    
 
         # display file selected in the filename display label
