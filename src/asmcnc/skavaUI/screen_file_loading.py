@@ -280,11 +280,16 @@ class LoadingScreen(Screen):
                             # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                             # in order for the electronics to send the right voltage for the desired RPM
 
+                            print "spinlde voltage: "
+                            print (self.m.spindle_voltage)
+
                             if self.m.spindle_voltage == 110:
                                 # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
                                 rpm_red = self.m.convert_from_110_to_230(rpm)
                                 l_block = "M3S" + str(rpm_red)
 
+                                print "converted rpm: "
+                                print(l_block)
 
                     elif l_block.find('S0'):
                         l_block = l_block.replace('S0','')
