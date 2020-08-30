@@ -172,6 +172,9 @@ class LoadingScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
+
+        if self.m.spindle_voltage == 110:
+            self.minimum_spindle_rpm = 10000
         
     def on_enter(self):    
 
@@ -264,7 +267,8 @@ class LoadingScreen(Screen):
                 # Strip comments/spaces/new line and capitalize:
                 l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
                 
-                if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                if (l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1
+                    and l_block.find('M30') == -1 and l_block.find('M2') == -1):    # Drop undesirable lines
                     
                     # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
                     if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
@@ -274,6 +278,20 @@ class LoadingScreen(Screen):
                             rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
                             if rpm < self.minimum_spindle_rpm:
                                 l_block = "M3S" + str(self.minimum_spindle_rpm)
+
+
+                            # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
+                            # in order for the electronics to send the right voltage for the desired RPM
+
+                            if self.m.spindle_voltage == 110:
+                                # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
+                                rpm_red = self.m.convert_from_110_to_230(rpm)
+                                l_block = "M3S" + str(rpm_red)
+
+
+                    elif l_block.find('S0'):
+                        l_block = l_block.replace('S0','')
+
     
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             

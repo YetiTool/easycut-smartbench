@@ -366,6 +366,10 @@ class RouterMachine(object):
 
 # HW/FW VERSION CAPABILITY
 
+    def fw_can_operate_digital_spindle(self):
+        # log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
+        return False
+
     def fw_can_operate_laser_commands(self):
 
         log('FW version able to operate laser commands AX and AZ: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')))
@@ -415,7 +419,22 @@ class RouterMachine(object):
                         return True # equal
 
         else: return False
-        
+
+# HW/FW ADJUSTMENTS
+
+    # Functions to convert spindle RPMs if using a 110V spindle
+    # 'red' refers to 230V line (which is what electronics thinks spindle will be regardless of actual HW)
+    # 'green' refers to 110V line
+
+    def convert_from_110_to_230(self, rpm_green):
+        v_green = (rpm_green - 9375)/1562.5
+        rpm_red = (2187.5*v_green) + 3125
+        return rpm_red
+
+    def convert_from_230_to_110(self, rpm_red):
+        v_red = (rpm_red - 3125)/2187.5
+        rpm_green = (1562.5*v_red) + 9375
+        return rpm_green
         
 # CRITICAL START/STOP
 
@@ -693,7 +712,13 @@ class RouterMachine(object):
 
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
-    def spindle_speed(self): return int(self.s.spindle_speed)
+    def spindle_speed(self): 
+        if spindle_voltage == 110: 
+            # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
+            converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
+            return int(converted_speed)
+        else: 
+            return int(self.s.spindle_speed)
 
 # POSITIONAL SETTERS
 
