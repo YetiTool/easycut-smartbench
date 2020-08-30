@@ -356,7 +356,8 @@ class DeveloperScreen(Screen):
     def get_sw_update(self): 
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
-            os.system("cd /home/pi/easycut-smartbench/ && git checkout " + str(self.user_branch) + " && git pull")
+            os.system("cd /home/pi/easycut-smartbench/ && git checkout " + str(self.user_branch))
+            os.system("git pull")
             self.sm.current = 'rebooting'
 
 ## Diagnostics
