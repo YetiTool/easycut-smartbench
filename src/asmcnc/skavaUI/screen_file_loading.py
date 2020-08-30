@@ -274,9 +274,6 @@ class LoadingScreen(Screen):
                             # find 'S' prefix and strip out the value associated with it
                             rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
 
-                            print "spinlde voltage: "
-                            print (self.m.spindle_voltage)
-
                             # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                             # in order for the electronics to send the right voltage for the desired RPM
                             if self.m.spindle_voltage == 110:
@@ -288,9 +285,6 @@ class LoadingScreen(Screen):
                             if rpm < self.minimum_spindle_rpm:
                                 l_block = "M3S" + str(self.minimum_spindle_rpm)
 
-
-                                print "converted rpm: "
-                                print(l_block)
 
                     elif l_block.find('S0'):
                         l_block = l_block.replace('S0','')
