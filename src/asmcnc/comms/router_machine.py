@@ -327,8 +327,6 @@ class RouterMachine(object):
             file.write(file_string)
             file.close()
 
-            print "wrote settings"
-
             self.spindle_brand = brand
             self.spindle_voltage = voltage
             self.spindle_digital = digital

@@ -441,7 +441,7 @@ class SerialConnection(object):
 
             # Add time taken in seconds to calibration tracking
             self.m.time_since_calibration_seconds += time_taken_seconds
-            self.m.write_calibration_settines(self.m.time_since_calibration_seconds)
+            self.m.write_calibration_settings(self.m.time_since_calibration_seconds)
 
             # Add time taken in seconds since Z head last lubricated
             self.m.time_since_z_head_lubricated_seconds += time_taken_seconds
