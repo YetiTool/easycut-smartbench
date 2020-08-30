@@ -177,10 +177,8 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
-            log("Written to file")
-
             self.time_since_calibration_seconds = value
-            log("Write calibration settings")
+            log("calibration settings written to file")
             return True
 
         except:
