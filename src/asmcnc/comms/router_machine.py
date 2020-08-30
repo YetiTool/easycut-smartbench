@@ -177,7 +177,7 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
-            self.time_since_calibration_seconds = value
+            self.time_since_calibration_seconds = float(value)
             log("calibration settings written to file")
             return True
 
@@ -208,7 +208,7 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
-            self.time_since_z_head_lubricated_seconds = value
+            self.time_since_z_head_lubricated_seconds = float(value)
 
             log("Write z head maintenance settings")
             return True
@@ -245,9 +245,10 @@ class RouterMachine(object):
             file = open(self.z_head_laser_offset_file_path, "w")
             file.write(str(enabled) + "\n" + str(X) + "\n" + str(Y))
             file.close()
-            self.laser_offset_x_value = X
-            self.laser_offset_y_value = Y
-            self.is_laser_enabled = enabled
+            self.laser_offset_x_value = float(X)
+            self.laser_offset_y_value = float(Y)
+            if enabled == "True" or enabled == True: self.is_laser_enabled = True
+            else: self.is_laser_enabled = False
 
             return True
 
@@ -325,11 +326,12 @@ class RouterMachine(object):
             file.write(file_string)
             file.close()
 
-            self.spindle_brand = brand
-            self.spindle_voltage = voltage
-            self.spindle_digital = digital
-            self.spindle_cooldown_time_seconds = time_seconds
-            self.spindle_cooldown_rpm = rpm
+            self.spindle_brand = str(brand)
+            self.spindle_voltage = int(voltage)
+            if digital== 'True' or digital == True: self.spindle_digital = True
+            else: self.spindle_digital == False           
+            self.spindle_cooldown_time_seconds = int(time_seconds)
+            self.spindle_cooldown_rpm = int(rpm)
 
             log("Spindle cooldown settings written to file")
             return True
