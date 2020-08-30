@@ -179,7 +179,7 @@ class RouterMachine(object):
 
             log("Written to file")
 
-            self.m.time_since_calibration_seconds = value
+            self.time_since_calibration_seconds = value
             log("Write calibration settings")
             return True
 
@@ -718,7 +718,7 @@ class RouterMachine(object):
     def feed_rate(self): return int(self.s.feed_rate)
     def spindle_speed(self): 
         if self.spindle_voltage == 110: 
-            # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
+            # if not self.spindle_digital or not self.fw_can_operate_digital_spindle(): # this is only relevant much later on
             converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
             return int(converted_speed)
         else: 
