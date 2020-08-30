@@ -38,6 +38,7 @@ Builder.load_string("""
     pl_branch_label:pl_branch_label
     fw_version_label:fw_version_label
     dev_mode_toggle: dev_mode_toggle
+    user_branch: user_branch
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -83,10 +84,19 @@ Builder.load_string("""
             pos: self.parent.pos
             cols: 2
             size_hint_y: 0.4
+
+            GridLayout:
+                size: self.parent.size
+                pos: self.parent.pos
+                cols: 2
+
+                TextInput:
+                    id: user_branch
+                    text: 'branch'
                         
-            Button:
-                text: 'Pull Software'
-                on_press: root.get_sw_update()
+                Button:
+                    text: 'CO & Pull'
+                    on_press: root.get_sw_update()
 
             Button:
                 text: 'Flash Firmware'
@@ -344,8 +354,10 @@ class DeveloperScreen(Screen):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def get_sw_update(self): 
-        self.set.get_sw_update()
-        self.sm.current = 'rebooting'
+        if sys.platform != 'win32' and sys.platform != 'darwin':       
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
+            os.system("cd /home/pi/easycut-smartbench/ && git checkout " + str(self.user_branch) + " && git pull")
+            self.sm.current = 'rebooting'
 
 ## Diagnostics
 
