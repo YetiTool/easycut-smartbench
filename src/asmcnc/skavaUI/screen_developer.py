@@ -315,6 +315,8 @@ class DeveloperScreen(Screen):
         self.sw_branch_label.text = self.set.sw_branch
         self.pl_hash_label.text = self.set.pl_hash
         self.pl_branch_label.text = self.set.pl_branch
+
+        self.user_branch = self.set.sw_branch
     
     def on_pre_enter(self, *args):
         self.m.send_any_gcode_command('$I')
@@ -355,10 +357,9 @@ class DeveloperScreen(Screen):
 
     def get_sw_update(self): 
         if sys.platform != 'win32' and sys.platform != 'darwin':       
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
-            os.system("cd /home/pi/easycut-smartbench/ && git checkout " + str(self.user_branch))
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch))
             os.system("git pull")
-            self.sm.current = 'rebooting'
+            # self.sm.current = 'rebooting'
 
 ## Diagnostics
 
