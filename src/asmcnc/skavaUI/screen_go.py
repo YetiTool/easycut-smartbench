@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -380,6 +380,7 @@ class GoScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.job_gcode=kwargs['job']
+        self.am=kwargs['app_manager']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
@@ -420,6 +421,32 @@ class GoScreen(Screen):
             pass
         else: 
             self.reset_go_screen_prior_to_job_start()
+
+    def on_enter(self):
+
+        # Check brush use and lifetime: 
+        if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
+            brush_warning = "[b]Check your spindle brushes before starting your job![/b]\n\n" + \
+            "You have used SmartBench for [b]" + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours[/b] " + \
+            "since you updated your spindle brush settings, and you told us that they only have lifetime of [b]" + \
+            str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours[/b]!"
+            brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, brush_warning, 'brushes')
+
+        if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
+            lubrication_warning = "[b]Lubricate the z head before starting your job![/b]\n\n" + \
+            "You have used SmartBench for [b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + " hours[/b] " + \
+            "since you last told us that you lubricated the Z head\n\n" + \
+            "Will you lubricate the Z head now?\n\n" + \
+            "Saying 'OK' will reset this reminder."
+            lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, lubrication_warning, 'lubrication')
+
+        if self.m.time_since_calibration_seconds >= (320*3600):
+            calibration_warning = "[b]Calibrate SmartBench before starting your job![/b]\n\n" + \
+            "You have used SmartBench for [b]" + str(int(self.m.time_since_calibration_seconds/3600)) + " hours[/b] " + \
+            "since you last completed a full calibration\n\n" + \
+            "Will you calibrate SmartBench now?"
+            lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
+
 
 
 ### COMMON SCREEN PREP METHOD

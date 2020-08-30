@@ -62,9 +62,11 @@ class AppManagerClass(object):
         self.current_app = 'update'
         self.sm.current = 'update'
 
-    def start_maintenance_app(self):
+    def start_maintenance_app(self, landing_tab):
         if not self.sm.has_screen('maintenance'):
             maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m)
             self.sm.add_widget(maintenance_screen)
+
+        self.sm.get_screen('maintenance').landing_tab = landing_tab
         self.sm.current = 'maintenance'
     
