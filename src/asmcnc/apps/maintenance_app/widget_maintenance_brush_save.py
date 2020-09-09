@@ -123,6 +123,18 @@ class BrushSaveWidget(Widget):
             popup_info.PopupError(self.sm, brush_life_validation_error)
             return
 
+        # Check use <= lifetime
+        if use <= lifetime: pass # all good, carry on
+        else: 
+            # throw popup, return without saving
+            brush_both_validation_error = "The brush use hours should be less than or equal to the lifetime!\n\n" + \
+            "Please check your values."
+
+            popup_info.PopupError(self.sm, brush_both_validation_error)
+            return
+
+
+
         # write new values to file
         if self.m.write_spindle_brush_values(use, lifetime):
             popup_info.PopupMiniInfo(self.sm,"Settings saved!")
@@ -131,7 +143,8 @@ class BrushSaveWidget(Widget):
             " please contact the YetiTool support team."
             popup_info.PopupError(self.sm, warning_message)
 
+
         # Update the monitor :)
-        value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
         self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
 

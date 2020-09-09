@@ -44,7 +44,7 @@ Builder.load_string("""
         id: tab_panel
         size_hint: (None,None)
         height: dp(480)
-        width: dp(800)
+        width: dp(804)
         pos: (0, 0)
         padding: [dp(-2),dp(-2),dp(-2),dp(0)]
         spacing: [0,dp(-4)]
@@ -63,10 +63,10 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
+                width: dp(804)
                 height: dp(390)
                 orientation: "horizontal" 
-                padding: (10, 10, 10, 20)
+                padding: (12, 10, 12, 20)
                 spacing: (10)
                 canvas:
                     Color:
@@ -169,10 +169,10 @@ Builder.load_string("""
             background_down: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_grey.png'
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
+                width: dp(804)
                 height: dp(390)
                 orientation: "vertical" 
-                padding: (20, 20, 20, 20)
+                padding: (22, 20, 22, 20)
                 spacing: (20)
                 canvas:
                     Color:
@@ -302,10 +302,10 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
+                width: dp(804)
                 height: dp(390)
                 orientation: "vertical" 
-                padding: (20, 20, 20, 20)
+                padding: (22, 20, 22, 20)
                 spacing: (20)
                 canvas:
                     Color:
