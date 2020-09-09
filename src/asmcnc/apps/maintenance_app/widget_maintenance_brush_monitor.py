@@ -89,7 +89,7 @@ class BrushMonitorWidget(Widget):
         self.fuel_bar.size = [self.empty_monitor.width*self.monitor_percentage, self.empty_monitor.height*0.9]
         self.fuel_bar.x = self.empty_monitor.x + (self.empty_monitor.width*(1-self.monitor_percentage))
 
-        self.percentage.text = str(int(self.monitor_percentage*100)) + '%'
+        self.percentage.text = str(round(self.monitor_percentage*100)) + '%'
 
 
         # Change colour of the fuel bar in line with percentage
