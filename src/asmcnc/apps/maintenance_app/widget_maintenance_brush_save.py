@@ -127,7 +127,7 @@ class BrushSaveWidget(Widget):
         if use <= lifetime: pass # all good, carry on
         else: 
             # throw popup, return without saving
-            brush_both_validation_error = "The brush use hours should be less than or equal to the lifetime!.\n\n" + \
+            brush_both_validation_error = "The brush use hours should be less than or equal to the lifetime!\n\n" + \
             "Please check your values."
 
             popup_info.PopupError(self.sm, brush_both_validation_error)
