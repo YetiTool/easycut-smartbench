@@ -132,6 +132,6 @@ class BrushSaveWidget(Widget):
             popup_info.PopupError(self.sm, warning_message)
 
         # Update the monitor :)
-        value = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
+        value = 1 - float(self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)
         self.sm.get_screen('maintenance').brush_monitor_widget.set_percentage(value)
 
