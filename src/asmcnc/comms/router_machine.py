@@ -37,10 +37,6 @@ class RouterMachine(object):
     # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
     limit_switch_safety_distance = 1.0 
-    
-    z_lift_after_probing = 20.0
-    z_probe_speed = 60
-    z_touch_plate_thickness = 1.53
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
@@ -53,15 +49,22 @@ class RouterMachine(object):
 
     # PERSISTENT MACHINE VALUES
 
+
     ## PERSISTENT VALUES SETUP
     smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
     
     ### Individual files to hold persistent values
+    z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
     calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
     z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'   
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+
+    ## PROBE SETTINGS
+    z_lift_after_probing = 20.0
+    z_probe_speed = 60
+    z_touch_plate_thickness = 1.53
 
     ## CALIBRATION SETTINGS
     time_since_calibration_seconds = float(320*3600)
@@ -110,6 +113,12 @@ class RouterMachine(object):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
 
+        if not path.exists(self.z_touch_plate_thickness_file_path):
+            log("Creating z touch plate thickness file...")
+            file = open(self.z_touch_plate_thickness_file_path, "w+")
+            file.write(str(self.z_touch_plate_thickness))
+            file.close()
+
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
@@ -147,11 +156,43 @@ class RouterMachine(object):
             file.close()
 
     def get_persistent_values(self):
+        self.read_z_touch_plate_thickness()
         self.read_calibration_settings()
         self.read_z_head_maintenance_settings()
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+
+
+    ## TOUCH PLATE THICKENESS
+    def read_z_touch_plate_thickness(self):
+
+        try: 
+            file = open(self.z_touch_plate_thickness_file_path, 'r')
+            self.z_touch_plate_thickness  = float(file.read())
+            file.close()
+
+            log("Read in z touch plate thickness")
+            return True
+
+        except:
+            log("Unable to read in z touch plate thickness")
+            return False
+
+    def write_z_touch_plate_thickness(self, value):
+
+        try:
+            file = open(self.z_touch_plate_thickness_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.z_touch_plate_thickness = float(value)
+            log("z touch plate thickness written to file")
+            return True
+
+        except:
+            log("Unable to write z touch plate thickness")
+            return False
 
 
     ## CALIBRATION SETTINGS

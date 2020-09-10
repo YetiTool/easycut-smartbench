@@ -39,6 +39,7 @@ Builder.load_string("""
     fw_version_label:fw_version_label
     dev_mode_toggle: dev_mode_toggle
     user_branch: user_branch
+    z_touch_plate_entry: z_touch_plate_entry
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -112,7 +113,7 @@ Builder.load_string("""
                 on_press: root.ansible_service_run()
 
         Label:
-            text: 'Roll Back Updates'
+            text: 'Maintenance'
             color: 1,1,1,1
             size_hint_y: 0.25
             
@@ -127,10 +128,20 @@ Builder.load_string("""
             cols: 2
             size_hint_y: 0.4
                         
-            Button:
-                text: 'Roll Back Software'
-                disabled: 'true'
-#                 on_press: root.get_sw_update()
+            GridLayout:
+                size: self.parent.size
+                pos: self.parent.pos
+                cols: 2
+
+                TextInput:
+                    id: z_touch_plate_entry
+                    text: 'thickness'
+                    multiline: False
+                    input_filter: 'float'
+                        
+                Button:
+                    text: 'Update TP'
+                    on_press: root.update_z_touch_plate_thickness()
 
             Button:
                 text: 'Roll Back Firmware'
@@ -318,6 +329,7 @@ class DeveloperScreen(Screen):
         self.pl_branch_label.text = self.set.pl_branch
 
         self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
     
     def on_pre_enter(self, *args):
         self.m.send_any_gcode_command('$I')
@@ -388,6 +400,9 @@ class DeveloperScreen(Screen):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
 
+## Machine settings
+    def update_z_touch_plate_thickness(self):
+        self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
 
 ## GRBL Settings
 
