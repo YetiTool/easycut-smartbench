@@ -329,10 +329,10 @@ class DeveloperScreen(Screen):
         self.pl_branch_label.text = self.set.pl_branch
 
         self.user_branch.text = (self.set.sw_branch).strip('*')
-        self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
     
     def on_pre_enter(self, *args):
         self.m.send_any_gcode_command('$I')
+        self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
 
     def on_enter(self, *args):
         self.scrape_fw_version()
