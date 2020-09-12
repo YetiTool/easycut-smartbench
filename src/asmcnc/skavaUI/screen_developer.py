@@ -40,6 +40,7 @@ Builder.load_string("""
     dev_mode_toggle: dev_mode_toggle
     user_branch: user_branch
     z_touch_plate_entry: z_touch_plate_entry
+    reminder_disable: reminder_disable
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -143,20 +144,18 @@ Builder.load_string("""
                     text: 'Update TP'
                     on_press: root.update_z_touch_plate_thickness()
 
-            Button:
-                text: 'Roll Back Firmware'
-#                 on_press: root.flash_fw()
-                disabled: 'true'
+            ToggleButton:
+                id: reminder_disable
+                text: 'Reminders on/off'
+                on_press: root.toggle_reminders()
 
             Button:
-                text: 'Roll Back Platform'
-#                 on_press: root.set_tag_pl_update()
-                disabled: 'true'
+                text: 'Max out usage'
+                on_press: root.full_reminders()
                 
             Button:
-                text: 'Roll Back All'
-#                 on_press: root.ansible_service_run()
-                disabled: 'true'
+                text: 'FACTORY RESET'
+                on_press: root.factory_reset()
     
         GridLayout:
             size: self.parent.size
@@ -404,6 +403,57 @@ class DeveloperScreen(Screen):
     def update_z_touch_plate_thickness(self):
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
 
+
+    def toggle_reminders(self):
+        if self.reminder_disable.state == 'normal':
+            self.m.reminders_enabled = True
+        elif self.reminder_disable.state == 'down':
+            self.m.reminders_enabled = False
+
+    def full_reminders(self):
+        self.m.write_calibration_settings(float(320*3600))
+        self.m.write_z_head_maintenance_settings(float(50*3600))
+        # This is on purpose, want use == lifetime
+        self.m.write_spindle_brush_values(self.m.spindle_brush_lifetime_seconds, self.m.spindle_brush_lifetime_seconds)
+        self.m.reminders_enabled = True
+
+    def factory_reset(self):
+        lifetime = float(120*3600)
+        self.m.write_spindle_brush_values(0, lifetime)
+        self.m.write_z_head_maintenance_settings(0)
+        self.m.write_calibration_settings(0)
+        self.m.reminders_enabled = True
+
+        self.m.trigger_setup = True
+        self.m.write_set_up_options(True)
+
+        # Sets everything to zeroes or defaults
+
+        # Need a file where it basically just says whether it needs user to reset their maintenance settings
+
+        # trigger_setup = True
+        # calibrated_for_first_time = False
+        # z_head_lubricated_for_first_time = False
+        # warranty_registration = False
+        # spindle_brush_values_set = False
+
+
+        # This will also be triggered if a new file/folder gets created?
+
+        # Something like: 
+
+        # Welcome to SmartBench! 
+
+        # Please visit the Maintenance App to enter your machine settings,
+        # and calibrate your machine with the Calibration App. 
+
+        # You may see this message again if you have had to repair your software or deleted your machine settings. 
+
+        # Remind me later // Set up now (takes user to either maintenance or calibration)
+
+
+
+
 ## GRBL Settings
 
     def download_grbl_settings(self):
@@ -566,5 +616,8 @@ class DeveloperScreen(Screen):
 #         os.system("./update_fw.sh")
 #         # sys.exit()
 #     
+
+
+
 
 

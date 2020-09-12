@@ -21,18 +21,31 @@ from kivy.graphics import Color, Rectangle
 
 class PopupWelcome(Widget):
 
-    def __init__(self, screen_manager, description):
+    def __init__(self, screen_manager, machine, description):
         
-        self.shapecutter_sm = screen_manager
+        self.sm = screen_manager
+        self.m = machine
         
+        def set_trigger_to_false(*args):
+          self.m.write_set_up_options(False)
+          self.sm.get_screen('lobby').carousel.load_next(mode='next')
+
+        def set_trigger_to_true(*args):
+          self.m.write_set_up_options(True)
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
+        label = Label(size_hint_y=2, text_size=(340, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
+
+        remind_me_button = Button(text='[b]Remind me later[/b]', markup = True)
+        remind_me_button.background_normal = ''
+        remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[90,20,90,0])
+        btn_layout.add_widget(remind_me_button)       
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
@@ -56,6 +69,9 @@ class PopupWelcome(Widget):
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=set_trigger_to_false)
+        remind_me_button.bind(on_press=popup.dismiss)
+        remind_me_button.bind(on_press=set_trigger_to_true)
 
         popup.open()
         
