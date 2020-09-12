@@ -54,6 +54,7 @@ class RouterMachine(object):
     smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
     
     ### Individual files to hold persistent values
+    set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
     z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
     calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
     z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'   
@@ -90,6 +91,9 @@ class RouterMachine(object):
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
+    reminders_enabled = True
+
+    trigger_setup = False
             
     def __init__(self, win_serial_port, screen_manager):
 
@@ -112,6 +116,12 @@ class RouterMachine(object):
         if not path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
+
+        if not path.exists(self.set_up_options_file_path):
+            log("Creating sb_values dir...")
+            file = open(self.set_up_options_file_path, "w+")
+            file.write(str(self.trigger_setup))
+            file.close()
 
         if not path.exists(self.z_touch_plate_thickness_file_path):
             log("Creating z touch plate thickness file...")
@@ -156,12 +166,46 @@ class RouterMachine(object):
             file.close()
 
     def get_persistent_values(self):
+        self.read_set_up_options()
         self.read_z_touch_plate_thickness()
         self.read_calibration_settings()
         self.read_z_head_maintenance_settings()
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+
+
+    ## SET UP OPTIONS
+    def read_set_up_options(self):
+        try: 
+            file = open(self.set_up_options_file_path, 'r')
+            trigger_bool_string  = float(file.read())
+            file.close()
+
+            if trigger_bool_string == 'False': self.m.trigger_setup = False
+            else: self.m.trigger_setup = True
+
+            log("Read in set up options")
+            return True
+
+        except:
+            log("Unable to read in set up options")
+            return False
+
+    def write_set_up_options(self, value):
+
+        try:
+            file = open(self.set_up_options_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.m.trigger_setup = value
+            log("set up options written to file")
+            return True
+
+        except:
+            log("Unable to write set up options")
+            return False
 
 
     ## TOUCH PLATE THICKENESS
