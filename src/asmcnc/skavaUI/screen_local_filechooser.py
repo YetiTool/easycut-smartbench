@@ -328,14 +328,24 @@ class LocalFileChooser(Screen):
 
     def delete_selected(self, filename):        
         if os.path.isfile(filename):
-            os.remove(filename)
+            try: 
+                os.remove(filename)
+                
+            except: 
+                print "attempt to delete folder, or undeletable file"
+
             self.refresh_filechooser()    
 
     def delete_all(self):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
         if files_in_cache:
             for file in files_in_cache:
-                os.remove(job_cache_dir+file)
+                try: 
+                    os.remove(job_cache_dir+file)
+
+                except: 
+                    print "attempt to delete folder, or undeletable file"
+
         self.refresh_filechooser()       
 
 
