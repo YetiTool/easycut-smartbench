@@ -182,8 +182,8 @@ class RouterMachine(object):
             trigger_bool_string  = float(file.read())
             file.close()
 
-            if trigger_bool_string == 'False': self.m.trigger_setup = False
-            else: self.m.trigger_setup = True
+            if trigger_bool_string == 'False': self.trigger_setup = False
+            else: self.trigger_setup = True
 
             log("Read in set up options")
             return True
@@ -199,7 +199,7 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
-            self.m.trigger_setup = value
+            self.trigger_setup = value
             log("set up options written to file")
             return True
 
