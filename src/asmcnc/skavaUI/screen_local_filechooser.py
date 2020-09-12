@@ -328,7 +328,12 @@ class LocalFileChooser(Screen):
 
     def delete_selected(self, filename):        
         if os.path.isfile(filename):
-            os.remove(filename)
+            try: 
+                os.remove(filename)
+                
+            except: 
+                print "attempt to delete folder, or undeletable file"
+
             self.refresh_filechooser()    
 
     def delete_all(self):
