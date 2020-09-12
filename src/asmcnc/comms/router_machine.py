@@ -118,7 +118,7 @@ class RouterMachine(object):
             os.mkdir(self.smartbench_values_dir)
 
         if not path.exists(self.set_up_options_file_path):
-            log("Creating sb_values dir...")
+            log("Creating set up options file...")
             file = open(self.set_up_options_file_path, "w+")
             file.write(str(self.trigger_setup))
             file.close()
@@ -179,10 +179,10 @@ class RouterMachine(object):
     def read_set_up_options(self):
         try: 
             file = open(self.set_up_options_file_path, 'r')
-            trigger_bool_string  = float(file.read())
+            trigger_bool_string  = str(file.read())
             file.close()
 
-            if trigger_bool_string == 'False': self.trigger_setup = False
+            if trigger_bool_string == 'False' or trigger_bool_string == False: self.trigger_setup = False
             else: self.trigger_setup = True
 
             log("Read in set up options")
