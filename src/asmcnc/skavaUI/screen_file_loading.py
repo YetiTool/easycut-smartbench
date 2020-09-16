@@ -302,6 +302,9 @@ class LoadingScreen(Screen):
 
                         feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
+                        if float(feed_rate) == 0:
+                            l_block = l_block.replace('F0','')
+
                         if float(feed_rate) < self.minimum_feed_rate:
                             l_block = l_block.replace('F'+ feed_rate, 'F' + str(self.minimum_feed_rate))
 
