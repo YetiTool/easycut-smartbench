@@ -166,6 +166,10 @@ class LoadingScreen(Screen):
 
     # scrubbing parameters        
     minimum_spindle_rpm = 3500
+    maximum_spindle_rpm = 25000
+
+    minimum_feed_rate = 100
+    maximum_feed_rate = 5000
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -286,11 +290,24 @@ class LoadingScreen(Screen):
                             if rpm < self.minimum_spindle_rpm:
                                 l_block = "M3S" + str(self.minimum_spindle_rpm)
 
+                            if rpm > self.maximum_spindle_rpm: 
+                                l_block = "M3S" + str(self.maximum_spindle_rpm)
+
 
                     elif l_block.find('S0'):
                         l_block = l_block.replace('S0','')
 
     
+                    if l_block.find ('F') >= 0:
+
+                        feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+
+                        if float(feed_rate) < self.minimum_feed_rate:
+                            l_block = l_block.replace('F'+ feed_rate, 'F' + str(self.minimum_feed_rate))
+
+                        if float(feed_rate) > self.maximum_feed_rate:
+                            l_block = l_block.replace('F'+ feed_rate, 'F' + str(self.maximum_feed_rate))
+
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             
                 self.lines_scrubbed += 1
