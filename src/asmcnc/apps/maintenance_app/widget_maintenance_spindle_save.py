@@ -182,7 +182,7 @@ class SpindleSaveWidget(Widget):
             
             popup_info.PopupInfo(self.sm, 700, spindle_voltage_info)
 
-        # brands = ['YETI digital 230V', 'YETI digital 110V', 'YETI manual 230V', 'YETI manual 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
+        # brands = ['YETI digital 230V', 'YETI digital 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
 
 
     # spindle_brand = 'YETI' # String to hold brand name
