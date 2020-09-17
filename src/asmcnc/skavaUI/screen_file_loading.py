@@ -302,22 +302,24 @@ class LoadingScreen(Screen):
     
                     if l_block.find ('F') >= 0:
 
-                        feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+                        try: feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
-                        if float(feed_rate) < self.minimum_feed_rate:
-                            
-                            self.sm.get_screen('check_job').flag_min_feed_rate = True
+                            if float(feed_rate) < self.minimum_feed_rate:
+                                
+                                self.sm.get_screen('check_job').flag_min_feed_rate = True
 
-                            if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
-                                self.sm.get_screen('check_job').as_low_as = float(feed_rate)
+                                if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
+                                    self.sm.get_screen('check_job').as_low_as = float(feed_rate)
 
 
-                        if float(feed_rate) > self.maximum_feed_rate:
+                            if float(feed_rate) > self.maximum_feed_rate:
 
-                            self.sm.get_screen('check_job').flag_max_feed_rate = True
+                                self.sm.get_screen('check_job').flag_max_feed_rate = True
 
-                            if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
-                                self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+                                if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
+                                    self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+
+                        except: print 'Failed to extract feed rate. Probable G-code error!'
 
 
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
