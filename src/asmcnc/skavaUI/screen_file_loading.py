@@ -302,7 +302,9 @@ class LoadingScreen(Screen):
     
                     if l_block.find ('F') >= 0:
 
-                        try: feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+                        try: 
+
+                            feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
                             if float(feed_rate) < self.minimum_feed_rate:
                                 
