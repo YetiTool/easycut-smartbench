@@ -435,7 +435,7 @@ class CheckingScreen(Screen):
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = '[b]Error found![/b]'
+                self.job_checking_checked = '[b]Errors found![/b]'
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = 'Errors found in G-code.\n\nPlease review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
@@ -554,6 +554,10 @@ class CheckingScreen(Screen):
         self.check_outcome = ''
         self.display_output = ''
         self.job_ok = False
+        self.flag_min_feed_rate = False
+        self.as_low_as = 100
+        self.flag_max_feed_rate = False
+        self.as_high_as = 5000
         self.error_log = []
         if self.m.s.is_job_streaming:
             self.m.s.cancel_stream()
