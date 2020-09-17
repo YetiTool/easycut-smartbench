@@ -383,7 +383,7 @@ class CheckingScreen(Screen):
             
             if self.m.state() == "Idle":
                 self.job_checking_checked = '[b]Checking job...[/b]'
-                self.check_outcome = 'Sniffing out any gcode errors...'
+                self.check_outcome = 'Looking for gcode errors...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
@@ -446,6 +446,10 @@ class CheckingScreen(Screen):
                 self.job_checking_checked = '[b]Advisories[/b]'
                 self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
                                     'Please review your job before running it.'
+                self.job_ok = True
+                
+                # add job checked already flag here
+                self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
 
             else:
                 self.job_checking_checked = '[b]File is OK![/b]'
