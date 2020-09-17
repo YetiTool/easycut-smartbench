@@ -222,7 +222,12 @@ class CheckingScreen(Screen):
     
     job_box = job_envelope.BoundingBox()
     
-#     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
+
+    flag_min_feed_rate = False
+    as_low_as = 100
+    flag_max_feed_rate = False
+    as_high_as = 5000
+
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -274,7 +279,6 @@ class CheckingScreen(Screen):
             # update screen
             self.check_outcome = 'Job is within bounds.'
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
-            # auto check g-code? Yeah, why not.
 
         else:
             log("Out of bounds...")
@@ -437,6 +441,12 @@ class CheckingScreen(Screen):
                 elif self.entry_screen == 'home':
                     self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
                 self.job_ok = False
+
+            elif self.flag_min_feed_rate or self.flag_max_feed_rate:
+                self.job_checking_checked = '[b]Advisories[/b]'
+                self.check_outcome = 'This file will run, but it might not run in the way you expect. ' + \
+                                    'Please review your job before running it, and apply changes if necessary.'
+
             else:
                 self.job_checking_checked = '[b]File is OK![/b]'
                 self.check_outcome =  'No errors found. You\'re good to go!'
@@ -456,6 +466,21 @@ class CheckingScreen(Screen):
 
 
     def write_error_output(self, error_log):
+
+        self.display_output = ''
+
+        ## PUT FEED/SPEED MIN/MAXES HERE: 
+
+        if self.flag_max_feed_rate or self.flag_min_feed_rate:
+            self.display_output = self.display_output + '[color=#FFFFFF][b]FEED RATE WARNING[/b][/color]\n\n'
+
+            if self.flag_min_feed_rate: 
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as low as ' + self.as_low_as + ' mm/min.\n' + \
+                                    'The recommended minimum feed rate is 100 mm/min.[/color]'
+
+            if self.flag_max_feed_rate:
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as high as ' + self.as_high_as + ' mm/min.\n' + \
+                                    'The recommended maximum feed rate is 5000 mm/min.[/color]'
         
         error_summary = []
         
@@ -471,10 +496,10 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         if error_summary == []:
-            self.display_output = ''
+            self.display_output = self.display_output + ''
         else:
             # Put everything into a giant string for the ReStructed Text object        
-            self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
+            self.display_output = self.display_output + '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
             '\n\n'.join(map(str,error_summary))
         
 #        # If want to print all the lines of the file and oks:

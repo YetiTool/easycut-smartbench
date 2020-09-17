@@ -168,8 +168,10 @@ class LoadingScreen(Screen):
     minimum_spindle_rpm = 3500
     maximum_spindle_rpm = 25000
 
+    # Feed rate flag parameters
     minimum_feed_rate = 100
     maximum_feed_rate = 5000
+
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -302,14 +304,21 @@ class LoadingScreen(Screen):
 
                         feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
 
-                        if float(feed_rate) == 0:
-                            l_block = l_block.replace('F0','')
-
                         if float(feed_rate) < self.minimum_feed_rate:
-                            l_block = l_block.replace('F'+ feed_rate, 'F' + str(self.minimum_feed_rate))
+                            
+                            self.sm.get_screen('check_job').flag_min_feed_rate = True
+
+                            if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
+                                self.sm.get_screen('check_job').as_low_as = float(feed_rate)
+
 
                         if float(feed_rate) > self.maximum_feed_rate:
-                            l_block = l_block.replace('F'+ feed_rate, 'F' + str(self.maximum_feed_rate))
+
+                            self.sm.get_screen('check_job').flag_max_feed_rate = True
+
+                            if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
+                                self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+
 
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             
