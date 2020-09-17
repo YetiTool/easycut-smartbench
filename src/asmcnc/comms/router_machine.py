@@ -68,10 +68,10 @@ class RouterMachine(object):
     z_touch_plate_thickness = 1.53
 
     ## CALIBRATION SETTINGS
-    time_since_calibration_seconds = float(320*3600)
+    time_since_calibration_seconds = 0
 
     ## Z HEAD MAINTENANCE SETTINGS
-    time_since_z_head_lubricated_seconds = float(50*3600)
+    time_since_z_head_lubricated_seconds = 0
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -81,13 +81,13 @@ class RouterMachine(object):
     is_laser_enabled = False
 
     ## BRUSH VALUES
-    spindle_brush_use_seconds = float(0*3600)
+    spindle_brush_use_seconds = 0
     spindle_brush_lifetime_seconds = float(120*3600)
 
     ## SPINDLE COOLDOWN OPTIONS
     spindle_brand = 'YETI' # String to hold brand name
     spindle_voltage = 230 # Options are 230V or 110V
-    spindle_digital = False #spindle can be manual or digital
+    spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 

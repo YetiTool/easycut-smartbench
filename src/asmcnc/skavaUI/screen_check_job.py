@@ -444,7 +444,7 @@ class CheckingScreen(Screen):
 
             elif self.flag_min_feed_rate or self.flag_max_feed_rate:
                 self.job_checking_checked = '[b]Advisories[/b]'
-                self.check_outcome = 'This file will run, but it might not run in the way you expect. ' + \
+                self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
                                     'Please review your job before running it, and apply changes if necessary.'
 
             else:
@@ -475,11 +475,11 @@ class CheckingScreen(Screen):
             self.display_output = self.display_output + '[color=#FFFFFF][b]FEED RATE WARNING[/b][/color]\n\n'
 
             if self.flag_min_feed_rate: 
-                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as low as ' + str(self.as_low_as) + ' mm/min.\n' + \
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as low as ' + str(self.as_low_as) + ' mm/min.\n\n' + \
                                     'The recommended minimum feed rate is 100 mm/min.[/color]'
 
             if self.flag_max_feed_rate:
-                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as high as ' + str(self.as_high_as) + ' mm/min.\n' + \
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as high as ' + str(self.as_high_as) + ' mm/min.\n\n' + \
                                     'The recommended maximum feed rate is 5000 mm/min.[/color]'
         
         error_summary = []
