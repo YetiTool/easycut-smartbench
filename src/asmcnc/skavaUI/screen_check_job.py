@@ -222,7 +222,12 @@ class CheckingScreen(Screen):
     
     job_box = job_envelope.BoundingBox()
     
-#     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
+
+    flag_min_feed_rate = False
+    as_low_as = 100
+    flag_max_feed_rate = False
+    as_high_as = 5000
+
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -274,7 +279,6 @@ class CheckingScreen(Screen):
             # update screen
             self.check_outcome = 'Job is within bounds.'
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
-            # auto check g-code? Yeah, why not.
 
         else:
             log("Out of bounds...")
@@ -379,7 +383,7 @@ class CheckingScreen(Screen):
             
             if self.m.state() == "Idle":
                 self.job_checking_checked = '[b]Checking job...[/b]'
-                self.check_outcome = 'Sniffing out any gcode errors...'
+                self.check_outcome = 'Looking for gcode errors...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
@@ -431,12 +435,22 @@ class CheckingScreen(Screen):
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = '[b]Error found![/b]'
+                self.job_checking_checked = '[b]Errors found![/b]'
                 if self.entry_screen == 'file_loading':
-                    self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                    self.check_outcome = 'Errors found in G-code.\n\nPlease review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
-                    self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
+                    self.check_outcome = 'Errors found in G-code.\n\nPlease review and re-load your job before attempting to run it.'
                 self.job_ok = False
+
+            elif self.flag_min_feed_rate or self.flag_max_feed_rate:
+                self.job_checking_checked = '[b]Advisories[/b]'
+                self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
+                                    'Please review your job before running it.'
+                self.job_ok = True
+                
+                # add job checked already flag here
+                self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
+
             else:
                 self.job_checking_checked = '[b]File is OK![/b]'
                 self.check_outcome =  'No errors found. You\'re good to go!'
@@ -456,6 +470,21 @@ class CheckingScreen(Screen):
 
 
     def write_error_output(self, error_log):
+
+        self.display_output = ''
+
+        ## PUT FEED/SPEED MIN/MAXES HERE: 
+
+        if self.flag_max_feed_rate or self.flag_min_feed_rate:
+            self.display_output = self.display_output + '[color=#FFFFFF][b]FEED RATE WARNING[/b][/color]\n\n'
+
+            if self.flag_min_feed_rate: 
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as low as ' + str(self.as_low_as) + ' mm/min.[/color]\n\n' + \
+                                    '[color=#FFFFFF]The recommended minimum feed rate is 100 mm/min.[/color]\n\n'
+
+            if self.flag_max_feed_rate:
+                self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as high as ' + str(self.as_high_as) + ' mm/min.[/color]\n\n' + \
+                                    '[color=#FFFFFF]The recommended maximum feed rate is 5000 mm/min.[/color]\n\n'
         
         error_summary = []
         
@@ -471,10 +500,10 @@ class CheckingScreen(Screen):
                 error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
         
         if error_summary == []:
-            self.display_output = ''
+            self.display_output = self.display_output + ''
         else:
             # Put everything into a giant string for the ReStructed Text object        
-            self.display_output = '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
+            self.display_output = self.display_output + '[color=#FFFFFF][b]ERROR SUMMARY[/b][/color]\n\n' + \
             '\n\n'.join(map(str,error_summary))
         
 #        # If want to print all the lines of the file and oks:
@@ -525,6 +554,10 @@ class CheckingScreen(Screen):
         self.check_outcome = ''
         self.display_output = ''
         self.job_ok = False
+        self.flag_min_feed_rate = False
+        self.as_low_as = 100
+        self.flag_max_feed_rate = False
+        self.as_high_as = 5000
         self.error_log = []
         if self.m.s.is_job_streaming:
             self.m.s.cancel_stream()
