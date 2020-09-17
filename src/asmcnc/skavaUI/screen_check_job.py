@@ -437,15 +437,15 @@ class CheckingScreen(Screen):
 
                 self.job_checking_checked = '[b]Error found![/b]'
                 if self.entry_screen == 'file_loading':
-                    self.check_outcome = 'Errors found in G-code. Please review your job before attempting to re-load it.'
+                    self.check_outcome = 'Errors found in G-code.\n\nPlease review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
-                    self.check_outcome = 'Errors found in G-code. Please review and re-load your job before attempting to run it.'
+                    self.check_outcome = 'Errors found in G-code.\n\nPlease review and re-load your job before attempting to run it.'
                 self.job_ok = False
 
             elif self.flag_min_feed_rate or self.flag_max_feed_rate:
                 self.job_checking_checked = '[b]Advisories[/b]'
                 self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
-                                    'Please review your job before running it, and apply changes if necessary.'
+                                    'Please review your job before running it.'
 
             else:
                 self.job_checking_checked = '[b]File is OK![/b]'
@@ -476,11 +476,11 @@ class CheckingScreen(Screen):
 
             if self.flag_min_feed_rate: 
                 self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as low as ' + str(self.as_low_as) + ' mm/min.[/color]\n\n' + \
-                                    '[color=#FFFFFF]The recommended minimum feed rate is 100 mm/min.[/color]'
+                                    '[color=#FFFFFF]The recommended minimum feed rate is 100 mm/min.[/color]\n\n'
 
             if self.flag_max_feed_rate:
                 self.display_output = self.display_output + '[color=#FFFFFF]This file contains feed rate commands as high as ' + str(self.as_high_as) + ' mm/min.[/color]\n\n' + \
-                                    '[color=#FFFFFF]The recommended maximum feed rate is 5000 mm/min.[/color]'
+                                    '[color=#FFFFFF]The recommended maximum feed rate is 5000 mm/min.[/color]\n\n'
         
         error_summary = []
         
