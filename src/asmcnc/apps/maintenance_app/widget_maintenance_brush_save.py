@@ -80,18 +80,7 @@ class BrushSaveWidget(Widget):
 
     def get_info(self):
 
-        brush_info = "[b]Brush use:[/b]\n" + \
-        "   [b]Value:[/b] The running hours of the brushes.\n" + \
-        "   [b]Restore:[/b] Return to the hours previously logged.\n" + \
-        "   [b]Reset:[/b] Set the running hours to zero.\n\n" + \
-        "[b]Brush life:[/b]\n" + \
-        "   [b]Value:[/b] The hours the brushes are expected to last.\n" + \
-        "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
-        " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
-        "   [b]Restore:[/b] Return the brush life to the hours previously set.\n" + \
-        "   [b]Reset:[/b] Sets to the brush life to 120 hours.\n"
-
-        popup_info.PopupInfo(self.sm, 700, brush_info)
+        popup_maintenance.PopupBrushInfo(self.sm)
 
     def save(self):
 
