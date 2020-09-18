@@ -397,8 +397,10 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.z_limit_set = False
         self.spindle_pass_fail_list = []
+        self.string_overload_summary = ''
 
     def on_enter(self, *args):
+        self.string_overload_summary = ''
         self.scrape_fw_version()
         self.m.is_laser_enabled = True
         self.m.s.write_command('$21 = 0')
@@ -593,6 +595,9 @@ class ZHeadDiagnosticsScreen(Screen):
 
             if 'False' in self.spindle_pass_fail_list:
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+                test = self.string_overload_summary.split('Spindle ')
+                popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3])
+
             else: 
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
@@ -606,9 +611,10 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def spindle_check(self, M3_command, expected_mV):
 
+
         def overload_check(mid_range_mV):
 
-            print ('Voltage out: ' + str(self.m.s.overload_pin_mV))
+            self.string_overload_summary = self.string_overload_summary + '\n' + 'Voltage out: ' + str(self.m.s.overload_pin_mV)
 
 
             # 5000 RPM = 1.7V - 2.3V
@@ -619,8 +625,8 @@ class ZHeadDiagnosticsScreen(Screen):
             elif mid_range_mV == 3900: tolerance = 600
             elif mid_range_mV == 5750: tolerance = 750
 
-            print ('Min: ' + str(mid_range_mV - tolerance))
-            print ('Max: ' + str(mid_range_mV + tolerance))
+            self.string_overload_summary = self.string_overload_summary + '\n' + 'Min: ' + str(mid_range_mV - tolerance)
+            self.string_overload_summary = self.string_overload_summary + '\n'+ 'Max: ' + str(mid_range_mV + tolerance)
 
             if (self.m.s.overload_pin_mV >= mid_range_mV - tolerance) and (self.m.s.overload_pin_mV <= mid_range_mV + tolerance):
                 self.spindle_pass_fail_list.append('True')
@@ -630,7 +636,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
 
-        print ('Spindle speed: ' + str(M3_command))
+        self.string_overload_summary = self.string_overload_summary + '\n' + 'Spindle speed: ' + str(M3_command)
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV), 0.5)
 
