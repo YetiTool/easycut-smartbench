@@ -793,7 +793,7 @@ class PopupReminder(Widget):
 
         
         def calibration_delay(*args):
-          new_time = float(float(320*3600) + self.time_to_remind_user_to_calibrate_seconds)
+          new_time = float(float(320*3600) + self.m.time_to_remind_user_to_calibrate_seconds)
           self.m.write_calibration_settings(self.m.time_since_calibration_seconds, new_time)
 
 
