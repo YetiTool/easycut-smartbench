@@ -443,13 +443,13 @@ class GoScreen(Screen):
                 lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, lubrication_warning, 'lubrication')
 
             if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
-                calibration_warning = "[b]Calibrate SmartBench before starting your job![/b]\n\n" + \
-                "You have used SmartBench for [b]" + str(int(self.m.time_since_calibration_seconds/3600)) + " hours[/b] " + \
-                "since you last completed a full calibration\n\n" + \
+                calibration_warning = "You have used SmartBench for [b]" + str(int(self.m.time_since_calibration_seconds/3600)) + " hours[/b] " + \
+                "since its last calibration\n\n" + \
+                "A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.\n\n" + \
+                "A calibration procedure can take approximately 10 minutes with basic tools.\n\n" + \
+                "Calibration is not compulsory.\n\n" + \
                 "Will you calibrate SmartBench now?"
                 lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
-
-
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
