@@ -494,8 +494,12 @@ class MaintenanceScreenClass(Screen):
         self.brush_monitor_widget.set_percentage(value)
 
         # SPINDLE
-        if self.m.spindle_digital: string_digital = 'digital'
-        else: string_digital = 'manual'
+        if self.m.spindle_digital: 
+            string_digital = 'digital'
+            self.spindle_settings_widget.spindle_cooldown_speed.disabled = False
+        else: 
+            string_digital = 'manual'
+            self.spindle_settings_widget.spindle_cooldown_speed.disabled = True
 
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)

@@ -170,6 +170,7 @@ Builder.load_string("""
                 values: root.brand_list
                 option_cls: Factory.get("SpindleSpinner")
                 background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
+                on_text: root.autofill_rpm_time()
                 # background_color: [1,1,1,0]
 
 
@@ -185,4 +186,18 @@ class SpindleSettingsWidget(Widget):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+    def autofill_rpm_time(self):
 
+        if 'AMB' in self.spindle_brand.text:
+            self.spindle_cooldown_time.text = str(10)
+            self.spindle_cooldown_speed.text = str(10000)
+
+        if 'YETI' in self.spindle_brand.text:
+            self.spindle_cooldown_time.text = str(30)
+            self.spindle_cooldown_speed.text = str(20000)
+
+        if 'manual' in self.spindle_brand.text:
+            self.spindle_cooldown_speed.disabled = True
+
+        if 'digital' in self.spindle_brand.text:
+            self.spindle_cooldown_speed.disabled = False

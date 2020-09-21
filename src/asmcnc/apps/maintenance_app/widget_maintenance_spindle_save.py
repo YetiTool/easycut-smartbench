@@ -99,8 +99,8 @@ class SpindleSaveWidget(Widget):
 
             print brand
 
-            if digital == 'digital': digital = True
-            elif digital =='manual': digital = False
+            if 'digital' in digital: digital = True
+            elif 'manual' in digital: digital = False
             else:
                 brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
                 "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
