@@ -394,7 +394,7 @@ class RouterMachine(object):
             self.spindle_brand = str(read_spindle[0])
             self.spindle_voltage = int(read_spindle[1])
             if read_spindle[2] == 'True': self.spindle_digital = True
-            else: self.spindle_digital == False
+            else: self.spindle_digital = False
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
