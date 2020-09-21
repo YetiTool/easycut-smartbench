@@ -449,7 +449,7 @@ class GoScreen(Screen):
                 "Will you calibrate SmartBench now?"
                 lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
 
-        if not self.temp_suppress_prompts: self.temp_suppress_prompts = True
+        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
 
 ### COMMON SCREEN PREP METHOD
