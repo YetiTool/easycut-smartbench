@@ -792,21 +792,28 @@ class PopupReminder(Widget):
               self.m.write_z_head_maintenance_settings(0)
 
         
+        def calibration_delay(*args):
+          new_time = float(float(320*3600) + self.m.time_to_remind_user_to_calibrate_seconds)
+          self.m.write_calibration_settings(self.m.time_since_calibration_seconds, new_time)
+
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,0], markup = True)
 
         if go_to == 'calibration':
           ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
+          back_button = Button(text='[b]Remind me in 320 hours[/b]', markup = True)
 
         if go_to == 'lubrication':
           ok_button = Button(text='[b]Ok! Z-head lubricated![/b]', markup = True)
+          back_button = Button(text='[b]Remind me later[/b]', markup = True)
 
         if go_to == 'brushes':
           ok_button = Button(text='[b]Change brushes now![/b]', markup = True)
+          back_button = Button(text='[b]Remind me later[/b]', markup = True)
 
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]Remind me later[/b]', markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -837,6 +844,9 @@ class PopupReminder(Widget):
         
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=open_app)
-        back_button.bind(on_press=popup.dismiss)       
+        back_button.bind(on_press=popup.dismiss)
+
+        if go_to == 'calibration':
+          back_button.bind(on_press=calibration_delay)      
 
         popup.open()  
