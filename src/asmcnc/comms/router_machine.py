@@ -69,6 +69,7 @@ class RouterMachine(object):
 
     ## CALIBRATION SETTINGS
     time_since_calibration_seconds = 0
+    time_to_remind_user_to_calibrate_seconds = float(320*3600)
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
@@ -156,7 +157,7 @@ class RouterMachine(object):
         if not path.exists(self.calibration_settings_file_path):
             log('Creating calibration settings file...')
             file = open(self.calibration_settings_file_path, 'w+')
-            file.write(str(self.time_since_calibration_seconds))
+            file.write(str(self.time_since_calibration_seconds) + "\n" + str(self.time_to_remind_user_to_calibrate_seconds))
             file.close()
 
         if not path.exists(self.z_head_maintenance_settings_file_path):
@@ -245,8 +246,11 @@ class RouterMachine(object):
 
         try: 
             file = open(self.calibration_settings_file_path, 'r')
-            self.time_since_calibration_seconds  = float(file.read())
+            [read_time_since_calibration_seconds, read_time_to_remind_user_to_calibrate_seconds]  = file.read().splitlines()
             file.close()
+
+            self.time_since_calibration_seconds = float(read_time_since_calibration_seconds)
+            self.time_to_remind_user_to_calibrate_seconds = float(read_time_to_remind_user_to_calibrate_seconds)
 
             log("Read in calibration settings")
             return True
@@ -255,14 +259,15 @@ class RouterMachine(object):
             log("Unable to read calibration settings")
             return False
 
-    def write_calibration_settings(self, value):
+    def write_calibration_settings(self, since_calibration, remind_time):
 
         try:
             file = open(self.calibration_settings_file_path, 'w+')
-            file.write(str(value))
+            file.write(str(since_calibration) + "\n" + str(remind_time))
             file.close()
 
-            self.time_since_calibration_seconds = float(value)
+            self.time_since_calibration_seconds = float(since_calibration)
+            self.time_to_remind_user_to_calibrate_seconds = float(remind_time)
             log("calibration settings written to file")
             return True
 

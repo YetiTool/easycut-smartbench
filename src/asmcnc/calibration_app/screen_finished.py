@@ -80,7 +80,7 @@ class FinishedCalScreenClass(Screen):
             
     def on_enter(self):
         if self.calibration_cancelled == False:
-            self.m.write_calibration_settings(0)
+            self.m.write_calibration_settings(0, float(320*3600))
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1.5)
  
     def exit_screen(self, dt):

@@ -411,7 +411,7 @@ class DeveloperScreen(Screen):
             self.m.reminders_enabled = False
 
     def full_reminders(self):
-        self.m.write_calibration_settings(float(320*3600))
+        self.m.write_calibration_settings(float(320*3600),float(320*3600))
         self.m.write_z_head_maintenance_settings(float(50*3600))
         # This is on purpose, want use == lifetime
         self.m.write_spindle_brush_values(self.m.spindle_brush_lifetime_seconds, self.m.spindle_brush_lifetime_seconds)
@@ -421,7 +421,7 @@ class DeveloperScreen(Screen):
         lifetime = float(120*3600)
         self.m.write_spindle_brush_values(0, lifetime)
         self.m.write_z_head_maintenance_settings(0)
-        self.m.write_calibration_settings(0)
+        self.m.write_calibration_settings(0, float(320*3600))
         self.m.reminders_enabled = True
 
         self.m.trigger_setup = True
