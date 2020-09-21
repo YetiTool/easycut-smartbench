@@ -778,7 +778,10 @@ class PopupReminder(Widget):
         self.am = app_manager
         self.m = machine
         
-        description = message + "\n\n[b]WARNING! Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts![/b]"
+        if go_to == 'calibration':
+          description = message
+        else:
+          description = message + "\n\n[b]WARNING! Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts![/b]"
 
         def open_app(*args):
 
