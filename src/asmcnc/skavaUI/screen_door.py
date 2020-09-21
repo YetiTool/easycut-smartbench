@@ -318,6 +318,7 @@ class DoorScreen(Screen):
         if self.return_to_screen == 'go':
             self.m.s.is_job_streaming = True
             self.sm.get_screen('go').is_job_started_already = False
+            self.sm.get_screen('go').temp_suppress_prompts = True
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
         self.m.cancel_after_a_hard_door()

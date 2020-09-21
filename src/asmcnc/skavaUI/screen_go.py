@@ -365,6 +365,7 @@ class GoScreen(Screen):
 
 
     is_job_started_already = False
+    temp_suppress_prompts = False
        
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
@@ -424,7 +425,7 @@ class GoScreen(Screen):
 
     def on_enter(self):
 
-        if not self.is_job_started_already:
+        if not self.is_job_started_already and not self.temp_suppress_prompts:
             # Check brush use and lifetime: 
             if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds and self.m.reminders_enabled == True:
                 brush_warning = "[b]Check your spindle brushes before starting your job![/b]\n\n" + \
@@ -448,6 +449,7 @@ class GoScreen(Screen):
                 "Will you calibrate SmartBench now?"
                 lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
 
+        if not self.temp_suppress_prompts: self.temp_suppress_prompts = True
 
 
 ### COMMON SCREEN PREP METHOD
