@@ -189,11 +189,11 @@ class SpindleSettingsWidget(Widget):
     def autofill_rpm_time(self):
 
         if 'AMB' in self.spindle_brand.text:
-            self.spindle_cooldown_time.text = str(10)
+            self.spindle_cooldown_time.text = str(30)
             self.spindle_cooldown_speed.text = str(10000)
 
         if 'YETI' in self.spindle_brand.text:
-            self.spindle_cooldown_time.text = str(30)
+            self.spindle_cooldown_time.text = str(10)
             self.spindle_cooldown_speed.text = str(20000)
 
         if 'manual' in self.spindle_brand.text:
