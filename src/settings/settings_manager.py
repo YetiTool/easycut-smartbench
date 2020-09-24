@@ -63,7 +63,7 @@ class Settings(object):
     def refresh_latest_platform_version(self):
         if self.sm.current == 'dev':
             os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
-        self.latest_platform_version = str(os.popen("git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
             
 ## GET SOFTWARE UPDATES
