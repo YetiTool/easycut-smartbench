@@ -519,7 +519,7 @@ class GoScreen(Screen):
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
         # Turn vac on if spindle gets turned on during job
-        if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+        if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)
