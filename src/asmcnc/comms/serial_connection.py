@@ -334,7 +334,7 @@ class SerialConnection(object):
 
     def initialise_job(self):
             
-        if self.m_state != "Check"::
+        if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
             self.m.zUp()
   
@@ -409,7 +409,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
 
-        if self.m_state != "Check"::
+        if self.m_state != "Check":
 
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
