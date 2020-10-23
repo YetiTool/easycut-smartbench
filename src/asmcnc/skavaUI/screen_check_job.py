@@ -561,5 +561,8 @@ class CheckingScreen(Screen):
         self.error_log = []
         if self.m.s.is_job_streaming:
             self.m.s.cancel_stream()
+        else:
+            self.m.disable_check_mode()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+
 

@@ -42,8 +42,6 @@ class RouterMachine(object):
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
 
-    is_check_mode_enabled = False    
-
     is_machine_paused = False
 
 
@@ -723,19 +721,18 @@ class RouterMachine(object):
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
     
-
-
     def enable_check_mode(self):
-        if not self.is_check_mode_enabled:
+        if self.m_state != "Check":
             self.s.write_command('$C', altDisplayText = 'Check mode ON')
         else:
-            print 'Check mode already enabled'        
+            log('Check mode already enabled')
 
     def disable_check_mode(self):
-        if self.is_check_mode_enabled:
+        if self.m_state == "Check":
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
         else:
-            print 'Check mode already disabled'
+            log('Check mode already disabled')
+        self.m._grbl_soft_reset()
 
     def get_switch_states(self):
         
