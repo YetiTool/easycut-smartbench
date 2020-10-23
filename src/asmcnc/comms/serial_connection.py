@@ -288,7 +288,7 @@ class SerialConnection(object):
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
-            if self.m.is_check_mode_enabled:
+            if self.m_state == "Check":
                 
                 # run job as per normal
                 self.run_job(job_object)
@@ -334,7 +334,7 @@ class SerialConnection(object):
 
     def initialise_job(self):
             
-        if not self.m.is_check_mode_enabled:
+        if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
             self.m.zUp()
   
@@ -409,7 +409,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
 
-        if not self.m.is_check_mode_enabled:
+        if self.m_state != "Check":
 
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
@@ -464,7 +464,7 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self._reset_counters()
 
-        if not self.m.is_check_mode_enabled:
+        if self.m_state != "Check":
             
             # Flush
             self.FLUSH_FLAG = True
@@ -479,7 +479,6 @@ class SerialConnection(object):
             
             # Flush
             self.FLUSH_FLAG = True
-        
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -827,12 +826,6 @@ class SerialConnection(object):
             elif stripped_message.startswith('ASM CNC'):
                 self.fw_version = stripped_message.split(':')[1]
                 log('FW version: ' + str(self.fw_version))
-
-            elif stripped_message.startswith('MSG:Enabled'):
-                self.m.is_check_mode_enabled = True
-
-            elif stripped_message.startswith('MSG:Disabled'):
-                self.m.is_check_mode_enabled = False
 
 
     def check_for_sustained_max_overload(self, dt):

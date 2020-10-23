@@ -563,3 +563,4 @@ class CheckingScreen(Screen):
             self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
+
