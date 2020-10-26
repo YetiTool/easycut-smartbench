@@ -245,12 +245,16 @@ class GCodeMonitor(Widget):
     
     def update_monitor_text_buffer(self, input_or_output, content):
         
+        # if content.startswith('<Alarm'): 
+        #     self.monitor_text_buffer.append(content)
+        #     return
+            
         # Don't update if content is to be hidden
         if content.startswith('<') and self.hide_received_status == 'down':
             self.status_report_buffer.append(content)
             return
         if content == 'ok' and self.hide_received_ok == 'down': return
-        
+
         # Update buffer with content
         if input_or_output == 'snd': self.monitor_text_buffer.append( '> ' + content)
         if input_or_output == 'rec': self.monitor_text_buffer.append(content)
@@ -289,10 +293,12 @@ class GCodeMonitor(Widget):
     
     def toggle_check_mode(self):
         
-        if self.m.is_check_mode_enabled:
+        if self.m.s.m_state == "Check":
             self.m.disable_check_mode()
-        else:
+        elif self.m.s.m_state == "Idle":
             self.m.enable_check_mode()
+        else:
+            self.update_monitor_text_buffer('debug', 'Could not enable check mode; please check machine is Idle.')
 
     def clear_monitor(self): 
         

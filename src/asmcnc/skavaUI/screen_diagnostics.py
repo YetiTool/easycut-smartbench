@@ -20,8 +20,7 @@ import os, sys
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar,\
     widget_z_move, widget_xy_move, widget_common_move,\
     widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor,\
-    widget_network_setup, widget_z_height, popup_stop_press,\
-    widget_feed_override
+    widget_network_setup, widget_z_height, widget_feed_override
 from asmcnc.geometry import job_envelope
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 

@@ -29,7 +29,7 @@ class PopupMachineError(Widget):
         
         description = "Machine is not Idle.\n\n" \
                     "Please check that SmartBench is clear," \
-                    " and then use EasyCut Pro to RESET SmartBench before using Shape Cutter."
+                    " and then use the Pro app to RESET SmartBench before using Shape Cutter."
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])

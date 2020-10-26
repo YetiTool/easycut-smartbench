@@ -4,8 +4,10 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess
+import sys,os, subprocess #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
+
+from kivy.clock import Clock
 
 class Settings(object):
     
@@ -19,15 +21,21 @@ class Settings(object):
     latest_platform_version = ''
     fw_version = ''
     latest_fw_version = ''
-    
+    grbl_mega_dir = '/home/pi/grbl-Mega/' 
+
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
-        
+    
+
+## REFRESH EVERYTHING AT START UP    
+    # def refresh_all(self):
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
+
+## VERSION REFRESH
         
     def refresh_sw_version(self):
         self.sw_version = str(os.popen("git describe --tags").read()).strip('\n')
@@ -36,21 +44,16 @@ class Settings(object):
 
     def refresh_latest_sw_version(self):
 
-        self.latest_sw_version = str(os.popen("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        try: 
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
+            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
 
-        if sys.platform != 'win32' and sys.platform != 'darwin':
+            if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
+                self.latest_sw_version = str(sw_version_list[1])
+            else: self.latest_sw_version = str(sw_version_list[0])
+        except: 
+            print "Could not fetch software version tags"
 
-            if not self.latest_sw_version.startswith('v'): 
-                
-                def filter_tags(version):
-                    if version.startswith('v'): return True
-                    else: return False
-                
-                sw_version_list = (str(os.popen("cd /home/pi/easycut-smartbench/ && git tag").read()).split('\n'))
-                sw_version_list = filter(filter_tags, sw_version_list)
-                version_numbers = map(lambda each:each.strip("v"), sw_version_list)
-                max_version_number = max(version_numbers)
-                self.latest_sw_version = 'v' + str(max_version_number)
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
@@ -58,7 +61,12 @@ class Settings(object):
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+        if self.sm.current == 'dev':
+            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
+        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+
+            
+## GET SOFTWARE UPDATES
 
     def get_sw_update_via_wifi(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
@@ -132,7 +140,9 @@ class Settings(object):
             clone_new_EC_and_restart()
 
         else: return False
-            
+
+
+## USB SOFTWARE UPDATE            
     def get_sw_update_via_usb(self):
     
         def find_usb_directory():
@@ -184,5 +194,34 @@ class Settings(object):
             return "update failed"
         else:
             return checkout_success
+
+
+
+## FIRMWARE UPDATE FUNCTIONS
+    def get_fw_update(self):
+        os.system("sudo pigpiod")
+        print "pigpio daemon started"
+        Clock.schedule_once(lambda dt: self.flash_fw(), 2)
+
+    def get_hex_file(self):
+        if not path.exists(self.grbl_mega_dir):
+            pass 
+            # clone git directory
+        # then pull latest tags
+
+    def edit_update_fw_shell_script():
+        pass
+
+    def flash_fw(self):
+
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")    
+        os.system("./update_fw.sh")
+        sys.exit()
+
+
 
             

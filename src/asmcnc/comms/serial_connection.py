@@ -104,8 +104,14 @@ class SerialConnection(object):
                         # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+                    # elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
+                    
+                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    #     return True
+                        
                     elif (line[:12] == 'tty.usbmodem'): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
@@ -179,16 +185,15 @@ class SerialConnection(object):
                 self.write_direct(*command)
                 command_counter += 1
                 
-            del self.write_command_buffer[0:(command_counter+1)]
-            
+            del self.write_command_buffer[0:(command_counter)]
+
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
-                
-            del self.write_realtime_buffer[0:(realtime_counter+1)]
 
-            
+            del self.write_realtime_buffer[0:(realtime_counter)]
+
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
                 # Read line in from serial buffer
@@ -276,18 +281,26 @@ class SerialConnection(object):
 
         self.m.enable_check_mode()
         
-        # Sleep to ensure check mode ok isn't included in log
-        time.sleep(0.1)
-        
         # Set up error logging
         self.suppress_error_screens = True
         self.response_log = []
         
-        # run job as per normal, if_check_enabled has been set to true
-        self.run_job(job_object)
 
-        # get error log back to the checking screen when it's ready
-        Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
+        def check_job_inner_function():
+            # Check that check mode has been enabled before running:
+            if self.m_state == "Check":
+                
+                # run job as per normal
+                self.run_job(job_object)
+
+                # get error log back to the checking screen when it's ready
+                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
+
+            else:
+                Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
+
+        # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
+        Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
 
     def return_check_outcome(self, job_object,dt):
         if len(self.response_log) >= len(job_object): # + 2
@@ -320,14 +333,8 @@ class SerialConnection(object):
         return
 
     def initialise_job(self):
-                
-        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
-            self.buffer_monitor_file = open("buffer_log.txt", "w") 
             
-        if not self.m.is_check_mode_enabled:
-            # Move head out of the way before moving to the job datum in XY.
-# >>>>>>> revert-196-vac_fix
-            # self.m.prepare_machine() #PROBLEM
+        if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
             self.m.zUp()
   
@@ -402,34 +409,17 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
 
-        if not self.m.is_check_mode_enabled:
+        if self.m_state != "Check":
 
-# >>>>>>> revert-196-vac_fix           
-            # move head up and turn vac off
-            # self.m.post_cut_sequence() #PROBLEM
+            if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+                self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
+                self.sm.current = 'spindle_cooldown'
+                self.send_stream_time_to_job_done_screen()
+            else:
+                self.send_stream_time_to_job_done_screen()
+                self.sm.current = 'jobdone'
 
-            self.m.zUp()
-    
-            # Tell user the job has finished
-            log("G-code streaming finished!")
-            self.stream_end_time = time.time()
-            time_taken_seconds = int(self.stream_end_time - self.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-    
-            # send info to the job done screen
-            self.sm.current = 'jobdone'
             self._reset_counters()
-
-            # reset go screen to go again
-            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
         else:
             self.m.disable_check_mode()
@@ -438,34 +428,57 @@ class SerialConnection(object):
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
-            self.buffer_monitor_file = None
+            self.buffer_monitor_file = None 
 
+    def send_stream_time_to_job_done_screen(self):
+
+            # Tell user the job has finished
+            log("G-code streaming finished!")
+            self.stream_end_time = time.time()
+            time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
+            hours = int(time_taken_seconds / (60 * 60))
+            seconds_remainder = time_taken_seconds % (60 * 60)
+            minutes = int(seconds_remainder / 60)
+            seconds = int(seconds_remainder % 60)
+            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+
+            # Add time taken in seconds to brush use: 
+            self.m.spindle_brush_use_seconds += time_taken_seconds
+            self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+
+            # Add time taken in seconds to calibration tracking
+            self.m.time_since_calibration_seconds += time_taken_seconds
+            self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
+
+            # Add time taken in seconds since Z head last lubricated
+            self.m.time_since_z_head_lubricated_seconds += time_taken_seconds
+            self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
+
+            # send info to the job done screen
+            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
 
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
         self._reset_counters()
 
-        if not self.m.is_check_mode_enabled:
-            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
+        if self.m_state != "Check":
             
             # Flush
             self.FLUSH_FLAG = True
-
-# >>>>>>> revert-196-vac_fix        
-#             # Move head up and turn vac off after a delay
-#             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
-#             
+     
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)            
+
         else:
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             
             # Flush
             self.FLUSH_FLAG = True
-        
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -498,6 +511,10 @@ class SerialConnection(object):
     g28_x = '0.0'
     g28_y = '0.0'
     g28_z = '0.0'
+
+    # Feeds and speeds
+    spindle_speed = '0.0'
+    feed_rate = '0.0'
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -616,9 +633,6 @@ class SerialConnection(object):
                     # print if change flagged
                     if self.print_buffer_status == True:
                         self.print_buffer_status = False
-                        if self.sm.get_screen('home').settings_widget.buffer_log_mode == "down":
-                            print self.serial_blocks_available + " " + self.serial_chars_available
-                            if self.buffer_monitor_file: self.buffer_monitor_file.write(self.serial_blocks_available + " " + self.serial_chars_available + "\n")
 
                 # Get limit switch states: Pn:PxXyYZ
                 elif part.startswith('Pn:'):
@@ -637,7 +651,7 @@ class SerialConnection(object):
                     if 'Y' in pins_info: self.limit_Y = True
                     else: self.limit_Y = False
                     
-                    if 'z' in pins_info: self.limit_z = True
+                    if 'Z' in pins_info: self.limit_z = True
                     else: self.limit_z = False
 
                     if 'P' in pins_info: self.probe = True
@@ -684,7 +698,12 @@ class SerialConnection(object):
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                         Clock.schedule_once(self.check_for_sustained_max_overload, 1)
-                            
+
+                elif part.startswith('FS:'):
+                    feed_speed = part[3:].split(',')
+                    self.feed_rate = feed_speed[0]
+                    self.spindle_speed = feed_speed[1]
+
                 else:
                     continue
 
@@ -769,6 +788,7 @@ class SerialConnection(object):
 
         # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:],
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
+
         elif message.startswith('['):
                       
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
@@ -890,7 +910,7 @@ class SerialConnection(object):
         # Finally issue the command        
         if self.s:
             try:
-                
+
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
                     self.s.write(serialCommand + '\n')
@@ -909,6 +929,9 @@ class SerialConnection(object):
                 self.get_serial_screen('Could not write last command to serial buffer.')
     #                 log('Serial Error: ' + str(serialError))
         
+        else: 
+
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):

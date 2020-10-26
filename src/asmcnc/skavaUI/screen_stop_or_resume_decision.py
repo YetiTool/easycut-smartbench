@@ -159,6 +159,7 @@ class StopOrResumeDecisionScreen(Screen):
         
         if self.return_screen == 'go':
             self.sm.get_screen('go').is_job_started_already = False
+            self.sm.get_screen('go').temp_suppress_prompts = True
         self.sm.current = self.return_screen
 
     

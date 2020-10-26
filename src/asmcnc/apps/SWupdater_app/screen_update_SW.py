@@ -13,6 +13,7 @@ import sys, os, socket
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.SWupdater_app import popup_update_SW
 
 Builder.load_string("""
 
@@ -66,7 +67,7 @@ Builder.load_string("""
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
-                        width: dp(385)
+                        width: dp(375)
                         orientation: "vertical"
                         padding: [0,0,30,0]
                         Label: 
@@ -93,19 +94,35 @@ Builder.load_string("""
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
-                        width: dp(213)
-                        orientation: "vertical"
+                        width: dp(223)
+                        orientation: "horizontal"
                         padding: [0,0,30,0]
-#                         Label: 
-#                             color: 0,0,0,1
-#                             font_size: 18
-#                             markup: True
-#                             halign: "center"
-#                             valign: "bottom"
-#                             text_size: self.size
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             text: "[b]Available Version[/b]"
+
+                        BoxLayout: 
+                            size_hint: (None, None) 
+                            orientation: "vertical"
+                            height: dp(100)
+                            width: dp(49)
+                            padding: [5,35,15,35]
+                            Button:
+                                size_hint: (None,None)
+                                height: dp(30)
+                                width: dp(29)
+                                background_color: hex('#F4433600')
+                                center: self.parent.center
+                                pos: self.parent.pos
+                                on_press: root.refresh_latest_software_version()
+                                BoxLayout:
+                                    padding: 0
+                                    size: self.parent.size
+                                    pos: self.parent.pos
+                                    Image:
+                                        source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                        center_x: self.parent.center_x
+                                        y: self.parent.y
+                                        size: self.parent.width, self.parent.height
+                                        allow_stretch: True
+
                         Label: 
                             id: latest_software_version_label
                             color: 0,0,0,1
@@ -225,7 +242,7 @@ Builder.load_string("""
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.get_sw_update_over_wifi()
+                            on_press: root.prep_for_sw_update_over_wifi()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -309,7 +326,7 @@ Builder.load_string("""
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.get_sw_update_over_usb()
+                            on_press: root.prep_for_sw_update_over_usb()
                             BoxLayout:
                                 padding: 0
                                 size: self.parent.size
@@ -343,12 +360,20 @@ class SWUpdateScreen(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm)
         
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
-        
-        self.refresh_latest_software_version()
+        self.update_screen_with_latest_version()
+
         
     def refresh_latest_software_version(self):
-        self.set.refresh_latest_sw_version()
-        
+
+        self.latest_software_version_label.text = '[b]Refreshing...\n\nPlease wait.[/b]'
+
+        def do_refresh():
+            self.set.refresh_latest_sw_version()
+            self.update_screen_with_latest_version()
+
+        Clock.schedule_once(lambda dt: do_refresh(),0.5)
+    
+    def update_screen_with_latest_version(self):
         if self.set.latest_sw_version != '':    
             self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
         elif self.wifi_image.source != self.wifi_on:
@@ -357,13 +382,15 @@ class SWUpdateScreen(Screen):
             self.latest_software_version_label.text = '[b]You are up to date![/b]'
  
     def on_enter(self):
+
+        # Keep tabs on wifi connection
         self.check_wifi_connection(1)
         self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
 
+        # Set up and keep tabs on usb connection
         self.usb_stick.enable()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
-        Clock.schedule_once(lambda dt: self.refresh_latest_software_version(), 1)
 
     def on_leave(self):
         Clock.unschedule(self.poll_USB)
@@ -374,36 +401,76 @@ class SWUpdateScreen(Screen):
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
 
+    def prep_for_sw_update_over_wifi(self):
+
+        wait_popup = popup_info.PopupWait(self.sm)
+
+        def check_connection_and_version():
+            if self.wifi_image.source != self.wifi_on:
+                description = "No WiFi connection!"
+                popup_info.PopupError(self.sm, description)
+                wait_popup.popup.dismiss()
+                return
+
+            if self.set.latest_sw_version.endswith('beta'):
+                wait_popup.popup.dismiss()
+                popup_update_SW.PopupBetaUpdate(self.sm, 'wifi')
+                return
+
+            Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 0.2)
+            self.get_sw_update_over_wifi()
+
+        Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
+
+    def prep_for_sw_update_over_usb(self):
+
+        wait_popup = popup_info.PopupWait(self.sm)
+
+        def check_connection_and_version():
+            if self.usb_image.source != self.usb_on:
+                description = "No USB drive found!"
+                popup_info.PopupError(self.sm, description)
+                wait_popup.popup.dismiss()
+                return
+
+            if self.set.latest_sw_version.endswith('beta'):
+                wait_popup.popup.dismiss()
+                popup_update_SW.PopupBetaUpdate(self.sm, 'usb')
+                return
+
+            Clock.schedule_once( lambda dt: wait_popup.popup.dismiss(), 0.2)
+            self.get_sw_update_over_usb()
+
+        Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
+        
+        
+
     def get_sw_update_over_wifi(self):
-               
-        if self.wifi_image.source == self.wifi_on:
+
+        popup_info.PopupWait(self.sm)
+
+        def do_sw_update():
+
+            outcome = self.set.get_sw_update_via_wifi()
             
-            popup_info.PopupWait(self.sm)
-            
-            def do_update():
-            
-                outcome = self.set.get_sw_update_via_wifi()
+            if outcome == False: 
+                description = "There was a problem updating your software. \n\n" \
+                "We can try to fix the problem, but you MUST have a stable internet connection and" \
+                " power supply.\n\n" \
+                "Would you like to repair your software now?"
+                popup_info.PopupSoftwareRepair(self.sm, self, description)
+
+            elif outcome == "Software already up to date!": 
+                popup_info.PopupError(self.sm, outcome)
                 
-                if outcome == False: 
-                    description = "There was a problem updating your software. \n\n" \
-                    "We can try to fix the problem, but you MUST have a stable internet connection and" \
-                    " power supply.\n\n" \
-                    "Would you like to repair your software now?"
-                    popup_info.PopupSoftwareRepair(self.sm, self, description)               
-                elif outcome == "Software already up to date!": 
-                    popup_info.PopupError(self.sm, outcome)
-                    
-                elif outcome == "Could not resolve host: github.com":
-                    description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                    popup_info.PopupError(self.sm, outcome)
-                else: 
-                    popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
-            
-            Clock.schedule_once(lambda dt: do_update(), 2)
-            
-        else: 
-            description = "No WiFi connection!"
-            popup_info.PopupError(self.sm, description)
+            elif outcome == "Could not resolve host: github.com":
+                description = "Could not connect to github. Please check that your connection is stable, or try again later"
+                popup_info.PopupError(self.sm, outcome)
+
+            else: 
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+
+        Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
     def repair_sw_over_wifi(self):
             
@@ -415,7 +482,7 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup EasyCut safely, please try again later.\n\n" + \
+                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
                     popup_info.PopupError(self.sm, description)           
             else: 
@@ -426,42 +493,38 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
-        if self.usb_image.source == self.usb_on:
-            
-            popup_info.PopupWait(self.sm)
-            
-            def do_update():
-                outcome = self.set.get_sw_update_via_usb()
-                
-                if outcome == 2:
-                    description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
-                    "Please make sure that there is only one instance of EasyCut on your USB drive, and try again."
-                    popup_info.PopupError(self.sm, description)
-                elif outcome == 0:
-                    description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
-                    "Please make sure that the folder containing EasyCut is called [b]easycut-smartbench[/b], and try again."
-                    popup_info.PopupError(self.sm, description)
-                elif outcome == "update failed":
-                    
-                    # this may need its own special bigger pop-up
-                    
-                    description = "It was not possible to update your software from the USB drive.\n\n" + \
-                    "Please check your EasyCut folder or try again later. If this problem persists you may need to connect to the " + \
-                    "internet to update your software, and repair it if necessary.\n\n"
-                    popup_info.PopupError(self.sm, description)              
-                
-                else:
-                    self.usb_stick.disable()
-                    update_success = outcome
-                    popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
-                
-            
-            Clock.schedule_once(lambda dt: do_update(), 2)
-            
-        else: 
-            description = "No USB drive found!"
-            popup_info.PopupError(self.sm, description)
 
+        popup_info.PopupWait(self.sm)
+
+        def do_sw_update():
+            outcome = self.set.get_sw_update_via_usb()
+            
+            if outcome == 2:
+                description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
+                "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
+                popup_info.PopupError(self.sm, description)
+
+            elif outcome == 0:
+                description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
+                "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
+                popup_info.PopupError(self.sm, description)
+
+            elif outcome == "update failed":
+                
+                # this may need its own special bigger pop-up
+                
+                description = "It was not possible to update your software from the USB drive.\n\n" + \
+                "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
+                "internet to update your software, and repair it if necessary.\n\n"
+                popup_info.PopupError(self.sm, description)              
+            
+            else:
+                self.usb_stick.disable()
+                update_success = outcome
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+
+        Clock.schedule_once(lambda dt: do_sw_update(), 2)
+                
     def check_wifi_connection(self, dt):
 
         try:

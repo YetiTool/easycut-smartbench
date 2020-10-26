@@ -21,6 +21,7 @@ from shutil import copy
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -132,7 +133,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.delete_selected(filechooser.selection[0])
+                    root.delete_popup(file_selection = filechooser.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -155,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.delete_all()
+                    root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -310,45 +311,41 @@ class LocalFileChooser(Screen):
 
     def go_to_loading_screen(self, file_selection):
 
-        self.manager.get_screen('loading').loading_file_name = file_selection
-        self.manager.current = 'loading'
+        if os.path.isfile(file_selection):
+            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.manager.current = 'loading'
 
-# ---------------------------------------------------------- DONE
-        
-        # Replace this with move to the file_loading screen
-# --------------------------------------------------------------- OLD       
-#         # Move over the nc file
-#         if os.path.isfile(file_selection):
-#             
-#             # ... to Q
-#             files_in_q = os.listdir(job_q_dir) # clean Q
-#             if files_in_q:
-#                 for file in files_in_q:
-#                     os.remove(job_q_dir+file)
-#             copy(file_selection, job_q_dir) # "copy" overwrites same-name file at destination
-# 
-#         # Move over the preview image
-#         if self.preview_image_path:
-#             if os.path.isfile(self.preview_image_path):
-#                 
-#                 # ... to Q
-#                 copy(self.preview_image_path, job_q_dir) # "copy" overwrites same-name file at destination
-#-------------------------------------------------------------------
+        else: 
+            error_message = 'File selected does not exist!'
+            popup_info.PopupError(self.sm, error_message)
 
+    def delete_popup(self, **kwargs):
 
-    def delete_selected(self, filename):
-        
+        if kwargs['file_selection'] == 'all':
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_all, file_selection = 'all')
+        else: 
+            popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
+
+    def delete_selected(self, filename):        
         if os.path.isfile(filename):
-            os.remove(filename)
-            self.refresh_filechooser()    
-          
-        
-    def delete_all(self):
+            try: 
+                os.remove(filename)
+                
+            except: 
+                print "attempt to delete folder, or undeletable file"
 
+            self.refresh_filechooser()    
+
+    def delete_all(self):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
         if files_in_cache:
             for file in files_in_cache:
-                os.remove(job_cache_dir+file)
+                try: 
+                    os.remove(job_cache_dir+file)
+
+                except: 
+                    print "attempt to delete folder, or undeletable file"
+
         self.refresh_filechooser()       
 
 

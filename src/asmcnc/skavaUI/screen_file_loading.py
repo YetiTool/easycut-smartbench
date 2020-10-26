@@ -25,7 +25,7 @@ import sys, os, time
 from datetime import datetime
 import re
 
-from asmcnc.skavaUI import screen_check_job, widget_gcode_view
+from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
 
 # from asmcnc.comms import usb_storage
@@ -166,13 +166,19 @@ class LoadingScreen(Screen):
 
     # scrubbing parameters        
     minimum_spindle_rpm = 3500
+    maximum_spindle_rpm = 25000
+
+    # Feed rate flag parameters
+    minimum_feed_rate = 100
+    maximum_feed_rate = 5000
+
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
-        
+
     def on_enter(self):    
 
         # display file selected in the filename display label
@@ -198,9 +204,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
-        
-        #self.job_gcode = self.objectifiled(self.loading_file_name)        # put file contents into a python object (objectifile)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
     
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
@@ -225,6 +229,13 @@ class LoadingScreen(Screen):
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
+
+        if len(self.job_file_as_list) == 0:
+            file_empty_warning = 'File is empty!\n\nPlease load a different file.'
+            popup_info.PopupError(self.sm, file_empty_warning)
+            self.sm.current = 'local_filechooser'
+            return
+
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
         self.load_value = 1
@@ -237,6 +248,7 @@ class LoadingScreen(Screen):
         self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
 
         Clock.schedule_once(self._scrub_file_loop, 0)
+
 
     interrupt_line_threshold = 10000
     interrupt_delay = 0.1
@@ -258,7 +270,8 @@ class LoadingScreen(Screen):
                 # Strip comments/spaces/new line and capitalize:
                 l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
                 
-                if l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1:    # Drop undesirable lines
+                if (l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1
+                    and l_block.find('M30') == -1 and l_block.find('M2') == -1):    # Drop undesirable lines
                     
                     # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
                     if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
@@ -266,9 +279,51 @@ class LoadingScreen(Screen):
                             
                             # find 'S' prefix and strip out the value associated with it
                             rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
+
+
+                            # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
+                            # in order for the electronics to send the right voltage for the desired RPM
+                            if self.m.spindle_voltage == 110:
+                                # if not self.m.spindle_digital or not self.m.fw_can_operate_digital_spindle(): # this is only relevant much later on
+                                rpm = self.m.convert_from_110_to_230(rpm)
+                                l_block = "M3S" + str(rpm)
+
+                            # Ensure all rpms are above the minimum (assuming a 230V spindle)
                             if rpm < self.minimum_spindle_rpm:
                                 l_block = "M3S" + str(self.minimum_spindle_rpm)
+
+                            if rpm > self.maximum_spindle_rpm: 
+                                l_block = "M3S" + str(self.maximum_spindle_rpm)
+
+
+                    elif l_block.find('S0'):
+                        l_block = l_block.replace('S0','')
+
     
+                    if l_block.find ('F') >= 0:
+
+                        try: 
+
+                            feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+
+                            if float(feed_rate) < self.minimum_feed_rate:
+                                
+                                self.sm.get_screen('check_job').flag_min_feed_rate = True
+
+                                if float(feed_rate) < self.sm.get_screen('check_job').as_low_as:
+                                    self.sm.get_screen('check_job').as_low_as = float(feed_rate)
+
+
+                            if float(feed_rate) > self.maximum_feed_rate:
+
+                                self.sm.get_screen('check_job').flag_max_feed_rate = True
+
+                                if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
+                                    self.sm.get_screen('check_job').as_high_as = float(feed_rate)
+
+                        except: print 'Failed to extract feed rate. Probable G-code error!'
+
+
                     self.preloaded_job_gcode.append(l_block)  #append cleaned up gcode to object
             
                 self.lines_scrubbed += 1

@@ -429,14 +429,14 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        if self.m.trigger_setup == True: self.help_popup()
+
     def help_popup(self):
-        print "pop up press"
-        
         description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
-                    "If this is your first time, make sure you\nuse " \
-                    "the [b]Wifi[/b] and [b]Calibrate[/b] apps to set up\nSmartBench and EasyCut. \n\n " \
+                    "If this is your first time, make sure you use\n" \
+                    "the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps\nto set up SmartBench. \n\n " \
                     "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
-        popup_info.PopupWelcome(self.sm, description)
+        popup_info.PopupWelcome(self.sm, self.m, description)
  
     def pro_app(self):
         self.am.start_pro_app()
@@ -459,4 +459,4 @@ class LobbyScreen(Screen):
         popup_info.PopupDeveloper(self.sm)
 
     def maintenance_app(self):
-        self.am.start_maintenance_app() 
+        self.am.start_maintenance_app('laser_tab') 

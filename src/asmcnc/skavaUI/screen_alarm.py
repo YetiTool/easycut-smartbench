@@ -9,6 +9,9 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTra
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_info
 
 import sys, os
 
@@ -33,62 +36,146 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#d60000FF')
+            rgba: [1, 1, 1, 1]
         Rectangle: 
             size: self.size
             pos: self.pos
-             
+
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 50
-        spacing: 70
-        size_hint_x: 1
+        orientation: 'vertical'
+        padding: 0
+        spacing: 0
+        size_hint: (None, None)
+        height: dp(480)
+        width: dp(800)
 
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 1
-            spacing: 20
-             
+        # Alarm label
+        BoxLayout: 
+            padding: [15,0,0,0]
+            spacing: 0
+            size_hint: (None, None)
+            height: dp(50)
+            width: dp(800)
             Label:
-                size_hint_y: 1
-                font_size: '35sp'
-                text: '[b]STOP! ALARM![/b]'
+                size_hint: (None, None)
+                font_size: '30sp'
+                text: '[b]Alarm![/b]'
+                color: [0,0,0,1]
                 markup: True
- 
-            Label:
-                size_hint_y: 1.6
-                text_size: self.size
-                font_size: '20sp'
                 halign: 'left'
-                valign: 'top'
-                text: root.alarm_description 
+                height: dp(50)
+                width: dp(790)
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
 
-                
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: 150, 0
-            
+        BoxLayout: 
+            padding: [10,0,10,0]
+            spacing: 0
+            size_hint: (None, None)
+            height: dp(5)
+            width: dp(800)
+            Image:
+                id: red_underline
+                source: "./asmcnc/skavaUI/img/red_underline.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
+        
+        # Alarm image and text
+        BoxLayout: 
+            padding: [30,35,30,0]
+            spacing: 20
+            size_hint: (None, None)
+            height: dp(295)
+            width: dp(800)
+            orientation: 'vertical'
+            BoxLayout: 
+                padding: [305,0,0,0]
+                size_hint: (None, None)
+                height: dp(130)
+                width: dp(740)       
+                Image:
+                    id: alarm_icon
+                    source: "./asmcnc/skavaUI/img/alarm_icon.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+                    size_hint: (None, None)
+                    height: dp(130)
+                    width: dp(130)
+            Label:
+                size_hint: (None, None)
+                font_size: '20sp'
+                text: root.alarm_description
+                color: [0,0,0,1]
+                markup: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                height: dp(90)
+                width: dp(700)
+
+        BoxLayout: 
+            padding: [0,0,0,0]
+            spacing: 0
+            size_hint: (None, None)
+            height: dp(130)
+            width: dp(800)
+            orientation: 'horizontal'
+            BoxLayout: 
+                padding: [20,0,0,20]
+                spacing: 0
+                size_hint: (None, None)
+                height: dp(130)
+                width: dp(400)
                 Button:
-                    size_hint_y:0.9
-                    id: getout_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_color: hex('#a80000FF')
-                    on_press: 
-                        root.quit_to_home()
-                        
+                    size_hint: (None,None)
+                    height: dp(80)
+                    width: dp(280)
+                    background_color: hex('#F4433600')
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.show_details()
                     BoxLayout:
-                        padding: 5
+                        padding: 0
                         size: self.parent.size
                         pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: 'Return'
-                        
+                        Image:
+                            source: "./asmcnc/skavaUI/img/show_details_blue.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+            BoxLayout: 
+                padding: [258,0,30,10]
+                spacing: 0
+                size_hint: (None, None)
+                height: dp(130)
+                width: dp(400)
+                Button:
+                    size_hint: (None,None)
+                    height: dp(112)
+                    width: dp(112)
+                    background_color: hex('#F4433600')
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.quit_to_home()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/skavaUI/img/quit_to_lobby_btn.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+         
             
 """)
 
@@ -110,6 +197,16 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
         self.m.led_restore()
 
+    def show_details(self):
+        self.m.reset_from_alarm()
+
+        def trigger_popup():
+            details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
+            popup_info.PopupInfo(self.sm, 600, details)
+
+        Clock.schedule_once(lambda dt: trigger_popup(), 0.45)
+
+
     def quit_to_home(self):
         
         self.m.resume_from_alarm()
@@ -118,4 +215,5 @@ class AlarmScreenClass(Screen):
             self.sm.current = self.return_to_screen     
         else: 
             self.sm.current = 'lobby'
+
             

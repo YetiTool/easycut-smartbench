@@ -21,18 +21,31 @@ from kivy.graphics import Color, Rectangle
 
 class PopupWelcome(Widget):
 
-    def __init__(self, screen_manager, description):
+    def __init__(self, screen_manager, machine, description):
         
-        self.shapecutter_sm = screen_manager
+        self.sm = screen_manager
+        self.m = machine
         
+        def set_trigger_to_false(*args):
+          self.m.write_set_up_options(False)
+          self.sm.get_screen('lobby').carousel.load_next(mode='next')
+
+        def set_trigger_to_true(*args):
+          self.m.write_set_up_options(True)
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
+        label = Label(size_hint_y=2, text_size=(340, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
+
+        remind_me_button = Button(text='[b]Remind me later[/b]', markup = True)
+        remind_me_button.background_normal = ''
+        remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[90,20,90,0])
+        btn_layout.add_widget(remind_me_button)       
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
@@ -40,7 +53,7 @@ class PopupWelcome(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Welcome to EasyCut',
+        popup = Popup(title='Welcome to SmartBench',
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
@@ -56,6 +69,9 @@ class PopupWelcome(Widget):
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=set_trigger_to_false)
+        remind_me_button.bind(on_press=popup.dismiss)
+        remind_me_button.bind(on_press=set_trigger_to_true)
 
         popup.open()
         
@@ -157,6 +173,70 @@ class PopupDatum(Widget):
 
       popup.open()
 
+class PopupStop(Widget):
+
+
+    def __init__(self, machine, screen_manager):
+        
+      self.m = machine
+      self.m.soft_stop()
+
+      self.sm = screen_manager
+        
+      def machine_reset(*args):
+          self.m.stop_from_soft_stop_cancel()
+
+
+      def machine_resume(*args):
+          self.m.resume_from_a_soft_door()
+        
+      stop_description = "Is everything OK? You can resume the job, or cancel it completely."
+      
+      img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
+      
+      resume_button = Button(text='[b]Resume[/b]', markup = True)
+      resume_button.background_normal = ''
+      resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+      cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+      cancel_button.background_normal = ''
+      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+     
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+      btn_layout.add_widget(cancel_button)
+      btn_layout.add_widget(resume_button)
+      
+      layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
+      layout_plan.add_widget(img)
+      layout_plan.add_widget(label)
+      layout_plan.add_widget(btn_layout)
+      
+      popup = Popup(title='Warning!',
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(400, 300),
+                    auto_dismiss= False
+                    )
+      
+      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_height = '4dp'
+      popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+      
+      cancel_button.bind(on_press=machine_reset)
+      cancel_button.bind(on_press=popup.dismiss)
+      resume_button.bind(on_press=machine_resume)
+      resume_button.bind(on_press=popup.dismiss)
+      
+      popup.open()
+
+    
+
+
+
 class PopupUSBInfo(Widget):
 
     def __init__(self, screen_manager, safe_to_remove):
@@ -257,6 +337,47 @@ class PopupInfo(Widget):
 
         popup.open()
 
+class PopupMiniInfo(Widget):
+
+    def __init__(self, screen_manager, description):
+        
+        self.sm = screen_manager
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+        
+        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
+        
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title='Information',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 300),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        ok_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
 class PopupSoftwareUpdateSuccess(Widget):
     def __init__(self, screen_manager, message):
         
@@ -303,7 +424,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         
         popup.open()
         
-        Clock.schedule_once(reboot, 3)
+        Clock.schedule_once(reboot, 6)
     
 class PopupSoftwareRepair(Widget):   
     def __init__(self, screen_manager, settings_manager, warning_message):
@@ -338,7 +459,7 @@ class PopupSoftwareRepair(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='There was a problem updating EasyCut...',
+        popup = Popup(title='There was a problem updating the software...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -460,7 +581,7 @@ class PopupWait(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Please Wait...',
+        self.popup = Popup(title='Please Wait...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -470,13 +591,13 @@ class PopupWait(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
-        popup.separator_height = '4dp'
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        self.popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        self.popup.separator_height = '4dp'
+        self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=popup.dismiss)    
+        ok_button.bind(on_press=self.popup.dismiss)    
 
-        popup.open()
+        self.popup.open()
 
 class PopupDeveloper(Widget):   
     def __init__(self, screen_manager):
@@ -583,3 +704,152 @@ class PopupDevModePassword(Widget):
         ok_button.bind(on_press=popup.dismiss)    
 
         popup.open()
+
+
+class PopupDeleteFile(Widget):   
+    def __init__(self, **kwargs):
+        
+        self.sm = kwargs['screen_manager']
+        self.function = kwargs['function']
+        self.file_selection = kwargs['file_selection']
+        
+        if self.file_selection == 'all':
+          description = "Are you sure you want to delete these files?"
+        else:
+          description = "Are you sure you want to delete this file?"
+        
+        def delete(*args):
+          if self.file_selection == 'all':
+            self.function()
+          else:
+            self.function(self.file_selection)
+
+        def back(*args):
+          return False
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        
+        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30,20,30,0])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title='Warning!',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 350),
+                      auto_dismiss= False
+                      )
+        
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=delete)
+        back_button.bind(on_press=popup.dismiss)
+        back_button.bind(on_press=back)
+
+        popup.open()
+
+
+
+class PopupReminder(Widget):
+
+    def __init__(self, screen_manager, app_manager, machine, message, go_to):
+        
+        self.sm = screen_manager
+        self.am = app_manager
+        self.m = machine
+        
+        if go_to == 'calibration':
+          description = message
+        else:
+          description = message + "\n\n[b]WARNING! Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts![/b]"
+
+        def open_app(*args):
+
+            if go_to == 'calibration':
+              self.am.start_calibration_app('go')
+
+            elif go_to == 'brushes':
+              self.am.start_maintenance_app('brush_tab')
+
+            elif go_to == 'lubrication': 
+              self.m.write_z_head_maintenance_settings(0)
+
+        
+        def calibration_delay(*args):
+          new_time = float(float(320*3600) + self.m.time_to_remind_user_to_calibrate_seconds)
+          self.m.write_calibration_settings(self.m.time_since_calibration_seconds, new_time)
+
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,0], markup = True)
+
+        if go_to == 'calibration':
+          ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
+          back_button = Button(text='[b]Remind me in 320 hours[/b]', markup = True)
+
+        if go_to == 'lubrication':
+          ok_button = Button(text='[b]Ok! Z-head lubricated![/b]', markup = True)
+          back_button = Button(text='[b]Remind me later[/b]', markup = True)
+
+        if go_to == 'brushes':
+          ok_button = Button(text='[b]Change brushes now![/b]', markup = True)
+          back_button = Button(text='[b]Remind me later[/b]', markup = True)
+
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0], size_hint_y = 0.6)
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,10,10,5])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+
+        popup = Popup(title='Maintenance reminder!',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '22sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(700, 460),
+                      auto_dismiss= False
+                      )
+        
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=open_app)
+        back_button.bind(on_press=popup.dismiss)
+
+        if go_to == 'calibration':
+          back_button.bind(on_press=calibration_delay)      
+
+        popup.open()  

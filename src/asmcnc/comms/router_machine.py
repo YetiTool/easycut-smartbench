@@ -16,6 +16,8 @@ from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
 
+from asmcnc.skavaUI import popup_info
+
 
 def log(message):
     timestamp = datetime.now()
@@ -36,32 +38,62 @@ class RouterMachine(object):
     # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
     limit_switch_safety_distance = 1.0 
-    
-    z_lift_after_probing = 20.0
-    z_probe_speed = 60
-    z_touch_plate_thickness = 1.53
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
-    is_check_mode_enabled = False    
 
     is_machine_paused = False
 
-    # Persistent values setup
+
+    # PERSISTENT MACHINE VALUES
+
+
+    ## PERSISTENT VALUES SETUP
     smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
-
-    spindle_brush_use_file_path = smartbench_values_dir + 'spindle_brush_use.txt'
-    spindle_brush_max_life_file_path = smartbench_values_dir + 'spindle_brush_max_life.txt'
     
+    ### Individual files to hold persistent values
+    set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
+    z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
+    calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
+    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'   
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
+    spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
+    spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
 
+    ## PROBE SETTINGS
+    z_lift_after_probing = 20.0
+    z_probe_speed = 60
+    z_touch_plate_thickness = 1.53
+
+    ## CALIBRATION SETTINGS
+    time_since_calibration_seconds = 0
+    time_to_remind_user_to_calibrate_seconds = float(320*3600)
+
+    ## Z HEAD MAINTENANCE SETTINGS
+    time_since_z_head_lubricated_seconds = 0
+
+    ## LASER VALUES
     laser_offset_x_value = 0
     laser_offset_y_value = 0
 
     is_laser_on = False
     is_laser_enabled = False
 
+    ## BRUSH VALUES
+    spindle_brush_use_seconds = 0
+    spindle_brush_lifetime_seconds = float(120*3600)
+
+    ## SPINDLE COOLDOWN OPTIONS
+    spindle_brand = 'YETI' # String to hold brand name
+    spindle_voltage = 230 # Options are 230V or 110V
+    spindle_digital = True #spindle can be manual or digital
+    spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
+    spindle_cooldown_rpm = 20000 # YETI value is 20k 
+
+    reminders_enabled = True
+
+    trigger_setup = False
             
     def __init__(self, win_serial_port, screen_manager, flurry_database):
 
@@ -79,52 +111,330 @@ class RouterMachine(object):
             self.get_persistent_values()
         
 
+# PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
         if not path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
-        
-        # check SmartBench value files
-        if not path.exists(self.spindle_brush_use_file_path):
-            log("Creating spindle brushes use file...")
-            file = open(self.spindle_brush_use_file_path, "w+")
-            file.write("0")
+
+        if not path.exists(self.set_up_options_file_path):
+            log("Creating set up options file...")
+            file = open(self.set_up_options_file_path, "w+")
+            file.write(str(self.trigger_setup))
             file.close()
-        if not path.exists(self.spindle_brush_max_life_file_path):
-            log("Creating spindle brushes max life file...")
-            file = open(self.spindle_brush_max_life_file_path, "w+")
-            max_life_in_seconds = 120 * 3600 # hours of life expected, converted to seconds
-            file.write(str(max_life_in_seconds))
+
+        if not path.exists(self.z_touch_plate_thickness_file_path):
+            log("Creating z touch plate thickness file...")
+            file = open(self.z_touch_plate_thickness_file_path, "w+")
+            file.write(str(self.z_touch_plate_thickness))
             file.close()
+
         if not path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
             file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
-    def get_persistent_values(self):
-        self.read_z_head_laser_offset_values()
+        if not path.exists(self.spindle_brush_values_file_path):
+            log("Creating spindle brush values file...")
+            file = open(self.spindle_brush_values_file_path, "w+")
+            file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
+            file.close()
 
+        if not path.exists(self.spindle_cooldown_settings_file_path):
+            log("Creating spindle cooldown settings file...")
+            file = open(self.spindle_cooldown_settings_file_path, "w+")
+            file.write(
+                str(self.spindle_brand) + "\n" + 
+                str(self.spindle_voltage) + "\n" + 
+                str(self.spindle_digital) + "\n" + 
+                str(self.spindle_cooldown_time_seconds) + "\n" +
+                str(self.spindle_cooldown_rpm)
+                )
+            file.close()
+
+        if not path.exists(self.calibration_settings_file_path):
+            log('Creating calibration settings file...')
+            file = open(self.calibration_settings_file_path, 'w+')
+            file.write(str(self.time_since_calibration_seconds) + "\n" + str(self.time_to_remind_user_to_calibrate_seconds))
+            file.close()
+
+        if not path.exists(self.z_head_maintenance_settings_file_path):
+            log('Creating z head maintenance settings file...')
+            file = open(self.z_head_maintenance_settings_file_path, 'w+')
+            file.write(str(self.time_since_z_head_lubricated_seconds))
+            file.close()
+
+    def get_persistent_values(self):
+        self.read_set_up_options()
+        self.read_z_touch_plate_thickness()
+        self.read_calibration_settings()
+        self.read_z_head_maintenance_settings()
+        self.read_z_head_laser_offset_values()
+        self.read_spindle_brush_values()
+        self.read_spindle_cooldown_settings()
+
+
+    ## SET UP OPTIONS
+    def read_set_up_options(self):
+        try: 
+            file = open(self.set_up_options_file_path, 'r')
+            trigger_bool_string  = str(file.read())
+            file.close()
+
+            if trigger_bool_string == 'False' or trigger_bool_string == False: self.trigger_setup = False
+            else: self.trigger_setup = True
+
+            log("Read in set up options")
+            return True
+
+        except:
+            log("Unable to read in set up options")
+            return False
+
+    def write_set_up_options(self, value):
+
+        try:
+            file = open(self.set_up_options_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.trigger_setup = value
+            log("set up options written to file")
+            return True
+
+        except:
+            log("Unable to write set up options")
+            return False
+
+
+    ## TOUCH PLATE THICKENESS
+    def read_z_touch_plate_thickness(self):
+
+        try: 
+            file = open(self.z_touch_plate_thickness_file_path, 'r')
+            self.z_touch_plate_thickness  = float(file.read())
+            file.close()
+
+            log("Read in z touch plate thickness")
+            return True
+
+        except:
+            log("Unable to read in z touch plate thickness")
+            return False
+
+    def write_z_touch_plate_thickness(self, value):
+
+        try:
+            file = open(self.z_touch_plate_thickness_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.z_touch_plate_thickness = float(value)
+            log("z touch plate thickness written to file")
+            return True
+
+        except:
+            log("Unable to write z touch plate thickness")
+            return False
+
+
+    ## CALIBRATION SETTINGS
+
+    def read_calibration_settings(self):
+
+        try: 
+            file = open(self.calibration_settings_file_path, 'r')
+            [read_time_since_calibration_seconds, read_time_to_remind_user_to_calibrate_seconds]  = file.read().splitlines()
+            file.close()
+
+            self.time_since_calibration_seconds = float(read_time_since_calibration_seconds)
+            self.time_to_remind_user_to_calibrate_seconds = float(read_time_to_remind_user_to_calibrate_seconds)
+
+            log("Read in calibration settings")
+            return True
+
+        except:
+            log("Unable to read calibration settings")
+            return False
+
+    def write_calibration_settings(self, since_calibration, remind_time):
+
+        try:
+            file = open(self.calibration_settings_file_path, 'w+')
+            file.write(str(since_calibration) + "\n" + str(remind_time))
+            file.close()
+
+            self.time_since_calibration_seconds = float(since_calibration)
+            self.time_to_remind_user_to_calibrate_seconds = float(remind_time)
+            log("calibration settings written to file")
+            return True
+
+        except:
+            log("Unable to write calibration settings")
+            return False
+
+    ## Z HEAD MAINTENANCE SETTINGS REMINDER
+
+    def read_z_head_maintenance_settings(self):
+
+        try: 
+            file = open(self.z_head_maintenance_settings_file_path, 'r')
+            self.time_since_z_head_lubricated_seconds  = float(file.read())
+            file.close()
+
+            log("Read in z head maintenance settings")
+            return True
+
+        except: 
+            log("Unable to read z head maintenance settings")
+            return False
+
+    def write_z_head_maintenance_settings(self, value):
+
+        try:
+            file = open(self.z_head_maintenance_settings_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.time_since_z_head_lubricated_seconds = float(value)
+
+            log("Write z head maintenance settings")
+            return True
+
+        except: 
+            log("Unable to write z head maintenance settings")
+            return False
+
+    ## LASER DATUM OFFSET
     def read_z_head_laser_offset_values(self):
+
         try:
             file = open(self.z_head_laser_offset_file_path, 'r')
-            [self.is_laser_enabled, self.laser_offset_x_value, self.laser_offset_y_value] = file.read().splitlines()
-            file.close
+            [read_is_laser_enabled, read_laser_offset_x_value, read_laser_offset_y_value] = file.read().splitlines()
+            file.close()
+
+            # file read brings value in as a string, so need to do conversions to appropriate variables: 
+            if read_is_laser_enabled == "True": self.is_laser_enabled = True
+            else: self.is_laser_enabled = False
+
+            self.laser_offset_x_value = float(read_laser_offset_x_value)
+            self.laser_offset_y_value = float(read_laser_offset_y_value)
+
+
+            log("Read in z head laser offset values")
+            return True
+
         except: 
             log("Unable to read z head laser offset values") 
+            return False
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
         try:
             file = open(self.z_head_laser_offset_file_path, "w")
             file.write(str(enabled) + "\n" + str(X) + "\n" + str(Y))
             file.close()
-            self.laser_offset_x_value = X
-            self.laser_offset_y_value = Y
-            self.is_laser_enabled = enabled
+            self.laser_offset_x_value = float(X)
+            self.laser_offset_y_value = float(Y)
+            if enabled == "True" or enabled == True: self.is_laser_enabled = True
+            else: self.is_laser_enabled = False
+
+            return True
+
         except: 
             log("Unable to write z head laser offset values")
+            return False
+
+    ## SPINDLE BRUSH MONITOR
+    def read_spindle_brush_values(self):
+
+        try:
+            file = open(self.spindle_brush_values_file_path, 'r')
+            read_brush = file.read().splitlines()
+            file.close()
+
+            self.spindle_brush_use_seconds = float(read_brush[0])
+            self.spindle_brush_lifetime_seconds = float(read_brush[1])
+
+            log("Read in spindle brush use and lifetime")
+            return True
+
+        except: 
+
+            log("Unable to read spindle brush use and lifetime values")
+            return False
+
+    def write_spindle_brush_values(self, use, lifetime):
+        try:
+            file = open(self.spindle_brush_values_file_path, "w")
+            file.write(str(use) + "\n" + str(lifetime))
+            file.close()
+
+            self.spindle_brush_use_seconds = float(use)
+            self.spindle_brush_lifetime_seconds = float(lifetime)
+
+            log("Spindle brush use and lifetime written to file")
+            return True
+
+        except: 
+            log("Unable to write spindle brush use and lifetime values")
+            return False
+
+
+    ## SPINDLE COOLDOWN OPTIONS
+    def read_spindle_cooldown_settings(self):
+
+        try:
+            file = open(self.spindle_cooldown_settings_file_path, 'r')
+            # this might throw errors, not sure? might need to define list first and then read but let's try
+            read_spindle = file.read().splitlines()
+            file.close()
+
+            self.spindle_brand = str(read_spindle[0])
+            self.spindle_voltage = int(read_spindle[1])
+            if read_spindle[2] == 'True': self.spindle_digital = True
+            else: self.spindle_digital = False
+            self.spindle_cooldown_time_seconds = int(read_spindle[3])
+            self.spindle_cooldown_rpm = int(read_spindle[4])
+
+            log("Read in spindle cooldown settings")
+            return True
+
+        except: 
+            log("Unable to read spindle cooldown settings")
+            return False
+
+    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
+        try:
+
+            file = open(self.spindle_cooldown_settings_file_path, "w")
+
+            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm)
+
+            file.write(file_string)
+            file.close()
+
+
+            self.spindle_brand = str(brand)
+            self.spindle_voltage = int(voltage)
+            if digital == 'True' or digital == True: self.spindle_digital = True
+            else: self.spindle_digital = False
+
+            self.spindle_cooldown_time_seconds = int(time_seconds)
+            self.spindle_cooldown_rpm = int(rpm)
+
+            log("Spindle cooldown settings written to file")
+            return True
+
+        except: 
+            log("Unable to write spindle cooldown settings")
+            return False
+
+
+
+# ABSOLUTE MACHINE LIMITS
 
     # For manual moves, recalculate the absolute limits, factoring in the limit-switch safety distance (how close we want to get to the switches)
     def set_jog_limits(self):
@@ -144,6 +454,16 @@ class RouterMachine(object):
 
 # HW/FW VERSION CAPABILITY
 
+    def fw_can_operate_digital_spindle(self):
+        # log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
+        return False
+
+    def fw_can_operate_laser_commands(self):
+
+        log('FW version able to operate laser commands AX and AZ: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')))
+        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')       
+
+
     def fw_can_operate_zUp_on_pause(self):
 
         log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')))
@@ -152,35 +472,62 @@ class RouterMachine(object):
 
     def is_machines_fw_version_equal_to_or_greater_than_verison(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
         
-        # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
-        try:
-            machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
-            ref_version_parts = version_to_reference.split('.')[:3]
-        
-            # convert values to ints for comparison
-            machine_fw_parts = [int(i) for i in machine_fw_parts]
-            ref_version_parts = [int(i) for i in ref_version_parts]
-        except:
-            self.s.get_serial_screen("Couldn't process Z head FW value when checking capability: " + str(capability_decription))
-        
-        if machine_fw_parts[0] > ref_version_parts[0]:
-            return True
-        elif machine_fw_parts[0] < ref_version_parts[0]:
-            return False
-        else: # equal so far
-            if machine_fw_parts[1] > ref_version_parts[1]:
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            # NOTE: Would use "from packaging import version" but didn't ship as standard. So doing the hard way.
+            try:
+                machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
+                ref_version_parts = version_to_reference.split('.')[:3]
+            
+                # convert values to ints for comparison
+                machine_fw_parts = [int(i) for i in machine_fw_parts]
+                ref_version_parts = [int(i) for i in ref_version_parts]
+            except:
+                error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
+                ".\n\n Please check Z Head connection."
+                popup_info.PopupError(self.sm, error_description)
+
+                return False
+            
+            if machine_fw_parts[0] > ref_version_parts[0]:
                 return True
-            elif machine_fw_parts[1] < ref_version_parts[1]:
+            elif machine_fw_parts[0] < ref_version_parts[0]:
                 return False
             else: # equal so far
-                if machine_fw_parts[2] > ref_version_parts[2]:
+                if machine_fw_parts[1] > ref_version_parts[1]:
                     return True
-                elif machine_fw_parts[2] < ref_version_parts[2]:
+                elif machine_fw_parts[1] < ref_version_parts[1]:
                     return False
-                else: 
-                    return True # equal
-        
-        
+                else: # equal so far
+                    if machine_fw_parts[2] > ref_version_parts[2]:
+                        return True
+                    elif machine_fw_parts[2] < ref_version_parts[2]:
+                        return False
+                    else: 
+                        return True # equal
+
+        else: return False
+
+# HW/FW ADJUSTMENTS
+
+    # Functions to convert spindle RPMs if using a 110V spindle
+    # 'red' refers to 230V line (which is what electronics thinks spindle will be regardless of actual HW)
+    # 'green' refers to 110V line
+
+    def convert_from_110_to_230(self, rpm_green):
+        if float(rpm_green) != 0:
+            v_green = (float(rpm_green) - 9375)/1562.5
+            rpm_red = (2187.5*float(v_green)) + 3125
+            return float(rpm_red)
+        else: return 0
+
+    def convert_from_230_to_110(self, rpm_red):
+        if float(rpm_red) != 0:
+            v_red = (float(rpm_red) - 3125)/2187.5
+            rpm_green = (1562.5*float(v_red)) + 9375
+            return float(rpm_green)
+        else: return 0
+
 # CRITICAL START/STOP
 
     '''
@@ -237,9 +584,14 @@ class RouterMachine(object):
         self._grbl_soft_reset()     # Reset to get out of Alarm mode.
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-#         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
-        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.3)
+        # Set lights
+        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
 
+    def reset_from_alarm(self):
+        # Machine has stopped without warning and probably lost position
+        self._stop_all_streaming()  # In case alarm happened during stream, stop that
+        self._grbl_soft_reset()     # Reset to get out of Alarm mode. All buffers will be dumped.
+        
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
@@ -265,6 +617,10 @@ class RouterMachine(object):
     def resume_from_gcode_error(self):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
+    def soft_stop(self):
+        self.set_pause(True)
+        self._grbl_door()
+
     def stop_from_quick_command_reset(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
@@ -286,15 +642,19 @@ class RouterMachine(object):
  
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
+
+    def resume_from_a_soft_door(self):
+        self._grbl_resume()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
    
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
@@ -364,25 +724,19 @@ class RouterMachine(object):
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
     
-
-
     def enable_check_mode(self):
-        if not self.state().startswith('Check'):
-            self.s.write_command('$C', altDisplayText = 'Check mode ON')
-            self.is_check_mode_enabled = True
+        self._grbl_soft_reset()
+        if self.s.m_state != "Check":
+            Clock.schedule_once(lambda dt: self.s.write_command('$C', altDisplayText = 'Check mode ON'), 0.2)
         else:
-            print 'Check mode already enabled'
-            self.is_check_mode_enabled = True           
+            log('Check mode already enabled')
 
     def disable_check_mode(self):
-        if self.state().startswith('Check') \
-            or (self.state().startswith('Alarm') and self.is_check_mode_enabled == True) \
-            or (self.state().startswith('Error') and self.is_check_mode_enabled == True): 
+        if self.s.m_state == "Check":
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
-            self.is_check_mode_enabled = False
         else:
-            print 'Check mode already disabled'
-            self.is_check_mode_enabled = False 
+            log('Check mode already disabled')
+        Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 0.1)
 
     def get_switch_states(self):
         
@@ -448,6 +802,15 @@ class RouterMachine(object):
     def g28_y(self): return float(self.s.g28_y)
     def g28_z(self): return float(self.s.g28_z)
 
+# SPEED AND FEED GETTERS
+    def feed_rate(self): return int(self.s.feed_rate)
+    def spindle_speed(self): 
+        if self.spindle_voltage == 110: 
+            # if not self.spindle_digital or not self.fw_can_operate_digital_spindle(): # this is only relevant much later on
+            converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
+            return int(converted_speed)
+        else: 
+            return int(self.s.spindle_speed)
 
 # POSITIONAL SETTERS
 
@@ -464,32 +827,44 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_workzone_to_pos_xy()
+        if self.jog_spindle_to_laser_datum('XY'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(xy_poll_for_success)
+                    self.set_workzone_to_pos_xy()
+
+            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_x_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_x_datum()
+        if self.jog_spindle_to_laser_datum('X'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(x_poll_for_success)
+                    self.set_x_datum()
+
+            x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_y_datum_with_laser(self):
-        self.jog_spindle_to_laser_datum()
-        def wait_for_movement_to_complete(dt):
-            if not self.state() == 'Jog':
-                Clock.unschedule(self.poll_for_success)
-                self.set_y_datum()
+        if self.jog_spindle_to_laser_datum('Y'): 
 
-        self.poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+            def wait_for_movement_to_complete(dt):
+                if not self.state() == 'Jog':
+                    Clock.unschedule(y_poll_for_success)
+                    self.set_y_datum()
+
+            y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+
+        else: 
+            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+
 
     def set_jobstart_z(self):
         self.s.write_command('G10 L20 P1 Z0')
@@ -524,15 +899,28 @@ class RouterMachine(object):
         self.s.write_command('M5')
         self.db.spindle_off()
 
+    def cooldown_zUp_and_spindle_on(self):
+        self.s.write_command('AE')
+        if self.spindle_voltage == 230:
+            self.s.write_command('M3 S' + str(self.spindle_cooldown_rpm))
+        else:
+            cooldown_rpm = self.convert_from_110_to_230(self.spindle_cooldown_rpm)
+            self.s.write_command('M3 S' + str(cooldown_rpm))
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+
     def laser_on(self):
         if self.is_laser_enabled == True: 
-            self.is_laser_on = True
-            # self.s.write_command('AZ')
+
+            if self.fw_can_operate_laser_commands():
+                self.s.write_command('AZ')
             self.set_led_colour('BLUE')
+
+            self.is_laser_on = True
 
     def laser_off(self):
         self.is_laser_on = False
-        # self.s.write_command('AX')
+        if self.fw_can_operate_laser_commands():
+            self.s.write_command('AX')
         self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
@@ -570,30 +958,47 @@ class RouterMachine(object):
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
 
-    def jog_spindle_to_laser_datum(self):
-        self.jog_relative('X', self.laser_offset_x_value, 6000.0)
-        self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+    def jog_spindle_to_laser_datum(self, axis):
+
+        if axis == 'X' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+            and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+
+                self.jog_relative('X', self.laser_offset_x_value, 6000.0)
+
+            else: return False
+
+        if axis == 'Y' or axis == 'XY' or axis == 'YX':
+            # Check that movement is within bounds before jogging
+            if (self.mpos_y() + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+            and self.mpos_y() + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+
+                self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
+
+            else: return False
+
+        return True
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
 
-    def feed_override_up_10(self, final_percentage=''):
-        self.s.write_realtime('\x91', altDisplayText='Feed override UP ' + str(final_percentage))
+    def feed_override_up_1(self, final_percentage=''): 
+        self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
 
-    def feed_override_down_10(self, final_percentage=''):
-        self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
+    def feed_override_down_1(self, final_percentage=''):
+        self.s.write_realtime('\x94', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
     # Realtime spindle speed adjustment
     def speed_override_reset(self):
         self.s.write_realtime('\x99', altDisplayText = 'Speed override RESET')
 
-    def speed_override_up_10(self, final_percentage=''):
-        self.s.write_realtime('\x9A', altDisplayText='Speed override UP ' + str(final_percentage))
+    def speed_override_up_1(self, final_percentage=''):
+        self.s.write_realtime('\x9C', altDisplayText='Speed override UP ' + str(final_percentage))
 
-    def speed_override_down_10(self, final_percentage=''):
-        self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
-
+    def speed_override_down_1(self, final_percentage=''):
+        self.s.write_realtime('\x9D', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
         
 # HOMING
@@ -654,7 +1059,8 @@ class RouterMachine(object):
             self.led_colour_status = colour_name 
     
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif colour_name == 'GREEN':    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
+            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
             elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
             elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
@@ -725,7 +1131,7 @@ class RouterMachine(object):
     rainbow_delay = 0.03
     led_rainbow_ending_green = [
         'B0','G0','R0','R1','R2','R3','R4','R5','R6','R7','R8','R9','R8','R7','R6','R5','R4','R3','R2','R1','R0',
-        'B1','B2','B3','B4','B5','B6','B7','B8','B9','B8','B7','B6','B5','B4','B3','B2','B1','B0'
+        # 'B1','B2','B3','B4','B5','B6','B7','B8','B9','B8','B7','B6','B5','B4','B3','B2','B1','B0'
         'G1','G2','G3','G4','G5','G6','G7','G8','G9'
         ]
 

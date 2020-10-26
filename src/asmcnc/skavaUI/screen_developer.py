@@ -38,6 +38,9 @@ Builder.load_string("""
     pl_branch_label:pl_branch_label
     fw_version_label:fw_version_label
     dev_mode_toggle: dev_mode_toggle
+    user_branch: user_branch
+    z_touch_plate_entry: z_touch_plate_entry
+    reminder_disable: reminder_disable
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -83,15 +86,24 @@ Builder.load_string("""
             pos: self.parent.pos
             cols: 2
             size_hint_y: 0.4
+
+            GridLayout:
+                size: self.parent.size
+                pos: self.parent.pos
+                cols: 2
+
+                TextInput:
+                    id: user_branch
+                    text: 'branch'
+                    multiline: False
                         
-            Button:
-                text: 'Pull Software'
-                on_press: root.get_sw_update()
+                Button:
+                    text: 'CO & Pull'
+                    on_press: root.get_sw_update()
 
             Button:
-                text: 'Pull Firmware'
+                text: 'Flash Firmware'
                 on_press: root.flash_fw()
-                disabled: 'true'
 
             Button:
                 text: 'Pull Platform'
@@ -102,7 +114,7 @@ Builder.load_string("""
                 on_press: root.ansible_service_run()
 
         Label:
-            text: 'Roll Back Updates'
+            text: 'Maintenance'
             color: 1,1,1,1
             size_hint_y: 0.25
             
@@ -117,25 +129,33 @@ Builder.load_string("""
             cols: 2
             size_hint_y: 0.4
                         
-            Button:
-                text: 'Roll Back Software'
-                disabled: 'true'
-#                 on_press: root.get_sw_update()
+            GridLayout:
+                size: self.parent.size
+                pos: self.parent.pos
+                cols: 2
+
+                TextInput:
+                    id: z_touch_plate_entry
+                    text: 'thickness'
+                    multiline: False
+                    input_filter: 'float'
+                        
+                Button:
+                    text: 'Update TP'
+                    on_press: root.update_z_touch_plate_thickness()
+
+            ToggleButton:
+                id: reminder_disable
+                text: 'Reminders on/off'
+                on_press: root.toggle_reminders()
 
             Button:
-                text: 'Roll Back Firmware'
-#                 on_press: root.flash_fw()
-                disabled: 'true'
-
-            Button:
-                text: 'Roll Back Platform'
-#                 on_press: root.set_tag_pl_update()
-                disabled: 'true'
+                text: 'Max out usage'
+                on_press: root.full_reminders()
                 
             Button:
-                text: 'Roll Back All'
-#                 on_press: root.ansible_service_run()
-                disabled: 'true'
+                text: 'FACTORY RESET'
+                on_press: root.factory_reset()
     
         GridLayout:
             size: self.parent.size
@@ -144,19 +164,16 @@ Builder.load_string("""
             size_hint_y: 0.4     
 
             Button:
-                text: ''
-                background_normal: ''
-                background_color: [0,0,0,0]
+                text: 'Download settings'
+                on_press: root.download_grbl_settings()
                         
             Button:
-                text: ''
-                background_normal: ''
-                background_color: [0,0,0,0]
+                text: 'Save Settings'
+                on_press: root.save_grbl_settings()
                            
             Button:
-                text: ''
-                background_normal: ''
-                background_color: [0,0,0,0]
+                text: 'Restore Settings'
+                on_press: root.restore_grbl_settings()
                 
             Button:
                 text: 'Bake GRBL settings'
@@ -208,7 +225,7 @@ Builder.load_string("""
                 on_press: root.go_back()               
 
             Label:
-                text: 'EasyCut'
+                text: 'EasyCut-SmartBench'
                 color: 1,1,1,1
             
             Button:
@@ -261,7 +278,7 @@ Builder.load_string("""
                 id: pl_branch_label               
 
             Label:
-                text: 'FW branch'
+                text: '-'
                 color: 1,1,1,1
                 
             Label:
@@ -270,7 +287,7 @@ Builder.load_string("""
                 id: pl_hash_label
 
             Label:
-                text: 'FW hash'
+                text: '-'
                 color: 1,1,1,1
 
             Label:
@@ -309,7 +326,13 @@ class DeveloperScreen(Screen):
         self.sw_branch_label.text = self.set.sw_branch
         self.pl_hash_label.text = self.set.pl_hash
         self.pl_branch_label.text = self.set.pl_branch
+
+        self.user_branch.text = (self.set.sw_branch).strip('*')
     
+    def on_pre_enter(self, *args):
+        self.m.send_any_gcode_command('$I')
+        self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
+
     def on_enter(self, *args):
         self.scrape_fw_version()
         self.usb_stick.enable()
@@ -342,17 +365,20 @@ class DeveloperScreen(Screen):
         self.sm.current = 'lobby'
 
     def scrape_fw_version(self):
-        self.fw_version_label.text =str(self.m.s.fw_version)
+        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def get_sw_update(self): 
-        self.set.get_sw_update()
-        self.sm.current = 'rebooting'
+        if sys.platform != 'win32' and sys.platform != 'darwin':       
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
+            os.system("git pull")
+            self.sm.current = 'rebooting'
 
 ## Diagnostics
 
     def send_logs(self):
-        # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
-        os.system("journalctl > smartbench_logs.txt && mv smartbench_logs.txt /media/usb/")      
+        if self.usb_stick.is_usb_mounted_flag == True:
+            # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+            os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
         
     def email_state(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/e-mail-state.sh")
@@ -363,15 +389,79 @@ class DeveloperScreen(Screen):
     ## Platform updates
 
     def set_tag_pl_update(self):
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+        self.set.refresh_latest_platform_version()
+        self.set.refresh_platform_version()
+
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.set.latest_platform_version)
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
     def ansible_service_run(self):
         os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
 
+## Machine settings
+    def update_z_touch_plate_thickness(self):
+        self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
+
+
+    def toggle_reminders(self):
+        if self.reminder_disable.state == 'normal':
+            self.m.reminders_enabled = True
+        elif self.reminder_disable.state == 'down':
+            self.m.reminders_enabled = False
+
+    def full_reminders(self):
+        self.m.write_calibration_settings(float(320*3600),float(320*3600))
+        self.m.write_z_head_maintenance_settings(float(50*3600))
+        # This is on purpose, want use == lifetime
+        self.m.write_spindle_brush_values(self.m.spindle_brush_lifetime_seconds, self.m.spindle_brush_lifetime_seconds)
+        self.m.reminders_enabled = True
+
+    def factory_reset(self):
+        lifetime = float(120*3600)
+        self.m.write_spindle_brush_values(0, lifetime)
+        self.m.write_z_head_maintenance_settings(0)
+        self.m.write_calibration_settings(0, float(320*3600))
+        self.m.reminders_enabled = True
+
+        self.m.trigger_setup = True
+        self.m.write_set_up_options(True)
+
+        # Sets everything to zeroes or defaults
+
+        # Need a file where it basically just says whether it needs user to reset their maintenance settings
+
+        # trigger_setup = True
+        # calibrated_for_first_time = False
+        # z_head_lubricated_for_first_time = False
+        # warranty_registration = False
+        # spindle_brush_values_set = False
+
+
+        # This will also be triggered if a new file/folder gets created?
+
+        # Something like: 
+
+        # Welcome to SmartBench! 
+
+        # Please visit the Maintenance App to enter your machine settings,
+        # and calibrate your machine with the Calibration App. 
+
+        # You may see this message again if you have had to repair your software or deleted your machine settings. 
+
+        # Remind me later // Set up now (takes user to either maintenance or calibration)
+
+
+
 
 ## GRBL Settings
+
+    def download_grbl_settings(self):
+        self.save_grbl_settings()
+        if self.usb_stick.is_usb_mounted_flag == True:
+            # os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/scp-logs.sh")
+            os.system("sudo cp --no-preserve=mode,ownership /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt /media/usb/")
+            os.system("rm /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt")
 
     def bake_grbl_settings(self):
         grbl_settings = [
@@ -420,59 +510,103 @@ class DeveloperScreen(Screen):
         self.m.send_any_gcode_command("$$")
         self.m.send_any_gcode_command("$#")
 
-        grbl_settings_and_params = [
-                    '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
-                    '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
-                    '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
-                    '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
-                    '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
-                    '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
-                    '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
-                    '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
-                    '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
-                    '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
-                    '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
-                    '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
-                    '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
-                    '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
-                    '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
-                    '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
-                    '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
-                    '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
-                    '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
-                    '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
-                    '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
-                    '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
-                    '$100=' + str(self.m.s.setting_100),   #X steps/mm
-                    '$101=' + str(self.m.s.setting_101),   #Y steps/mm
-                    '$102=' + str(self.m.s.setting_102),   #Z steps/mm
-                    '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
-                    '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
-                    '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
-                    '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
-                    '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
-                    '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
-                    '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
-                    '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
-                    '$132=' + str(self.m.s.setting_132),   #Z Max travel, mm
-                    'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
-            ]
+        try: self.m.s.setting_50
+        except:
+            grbl_settings_and_params = [
+                        '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
+                        '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
+                        '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
+                        '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
+                        '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
+                        '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
+                        '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
+                        '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
+                        '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
+                        '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
+                        '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
+                        '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
+                        '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
+                        '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
+                        '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
+                        '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
+                        '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
+                        '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
+                        '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
+                        '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
+                        '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
+                        '$100=' + str(self.m.s.setting_100),   #X steps/mm
+                        '$101=' + str(self.m.s.setting_101),   #Y steps/mm
+                        '$102=' + str(self.m.s.setting_102),   #Z steps/mm
+                        '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
+                        '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
+                        '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
+                        '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
+                        '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
+                        '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
+                        '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                        '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
+                        '$132=' + str(self.m.s.setting_132)   #Z Max travel, mm
+                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                ]
+        else:
+            grbl_settings_and_params = [
+                        '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
+                        '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
+                        '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
+                        '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
+                        '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
+                        '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
+                        '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
+                        '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
+                        '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
+                        '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
+                        '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------                        
+                        '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
+                        '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
+                        '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
+                        '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
+                        '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
+                        '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
+                        '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
+                        '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
+                        '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
+                        '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
+                        '$50=' + str(self.m.s.setting_50),     #Yeti custom serial number
+                        '$100=' + str(self.m.s.setting_100),   #X steps/mm
+                        '$101=' + str(self.m.s.setting_101),   #Y steps/mm
+                        '$102=' + str(self.m.s.setting_102),   #Z steps/mm
+                        '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
+                        '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
+                        '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
+                        '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
+                        '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
+                        '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
+                        '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                        '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
+                        '$132=' + str(self.m.s.setting_132)   #Z Max travel, mm
+                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                ]
 
-        f = open('saved_grbl_settings_params.txt', 'w')
-        f.write("auto_restore = True,")
-        f.write(str(grbl_settings_and_params))
+        f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
+        f.write(('\n').join(grbl_settings_and_params))
         f.close()
-        
-        print(grbl_settings_and_params)
 
     def restore_grbl_settings(self):
-        
-        g = open('saved_grbl_settings_params.txt', 'r')
-        settings_to_restore = g.read()
-#         self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+
+        if self.usb_stick.is_usb_mounted_flag == True:
+            g = open("/media/usb/saved_grbl_settings_params.txt", 'r')
+        else:        
+            g = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'r')
+
+        settings_to_restore = (g.read()).split('\n')
+        self.m.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+
+
 
     def flash_fw(self):
-        pass
+        self.set.get_fw_update()
 #         os.system("sudo service pigpiod start")
 #         pi = pigpio.pi()
 #         pi.set_mode(17, pigpio.ALT3)
@@ -482,5 +616,8 @@ class DeveloperScreen(Screen):
 #         os.system("./update_fw.sh")
 #         # sys.exit()
 #     
+
+
+
 
 

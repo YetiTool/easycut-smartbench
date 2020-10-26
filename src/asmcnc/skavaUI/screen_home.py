@@ -40,7 +40,6 @@ Builder.load_string("""
     quick_commands_container:quick_commands_container
     virtual_bed_control_container:virtual_bed_control_container
     gcode_monitor_container:gcode_monitor_container
-    settings_container:settings_container
     home_tab:home_tab
     tab_panel:tab_panel
     pos_tab:pos_tab
@@ -84,18 +83,8 @@ Builder.load_string("""
                                     size: self.size
                                     pos: self.pos
 
-                            Accordion:
-                                orientation: 'horizontal'
-
-                                AccordionItem:
-                                    title: 'GCode monitor'
-                                    collapse: False
-                                    id: gcode_monitor_container
-
-                                AccordionItem:
-                                    title: 'Settings'
-                                    id: settings_container
-
+                            BoxLayout:
+                                id: gcode_monitor_container
 
 
                     TabbedPanelItem:
@@ -298,14 +287,9 @@ class HomeScreen(Screen):
         # Settings tab
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
-        self.settings_widget = widget_settings_options.SettingsOptions(machine=self.m, screen_manager=self.sm, settings = self.set)
-        self.settings_container.add_widget(self.settings_widget)
         
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
-
-        if self.m.is_laser_enabled == True: self.default_datum_choice = 'laser'
-        else: self.default_datum_choice = 'spindle'
 
     def on_enter(self): 
 
