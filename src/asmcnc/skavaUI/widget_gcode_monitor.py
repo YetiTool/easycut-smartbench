@@ -293,7 +293,7 @@ class GCodeMonitor(Widget):
     
     def toggle_check_mode(self):
         
-        if self.m.is_check_mode_enabled:
+        if self.m.s.m_state == "Check":
             self.m.disable_check_mode()
         else:
             self.m.enable_check_mode()
