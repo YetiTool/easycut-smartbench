@@ -295,8 +295,10 @@ class GCodeMonitor(Widget):
         
         if self.m.s.m_state == "Check":
             self.m.disable_check_mode()
-        else:
+        elif self.m.s.m_state == "Idle":
             self.m.enable_check_mode()
+        else:
+            self.update_monitor_text_buffer('debug', 'Could not enable check mode; please check machine is Idle.')
 
     def clear_monitor(self): 
         
