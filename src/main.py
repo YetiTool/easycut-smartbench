@@ -221,6 +221,9 @@ class SkavaUI(App):
 
         log('Screen manager activated: ' + str(sm.current))
 
+        log("Preparing status poll to remote...")
+        Clock.schedule_once(db._start_status_poll,20)
+        
         return sm
 
 if __name__ == '__main__':

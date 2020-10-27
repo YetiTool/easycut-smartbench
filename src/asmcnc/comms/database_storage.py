@@ -68,8 +68,7 @@ class DatabaseStorage(object):
         # OK, now we know it works, close it to prevent timeouts
         self.rabbitMQ_connection.close()
         
-        log("Preparing status poll...")
-        Clock.schedule_once(self._start_status_poll,20)
+
 #         except:
 #             log("Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?")
 
