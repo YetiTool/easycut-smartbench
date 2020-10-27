@@ -66,7 +66,7 @@ class DatabaseStorage(object):
         log("Channel to remote db intialised.")
 
         # OK, now we know it works, close it to prevent timeouts
-        self.rabbitMQ_connection.close()
+#         self.rabbitMQ_connection.close()
         
 #         log("Preparing status poll to remote...")
 #         Clock.schedule_once(db._start_status_poll,20)
