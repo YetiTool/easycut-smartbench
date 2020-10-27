@@ -50,7 +50,11 @@ class RouterMachine(object):
 
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
+    if sys.platform != 'win32' and sys.platform != 'darwin':
+        smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
+    else:
+        smartbench_values_dir = 'sb_values/'
+       
     
     ### Individual files to hold persistent values
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
@@ -60,6 +64,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    device_label_file_path = smartbench_values_dir + 'device_label.txt'
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -72,6 +77,9 @@ class RouterMachine(object):
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
+
+    ## DEVICE LABEL 
+    device_label = "default" #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -95,10 +103,9 @@ class RouterMachine(object):
 
     trigger_setup = False
             
-    def __init__(self, win_serial_port, screen_manager, flurry_database):
+    def __init__(self, win_serial_port, screen_manager):
 
         self.sm = screen_manager
-        self.db = flurry_database
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
@@ -106,9 +113,9 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-        if sys.platform != "win32" and sys.platform != "darwin":
-            self.check_presence_of_sb_values_files()
-            self.get_persistent_values()
+#         if sys.platform != "win32" and sys.platform != "darwin":
+        self.check_presence_of_sb_values_files()
+        self.get_persistent_values()
         
 
 # PERSISTENT MACHINE VALUES
@@ -167,6 +174,14 @@ class RouterMachine(object):
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
+        if not path.exists(self.device_label_file_path):
+            log('Creating device label settings file...')
+            file = open(self.device_label_file_path, 'w+')
+            file.write(str(self.device_label))
+            file.close()
+
+
+
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -175,6 +190,7 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+        self.read_device_label()
 
 
     ## SET UP OPTIONS
@@ -239,6 +255,38 @@ class RouterMachine(object):
         except:
             log("Unable to write z touch plate thickness")
             return False
+
+
+    ## DEVICE LABEL
+    def read_device_label(self):
+
+        try: 
+            file = open(self.device_label_file_path, 'r')
+            self.device_label  = str(file.read())
+            file.close()
+
+            log("Read in device label")
+            return True
+
+        except:
+            log("Unable to read device label")
+            return False
+
+    def write_device_label(self, value):
+
+        try:
+            file = open(self.device_label_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.device_label_file_path = str(value)
+            log("device label written to file")
+            return True
+
+        except:
+            log("Unable to write device label")
+            return False
+
 
 
     ## CALIBRATION SETTINGS
@@ -893,11 +941,9 @@ class RouterMachine(object):
 
     def spindle_on(self):
         self.s.write_command('M3 S25000')
-        self.db.spindle_on()
     
     def spindle_off(self):
         self.s.write_command('M5')
-        self.db.spindle_off()
 
     def cooldown_zUp_and_spindle_on(self):
         self.s.write_command('AE')

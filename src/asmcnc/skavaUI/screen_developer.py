@@ -30,6 +30,7 @@ Builder.load_string("""
 
 <DeveloperScreen>:
 
+
     sw_version_label:sw_version_label
     sw_hash_label:sw_hash_label
     sw_branch_label:sw_branch_label
@@ -41,6 +42,7 @@ Builder.load_string("""
     user_branch: user_branch
     z_touch_plate_entry: z_touch_plate_entry
     reminder_disable: reminder_disable
+    device_label_text_input:device_label_text_input
 #     latest_platform_version_label:latest_platform_version_label
 
     GridLayout:
@@ -185,15 +187,16 @@ Builder.load_string("""
             cols: 2
             size_hint_y: 0.25
             
-            Label:
-                text: 'Misc'
-                color: 1,1,1,1
+            Button:
+                text: 'Save device label'
+                on_press: root.save_device_label()
 #                 size_hint_y: 0.25
 #                 size_hint_x: 0.25
 
-            Label:
-                text: ''
-                color: 1,1,1,1
+            TextInput:
+                id: device_label_text_input
+                text: 'default'
+                multiline: False
         
         
         GridLayout:
@@ -332,6 +335,7 @@ class DeveloperScreen(Screen):
     def on_pre_enter(self, *args):
         self.m.send_any_gcode_command('$I')
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
+        self.device_label_text_input.text = str(self.m.device_label)
 
     def on_enter(self, *args):
         self.scrape_fw_version()
@@ -402,6 +406,9 @@ class DeveloperScreen(Screen):
 ## Machine settings
     def update_z_touch_plate_thickness(self):
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
+
+    def save_device_label(self):
+        self.m.write_device_label(self.device_label_text_input.text)
 
 
     def toggle_reminders(self):

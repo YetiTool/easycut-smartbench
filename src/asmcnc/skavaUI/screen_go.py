@@ -575,21 +575,24 @@ class GoScreen(Screen):
             
 ### SCREEN UPDATES
     
+    percent_thru_job = 0
+    time_taken_seconds = 0
+    
     def poll_for_job_progress(self, dt):
 
         # % progress    
         if len(self.job_gcode) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
-            if percent_thru_job > 100: percent_thru_job = 100
-            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
+            self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
+            if self.percent_thru_job > 100: self.percent_thru_job = 100
+            self.progress_percentage_label.text = "[color=333333]" + str(self.percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
         if len(self.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
 
             stream_end_time = time.time()
-            time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
+            self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
+            hours = int(self.time_taken_seconds / (60 * 60))
+            seconds_remainder = self.time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             

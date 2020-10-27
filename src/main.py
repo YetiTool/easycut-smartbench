@@ -70,7 +70,7 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 
 
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM5'
 
 # Current version active/working on
 initial_version = 'v1.4.2'
@@ -131,14 +131,14 @@ class SkavaUI(App):
 
         log("Starting App:")
 
-        # Create database object to talk to
-        db = database_storage.DatabaseStorage()
-        
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, db)
+        m = router_machine.RouterMachine(Cmport, sm)
+
+        # Create database object to talk to
+        db = database_storage.DatabaseStorage(sm, m)
         
         job_gcode = []  # declare g-code object
         
