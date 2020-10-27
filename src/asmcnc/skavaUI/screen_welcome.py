@@ -64,11 +64,14 @@ class WelcomeScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
+        self.db=kwargs['database']
 
 
     def on_enter(self):
         
         if self.m.s.is_connected():
+
+            Clock.schedule_once(self.db._start_status_ping_schedule, 2)
 
             # PC boot timings
             if sys.platform == 'win32':

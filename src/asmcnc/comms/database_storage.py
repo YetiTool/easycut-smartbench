@@ -11,7 +11,6 @@ import os.path
 from os import path
 import time
 import datetime
-
 from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
@@ -21,6 +20,10 @@ def log(message):
     timestamp = datetime.datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
+try:
+    import pika
+except:
+    log("Couldn't import pika")
 
 class DatabaseStorage(object):
 
@@ -45,7 +48,6 @@ class DatabaseStorage(object):
         
 #         try:
         # Ansible may not have pre-installed this, hence try the import
-        import pika
 
         # LOCAL CONNECTION
 #             rabbitMQ_connection = pika.BlockingConnection(
@@ -72,44 +74,37 @@ class DatabaseStorage(object):
 #         Clock.schedule_once(db._start_status_poll,20)
 #         except:
 #             log("Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?")
-        Clock.schedule_interval(self.test_print,1)
 
 
-    def _start_status_poll(self, dt):
-        log("Starting status poll schedule.")
+    def _start_status_ping_schedule(self, dt):
+        log("Starting status ping schedule.")
         Clock.schedule_interval(self._send_status_update_to_remote_db, self.STATUS_POLL_INTERVAL)
 
-    def test_print(self,dt):
-        log("Interval print check")
 
     def _send_status_update_to_remote_db(self, dt):
         
-        log("Attempting to poll now")
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
-#         try:
-        
+        try:
+            job_time = self.sm.get_screen('go').time_taken_seconds
+            job_percent = self.sm.get_screen('go').percent_thru_job
+    
+            message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.m.device_label + "|job_time;" + str(job_time) + "|job_percent;" + str(job_percent)
+    
+            self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
+            self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
+                                                   5672,
+                                                   '/',
+                                                   self.credentials)    
+            self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
+            channel = self.rabbitMQ_connection.channel()
+            channel.queue_declare(queue='machine_status_1')
+    
+            log("Status ping: " + message)
+            channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
+            self.rabbitMQ_connection.close()
 
-        job_time = self.sm.get_screen('go').time_taken_seconds
-        job_percent = self.sm.get_screen('go').percent_thru_job
-
-        message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.m.device_label + "|job_time;" + str(job_time) + "|job_percent;" + str(job_percent)
-
-#         import pika
-        self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
-        self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
-                                               5672,
-                                               '/',
-                                               self.credentials)    
-        self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
-        channel = self.rabbitMQ_connection.channel()
-        channel.queue_declare(queue='machine_status_1')
-        print "Polling..."
-
-        log("Sending: " + message)
-        channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
-        self.rabbitMQ_connection.close()
-#         except:
-#             log("Problem sending to remote db:" )
+        except:
+            log("Problem pinging status to remote db." )
                 
 
 
