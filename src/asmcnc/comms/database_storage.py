@@ -77,6 +77,7 @@ class DatabaseStorage(object):
 
     def _send_status_update_to_remote_db(self, dt):
         
+        print "Attempting to poll"
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
         try:
         
@@ -95,6 +96,8 @@ class DatabaseStorage(object):
             self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
             channel = self.rabbitMQ_connection.channel()
             channel.queue_declare(queue='machine_status_1')
+            print "Polling..."
+
             log("Sending: " + message)
             channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
             self.rabbitMQ_connection.close()
