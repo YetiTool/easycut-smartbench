@@ -23,7 +23,7 @@ def log(message):
 try:
     import pika
 except:
-    log("Couldn't import pika")
+    log("Couldn't import pika lib - has it been installed on plateform?")
 
 class DatabaseStorage(object):
 
