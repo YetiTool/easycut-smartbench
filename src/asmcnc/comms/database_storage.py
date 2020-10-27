@@ -83,12 +83,28 @@ class DatabaseStorage(object):
 
     def _send_status_update_to_remote_db(self, dt):
         
+        measurement_type = "sb1_status"
+        
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
         try:
-            job_time = self.sm.get_screen('go').time_taken_seconds
-            job_percent = self.sm.get_screen('go').percent_thru_job
+
     
-            message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.m.device_label + "|job_time;" + str(job_time) + "|job_percent;" + str(job_percent)
+# OLD             message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.m.device_label + "|job_time;" + str(job_time) + "|job_percent;" + str(job_percent)
+
+            message = [
+                {
+                    "measurement": measurement_type,
+                    "tags": {
+                        "device_ID": self.m.device_label,
+                    },
+                    "fields": {
+                        "status": self.m.s.m_state,
+                        "job_time": self.sm.get_screen('go').time_taken_seconds,
+                        "job_percent": self.sm.get_screen('go').percent_thru_job,
+                        
+                    }
+                }
+            ]
     
             self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
             self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
