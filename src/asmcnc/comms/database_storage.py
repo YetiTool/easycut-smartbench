@@ -68,20 +68,21 @@ class DatabaseStorage(object):
             # OK, now we know it works, close it to prevent timeouts
             self.rabbitMQ_connection.close()
             
-            log("Starting status poll...")
-            Clock.schedule_once(self._start_status_poll,5)
+            log("Preparing status poll...")
+            Clock.schedule_once(self._start_status_poll,20)
         except:
             log("Unable to create pipe to remote database. Have libs been installed? Or check DatabaseStorage credentials?")
 
 
 
     def _start_status_poll(self, dt):
+        log("Starting status poll schedule.")
         Clock.schedule_interval(self._send_status_update_to_remote_db, self.STATUS_POLL_INTERVAL)
 
 
     def _send_status_update_to_remote_db(self, dt):
         
-        print "Attempting to poll"
+        log("Attempting to poll now")
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
 #         try:
         
