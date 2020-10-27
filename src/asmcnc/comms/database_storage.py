@@ -79,7 +79,7 @@ class DatabaseStorage(object):
         log("Starting status poll schedule.")
         Clock.schedule_interval(self._send_status_update_to_remote_db, self.STATUS_POLL_INTERVAL)
 
-    def test_print(self):
+    def test_print(self,dt):
         log("Interval print check")
 
     def _send_status_update_to_remote_db(self, dt):
