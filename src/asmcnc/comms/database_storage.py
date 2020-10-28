@@ -14,6 +14,7 @@ import datetime
 from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
+import json
 
 
 def log(message):
@@ -87,11 +88,8 @@ class DatabaseStorage(object):
         
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
         try:
-
     
-# OLD             message = "time;" + str(datetime.datetime.now()) + "|machineID;" + self.m.device_label + "|job_time;" + str(job_time) + "|job_percent;" + str(job_percent)
-
-            message = [
+            data = [
                 {
                     "measurement": measurement_type,
                     "tags": {
@@ -101,10 +99,15 @@ class DatabaseStorage(object):
                         "status": self.m.s.m_state,
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
                         "job_percent": self.sm.get_screen('go').percent_thru_job,
-                        
+                        "z_maint_hrs_since_last": self.m.time_since_z_head_lubricated_seconds/3600,
+                        "z_maint_hrs_limit": 50,
+                        "sindle_brush_use_hrs": self.m.spindle_brush_use_seconds/3600,
+                        "sindle_brush_use_limit": int(self.m.spindle_brush_lifetime_seconds/3600),
                     }
                 }
             ]
+
+            message = json.dumps(data)
     
             self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
             self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname,
