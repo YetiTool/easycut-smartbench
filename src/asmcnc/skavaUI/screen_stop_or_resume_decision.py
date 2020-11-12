@@ -151,7 +151,7 @@ class StopOrResumeDecisionScreen(Screen):
 
     
     def cancel_job(self):
-        popup_info.PopupConfirmJobCancel()
+        popup_info.PopupConfirmJobCancel(self.sm)
 
     def confirm_job_cancel(self):
         self.m.s.is_job_streaming = True

@@ -856,7 +856,7 @@ class PopupReminder(Widget):
 
 class PopupConfirmJobCancel(Widget):
 
-    def __init__(self, machine, screen_manager):
+    def __init__(self, screen_manager):
 
       self.sm = screen_manager
         
