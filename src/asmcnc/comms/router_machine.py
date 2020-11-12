@@ -461,7 +461,7 @@ class RouterMachine(object):
     #     return output      
 
     def hw_can_operate_laser_commands(self):
-        output = self.is_machines_hw_version_equal_to_or_greater_than_version('6', 'laser commands AX and AZ') # Update to version 8, but need 6 to test on rig
+        output = self.is_machines_hw_version_equal_to_or_greater_than_version('8', 'laser commands AX and AZ') # Update to version 8, but need 6 to test on rig
         log('HW version able to operate laser commands AX and AZ: ' + str(output))
         return output  
 
