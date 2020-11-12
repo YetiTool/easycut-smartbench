@@ -77,6 +77,8 @@ class RouterMachine(object):
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
+    time_to_remind_user_to_lube_z_seconds = float(50*3600)
+    
 
     ## DEVICE LABEL 
     device_label = "default" #TODO needs tying to machine unique ID else all machines will refence this dataseries

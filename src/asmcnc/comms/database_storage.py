@@ -15,6 +15,7 @@ from __builtin__ import True
 from kivy.uix.switch import Switch
 from pickle import TRUE
 import json
+import socket 
 
 
 def log(message):
@@ -85,6 +86,27 @@ class DatabaseStorage(object):
     def _send_status_update_to_remote_db(self, dt):
         
         measurement_type = "sb1_status"
+        device_label = self.m.device_label + " (" + socket.gethostname() + ")"
+        
+        # z lube
+        z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds/3600
+        z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds/3600
+        z_lube_hrs_left = round(z_lube_limit_hrs - z_lube_used_hrs, 2)
+        z_lube_percent_used = round((z_lube_hrs_left/z_lube_limit_hrs)*100, 2)
+
+        # spindle brush
+        spindle_brush_limit_hrs = self.m.spindle_brush_lifetime_seconds/3600
+        spindle_brush_used_hrs = self.m.spindle_brush_use_seconds/3600
+        spindle_brush_hrs_left = round(spindle_brush_limit_hrs - spindle_brush_used_hrs, 2)
+        spindle_brush_percent_used = round((spindle_brush_hrs_left/spindle_brush_limit_hrs)*100, 2)
+
+        # calibration
+        calibration_limit_hrs = self.m.time_to_remind_user_to_calibrate_seconds/3600
+        calibration_used_hrs = self.m.time_since_calibration_seconds/3600
+        calibration_hrs_left = round(calibration_limit_hrs - calibration_used_hrs, 2)
+        calibration_percent_used = round((calibration_hrs_left/calibration_limit_hrs)*100, 2)
+
+
         
         # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
         try:
@@ -93,16 +115,23 @@ class DatabaseStorage(object):
                 {
                     "measurement": measurement_type,
                     "tags": {
-                        "device_ID": self.m.device_label,
+                        "device_ID": device_label,
                     },
                     "fields": {
                         "status": self.m.s.m_state,
+
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
                         "job_percent": self.sm.get_screen('go').percent_thru_job,
-                        "z_maint_hrs_since_last": self.m.time_since_z_head_lubricated_seconds/3600,
-                        "z_maint_hrs_limit": 50,
-                        "sindle_brush_use_hrs": self.m.spindle_brush_use_seconds/3600,
-                        "sindle_brush_use_limit": int(self.m.spindle_brush_lifetime_seconds/3600),
+
+                        "z_lube_%_thru": str(z_lube_percent_used),
+                        "z_lube_hrs_before_next": str(z_lube_hrs_left),
+
+                        "spindle_brush_%_thru": str(spindle_brush_percent_used),
+                        "spindle_brush_hrs_before_next": str(spindle_brush_hrs_left),
+
+                        "calibration_%_thru": str(calibration_percent_used),
+                        "calibration_hrs_before_next": str(calibration_hrs_left),
+                   
                     }
                 }
             ]
