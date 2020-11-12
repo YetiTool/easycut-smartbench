@@ -427,7 +427,8 @@ class WifiScreen(Screen):
             self.connect_wifi()
 
     def connect_wifi(self):
-        popup_info.PopupWait(self.sm)
+        message = 'Please wait...\n\nConsole will reboot to connect to network'
+        popup_info.PopupMiniInfo(self.sm, message)
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -472,7 +473,6 @@ class WifiScreen(Screen):
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
-
 
         self.sm.current = 'rebooting'
 
