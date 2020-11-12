@@ -868,10 +868,10 @@ class PopupConfirmJobCancel(Widget):
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
-      resume_button = Button(text='[b]No, resume[/b]', markup = True)
+      resume_button = Button(text='[b]No[/b]', markup = True)
       resume_button.background_normal = ''
       resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-      cancel_button = Button(text='[b]Yes, cancel[/b]', markup = True)
+      cancel_button = Button(text='[b]Yes[/b]', markup = True)
       cancel_button.background_normal = ''
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
