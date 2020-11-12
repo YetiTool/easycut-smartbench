@@ -81,10 +81,6 @@ class WelcomeScreenClass(Screen):
             if sys.platform != 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
-                # Get grbl firmware version loaded into serial comms
-                Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I'), 5.5)
-                # Get grbl settings loaded into serial comms
-                Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.6)
                 # Allow time for machine reset sequence
                 Clock.schedule_once(self.go_to_next_screen, 6)
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first                
@@ -99,8 +95,6 @@ class WelcomeScreenClass(Screen):
         # Laser settings
         if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
-
-        self.m.laser_off()
 
 
         # SW Update available?
