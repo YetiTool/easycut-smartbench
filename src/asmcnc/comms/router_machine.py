@@ -508,19 +508,24 @@ class RouterMachine(object):
         # log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
         return False
 
-    def fw_can_operate_laser_commands(self):
+    # def fw_can_operate_laser_commands(self):
+    #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
+    #     log('FW version able to operate laser commands AX and AZ: ' + str(output))
+    #     return output      
 
-        log('FW version able to operate laser commands AX and AZ: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')))
-        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.1.2', 'laser commands AX and AZ')       
+    def hw_can_operate_laser_commands(self):
+        output = self.is_machines_hw_version_equal_to_or_greater_than_version('8', 'laser commands AX and AZ') # Update to version 8, but need 6 to test on rig
+        log('HW version able to operate laser commands AX and AZ: ' + str(output))
+        return output  
 
 
     def fw_can_operate_zUp_on_pause(self):
 
-        log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')))
-        return self.is_machines_fw_version_equal_to_or_greater_than_verison('1.0.13', 'Z up on pause')
+        log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
+        return self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')
     
 
-    def is_machines_fw_version_equal_to_or_greater_than_verison(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
+    def is_machines_fw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
         
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
@@ -535,7 +540,7 @@ class RouterMachine(object):
             except:
                 error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
                 ".\n\n Please check Z Head connection."
-                popup_info.PopupError(self.sm, error_description)
+                log(error_description)
 
                 return False
             
@@ -555,6 +560,24 @@ class RouterMachine(object):
                         return False
                     else: 
                         return True # equal
+
+        else: return False
+
+    def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription): 
+        
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+            try:
+                if self.s.hw_version >= version_to_reference:
+                    return True
+                else:
+                    return False
+            
+            except:
+                error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
+                ".\n\n Please check Z Head connection."
+                log(error_description)
+
+                return False
 
         else: return False
 
@@ -636,6 +659,15 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         # Set lights
         Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
+        # Get grbl firmware version loaded into serial comms
+        Clock.schedule_once(lambda dt: self.send_any_gcode_command('$I'), 1.5)
+        # Turn laser off (if it is on)
+        Clock.schedule_once(lambda dt: self.laser_off(bootup=True), 1.7)
+        # Get grbl settings loaded into serial comms
+        Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
+
+
+
 
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
@@ -959,17 +991,20 @@ class RouterMachine(object):
     def laser_on(self):
         if self.is_laser_enabled == True: 
 
-            if self.fw_can_operate_laser_commands():
+            if self.hw_can_operate_laser_commands():
                 self.s.write_command('AZ')
             self.set_led_colour('BLUE')
 
             self.is_laser_on = True
 
-    def laser_off(self):
+    def laser_off(self, bootup=False):
         self.is_laser_on = False
-        if self.fw_can_operate_laser_commands():
+        if self.hw_can_operate_laser_commands():
             self.s.write_command('AX')
-        self.set_led_colour('GREEN')
+        if bootup == True:
+            self.set_led_colour('YELLOW')
+        else:
+            self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
