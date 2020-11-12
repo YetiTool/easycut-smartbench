@@ -534,6 +534,7 @@ class SerialConnection(object):
     expecting_probe_result = False
     
     fw_version = ''
+    hw_version = ''
 
 
     def process_grbl_push(self, message):
@@ -824,8 +825,11 @@ class SerialConnection(object):
                 self.expecting_probe_result = False # clear flag
                 
             elif stripped_message.startswith('ASM CNC'):
-                self.fw_version = stripped_message.split(':')[1]
+                fw_hw_versions = stripped_message.split(';')
+                self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                self.hw_version = (fw_hw_versions[2]).split(':')[1]
                 log('FW version: ' + str(self.fw_version))
+                log('HW version: ' + str(self.hw_version))
 
 
     def check_for_sustained_max_overload(self, dt):
