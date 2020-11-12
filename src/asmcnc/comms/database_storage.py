@@ -25,7 +25,7 @@ def log(message):
 try:
     import pika
 except:
-    log("Couldn't import pika lib - has it been installed on plateform?")
+    log("Couldn't import pika lib - has it been installed on platform?")
 
 class DatabaseStorage(object):
 
@@ -69,8 +69,8 @@ class DatabaseStorage(object):
         self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
         log("Channel to remote db intialised.")
 
-        # OK, now we know it works, close it to prevent timeouts
-#         self.rabbitMQ_connection.close()
+#         OK, now we know it works, close it to prevent timeouts
+        self.rabbitMQ_connection.close()
         
 #         log("Preparing status poll to remote...")
 #         Clock.schedule_once(db._start_status_poll,20)
@@ -123,14 +123,14 @@ class DatabaseStorage(object):
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
                         "job_percent": self.sm.get_screen('go').percent_thru_job,
 
-                        "z_lube_%_thru": str(z_lube_percent_used),
-                        "z_lube_hrs_before_next": str(z_lube_hrs_left),
+                        "z_lube_%_thru": z_lube_percent_used,
+                        "z_lube_hrs_before_next": z_lube_hrs_left,
 
-                        "spindle_brush_%_thru": str(spindle_brush_percent_used),
-                        "spindle_brush_hrs_before_next": str(spindle_brush_hrs_left),
+                        "spindle_brush_%_thru": spindle_brush_percent_used,
+                        "spindle_brush_hrs_before_next": spindle_brush_hrs_left,
 
-                        "calibration_%_thru": str(calibration_percent_used),
-                        "calibration_hrs_before_next": str(calibration_hrs_left),
+                        "calibration_%_thru": calibration_percent_used,
+                        "calibration_hrs_before_next": calibration_hrs_left,
                    
                     }
                 }
