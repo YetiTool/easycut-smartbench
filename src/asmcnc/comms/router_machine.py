@@ -607,11 +607,11 @@ class RouterMachine(object):
         # Set lights
         Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
         # Get grbl firmware version loaded into serial comms
-        Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I'), 1.5)
+        Clock.schedule_once(lambda dt: self.send_any_gcode_command('$I'), 1.5)
         # Turn laser off (if it is on)
-        Clock.schedule_once(lambda dt: self.m.laser_off(bootup=True), 1.7)
+        Clock.schedule_once(lambda dt: self.laser_off(bootup=True), 1.7)
         # Get grbl settings loaded into serial comms
-        Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 1.9)
+        Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
 
 
 
