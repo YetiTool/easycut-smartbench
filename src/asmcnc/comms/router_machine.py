@@ -606,6 +606,15 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
         # Set lights
         Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
+        # Get grbl firmware version loaded into serial comms
+        Clock.schedule_once(lambda dt: self.send_any_gcode_command('$I'), 1.5)
+        # Turn laser off (if it is on)
+        Clock.schedule_once(lambda dt: self.laser_off(bootup=True), 1.7)
+        # Get grbl settings loaded into serial comms
+        Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
+
+
+
 
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
@@ -935,11 +944,14 @@ class RouterMachine(object):
 
             self.is_laser_on = True
 
-    def laser_off(self):
+    def laser_off(self, bootup=False):
         self.is_laser_on = False
         if self.hw_can_operate_laser_commands():
             self.s.write_command('AX')
-        self.set_led_colour('GREEN')
+        if bootup == True:
+            self.set_led_colour('YELLOW')
+        else:
+            self.set_led_colour('GREEN')
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
