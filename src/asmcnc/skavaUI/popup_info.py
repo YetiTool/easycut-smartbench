@@ -852,4 +852,55 @@ class PopupReminder(Widget):
         if go_to == 'calibration':
           back_button.bind(on_press=calibration_delay)      
 
-        popup.open()  
+        popup.open()
+
+class PopupConfirmJobCancel(Widget):
+
+    def __init__(self, machine, screen_manager):
+
+      self.sm = screen_manager
+        
+      def confirm_cancel(*args):
+          self.sm.get_screen('stop_or_resume_job_decision').confirm_job_cancel()
+        
+      stop_description = "Are you sure you want to cancel the job?"
+      
+      img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
+      
+      resume_button = Button(text='[b]No, resume[/b]', markup = True)
+      resume_button.background_normal = ''
+      resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+      cancel_button = Button(text='[b]Yes, cancel[/b]', markup = True)
+      cancel_button.background_normal = ''
+      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+     
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+      btn_layout.add_widget(cancel_button)
+      btn_layout.add_widget(resume_button)
+      
+      layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
+      layout_plan.add_widget(img)
+      layout_plan.add_widget(label)
+      layout_plan.add_widget(btn_layout)
+      
+      popup = Popup(title='Warning!',
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(400, 300),
+                    auto_dismiss= False
+                    )
+      
+      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_height = '4dp'
+      popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+      
+      cancel_button.bind(on_press=confirm_cancel)
+      cancel_button.bind(on_press=popup.dismiss)
+      resume_button.bind(on_press=popup.dismiss)
+      
+      popup.open()
