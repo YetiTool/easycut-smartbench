@@ -169,7 +169,7 @@ class Settings(object):
                 
                 os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
                 
-                unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo'
+                unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo/'
                 os.system(unzip_dir_command)
 
                 dir_path_name = (os.popen("find /home/pi/temp_repo/ -name 'easycut-smartbench*'").read()).strip('\n')
@@ -202,7 +202,7 @@ class Settings(object):
 
         log('Updating software from: ' + dir_path_name)
 
-        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
+        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository file://' + dir_path_name + '/.git'
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
         pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
 
