@@ -46,7 +46,6 @@ from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing # @UnresolvedImport
 from asmcnc.skavaUI import screen_safety_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
-# from asmcnc.skavaUI import screen_homing_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_done # @UnresolvedImport
@@ -156,7 +155,6 @@ class SkavaUI(App):
         homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
         safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m)
-        # homing_warning_screen = screen_homing_warning.WarningHoming(name = 'homingWarning', screen_manager = sm, machine =m)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
         job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
@@ -190,7 +188,6 @@ class SkavaUI(App):
         sm.add_widget(homing_screen)
         sm.add_widget(safety_screen)
         sm.add_widget(mstate_screen)
-        # sm.add_widget(homing_warning_screen)
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
         sm.add_widget(job_done_screen)
