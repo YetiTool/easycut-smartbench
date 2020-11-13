@@ -167,8 +167,10 @@ class Settings(object):
                 
                 os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
                 
-                unzip_dir_command = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
+                unzip_dir_command = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo &>/dev/null'
                 os.system(unzip_dir_command)
+
+                log('unzipped file name: ' + str((zipped_file_name.strip('.zip')).split('/')[-1]))
 
                 dir_path_name = (os.popen('find /home/pi/temp_repo/ -name ' + str((zipped_file_name.strip('.zip')).split('/')[-1])).read()).strip('\n')
 
