@@ -919,17 +919,17 @@ class PopupHomingWarning(Widget):
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
-      resume_button = Button()
-      resume_button.background_normal = './asmcnc/skavaUI/img/home.png'
-      resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-      cancel_button = Button()
-      cancel_button.background_normal = './asmcnc/skavaUI/img/cancel_btn_decision_context.png'
-      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      home_img = Image(source='./asmcnc/skavaUI/img/home.png', allow_stretch=False)
+      home_button = Button(Image=home_img)
+      # resume_button.background_normal = './asmcnc/skavaUI/img/home.png'
 
-     
-      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+      cancel_img = Image(source='./asmcnc/skavaUI/img/cancel_btn_decision_context.png', allow_stretch=False)
+      cancel_button = Button(Image=cancel_button)
+      # cancel_button.background_normal = './asmcnc/skavaUI/img/cancel_btn_decision_context.png'
+
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0], size_hint_y=3) 
       btn_layout.add_widget(cancel_button)
-      btn_layout.add_widget(resume_button)
+      btn_layout.add_widget(home_button)
       
       layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
       layout_plan.add_widget(img)
@@ -950,8 +950,8 @@ class PopupHomingWarning(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
-      cancel_button.bind(on_press=home_now)
+      home_button.bind(on_press=home_now)
+      home_button.bind(on_press=popup.dismiss)
       cancel_button.bind(on_press=popup.dismiss)
-      resume_button.bind(on_press=popup.dismiss)
       
       popup.open()
