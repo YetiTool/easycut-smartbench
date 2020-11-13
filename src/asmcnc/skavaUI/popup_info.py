@@ -928,7 +928,7 @@ class PopupHomingWarning(Widget):
       cancel_button.background_normal = ''
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=3) 
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
       btn_layout.add_widget(cancel_button)
       btn_layout.add_widget(home_button)
       
