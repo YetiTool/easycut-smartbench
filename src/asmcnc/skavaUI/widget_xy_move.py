@@ -377,7 +377,7 @@ class XYMove(Widget):
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
                 # self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
                 # self.sm.get_screen('homingWarning').error_msg = ''
                 # self.sm.current = 'homingWarning'
@@ -386,7 +386,7 @@ class XYMove(Widget):
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
                 # self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
                 # self.sm.get_screen('homingWarning').error_msg = ''
                 # self.sm.current = 'homingWarning'

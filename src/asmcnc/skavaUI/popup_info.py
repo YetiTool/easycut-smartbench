@@ -907,9 +907,10 @@ class PopupConfirmJobCancel(Widget):
 
 class PopupHomingWarning(Widget):
 
-    def __init__(self, screen_manager, return_to_screen, cancel_to_screen):
+    def __init__(self, screen_manager, machine, return_to_screen, cancel_to_screen):
 
       self.sm = screen_manager
+      self.m = machine
         
       def home_now(*args):
           self.m.request_homing_procedure(return_to_screen, cancel_to_screen)
@@ -921,13 +922,13 @@ class PopupHomingWarning(Widget):
       
       home_button = Button(text='[b]Home[/b]', markup = True)
       home_button.background_normal = ''
-      home_button.background_color = [13 / 255., 71 / 255., 161 / 255., 1.]
+      home_button.background_color = [33 / 255., 150 / 255., 243 / 255., 98 / 100.]
 
       cancel_button = Button(text='[b]Cancel[/b]', markup = True)
       cancel_button.background_normal = ''
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0], size_hint_y=3) 
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=3) 
       btn_layout.add_widget(cancel_button)
       btn_layout.add_widget(home_button)
       
