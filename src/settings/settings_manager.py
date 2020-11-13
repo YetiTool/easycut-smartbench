@@ -196,6 +196,9 @@ class Settings(object):
         dir_path_name = find_usb_directory()
         
         if dir_path_name == 2 or dir_path_name == 0:
+            if dir_path_name.startswith('/home/pi/temp_repo/'):
+                rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
+                os.system(rm_temp_repo)
             return dir_path_name
 
         log('Updating software from: ' + dir_path_name)
