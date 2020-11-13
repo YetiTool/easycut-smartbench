@@ -167,7 +167,7 @@ class Settings(object):
                 
                 os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
                 
-                unzip_dir_command = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo &>/dev/null'
+                unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo'
                 os.system(unzip_dir_command)
 
                 log('unzipped file name: ' + str((zipped_file_name.strip('.zip')).split('/')[-1]))
