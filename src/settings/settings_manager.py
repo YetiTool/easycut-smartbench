@@ -6,8 +6,13 @@ Module to get and store settings info
 
 import sys,os, subprocess #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
+from datetime import datetime
 
 from kivy.clock import Clock
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class Settings(object):
     
@@ -147,21 +152,41 @@ class Settings(object):
     
         def find_usb_directory():
 
-            zipped_file_name = (os.popen('find /media/usb/ -name easycut-smartbench.zip').read()).strip('\n')
+            try:
+                # look for new SB file name first
+                zipped_file_name = (os.popen("find /media/usb/ -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
+
+                if zipped_file_name == '':
+                    # if it doesn't exist, then look for easycut-smartbench.zip file as a backup
+                    zipped_file_name = (os.popen("find /media/usb/ -name 'easycut-smartbench*.zip'").read()).strip('\n')
+
+            except:
+                zipped_file_name = ''
+
             if zipped_file_name != '':
                 
                 os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
                 
-                unzip_dir = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
-                os.system(unzip_dir)
-                dir_path_name = (os.popen('find /home/pi/temp_repo/ -name easycut-smartbench').read()).strip('\n')
+                unzip_dir_command = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
+                os.system(unzip_dir_command)
+
+                dir_path_name = (os.popen('find /home/pi/temp_repo/ -name ' + str(zipped_file_name.split('.')[0])).read()).strip('\n')
 
             else:
-                dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
+
+                try:
+                    dir_path_name = (os.popen("find /media/usb/ -name 'SmartBench-SW-update*'").read()).strip('\n')
+
+                    if dir_path_name == '':
+                        dir_path_name = (os.popen("find /media/usb/ -name 'easycut-smartbench*'").read()).strip('\n')
+
+                except:
+                    dir_path_name = ''
+
             
-            if dir_path_name.count('easycut-smartbench') > 1:
+            if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
                 return 2
-            elif dir_path_name.count('easycut-smartbench') == 0:
+            elif ((dir_path_name.count('SmartBench-SW-update') == 0) and (dir_path_name.count('easycut-smartbench') == 0)):
                 return 0
             else:
                 return dir_path_name
