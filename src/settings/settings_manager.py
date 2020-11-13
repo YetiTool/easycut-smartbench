@@ -156,11 +156,11 @@ class Settings(object):
 
             try:
                 # look for new SB file name first
-                zipped_file_name = (os.popen("find /media/usb/ -name -maxdepth 2 'SmartBench-SW-update*.zip'").read()).strip('\n')
+                zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
 
                 if zipped_file_name == '':
                     # if it doesn't exist, then look for easycut-smartbench.zip file as a backup
-                    zipped_file_name = (os.popen("find /media/usb/ -name -maxdepth 2 'easycut-smartbench*.zip'").read()).strip('\n')
+                    zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*.zip'").read()).strip('\n')
 
             except:
                 zipped_file_name = ''
@@ -177,10 +177,10 @@ class Settings(object):
             else:
 
                 try:
-                    dir_path_name = (os.popen("find /media/usb/ -name -maxdepth 2 'SmartBench-SW-update*'").read()).strip('\n')
+                    dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*'").read()).strip('\n')
 
                     if dir_path_name == '':
-                        dir_path_name = (os.popen("find /media/usb/ -name -maxdepth 2 'easycut-smartbench*'").read()).strip('\n')
+                        dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip('\n')
 
                 except:
                     dir_path_name = ''
