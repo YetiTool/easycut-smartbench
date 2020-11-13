@@ -919,13 +919,13 @@ class PopupHomingWarning(Widget):
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
-      home_img = Image(source='./asmcnc/skavaUI/img/home.png', allow_stretch=False)
-      home_button = Button(size = home_img.size)
-      home_button.background_normal = './asmcnc/skavaUI/img/home.png'
+      home_button = Button(text='[b]Home[/b]', markup = True)
+      home_button.background_normal = ''
+      home_button.background_color = [13 / 255., 71 / 255., 161 / 255., 1.]
 
-      cancel_img = Image(source='./asmcnc/skavaUI/img/cancel_btn_decision_context.png', allow_stretch=False)
-      cancel_button = Button(size = cancel_img.size)
-      cancel_button.background_normal = './asmcnc/skavaUI/img/cancel_btn_decision_context.png'
+      cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+      cancel_button.background_normal = ''
+      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
       btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0], size_hint_y=3) 
       btn_layout.add_widget(cancel_button)
