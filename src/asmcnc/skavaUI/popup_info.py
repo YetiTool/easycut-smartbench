@@ -904,3 +904,55 @@ class PopupConfirmJobCancel(Widget):
       resume_button.bind(on_press=popup.dismiss)
       
       popup.open()
+
+class PopupHomingWarning(Widget):
+
+    def __init__(self, screen_manager, machine, return_to_screen, cancel_to_screen):
+
+      self.sm = screen_manager
+      self.m = machine
+        
+      def home_now(*args):
+          self.m.request_homing_procedure(return_to_screen, cancel_to_screen)
+        
+      stop_description = "You need to home SmartBench first!"
+      
+      img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+      label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
+      
+      home_button = Button(text='[b]Home[/b]', markup = True)
+      home_button.background_normal = ''
+      home_button.background_color = [33 / 255., 150 / 255., 243 / 255., 98 / 100.]
+
+      cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+      cancel_button.background_normal = ''
+      cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+      btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0], size_hint_y=2) 
+      btn_layout.add_widget(cancel_button)
+      btn_layout.add_widget(home_button)
+      
+      layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[30,20,30,0])
+      layout_plan.add_widget(img)
+      layout_plan.add_widget(label)
+      layout_plan.add_widget(btn_layout)
+      
+      popup = Popup(title='Warning!',
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(400, 300),
+                    auto_dismiss= False
+                    )
+      
+      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_height = '4dp'
+      popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+
+      home_button.bind(on_press=home_now)
+      home_button.bind(on_press=popup.dismiss)
+      cancel_button.bind(on_press=popup.dismiss)
+      
+      popup.open()
