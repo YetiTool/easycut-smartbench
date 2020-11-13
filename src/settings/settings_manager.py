@@ -184,6 +184,8 @@ class Settings(object):
                     dir_path_name = ''
 
             
+            log('directory name: ' + dir_path_name)
+
             if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
                 return 2
             elif ((dir_path_name.count('SmartBench-SW-update') == 0) and (dir_path_name.count('easycut-smartbench') == 0)):
