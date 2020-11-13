@@ -169,9 +169,7 @@ class QuickCommands(Widget):
             self.sm.current = 'boundary'
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
-            self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'
-            self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
-            self.sm.current = 'prepare_to_home'
+            self.m.request_homing_procedure('home','home')
 
         else:
 
