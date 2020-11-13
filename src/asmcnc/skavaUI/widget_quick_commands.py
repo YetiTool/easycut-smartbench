@@ -164,14 +164,14 @@ class QuickCommands(Widget):
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
-            
-        elif self.m.is_machine_homed == False and sys.platform != "win32":
-            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-            self.sm.get_screen('homingWarning').error_msg = 'Cannot start Job.'
-            self.sm.current = 'homingWarning'
                 
         elif self.is_job_within_bounds() == False and sys.platform != "win32":                   
             self.sm.current = 'boundary'
+
+        elif self.m.is_machine_homed == False and sys.platform != "win32":
+            self.sm.get_screen('prepare_to_home').cancel_to_screen = 'home'
+            self.sm.get_screen('prepare_to_home').return_to_screen = 'home'
+            self.sm.current = 'prepare_to_home'
 
         else:
 
