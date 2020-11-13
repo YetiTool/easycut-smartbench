@@ -170,9 +170,7 @@ class Settings(object):
                 unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo'
                 os.system(unzip_dir_command)
 
-                log('unzipped file name: ' + str((zipped_file_name.strip('.zip')).split('/')[-1]))
-
-                dir_path_name = (os.popen('find /home/pi/temp_repo/ -name ' + str((zipped_file_name.strip('.zip')).split('/')[-1])).read()).strip('\n')
+                dir_path_name = (os.popen("find /home/pi/temp_repo/ -name 'easycut-smartbench*'").read()).strip('\n')
 
             else:
 
