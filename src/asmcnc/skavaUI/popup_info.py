@@ -921,17 +921,9 @@ class PopupHomingWarning(Widget):
       
       home_img = Image(source='./asmcnc/skavaUI/img/home.png', allow_stretch=False)
       home_button = Button()
-      home_btn_layout = BoxLayout(padding = 0, size = home_button.size, pos = home_button.pos)
-      home_btn_layout.add_widget(home_img)
-      home_button.add_widget(home_btn_layout)
-      home_button.background_normal = ''
 
       cancel_img = Image(source='./asmcnc/skavaUI/img/cancel_btn_decision_context.png', allow_stretch=False)
       cancel_button = Button()
-      cancel_btn_layout = BoxLayout(padding = 0, size = cancel_button.size, pos = cancel_button.pos)
-      cancel_btn_layout.add_widget(cancel_img)
-      cancel_button.add_widget(cancel_btn_layout)
-      cancel_button.background_normal = ''
 
       btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0], size_hint_y=3) 
       btn_layout.add_widget(cancel_button)
@@ -956,6 +948,16 @@ class PopupHomingWarning(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
+      home_btn_layout = BoxLayout(padding = 0, size = home_button.size, pos = home_button.pos)
+      home_btn_layout.add_widget(home_img)
+      home_button.add_widget(home_btn_layout)
+      home_button.background_normal = ''
+
+      cancel_btn_layout = BoxLayout(padding = 0, size = cancel_button.size, pos = cancel_button.pos)
+      cancel_btn_layout.add_widget(cancel_img)
+      cancel_button.add_widget(cancel_btn_layout)
+      cancel_button.background_normal = ''
+
       home_button.bind(on_press=home_now)
       home_button.bind(on_press=popup.dismiss)
       cancel_button.bind(on_press=popup.dismiss)
