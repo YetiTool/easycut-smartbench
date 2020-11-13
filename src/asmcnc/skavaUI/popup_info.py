@@ -920,11 +920,13 @@ class PopupHomingWarning(Widget):
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
       home_img = Image(source='./asmcnc/skavaUI/img/home.png', allow_stretch=False)
-      home_button = Button(Image=home_img)
+      home_button = Button()
+      home_button.add_widget(home_img)
       home_button.background_normal = ''
 
       cancel_img = Image(source='./asmcnc/skavaUI/img/cancel_btn_decision_context.png', allow_stretch=False)
-      cancel_button = Button(Image=cancel_img)
+      cancel_button = Button()
+      cancel_button.add_widget(cancel_img)
       cancel_button.background_normal = ''
 
       btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0], size_hint_y=3) 
