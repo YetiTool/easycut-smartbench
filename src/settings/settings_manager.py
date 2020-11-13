@@ -152,6 +152,8 @@ class Settings(object):
     
         def find_usb_directory():
 
+# find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*
+
             try:
                 # look for new SB file name first
                 zipped_file_name = (os.popen("find /media/usb/ -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
@@ -200,11 +202,13 @@ class Settings(object):
 
         log('Updating software from: ' + dir_path_name)
 
-        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
+        rename_repository = 'sudo mv ' + dir_path_name + ' /home/pi/temp_repo/easycut-smartbench'
+        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository /home/pi/temp_repo/easycut-smartbench'
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
         pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
 
-        try: 
+        try:
+            os.system(rename_repository)
             os.system(add_remote)
             os.system(fetch_from_usb)
             os.system(pull_master_from_usb)
