@@ -933,6 +933,16 @@ class PopupHomingWarning(Widget):
       layout_plan.add_widget(img)
       layout_plan.add_widget(label)
       layout_plan.add_widget(btn_layout)
+
+      home_btn_layout = BoxLayout(padding = 0, size = home_button.size, pos = home_button.pos)
+      home_btn_layout.add_widget(home_img)
+      home_button.add_widget(home_btn_layout)
+      home_button.background_normal = ''
+
+      cancel_btn_layout = BoxLayout(padding = 0, size = cancel_button.size, pos = cancel_button.pos)
+      cancel_btn_layout.add_widget(cancel_img)
+      cancel_button.add_widget(cancel_btn_layout)
+      cancel_button.background_normal = ''
       
       popup = Popup(title='Warning!',
                     title_color=[0, 0, 0, 1],
@@ -948,15 +958,6 @@ class PopupHomingWarning(Widget):
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
-      home_btn_layout = BoxLayout(padding = 0, size = home_button.size, pos = home_button.pos)
-      home_btn_layout.add_widget(home_img)
-      home_button.add_widget(home_btn_layout)
-      home_button.background_normal = ''
-
-      cancel_btn_layout = BoxLayout(padding = 0, size = cancel_button.size, pos = cancel_button.pos)
-      cancel_btn_layout.add_widget(cancel_img)
-      cancel_button.add_widget(cancel_btn_layout)
-      cancel_button.background_normal = ''
 
       home_button.bind(on_press=home_now)
       home_button.bind(on_press=popup.dismiss)
