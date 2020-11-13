@@ -196,9 +196,12 @@ class Settings(object):
         if dir_path_name == 2 or dir_path_name == 0:
             return dir_path_name
 
+        log('Updating software from: ' + dir_path_name)
+
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
         pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
+
         try: 
             os.system(add_remote)
             os.system(fetch_from_usb)
