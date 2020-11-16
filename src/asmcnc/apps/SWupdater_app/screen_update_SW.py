@@ -377,18 +377,20 @@ class SWUpdateScreen(Screen):
                         self.set.refresh_latest_sw_version()
 
                     else:
+                        if self.wifi_image.source != self.wifi_on:
+                            refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                            popup_info.PopupError(self.sm, refresh_error_message)
+                else:
+                    if self.wifi_image.source != self.wifi_on:
                         refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
                         popup_info.PopupError(self.sm, refresh_error_message)
-                else:
-                    refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
-                    popup_info.PopupError(self.sm, refresh_error_message)   
 
                 self.set.clear_remote_repo(dir_path_name)                 
 
-            elif self.wifi_image.source == self.wifi_on:
+            if self.wifi_image.source == self.wifi_on:
                 self.set.refresh_latest_sw_version()
 
-            else: 
+            if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
                 refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
                 popup_info.PopupError(self.sm, refresh_error_message)
 
