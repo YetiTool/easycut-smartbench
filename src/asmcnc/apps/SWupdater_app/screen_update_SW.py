@@ -368,7 +368,23 @@ class SWUpdateScreen(Screen):
         self.latest_software_version_label.text = '[b]Refreshing...\n\nPlease wait.[/b]'
 
         def do_refresh():
-            self.set.refresh_latest_sw_version()
+
+            if self.usb_stick.is_available():
+                dir_path_name = self.set.find_usb_directory()
+        
+                if dir_path_name == 2 or dir_path_name == 0:
+                    pass
+                else:
+                    if self.set.set_up_remote_repo(dir_path_name):
+                        self.set.refresh_latest_sw_version()
+                        return
+                    else:
+                        refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                        popup_info.PopupError(self.sm, refresh_error_message)
+                        
+            else:
+                self.set.refresh_latest_sw_version()
+
             self.update_screen_with_latest_version()
 
         Clock.schedule_once(lambda dt: do_refresh(),0.5)

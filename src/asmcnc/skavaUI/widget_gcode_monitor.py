@@ -13,6 +13,7 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 
 Builder.load_string("""
 
@@ -279,6 +280,9 @@ class GCodeMonitor(Widget):
         
     def send_gcode_textinput(self): 
         
+        print(Window.keyboard_height)
+
+
         if self.popup_flag == True: 
             description = "Sending commands directly to the machine can change how it operates.\n\n" + \
             "Please exercise caution when using this feature.\n\n"
