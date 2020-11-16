@@ -191,10 +191,9 @@ class Settings(object):
             return dir_path_name
 
     def set_up_remote_repo(self, dir_path_name):
-        log('Updating software from: ' + dir_path_name)
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
-        pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
+        # pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
 
         try:
             os.system(add_remote)
@@ -223,6 +222,7 @@ class Settings(object):
             return dir_path_name
 
         if self.set_up_remote_repo(dir_path_name):
+            log('Updating software from: ' + dir_path_name)
             self.refresh_latest_sw_version()
             checkout_success = self.checkout_latest_version()   
 
