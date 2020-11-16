@@ -193,10 +193,12 @@ class Settings(object):
     def set_up_remote_repo(self, dir_path_name):
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
+        fetch_tags = 'cd /home/pi/easycut-smartbench/ && git fetch temp_repository --tags --quiet'
 
         try:
             os.system(add_remote)
             os.system(fetch_from_usb)
+            os.system(fetch_tags)
             return True
 
         except:
