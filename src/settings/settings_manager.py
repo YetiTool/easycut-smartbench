@@ -193,12 +193,10 @@ class Settings(object):
     def set_up_remote_repo(self, dir_path_name):
         add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
         fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
-        # pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
 
         try:
             os.system(add_remote)
             os.system(fetch_from_usb)
-            os.system(pull_master_from_usb)
             return True
 
         except:
