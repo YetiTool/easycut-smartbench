@@ -269,7 +269,7 @@ class GCodeMonitor(Widget):
             del self.monitor_text_buffer[0:len(self.monitor_text_buffer)-60]
         
     def update_status_text(self, dt):
-        
+        print(Window.keyboard_height)
         # this needs fixing
         if self.m.state() == 'Alarm' and not any('Alarm' in s for s in self.status_report_buffer):
             self.status_report_buffer.append('Please reset for status update')
@@ -280,9 +280,6 @@ class GCodeMonitor(Widget):
         
     def send_gcode_textinput(self): 
         
-        print(Window.keyboard_height)
-
-
         if self.popup_flag == True: 
             description = "Sending commands directly to the machine can change how it operates.\n\n" + \
             "Please exercise caution when using this feature.\n\n"
