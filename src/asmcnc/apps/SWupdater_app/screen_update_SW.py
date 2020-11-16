@@ -369,7 +369,7 @@ class SWUpdateScreen(Screen):
 
         def do_refresh():
 
-            if self.wifi_image.source != self.wifi_on and self.usb_stick.is_available():
+            if self.usb_stick.is_available():
                 dir_path_name = self.set.find_usb_directory()
         
                 if dir_path_name != 2 and dir_path_name != 0:
