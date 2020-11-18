@@ -52,7 +52,7 @@ Builder.load_string("""
                 width: dp(780)
                 height: dp(240)
                 padding: [40,20]
-                spacing: 10
+                spacing: 20
                 orientation: 'vertical'
                 canvas:
                     Color:
@@ -73,7 +73,8 @@ Builder.load_string("""
                     id: user_branch
                     text: 'branch'
                     multiline: False
-                    size_hint_y: 0.4
+                    size_hint_y: 0.5
+                    font_size: 20
 
                 Button:
                     text: 'Checkout and pull'
