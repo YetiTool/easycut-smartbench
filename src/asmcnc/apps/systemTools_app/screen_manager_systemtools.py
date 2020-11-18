@@ -26,8 +26,8 @@ class ScreenManagerSystemTools(object):
     def back_to_menu(self):
         self.sm.current = 'system_menu'
 
-	def exit_app(self):
-		self.sm.current = 'lobby'
+    def exit_app(self):
+        self.sm.current = 'lobby'
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
