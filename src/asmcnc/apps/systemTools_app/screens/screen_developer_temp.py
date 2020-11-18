@@ -29,7 +29,7 @@ class DeveloperTempScreen(Screen):
     def __init__(self, **kwargs):
         super(DeveloperTempScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
-		self.m = kwargs['machine']
+        self.m = kwargs['machine']
 
 
     def go_back(self):

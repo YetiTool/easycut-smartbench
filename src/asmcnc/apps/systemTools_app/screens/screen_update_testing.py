@@ -28,7 +28,7 @@ class UpdateTestingScreen(Screen):
     def __init__(self, **kwargs):
         super(UpdateTestingScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
-		self.m = kwargs['machine']
+        self.m = kwargs['machine']
 
     def go_back(self):
     	self.systemtools_sm.exit_app()
