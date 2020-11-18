@@ -157,51 +157,10 @@ Builder.load_string("""
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(385)
-                    height: dp(130)
-                    padding: 0
-                    spacing: 0
-                    orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                    Label:
-                        text: 'Machine Info'
-                        color: [0,0,0,1]
-
-                    GridLayout:
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        cols: 2
-                        rows: 3
-
-                        Label:
-                            text: 'Serial number:'
-                            color: [0,0,0,1]
-                        Label:
-                            text: ''
-                            color: [0,0,0,1]
-                        Label:
-                            text: 'Model:'
-                            color: [0,0,0,1]
-                        Label:
-                            text: ''
-                            color: [0,0,0,1]
-                        Label:
-                            text: 'Console serial number:'
-                            color: [0,0,0,1]
-                        Label:
-                            text: ''
-                            color: [0,0,0,1]
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(385)
+                    width: dp(192.5)
                     height: dp(130)
                     padding: 0
                     spacing: 0
@@ -234,6 +193,63 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(385)
+                    height: dp(130)
+                    padding: 0
+                    spacing: 0
+                    orientation: 'vertical'
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                    Label:
+                        text: 'Machine Info'
+                        color: [0,0,0,1]
+                        size_hint_y: 0.2
+
+                    GridLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        cols: 2
+                        rows: 3
+
+                        Label:
+                            text: 'Serial number:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
+                        Label:
+                            text: 'Model:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
+                        Label:
+                            text: 'Console serial number:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(192.5)
+                    height: dp(130)
+                    padding: 0
+                    spacing: 0
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(130)
@@ -267,8 +283,14 @@ class BuildInfoScreen(Screen):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
 
+    ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+
+    ## GET BUILD INFO
+    def on_enter(self):
+        pass
+
