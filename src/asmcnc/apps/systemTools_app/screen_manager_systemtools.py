@@ -19,7 +19,7 @@ class ScreenManagerSystemTools(object):
 
 	def open_build_info_screen(self):
         if not self.sm.has_screen('build_info'):
-            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
+            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
             self.sm.add_widget(build_info_screen)
         self.sm.current = 'build_info'
 
