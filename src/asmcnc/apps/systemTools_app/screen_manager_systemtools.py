@@ -17,11 +17,11 @@ class ScreenManagerSystemTools(object):
             self.sm.add_widget(system_menu_screen)
         self.sm.current = 'system_menu'
 
-	def open_build_info_screen(self):
-        if not self.sm.has_screen('build_info'):
-            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
-            self.sm.add_widget(build_info_screen)
-        self.sm.current = 'build_info'
+	# def open_build_info_screen(self):
+ #        if not self.sm.has_screen('build_info'):
+ #            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
+ #            self.sm.add_widget(build_info_screen)
+ #        self.sm.current = 'build_info'
 
     def back_to_menu(self):
         self.sm.current = 'system_menu'
