@@ -215,7 +215,7 @@ class BetaTestersScreen(Screen):
     def go_back(self):
         self.systemtools_sm.open_system_tools()
 
-    def exit_app()
+    def exit_app():
     	self.systemtools_sm.exit_app()
 
     def go_to_build_info(self):
