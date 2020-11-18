@@ -95,19 +95,19 @@ class SystemMenuScreen(Screen):
         sys.exit()
 
     def beta_testers(self):
-    	pass #need screen
+    	self.systemtools_sm.open_beta_testers_screen()
 
     def grbl_settings(self):
-    	pass #need screen
+    	self.systemtools_sm.open_grbl_settings_screen()
 
     def factory_settings(self):
-    	pass # need screen
+    	self.systemtools_sm.open_factory_settings_screen()
 
     def update_testing(self):
-        pass # need screen
+        self.systemtools_sm.open_update_testing_screen()
 
     def developer(self):
-    	pass # need screen
+    	self.systemtools_sm.open_developer_screen()
 
 
 

@@ -60,7 +60,7 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('build_info')
 
         self.sm.current = 'lobby'
-        self.destroy_screen('system_menu')
+        # self.destroy_screen('system_menu')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
