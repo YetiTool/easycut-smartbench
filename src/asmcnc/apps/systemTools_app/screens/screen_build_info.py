@@ -72,73 +72,82 @@ Builder.load_string("""
                     Label: 
                         text: ''
                     Label: 
-                        text: 'test'
+                        text: 'Software'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Platform'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Firmware'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Z head'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Hardware'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Version'
+                        color: [0,0,0,1]
+                    Label:
+                        id: SW_version
+                        text: 'SW_version'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: PL_version
+                        text: 'PL_version'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: FW_version
+                        text: 'FW_version'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: ZH_version
+                        text: 'ZH_version'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: HW_version
+                        text: 'HW_version'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Branch'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: SW_branch
+                        text: 'branch'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: PL_branch
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: 'Commit'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: SW_commit
+                        text: 'SW_commit'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        id: PL_commit
+                        text: 'PL_commit'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
                     Label: 
-                        text: 'test'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'test'
+                        text: '-'
                         color: [0,0,0,1]
 
             BoxLayout:
