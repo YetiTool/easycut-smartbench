@@ -27,7 +27,7 @@ Builder.load_string("""
         pos: self.parent.pos
         padding: 0
         spacing: 0
-        cols: 4
+        cols: 5
         rows: 2
 
 		Button:
@@ -46,6 +46,10 @@ Builder.load_string("""
 			text: 'Reboot'
 			on_press: root.reboot()
 
+        Button:
+            text: 'Quit to Console'
+            on_press: root.quit_to_console()
+
 		Button:
 			text: 'Beta Testers'
 			on_press: root.beta_testers()
@@ -57,6 +61,10 @@ Builder.load_string("""
 		Button:
 			text: 'Factory Settings'
 			on_press: root.factory_settings()
+
+        Button:
+            text: 'Update testing'
+            on_press: root.update_testing()
 
 		Button:
 			text: 'Developer'
@@ -82,6 +90,10 @@ class SystemMenuScreen(Screen):
     def reboot(self):
     	pass
 
+    def quit_to_console(self):
+        print 'Bye!'
+        sys.exit()
+
     def beta_testers(self):
     	pass
 
@@ -90,6 +102,9 @@ class SystemMenuScreen(Screen):
 
     def factory_settings(self):
     	pass
+
+    def update_testing(self):
+        pass
 
     def developer(self):
     	pass
