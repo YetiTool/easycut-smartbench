@@ -51,8 +51,8 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(240)
-                padding: 40
-                spacing: 20
+                padding: [40,10]
+                spacing: 10
                 orientation: 'vertical'
                 canvas:
                     Color:
@@ -67,6 +67,7 @@ Builder.load_string("""
                     font_size: 20
                     halign: "left"
                     markup: True
+                    size_hint_y: 0.15
 
                 TextInput:
                     id: user_branch
@@ -144,10 +145,16 @@ Builder.load_string("""
                         Label:
                             text: 'Latest beta version:'
                             color: [0,0,0,1]
+                            font_size: 20
+                            markup: True
+
                         Label:
                             id: beta_version
                             text: 'beta_version_no'
                             color: [0,0,0,1]
+                            font_size: 20
+                            markup: True
+                            
                     BoxLayout:
                         padding: [30, 10]
                         Button:
