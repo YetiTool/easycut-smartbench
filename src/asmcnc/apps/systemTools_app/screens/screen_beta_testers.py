@@ -39,7 +39,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(70)
                     width: dp(780)
-                    text: "Beta testing"
+                    text: "Beta Testing"
                     color: [0,0,0,1]
                     font_size: 30
                     halign: "center"
@@ -51,7 +51,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(240)
-                padding: [40,10]
+                padding: [40,20]
                 spacing: 10
                 orientation: 'vertical'
                 canvas:
@@ -67,12 +67,13 @@ Builder.load_string("""
                     font_size: 20
                     halign: "left"
                     markup: True
-                    size_hint_y: 0.15
+                    size_hint_y: 0.2
 
                 TextInput:
                     id: user_branch
                     text: 'branch'
                     multiline: False
+                    size_hint_y: 0.2
 
                 Button:
                     text: 'Checkout and pull'
@@ -154,7 +155,7 @@ Builder.load_string("""
                             color: [0,0,0,1]
                             font_size: 20
                             markup: True
-                            
+
                     BoxLayout:
                         padding: [30, 10]
                         Button:
