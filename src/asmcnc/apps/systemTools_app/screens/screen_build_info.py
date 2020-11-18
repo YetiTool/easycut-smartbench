@@ -63,11 +63,60 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
 
-           #      GridLayout: 
-                    # size: self.parent.size
-                    # pos: self.parent.pos
-                    # cols: 6
-                    # rows: 4
+                GridLayout: 
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    cols: 6
+                    rows: 4
+
+                    Label: 
+                        text: ''
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
+                    Label: 
+                        text: 'test'
 
             BoxLayout:
                 size_hint: (None,None)
