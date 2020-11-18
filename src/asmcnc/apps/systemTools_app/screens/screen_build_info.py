@@ -282,6 +282,7 @@ class BuildInfoScreen(Screen):
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
+        self.m = kwargs['machine']
 
     ## EXIT BUTTONS
     def go_back(self):

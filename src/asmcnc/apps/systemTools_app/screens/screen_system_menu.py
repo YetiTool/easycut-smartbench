@@ -25,8 +25,8 @@ Builder.load_string("""
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding: 0
-        spacing: 0
+        padding: 10
+        spacing: 10
         cols: 5
         rows: 2
 
@@ -85,29 +85,29 @@ class SystemMenuScreen(Screen):
     	self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
-    	pass
+    	pass # need popup
 
     def reboot(self):
-    	pass
+        self.sm.current = 'rebooting'
 
     def quit_to_console(self):
         print 'Bye!'
         sys.exit()
 
     def beta_testers(self):
-    	pass
+    	pass #need screen
 
     def grbl_settings(self):
-    	pass
+    	pass #need screen
 
     def factory_settings(self):
-    	pass
+    	pass # need screen
 
     def update_testing(self):
-        pass
+        pass # need screen
 
     def developer(self):
-    	pass
+    	pass # need screen
 
 
 

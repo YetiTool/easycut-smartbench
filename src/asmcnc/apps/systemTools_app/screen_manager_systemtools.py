@@ -1,7 +1,7 @@
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info
+from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testers, screen_grbl_settings, screen_factory_settings, screen_update_testing
 
 class ScreenManagerSystemTools(object):
 
@@ -19,15 +19,48 @@ class ScreenManagerSystemTools(object):
 
     def open_build_info_screen(self):
        if not self.sm.has_screen('build_info'):
-           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
+           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
            self.sm.add_widget(build_info_screen)
        self.sm.current = 'build_info'
+
+    def open_beta_testers_screen(self):
+       if not self.sm.has_screen('beta_testers'):
+           beta_testers_screen = screen_beta_testers.BetaTestersScreen(name = 'beta_testers', system_tools = self)
+           self.sm.add_widget(beta_testers_screen)
+       self.sm.current = 'beta_testers'
+
+    def open_grbl_settings_screen(self):
+       if not self.sm.has_screen('grbl_settings'):
+           grbl_settings_screen = screen_grbl_settings.GRBLSettingsScreen(name = 'grbl_settings', machine = self.m, system_tools = self)
+           self.sm.add_widget(grbl_settings_screen)
+       self.sm.current = 'grbl_settings'
+
+    def open_factory_settings_screen(self):
+       if not self.sm.has_screen('factory_settings'):
+           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self)
+           self.sm.add_widget(factory_settings_screen)
+       self.sm.current = 'factory_settings'
+
+    def open_update_testing_screen(self):
+       if not self.sm.has_screen('update_testing'):
+           update_testing_screen = screen_update_testing.UpdateTestingScreen(name = 'update_testing', machine = self.m, system_tools = self)
+           self.sm.add_widget(update_testing_screen)
+       self.sm.current = 'update_testing'
+
+    def open_developer_screen(self):
+       if not self.sm.has_screen('developer_temp'):
+           developer_temp_screen = screen_developer_temp.DeveloperTempScreen(name = 'developer_temp', machine = self.m, system_tools = self)
+           self.sm.add_widget(developer_temp_screen)
+       self.sm.current = 'developer_temp'
 
     def back_to_menu(self):
         self.sm.current = 'system_menu'
 
     def exit_app(self):
+        self.destroy_screen('build_info')
+
         self.sm.current = 'lobby'
+        self.destroy_screen('system_menu')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
