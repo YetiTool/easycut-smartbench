@@ -32,7 +32,7 @@ Builder.load_string("""
 
 		Button:
 			text: 'Go Back'
-			on_press: root.exit_app()
+			on_press: root.go_back()
 
 		Button:
 			text: 'Build Info'
@@ -70,7 +70,7 @@ class SystemMenuScreen(Screen):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
 
-    def exit_app(self):
+    def go_back(self):
     	self.systemtools_sm.exit_app()
 
     def go_to_build_info(self):
