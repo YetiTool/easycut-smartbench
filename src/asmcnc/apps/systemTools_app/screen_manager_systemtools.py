@@ -30,10 +30,10 @@ class ScreenManagerSystemTools(object):
         self.usb_stick.enable()
 
         def get_logs():
-            message = 'Downloading logs, please wait...'
-            wait_popup = popup_info.PopupWait(self.sm, description = message)
 
             if self.usb_stick.is_usb_mounted_flag == True:
+                message = 'Downloading logs, please wait...'
+                wait_popup = popup_info.PopupWait(self.sm, description = message)
                 os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
                 self.usb_stick.disable()
                 message = 'Logs downloaded'
