@@ -31,13 +31,15 @@ class ScreenManagerSystemTools(object):
 
         def get_logs():
 
-            if self.usb_stick.is_usb_mounted_flag == True:
                 message = 'Downloading logs, please wait...'
                 wait_popup = popup_info.PopupWait(self.sm, description = message)
+            if self.usb_stick.is_usb_mounted_flag == True:
                 os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
                 self.usb_stick.disable()
                 message = 'Logs downloaded'
+                updated_wait_popup = popup_info.PopupWait(self.sm, description = message)
                 wait_popup.popup.dismiss()
+                Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 0.5)
             else:
                 Clock.schedule_once(lambda dt: get_logs(), 0.2)
 
