@@ -144,6 +144,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
+                        padding: 10
 
                         Label:
                             text: 'Latest beta version:'
