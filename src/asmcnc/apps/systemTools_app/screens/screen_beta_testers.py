@@ -67,13 +67,13 @@ Builder.load_string("""
                     font_size: 20
                     halign: "left"
                     markup: True
-                    size_hint_y: 0.4
+                    size_hint_y: 0.3
 
                 TextInput:
                     id: user_branch
                     text: 'branch'
                     multiline: False
-                    size_hint_y: 0.5
+                    size_hint_y: 0.6
                     font_size: 20
 
                 Button:
