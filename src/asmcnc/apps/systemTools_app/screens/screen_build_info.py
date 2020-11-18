@@ -169,6 +169,34 @@ Builder.load_string("""
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
+                    Label:
+                        text: 'Machine Info'
+                        color: [0,0,0,1]
+
+                    GridLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        cols: 2
+                        rows: 3
+
+                        Label:
+                            text: 'Serial number:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
+                        Label:
+                            text: 'Model:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
+                        Label:
+                            text: 'Console serial number:'
+                            color: [0,0,0,1]
+                        Label:
+                            text: ''
+                            color: [0,0,0,1]
 
                 BoxLayout:
                     size_hint: (None,None)
