@@ -68,6 +68,7 @@ Builder.load_string("""
                     halign: "left"
                     markup: True
                     size_hint_y: 0.3
+                    text_size: self.size
 
                 TextInput:
                     id: user_branch
@@ -126,7 +127,7 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(385)
+                    width: dp(375)
                     height: dp(130)
                     padding: 0
                     spacing: 0
