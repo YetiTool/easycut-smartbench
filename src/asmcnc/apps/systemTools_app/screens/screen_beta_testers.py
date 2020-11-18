@@ -51,8 +51,8 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(240)
-                padding: 0
-                spacing: 0
+                padding: 40
+                spacing: 20
                 orientation: 'vertical'
                 canvas:
                     Color:
@@ -64,6 +64,9 @@ Builder.load_string("""
                 Label
                     text: 'Run developer branch:'
                     color: [0,0,0,1]
+                    font_size: 20
+                    halign: "left"
+                    markup: True
 
                 TextInput:
                     id: user_branch
@@ -133,7 +136,7 @@ Builder.load_string("""
                             size: self.size
 
                     GridLayout:
-                        size: self.parent.size
+                        size_hint_y: 0.4
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
