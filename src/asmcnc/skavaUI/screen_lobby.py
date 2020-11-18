@@ -456,7 +456,8 @@ class LobbyScreen(Screen):
         self.am.start_update_app()    
     
     def developer_app(self):
-        popup_info.PopupDeveloper(self.sm)
+        # popup_info.PopupDeveloper(self.sm)
+        self.am.start_systemtools_app()
 
     def maintenance_app(self):
         self.am.start_maintenance_app('laser_tab') 

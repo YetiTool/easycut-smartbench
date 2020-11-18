@@ -73,7 +73,7 @@ class AppManagerClass(object):
         self.sm.current = 'maintenance'
 
 
-    def start_system_tools_app(self):
+    def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
     
