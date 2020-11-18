@@ -39,9 +39,9 @@ class ScreenManagerSystemTools(object):
                 self.usb_stick.disable()
                 
                 message = 'Logs downloaded'
-                updated_wait_popup = popup_info.PopupWait(self.sm, description = message)
+                # updated_wait_popup = popup_info.PopupWait(self.sm, description = message)
                 wait_popup.popup.dismiss()
-                Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 0.5)
+                # Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 0.5)
 
             else:
                 Clock.schedule_once(lambda dt: get_logs(), 0.2)
