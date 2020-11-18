@@ -40,9 +40,10 @@ Builder.load_string("""
                         size: self.size
 	            Label:
 	                size_hint: (None,None)
-	                height: dp(90)
+	                height: dp(70)
 	                width: dp(780)
 	                text: "Build Information"
+	                color: [0,0,0,1]
 	                font_size: 30
 	                halign: "center"
 	                valign: "bottom"
@@ -52,7 +53,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(360)
+                height: dp(380)
                 padding: 0
                 spacing: 0
                 canvas:
