@@ -9,6 +9,7 @@ from asmcnc.apps.SWupdater_app import screen_update_SW
 from asmcnc.calibration_app import screen_landing
 from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
+from asmcnc.apps.systemTools_app import screen_manager_systemtools
 
 
 # import shape cutter managing object
@@ -25,6 +26,7 @@ class AppManagerClass(object):
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
+        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m)
         
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm)
         self.sm.add_widget(wifi_screen)
@@ -69,4 +71,9 @@ class AppManagerClass(object):
 
         self.sm.get_screen('maintenance').landing_tab = landing_tab
         self.sm.current = 'maintenance'
+
+
+    def start_system_tools_app(self):
+        self.current_app = 'system_tools'
+        self.systemtools_sm.open_system_tools()
     

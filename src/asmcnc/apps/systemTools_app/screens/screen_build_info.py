@@ -1,0 +1,77 @@
+'''
+Created on 18 November 2020
+Build info screen for system tools app
+
+@author: Letty
+'''
+
+from kivy.lang import Builder
+from kivy.factory import Factory
+from kivy.uix.screenmanager import ScreenManager, Screen
+
+from asmcnc.skavaUI import popup_info
+
+Builder.load_string("""
+
+<BuildInfoScreen>
+
+    BoxLayout:
+        height: dp(800)
+        width: dp(480)
+	    canvas.before:
+	        Color: 
+	            rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+	        Rectangle: 
+	            size: self.size
+	            pos: self.pos
+
+        BoxLayout:
+            padding: 0
+            spacing: 0
+            orientation: "vertical"
+	        BoxLayout:
+	            padding: 0
+	            spacing: 0
+                canvas:
+                    Color:
+                        rgba: [1,1,1,1]
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+	            Label:
+	                size_hint: (None,None)
+	                height: dp(90)
+	                width: dp(800)
+	                text: "Build Information"
+	                font_size: 30
+	                halign: "center"
+	                valign: "bottom"
+	                markup: True
+                   
+                    
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(390)
+                padding: 0,110,0,110
+                spacing: 0
+                canvas:
+                    Color:
+                        rgba: [1,1,1,1]
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+
+""")
+
+class BuildInfoScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(BuildInfoScreen, self).__init__(**kwargs)
+        self.systemtools_sm = kwargs['system_tools']
+
+    def go_back(self):
+    	self.systemtools_sm.back_to_menu()
+
+    def exit_app(self):
+    	self.systemtools_sm.exit_app()
