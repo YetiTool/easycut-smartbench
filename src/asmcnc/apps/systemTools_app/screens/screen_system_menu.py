@@ -8,6 +8,7 @@ Menu screen for system tools app
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
@@ -85,7 +86,7 @@ class SystemMenuScreen(Screen):
     	self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
-    	pass # need popup
+        self.systemtools_sm.download_logs_to_usb()
 
     def reboot(self):
         self.sm.current = 'rebooting'

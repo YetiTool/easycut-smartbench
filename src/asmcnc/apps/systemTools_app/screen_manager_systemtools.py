@@ -1,6 +1,7 @@
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
-
+from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testers, screen_grbl_settings, screen_factory_settings, screen_update_testing
 
 class ScreenManagerSystemTools(object):
@@ -10,6 +11,7 @@ class ScreenManagerSystemTools(object):
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
+        self.usb_stick = usb_storage.USB_storage(self.sm)
 
     def open_system_tools(self):
         if not self.sm.has_screen('system_menu'): 
@@ -22,6 +24,23 @@ class ScreenManagerSystemTools(object):
            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
            self.sm.add_widget(build_info_screen)
        self.sm.current = 'build_info'
+
+    def download_logs_to_usb(self):
+        self.usb_stick.enable()
+
+        def get_logs():
+            message = 'Downloading logs, please wait...'
+            popup_info.PopupMiniInfo(self.sm, message)
+
+            if self.usb_stick.is_usb_mounted_flag == True:
+                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                self.usb_stick.disable()
+                message = 'Logs downloaded'
+                popup_info.PopupMiniInfo(self.sm, message)
+            else:
+                Clock.schedule_once(lambda dt: get_logs(), 0.2)
+
+        Clock.schedule_once(lambda dt: get_logs(), 0.2)
 
     def open_beta_testers_screen(self):
        if not self.sm.has_screen('beta_testers'):
