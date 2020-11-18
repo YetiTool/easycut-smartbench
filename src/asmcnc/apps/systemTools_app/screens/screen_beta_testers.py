@@ -213,6 +213,9 @@ class BetaTestersScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
 
     def go_back(self):
+        self.systemtools_sm.open_system_tools()
+
+    def exit_app()
     	self.systemtools_sm.exit_app()
 
     def go_to_build_info(self):
