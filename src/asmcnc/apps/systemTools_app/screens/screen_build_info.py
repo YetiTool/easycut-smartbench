@@ -73,50 +73,73 @@ Builder.load_string("""
                         text: ''
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'test'
+                        color: [0,0,0,1]
 
             BoxLayout:
                 size_hint: (None,None)
