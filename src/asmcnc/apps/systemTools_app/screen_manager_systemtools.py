@@ -37,7 +37,7 @@ class ScreenManagerSystemTools(object):
                 os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
                 self.usb_stick.disable()
                 message = 'Logs downloaded'
-                wait_popup.dismiss()
+                wait_popup.popup.dismiss()
             else:
                 Clock.schedule_once(lambda dt: get_logs(), 0.2)
 
