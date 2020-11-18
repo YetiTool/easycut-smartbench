@@ -53,7 +53,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(250)
+                height: dp(240)
                 padding: 0
                 spacing: 0
                 canvas:
@@ -114,11 +114,11 @@ Builder.load_string("""
                         color: [0,0,0,1]
                     Label: 
                         id: SW_branch
-                        text: 'branch'
+                        text: 'SW_branch'
                         color: [0,0,0,1]
                     Label: 
                         id: PL_branch
-                        text: '-'
+                        text: 'PL_branch'
                         color: [0,0,0,1]
                     Label: 
                         text: '-'
@@ -153,14 +153,14 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(120)
+                height: dp(130)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(385)
-                    height: dp(120)
+                    height: dp(130)
                     padding: 0
                     spacing: 0
                     canvas:
@@ -173,7 +173,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(385)
-                    height: dp(120)
+                    height: dp(130)
                     padding: 0
                     spacing: 0
                     canvas:
