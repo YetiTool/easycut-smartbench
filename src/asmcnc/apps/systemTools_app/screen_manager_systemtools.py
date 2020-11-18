@@ -1,7 +1,7 @@
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-from asmcnc.apps.systemTools_app.screens import screen_system_menu
+from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info
 
 class ScreenManagerSystemTools(object):
 
@@ -18,8 +18,8 @@ class ScreenManagerSystemTools(object):
         self.sm.current = 'system_menu'
 
 	def open_build_info_screen(self):
-        if not self.sm.has_screen('build_info'): 
-            build_info_screen = build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
+        if not self.sm.has_screen('build_info'):
+            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
             self.sm.add_widget(build_info_screen)
         self.sm.current = 'build_info'
 
