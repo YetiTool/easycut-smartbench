@@ -26,8 +26,8 @@ Builder.load_string("""
 	            pos: self.pos
 
         BoxLayout:
-            padding: 0
-            spacing: 0
+            padding: 10
+            spacing: 10
             orientation: "vertical"
 	        BoxLayout:
 	            padding: 0
@@ -41,7 +41,7 @@ Builder.load_string("""
 	            Label:
 	                size_hint: (None,None)
 	                height: dp(90)
-	                width: dp(800)
+	                width: dp(780)
 	                text: "Build Information"
 	                font_size: 30
 	                halign: "center"
@@ -51,9 +51,9 @@ Builder.load_string("""
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(390)
-                padding: 0,110,0,110
+                width: dp(780)
+                height: dp(360)
+                padding: 0
                 spacing: 0
                 canvas:
                     Color:
