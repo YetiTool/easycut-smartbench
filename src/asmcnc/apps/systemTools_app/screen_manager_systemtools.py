@@ -39,7 +39,7 @@ class ScreenManagerSystemTools(object):
 
                 message = 'Logs downloaded'
                 updated_wait_popup = popup_info.PopupWait(self.sm, description = message)
-                Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 0.5)
+                Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 2)
 
             else:
                 Clock.schedule_once(lambda dt: get_logs(), 0.2)
