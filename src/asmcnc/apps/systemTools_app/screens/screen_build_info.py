@@ -163,6 +163,7 @@ Builder.load_string("""
                     height: dp(130)
                     padding: 0
                     spacing: 0
+                    orientation: 'vertical'
                     canvas:
                         Color:
                             rgba: [1,1,1,1]
@@ -210,6 +211,52 @@ Builder.load_string("""
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(130)
+                        width: dp(192.5)
+                        padding: [52.25,31,52.25,31]
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(68)
+                            width: dp(88)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.go_back()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(130)
+                        width: dp(192.5)
+                        padding: [40.25,9,40.25,9] 
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(112)
+                            width: dp(112)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.exit_app()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/wifi_app/img/quit.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
 
 
 """)
