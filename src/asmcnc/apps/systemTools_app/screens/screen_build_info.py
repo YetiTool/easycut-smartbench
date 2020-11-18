@@ -53,7 +53,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(270)
+                height: dp(250)
                 padding: 0
                 spacing: 0
                 canvas:
@@ -144,14 +144,14 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(100)
+                height: dp(120)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(385)
-                    height: dp(100)
+                    height: dp(120)
                     padding: 0
                     spacing: 0
                     canvas:
@@ -164,7 +164,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(385)
-                    height: dp(100)
+                    height: dp(120)
                     padding: 0
                     spacing: 0
                     canvas:
