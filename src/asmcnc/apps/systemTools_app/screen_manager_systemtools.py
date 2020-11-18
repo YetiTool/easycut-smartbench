@@ -17,20 +17,20 @@ class ScreenManagerSystemTools(object):
             self.sm.add_widget(system_menu_screen)
         self.sm.current = 'system_menu'
 
-	def open_build_info_screen(self):
-        # if not self.sm.has_screen('build_info'):
-        #     build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
-        #     self.sm.add_widget(build_info_screen)
-        self.sm.current = 'build_info'
+	# def open_build_info_screen(self):
+ #        # if not self.sm.has_screen('build_info'):
+ #        #     build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', system_tools = self)
+ #        #     self.sm.add_widget(build_info_screen)
+ #        self.sm.current = 'build_info'
 
-    def back_to_menu(self):
-        self.sm.current = 'system_menu'
+ #    def back_to_menu(self):
+ #        self.sm.current = 'system_menu'
 
-	def exit_app(self):
-		self.sm.current = 'lobby'
+	# def exit_app(self):
+	# 	self.sm.current = 'lobby'
 
-    def destroy_screen(self, screen_name):
-        if self.sm.has_screen(screen_name):
-            self.sm.get_screen(screen_name).clear_widgets()
-            self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print (screen_name + ' deleted')
+ #    def destroy_screen(self, screen_name):
+ #        if self.sm.has_screen(screen_name):
+ #            self.sm.get_screen(screen_name).clear_widgets()
+ #            self.sm.remove_widget(self.sm.get_screen(screen_name))
+ #            print (screen_name + ' deleted')
