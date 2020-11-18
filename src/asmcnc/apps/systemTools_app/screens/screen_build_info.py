@@ -131,12 +131,12 @@ Builder.load_string("""
                     height: dp(100)
                     padding: 0
                     spacing: 0
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -144,12 +144,12 @@ Builder.load_string("""
                     height: dp(100)
                     padding: 0
                     spacing: 0
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
 
 
 """)
