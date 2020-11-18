@@ -39,7 +39,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(70)
                     width: dp(780)
-                    text: "Build Information"
+                    text: "Beta testing"
                     color: [0,0,0,1]
                     font_size: 30
                     halign: "center"
@@ -53,6 +53,7 @@ Builder.load_string("""
                 height: dp(240)
                 padding: 0
                 spacing: 0
+                orientation: 'vertical'
                 canvas:
                     Color:
                         rgba: [1,1,1,1]
@@ -144,8 +145,10 @@ Builder.load_string("""
                             id: beta_version
                             text: 'beta_version_no'
                             color: [0,0,0,1]
-                    Button:
-                        text: 'Update to beta'
+                    BoxLayout:
+                        padding: [30, 10]
+                        Button:
+                            text: 'Update to beta'
 
 
 
