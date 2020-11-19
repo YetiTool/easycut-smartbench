@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testers, screen_grbl_settings, screen_factory_settings, screen_update_testing
+from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testers, screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp
 
 class ScreenManagerSystemTools(object):
 
@@ -30,21 +30,30 @@ class ScreenManagerSystemTools(object):
         self.usb_stick.enable()
         message = 'Downloading logs, please wait...'
         wait_popup = popup_info.PopupWait(self.sm, description = message)
+        count = 0
 
-        def get_logs():
+        def get_logs(count):
             if self.usb_stick.is_usb_mounted_flag == True:
                 os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
 
                 message = 'Logs downloaded'
-                updated_wait_popup = popup_info.PopupWait(self.sm, description = message)
-                Clock.schedule_once(lambda dt: updated_wait_popup.popup.dismiss(), 3)
+                popup_info.PopupMiniInfo(self.sm, description = message)
+
+            elif count > 3:
+                message = 'No USB found!'
+                popup_info.PopupMiniInfo(self.sm, description = message)
+                wait_popup.popup.dismiss()
+                if self.usb_stick.is_available(): self.usb_stick.disable()
 
             else:
-                Clock.schedule_once(lambda dt: get_logs(), 0.2)
+                count =+1
+                Clock.schedule_once(lambda dt: get_logs(count), 0.2)
+                print count
 
-        Clock.schedule_once(lambda dt: get_logs(), 0.2)
+
+        Clock.schedule_once(lambda dt: get_logs(count), 0.2)
 
     def open_beta_testers_screen(self):
        if not self.sm.has_screen('beta_testers'):
@@ -52,11 +61,68 @@ class ScreenManagerSystemTools(object):
            self.sm.add_widget(beta_testers_screen)
        self.sm.current = 'beta_testers'
 
+    # GRBL Settings and popups
     def open_grbl_settings_screen(self):
        if not self.sm.has_screen('grbl_settings'):
            grbl_settings_screen = screen_grbl_settings.GRBLSettingsScreen(name = 'grbl_settings', machine = self.m, system_tools = self)
            self.sm.add_widget(grbl_settings_screen)
        self.sm.current = 'grbl_settings'
+
+    def download_grbl_settings_to_usb(self): # system tools manager
+        self.m.save_grbl_settings()
+
+        self.usb_stick.enable()
+        message = 'Downloading grbl settings, please wait...'
+        wait_popup = popup_info.PopupWait(self.sm, description = message)
+
+        def get_grbl_settings_onto_usb():
+          if self.usb_stick.is_usb_mounted_flag == True:
+              os.system("sudo cp --no-preserve=mode,ownership /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt /media/usb/")
+              os.system("rm /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt")
+
+              wait_popup.popup.dismiss()
+              self.usb_stick.disable()
+
+              message = 'GRBL settings downloaded'
+              popup_info.PopupMiniInfo(self.sm, description = message)
+
+          else:
+              Clock.schedule_once(lambda dt: get_grbl_settings_onto_usb(), 0.2)
+
+        Clock.schedule_once(lambda dt: get_grbl_settings_onto_usb(), 0.2)
+
+    def restore_grbl_settings_from_usb(self):
+        self.usb_stick.enable()
+        message = 'Restoring grbl settings, please wait...'
+        wait_popup = popup_info.PopupWait(self.sm, description = message)
+
+        def get_grbl_settings_from_usb():
+          if self.usb_stick.is_usb_mounted_flag == True:
+              filename = '/media/usb/saved_grbl_settings_params.txt'
+              success_flag = self.m.restore_grbl_settings_from_file(filename)
+              wait_popup.popup.dismiss()
+              self.usb_stick.disable()
+              if success_flag:
+                  message = 'GRBL settings restored!'
+                  popup_info.PopupMiniInfo(self.sm, description = message)
+              else:
+                  message = 'Could not restore settings, please check file!'
+                  popup_info.PopupMiniInfo(self.sm, description = message)
+
+          else:
+              Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
+
+        Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
+
+    def restore_grbl_settings_from_file(self): # first half to system tools, second half to machine module
+        filename = '/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'
+        success_flag = self.m.restore_grbl_settings_from_file(filename)
+        if success_flag:
+            message = 'GRBL settings restored!'
+            popup_info.PopupMiniInfo(self.sm, description = message)
+        else:
+            message = 'Could not restore settings, please check file!'
+            popup_info.PopupMiniInfo(self.sm, description = message)   
 
     def open_factory_settings_screen(self):
        if not self.sm.has_screen('factory_settings'):
@@ -81,12 +147,15 @@ class ScreenManagerSystemTools(object):
 
     def exit_app(self):
         self.destroy_screen('build_info')
-
+        self.destroy_screen('system_menu')
+        self.destroy_screen('beta_testers')
+        self.destroy_screen('grbl_settings')
+        self.destroy_screen('factory_settings')
+        self.destroy_screen('update_testing')
+        self.destroy_screen('developer_temp')
         self.sm.current = 'lobby'
-        # self.destroy_screen('system_menu')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
-            self.sm.get_screen(screen_name).clear_widgets()
             self.sm.remove_widget(self.sm.get_screen(screen_name))
             print (screen_name + ' deleted')
