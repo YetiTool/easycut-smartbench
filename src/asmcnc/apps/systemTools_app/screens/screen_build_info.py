@@ -104,22 +104,27 @@ Builder.load_string("""
                         id: sw_version_label
                         text: 'SW_version'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         id: zh_version_label
                         text: 'ZH_version'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         id: hw_version_label
                         text: 'HW_version'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         text: 'Branch'
                         color: [0,0,0,1]
