@@ -12,6 +12,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 Builder.load_string("""
 
 <BetaTestersScreen>
+
+    user_branch: user_branch
     BoxLayout:
         height: dp(800)
         width: dp(480)
