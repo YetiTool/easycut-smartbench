@@ -105,26 +105,36 @@ Builder.load_string("""
                         text: 'SW_version'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: zh_version_label
                         text: 'ZH_version'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: hw_version_label
                         text: 'HW_version'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         text: 'Branch'
                         color: [0,0,0,1]
@@ -133,11 +143,15 @@ Builder.load_string("""
                         text: 'SW_branch'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: pl_branch_label
                         text: 'PL_branch'
                         color: [0,0,0,1]
                         text_size: self.size
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         text: '-'
                         color: [0,0,0,1]
@@ -154,10 +168,14 @@ Builder.load_string("""
                         id: sw_hash_label
                         text: 'SW_commit'
                         color: [0,0,0,1]
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         id: pl_hash_label
                         text: 'PL_commit'
                         color: [0,0,0,1]
+                        markup: 'True'
+                        halign: 'center'
                     Label: 
                         text: '-'
                         color: [0,0,0,1]
