@@ -48,7 +48,7 @@ class ScreenManagerSystemTools(object):
                 if self.usb_stick.is_available(): self.usb_stick.disable()
 
             else:
-                count =+1
+                count +=1
                 Clock.schedule_once(lambda dt: get_logs(count), 0.2)
                 print count
 
