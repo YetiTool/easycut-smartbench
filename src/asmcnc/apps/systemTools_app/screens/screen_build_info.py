@@ -127,10 +127,12 @@ Builder.load_string("""
                         id: sw_branch_label
                         text: 'SW_branch'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         id: pl_branch_label
                         text: 'PL_branch'
                         color: [0,0,0,1]
+                        text_size: self.size
                     Label: 
                         text: '-'
                         color: [0,0,0,1]
@@ -240,13 +242,13 @@ Builder.load_string("""
                             text: 'Model:'
                             color: [0,0,0,1]
                         Label:
-                            text: ''
+                            text: '-'
                             color: [0,0,0,1]
                         Label:
                             text: 'Console serial number:'
                             color: [0,0,0,1]
                         Label:
-                            text: ''
+                            text: '-'
                             color: [0,0,0,1]
 
                 BoxLayout:
@@ -310,9 +312,6 @@ class BuildInfoScreen(Screen):
         self.zh_version_label.text = str(self.m.z_head_version())
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
-
-
-
 
 
     ## EXIT BUTTONS
