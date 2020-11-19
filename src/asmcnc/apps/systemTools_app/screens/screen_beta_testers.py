@@ -212,6 +212,8 @@ class BetaTestersScreen(Screen):
         super(BetaTestersScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
 
+        # self.user_branch.text = (self.set.sw_branch).strip('*')
+
     def go_back(self):
         self.systemtools_sm.open_system_tools()
 

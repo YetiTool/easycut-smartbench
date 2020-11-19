@@ -15,6 +15,17 @@ Builder.load_string("""
 
 <BuildInfoScreen>
 
+    sw_version_label: sw_version_label
+    pl_version_label: pl_version_label
+    sw_hash_label: sw_hash_label
+    sw_branch_label: sw_branch_label
+    pl_hash_label: pl_hash_label  
+    pl_branch_label: pl_branch_label
+    fw_version_label: fw_version_label
+    hw_version_label: hw_version_label
+    zh_version_label: zh_version_label
+    machine_serial_number_label: machine_serial_number_label
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -90,34 +101,34 @@ Builder.load_string("""
                         text: 'Version'
                         color: [0,0,0,1]
                     Label:
-                        id: SW_version
+                        id: sw_version_label
                         text: 'SW_version'
                         color: [0,0,0,1]
                     Label: 
-                        id: PL_version
+                        id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
                     Label: 
-                        id: FW_version
+                        id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
                     Label: 
-                        id: ZH_version
+                        id: zh_version_label
                         text: 'ZH_version'
                         color: [0,0,0,1]
                     Label: 
-                        id: HW_version
+                        id: hw_version_label
                         text: 'HW_version'
                         color: [0,0,0,1]
                     Label: 
                         text: 'Branch'
                         color: [0,0,0,1]
                     Label: 
-                        id: SW_branch
+                        id: sw_branch_label
                         text: 'SW_branch'
                         color: [0,0,0,1]
                     Label: 
-                        id: PL_branch
+                        id: pl_branch_label
                         text: 'PL_branch'
                         color: [0,0,0,1]
                     Label: 
@@ -133,11 +144,11 @@ Builder.load_string("""
                         text: 'Commit'
                         color: [0,0,0,1]
                     Label: 
-                        id: SW_commit
+                        id: sw_hash_label
                         text: 'SW_commit'
                         color: [0,0,0,1]
                     Label: 
-                        id: PL_commit
+                        id: pl_hash_label
                         text: 'PL_commit'
                         color: [0,0,0,1]
                     Label: 
@@ -222,6 +233,7 @@ Builder.load_string("""
                             text: 'Serial number:'
                             color: [0,0,0,1]
                         Label:
+                            id: machine_serial_number_label
                             text: ''
                             color: [0,0,0,1]
                         Label:
@@ -283,6 +295,25 @@ class BuildInfoScreen(Screen):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
+        self.set = kwargs['settings']
+
+        self.sw_version_label.text = self.set.sw_version
+        self.pl_version_label.text = self.set.platform_version
+        self.latest_sw_version = self.set.latest_sw_version
+        self.latest_platform_version = self.set.latest_platform_version
+        self.sw_hash_label.text = self.set.sw_hash
+        self.sw_branch_label.text = self.set.sw_branch
+        self.pl_hash_label.text = self.set.pl_hash
+        self.pl_branch_label.text = self.set.pl_branch
+
+        self.hw_version_label.text = self.m.s.hw_version
+        self.zh_version_label.text = str(self.m.z_head_version())
+        try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
+        except: self.machine_serial_number_label.text = 'YS6'
+
+
+
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -292,6 +323,11 @@ class BuildInfoScreen(Screen):
         self.systemtools_sm.exit_app()
 
     ## GET BUILD INFO
-    def on_enter(self):
-        pass
+    def on_pre_enter(self, *args):
+        self.m.send_any_gcode_command('$I')
 
+    def on_enter(self, *args):
+        self.scrape_fw_version()
+
+    def scrape_fw_version(self):
+        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])

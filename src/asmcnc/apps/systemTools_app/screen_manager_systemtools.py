@@ -7,11 +7,12 @@ from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build
 
 class ScreenManagerSystemTools(object):
 
-    def __init__(self, app_manager, screen_manager, machine):
+    def __init__(self, app_manager, screen_manager, machine, settings):
 
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
+        self.set = settings
         self.usb_stick = usb_storage.USB_storage(self.sm)
 
     def open_system_tools(self):
@@ -22,7 +23,7 @@ class ScreenManagerSystemTools(object):
 
     def open_build_info_screen(self):
        if not self.sm.has_screen('build_info'):
-           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self)
+           build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self, settings = self.set)
            self.sm.add_widget(build_info_screen)
        self.sm.current = 'build_info'
 

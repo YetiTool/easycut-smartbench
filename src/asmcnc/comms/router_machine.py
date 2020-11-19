@@ -944,6 +944,11 @@ class RouterMachine(object):
         except: return 0
         else: return self.s.setting_50
 
+    def z_head_version(self):
+        try: self.s.setting_50
+        except: return 0
+        else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+
 # POSITONAL GETTERS            
         
     def x_pos_str(self): return self.s.m_x

@@ -31,8 +31,12 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
 
+    ## EXIT BUTTONS
     def go_back(self):
-    	self.systemtools_sm.exit_app()
+        self.systemtools_sm.back_to_menu()
 
-    def go_to_build_info(self):
-    	self.systemtools_sm.open_build_info_screen()
+    def exit_app(self):
+        self.systemtools_sm.exit_app()
+
+    # def on_enter(self):
+    #     self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)

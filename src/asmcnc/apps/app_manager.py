@@ -26,7 +26,7 @@ class AppManagerClass(object):
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
-        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m)
+        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set)
         
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm)
         self.sm.add_widget(wifi_screen)
