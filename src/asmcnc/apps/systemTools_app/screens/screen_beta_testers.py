@@ -79,6 +79,7 @@ Builder.load_string("""
 
                 Button:
                     text: 'Checkout and pull'
+                    on_press: root.checkout_branch()
 
 
             BoxLayout:
@@ -211,11 +212,18 @@ class BetaTestersScreen(Screen):
     def __init__(self, **kwargs):
         super(BetaTestersScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
+        self.set = kwargs['settings']
 
-        # self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.user_branch.text = (self.set.sw_branch).strip('*')
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+
+    def checkout_branch(self):
+        if sys.platform != 'win32' and sys.platform != 'darwin':       
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
+            os.system("git pull")
+            self.sm.current = 'rebooting'

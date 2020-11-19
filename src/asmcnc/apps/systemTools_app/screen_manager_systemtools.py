@@ -58,7 +58,7 @@ class ScreenManagerSystemTools(object):
 
     def open_beta_testers_screen(self):
        if not self.sm.has_screen('beta_testers'):
-           beta_testers_screen = screen_beta_testers.BetaTestersScreen(name = 'beta_testers', system_tools = self)
+           beta_testers_screen = screen_beta_testers.BetaTestersScreen(name = 'beta_testers', system_tools = self, settings = self.set)
            self.sm.add_widget(beta_testers_screen)
        self.sm.current = 'beta_testers'
 
