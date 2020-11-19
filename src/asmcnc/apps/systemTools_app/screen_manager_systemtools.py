@@ -41,7 +41,7 @@ class ScreenManagerSystemTools(object):
                 message = 'Logs downloaded'
                 popup_info.PopupMiniInfo(self.sm, description = message)
 
-            elif count > 3:
+            elif count > 30:
                 message = 'No USB found!'
                 popup_info.PopupMiniInfo(self.sm, description = message)
                 wait_popup.popup.dismiss()
