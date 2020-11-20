@@ -230,8 +230,7 @@ Builder.load_string("""
                         padding: [30, 10]
                         Button:
                             text: 'Update to beta'
-
-
+                            on_press: root.update_to_latest_beta()
 
                 BoxLayout:
                     size_hint: (None,None)
