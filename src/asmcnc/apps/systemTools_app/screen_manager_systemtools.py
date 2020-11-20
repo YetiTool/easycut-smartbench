@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testers, screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp
+from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testing, screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp
 
 class ScreenManagerSystemTools(object):
 
@@ -56,11 +56,11 @@ class ScreenManagerSystemTools(object):
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)
 
-    def open_beta_testers_screen(self):
-       if not self.sm.has_screen('beta_testers'):
-           beta_testers_screen = screen_beta_testers.BetaTestersScreen(name = 'beta_testers', system_tools = self, settings = self.set)
-           self.sm.add_widget(beta_testers_screen)
-       self.sm.current = 'beta_testers'
+    def open_beta_testing_screen(self):
+       if not self.sm.has_screen('beta_testing'):
+           beta_testing_screen = screen_beta_testing.BetaTestingScreen(name = 'beta_testing', system_tools = self, settings = self.set)
+           self.sm.add_widget(beta_testing_screen)
+       self.sm.current = 'beta_testing'
 
     # GRBL Settings and popups
     def open_grbl_settings_screen(self):
@@ -149,7 +149,7 @@ class ScreenManagerSystemTools(object):
     def exit_app(self):
         self.destroy_screen('build_info')
         self.destroy_screen('system_menu')
-        self.destroy_screen('beta_testers')
+        self.destroy_screen('beta_testing')
         self.destroy_screen('grbl_settings')
         self.destroy_screen('factory_settings')
         self.destroy_screen('update_testing')

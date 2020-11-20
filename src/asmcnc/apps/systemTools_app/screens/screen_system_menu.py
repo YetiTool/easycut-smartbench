@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string("""
 
@@ -52,8 +53,8 @@ Builder.load_string("""
             on_press: root.quit_to_console()
 
 		Button:
-			text: 'Beta Testers'
-			on_press: root.beta_testers()
+			text: 'Beta Testing'
+			on_press: root.beta_testing()
 
 		Button:
 			text: 'GRBL Settings'
@@ -95,20 +96,20 @@ class SystemMenuScreen(Screen):
         print 'Bye!'
         sys.exit()
 
-    def beta_testers(self):
-    	self.systemtools_sm.open_beta_testers_screen()
+    def beta_testing(self):
+        popup_system.PopupBetaTesting(self.systemtools_sm)
 
     def grbl_settings(self):
-    	self.systemtools_sm.open_grbl_settings_screen()
+    	popup_system.PopupGRBLSettingsPassword(self.systemtools_sm)
 
     def factory_settings(self):
-    	self.systemtools_sm.open_factory_settings_screen()
+    	popup_system.PopupFactorySettingsPassword(self.systemtools_sm)
 
     def update_testing(self):
-        self.systemtools_sm.open_update_testing_screen()
+        popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
 
     def developer(self):
-    	self.systemtools_sm.open_developer_screen()
+    	popup_system.PopupDeveloperPassword(self.systemtools_sm)
 
 
 

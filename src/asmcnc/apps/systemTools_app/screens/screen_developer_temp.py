@@ -65,7 +65,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(70)
                     width: dp(780)
-                    text: "Update Testing"
+                    text: "Developer"
                     color: [0,0,0,1]
                     font_size: 30
                     halign: "center"
