@@ -302,7 +302,8 @@ class ShapeCutter30ScreenClass(Screen):
 
 # Action buttons       
     def get_info(self):
-        pass
+        info = "The Z datum is SmartBench's reference point for the surface of the material."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         if not self.m.state().startswith('Jog'):

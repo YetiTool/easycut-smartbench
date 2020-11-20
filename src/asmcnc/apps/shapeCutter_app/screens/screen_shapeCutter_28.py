@@ -318,7 +318,8 @@ class ShapeCutter28ScreenClass(Screen):
 
 # Action buttons
     def get_info(self):
-        pass
+        info = "Move the machine by using the arrow buttons.\n\nSet the datum by using the SET buttons.\n\nMove the machine to the datum by using the GO buttons."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         if not self.m.state().startswith('Jog'):
