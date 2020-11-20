@@ -212,10 +212,17 @@ class ZMove(Widget):
 
     def probe_z(self):
         self.m.probe_z()
+        self.disable_z_datum_reminder()
      
     def set_jobstart_z(self):
         self.m.set_jobstart_z()
+        self.disable_z_datum_reminder()
      
     def go_to_jobstart_z(self):
         self.m.go_to_jobstart_z()
+
+    def disable_z_datum_reminder(self):
+        if self.sm.get_screen('home').z_datum_reminder_flag:
+            self.sm.get_screen('home').z_datum_reminder_flag = False
+
     
