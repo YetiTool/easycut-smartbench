@@ -70,7 +70,7 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 
 
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM5'
 
 # Current version active/working on
 initial_version = 'v1.4.2'

@@ -118,10 +118,13 @@ class DatabaseStorage(object):
                         "device_ID": device_label,
                     },
                     "fields": {
+                        "machine_name": self.m.device_label,
                         "status": self.m.s.m_state,
+                        "overload_peak": float(self.sm.get_screen('go').overload_peak),
 
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
                         "job_percent": self.sm.get_screen('go').percent_thru_job,
+                        "job_name": self.sm.get_screen('go').job_name_only,
 
                         "z_lube_%_thru": z_lube_percent_used,
                         "z_lube_hrs_before_next": z_lube_hrs_left,

@@ -692,6 +692,7 @@ class SerialConnection(object):
                     
                         try:
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
+                            self.sm.get_screen('go').update_overload_peak(self.overload_state)
                         except:
                             log('Unable to update_overlaod_state on go screen')
                     

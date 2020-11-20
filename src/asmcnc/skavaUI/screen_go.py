@@ -357,6 +357,7 @@ def log(message):
 class GoScreen(Screen):
 
     job_filename = ""
+    job_name_only = ""
     job_gcode = []
 
     btn_back = ObjectProperty()
@@ -372,7 +373,7 @@ class GoScreen(Screen):
     loop_for_job_progress = None
     loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
-
+    overload_peak = 0
 
     def __init__(self, **kwargs):
 
@@ -469,9 +470,11 @@ class GoScreen(Screen):
 
         # scrape filename title
         if sys.platform == 'win32':
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
+            self.job_name_only = self.job_filename.split("\\")[-1]
+            self.file_data_label.text = "[color=333333]" + self.job_name_only + "[/color]"
         else:
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
+            self.job_name_only = self.job_filename.split("/")[-1]
+            self.file_data_label.text = "[color=333333]" + self.job_name_only + "[/color]"
         
         # Reset flag & light
         self.is_job_started_already = False
@@ -480,6 +483,7 @@ class GoScreen(Screen):
         
         self.feedOverride.feed_norm()
         self.speedOverride.speed_norm()
+        self.overload_peak = 0.0
 
 
 ### GENERAL ACTIONS
@@ -626,9 +630,11 @@ class GoScreen(Screen):
         else: log('Overload state not recognised: ' + str(state))
 
 
+    def update_overload_peak(self, state):
 
-            
-
+        if state > self.overload_peak: 
+            self.overload_peak = state
+            print "New overload peak: " + str(self.overload_peak)
 
 
         
