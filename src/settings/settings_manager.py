@@ -6,8 +6,13 @@ Module to get and store settings info
 
 import sys,os, subprocess #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
+from datetime import datetime
 
 from kivy.clock import Clock
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class Settings(object):
     
@@ -53,7 +58,6 @@ class Settings(object):
             else: self.latest_sw_version = str(sw_version_list[0])
         except: 
             print "Could not fetch software version tags"
-
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
@@ -142,59 +146,92 @@ class Settings(object):
         else: return False
 
 
-## USB SOFTWARE UPDATE            
-    def get_sw_update_via_usb(self):
-    
-        def find_usb_directory():
+## USB SOFTWARE UPDATE
 
-            zipped_file_name = (os.popen('find /media/usb/ -name easycut-smartbench.zip').read()).strip('\n')
-            if zipped_file_name != '':
-                
-                os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
-                
-                unzip_dir = 'unzip ' + zipped_file_name + ' -d /home/pi/temp_repo'
-                os.system(unzip_dir)
-                dir_path_name = (os.popen('find /home/pi/temp_repo/ -name easycut-smartbench').read()).strip('\n')
+    def find_usb_directory(self):
+        try:
+            # look for new SB file name first
+            zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
 
-            else:
-                dir_path_name = (os.popen('find /media/usb/ -name easycut-smartbench').read()).strip('\n')
+            if zipped_file_name == '':
+                # if it doesn't exist, then look for easycut-smartbench.zip file as a backup
+                zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*.zip'").read()).strip('\n')
+
+        except:
+            zipped_file_name = ''
+
+        if zipped_file_name != '':
             
-            if dir_path_name.count('easycut-smartbench') > 1:
-                return 2
-            elif dir_path_name.count('easycut-smartbench') == 0:
-                return 0
-            else:
-                return dir_path_name
+            os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
+            
+            unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo/'
+            os.system(unzip_dir_command)
+
+            dir_path_name = (os.popen("find /home/pi/temp_repo/ -name 'easycut-smartbench*'").read()).strip('\n')
+
+        else:
+
+            try:
+                dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*'").read()).strip('\n')
+
+                if dir_path_name == '':
+                    dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip('\n')
+
+            except:
+                dir_path_name = ''
+
         
-        dir_path_name = find_usb_directory()
+        log('directory name: ' + dir_path_name)
+
+        if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
+            return 2
+        elif ((dir_path_name.count('SmartBench-SW-update') == 0) and (dir_path_name.count('easycut-smartbench') == 0)):
+            return 0
+        else:
+            return dir_path_name
+
+    def set_up_remote_repo(self, dir_path_name):
+        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
+        fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
+        fetch_tags = 'cd /home/pi/easycut-smartbench/ && git fetch temp_repository --tags --quiet'
+
+        try:
+            os.system(add_remote)
+            os.system(fetch_from_usb)
+            os.system(fetch_tags)
+            return True
+
+        except:
+            return "update failed"
+
+    def clear_remote_repo(self, dir_path_name):
+        rm_remote = 'git remote rm temp_repository'
+        try: 
+            os.system(rm_remote)
+        except: 
+            pass
+
+        if dir_path_name.startswith('/home/pi/temp_repo/'):
+            rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
+            os.system(rm_temp_repo)
+
+    def get_sw_update_via_usb(self):
+        dir_path_name = self.find_usb_directory()
         
         if dir_path_name == 2 or dir_path_name == 0:
             return dir_path_name
 
-        add_remote = 'cd /home/pi/easycut-smartbench && git remote add temp_repository ' + dir_path_name
-        fetch_from_usb = 'cd /home/pi/easycut-smartbench && git fetch temp_repository'
-        pull_master_from_usb = 'cd /home/pi/easycut-smartbench && git pull temp_repository master'
-        try: 
-            os.system(add_remote)
-            os.system(fetch_from_usb)
-            os.system(pull_master_from_usb)
-        except:
-            return "update failed"
-        
-        self.refresh_latest_sw_version()
-        checkout_success = self.checkout_latest_version()
-        rm_remote = 'git remote rm temp_repository'
-        os.system(rm_remote)
-        
-        if dir_path_name.startswith('/home/pi/'):
-            rm_temp_repo = 'sudo rm ' + dir_path_name + ' -r'
-            os.system(rm_temp_repo)
-           
+        if self.set_up_remote_repo(dir_path_name):
+            log('Updating software from: ' + dir_path_name)
+            self.refresh_latest_sw_version()
+            checkout_success = self.checkout_latest_version()   
+
+        self.clear_remote_repo(dir_path_name)
+
         if checkout_success == False: 
             return "update failed"
         else:
             return checkout_success
-
 
 
 ## FIRMWARE UPDATE FUNCTIONS
