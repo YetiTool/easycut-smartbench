@@ -162,6 +162,11 @@ class QuickCommands(Widget):
 
             popup_info.PopupInfo(self.sm, 400, info)
 
+        elif self.sm.get_screen('home').z_datum_reminder_flag:
+            z_datum_reminder_message = 'You may need to set a new Z datum before you start a new job!'
+            popup_info.PopupWarning(self.sm, z_datum_reminder_message)
+            self.sm.get_screen('home').z_datum_reminder_flag = False
+
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
