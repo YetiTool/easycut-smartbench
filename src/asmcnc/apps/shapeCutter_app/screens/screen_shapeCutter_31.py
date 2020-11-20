@@ -12,7 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
-from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error, popup_info
 
 Builder.load_string("""
 

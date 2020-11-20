@@ -10,8 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-
-from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed
+from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed, popup_info
 
 Builder.load_string("""
 
