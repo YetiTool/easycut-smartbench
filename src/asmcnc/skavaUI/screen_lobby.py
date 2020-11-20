@@ -281,7 +281,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_developer.png"
+                                source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -289,7 +289,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Developer'
+                        text: 'System Tools'
                         markup: True
 
                 # BoxLayout:
