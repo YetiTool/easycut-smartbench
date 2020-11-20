@@ -171,6 +171,11 @@ class QuickCommands(Widget):
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('home','home')
 
+        elif self.sm.get_screen('home').z_datum_reminder_flag:
+            z_datum_reminder_message = 'You may need to set a new Z datum\nbefore you start a new job!'
+            popup_info.PopupWarning(self.sm, z_datum_reminder_message)
+            self.sm.get_screen('home').z_datum_reminder_flag = False
+
         else:
 
             # clear to proceed

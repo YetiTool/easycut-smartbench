@@ -10,8 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
-
-from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed
+from asmcnc.apps.shapeCutter_app.screens import widget_sC28_xy_move, widget_sC_work_coordinates, widget_sC_virtual_bed, popup_info
 
 Builder.load_string("""
 
@@ -318,7 +317,8 @@ class ShapeCutter28ScreenClass(Screen):
 
 # Action buttons
     def get_info(self):
-        pass
+        info = "Move the machine by using the arrow buttons.\n\nSet the datum by using the SET buttons.\n\nMove the machine to the datum by using the GO buttons."
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         if not self.m.state().startswith('Jog'):

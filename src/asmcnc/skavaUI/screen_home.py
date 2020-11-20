@@ -20,6 +20,7 @@ from multiprocessing import Process, Manager
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
 from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_settings_options, widget_gcode_view # @UnresolvedImport
+from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
 
@@ -253,6 +254,7 @@ class HomeScreen(Screen):
     non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
     default_datum_choice = 'spindle'
+    z_datum_reminder_flag = False
 
     def __init__(self, **kwargs):
 
@@ -329,6 +331,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print 'No G-code loaded.'
+
 
     def preview_job_file(self, dt):
 
