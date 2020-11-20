@@ -20,6 +20,7 @@ class Settings(object):
     sw_hash = ''
     sw_branch = ''
     latest_sw_version = ''
+    latest_sw_beta = ''
     platform_version = ''
     pl_hash = ''
     pl_branch = ''
@@ -48,14 +49,12 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-
         try: 
             os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
-            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
+            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
+            self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
+            self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
 
-            if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
-                self.latest_sw_version = str(sw_version_list[1])
-            else: self.latest_sw_version = str(sw_version_list[0])
         except: 
             print "Could not fetch software version tags"
 
@@ -72,18 +71,24 @@ class Settings(object):
             
 ## GET SOFTWARE UPDATES
 
-    def get_sw_update_via_wifi(self):
+    def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
-        checkout_success = self.checkout_latest_version()
+        checkout_success = self.checkout_latest_version(beta)
         return checkout_success
     
-    def checkout_latest_version(self):    
+    def checkout_latest_version(self, beta = False):
+
+        if not beta:
+            version_to_checkout = self.latest_sw_version
+        else:
+            version_to_checkout = self.latest_sw_beta
+
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            if self.latest_sw_version != self.sw_version:
+            if version_to_checkout != self.sw_version:
                 os.system("cd /home/pi/easycut-smartbench/")
 
-                cmd  = ["git", "checkout", self.latest_sw_version]
+                cmd  = ["git", "checkout", version_to_checkout]
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 unformatted_git_output = p.communicate()[1]
@@ -215,7 +220,7 @@ class Settings(object):
             rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
             os.system(rm_temp_repo)
 
-    def get_sw_update_via_usb(self):
+    def get_sw_update_via_usb(self, beta = False):
         dir_path_name = self.find_usb_directory()
         
         if dir_path_name == 2 or dir_path_name == 0:
@@ -224,7 +229,7 @@ class Settings(object):
         if self.set_up_remote_repo(dir_path_name):
             log('Updating software from: ' + dir_path_name)
             self.refresh_latest_sw_version()
-            checkout_success = self.checkout_latest_version()   
+            checkout_success = self.checkout_latest_version(beta)   
 
         self.clear_remote_repo(dir_path_name)
 

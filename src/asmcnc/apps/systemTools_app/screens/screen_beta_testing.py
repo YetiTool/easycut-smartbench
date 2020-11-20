@@ -8,12 +8,17 @@ Beta testers screen for system tools app
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from asmcnc.comms import usb_storage
 
 Builder.load_string("""
 
 <BetaTestingScreen>
 
     user_branch: user_branch
+    beta_version: beta_version
+    usb_toggle: usb_toggle
+    wifi_toggle: wifi_toggle
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -48,41 +53,100 @@ Builder.load_string("""
                     valign: "bottom"
                     markup: True
                    
-                    
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(240)
-                padding: [40,20]
-                spacing: 20
-                orientation: 'vertical'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
+                padding: 0
+                spacing: 10
+                orientation: 'horizontal'
 
-                Label
-                    text: 'Run developer branch:'
-                    color: [0,0,0,1]
-                    font_size: 20
-                    halign: "left"
-                    markup: True
-                    size_hint_y: 0.3
-                    text_size: self.size
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(577.5)
+                    height: dp(240)
+                    padding: [40,20]
+                    spacing: 20
+                    orientation: 'vertical'
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
 
-                TextInput:
-                    id: user_branch
-                    text: 'branch'
-                    multiline: False
-                    size_hint_y: 0.6
-                    font_size: 20
+                    Label
+                        text: 'Run developer branch:'
+                        color: [0,0,0,1]
+                        font_size: 20
+                        halign: "left"
+                        markup: True
+                        size_hint_y: 0.3
+                        text_size: self.size
 
-                Button:
-                    text: 'Checkout and pull'
-                    on_press: root.checkout_branch()
+                    TextInput:
+                        id: user_branch
+                        text: 'branch'
+                        multiline: False
+                        size_hint_y: 0.6
+                        font_size: 20
 
+                    Button:
+                        text: 'Checkout and pull (uses wifi)'
+                        on_press: root.checkout_branch()
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(192.5)
+                    height: dp(240)
+                    padding: 0
+                    spacing: 0
+                    orientation: 'vertical'
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(192.5)
+                        height: dp(120)
+                        padding: [81.75, 45]
+                        spacing: 0
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(30)
+                            width: dp(29)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.refresh_latest_software_version()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(192.5)
+                        height: dp(120)
+                        orientation: 'horizontal'
+                        padding: [20, 30]
+                        ToggleButton:
+                            id: usb_toggle
+                            text: 'USB'
+                            group: 'wifi-usb'
+                        ToggleButton:
+                            id: wifi_toggle
+                            text: 'WIFI'
+                            group: 'wifi-usb'
+                            state: 'down'
 
             BoxLayout:
                 size_hint: (None,None)
@@ -217,6 +281,9 @@ class BetaTestingScreen(Screen):
         self.set = kwargs['settings']
 
         self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.beta_version.text = self.set.latest_sw_beta
+
+        self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm)
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -224,8 +291,24 @@ class BetaTestingScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+    def on_enter(self):
+        self.usb_stick.enable()
+
     def checkout_branch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
             os.system("git pull")
             self.sm.current = 'rebooting'
+
+    def update_to_latest_beta(self):
+        if self.wifi_toggle.state == 'down':
+            self.set.get_sw_update_via_wifi(beta=True)
+            self.usb_stick.disable()
+        elif self.usb_toggle.state == 'down':
+            self.set.get_sw_update_via_usb(beta=True)
+            self.usb_stick.disable()
+
+    def refresh_latest_software_version(self):
+        self.set.refresh_latest_sw_version()
+        self.user_branch.text = (self.set.sw_branch).strip('*')
+        self.beta_version.text = self.set.latest_sw_beta
