@@ -134,6 +134,8 @@ class DatabaseStorage(object):
 
                         "calibration_%_thru": calibration_percent_used,
                         "calibration_hrs_before_next": calibration_hrs_left,
+                        
+                        "gcode_line": self.m.s.g_count
                    
                     }
                 }
