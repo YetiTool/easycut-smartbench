@@ -667,7 +667,7 @@ class ShapeCutterJobParameters(object):
 
     def generate_gCode_filename(self):
         self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
-         + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
+         + "_" + self.shape_dict["cut_type"] + "_" + self.profile_filename + ".nc"
        
     def save_gCode(self):
         self.generate_gCode_filename()
