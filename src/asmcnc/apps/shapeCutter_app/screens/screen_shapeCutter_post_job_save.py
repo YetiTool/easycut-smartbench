@@ -230,8 +230,7 @@ class ShapeCutterSaveJobScreenClass(Screen):
         if not self.file_name.text == '':
             self.j.save_parameters(self.file_name.text)
             self.save_image.source = './asmcnc/apps/shapeCutter_app/img/thumbs_up.png'
-    #         self.j.generate_gCode()
-    #         self.j.save_gCode()
+            self.j.save_gCode()
 
         else: 
             
