@@ -172,7 +172,7 @@ class QuickCommands(Widget):
             self.m.request_homing_procedure('home','home')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag:
-            z_datum_reminder_message = 'You may need to set a new Z datum\nbefore you start a new job!'
+            z_datum_reminder_message = 'You may need to set a new Z datum\nbefore you start a new job!\n\nPress [b]Ok[/b] to clear this reminder.'
             popup_info.PopupWarning(self.sm, z_datum_reminder_message)
             self.sm.get_screen('home').z_datum_reminder_flag = False
 
