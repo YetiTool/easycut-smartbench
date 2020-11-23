@@ -208,7 +208,7 @@ class GRBLSettingsScreen(Screen):
 
 
     def download_grbl_settings(self):
-        self.systemtools_sm.download_grbl_settings()
+        self.systemtools_sm.download_grbl_settings_to_usb()
 
     def save_grbl_settings(self):
         self.m.save_grbl_settings()
