@@ -308,7 +308,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding: [20, 20, 20, 10]
+                    padding: 20
                     spacing: 20
 
                     canvas:
@@ -327,7 +327,7 @@ Builder.load_string("""
                         id: spindle_overload_container
                         orientation: 'vertical'
                         size_hint_y: 0.25
-                        padding: 00
+                        padding: [0, 0, 0, -10]
                         spacing: 10
  
                         Label:
