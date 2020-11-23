@@ -495,7 +495,7 @@ class SWUpdateScreen(Screen):
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
 
-                message = 'Please wait...\n\nConsole will reboot to connect to network'
+                message = 'Please wait...\n\nConsole will reboot to finish update.'
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
@@ -551,7 +551,7 @@ class SWUpdateScreen(Screen):
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
 
-                message = 'Please wait...\n\nConsole will reboot to connect to network'
+                message = 'Please wait...\n\nConsole will reboot to finish update.'
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
