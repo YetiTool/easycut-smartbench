@@ -345,7 +345,7 @@ Builder.load_string("""
 
                         Label:
                             id: spindle_voltage
-                            size_hint_y: 0.6
+                            height: 10
                             text: '0'
                             font_size: '16px' 
                             valign: 'middle'
@@ -421,11 +421,13 @@ class GoScreen(Screen):
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
+            self.spindle_voltage.opacity = 1
 
         else: 
             self.spindle_overload_container.height = 0
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
+            self.spindle_voltage.opacity = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
