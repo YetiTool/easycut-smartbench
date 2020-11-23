@@ -302,10 +302,10 @@ class BetaTestingScreen(Screen):
     def update_to_latest_beta(self):
         if self.wifi_toggle.state == 'down':
             self.set.get_sw_update_via_wifi(beta=True)
-            self.usb_stick.disable()
         elif self.usb_toggle.state == 'down':
             self.set.get_sw_update_via_usb(beta=True)
-            self.usb_stick.disable()
+        self.usb_stick.disable()
+        self.sm.current = 'rebooting'
 
     def refresh_latest_software_version(self):
         self.set.refresh_latest_sw_version()

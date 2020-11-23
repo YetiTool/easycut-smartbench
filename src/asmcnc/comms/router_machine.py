@@ -481,79 +481,79 @@ class RouterMachine(object):
         try: self.s.setting_50
         except:
             grbl_settings_and_params = [
-                        '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
-                        '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
-                        '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
-                        '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
-                        '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
-                        '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
-                        '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
-                        '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
-                        '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
-                        '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
-                        '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
-                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------
-                        '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
-                        '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
-                        '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
-                        '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
-                        '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
-                        '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
-                        '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
-                        '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
-                        '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
-                        '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
-                        '$100=' + str(self.m.s.setting_100),   #X steps/mm
-                        '$101=' + str(self.m.s.setting_101),   #Y steps/mm
-                        '$102=' + str(self.m.s.setting_102),   #Z steps/mm
-                        '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
-                        '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
-                        '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
-                        '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
-                        '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
-                        '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
-                        '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
-                        '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
-                        '$132=' + str(self.m.s.setting_132)   #Z Max travel, mm
+                        '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
+                        '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
+                        '$2=' + str(self.s.setting_2),           #Step port invert, mask
+                        '$3=' + str(self.s.setting_3),           #Direction port invert, mask
+                        '$4=' + str(self.s.setting_4),           #Step enable invert, boolean
+                        '$5=' + str(self.s.setting_5),           #Limit pins invert, boolean
+                        '$6=' + str(self.s.setting_6),           #Probe pin invert, boolean
+                        '$10=' + str(self.s.setting_10),          #Status report, mask <----------------------
+                        '$11=' + str(self.s.setting_11),      #Junction deviation, mm
+                        '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
+                        '$13=' + str(self.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------
+                        '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
+                        '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
+                        '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
+                        '$24=' + str(self.s.setting_24),     #Homing feed, mm/min
+                        '$25=' + str(self.s.setting_25),    #Homing seek, mm/min
+                        '$26=' + str(self.s.setting_26),        #Homing debounce, milliseconds
+                        '$27=' + str(self.s.setting_27),      #Homing pull-off, mm
+                        '$30=' + str(self.s.setting_30),      #Max spindle speed, RPM
+                        '$31=' + str(self.s.setting_31),         #Min spindle speed, RPM
+                        '$32=' + str(self.s.setting_32),           #Laser mode, boolean
+                        '$100=' + str(self.s.setting_100),   #X steps/mm
+                        '$101=' + str(self.s.setting_101),   #Y steps/mm
+                        '$102=' + str(self.s.setting_102),   #Z steps/mm
+                        '$110=' + str(self.s.setting_110),   #X Max rate, mm/min
+                        '$111=' + str(self.s.setting_111),   #Y Max rate, mm/min
+                        '$112=' + str(self.s.setting_112),   #Z Max rate, mm/min
+                        '$120=' + str(self.s.setting_120),    #X Acceleration, mm/sec^2
+                        '$121=' + str(self.s.setting_121),    #Y Acceleration, mm/sec^2
+                        '$122=' + str(self.s.setting_122),    #Z Acceleration, mm/sec^2
+                        '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                        '$131=' + str(self.s.setting_131),   #Y Max travel, mm
+                        '$132=' + str(self.s.setting_132)   #Z Max travel, mm
                         # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
                 ]
         else:
             grbl_settings_and_params = [
-                        '$0=' + str(self.m.s.setting_0),    #Step pulse, microseconds
-                        '$1=' + str(self.m.s.setting_1),    #Step idle delay, milliseconds
-                        '$2=' + str(self.m.s.setting_2),           #Step port invert, mask
-                        '$3=' + str(self.m.s.setting_3),           #Direction port invert, mask
-                        '$4=' + str(self.m.s.setting_4),           #Step enable invert, boolean
-                        '$5=' + str(self.m.s.setting_5),           #Limit pins invert, boolean
-                        '$6=' + str(self.m.s.setting_6),           #Probe pin invert, boolean
-                        '$10=' + str(self.m.s.setting_10),          #Status report, mask <----------------------
-                        '$11=' + str(self.m.s.setting_11),      #Junction deviation, mm
-                        '$12=' + str(self.m.s.setting_12),      #Arc tolerance, mm
-                        '$13=' + str(self.m.s.setting_13),          #Report inches, boolean
-                        '$22=' + str(self.m.s.setting_22),          #Homing cycle, boolean <------------------------                        
-                        '$20=' + str(self.m.s.setting_20),          #Soft limits, boolean <-------------------
-                        '$21=' + str(self.m.s.setting_21),          #Hard limits, boolean <------------------
-                        '$23=' + str(self.m.s.setting_23),          #Homing dir invert, mask
-                        '$24=' + str(self.m.s.setting_24),     #Homing feed, mm/min
-                        '$25=' + str(self.m.s.setting_25),    #Homing seek, mm/min
-                        '$26=' + str(self.m.s.setting_26),        #Homing debounce, milliseconds
-                        '$27=' + str(self.m.s.setting_27),      #Homing pull-off, mm
-                        '$30=' + str(self.m.s.setting_30),      #Max spindle speed, RPM
-                        '$31=' + str(self.m.s.setting_31),         #Min spindle speed, RPM
-                        '$32=' + str(self.m.s.setting_32),           #Laser mode, boolean
-                        '$50=' + str(self.m.s.setting_50),     #Yeti custom serial number
-                        '$100=' + str(self.m.s.setting_100),   #X steps/mm
-                        '$101=' + str(self.m.s.setting_101),   #Y steps/mm
-                        '$102=' + str(self.m.s.setting_102),   #Z steps/mm
-                        '$110=' + str(self.m.s.setting_110),   #X Max rate, mm/min
-                        '$111=' + str(self.m.s.setting_111),   #Y Max rate, mm/min
-                        '$112=' + str(self.m.s.setting_112),   #Z Max rate, mm/min
-                        '$120=' + str(self.m.s.setting_120),    #X Acceleration, mm/sec^2
-                        '$121=' + str(self.m.s.setting_121),    #Y Acceleration, mm/sec^2
-                        '$122=' + str(self.m.s.setting_122),    #Z Acceleration, mm/sec^2
-                        '$130=' + str(self.m.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
-                        '$131=' + str(self.m.s.setting_131),   #Y Max travel, mm
-                        '$132=' + str(self.m.s.setting_132)   #Z Max travel, mm
+                        '$0=' + str(self.s.setting_0),    #Step pulse, microseconds
+                        '$1=' + str(self.s.setting_1),    #Step idle delay, milliseconds
+                        '$2=' + str(self.s.setting_2),           #Step port invert, mask
+                        '$3=' + str(self.s.setting_3),           #Direction port invert, mask
+                        '$4=' + str(self.s.setting_4),           #Step enable invert, boolean
+                        '$5=' + str(self.s.setting_5),           #Limit pins invert, boolean
+                        '$6=' + str(self.s.setting_6),           #Probe pin invert, boolean
+                        '$10=' + str(self.s.setting_10),          #Status report, mask <----------------------
+                        '$11=' + str(self.s.setting_11),      #Junction deviation, mm
+                        '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
+                        '$13=' + str(self.s.setting_13),          #Report inches, boolean
+                        '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------                        
+                        '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
+                        '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
+                        '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
+                        '$24=' + str(self.s.setting_24),     #Homing feed, mm/min
+                        '$25=' + str(self.s.setting_25),    #Homing seek, mm/min
+                        '$26=' + str(self.s.setting_26),        #Homing debounce, milliseconds
+                        '$27=' + str(self.s.setting_27),      #Homing pull-off, mm
+                        '$30=' + str(self.s.setting_30),      #Max spindle speed, RPM
+                        '$31=' + str(self.s.setting_31),         #Min spindle speed, RPM
+                        '$32=' + str(self.s.setting_32),           #Laser mode, boolean
+                        '$50=' + str(self.s.setting_50),     #Yeti custom serial number
+                        '$100=' + str(self.s.setting_100),   #X steps/mm
+                        '$101=' + str(self.s.setting_101),   #Y steps/mm
+                        '$102=' + str(self.s.setting_102),   #Z steps/mm
+                        '$110=' + str(self.s.setting_110),   #X Max rate, mm/min
+                        '$111=' + str(self.s.setting_111),   #Y Max rate, mm/min
+                        '$112=' + str(self.s.setting_112),   #Z Max rate, mm/min
+                        '$120=' + str(self.s.setting_120),    #X Acceleration, mm/sec^2
+                        '$121=' + str(self.s.setting_121),    #Y Acceleration, mm/sec^2
+                        '$122=' + str(self.s.setting_122),    #Z Acceleration, mm/sec^2
+                        '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
+                        '$131=' + str(self.s.setting_131),   #Y Max travel, mm
+                        '$132=' + str(self.s.setting_132)   #Z Max travel, mm
                         # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
                 ]
 
@@ -567,6 +567,7 @@ class RouterMachine(object):
             fileobject = open(filename, 'r')
             settings_to_restore = (fileobject.read()).split('\n')
             self.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
+            self.send_any_gcode_command("$$")
             return True
 
         except:

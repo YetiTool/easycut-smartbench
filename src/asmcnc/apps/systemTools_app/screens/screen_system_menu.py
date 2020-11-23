@@ -90,7 +90,7 @@ class SystemMenuScreen(Screen):
         self.systemtools_sm.download_logs_to_usb()
 
     def reboot(self):
-        self.sm.current = 'rebooting'
+        self.systemtools_sm.sm.current = 'rebooting'
 
     def quit_to_console(self):
         print 'Bye!'
