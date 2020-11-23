@@ -220,7 +220,7 @@ class GRBLSettingsScreen(Screen):
         self.systemtools_sm.restore_grbl_settings_from_file()    
 
     def bake_default_settings(self):
-        self.bake_default_grbl_settings()
+        self.m.bake_default_grbl_settings()
 
     def send_rst_dollar(self):
         self.m.send_any_gcode_command("$RST=$")
