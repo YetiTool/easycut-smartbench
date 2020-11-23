@@ -305,6 +305,7 @@ class ShapeCutterJobParameters(object):
         self.profile_filename = (filename.split('/')[-1]).split('.')[0]
     
     def save_parameters(self, filename):
+        self.profile_filename = filename
         w = csv.writer(open(self.parameterCache_file_path + filename + '.csv', "w"), delimiter = '\t', lineterminator = '\n')
         for param_group, group_dict in self.parameter_dict.items():
             w.writerow([param_group])
