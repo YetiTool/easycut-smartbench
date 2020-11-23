@@ -636,7 +636,7 @@ class GoScreen(Screen):
         else: log('Overload state not recognised: ' + str(state))
 
     def update_voltage_label(self):
-        self.spindle_voltage.text = str(self.m.spindle_load())
+        self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
 
 
