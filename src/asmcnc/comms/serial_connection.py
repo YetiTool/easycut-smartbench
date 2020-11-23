@@ -515,6 +515,7 @@ class SerialConnection(object):
     # Feeds and speeds
     spindle_speed = '0.0'
     feed_rate = '0.0'
+    spindle_load_voltage = '0.0'
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -675,16 +676,18 @@ class SerialConnection(object):
                             self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
-                    overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
-                    if overload_raw_mV < 750 : overload_mV_equivalent_state = 0
-                    elif overload_raw_mV < 1750 : overload_mV_equivalent_state = 20
-                    elif overload_raw_mV < 3000 : overload_mV_equivalent_state = 40
-                    elif overload_raw_mV < 3750 : overload_mV_equivalent_state = 60
-                    elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
-                    elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
-                    elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
+                    self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
+                    if self.spindle_load_voltage < 750 : overload_mV_equivalent_state = 0
+                    elif self.spindle_load_voltage < 1750 : overload_mV_equivalent_state = 20
+                    elif self.spindle_load_voltage < 3000 : overload_mV_equivalent_state = 40
+                    elif self.spindle_load_voltage < 3750 : overload_mV_equivalent_state = 60
+                    elif self.spindle_load_voltage < 4250 : overload_mV_equivalent_state = 80
+                    elif self.spindle_load_voltage < 4750 : overload_mV_equivalent_state = 90
+                    elif self.spindle_load_voltage >= 4750 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
+
+
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state

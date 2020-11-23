@@ -49,6 +49,7 @@ Builder.load_string("""
     btn_back_img:btn_back_img
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
+    spindle_voltage: spindle_voltage
     
     BoxLayout:
         padding: 0
@@ -342,6 +343,17 @@ Builder.load_string("""
                             text: '[color=333333]0 %[/color]'
                             markup: True
 
+                        Label:
+                            id: spindle_voltage
+                            size_hint_y: 0.22
+                            text: '0'
+                            font_size: '16px' 
+                            valign: 'middle'
+                            halign: 'center'
+                            size:self.texture_size
+                            text_size: self.size
+                            color: [0,0,0,0.5]
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -608,6 +620,7 @@ class GoScreen(Screen):
 
         self.speedOverride.update_spindle_speed_label()
         self.feedOverride.update_feed_rate_label()
+        self.update_voltage_label()
 
 
     # Called from serial_connection if change in state seen
@@ -621,6 +634,9 @@ class GoScreen(Screen):
         elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         else: log('Overload state not recognised: ' + str(state))
+
+    def update_voltage_label(self):
+        self.spindle_voltage.text = str(self.m.spindle_load())
 
 
 
