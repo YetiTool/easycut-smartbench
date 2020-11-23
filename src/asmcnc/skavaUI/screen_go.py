@@ -345,7 +345,6 @@ Builder.load_string("""
 
                         Label:
                             id: spindle_voltage
-                            height: 10
                             text: '0.7'
                             font_size: '16px' 
                             valign: 'middle'
