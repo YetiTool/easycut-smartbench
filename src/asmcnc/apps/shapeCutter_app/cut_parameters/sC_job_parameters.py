@@ -670,6 +670,7 @@ class ShapeCutterJobParameters(object):
          + "_" + self.shape_dict["cut_type"] + self.profile_filename + ".nc"
        
     def save_gCode(self):
+        self.generate_gCode_filename()
         f = open(self.gcode_filename, "w")
         for line in self.gcode_lines:
             f.write(line + "\n")
