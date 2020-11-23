@@ -308,7 +308,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding: 20
+                    padding: [20, 20, 20, 10]
                     spacing: 20
 
                     canvas:
@@ -345,7 +345,7 @@ Builder.load_string("""
 
                         Label:
                             id: spindle_voltage
-                            size_hint_y: 0.22
+                            size_hint_y: 0.3
                             text: '0'
                             font_size: '16px' 
                             valign: 'middle'
