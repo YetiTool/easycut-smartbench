@@ -568,7 +568,8 @@ class RouterMachine(object):
             fileobject = open(filename, 'r')
             settings_to_restore = (fileobject.read()).split('\n')
             self.s.start_sequential_stream(settings_to_restore)   # Send any grbl specific parameters
-            Clock.schedule_once(lambda dt: self.send_any_gcode_command("$$"), 2)
+            Clock.schedule_once(lambda dt: self.send_any_gcode_command("$$"), 1)
+            Clock.schedule_once(lambda dt: self.send_any_gcode_command("$#"), 2)
             return True
 
         except:
