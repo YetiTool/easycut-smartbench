@@ -428,7 +428,7 @@ class FactorySettingsScreen(Screen):
     def update_serial_number(self):
         full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
         self.m.write_dollar_50_setting(full_serial_number)
-        Clock.schedule_once(lambda dt: self.machine_serial.text = str( self.m.serial_number()), 1)
+        self.machine_serial.text = str( self.m.serial_number())
 
     def factory_reset(self):
         lifetime = float(120*3600)
