@@ -8,6 +8,7 @@ Menu screen for system tools app
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 
 Builder.load_string("""
 
@@ -428,7 +429,12 @@ class FactorySettingsScreen(Screen):
     def update_serial_number(self):
         full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
         self.m.write_dollar_50_setting(full_serial_number)
-        self.machine_serial.text = str( self.m.serial_number())
+        self.machine_serial.text = 'updating...'
+
+        def update_text_with_serial():
+            self.machine_serial.text = str( self.m.serial_number())
+
+        Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def factory_reset(self):
         lifetime = float(120*3600)
