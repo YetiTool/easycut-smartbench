@@ -427,8 +427,9 @@ class FactorySettingsScreen(Screen):
 
     def update_serial_number(self):
         serial_code_update = "$50=" + self.serial_number_input.text + "." + self.product_number_input.text
+        print serial_code_update
         self.m.send_any_gcode_command(serial_code_update)
-        self.m.send_any_gcode_command("$$")
+        # self.m.send_any_gcode_command("$$")
         self.machine_serial.text = str( self.m.serial_number())
 
     def factory_reset(self):
