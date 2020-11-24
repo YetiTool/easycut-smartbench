@@ -136,7 +136,7 @@ Builder.load_string("""
                 text: ''
 
         Button:
-            text: 'Return to home'
+            text: 'Return to factory settings'
             on_press: root.return_to_home()
             
         BoxLayout:
@@ -215,4 +215,4 @@ class DiagnosticsScreen(Screen):
 
 
     def return_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = 'factory_settings'

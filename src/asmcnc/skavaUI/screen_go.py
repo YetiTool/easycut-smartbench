@@ -363,6 +363,7 @@ class GoScreen(Screen):
     btn_back_img = ObjectProperty()
     start_or_pause_button_image = ObjectProperty()
 
+    show_spindle_overload = False
 
     is_job_started_already = False
     temp_suppress_prompts = False
@@ -405,7 +406,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if ((str(self.m.serial_number())).endswith('03') or self.sm.get_screen('dev').developer_mode == True):
+        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True):
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1

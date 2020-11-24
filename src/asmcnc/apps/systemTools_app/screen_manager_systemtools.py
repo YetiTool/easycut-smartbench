@@ -2,7 +2,7 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.comms import usb_storage
-from asmcnc.skavaUI import popup_info
+from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testing, screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp
 
 class ScreenManagerSystemTools(object):
@@ -127,9 +127,15 @@ class ScreenManagerSystemTools(object):
 
     def open_factory_settings_screen(self):
        if not self.sm.has_screen('factory_settings'):
-           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self)
+           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self, settings = self.set)
            self.sm.add_widget(factory_settings_screen)
        self.sm.current = 'factory_settings'
+
+    def open_diagnostics_screen(self):
+       if not self.sm.has_screen('diagnostics'):
+            diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(diagnostics_screen)
+       self.sm.current = 'diagnostics'
 
     def open_update_testing_screen(self):
        if not self.sm.has_screen('update_testing'):
@@ -154,6 +160,7 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('factory_settings')
         self.destroy_screen('update_testing')
         self.destroy_screen('developer_temp')
+        self.destroy_screen('diagnostics')
         self.sm.current = 'lobby'
 
     def destroy_screen(self, screen_name):
