@@ -483,6 +483,7 @@ class GoScreen(Screen):
 
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
+        self.sm.get_screen('home').z_datum_reminder_flag = False
 
 
 ### GENERAL ACTIONS
