@@ -430,6 +430,12 @@ class RouterMachine(object):
             return False
 
 # GRBL SETTINGS
+    def write_dollar_50_setting(self, serial_number):
+        dollar_50_setting = [
+                            '$50=' + str(serial_number),
+                            '$$'
+                            ]
+        self.s.start_sequential_stream(dollar_50_setting, reset_grbl_after_stream=True)
 
     def bake_default_grbl_settings(self): # move to machine module
         grbl_settings = [

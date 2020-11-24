@@ -426,11 +426,9 @@ class FactorySettingsScreen(Screen):
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
     def update_serial_number(self):
-        serial_code_update = "$50=" + self.serial_number_input.text + "." + self.product_number_input.text
-        print serial_code_update
-        self.m.send_any_gcode_command(serial_code_update)
-        # self.m.send_any_gcode_command("$$")
-        self.machine_serial.text = str( self.m.serial_number())
+        full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
+        self.m.write_dollar_50_setting(full_serial_number)
+        Clock.schedule_once(lambda dt: self.machine_serial.text = str( self.m.serial_number()), 1)
 
     def factory_reset(self):
         lifetime = float(120*3600)
