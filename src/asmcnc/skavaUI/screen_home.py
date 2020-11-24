@@ -255,6 +255,7 @@ class HomeScreen(Screen):
     job_box = job_envelope.BoundingBox()
     default_datum_choice = 'spindle'
     z_datum_reminder_flag = False
+    has_datum_been_reset = False
 
     def __init__(self, **kwargs):
 

@@ -481,6 +481,9 @@ class GoScreen(Screen):
         self.feedOverride.feed_norm()
         self.speedOverride.speed_norm()
 
+        # Reset job tracking flags
+        self.sm.get_screen('home').has_datum_been_reset = False
+
 
 ### GENERAL ACTIONS
    
