@@ -15,7 +15,26 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 
-<ScrollableLabelStuffView>:
+<ScrollableLabelLogsView>:
+    scroll_y:1
+
+    canvas.before:
+        Color:
+            rgba: 0,0,0,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    
+    Label:
+        size_hint_y: None
+        height: self.texture_size[1]
+        text_size: self.width, None
+        font_size: '10sp'
+        text: root.text
+        max_lines: 60
+
+
+<ScrollableLabelCommandView>:
     scroll_y:1
 
     canvas.before:
@@ -31,12 +50,13 @@ Builder.load_string("""
         text_size: self.width, None
         font_size: '12sp'
         text: root.text
-        max_lines: 3
-
+        max_lines: 20
 
 <DeveloperTempScreen>
 
     output_view: output_view
+    input_view: input_view
+    gCodeInput: gCodeInput
 
     BoxLayout:
         height: dp(800)
@@ -76,70 +96,102 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(240)
-                padding: 20
-                spacing: 0
-                orientation: 'vertical'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
+                padding: 0
+                spacing: 10
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(577.5)
+                    height: dp(240)
+                    padding: 20
+                    spacing: 20
+                    orientation: 'vertical'
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+
+                    GridLayout: 
                         size: self.size
+                        pos: self.parent.pos
+                        cols: 4
+                        rows: 4
 
-                GridLayout: 
-                    size: self.size
-                    pos: self.parent.pos
-                    cols: 4
-                    rows: 4
-                    size_hint_y: 0.67
+                        Button:
+                            text: ''
+                                    
+                        Button:
+                            text: ''
+                                       
+                        Button:
+                            text: ''
+                            
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
-                                
-                    Button:
-                        text: ''
-                                   
-                    Button:
-                        text: ''
-                        
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
+                                       
+                        Button:
+                            text: ''
+                            
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
-                                   
-                    Button:
-                        text: ''
-                        
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
+                                       
+                        Button:
+                            text: ''
+                            
+                        Button:
+                            text: ''
 
-                    Button:
-                        text: ''
-                                   
-                    Button:
-                        text: ''
-                        
-                    Button:
-                        text: ''
+                        Button:
+                            text: ''
+                            
+                        Button:
+                            text: ''
 
-                    Button:
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(192.5)
+                    height: dp(240)
+                    padding: 20
+                    spacing: 0
+                    orientation: 'vertical'
+                    canvas:
+                        Color:
+                            rgba: [1,1,1,1]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+
+                    TextInput:                      
+                        id:gCodeInput
+                        multiline: False
                         text: ''
-                        
-                    Button:
-                        text: ''
+                        on_text_validate: root.send_gcode_textinput()
+                        size_hint_y: 0.25
+
+                    ScrollableLabelCommandView:
+                        id: input_view
+
 
 
             BoxLayout:
@@ -195,7 +247,7 @@ Builder.load_string("""
                     spacing: 0
                     orientation: 'vertical'
 
-                    ScrollableLabelStuffView:
+                    ScrollableLabelLogsView:
                         id: output_view
 
                 BoxLayout:
@@ -231,7 +283,10 @@ Builder.load_string("""
                                     allow_stretch: True
 """)
 
-class ScrollableLabelStuffView(ScrollView):
+class ScrollableLabelLogsView(ScrollView):
+    text = StringProperty('')
+
+class ScrollableLabelCommandView(ScrollView):
     text = StringProperty('')
 
 class DeveloperTempScreen(Screen):
@@ -246,3 +301,6 @@ class DeveloperTempScreen(Screen):
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
+
+    def send_gcode_textinput(self): 
+        self.m.send_any_gcode_command(str(self.gCodeInput.text))
