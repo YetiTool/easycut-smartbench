@@ -35,7 +35,7 @@ class ScreenManagerSystemTools(object):
 
         def get_logs(count):
             if self.usb_stick.is_usb_mounted_flag == True:
-                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                os.system("journalctl > smartbench_journal.txt && sudo cp --no-preserve=mode,ownership smartbench_journal.txt /media/usb/ && rm smartbench_journal.txt")
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
 
