@@ -126,7 +126,7 @@ Builder.load_string("""
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.6
-                                            input_type: 'number'
+                                            input_filter: 'int'
 
                                         Label:
                                             text: '.'
@@ -141,7 +141,7 @@ Builder.load_string("""
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.3
-                                            input_type: 'number'
+                                            input_filter: 'int'
 
                                     Button:
                                         text: 'UPDATE'
@@ -182,7 +182,7 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
                                         valign: 'middle'
-                                        input_type: 'number'
+                                        input_filter: 'float'
                                     Button:
                                         text: 'UPDATE'
                                         on_press: root.update_z_touch_plate_thickness()
