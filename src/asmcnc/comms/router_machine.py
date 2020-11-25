@@ -6,7 +6,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
-import sys, os
+import sys, os, time
 from datetime import datetime
 import os.path
 from os import path
@@ -662,28 +662,43 @@ class RouterMachine(object):
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
+        self.set_pause(False, delay = 0.1)
+        # Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
         self.s.is_job_streaming = True
         self._grbl_resume()
 
-    def set_pause(self, pauseBool):
-        self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
+    def set_pause(self, pauseBool, delay = 0):
+        # Record time machine is paused for. This covers: hard doors and soft doors. Alarms are handled in alarm screen, and GRBL errors instantly cancel streaming.
+        if pauseBool:
+            self.s.stream_pause_start_time = time.time()
+        else: 
+            self.s.stream_paused_cumulative_time = self.stream_paused_cumulative_time + int(time.time() - self.s.stream_pause_start_time)
+
+        def assign_pauseBool(pauseBool)
+            # sets serial_connection flag to pause (allows a hard door to be detected)
+            self.is_machine_paused = pauseBool
+
+        Clock.schedule_once(lambda dt: assign_pauseBool(pauseBool), delay)
  
     def stop_from_soft_stop_cancel(self):
+        self.set_pause(False, delay = 0.2)
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
+        # Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
 
     def resume_from_a_soft_door(self):
+        self.set_pause(False, delay = 0.2)
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
+        # Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def resume_after_a_hard_door(self):
+        self.set_pause(False, delay = 0.2)
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
+        # Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
 
     def cancel_after_a_hard_door(self):
+        self.set_pause(False, delay = 0.2)
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
+        # Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
    
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()

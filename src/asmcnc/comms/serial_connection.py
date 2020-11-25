@@ -271,7 +271,10 @@ class SerialConnection(object):
     l_count = 0 # lines sent to grbl
     c_line = [] # char count of blocks/lines in grbl's serial buffer
     
+    stream_total_time_seconds = 0
     stream_start_time = 0
+    stream_pause_start_time = 0
+    stream_paused_cumulative_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
     
@@ -353,7 +356,10 @@ class SerialConnection(object):
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
-        self.stream_start_time = time.time();
+        self.stream_total_time_seconds = 0
+        self.stream_start_time = time.time()
+        self.stream_pause_start_time = 0
+        self.stream_paused_cumulative_time = 0
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -399,15 +405,47 @@ class SerialConnection(object):
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
-
-
     # After streaming is completed
-    def end_stream(self):
+    def calculate_stream_and_use_time(self):
+        log("G-code streaming finished!")
+        self.stream_end_time = time.time()
 
+        # Time taken seconds: time ended - time started + spindle cooldown time - time the machine was paused for during the job
+        self.stream_total_time_seconds = int(self.stream_end_time - self.stream_start_time) + int(self.m.spindle_cooldown_time_seconds) - int(self.stream_paused_cumulative_time)
+
+        # Add time taken in seconds to brush use: 
+        self.m.spindle_brush_use_seconds += self.stream_total_time_seconds
+        self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+
+        # Add time taken in seconds to calibration tracking
+        self.m.time_since_calibration_seconds += self.stream_total_time_seconds
+        self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
+
+        # Add time taken in seconds since Z head last lubricated
+        self.m.time_since_z_head_lubricated_seconds += self.stream_total_time_seconds
+        self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
+
+    def send_stream_time_to_job_done_screen(self):
+        # Tell user the job has finished and how long it took
+        hours = int(self.stream_total_time_seconds / (60 * 60))
+        seconds_remainder = self.stream_total_time_seconds % (60 * 60)
+        minutes = int(seconds_remainder / 60)
+        seconds = int(seconds_remainder % 60)
+        log(" Time elapsed: " + str(self.stream_total_time_seconds) + " seconds")
+
+        # send info to the job done screen
+        self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+        self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
+         " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+
+    def end_stream(self):
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
         self.is_job_finished = True
+
+        # Get job run time and update maintenance use times
+        self.calculate_stream_and_use_time()
 
         if self.m_state != "Check":
 
@@ -430,38 +468,14 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None 
 
-    def send_stream_time_to_job_done_screen(self):
-
-            # Tell user the job has finished
-            log("G-code streaming finished!")
-            self.stream_end_time = time.time()
-            time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
-            minutes = int(seconds_remainder / 60)
-            seconds = int(seconds_remainder % 60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-
-            # Add time taken in seconds to brush use: 
-            self.m.spindle_brush_use_seconds += time_taken_seconds
-            self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
-
-            # Add time taken in seconds to calibration tracking
-            self.m.time_since_calibration_seconds += time_taken_seconds
-            self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
-
-            # Add time taken in seconds since Z head last lubricated
-            self.m.time_since_z_head_lubricated_seconds += time_taken_seconds
-            self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
-
-            # send info to the job done screen
-            self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-            self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-             " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-
     def cancel_stream(self):
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
+
+        # Get job run time and update maintenance use times
+        self.calculate_stream_and_use_time()
+
+        # Reset counters for tracking job progress
         self._reset_counters()
 
         if self.m_state != "Check":

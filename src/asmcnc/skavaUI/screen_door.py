@@ -228,19 +228,12 @@ class DoorScreen(Screen):
 
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
-
     
     def __init__(self, **kwargs):
     
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
-        # # Text
-        # self.door_label.font_size =  '19sp'
-        # self.door_text = '[color=000000]Pressing [b]Resume[/b] will cause the machine to continue it\'s normal operation. ' \
-        #                 +'Pressing [b]Cancel[/b] will cancel the current operation completely. [/color]'
-
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)

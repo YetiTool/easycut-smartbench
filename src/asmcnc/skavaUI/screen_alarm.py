@@ -186,6 +186,8 @@ class AlarmScreenClass(Screen):
     message = StringProperty()
     return_to_screen = 'home'
     
+    time_screen_entered = 0
+
     def __init__(self, **kwargs):
         super(AlarmScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
@@ -197,7 +199,10 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
         self.m.led_restore()
 
+        self.time_screen_entered = time.time()
+
     def show_details(self):
+        self.m.s.stream_paused_cumulative_time = int(time.time() - self.time_screen_entered)
         self.m.reset_from_alarm()
 
         def trigger_popup():
@@ -208,7 +213,7 @@ class AlarmScreenClass(Screen):
 
 
     def quit_to_home(self):
-        
+        self.m.s.stream_paused_cumulative_time = int(time.time() - self.time_screen_entered)
         self.m.resume_from_alarm()
         
         if self.sm.has_screen(self.return_to_screen):
