@@ -13,7 +13,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
-import sys, os
+import sys, os, time
 
 ALARM_CODES = {
 
