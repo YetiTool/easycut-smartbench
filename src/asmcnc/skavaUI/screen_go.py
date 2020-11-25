@@ -286,7 +286,7 @@ Builder.load_string("""
                                 text_size: self.size 
                             Label:
                                 size_hint_y: 1
-                                text: '[color=808080]Job time:[/color]'
+                                text: '[color=808080]Time since job started:[/color]'
                                 markup: True                           
                                 font_size: '16px' 
                                 valign: 'middle'
