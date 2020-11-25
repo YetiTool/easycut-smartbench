@@ -131,12 +131,12 @@ class PopupBrushInfo(Widget):
         "   [b]Reset:[/b] Set the running hours to zero."
         
 
-        description_bottom = "[b]Brush life:[/b]\n" + \
-        "   [b]Value:[/b] The hours the brushes are expected to last.\n" + \
+        description_bottom = "[b]Brush reminder:[/b]\n" + \
+        "   [b]Value:[/b] Set to the hours the brushes are expected to last.\n" + \
         "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
         " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
-        "   [b]Restore:[/b] Return the brush life to the hours previously set.\n" + \
-        "   [b]Reset:[/b] Sets to the brush life to 120 hours.\n"
+        "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
+        "   [b]Reset:[/b] Sets to the brush reminder to 120 hours.\n"
 
         description_examples_top = '[b]     NEW                    LOW                  SHUT-OFF[/b]'
         description_examples_bottom = '[b] 15mm                  10mm                    -[/b]         '
