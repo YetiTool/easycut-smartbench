@@ -44,7 +44,7 @@ Builder.load_string("""
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
-                text: "[b]BRUSH LIFE[/b]"
+                text: "[b]BRUSH REMINDER[/b]"
 
             BoxLayout: 
                 orientation: 'horizontal'
@@ -62,6 +62,7 @@ Builder.load_string("""
                     width: dp(120)
                     font_size: dp(28)
                     input_filter: 'int'
+                    multiline: False
 
                 Label: 
                     color: 0,0,0,1
