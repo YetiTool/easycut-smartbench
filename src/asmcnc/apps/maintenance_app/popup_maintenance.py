@@ -132,7 +132,7 @@ class PopupBrushInfo(Widget):
         
 
         description_bottom = "[b]Brush reminder:[/b]\n" + \
-        "   [b]Value:[/b] The hours the brushes are expected to last.\n" + \
+        "   [b]Value:[/b] Set to the hours the brushes are expected to last.\n" + \
         "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
         " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
         "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
