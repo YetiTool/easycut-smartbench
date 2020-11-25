@@ -672,7 +672,7 @@ class RouterMachine(object):
         if pauseBool:
             self.s.stream_pause_start_time = time.time()
         else: 
-            self.s.stream_paused_cumulative_time = self.stream_paused_cumulative_time + int(time.time() - self.s.stream_pause_start_time)
+            self.s.stream_paused_cumulative_time = self.s.stream_paused_cumulative_time + int(time.time() - self.s.stream_pause_start_time)
 
         def assign_pauseBool(pauseBool):
             # sets serial_connection flag to pause (allows a hard door to be detected)
