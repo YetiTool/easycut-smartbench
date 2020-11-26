@@ -28,12 +28,13 @@ class Beaver(object):
     def add_to_dam(self, log):
         self.dam.append(log)
         print log
-        os.system("sed -i \'1s/^/" + log + "\\n/;10000q;p\' " + dam_path)
+        os.system("sed -i \'1s/^/" + log + "\\n/\' " + dam_path)
 
     def sustain_dam(self, dt):
         if len(self.dam) > 60:
             self.dam = self.dam[-60:]
 
+# ;10000q;p
 
 
 
