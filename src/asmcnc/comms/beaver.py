@@ -18,8 +18,8 @@ class Beaver(object):
 
     def __init__(self):
         self.make_log("Start beaver...")
-        Clock.schedule_interval(self.sustain_dam, 10)
-        Clock.schedule_interval(self.sustain_dam, 300)
+        Clock.schedule_interval(self.sustain_dam_list, 10)
+        Clock.schedule_interval(self.sustain_dam_file, 300)
 
     def make_log(self, message):
         timestamp = datetime.now()
