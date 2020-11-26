@@ -150,13 +150,6 @@ Builder.load_string("""
 job_cache_dir = './jobCache/'    # where job files are cached for selection (for last used history/easy access)
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 
-
-def log(message):
-    
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
-
 class LoadingScreen(Screen):  
  
     load_value = NumericProperty()
@@ -226,7 +219,7 @@ class LoadingScreen(Screen):
         
     def objectifiled(self, job_file_path, dt):
 
-        log('> LOADING:')
+        self.m.log('> LOADING:')
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
@@ -240,8 +233,8 @@ class LoadingScreen(Screen):
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         
         self.load_value = 1
-        log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
-        log('> Scrubbing file...')
+        self.m.log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
+        self.m.log('> Scrubbing file...')
 
         # clear objects
         self.preloaded_job_gcode = []
@@ -337,7 +330,7 @@ class LoadingScreen(Screen):
 
         else: 
 
-            log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+            self.m.log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
             self._get_gcode_preview_and_ranges()
 
 
@@ -351,7 +344,7 @@ class LoadingScreen(Screen):
         # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
     
-        log('> get_non_modal_gcode')
+        self.m.log('> get_non_modal_gcode')
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
 
 
@@ -382,7 +375,7 @@ class LoadingScreen(Screen):
         self.check_button.disabled = False
         self.home_button.disabled = False
 
-        log('> END LOAD')
+        self.m.log('> END LOAD')
         
 
 

@@ -72,10 +72,6 @@ Builder.load_string("""
 
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
-
 
 class SpindleShutdownScreen(Screen):
 
@@ -101,7 +97,7 @@ class SpindleShutdownScreen(Screen):
     
     def on_enter(self):
 
-        log('Pausing job...')
+        self.m.log('Pausing job...')
         self.m.stop_for_a_stream_pause()
 
         # Ensure next timer is reset (problem in some failure modes)

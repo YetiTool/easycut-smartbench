@@ -33,29 +33,9 @@ Builder.load_string("""
         text: root.text
         max_lines: 60
 
-
-<ScrollableLabelCommandView>:
-    scroll_y:1
-
-    canvas.before:
-        Color:
-            rgba: 0,0,0,1
-        Rectangle:
-            size: self.size
-            pos: self.pos
-    
-    Label:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text_size: self.width, None
-        font_size: '12sp'
-        text: root.text
-        max_lines: 20
-
 <DeveloperTempScreen>
 
     output_view: output_view
-    input_view: input_view
     gCodeInput: gCodeInput
 
     BoxLayout:
@@ -189,8 +169,20 @@ Builder.load_string("""
                         on_text_validate: root.send_gcode_textinput()
                         size_hint_y: 0.25
 
-                    ScrollableLabelCommandView:
-                        id: input_view
+                    GridLayout: 
+                        size_hint_y: 0.75
+                        pos: self.parent.pos
+                        cols: 1
+                        rows: 3
+
+                        Button:
+                            text: ''
+                                    
+                        Button:
+                            text: ''
+                                       
+                        Button:
+                            text: ''
 
 
 
@@ -286,15 +278,13 @@ Builder.load_string("""
 class ScrollableLabelLogsView(ScrollView):
     text = StringProperty('')
 
-class ScrollableLabelCommandView(ScrollView):
-    text = StringProperty('')
-
 class DeveloperTempScreen(Screen):
 
     def __init__(self, **kwargs):
         super(DeveloperTempScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
+        Clock.schedule_interval(self.update_display_text, 0.2)
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -304,3 +294,6 @@ class DeveloperTempScreen(Screen):
 
     def send_gcode_textinput(self): 
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
+
+    def update_display_text(self, dt):   
+        self.output_view.text = '\n'.join(self.m.b.dam)

@@ -234,12 +234,6 @@ Builder.load_string("""
 """)
 
 
-def log(message):
-    
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
-
 class SafetyScreen(Screen):
 
 
@@ -257,7 +251,7 @@ class SafetyScreen(Screen):
 
     def on_enter(self):
 
-        log('Safety screen UP')
+        self.m.log('Safety screen UP')
         
         
     def go_to_next_screen(self):

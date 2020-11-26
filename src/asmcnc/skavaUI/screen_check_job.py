@@ -203,9 +203,6 @@ Builder.load_string("""
                              
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class CheckingScreen(Screen):
     
@@ -275,13 +272,13 @@ class CheckingScreen(Screen):
         bounds_output = self.is_job_within_bounds()
       
         if bounds_output == 'job is within bounds':
-            log("In bounds...")
+            self.m.log("In bounds...")
             # update screen
             self.check_outcome = 'Job is within bounds.'
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
 
         else:
-            log("Out of bounds...")
+            self.m.log("Out of bounds...")
             self.job_checking_checked = '[b]Boundary issue![/b]'
             self.toggle_boundary_buttons(False)
             self.check_outcome = '[b]The job would exceed the working volume of the machine in one or more axes. See help notes (right).[/b]'
@@ -464,7 +461,7 @@ class CheckingScreen(Screen):
             if self.job_ok == False:
                 self.job_gcode = []
     
-            log('File has been checked!')
+            self.m.log('File has been checked!')
             self.exit_label = 'Finish'
             # self.quit_button.disabled = False
 

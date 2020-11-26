@@ -28,10 +28,6 @@ BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
 GRBL_SCANNER_MIN_DELAY = 0.01 # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
-
 
 class SerialConnection(object):
 
@@ -70,7 +66,7 @@ class SerialConnection(object):
 
     def establish_connection(self, win_port):
 
-        log('Start to establish connection...')
+        self.m.log('Start to establish connection...')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
@@ -118,10 +114,10 @@ class SerialConnection(object):
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
-        log("Serial connection status: " + str(self.is_connected()))
+        self.m.log("Serial connection status: " + str(self.is_connected()))
 
         if self.is_connected():
-            log('Initialising grbl...')
+            self.m.log('Initialising grbl...')
             self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
     # is serial port connected?
@@ -136,7 +132,7 @@ class SerialConnection(object):
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
-        log('Starting services')
+        self.m.log('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
         self.next_poll_time = time.time()
         t = threading.Thread(target=self.grbl_scanner)
@@ -163,7 +159,7 @@ class SerialConnection(object):
 
     def grbl_scanner(self):
         
-        log('Running grbl_scanner thread')
+        self.m.log('Running grbl_scanner thread')
 
         while True:
 
@@ -202,7 +198,7 @@ class SerialConnection(object):
                     self.grbl_out = rec_temp;
                     # print self.grbl_out
                 except Exception as e:
-                    log('serial.readline exception:\n' + str(e))
+                    self.m.log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
                     self.get_serial_screen('Could not read line from serial buffer.')
             else: 
@@ -215,9 +211,9 @@ class SerialConnection(object):
                 #if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE: 
                     if rec_temp.startswith('<'):
-                        log(rec_temp)
+                        self.m.log(rec_temp)
                     else:
-                        log('< ' + rec_temp)
+                        self.m.log('< ' + rec_temp)
     
                 # Update the gcode monitor (may not be initialised) and console:
                 try:
@@ -235,7 +231,7 @@ class SerialConnection(object):
                     else:
                         self.process_grbl_push(rec_temp)
                 except Exception as e:
-                    log('Process response exception:\n' + str(e))
+                    self.m.log('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
@@ -277,7 +273,7 @@ class SerialConnection(object):
     
     def check_job(self, job_object):
         
-        log('Checking job...')
+        self.m.log('Checking job...')
 
         self.m.enable_check_mode()
         
@@ -314,20 +310,20 @@ class SerialConnection(object):
         
         # TAKE IN THE FILE
         self.job_gcode = job_object
-        log('Job starting...')
+        self.m.log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
 
         def set_streaming_flags_to_true():
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
-            log('Job running')           
+            self.m.log('Job running')           
 
         if self.initialise_job() and self.job_gcode:
             Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
                                        
         elif not self.job_gcode:
-            log('Could not start job: File empty')
+            self.m.log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
             self.is_job_finished = True
         return
@@ -379,7 +375,7 @@ class SerialConnection(object):
             self.response_log.append(message)
 
         if message.startswith('error'):
-            log('ERROR from GRBL: ' + message)
+            self.m.log('ERROR from GRBL: ' + message)
             
             if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
@@ -433,14 +429,14 @@ class SerialConnection(object):
     def send_stream_time_to_job_done_screen(self):
 
             # Tell user the job has finished
-            log("G-code streaming finished!")
+            self.m.log("G-code streaming finished!")
             self.stream_end_time = time.time()
             time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
             hours = int(time_taken_seconds / (60 * 60))
             seconds_remainder = time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
-            log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+            self.m.log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
             # Add time taken in seconds to brush use: 
             self.m.spindle_brush_use_seconds += time_taken_seconds
@@ -484,7 +480,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None
 
-        log("G-code streaming cancelled!")
+        self.m.log("G-code streaming cancelled!")
         
 
 
@@ -558,7 +554,7 @@ class SerialConnection(object):
                 status_parts[0] != "Check" and
                 status_parts[0] != "Home" and
                 status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message)
+                self.m.log("ERROR status parse: Status invalid: " + message)
                 return
 
             # Get machine's status
@@ -574,7 +570,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        self.m.log("ERROR status parse: Position invalid: " + message)
                         return
 
                     self.m_x = pos[0]
@@ -589,7 +585,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        self.m.log("ERROR status parse: Position invalid: " + message)
                         return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
@@ -603,7 +599,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        self.m.log("ERROR status parse: Position invalid: " + message)
                         return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
@@ -617,7 +613,7 @@ class SerialConnection(object):
                         int(buffer_info[0])
                         int(buffer_info[1])
                     except:
-                        log("ERROR status parse: Buffer status invalid: " + message)
+                        self.m.log("ERROR status parse: Buffer status invalid: " + message)
                         return
 
                     # if different from last check
@@ -670,7 +666,7 @@ class SerialConnection(object):
                     else:
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
-                            log("Hard " + self.m_state)
+                            self.m.log("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
                             self.sm.current = 'door'
 
@@ -683,17 +679,17 @@ class SerialConnection(object):
                     elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
                     elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
                     elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
-                    else: log("Overload value not recognised")
+                    else: self.m.log("Overload value not recognised")
                    
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
+                        self.m.log("Overload state change: " + str(self.overload_state))
                     
                         try:
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
                         except:
-                            log('Unable to update_overlaod_state on go screen')
+                            self.m.log('Unable to update_overlaod_state on go screen')
                     
                     # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
@@ -713,7 +709,7 @@ class SerialConnection(object):
 
  
         elif message.startswith('ALARM:'):
-            log('ALARM from GRBL: ' + message)
+            self.m.log('ALARM from GRBL: ' + message)
             if self.sm.current != 'alarmScreen':
                 self.sm.get_screen('alarmScreen').message = message
                 if self.sm.current == 'errorScreen':
@@ -723,7 +719,7 @@ class SerialConnection(object):
                 self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
-            log(message)
+            self.m.log(message)
             setting_and_value = message.split("=")
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
@@ -811,14 +807,14 @@ class SerialConnection(object):
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
             elif self.expecting_probe_result and stripped_message.startswith('PRB'):
 
-                log(stripped_message)
+                self.m.log(stripped_message)
 
                 successful_probe = stripped_message.split(':')[2]
                 
                 if successful_probe:
 
                     z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
-                    log('Probed at machine height: ' + z_machine_coord_when_probed)
+                    self.m.log('Probed at machine height: ' + z_machine_coord_when_probed)
                     self.m.probe_z_detection_event(z_machine_coord_when_probed)
 
 
@@ -828,8 +824,8 @@ class SerialConnection(object):
                 fw_hw_versions = stripped_message.split(';')
                 self.fw_version = (fw_hw_versions[1]).split(':')[1]
                 self.hw_version = (fw_hw_versions[2]).split(':')[1]
-                log('FW version: ' + str(self.fw_version))
-                log('HW version: ' + str(self.hw_version))
+                self.m.log('FW version: ' + str(self.fw_version))
+                self.m.log('HW version: ' + str(self.hw_version))
 
 
     def check_for_sustained_max_overload(self, dt):
@@ -860,7 +856,7 @@ class SerialConnection(object):
     _reset_grbl_after_stream = False
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False):
-        log("start_sequential_stream")
+        self.m.log("start_sequential_stream")
         self._sequential_stream_buffer = list_to_stream
         self._reset_grbl_after_stream = reset_grbl_after_stream
         self._send_next_sequential_stream()
@@ -873,10 +869,10 @@ class SerialConnection(object):
             del self._sequential_stream_buffer[0]
         else:
             self.is_sequential_streaming = False
-            log("sequential stream ended")
+            self.m.log("sequential stream ended")
             if self._reset_grbl_after_stream:
                 self.m.reset_after_sequential_stream()
-                log("GRBL Reset after sequential stream ended")
+                self.m.log("GRBL Reset after sequential stream ended")
 
 
     def cancel_sequential_stream(self, reset_grbl_after_cancel = False):
@@ -898,7 +894,7 @@ class SerialConnection(object):
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
             #if show_in_sys and altDisplayText==None: print serialCommand
             if not serialCommand.startswith('?'):
-                log('> ' + serialCommand)
+                self.m.log('> ' + serialCommand)
             if altDisplayText != None: print altDisplayText
 
             # Print to console in the UI
@@ -909,7 +905,7 @@ class SerialConnection(object):
 
         except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-            # log('Console display error: ' + str(consoleDisplayError))
+            # self.m.log('Console display error: ' + str(consoleDisplayError))
 
         # Finally issue the command        
         if self.s:
@@ -931,11 +927,11 @@ class SerialConnection(object):
 #                  SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 self.get_serial_screen('Could not write last command to serial buffer.')
-    #                 log('Serial Error: ' + str(serialError))
+    #                 self.m.log('Serial Error: ' + str(serialError))
         
         else: 
 
-            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
+            self.m.log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
@@ -947,7 +943,7 @@ class SerialConnection(object):
 #         try:
 #             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
 #             #if show_in_sys and altDisplayText==None: print serialCommand
-#             log('> ' + serialCommand)
+#             self.m.log('> ' + serialCommand)
 #             if altDisplayText != None: print altDisplayText
 # 
 #             # Print to console in the UI
@@ -958,7 +954,7 @@ class SerialConnection(object):
 # 
 #         except:
 #             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#             log('Console display error: ' + str(consoleDisplayError))
+#             self.m.log('Console display error: ' + str(consoleDisplayError))
 # 
 #         # Finally issue the command
 #         if self.s:
@@ -967,7 +963,7 @@ class SerialConnection(object):
 #                 
 #             except SerialException as serialError:
 #                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#                 log('Serial Error: ' + str(serialError))
+#                 self.m.log('Serial Error: ' + str(serialError))
 ## -----------------------------------------------------------------------------------------------------
 
     # Many realtime commands are non-printables, and cause the gcode console to crash. 
@@ -984,7 +980,7 @@ class SerialConnection(object):
 #             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
 #             #if show_in_sys and altDisplayText==None: print serialCommand
 #             if not serialCommand.startswith('?'):
-#                 log('> ' + serialCommand)
+#                 self.m.log('> ' + serialCommand)
 #             if altDisplayText != None: print altDisplayText
 # 
 #             # Print to console in the UI
@@ -995,7 +991,7 @@ class SerialConnection(object):
 # 
 #         except:
 #             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#             log('Console display error: ' + str(consoleDisplayError))
+#             self.m.log('Console display error: ' + str(consoleDisplayError))
 # 
 #         # Finally issue the command
 #         if self.s:
@@ -1004,7 +1000,7 @@ class SerialConnection(object):
 # 
 #             except SerialException as serialError:
 #                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-#                 log('Serial Error: ' + str(serialError))
+#                 self.m.log('Serial Error: ' + str(serialError))
 ## --------------------------------------------------------------------------------------------------------
 
 
@@ -1023,11 +1019,11 @@ class SerialConnection(object):
 #         if serialCommand.find('M30') >= 0: 
 #             pass
 #         elif serialCommand.find ('M3') >= 0 or serialCommand.find ('M03') >= 0:
-#             log("Spindle timer started")
+#             self.m.log("Spindle timer started")
 #             self.spindle_start_time = time.time()
 #             
 #         if serialCommand.find ('M5') >= 0 or serialCommand.find ('M05') >= 0 or serialCommand.find ('M30') >= 0 or serialCommand.find ('M2') >= 0:
-#             log("Spindle timer stopped")
+#             self.m.log("Spindle timer stopped")
 #             self.spindle_finish_time = time.time()
 #             spindle_session_on_seconds = int(self.spindle_finish_time - self.spindle_start_time)
 #             try:
@@ -1038,7 +1034,7 @@ class SerialConnection(object):
 #                 file.write(str(total_up_seconds))
 #                 file.close
 #             except:
-#                 log("Unable to write to " + self.m.spindle_brush_use_file_path)
+#                 self.m.log("Unable to write to " + self.m.spindle_brush_use_file_path)
 # 
 # 
 

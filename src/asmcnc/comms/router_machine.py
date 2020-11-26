@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-from asmcnc.comms import serial_connection  # @UnresolvedImport
+from asmcnc.comms import serial_connection, beaver  # @UnresolvedImport
 from kivy.clock import Clock
 import sys, os
 from datetime import datetime
@@ -17,17 +17,12 @@ from pickle import TRUE
 
 from asmcnc.skavaUI import popup_info
 
-
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
-
-
 class RouterMachine(object):
 
 # SETUP
     
     s = None # serial object
+    b = None # beaver object for logging
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
     grbl_x_max_travel = 1500.0 # measured from true home
@@ -99,6 +94,8 @@ class RouterMachine(object):
         self.sm = screen_manager
         self.set_jog_limits()
 
+        self.b = beaver.Beaver()
+
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm)
         self.s.establish_connection(win_serial_port)
@@ -108,40 +105,43 @@ class RouterMachine(object):
             self.check_presence_of_sb_values_files()
             self.get_persistent_values()
 
+    def log(self, message):
+        self.b.make_log(message)
+
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
         if not path.exists(self.smartbench_values_dir):
-            log("Creating sb_values dir...")
+            self.log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
 
         if not path.exists(self.set_up_options_file_path):
-            log("Creating set up options file...")
+            self.log("Creating set up options file...")
             file = open(self.set_up_options_file_path, "w+")
             file.write(str(self.trigger_setup))
             file.close()
 
         if not path.exists(self.z_touch_plate_thickness_file_path):
-            log("Creating z touch plate thickness file...")
+            self.log("Creating z touch plate thickness file...")
             file = open(self.z_touch_plate_thickness_file_path, "w+")
             file.write(str(self.z_touch_plate_thickness))
             file.close()
 
         if not path.exists(self.z_head_laser_offset_file_path):
-            log("Creating z head laser offset file...")
+            self.log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
             file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
         if not path.exists(self.spindle_brush_values_file_path):
-            log("Creating spindle brush values file...")
+            self.log("Creating spindle brush values file...")
             file = open(self.spindle_brush_values_file_path, "w+")
             file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
             file.close()
 
         if not path.exists(self.spindle_cooldown_settings_file_path):
-            log("Creating spindle cooldown settings file...")
+            self.log("Creating spindle cooldown settings file...")
             file = open(self.spindle_cooldown_settings_file_path, "w+")
             file.write(
                 str(self.spindle_brand) + "\n" + 
@@ -153,13 +153,13 @@ class RouterMachine(object):
             file.close()
 
         if not path.exists(self.calibration_settings_file_path):
-            log('Creating calibration settings file...')
+            self.log('Creating calibration settings file...')
             file = open(self.calibration_settings_file_path, 'w+')
             file.write(str(self.time_since_calibration_seconds) + "\n" + str(self.time_to_remind_user_to_calibrate_seconds))
             file.close()
 
         if not path.exists(self.z_head_maintenance_settings_file_path):
-            log('Creating z head maintenance settings file...')
+            self.log('Creating z head maintenance settings file...')
             file = open(self.z_head_maintenance_settings_file_path, 'w+')
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
@@ -184,11 +184,11 @@ class RouterMachine(object):
             if trigger_bool_string == 'False' or trigger_bool_string == False: self.trigger_setup = False
             else: self.trigger_setup = True
 
-            log("Read in set up options")
+            self.log("Read in set up options")
             return True
 
         except:
-            log("Unable to read in set up options")
+            self.log("Unable to read in set up options")
             return False
 
     def write_set_up_options(self, value):
@@ -199,11 +199,11 @@ class RouterMachine(object):
             file.close()
 
             self.trigger_setup = value
-            log("set up options written to file")
+            self.log("set up options written to file")
             return True
 
         except:
-            log("Unable to write set up options")
+            self.log("Unable to write set up options")
             return False
 
 
@@ -215,11 +215,11 @@ class RouterMachine(object):
             self.z_touch_plate_thickness  = float(file.read())
             file.close()
 
-            log("Read in z touch plate thickness")
+            self.log("Read in z touch plate thickness")
             return True
 
         except:
-            log("Unable to read in z touch plate thickness")
+            self.log("Unable to read in z touch plate thickness")
             return False
 
     def write_z_touch_plate_thickness(self, value):
@@ -230,11 +230,11 @@ class RouterMachine(object):
             file.close()
 
             self.z_touch_plate_thickness = float(value)
-            log("z touch plate thickness written to file")
+            self.log("z touch plate thickness written to file")
             return True
 
         except:
-            log("Unable to write z touch plate thickness")
+            self.log("Unable to write z touch plate thickness")
             return False
 
 
@@ -250,11 +250,11 @@ class RouterMachine(object):
             self.time_since_calibration_seconds = float(read_time_since_calibration_seconds)
             self.time_to_remind_user_to_calibrate_seconds = float(read_time_to_remind_user_to_calibrate_seconds)
 
-            log("Read in calibration settings")
+            self.log("Read in calibration settings")
             return True
 
         except:
-            log("Unable to read calibration settings")
+            self.log("Unable to read calibration settings")
             return False
 
     def write_calibration_settings(self, since_calibration, remind_time):
@@ -266,11 +266,11 @@ class RouterMachine(object):
 
             self.time_since_calibration_seconds = float(since_calibration)
             self.time_to_remind_user_to_calibrate_seconds = float(remind_time)
-            log("calibration settings written to file")
+            self.log("calibration settings written to file")
             return True
 
         except:
-            log("Unable to write calibration settings")
+            self.log("Unable to write calibration settings")
             return False
 
     ## Z HEAD MAINTENANCE SETTINGS REMINDER
@@ -282,11 +282,11 @@ class RouterMachine(object):
             self.time_since_z_head_lubricated_seconds  = float(file.read())
             file.close()
 
-            log("Read in z head maintenance settings")
+            self.log("Read in z head maintenance settings")
             return True
 
         except: 
-            log("Unable to read z head maintenance settings")
+            self.log("Unable to read z head maintenance settings")
             return False
 
     def write_z_head_maintenance_settings(self, value):
@@ -298,11 +298,11 @@ class RouterMachine(object):
 
             self.time_since_z_head_lubricated_seconds = float(value)
 
-            log("Write z head maintenance settings")
+            self.log("Write z head maintenance settings")
             return True
 
         except: 
-            log("Unable to write z head maintenance settings")
+            self.log("Unable to write z head maintenance settings")
             return False
 
     ## LASER DATUM OFFSET
@@ -321,11 +321,11 @@ class RouterMachine(object):
             self.laser_offset_y_value = float(read_laser_offset_y_value)
 
 
-            log("Read in z head laser offset values")
+            self.log("Read in z head laser offset values")
             return True
 
         except: 
-            log("Unable to read z head laser offset values") 
+            self.log("Unable to read z head laser offset values") 
             return False
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
@@ -341,7 +341,7 @@ class RouterMachine(object):
             return True
 
         except: 
-            log("Unable to write z head laser offset values")
+            self.log("Unable to write z head laser offset values")
             return False
 
     ## SPINDLE BRUSH MONITOR
@@ -355,12 +355,12 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(read_brush[0])
             self.spindle_brush_lifetime_seconds = float(read_brush[1])
 
-            log("Read in spindle brush use and lifetime")
+            self.log("Read in spindle brush use and lifetime")
             return True
 
         except: 
 
-            log("Unable to read spindle brush use and lifetime values")
+            self.log("Unable to read spindle brush use and lifetime values")
             return False
 
     def write_spindle_brush_values(self, use, lifetime):
@@ -372,11 +372,11 @@ class RouterMachine(object):
             self.spindle_brush_use_seconds = float(use)
             self.spindle_brush_lifetime_seconds = float(lifetime)
 
-            log("Spindle brush use and lifetime written to file")
+            self.log("Spindle brush use and lifetime written to file")
             return True
 
         except: 
-            log("Unable to write spindle brush use and lifetime values")
+            self.log("Unable to write spindle brush use and lifetime values")
             return False
 
 
@@ -396,11 +396,11 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
-            log("Read in spindle cooldown settings")
+            self.log("Read in spindle cooldown settings")
             return True
 
         except: 
-            log("Unable to read spindle cooldown settings")
+            self.log("Unable to read spindle cooldown settings")
             return False
 
     def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
@@ -422,11 +422,11 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = int(time_seconds)
             self.spindle_cooldown_rpm = int(rpm)
 
-            log("Spindle cooldown settings written to file")
+            self.log("Spindle cooldown settings written to file")
             return True
 
         except: 
-            log("Unable to write spindle cooldown settings")
+            self.log("Unable to write spindle cooldown settings")
             return False
 
 # GRBL SETTINGS
@@ -521,7 +521,7 @@ class RouterMachine(object):
                         '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
                         '$131=' + str(self.s.setting_131),   #Y Max travel, mm
                         '$132=' + str(self.s.setting_132)   #Z Max travel, mm
-                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                        # 'G10 L2 P1 X' + str(s.g54_x) + ' Y' + str(s.g54_y) + ' Z' + str(s.g54_z) # tell GRBL what position it's in                        
                 ]
         else:
             grbl_settings_and_params = [
@@ -560,13 +560,13 @@ class RouterMachine(object):
                         '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
                         '$131=' + str(self.s.setting_131),   #Y Max travel, mm
                         '$132=' + str(self.s.setting_132)   #Z Max travel, mm
-                        # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                        # 'G10 L2 P1 X' + str(s.g54_x) + ' Y' + str(s.g54_y) + ' Z' + str(s.g54_z) # tell GRBL what position it's in                        
                 ]
 
         f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
         f.write(('\n').join(grbl_settings_and_params))
         f.close()
-        log('Saved grbl settings to file')
+        self.log('Saved grbl settings to file')
 
     def restore_grbl_settings_from_file(self, filename):
 
@@ -579,7 +579,7 @@ class RouterMachine(object):
             return True
 
         except:
-            log('Could not read from file')
+            self.log('Could not read from file')
             return False
 
 # ABSOLUTE MACHINE LIMITS
@@ -603,23 +603,23 @@ class RouterMachine(object):
 # HW/FW VERSION CAPABILITY
 
     def fw_can_operate_digital_spindle(self):
-        # log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
+        # self.log("FW version to operate digital spindles doesn't exist yet, but it's coming!")
         return False
 
     # def fw_can_operate_laser_commands(self):
     #     output = self.is_machines_fw_version_equal_to_or_greater_than_version('1.1.2', 'laser commands AX and AZ')
-    #     log('FW version able to operate laser commands AX and AZ: ' + str(output))
+    #     self.log('FW version able to operate laser commands AX and AZ: ' + str(output))
     #     return output      
 
     def hw_can_operate_laser_commands(self):
         output = self.is_machines_hw_version_equal_to_or_greater_than_version('8', 'laser commands AX and AZ') # Update to version 8, but need 6 to test on rig
-        log('HW version able to operate laser commands AX and AZ: ' + str(output))
+        self.log('HW version able to operate laser commands AX and AZ: ' + str(output))
         return output  
 
 
     def fw_can_operate_zUp_on_pause(self):
 
-        log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
+        self.log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
         return self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')
     
 
@@ -638,7 +638,7 @@ class RouterMachine(object):
             except:
                 error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
                 ".\n\n Please check Z Head connection."
-                log(error_description)
+                self.log(error_description)
 
                 return False
             
@@ -673,7 +673,7 @@ class RouterMachine(object):
             except:
                 error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
                 ".\n\n Please check Z Head connection."
-                log(error_description)
+                self.log(error_description)
 
                 return False
 
@@ -857,28 +857,28 @@ class RouterMachine(object):
 
     def _stop_all_streaming(self):
         # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
-        log('Streaming stopped.')
+        self.log('Streaming stopped.')
         if self.s.is_job_streaming == True: self.s.cancel_stream() 
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     def _grbl_resume(self):
-        log('grbl realtime cmd sent: ~ resume')
+        self.log('grbl realtime cmd sent: ~ resume')
         self.s.write_realtime('~', altDisplayText = 'Resume')
 
     def _grbl_feed_hold(self):
-        log('grbl realtime cmd sent: ! feed-hold')
+        self.log('grbl realtime cmd sent: ! feed-hold')
         self.s.write_realtime('!', altDisplayText = 'Feed hold')
 
     def _grbl_soft_reset(self):
-        log('grbl realtime cmd sent: \\x18 soft reset')
+        self.log('grbl realtime cmd sent: \\x18 soft reset')
         self.s.write_realtime("\x18", altDisplayText = 'Soft reset')
 
     def _grbl_door(self):
-        log('grbl realtime cmd sent: \\x84')
+        self.log('grbl realtime cmd sent: \\x84')
         self.s.write_realtime('\x84', altDisplayText = 'Door')
     
     def _grbl_unlock(self):
-        log('grbl realtime cmd sent: $X unlock')
+        self.log('grbl realtime cmd sent: $X unlock')
         self.s.write_command('$X', altDisplayText = 'Unlock: $X')
 
 
@@ -909,13 +909,13 @@ class RouterMachine(object):
         if self.s.m_state != "Check":
             Clock.schedule_once(lambda dt: self.s.write_command('$C', altDisplayText = 'Check mode ON'), 0.2)
         else:
-            log('Check mode already enabled')
+            self.log('Check mode already enabled')
 
     def disable_check_mode(self):
         if self.s.m_state == "Check":
             self.s.write_command('$C', altDisplayText = 'Check mode OFF')
         else:
-            log('Check mode already disabled')
+            self.log('Check mode already disabled')
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 0.1)
 
     def get_switch_states(self):

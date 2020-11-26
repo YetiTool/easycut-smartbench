@@ -37,9 +37,10 @@ Builder.load_string("""
             do_scale: True
 """)
 
+
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
 class StencilBox(StencilView, BoxLayout):

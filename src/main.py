@@ -113,23 +113,19 @@ if sys.platform != 'win32' and sys.platform != 'darwin':
 
     print start_screen
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
 
 class SkavaUI(App):
 
 
     def build(self):
 
-        log("Starting App:")
-        
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm)
+
+        m.log("Starting App:")
         
         job_gcode = []  # declare g-code object
         
@@ -204,7 +200,7 @@ class SkavaUI(App):
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = start_screen
 
-        log('Screen manager activated: ' + str(sm.current))
+        m.log('Screen manager activated: ' + str(sm.current))
 
         return sm
 

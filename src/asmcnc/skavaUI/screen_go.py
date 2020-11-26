@@ -348,12 +348,6 @@ Builder.load_string("""
 
 """)
 
-
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
-
-
 class GoScreen(Screen):
 
     job_filename = ""
@@ -487,7 +481,7 @@ class GoScreen(Screen):
    
     def start_or_pause_button_press(self):
 
-        log('start/pause button pressed')
+        self.m.log('start/pause button pressed')
         if self.is_job_started_already:
             self._pause_job()
         else:
@@ -504,7 +498,7 @@ class GoScreen(Screen):
     def _start_running_job(self):
 
         self.is_job_started_already = True
-        log('Starting job...')
+        self.m.log('Starting job...')
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
         # Hide back button
         self.btn_back_img.source = './asmcnc/skavaUI/img/file_running.png'
@@ -553,10 +547,10 @@ class GoScreen(Screen):
 
         try:
             self.m.s.run_job(modified_job_gcode)
-            log('Job started ok from go screen...')
+            self.m.log('Job started ok from go screen...')
 
         except:
-            log('Job start from go screen failed!')
+            self.m.log('Job start from go screen failed!')
 
 
     def return_to_app(self):
@@ -621,7 +615,7 @@ class GoScreen(Screen):
         elif state == 80: self.overload_status_label.text = "[color=DE5003][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
-        else: log('Overload state not recognised: ' + str(state))
+        else: self.m.log('Overload state not recognised: ' + str(state))
 
 
 
