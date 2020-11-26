@@ -19,6 +19,7 @@ class Beaver(object):
     def __init__(self):
         self.make_log("Start beaver...")
         Clock.schedule_interval(self.sustain_dam, 10)
+        Clock.schedule_interval(self.sustain_dam, 300)
 
     def make_log(self, message):
         timestamp = datetime.now()
@@ -30,12 +31,10 @@ class Beaver(object):
         print log
         os.system("sed -i \'1s/^/" + log + "\\n/ \' " + dam_path)
 
-    def sustain_dam(self, dt):
+    def sustain_dam_list(self, dt):
         if len(self.dam) > 60:
             self.dam = self.dam[-60:]
 
-# ;10000q;p
-
-
-
-# os.system("sed -i \'1s/^/" + log + "\\n/\'; " + dam_path)
+# add sed truncating function
+    def sustain_dam_file(self, dt):
+       os.system(" sed -i \'20000001,$ d\' " + dam_path)
