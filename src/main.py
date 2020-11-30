@@ -67,10 +67,12 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.4.3'
+current_version = 'v1.4.3'
 
 # default starting screen
 start_screen = 'welcome'
+
+do_update = False
 
 # Config management
 def check_and_update_gpu_mem():
@@ -87,15 +89,25 @@ def check_and_update_config():
         if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
             os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
             os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
-            os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
+            os.system('sudo sed -i "s/version=0/version=' + current_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
     
     if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
         ver0_configuration()
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-        check_and_update_gpu_mem()
+        check_and_update_gpu_mem() # replace this with a platform update
+
+        # does a full software update need to happen here?
+        check_for_updates_and_launch_update_screen()
 
         # if software update has happened, launch the power cycle screen instead
         check_and_launch_powercycle_screen()        
+
+def check_for_updates_and_launch_update_screen():
+    if not (os.popen('grep "update_flag=False" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('update_flag=False')
+        do_update = True
+        os.system('sudo sed -i "s/update_flag=True/update_flag=False/" /home/pi/easycut-smartbench/src/config.txt')
+
+        # Instead of updating anything here, update this config file using ansible (which will work!)
 
 def check_and_launch_powercycle_screen():
     # Check whether machine needs to be power cycled (currently only after a software update)
@@ -208,7 +220,32 @@ class SkavaUI(App):
 
         return sm
 
+class Updater(App):
+
+    def build(self):
+
+        log("Starting Updater:")
+        
+        # Establish screens
+        sm = ScreenManager(transition=NoTransition())
+
+        # Get settings manager
+        sett = settings_manager.Settings(sm)
+
+        # get updating screen
+
+
+        ###
+
+        return sm
+
+
 if __name__ == '__main__':
 
-    SkavaUI().run()
+    if not do_update:
+
+        SkavaUI().run()
     
+    else:
+
+        Updater().run()

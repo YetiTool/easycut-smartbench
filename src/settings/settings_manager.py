@@ -43,6 +43,15 @@ class Settings(object):
 
 ## VERSION REFRESH
         
+    def refresh_version_matrix(self):
+        self.platform_version = str(os.popen("cd /home/pi/smartbench-version-matrix/ && git describe --tags").read()).strip('\n')
+        self.pl_hash = str(os.popen("cd /home/pi/smartbench-version-matrix/ && git rev-parse --short HEAD").read()).strip('\n')
+        self.pl_branch = str(os.popen("cd /home/pi/smartbench-version-matrix/ && git branch | grep \*").read()).strip('\n')
+
+    def refresh_latest_matrix_version(self):
+        os.system("cd /home/pi/smartbench-version-matrix/ && git fetch --tags --quiet")
+        self.latest_platform_version = str(os.popen("cd /home/pi/smartbench-version-matrix/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
+
     def refresh_sw_version(self):
         self.sw_version = str(os.popen("git describe --tags").read()).strip('\n')
         self.sw_hash = str(os.popen("git rev-parse --short HEAD").read()).strip('\n')
