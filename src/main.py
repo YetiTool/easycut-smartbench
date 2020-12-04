@@ -5,7 +5,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 
-# test-proof
+# test-proof-2
 #config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
