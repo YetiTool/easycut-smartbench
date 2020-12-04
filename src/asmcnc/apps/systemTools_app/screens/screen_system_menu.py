@@ -19,7 +19,7 @@ Builder.load_string("""
 
     canvas.before:
         Color: 
-            rgba: hex('#0d47a1FF')
+            rgba: hex('#f9f9f9ff')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -27,50 +27,170 @@ Builder.load_string("""
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding: 10
-        spacing: 10
+        padding: [dp(8.33), dp(60)]
+        spacing: [dp(8.33), dp(60)]
         cols: 5
         rows: 2
 
 		Button:
-			text: 'Go Back'
-			on_press: root.go_back()
-
-		Button:
-			text: 'Build Info'
+			text: 'System Info'
 			on_press: root.go_to_build_info()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'Download Logs'
 			on_press: root.download_logs()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'Reboot'
 			on_press: root.reboot()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
         Button:
             text: 'Quit to Console'
             on_press: root.quit_to_console()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'Beta Testing'
 			on_press: root.beta_testing()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'GRBL Settings'
 			on_press: root.grbl_settings()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'Factory Settings'
 			on_press: root.factory_settings()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
         Button:
             text: 'Update testing'
             on_press: root.update_testing()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 		Button:
 			text: 'Developer'
 			on_press: root.developer()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+        Button:
+            text: 'Go Back'
+            on_press: root.go_back()
+            background_normal: ''
+            background_color: hex('#f9f9f9ff')
+            BoxLayout:
+                padding: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                Image:
+                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
 """)
 
