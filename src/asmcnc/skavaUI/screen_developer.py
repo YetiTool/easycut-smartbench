@@ -20,6 +20,7 @@ from asmcnc.comms import usb_storage
 import sys, os
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps import screen_measurement_jig
 
 PLATFORM_REPOSITORY = "https://github.com/YetiTool/console-raspi3b-plus-platform.git"
 PLATFORM_DIRECTORY = "/home/pi/console-raspi3b-plus-platform"
@@ -65,9 +66,8 @@ Builder.load_string("""
             size_hint_y: 0.4
 
             Button:
-                text: 'Allow Remote Access'
-#                 on_press: root.allow_access()
-                disabled: 'true'
+                text: 'Y measurement test'
+                on_press: root.open_measurement_test()
                 
             Button:
                 text: 'Download logs'
@@ -617,6 +617,12 @@ class DeveloperScreen(Screen):
 #         # sys.exit()
 #     
 
+    def open_measurement_test(self):
+        self.current_app = 'system_tools'
+        if not self.sm.has_screen('y_measurement_jig'):
+            y_measurement_jig_screen = screen_measurement_jig.JigScreen(name = 'y_measurement_jig', screen_manager = self.sm, machine = self.m)
+            self.sm.add_widget(y_measurement_jig_screen)
+        self.sm.current = 'y_measurement_jig'
 
 
 

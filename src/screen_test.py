@@ -12,8 +12,10 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_door
+from asmcnc.apps import screen_measurement_jig
+from asmcnc.comms import router_machine
 
+Cmport = 'COM3'
 
 class ScreenTest(App):
 
@@ -21,7 +23,8 @@ class ScreenTest(App):
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
-		door_test_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm)
+		m = router_machine.RouterMachine(Cmport, sm)
+		door_test_screen = screen_measurement_jig.JigScreen(name = 'door', screen_manager = sm, machine = m)
 		sm.add_widget(door_test_screen)
 		sm.current = 'door'
 		return sm
