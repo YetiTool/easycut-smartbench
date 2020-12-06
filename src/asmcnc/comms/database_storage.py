@@ -25,7 +25,7 @@ def log(message):
 try:
     import pika
 except:
-    log("Couldn't import pika lib - has it been installed on platform?")
+    log("Couldn't import pika lib - has it been installed on platform? To install: python -m pip install pika --upgrade")
 
 class DatabaseStorage(object):
 
