@@ -195,11 +195,11 @@ class JigScreen(Screen):
     def run_stop_test(self):
 
         if self.go_stop.state == 'down':
-            self.go_stop.text = 'STOP'
             self.go_stop.background_color = [1,0,0,1]
+            self.go_stop.text = 'STOP'
             self.starting_pos = self.m.mpos_y()
             self.max_pos = self.set_max_pos()
-            self.test_run = Clock.schedule_interval(self.do_test_step, 2)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
         elif self.go_stop.state == 'normal':
             Clock.unschedule(self.test_run)
@@ -217,7 +217,7 @@ class JigScreen(Screen):
     def do_test_step(self, dt):
 
         if self.direction == 'forward':
-            if self.m.state() == 'Run':
+            if self.m.state() == 'Jog':
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
@@ -230,7 +230,7 @@ class JigScreen(Screen):
                 Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
 
         else:
-            if self.m.state() == 'Run':
+            if self.m.state() == 'Jog':
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
