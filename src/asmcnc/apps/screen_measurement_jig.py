@@ -124,7 +124,7 @@ Builder.load_string("""
                     id: go_stop
                     text: "GO"
                     on_press: root.run_stop_test()
-                    background_color: [0,0,0,0.2]
+                    background_color: [0,0,0,1]
                     background_normal: ''
                 Button:
                     text: "RESET"
@@ -182,7 +182,7 @@ class JigScreen(Screen):
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
-            self.go_stop.background_color = [0,(128/255),0,1]
+            self.go_stop.background_color = [0,0.502,0,1]
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
@@ -286,7 +286,7 @@ class JigScreen(Screen):
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
-        self.go_stop.background_color = [0,128/255,0,1]
+        self.go_stop.background_color = [0,0.502,0,1]
 
     def clear_data(self):
         self.test_data = [['mY', 'L', 'R']]
