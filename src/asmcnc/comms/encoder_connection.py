@@ -65,6 +65,7 @@ class EncoderConnection(object):
 
         if self.is_connected():
             log('Initialising grbl...')
+            Clock.schedule_once(self.start_services, 1)
 
     # is serial port connected?
     def is_connected(self):
