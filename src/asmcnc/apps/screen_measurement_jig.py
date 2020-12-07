@@ -39,8 +39,7 @@ Builder.load_string("""
     wheel_far:wheel_far
     go_stop: go_stop
     dir_toggle:dir_toggle
-    
-    background_color: hex('#E5E5E5FF')
+    bg_color: bg_color
 
     BoxLayout:
         padding: 0
@@ -49,7 +48,8 @@ Builder.load_string("""
 
         canvas:
             Color:
-                rgba: root.background_color
+                id: bg_color
+                rgba: hex('#E5E5E5FF')
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -181,6 +181,7 @@ class JigScreen(Screen):
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
+            self.bg_color.rgba = hex('#00FF00FF')
 
 
     def toggle_direction(self):
