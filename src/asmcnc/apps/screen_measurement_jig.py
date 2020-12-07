@@ -220,26 +220,36 @@ class JigScreen(Screen):
             if self.m.state() == 'Jog':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
+            elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', 10, 6000)
 
-            else: 
+            elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
                 Clock.unschedule(self.test_run)
                 self.go_stop.text = 'UPLOADING...'
                 Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
+            else: 
+                Clock.unschedule(self.test_run)
+                self.go_stop.state = 'normal'
+                self.go_stop.text = 'GO'
+                self.go_stop.background_color = [0,0.502,0,1]
 
         else:
             if self.m.state() == 'Jog':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
+            elif self.m.state() == 'Idle' and self.m.mpos_y() >= self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', -10, 6000)
-            else: 
+            elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 Clock.unschedule(self.test_run)
                 self.go_stop.text = 'UPLOADING...'
                 Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
+            else: 
+                Clock.unschedule(self.test_run)
+                self.go_stop.state = 'normal'
+                self.go_stop.text = 'GO'
+                self.go_stop.background_color = [0,0.502,0,1]
 
 
     def send_data_to_gsheet(self, rows):
