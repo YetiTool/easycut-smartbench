@@ -182,7 +182,7 @@ class JigScreen(Screen):
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
-            self.go_stop.background_color = [0,1,0,1]
+            self.go_stop.background_color = [0,128/255,0,1]
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
@@ -196,9 +196,9 @@ class JigScreen(Screen):
 
         if self.go_stop.state == 'down':
             self.go_stop.text = 'STOP'
+            self.go_stop.background_color = [0,1,0,1]
             self.starting_pos = self.m.mpos_y()
             self.max_pos = self.set_max_pos()
-
             self.test_run = Clock.schedule_interval(self.do_test_step, 2)
 
         elif self.go_stop.state == 'normal':
@@ -286,6 +286,7 @@ class JigScreen(Screen):
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
+        self.go_stop.background_color = [0,128/255,0,1]
 
     def clear_data(self):
         self.test_data = [['mY', 'L', 'R']]
