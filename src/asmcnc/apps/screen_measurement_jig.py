@@ -21,6 +21,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_move
+from asmcnc.comms import encoder_connection
 
 
 Builder.load_string("""
@@ -167,6 +168,10 @@ class JigScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
+        # Establish 's'erial comms and initialise
+        self.e = encoder_connection.EncoderConnection(self, self.sm)
+        self.e.establish_connection()
+
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
@@ -247,44 +252,44 @@ class JigScreen(Screen):
 
     def send_data_to_gsheet(self, rows):
 
-        ## GSHEET SETUP
-        scope = [
-            'https://www.googleapis.com/auth/drive',
-            'https://www.googleapis.com/auth/drive.file'
-            ]
-        file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-        client = gspread.authorize(creds)
+        # ## GSHEET SETUP
+        # scope = [
+        #     'https://www.googleapis.com/auth/drive',
+        #     'https://www.googleapis.com/auth/drive.file'
+        #     ]
+        # file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
+        # creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+        # client = gspread.authorize(creds)
         
-        #Set the sheet to dump to
-        name_of_GSheet = 'Y axis linear calibration'
-        spread= client.open(name_of_GSheet)
-        UL_data_worksheet_name = "Data dump"
+        # #Set the sheet to dump to
+        # name_of_GSheet = 'Y axis linear calibration'
+        # spread= client.open(name_of_GSheet)
+        # UL_data_worksheet_name = "Data dump"
 
-        print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
-        sheet = spread.worksheet(UL_data_worksheet_name)
-        spread.values_clear(UL_data_worksheet_name)
+        # print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
+        # sheet = spread.worksheet(UL_data_worksheet_name)
+        # spread.values_clear(UL_data_worksheet_name)
 
-        print ("Writing stock values to GSheet...")
-        sheet.update('A1:G', rows)
+        # print ("Writing stock values to GSheet...")
+        # sheet.update('A1:G', rows)
 
-        print ("Updating job stats...")
-        sheet = spread.worksheet("Test info")
-        current_utc =   datetime.utcnow()
-        # Time
-        sheet.update('B1', str(current_utc))
-        # Bench ID:
-        sheet.update('B2', str(self.bench_id.text))
-        # Test ID: 
-        sheet.update('B3', str(self.test_id.text))
-        # Travel: 
-        sheet.update('B4', str(self.travel.text))
-        # Wheel diameter HOME:
-        sheet.update('B5', str(self.wheel_home.text))
-        # Wheel diameter FAR:
-        sheet.update('B6', str(self.wheel_far.text))        
-        # Direction: 
-        sheet.update('B7', str(self.direction)) 
+        # print ("Updating job stats...")
+        # sheet = spread.worksheet("Test info")
+        # current_utc =   datetime.utcnow()
+        # # Time
+        # sheet.update('B1', str(current_utc))
+        # # Bench ID:
+        # sheet.update('B2', str(self.bench_id.text))
+        # # Test ID: 
+        # sheet.update('B3', str(self.test_id.text))
+        # # Travel: 
+        # sheet.update('B4', str(self.travel.text))
+        # # Wheel diameter HOME:
+        # sheet.update('B5', str(self.wheel_home.text))
+        # # Wheel diameter FAR:
+        # sheet.update('B6', str(self.wheel_far.text))        
+        # # Direction: 
+        # sheet.update('B7', str(self.direction)) 
         print ("ALL DONE!!! You're welcome.")
 
         self.go_stop.state = 'normal'
