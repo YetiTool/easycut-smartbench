@@ -20,6 +20,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_move
 from asmcnc.comms import encoder_connection
 
@@ -164,6 +165,7 @@ class JigScreen(Screen):
     test_data = [['mY', 'L', 'R']]
     starting_pos = 0
     max_pos = 0
+    bg_color = ObjectProperty()
 
     def __init__(self, **kwargs):
 
