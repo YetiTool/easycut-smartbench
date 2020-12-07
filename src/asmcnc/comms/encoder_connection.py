@@ -26,6 +26,8 @@ class EncoderConnection(object):
     
     monitor_text_buffer = ""
 
+    L_side = ''
+    R_side = ''
 
     def __init__(self, machine, screen_manager):
 
@@ -64,7 +66,7 @@ class EncoderConnection(object):
             log('No arduino connected')
 
         if self.is_connected():
-            log('Initialising grbl...')
+            log('Initialising encoder...')
             Clock.schedule_once(self.start_services, 1)
 
     # is serial port connected?
@@ -81,7 +83,6 @@ class EncoderConnection(object):
 
         log('Starting services')
         self.e.flushInput()  # Flush startup text in serial input
-        self.next_poll_time = time.time()
         t = threading.Thread(target=self.encoder_scanner)
         t.daemon = True
         t.start()
@@ -101,13 +102,13 @@ class EncoderConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.e.readline().strip() #Block the executing thread indefinitely until a line arrives
-                    self.grbl_out = rec_temp;
-                    # print self.grbl_out
+
                 except Exception as exc:
                     log('serial.readline exception:\n' + str(exc))
                     rec_temp = ''
             else: 
                 rec_temp = ''
+                log("nothing in waiting")
 
             # If something received from serial buffer, process it. 
             if len(rec_temp):
@@ -131,5 +132,8 @@ class EncoderConnection(object):
     def process_grbl_push(self, message):
     	# this just needs to translate pulses out into actions
     	log(message)
+
+        self.L_side = message[0]
+        self.R_side = message[1]
 
 

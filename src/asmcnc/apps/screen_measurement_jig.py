@@ -229,7 +229,7 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() < float(self.travel.text):
-                self.test_data.append([str(round(self.m.mpos_y(), 2)),'L','R'])
+                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', 10, 6000)
 
             else: 
@@ -242,7 +242,7 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > 10:
-                self.test_data.append([str(round(self.m.mpos_y(), 2)),'L','R'])
+                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', -10, 6000)
             else: 
                 Clock.unschedule(self.test_run)
@@ -252,44 +252,44 @@ class JigScreen(Screen):
 
     def send_data_to_gsheet(self, rows):
 
-        # ## GSHEET SETUP
-        # scope = [
-        #     'https://www.googleapis.com/auth/drive',
-        #     'https://www.googleapis.com/auth/drive.file'
-        #     ]
-        # file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-        # creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-        # client = gspread.authorize(creds)
+        ## GSHEET SETUP
+        scope = [
+            'https://www.googleapis.com/auth/drive',
+            'https://www.googleapis.com/auth/drive.file'
+            ]
+        file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
+        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+        client = gspread.authorize(creds)
         
-        # #Set the sheet to dump to
-        # name_of_GSheet = 'Y axis linear calibration'
-        # spread= client.open(name_of_GSheet)
-        # UL_data_worksheet_name = "Data dump"
+        #Set the sheet to dump to
+        name_of_GSheet = 'Y axis linear calibration'
+        spread= client.open(name_of_GSheet)
+        UL_data_worksheet_name = "Data dump"
 
-        # print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
-        # sheet = spread.worksheet(UL_data_worksheet_name)
-        # spread.values_clear(UL_data_worksheet_name)
+        print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
+        sheet = spread.worksheet(UL_data_worksheet_name)
+        spread.values_clear(UL_data_worksheet_name)
 
-        # print ("Writing stock values to GSheet...")
-        # sheet.update('A1:G', rows)
+        print ("Writing stock values to GSheet...")
+        sheet.update('A1:G', rows)
 
-        # print ("Updating job stats...")
-        # sheet = spread.worksheet("Test info")
-        # current_utc =   datetime.utcnow()
-        # # Time
-        # sheet.update('B1', str(current_utc))
-        # # Bench ID:
-        # sheet.update('B2', str(self.bench_id.text))
-        # # Test ID: 
-        # sheet.update('B3', str(self.test_id.text))
-        # # Travel: 
-        # sheet.update('B4', str(self.travel.text))
-        # # Wheel diameter HOME:
-        # sheet.update('B5', str(self.wheel_home.text))
-        # # Wheel diameter FAR:
-        # sheet.update('B6', str(self.wheel_far.text))        
-        # # Direction: 
-        # sheet.update('B7', str(self.direction)) 
+        print ("Updating job stats...")
+        sheet = spread.worksheet("Test info")
+        current_utc =   datetime.utcnow()
+        # Time
+        sheet.update('B1', str(current_utc))
+        # Bench ID:
+        sheet.update('B2', str(self.bench_id.text))
+        # Test ID: 
+        sheet.update('B3', str(self.test_id.text))
+        # Travel: 
+        sheet.update('B4', str(self.travel.text))
+        # Wheel diameter HOME:
+        sheet.update('B5', str(self.wheel_home.text))
+        # Wheel diameter FAR:
+        sheet.update('B6', str(self.wheel_far.text))        
+        # Direction: 
+        sheet.update('B7', str(self.direction)) 
         print ("ALL DONE!!! You're welcome.")
 
         self.go_stop.state = 'normal'
