@@ -28,6 +28,8 @@ class EncoderConnection(object):
 
     L_side = ''
     R_side = ''
+    Z_L = ''
+    Z_R = ''
 
     def __init__(self, machine, screen_manager):
 
@@ -131,6 +133,15 @@ class EncoderConnection(object):
     def process_grbl_push(self, message):
     	# this just needs to translate pulses out into actions
     	log(message)
+
+        parts = message.split('|')
+        for part in parts:
+            if.part.startswith('L:')
+                self.L_side = (part.split(':'))[1]
+            if.part.startswith('R:')
+                self.R_side = (part.split(':'))[1]
+            if.part.startswith('Z:')
+                self.Z_L = (part.split(':'))[1]
 
         # self.L_side = message[0]
         # self.R_side = message[1]
