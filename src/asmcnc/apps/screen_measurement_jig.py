@@ -40,7 +40,6 @@ Builder.load_string("""
     wheel_far:wheel_far
     go_stop: go_stop
     dir_toggle:dir_toggle
-    bg_color: bg_color
 
     BoxLayout:
         padding: 0
@@ -49,7 +48,6 @@ Builder.load_string("""
 
         canvas:
             Color:
-                id: bg_color
                 rgba: hex('#E5E5E5FF')
             Rectangle:
                 size: self.size
@@ -126,6 +124,8 @@ Builder.load_string("""
                     id: go_stop
                     text: "GO"
                     on_press: root.run_stop_test()
+                    background_color: [0,0,0,0.5]
+                    background_normal: ''
                 Button:
                     text: "RESET"
                     on_press: root.clear_data()
@@ -176,15 +176,13 @@ class JigScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
-        self.bg_color = ObjectProperty()
 
     def on_enter(self):
         # Establish 's'erial comms and initialise
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
-            self.bg_color.rgba = hex('#00FF00FF')
-
+            self.go_stop.background_color: [0,1,0,1]
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
