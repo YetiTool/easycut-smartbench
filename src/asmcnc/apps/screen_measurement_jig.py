@@ -124,7 +124,7 @@ Builder.load_string("""
                     id: go_stop
                     text: "GO"
                     on_press: root.run_stop_test()
-                    background_color: [0,0,0,0.5]
+                    background_color: [0,0,0,0.2]
                     background_normal: ''
                 Button:
                     text: "RESET"
@@ -182,7 +182,7 @@ class JigScreen(Screen):
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
-            self.go_stop.background_color = [0,128/255,0,1]
+            self.go_stop.background_color = [0,(128/255),0,1]
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
@@ -196,7 +196,7 @@ class JigScreen(Screen):
 
         if self.go_stop.state == 'down':
             self.go_stop.text = 'STOP'
-            self.go_stop.background_color = [0,1,0,1]
+            self.go_stop.background_color = [1,0,0,1]
             self.starting_pos = self.m.mpos_y()
             self.max_pos = self.set_max_pos()
             self.test_run = Clock.schedule_interval(self.do_test_step, 2)
@@ -220,7 +220,7 @@ class JigScreen(Screen):
             if self.m.state() == 'Run':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
+            elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', 10, 6000)
 
@@ -233,7 +233,7 @@ class JigScreen(Screen):
             if self.m.state() == 'Run':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
+            elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', -10, 6000)
             else: 
