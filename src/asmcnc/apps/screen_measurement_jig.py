@@ -176,27 +176,27 @@ class JigScreen(Screen):
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
 
-    def on_enter(self):
+    # def on_enter(self):
 
-        try: 
-            #Authorize the API
-            scope = [
-                'https://www.googleapis.com/auth/drive',
-                'https://www.googleapis.com/auth/drive.file'
-                ]
-            file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-            creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-            client = gspread.authorize(creds)
+    #     try: 
+    #         #Authorize the API
+    #         scope = [
+    #             'https://www.googleapis.com/auth/drive',
+    #             'https://www.googleapis.com/auth/drive.file'
+    #             ]
+    #         file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
+    #         creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+    #         client = gspread.authorize(creds)
 
-        except: 
-            os.system('pip install gspread oauth2client')
-            scope = [
-                'https://www.googleapis.com/auth/drive',
-                'https://www.googleapis.com/auth/drive.file'
-                ]
-            file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-            creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-            client = gspread.authorize(creds)
+    #     except: 
+    #         os.system('pip install gspread oauth2client')
+    #         scope = [
+    #             'https://www.googleapis.com/auth/drive',
+    #             'https://www.googleapis.com/auth/drive.file'
+    #             ]
+    #         file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
+    #         creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+    #         client = gspread.authorize(creds)
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
