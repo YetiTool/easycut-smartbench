@@ -40,6 +40,8 @@ Builder.load_string("""
     go_stop: go_stop
     dir_toggle:dir_toggle
     
+    background_color: hex('#E5E5E5FF')
+
     BoxLayout:
         padding: 0
         spacing: 0
@@ -47,7 +49,7 @@ Builder.load_string("""
 
         canvas:
             Color:
-                rgba: hex('#E5E5E5FF')
+                rgba: root.background_color
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -160,6 +162,8 @@ class JigScreen(Screen):
 
     direction = 'forward'
     test_data = [['mY', 'L', 'R']]
+    starting_pos = 0
+    max_pos = 0
 
     def __init__(self, **kwargs):
 
@@ -168,35 +172,16 @@ class JigScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
-        # Establish 's'erial comms and initialise
-        self.e = encoder_connection.EncoderConnection(self, self.sm)
-        self.e.establish_connection()
-
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
 
-    # def on_enter(self):
+    def on_enter(self):
+        # Establish 's'erial comms and initialise
+        self.e = encoder_connection.EncoderConnection(self, self.sm)
+        self.e.establish_connection()
+        if self.e.is_connected():
 
-    #     try: 
-    #         #Authorize the API
-    #         scope = [
-    #             'https://www.googleapis.com/auth/drive',
-    #             'https://www.googleapis.com/auth/drive.file'
-    #             ]
-    #         file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-    #         creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-    #         client = gspread.authorize(creds)
-
-    #     except: 
-    #         os.system('pip install gspread oauth2client')
-    #         scope = [
-    #             'https://www.googleapis.com/auth/drive',
-    #             'https://www.googleapis.com/auth/drive.file'
-    #             ]
-    #         file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-    #         creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-    #         client = gspread.authorize(creds)
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
@@ -206,11 +191,13 @@ class JigScreen(Screen):
             self.dir_toggle.text = 'Going Forwards'
             direction = 'forward'
 
-
     def run_stop_test(self):
 
         if self.go_stop.state == 'down':
             self.go_stop.text = 'STOP'
+            self.starting_pos = self.m.mpos_y()
+            self.max_pos = self.set_max_pos()
+
             self.test_run = Clock.schedule_interval(self.do_test_step, 2)
 
         elif self.go_stop.state == 'normal':
@@ -218,6 +205,13 @@ class JigScreen(Screen):
             self.go_stop.text = 'UPLOADING...'
             Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
 
+    def set_max_pos(self):
+
+        if self.direction == 'forward':
+            return self.starting_pos + float(self.travel.text)
+
+        elif self.direction == 'backward':
+            return self.starting_pos - float(self.travel.text)
 
     def do_test_step(self, dt):
 
@@ -225,7 +219,7 @@ class JigScreen(Screen):
             if self.m.state() == 'Run':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() < float(self.travel.text):
+            elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', 10, 6000)
 
@@ -238,7 +232,7 @@ class JigScreen(Screen):
             if self.m.state() == 'Run':
                 pass
 
-            elif self.m.state() == 'Idle' and self.m.mpos_y() > 10:
+            elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
                 self.m.jog_relative('Y', -10, 6000)
             else: 
@@ -298,6 +292,8 @@ class JigScreen(Screen):
     def go_to_lobby(self):
         self.sm.current = 'lobby'
 
+    def on_leave(self):
+        self.e.__del__()
 
 
 
