@@ -165,7 +165,6 @@ class JigScreen(Screen):
     test_data = [['mY', 'L', 'R']]
     starting_pos = 0
     max_pos = 0
-    bg_color = ObjectProperty()
 
     def __init__(self, **kwargs):
 
@@ -177,6 +176,7 @@ class JigScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
+        self.bg_color = ObjectProperty()
 
     def on_enter(self):
         # Establish 's'erial comms and initialise
