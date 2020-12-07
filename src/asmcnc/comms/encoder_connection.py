@@ -86,9 +86,9 @@ class EncoderConnection(object):
         t.daemon = True
         t.start()
 
-    def grbl_scanner(self):
+    def encoder_scanner(self):
         
-        log('Running grbl_scanner thread')
+        log('Running encoder_scanner thread')
 
         while True:
 
