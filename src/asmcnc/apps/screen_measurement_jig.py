@@ -187,10 +187,10 @@ class JigScreen(Screen):
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
             self.dir_toggle.text = 'Going Backwards'
-            direction = 'backward'
+            self.direction = 'backward'
         elif self.dir_toggle.state == 'normal':
             self.dir_toggle.text = 'Going Forwards'
-            direction = 'forward'
+            self.direction = 'forward'
 
     def run_stop_test(self):
 
