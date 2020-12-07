@@ -136,11 +136,11 @@ class EncoderConnection(object):
 
         parts = message.split('|')
         for part in parts:
-            if.part.startswith('L:')
+            if part.startswith('L:')
                 self.L_side = (part.split(':'))[1]
-            if.part.startswith('R:')
+            if part.startswith('R:')
                 self.R_side = (part.split(':'))[1]
-            if.part.startswith('Z:')
+            if part.startswith('Z:')
                 self.Z_L = (part.split(':'))[1]
 
         # self.L_side = message[0]
