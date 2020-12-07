@@ -132,7 +132,7 @@ class EncoderConnection(object):
     	# this just needs to translate pulses out into actions
     	log(message)
 
-        self.L_side = message[0]
-        self.R_side = message[1]
+        # self.L_side = message[0]
+        # self.R_side = message[1]
 
 
