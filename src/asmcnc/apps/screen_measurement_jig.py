@@ -182,7 +182,7 @@ class JigScreen(Screen):
         self.e = encoder_connection.EncoderConnection(self, self.sm)
         self.e.establish_connection()
         if self.e.is_connected():
-            self.go_stop.background_color: [0,1,0,1]
+            self.go_stop.background_color = [0,1,0,1]
 
     def toggle_direction(self):
         if self.dir_toggle.state == 'down':
