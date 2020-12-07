@@ -108,7 +108,6 @@ class EncoderConnection(object):
                     rec_temp = ''
             else: 
                 rec_temp = ''
-                log("nothing in waiting")
 
             # If something received from serial buffer, process it. 
             if len(rec_temp):

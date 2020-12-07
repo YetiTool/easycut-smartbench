@@ -221,9 +221,6 @@ class JigScreen(Screen):
 
     def do_test_step(self, dt):
 
-        self.test_data.append([str(round(self.m.mpos_y(), 2)),'L','R'])
-        self.m.jog_relative('Y', 10, 6000)
-
         if self.direction == 'forward':
             if self.m.state() == 'Run':
                 pass
