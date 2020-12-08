@@ -225,7 +225,7 @@ class JigScreen(Screen):
             self.go_stop.text = 'UPLOADING...'
 
             ## GET DATA UPDATED
-            Clock.schedule_once(lambda dt: self.create_new_spreadsheet(self.test_data), 1)
+            Clock.schedule_once(lambda dt: self.create_new_spreadsheet(), 1)
 
     def set_max_pos(self):
 
