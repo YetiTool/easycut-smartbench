@@ -345,7 +345,7 @@ class JigScreen(Screen):
         else:
             spread = client.open(name_of_GSheet)
 
-        test_data_worksheet_name = 'Test' + self.test_id.text
+        test_data_worksheet_name = 'Test ' + self.test_id.text
 
         ## don't know if this will work, might need to do 'if none'
         try: 
