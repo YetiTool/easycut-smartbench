@@ -258,8 +258,8 @@ class JigScreen(Screen):
                 self.go_stop.background_color = [0,0.502,0,1]
 
     def format_output(self, rows):
-        rows[1:] = [L - self.starting_L for L in rows[1:]]
-        rows[2:] = [R - self.starting_R for R in rows[2:]]
+        rows[1:] = [str(int(L) - int(self.starting_L)) for L in rows[1:]]
+        rows[2:] = [str(int(R) - int(self.starting_R)) for R in rows[2:]]
         return rows
 
     def send_data_to_gsheet(self, rows):
