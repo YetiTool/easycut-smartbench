@@ -267,7 +267,7 @@ class JigScreen(Screen):
     def do_test_step(self, dt):
 
         if self.direction == 'forward':
-            if self.m.state() == 'Jog':
+            if self.m.state() == 'Run':
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
@@ -287,7 +287,7 @@ class JigScreen(Screen):
                 self.go_stop.background_color = [0,0.502,0,1]
 
         else:
-            if self.m.state() == 'Jog':
+            if self.m.state() == 'Run':
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() >= self.max_pos:
