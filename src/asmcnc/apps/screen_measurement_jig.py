@@ -262,9 +262,9 @@ class JigScreen(Screen):
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
 
-                self.Y_pos_list.append(str(round(self.m.mpos_y(), 2)))
-                self.L_abs_list.append(self.e0.L_side + self.e1.L_side)
-                self.R_abs_list.append(self.e0.R_side + self.e1.R_side)
+                self.Y_pos_list.append(float(self.m.mpos_y()))
+                self.L_abs_list.append(float(self.e0.L_side + self.e1.L_side))
+                self.R_abs_list.append(float(self.e0.R_side + self.e1.R_side))
 
                 self.m.jog_relative('Y', 10, 6000)
 
@@ -282,9 +282,9 @@ class JigScreen(Screen):
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() >= self.max_pos:
 
-                self.Y_pos_list.append(str(round(self.m.mpos_y(), 2)))
-                self.L_abs_list.append(self.e0.L_side + self.e1.L_side)
-                self.R_abs_list.append(self.e0.R_side + self.e1.R_side)
+                self.Y_pos_list.append(float(self.m.mpos_y()))
+                self.L_abs_list.append(float(self.e0.L_side + self.e1.L_side))
+                self.R_abs_list.append(float(self.e0.R_side + self.e1.R_side))
 
                 self.m.jog_relative('Y', -10, 6000)
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
