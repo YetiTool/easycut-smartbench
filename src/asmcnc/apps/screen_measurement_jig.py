@@ -350,7 +350,7 @@ class JigScreen(Screen):
 
         except:
             test_data_worksheet_name = 'Test' + self.test_id.text
-            worksheet = duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+            worksheet = spread.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
         spread.values_clear(test_data_worksheet_name)
