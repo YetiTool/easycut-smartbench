@@ -22,8 +22,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_move
-from asmcnc.comms import encoder_connection
-
+from asmcnc.comms import encoder_connection_ACM0
+from asmcnc.comms import encoder_connection_ACM1
 
 Builder.load_string("""
 
@@ -173,15 +173,19 @@ class JigScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
+        # Establish 's'erial comms and initialise
+        self.e0 = encoder_connection_ACM0.EncoderConnection(self, self.sm)
+        self.e1 = encoder_connection_ACM1.EncoderConnection(self, self.sm)
+        self.e0.establish_connection()
+        self.e1.establish_connection()
+
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
 
     def on_enter(self):
-        # Establish 's'erial comms and initialise
-        self.e = encoder_connection.EncoderConnection(self, self.sm)
-        self.e.establish_connection()
-        if self.e.is_connected():
+
+        if (self.e0.is_connected() and self.e1.is_connected()):
             self.go_stop.background_color = [0,0.502,0,1]
 
     def toggle_direction(self):
@@ -198,6 +202,7 @@ class JigScreen(Screen):
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
             self.starting_pos = self.m.mpos_y()
+            self.starting_L = self.e.
             self.max_pos = self.set_max_pos()
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
@@ -221,7 +226,7 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
-                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
+                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e0.L_side + self.e1.L_side, self.e0.R_side + self.e1.R_side])
                 self.m.jog_relative('Y', 10, 6000)
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
@@ -239,7 +244,7 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() >= self.max_pos:
-                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e.L_side, self.e.R_side])
+                self.test_data.append([str(round(self.m.mpos_y(), 2)),  self.e0.L_side + self.e1.L_side, self.e0.R_side + self.e1.R_side])
                 self.m.jog_relative('Y', -10, 6000)
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 Clock.unschedule(self.test_run)
@@ -304,8 +309,6 @@ class JigScreen(Screen):
     def go_to_lobby(self):
         self.sm.current = 'lobby'
 
-    def on_leave(self):
-        self.e.__del__()
 
 
 
