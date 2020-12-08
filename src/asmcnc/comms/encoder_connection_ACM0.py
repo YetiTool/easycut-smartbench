@@ -127,11 +127,11 @@ class EncoderConnection(object):
 
     def process_grbl_push(self, message):
 
-        # if message.startswith('L:'):
-        #         self.L_side = float(message.split(':'))[1]
-        # elif message.startswith('R:'):
-        #         self.R_side = float(message.split(':'))[1]
-
+        if message.startswith('L:'):
+                self.L_side = float(message.split(':')[1])
+        elif message.startswith('R:'):
+                self.R_side = float(message.split(':')[1])
+                
         if self.prev_message != message: 
             log(message)
             self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', "Pulse out AMA0: "+ message)
