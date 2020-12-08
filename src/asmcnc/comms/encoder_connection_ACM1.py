@@ -29,6 +29,8 @@ class EncoderConnection(object):
     L_side = ''
     R_side = ''
 
+    prev_message = ''
+
     def __init__(self, machine, screen_manager):
 
         self.sm = screen_manager
@@ -129,10 +131,12 @@ class EncoderConnection(object):
 # PUSH MESSAGE HANDLING
 
     def process_grbl_push(self, message):
-    	# this just needs to translate pulses out into actions
-    	log(message)
 
         if message.startswith('L:'):
                 self.L_side = (message.split(':'))[1]
         elif message.startswith('R:'):
                 self.R_side = (message.split(':'))[1]
+
+        if self.prev_message != message: 
+            log(message)
+            self.prev_message = message
