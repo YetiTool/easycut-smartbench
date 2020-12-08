@@ -434,6 +434,15 @@ class JigScreen(Screen):
         self.R_diff_list = []
         self.Y_travel_list = []
 
+        self.L_pulse_raw = []
+        self.R_pulse_raw = []
+
+        self.starting_pos = 0
+        self.max_pos = 0
+        
+        self.L_abs_initial_value = 0
+        self.R_abs_initial_value = 0
+
     def go_to_lobby(self):
         self.sm.current = 'lobby'
 
