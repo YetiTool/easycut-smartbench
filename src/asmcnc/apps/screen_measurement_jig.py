@@ -4,6 +4,7 @@ Screen to
 
 # Build step: pip install gspread oauth2client
 import os
+import operator
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pprint
@@ -310,8 +311,10 @@ class JigScreen(Screen):
             self.L_abs_list = [str(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
             self.R_abs_list = [str(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
-        self.L_diff_list = self.L_abs_list - self.Y_pos_list
-        self.R_diff_list = self.R_abs_list - self.Y_pos_list
+        self.L_diff_list = list(map(operator.sub, self.L_abs_list, self.Y_pos_list))
+        self.R_diff_list = list(map(operator.sub, self.R_abs_list, self.Y_pos_list))
+        # self.L_diff_list = self.L_abs_list - self.Y_pos_list
+        # self.R_diff_list = self.R_abs_list - self.Y_pos_list
 
 
     def create_new_spreadsheet(self):
