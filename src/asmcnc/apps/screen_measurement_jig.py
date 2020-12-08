@@ -188,6 +188,9 @@ class JigScreen(Screen):
     last_bench = ''
     last_test = ''
 
+    L_abs_initial_value = 0
+    R_abs_initial_value = 0
+
     master_sheet_key = '1WE10SOkcf1MLIn5g6cQYoiqJIPZj70tyPoenw3KAqnM'
 
     def __init__(self, **kwargs):
@@ -314,9 +317,12 @@ class JigScreen(Screen):
             self.L_abs_list = [float(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
             self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
+        self.L_abs_initial_value = self.L_abs_list[0]
+        self.R_abs_initial_value = self.R_abs_list[0]
+
         self.Y_travel_list = [(y - self.starting_pos) for y in self.Y_pos_list]
-        self.L_abs_list = [(L - self.L_abs_list[0]) for L in self.L_abs_list]
-        self.R_abs_list = [(R - self.R_abs_list[0]) for R in self.R_abs_list]
+        self.L_abs_list = [(L - self.L_abs_initial_value) for L in self.L_abs_list]
+        self.R_abs_list = [(R - self.R_abs_initial_value) for R in self.R_abs_list]
         self.L_diff_list = list(map(operator.sub, self.L_abs_list, self.Y_pos_list))
         self.R_diff_list = list(map(operator.sub, self.R_abs_list, self.Y_pos_list))
         # self.L_diff_list = self.L_abs_list - self.Y_pos_list
