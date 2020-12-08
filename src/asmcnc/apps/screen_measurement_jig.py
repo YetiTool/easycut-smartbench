@@ -338,7 +338,7 @@ class JigScreen(Screen):
         if self.bench_id.text != self.last_bench:
             #Create the sheet to dump to
             spread = client.copy(self.master_sheet_key, title=name_of_GSheet, copy_permissions=True)
-            spread.share('yetitool.com', perm_type='domain', role='owner')
+            # spread.share('yetitool.com', perm_type='domain', role='owner')
             spread.share('lettie.adkins@yetitool.com', perm_type='user', role='owner', notify=True, email_message=self.bench_id.text, with_link=False)
 
         else:
