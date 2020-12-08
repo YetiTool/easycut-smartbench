@@ -323,7 +323,8 @@ class JigScreen(Screen):
         self.R_diff_list = self.convert_to_json(self.R_diff_list)
 
     def convert_to_json(self, data):
-        data = ['[' + str(x) + ']' for x in data]
+        data = [str(x).split() for x in data]
+        print data
         return data
 
     def create_new_spreadsheet(self):
