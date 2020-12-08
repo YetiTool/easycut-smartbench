@@ -316,6 +316,15 @@ class JigScreen(Screen):
         # self.L_diff_list = self.L_abs_list - self.Y_pos_list
         # self.R_diff_list = self.R_abs_list - self.Y_pos_list
 
+        self.Y_pos_list = self.convert_to_json(self.Y_pos_list)
+        self.L_abs_list = self.convert_to_json(self.L_abs_list)
+        self.R_abs_list = self.convert_to_json(self.R_abs_list)
+        self.L_diff_list = self.convert_to_json(self.L_diff_list)
+        self.R_diff_list = self.convert_to_json(self.R_diff_list)
+
+    def convert_to_json(self, data):
+        data = ['[' + str(x) + ']' for x in data]
+        return data
 
     def create_new_spreadsheet(self):
 
