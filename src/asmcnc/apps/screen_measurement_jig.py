@@ -165,6 +165,10 @@ class JigScreen(Screen):
     test_data = [['mY', 'L', 'R']]
     starting_pos = 0
     max_pos = 0
+    last_bench = ''
+    last_test = ''
+
+    master_sheet_key = '1WE10SOkcf1MLIn5g6cQYoiqJIPZj70tyPoenw3KAqnM'
 
     def __init__(self, **kwargs):
 
@@ -199,18 +203,29 @@ class JigScreen(Screen):
     def run_stop_test(self):
 
         if self.go_stop.state == 'down':
+
+            ## CHANGE BUTTON
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
+
+            ## SET VARIABLES
             self.starting_pos = self.m.mpos_y()
             self.starting_L = self.e0.L_side + self.e1.L_side
             self.starting_R = self.e0.R_side + self.e1.R_side
             self.max_pos = self.set_max_pos()
+
+            ## START THE TEST
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
         elif self.go_stop.state == 'normal':
+            self.end_of_test_sequence()
+
+    def end_of_test_sequence(self):
             Clock.unschedule(self.test_run)
             self.go_stop.text = 'UPLOADING...'
-            Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
+
+            ## GET DATA UPDATED
+            Clock.schedule_once(lambda dt: self.create_new_spreadsheet(self.test_data), 1)
 
     def set_max_pos(self):
 
@@ -231,9 +246,7 @@ class JigScreen(Screen):
                 self.m.jog_relative('Y', 10, 6000)
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
-                Clock.unschedule(self.test_run)
-                self.go_stop.text = 'UPLOADING...'
-                Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
+                self.end_of_test_sequence()
             else: 
                 Clock.unschedule(self.test_run)
                 self.go_stop.state = 'normal'
@@ -248,9 +261,7 @@ class JigScreen(Screen):
                 self.test_data.append([str(round(self.m.mpos_y(), 2)),  self.e0.L_side + self.e1.L_side, self.e0.R_side + self.e1.R_side])
                 self.m.jog_relative('Y', -10, 6000)
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
-                Clock.unschedule(self.test_run)
-                self.go_stop.text = 'UPLOADING...'
-                Clock.schedule_once(lambda dt: self.send_data_to_gsheet(self.test_data), 1)
+                self.end_of_test_sequence()
             else: 
                 Clock.unschedule(self.test_run)
                 self.go_stop.state = 'normal'
@@ -309,6 +320,70 @@ class JigScreen(Screen):
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
         self.go_stop.background_color = [0,0.502,0,1]
+
+
+    def create_new_spreadsheet(self):
+
+        name_of_GSheet = 'Y axis linear calibration ' + self.bench_id.text
+
+        ## GSHEET SETUP
+        scope = [
+            'https://www.googleapis.com/auth/drive',
+            'https://www.googleapis.com/auth/drive.file'
+            ]
+        file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
+        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+        client = gspread.authorize(creds)
+
+        if self.bench_id.text != self.last_bench:
+            #Create the sheet to dump to
+            spread = client.copy(master_sheet_key, title=name_of_GSheet, copy_permissions=True)
+
+        else:
+            spread = client.open(name_of_GSheet)
+
+        test_data_worksheet_name = 'Test' + self.test_id.text
+
+        ## don't know if this will work, might need to do 'if none'
+        try: 
+            worksheet = spread.worksheet(test_data_worksheet_name)
+
+        except:
+            test_data_worksheet_name = 'Test' + self.test_id.text
+            worksheet = duplicate_sheet(source_sheet_id, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+
+        print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
+        spread.values_clear(test_data_worksheet_name)
+
+        print ("Writing stock values to GSheet...")
+        worksheet.update('A1:F', self.test_data)
+
+        print ("Updating job stats...")
+        current_utc =   datetime.utcnow()
+        # Time
+        worksheet.update('H1', str(current_utc))
+        # Bench ID:
+        worksheet.update('H2', str(self.bench_id.text))
+        # Test ID: 
+        worksheet.update('H3', str(self.test_id.text))
+        # Travel: 
+        worksheet.update('H4', str(self.travel.text))
+        # Wheel diameter HOME:
+        worksheet.update('H5', str(self.wheel_home.text))
+        # Wheel diameter FAR:
+        worksheet.update('H6', str(self.wheel_far.text))        
+        # Direction: 
+        worksheet.update('H7', str(self.direction)) 
+        print ("ALL DONE!!! You're welcome.")
+
+        self.last_bench = self.bench_id.text
+        self.last_test = self.test_id.text
+        self.test_id.text = str(int(self.last_test + 1))
+
+        self.go_stop.state = 'normal'
+        self.go_stop.text = 'GO'
+        self.go_stop.background_color = [0,0.502,0,1]
+
 
     def clear_data(self):
         self.test_data = [['mY', 'L', 'R']]
