@@ -40,6 +40,8 @@ Builder.load_string("""
     wheel_far:wheel_far
     go_stop: go_stop
     dir_toggle:dir_toggle
+    pulse_home:pulse_home
+    pulse_far:pulse_far
 
     BoxLayout:
         padding: 0
@@ -87,6 +89,15 @@ Builder.load_string("""
                     id: wheel_far
                     text: "Wheel diameter FAR"
                     color: 0,0,0,1
+                Label: 
+                    id: pulse_home
+                    text: "Pulse/rev HOME"
+                    color: 0,0,0,1
+                Label: 
+                    id: pulse_far
+                    text: "Pulse/rev FAR"
+                    color: 0,0,0,1
+
 
                 TextInput: 
                     id: bench_id 
@@ -161,8 +172,14 @@ Builder.load_string("""
 
 class JigScreen(Screen):
 
+    Y_pos_list = []
+    L_abs_list = []
+    R_abs_list = []
+
+    L_diff_list = []
+    R_diff_list = []
+
     direction = 'forward'
-    test_data = [['mY', 'L', 'R']]
     starting_pos = 0
     max_pos = 0
     last_bench = ''
@@ -209,7 +226,7 @@ class JigScreen(Screen):
             self.go_stop.text = 'STOP'
 
             ## SET VARIABLES
-            self.starting_pos = self.m.mpos_y()
+            self.starting_pos = float(self.m.mpos_y())
             self.starting_L = self.e0.L_side + self.e1.L_side
             self.starting_R = self.e0.R_side + self.e1.R_side
             self.max_pos = self.set_max_pos()
@@ -242,7 +259,11 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
-                self.test_data.append([str(round(self.m.mpos_y(), 2)), self.e0.L_side + self.e1.L_side, self.e0.R_side + self.e1.R_side])
+
+                self.Y_pos_list.append(str(round(self.m.mpos_y(), 2)))
+                self.L_abs_list.append = (self.e0.L_side + self.e1.L_side)
+                self.R_abs_list.append = (self.e0.R_side + self.e1.R_side)
+
                 self.m.jog_relative('Y', 10, 6000)
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
@@ -258,7 +279,11 @@ class JigScreen(Screen):
                 pass
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() >= self.max_pos:
-                self.test_data.append([str(round(self.m.mpos_y(), 2)),  self.e0.L_side + self.e1.L_side, self.e0.R_side + self.e1.R_side])
+
+                self.Y_pos_list.append(str(round(self.m.mpos_y(), 2)))
+                self.L_abs_list.append = (self.e0.L_side + self.e1.L_side)
+                self.R_abs_list.append = (self.e0.R_side + self.e1.R_side)
+
                 self.m.jog_relative('Y', -10, 6000)
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 self.end_of_test_sequence()
@@ -273,56 +298,24 @@ class JigScreen(Screen):
     #     rows[2:] = [str(int(R) - int(self.starting_R)) for R in rows[2:]]
     #     return rows
 
-    def send_data_to_gsheet(self, rows):
+    def format_output(self):
 
-        # rows = self.format_output(rows)
+        if self.direction == 'forward':
 
-        ## GSHEET SETUP
-        scope = [
-            'https://www.googleapis.com/auth/drive',
-            'https://www.googleapis.com/auth/drive.file'
-            ]
-        file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-        client = gspread.authorize(creds)
-        
-        #Set the sheet to dump to
-        name_of_GSheet = 'Y axis linear calibration'
-        spread= client.open(name_of_GSheet)
-        UL_data_worksheet_name = "Data dump"
+            self.L_abs_list = [str(self.starting_pos + float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [str(self.starting_pos + float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
-        print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
-        sheet = spread.worksheet(UL_data_worksheet_name)
-        spread.values_clear(UL_data_worksheet_name)
+        else:
+            self.L_abs_list = [str(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [str(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
-        print ("Writing stock values to GSheet...")
-        sheet.update('A1:G', rows)
-
-        print ("Updating job stats...")
-        sheet = spread.worksheet("Test info")
-        current_utc =   datetime.utcnow()
-        # Time
-        sheet.update('B1', str(current_utc))
-        # Bench ID:
-        sheet.update('B2', str(self.bench_id.text))
-        # Test ID: 
-        sheet.update('B3', str(self.test_id.text))
-        # Travel: 
-        sheet.update('B4', str(self.travel.text))
-        # Wheel diameter HOME:
-        sheet.update('B5', str(self.wheel_home.text))
-        # Wheel diameter FAR:
-        sheet.update('B6', str(self.wheel_far.text))        
-        # Direction: 
-        sheet.update('B7', str(self.direction)) 
-        print ("ALL DONE!!! You're welcome.")
-
-        self.go_stop.state = 'normal'
-        self.go_stop.text = 'GO'
-        self.go_stop.background_color = [0,0.502,0,1]
+        self.L_diff_list = self.L_abs_list - self.Y_pos_list
+        self.R_diff_list = self.R_abs_list - self.Y_pos_list
 
 
-    def create_new_spreadsheet(self):
+    def create_new_spreadsheet(self, data):
+
+        self.format_output()
 
         name_of_GSheet = 'Y axis linear calibration ' + self.bench_id.text
 
@@ -359,7 +352,11 @@ class JigScreen(Screen):
         spread.values_clear(test_data_worksheet_name)
 
         print ("Writing stock values to GSheet...")
-        worksheet.update('A1:F', self.test_data)
+        worksheet.update('A2:A', self.Y_pos_list)
+        worksheet.update('B2:B', self.L_abs_list)
+        worksheet.update('C2:C', self.R_abs_list)
+        worksheet.update('D2:D', self.L_diff_list)
+        worksheet.update('E2:E', self.R_diff_list)
 
         print ("Updating job stats...")
         current_utc =   datetime.utcnow()
