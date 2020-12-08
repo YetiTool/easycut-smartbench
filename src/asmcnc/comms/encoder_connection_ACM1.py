@@ -134,5 +134,6 @@ class EncoderConnection(object):
 
         if self.prev_message != message: 
             log(message)
+            log(message.split(':'))[1]
             self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', "Pulse out ACM1: "+ message)
             self.prev_message = message
