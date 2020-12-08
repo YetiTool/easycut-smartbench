@@ -113,11 +113,6 @@ class EncoderConnection(object):
 
             # If something received from serial buffer, process it. 
             if len(rec_temp):
-                # Update the gcode monitor (may not be initialised) and console:
-                try:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('pulse out: ', rec_temp)
-                except:
-                    pass
     
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
@@ -139,6 +134,7 @@ class EncoderConnection(object):
 
         if self.prev_message != message: 
             log(message)
+            self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', "Pulse out AMA0: "+ message)
             self.prev_message = message
 
 
