@@ -202,7 +202,8 @@ class JigScreen(Screen):
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
             self.starting_pos = self.m.mpos_y()
-            self.starting_L = self.e.
+            self.starting_L = self.e0.L_side + self.e1.L_side
+            self.starting_R = self.e0.R_side + self.e1.R_side
             self.max_pos = self.set_max_pos()
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
