@@ -314,7 +314,7 @@ class JigScreen(Screen):
         self.R_diff_list = self.R_abs_list - self.Y_pos_list
 
 
-    def create_new_spreadsheet(self, data):
+    def create_new_spreadsheet(self):
 
         self.format_output()
 
