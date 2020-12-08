@@ -183,6 +183,9 @@ class JigScreen(Screen):
     R_diff_list = []
     Y_travel_list = []
 
+    L_pulse_raw = []
+    R_pulse_raw = []
+
     direction = 'forward'
     starting_pos = 0
     max_pos = 0
@@ -309,6 +312,9 @@ class JigScreen(Screen):
 
     def format_output(self):
 
+        self.L_pulse_raw = self.convert_to_json(self.L_abs_list)
+        self.R_pulse_raw = self.convert_to_json(self.R_abs_list)
+
         if self.direction == 'forward':
 
             self.L_abs_list = [float(self.starting_pos + float(((int(L) - int(self.starting_L))*(float(math.pi*(self.wheel_home.text))/float(self.pulse_home.text))))) for L in self.L_abs_list]
@@ -392,6 +398,9 @@ class JigScreen(Screen):
         worksheet.update('D2:D', self.R_abs_list)
         worksheet.update('E2:E', self.L_diff_list)
         worksheet.update('F2:F', self.R_diff_list)
+
+        worksheet.update('M2:M', self.L_pulse_raw)
+        worksheet.update('N2:N', self.R_pulse_raw)
 
         print ("Updating job stats...")
         current_utc =   datetime.utcnow()
