@@ -115,11 +115,11 @@ Builder.load_string("""
                     input_filter: 'float'
                 TextInput:
                     id: pulse_home
-                    text: "2000"
+                    text: "1024"
                     input_filter: 'int'
                 TextInput:
                     id: pulse_far
-                    text: "1024"
+                    text: "2000"
                     input_filter: 'int'
 
             GridLayout: 
@@ -317,12 +317,12 @@ class JigScreen(Screen):
 
         if self.direction == 'forward':
 
-            self.L_abs_list = [float(self.starting_pos + float(((int(L) - int(self.starting_L))*(float(math.pi*(self.wheel_home.text))/float(self.pulse_home.text))))) for L in self.L_abs_list]
-            self.R_abs_list = [float(self.starting_pos + float(((int(R) - int(self.starting_R))*(float(math.pi*(self.wheel_far.text))/float(self.pulse_far.text))))) for R in self.R_abs_list]
+            self.L_abs_list = [float(self.starting_pos + float(((int(L) - int(self.starting_L))*(math.pi*float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [float(self.starting_pos + float(((int(R) - int(self.starting_R))*(math.pi*float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
         else:
-            self.L_abs_list = [float(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(math.pi*(self.wheel_home.text))/float(self.pulse_home.text))))) for L in self.L_abs_list]
-            self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(math.pi*(self.wheel_far.text))/float(self.pulse_far.text))))) for R in self.R_abs_list]
+            self.L_abs_list = [float(self.starting_pos - float(((int(L) - int(self.starting_L))*(math.pi*float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(math.pi*float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
         self.L_abs_initial_value = self.L_abs_list[0]
         self.R_abs_initial_value = self.R_abs_list[0]
