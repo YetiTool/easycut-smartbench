@@ -315,6 +315,8 @@ class JigScreen(Screen):
             self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
         self.Y_travel_list = [(y - self.starting_pos) for y in self.Y_pos_list]
+        self.L_abs_list = [(L - self.L_abs_list[0]) for L in self.L_abs_list]
+        self.R_abs_list = [(R - self.R_abs_list[0]) for R in self.R_abs_list]
         self.L_diff_list = list(map(operator.sub, self.L_abs_list, self.Y_pos_list))
         self.R_diff_list = list(map(operator.sub, self.R_abs_list, self.Y_pos_list))
         # self.L_diff_list = self.L_abs_list - self.Y_pos_list
