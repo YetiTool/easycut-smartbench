@@ -350,29 +350,29 @@ class JigScreen(Screen):
             worksheet = spread.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
-        spread.values_clear(test_data_worksheet_name)
+        # spread.values_clear(test_data_worksheet_name)
 
         print ("Writing stock values to GSheet...")
         worksheet.update('A2:A', self.Y_pos_list)
-        worksheet.update('B2:B', self.L_abs_list)
-        worksheet.update('C2:C', self.R_abs_list)
-        worksheet.update('D2:D', self.L_diff_list)
-        worksheet.update('E2:E', self.R_diff_list)
+        worksheet.update('C2:C', self.L_abs_list)
+        worksheet.update('D2:D', self.R_abs_list)
+        worksheet.update('E2:E', self.L_diff_list)
+        worksheet.update('F2:F', self.R_diff_list)
 
         print ("Updating job stats...")
         current_utc =   datetime.utcnow()
         # Time
-        worksheet.update('H1', str(current_utc))
+        worksheet.update('I1', str(current_utc))
         # Bench ID:
-        worksheet.update('H2', str(self.bench_id.text))
+        worksheet.update('I2', str(self.bench_id.text))
         # Test ID: 
-        worksheet.update('H3', str(self.test_id.text))
+        worksheet.update('I3', str(self.test_id.text))
         # Travel: 
-        worksheet.update('H4', str(self.travel.text))
+        worksheet.update('I4', str(self.travel.text))
         # Wheel diameter HOME:
-        worksheet.update('H5', str(self.wheel_home.text))
+        worksheet.update('I5', str(self.wheel_home.text))
         # Wheel diameter FAR:
-        worksheet.update('H6', str(self.wheel_far.text))        
+        worksheet.update('I6', str(self.wheel_far.text))        
         # Direction: 
         worksheet.update('H7', str(self.direction)) 
         print ("ALL DONE!!! You're welcome.")
