@@ -4,6 +4,7 @@ Screen to
 
 # Build step: pip install gspread oauth2client
 import os
+import math
 import operator
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -310,12 +311,12 @@ class JigScreen(Screen):
 
         if self.direction == 'forward':
 
-            self.L_abs_list = [float(self.starting_pos + float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
-            self.R_abs_list = [float(self.starting_pos + float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
+            self.L_abs_list = [float(self.starting_pos + float(((int(L) - int(self.starting_L))*(float(math.pi*(self.wheel_home.text))/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [float(self.starting_pos + float(((int(R) - int(self.starting_R))*(float(math.pi*(self.wheel_far.text))/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
         else:
-            self.L_abs_list = [float(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(self.wheel_home.text)/float(self.pulse_home.text))))) for L in self.L_abs_list]
-            self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(self.wheel_far.text)/float(self.pulse_far.text))))) for R in self.R_abs_list]
+            self.L_abs_list = [float(self.starting_pos - float(((int(L) - int(self.starting_L))*(float(math.pi*(self.wheel_home.text))/float(self.pulse_home.text))))) for L in self.L_abs_list]
+            self.R_abs_list = [float(self.starting_pos - float(((int(R) - int(self.starting_R))*(float(math.pi*(self.wheel_far.text))/float(self.pulse_far.text))))) for R in self.R_abs_list]
 
         self.L_abs_initial_value = self.L_abs_list[0]
         self.R_abs_initial_value = self.R_abs_list[0]
@@ -323,8 +324,8 @@ class JigScreen(Screen):
         self.Y_travel_list = [(y - self.starting_pos) for y in self.Y_pos_list]
         self.L_abs_list = [(L - self.L_abs_initial_value) for L in self.L_abs_list]
         self.R_abs_list = [(R - self.R_abs_initial_value) for R in self.R_abs_list]
-        self.L_diff_list = list(map(operator.sub, self.L_abs_list, self.Y_pos_list))
-        self.R_diff_list = list(map(operator.sub, self.R_abs_list, self.Y_pos_list))
+        self.L_diff_list = list(map(operator.sub, self.L_abs_list, self.Y_travel_list))
+        self.R_diff_list = list(map(operator.sub, self.R_abs_list, self.Y_travel_list))
         # self.L_diff_list = self.L_abs_list - self.Y_pos_list
         # self.R_diff_list = self.R_abs_list - self.Y_pos_list
 
