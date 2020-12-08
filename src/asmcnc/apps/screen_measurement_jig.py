@@ -337,7 +337,7 @@ class JigScreen(Screen):
 
         if self.bench_id.text != self.last_bench:
             #Create the sheet to dump to
-            spread = client.copy(master_sheet_key, title=name_of_GSheet, copy_permissions=True)
+            spread = client.copy(self.master_sheet_key, title=name_of_GSheet, copy_permissions=True)
 
         else:
             spread = client.open(name_of_GSheet)
@@ -350,7 +350,7 @@ class JigScreen(Screen):
 
         except:
             test_data_worksheet_name = 'Test' + self.test_id.text
-            worksheet = duplicate_sheet(source_sheet_id, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+            worksheet = duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
         spread.values_clear(test_data_worksheet_name)
