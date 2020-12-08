@@ -328,8 +328,15 @@ class JigScreen(Screen):
         self.Y_travel_list = self.convert_to_json(self.Y_travel_list)
 
     def convert_to_json(self, data):
+        new_data = []
+
         data = [str(x).split() for x in data]
-        return data
+
+        for list in data:
+            new_list_item = [float(e) for e in list]
+            new_data.append(new_list_item)
+
+        return new_data
 
     def create_new_spreadsheet(self):
 
