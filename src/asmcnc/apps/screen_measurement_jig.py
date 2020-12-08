@@ -244,7 +244,7 @@ class JigScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 1)
 
         elif self.go_stop.state == 'normal':
             self.end_of_test_sequence()
@@ -276,7 +276,7 @@ class JigScreen(Screen):
                 self.L_abs_list.append(float(self.e0.L_side + self.e1.L_side))
                 self.R_abs_list.append(float(self.e0.R_side + self.e1.R_side))
 
-                self.m.jog_relative('Y', 10, 6000)
+                self.m.send_any_gcode_command('G0 G91 Y10')
 
             elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
                 self.end_of_test_sequence()
@@ -296,7 +296,7 @@ class JigScreen(Screen):
                 self.L_abs_list.append(float(self.e0.L_side + self.e1.L_side))
                 self.R_abs_list.append(float(self.e0.R_side + self.e1.R_side))
 
-                self.m.jog_relative('Y', -10, 6000)
+                self.m.send_any_gcode_command('G0 G91 Y-10')
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 self.end_of_test_sequence()
             else: 
@@ -304,11 +304,6 @@ class JigScreen(Screen):
                 self.go_stop.state = 'normal'
                 self.go_stop.text = 'GO'
                 self.go_stop.background_color = [0,0.502,0,1]
-
-    # def format_output(self, rows):
-    #     rows[1:] = [str(int(L) - int(self.starting_L)) for L in rows[1:]]
-    #     rows[2:] = [str(int(R) - int(self.starting_R)) for R in rows[2:]]
-    #     return rows
 
     def format_output(self):
 
