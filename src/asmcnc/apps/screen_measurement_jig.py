@@ -340,6 +340,7 @@ class JigScreen(Screen):
             spread = client.copy(self.master_sheet_key, title=name_of_GSheet, copy_permissions=True)
             spread.share('yetitool.com', perm_type='domain', role='writer')
             spread.share('lettie.adkins@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
+            spread.share('ed.sells@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
 
         else:
             spread = client.open(name_of_GSheet)
@@ -351,7 +352,7 @@ class JigScreen(Screen):
             worksheet = spread.worksheet(test_data_worksheet_name)
 
         except:
-            test_data_worksheet_name = 'Test' + self.test_id.text
+            test_data_worksheet_name = 'Test ' + self.test_id.text
             worksheet = spread.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         print ("Wiping old count sheet in GSheet \"" + name_of_GSheet + "\"...")
