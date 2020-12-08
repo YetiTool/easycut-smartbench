@@ -66,35 +66,28 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 2
-                cols: 5
+                cols: 7
 
 
                 Label: 
-
                     text: "Bench ID"
                     color: 0,0,0,1
                 Label: 
-                    id: test_id
                     text: "Test ID"
                     color: 0,0,0,1
                 Label: 
-                    id: travel
                     text: "Travel"
                     color: 0,0,0,1
                 Label: 
-                    id: wheel_home
                     text: "Wheel diameter HOME"
                     color: 0,0,0,1
                 Label: 
-                    id: wheel_far
                     text: "Wheel diameter FAR"
                     color: 0,0,0,1
                 Label: 
-                    id: pulse_home
                     text: "Pulse/rev HOME"
                     color: 0,0,0,1
                 Label: 
-                    id: pulse_far
                     text: "Pulse/rev FAR"
                     color: 0,0,0,1
 
@@ -118,6 +111,14 @@ Builder.load_string("""
                     id: wheel_far
                     text: "42.000"
                     input_filter: 'float'
+                TextInput:
+                    id: pulse_home
+                    text: "2000"
+                    input_filter: 'int'
+                TextInput:
+                    id: pulse_far
+                    text: "1024"
+                    input_filter: 'int'
 
             GridLayout: 
 
@@ -386,8 +387,12 @@ class JigScreen(Screen):
 
 
     def clear_data(self):
-        self.test_data = [['mY', 'L', 'R']]
+        self.Y_pos_list = []
+        self.L_abs_list = []
+        self.R_abs_list = []
 
+        self.L_diff_list = []
+        self.R_diff_list = []
     def go_to_lobby(self):
         self.sm.current = 'lobby'
 
