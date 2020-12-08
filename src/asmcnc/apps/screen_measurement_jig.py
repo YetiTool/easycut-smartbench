@@ -97,30 +97,37 @@ Builder.load_string("""
                 TextInput: 
                     id: bench_id 
                     text: "default"
+                    multiline: False
                 TextInput: 
                     id: test_id
                     text: "1"
                     input_filter: 'int'
+                    multiline: False
                 TextInput: 
                     id: travel
                     text: "2500"
                     input_filter: 'float'
+                    multiline: False
                 TextInput: 
                     id: wheel_home
                     text: "42.000"
                     input_filter: 'float'
+                    multiline: False
                 TextInput: 
                     id: wheel_far
                     text: "42.000"
                     input_filter: 'float'
+                    multiline: False
                 TextInput:
                     id: pulse_home
                     text: "1024"
                     input_filter: 'int'
+                    multiline: False
                 TextInput:
                     id: pulse_far
                     text: "2000"
                     input_filter: 'int'
+                    multiline: False
 
             GridLayout: 
 
