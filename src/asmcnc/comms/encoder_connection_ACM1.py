@@ -26,8 +26,8 @@ class EncoderConnection(object):
     
     monitor_text_buffer = ""
 
-    L_side = ''
-    R_side = ''
+    L_side = 0
+    R_side = 0
 
     prev_message = ''
 
@@ -128,9 +128,9 @@ class EncoderConnection(object):
     def process_grbl_push(self, message):
 
         if message.startswith('L:'):
-                self.L_side = (message.split(':'))[1]
+                self.L_side = float(message.split(':'))[1]
         elif message.startswith('R:'):
-                self.R_side = (message.split(':'))[1]
+                self.R_side = float(message.split(':'))[1]
 
         if self.prev_message != message: 
             log(message)
