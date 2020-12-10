@@ -181,7 +181,7 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
-                                    source: "./asmcnc/apps/shapeCutter_app/img/arrow_back.png"
+                                    source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
@@ -224,7 +224,7 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
+                                    source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
