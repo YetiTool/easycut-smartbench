@@ -58,7 +58,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/download_logs.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -74,7 +74,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/reboot.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -90,7 +90,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -106,7 +106,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -122,7 +122,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -138,7 +138,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/factory.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -154,7 +154,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/update_developer.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -170,7 +170,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/developer.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
@@ -186,7 +186,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                    source: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
