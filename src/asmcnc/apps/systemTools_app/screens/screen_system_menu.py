@@ -74,7 +74,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/apps/systemTools_app/img/reboot.png"
+                    source: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
