@@ -304,6 +304,7 @@ class JigScreen(Screen):
                 self.R_abs_list.append(float(self.e0.R_side + self.e1.R_side))
 
                 self.m.send_any_gcode_command('G0 G91 Y-10')
+                
             elif self.m.state() == 'Idle' and self.m.mpos_y() < self.max_pos:
                 self.end_of_test_sequence()
             else: 
