@@ -93,7 +93,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 8
                         size_hint: (None, None)
-                        height: dp(270)
+                        height: dp(260)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
@@ -405,7 +405,7 @@ class BuildInfoScreen(Screen):
     def get_smartbench_model(self):
         try:
             file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = file.read()
+            self.smartbench_model.text = '[b]' + str(file.read()) + '[/b]'
             file.close()
         except: 
             self.smartbench_model.text = '-'
