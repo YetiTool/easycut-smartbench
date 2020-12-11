@@ -71,16 +71,11 @@ Builder.load_string("""
                 spacing: 0
                 orientation: 'horizontal'
 
-                GridLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    cols: 2
-                    rows: 8
+                BoxLayout:
+                    orientation: 'vertical'
                     size_hint: (None, None)
                     height: dp(280)
                     width: dp(550)
-                    cols_minimum: {0: dp(230), 1: dp(320)}
-
 
                     Label:
                         id: smartbench_model
@@ -91,139 +86,150 @@ Builder.load_string("""
                         valign: "middle"
                         markup: True
                         font_size: 20
-                    Label:
-                        text: ''
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label:
-                        text: '[b]Serial number[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label:
-                        id: machine_serial_number_label
-                        color: hex('#333333ff')
-                        text: ''
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
 
-                    Label:
-                        text: '[b]Console serial number[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label:
-                        id: console_serial_number
-                        text: '-'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label: 
-                        text: '[b]Software[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label:
-                        id: sw_version_label
-                        color: hex('#333333ff')
-                        text: 'SW_version'
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        text_size: self.size
-                        markup: 'True'
-                        font_size: 20
-                    Label: 
-                        text: '[b]Platform[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label: 
-                        id: pl_version_label
-                        color: hex('#333333ff')
-                        text: 'PL_version'
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        text_size: self.size
-                        markup: 'True'
-                        font_size: 20
-                    Label: 
-                        text: '[b]Firmware[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label: 
-                        id: fw_version_label
-                        color: hex('#333333ff')
-                        text: 'FW_version'
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        text_size: self.size
-                        markup: 'True'
-                        font_size: 20
-                    Label: 
-                        text: '[b]Z head[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label: 
-                        id: zh_version_label
-                        color: hex('#333333ff')
-                        text: 'ZH_version'
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        text_size: self.size
-                        markup: 'True'
-                        font_size: 20
-                    Label: 
-                        text: '[b]Hardware[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label: 
-                        id: hw_version_label
-                        color: hex('#333333ff')
-                        text: 'HW_version'
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        text_size: self.size
-                        markup: 'True'
-                        font_size: 20
+                    GridLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        cols: 2
+                        rows: 8
+                        size_hint: (None, None)
+                        height: dp(270)
+                        width: dp(550)
+                        cols_minimum: {0: dp(230), 1: dp(320)}
+
+                        # Label:
+                        #     text: ''
+                        #     color: hex('#333333ff')
+                        #     text_size: self.size
+                        #     halign: "left"
+                        #     valign: "middle"
+                        #     markup: True
+                        #     font_size: 20
+                        Label:
+                            text: '[b]Serial number[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label:
+                            id: machine_serial_number_label
+                            color: hex('#333333ff')
+                            text: ''
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+
+                        Label:
+                            text: '[b]Console serial number[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label:
+                            id: console_serial_number
+                            text: '-'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label: 
+                            text: '[b]Software[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label:
+                            id: sw_version_label
+                            color: hex('#333333ff')
+                            text: 'SW_version'
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            text_size: self.size
+                            markup: 'True'
+                            font_size: 20
+                        Label: 
+                            text: '[b]Platform[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label: 
+                            id: pl_version_label
+                            color: hex('#333333ff')
+                            text: 'PL_version'
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            text_size: self.size
+                            markup: 'True'
+                            font_size: 20
+                        Label: 
+                            text: '[b]Firmware[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label: 
+                            id: fw_version_label
+                            color: hex('#333333ff')
+                            text: 'FW_version'
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            text_size: self.size
+                            markup: 'True'
+                            font_size: 20
+                        Label: 
+                            text: '[b]Z head[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label: 
+                            id: zh_version_label
+                            color: hex('#333333ff')
+                            text: 'ZH_version'
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            text_size: self.size
+                            markup: 'True'
+                            font_size: 20
+                        Label: 
+                            text: '[b]Hardware[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+                        Label: 
+                            id: hw_version_label
+                            color: hex('#333333ff')
+                            text: 'HW_version'
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            text_size: self.size
+                            markup: 'True'
+                            font_size: 20
 
                 BoxLayout:
                     size_hint: (None,None)
