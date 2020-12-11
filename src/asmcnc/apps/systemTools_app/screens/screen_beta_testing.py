@@ -93,7 +93,6 @@ Builder.load_string("""
                         on_press: root.update_to_latest_beta()
 
                     GridLayout:
-                        size_hint_y: 0.4
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
