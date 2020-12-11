@@ -25,6 +25,7 @@ Builder.load_string("""
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
     machine_serial_number_label: machine_serial_number_label
+    show_more_info: show_more_info
 
     BoxLayout:
         height: dp(800)
@@ -281,6 +282,11 @@ Builder.load_string("""
                         width: dp(210)
                         padding: [0,0]
 
+                        Label: 
+                            id: show_more_info
+                            text: root.more_info_text
+                            opacity: 1
+
 
 
 
@@ -486,6 +492,8 @@ Builder.load_string("""
 
 class BuildInfoScreen(Screen):
 
+    more_info_text = ''
+
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -505,6 +513,9 @@ class BuildInfoScreen(Screen):
         self.zh_version_label.text = str(self.m.z_head_version())
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
+
+        self.more_info_text = 'Software branch\n' + self.set.sw_branch + 'Software commit\n' self.set.sw_hash + /
+        'Platform branch\n' + self.set.pl_branch + 'Platform commit\n' + self.set.pl_hash 
 
 
     ## EXIT BUTTONS
