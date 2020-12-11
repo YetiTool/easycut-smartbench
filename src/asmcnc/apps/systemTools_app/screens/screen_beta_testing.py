@@ -74,6 +74,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 0
                         padding: 0
+                        size_hint_y: 0.4
 
                         Label
                             text: 'Run developer branch:'
@@ -81,14 +82,12 @@ Builder.load_string("""
                             font_size: 20
                             halign: "left"
                             markup: True
-                            size_hint_y: 0.3
                             text_size: self.size
 
                         TextInput:
                             id: user_branch
                             text: 'branch'
                             multiline: False
-                            size_hint_y: 0.4
                             font_size: 20
 
                     Button:
