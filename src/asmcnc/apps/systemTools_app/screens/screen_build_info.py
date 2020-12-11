@@ -68,7 +68,7 @@ Builder.load_string("""
                 height: dp(320)
                 padding: 20
                 spacing: 0
-                orientation: 'vertical'
+                orientation: 'horizontal'
 
                 # Label:
                 #     text: 'Machine Info'
@@ -87,11 +87,30 @@ Builder.load_string("""
                     rows: 8
                     size_hint: (None, None)
                     height: dp(280)
-                    width: dp(600)
-                    cols_minimum: {0: dp(250), 1: dp(350)}
+                    width: dp(550)
+                    cols_minimum: {0: dp(250), 1: dp(300)}
                     # rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
                     # spacing: [dp(20), dp(17.5)]
 
+
+                    Label:
+                        text: '[b]Model[/b]'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        color: [0,0,0,1]
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 20
+                    Label:
+                        text: '-'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        color: [0,0,0,1]
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 20
                     Label:
                         text: '[b]Serial number[/b]'
                         color: hex('#333333ff')
@@ -111,24 +130,7 @@ Builder.load_string("""
                         valign: "middle"
                         markup: True
                         font_size: 20
-                    Label:
-                        text: '[b]Model[/b]'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        color: [0,0,0,1]
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
-                    Label:
-                        text: '-'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        color: [0,0,0,1]
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 20
+
                     Label:
                         text: '[b]Console serial number[/b]'
                         color: hex('#333333ff')
@@ -247,6 +249,32 @@ Builder.load_string("""
                         text_size: self.size
                         markup: 'True'
                         font_size: 20
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(210)
+                    height: dp(320)
+                    padding: 0
+                    spacing: 0
+                    orientation: 'vertical'
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(35)
+                        width: dp(150)
+                        padding: 0
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(35)
+                            width: dp(150)
+                            background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                            border: [dp(7.5)]*4
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.exit_app()
+                            text: '[color=hex('#f9f9f9ff')]More info...[/color]'
+                            markup: True
+
+
 
 
                 # GridLayout: 
