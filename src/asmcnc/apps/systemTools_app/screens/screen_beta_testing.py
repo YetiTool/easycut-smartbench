@@ -107,6 +107,7 @@ Builder.load_string("""
                             color: [0,0,0,1]
                             font_size: 20
                             markup: True
+                            halign: "left"
 
                         Label:
                             id: beta_version
@@ -114,6 +115,7 @@ Builder.load_string("""
                             color: [0,0,0,1]
                             font_size: 20
                             markup: True
+                            halign: "left"
 
                     Button:
                         text: 'Update to beta'
