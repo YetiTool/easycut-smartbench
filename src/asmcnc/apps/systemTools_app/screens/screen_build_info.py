@@ -31,30 +31,30 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: hex(#f9f9f9ff)
+                rgba: hex('#f9f9f9ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
 
         BoxLayout:
-            padding: 10
-            spacing: 10
+            padding: 0
+            spacing: 0
             orientation: "vertical"
             BoxLayout:
                 padding: 0
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
                         pos: self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(70)
-                    width: dp(780)
+                    height: dp(90)
+                    width: dp(800)
                     text: "Build Information"
-                    color: hex(#333333ff)
+                    color: hex('#333333ff')
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
