@@ -514,7 +514,7 @@ class BuildInfoScreen(Screen):
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
 
-        self.more_info_text = 'Software branch\n' + self.set.sw_branch + 'Software commit\n' + self.set.sw_hash + /
+        self.more_info_text = 'Software branch\n' + self.set.sw_branch + 'Software commit\n' + self.set.sw_hash + \
         'Platform branch\n' + self.set.pl_branch + 'Platform commit\n' + self.set.pl_hash 
 
 
