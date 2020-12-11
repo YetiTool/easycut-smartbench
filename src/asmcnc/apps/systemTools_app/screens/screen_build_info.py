@@ -267,11 +267,13 @@ Builder.load_string("""
                             height: dp(35)
                             width: dp(150)
                             background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                            background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             border: [dp(7.5)]*4
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.exit_app()
-                            text: '[color=f9f9f9)]More info...[/color]'
+                            text: 'More info...'
+                            color: hex('#f9f9f9ff')
                             markup: True
 
 
