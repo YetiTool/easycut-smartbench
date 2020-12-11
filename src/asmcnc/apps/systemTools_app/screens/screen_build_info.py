@@ -31,7 +31,7 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                rgba: hex(#f9f9f9ff)
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -54,7 +54,7 @@ Builder.load_string("""
                     height: dp(70)
                     width: dp(780)
                     text: "Build Information"
-                    color: [0,0,0,1]
+                    color: hex(#333333ff)
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
