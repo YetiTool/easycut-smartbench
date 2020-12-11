@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from kivy.uix.spinner import Spinner
 
 Builder.load_string("""
 
@@ -27,17 +28,17 @@ Builder.load_string("""
     show_spindle_overload_toggle: show_spindle_overload_toggle
 
     BoxLayout:
-        width: dp(800)
-        height: dp(480)
+        height: dp(800)
+        width: dp(480)
         canvas.before:
             Color: 
-                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                rgba: hex('#f9f9f9ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
 
         BoxLayout:
-            padding: 10
+            padding: 0
             spacing: 10
             orientation: "vertical"
             BoxLayout:
@@ -45,65 +46,69 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
                         pos: self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(70)
-                    width: dp(780)
-                    text: "Factory Settings"
-                    color: [0,0,0,1]
+                    height: dp(60)
+                    width: dp(800)
+                    text: "Factory settings"
+                    color: hex('#f9f9f9ff')
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
                     markup: True
-
+                   
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(240)
-                padding: 0
+                width: dp(800)
+                height: dp(320)
+                padding: 10
                 spacing: 10
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(577.5)
-                    height: dp(240)
+                    height: dp(320)
                     padding: 0
                     spacing: 10
                     orientation: 'vertical'
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(155)
+                        height: dp(235)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
-                        canvas:
-                            Color:
-                                rgba: [1,1,1,1]
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
+
                         GridLayout: 
                             size: self.parent.size
                             pos: self.parent.pos
                             cols: 0
                             rows: 3
-                            padding: [10,0]
+                            padding: 10
                             spacing: 5
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
-                                Label:
-                                    text: '[b]Serial number (e.g., 1234.01)[/b]'
-                                    color: [0,0,0,1]
-                                    markup: True
-                                    text_size: self.size
-                                    halign: 'left'
-                                    size_hint_y: 0.8
+
+                                Spinner:
+                                    text: 'Model'
+                                    values: root.machine_model_values
+                                    on_text: root.update_model()
+
+                            BoxLayout: 
+                                orientation: 'vertical'
+                                spacing: 5
+                                # Label:
+                                #     text: '[b]Serial number (e.g., 1234.01)[/b]'
+                                #     color: [0,0,0,1]
+                                #     markup: True
+                                #     text_size: self.size
+                                #     halign: 'left'
+                                #     size_hint_y: 0.8
 
                                 GridLayout: 
                                     size: self.parent.size
@@ -113,7 +118,7 @@ Builder.load_string("""
                                     padding: 0
                                     spacing: 10
                                     Label:
-                                        text: '$50 ='
+                                        text: '[b]Serial number $50 = [/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     BoxLayout: 
@@ -156,13 +161,13 @@ Builder.load_string("""
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
-                                Label:
-                                    text: '[b]Touchplate thickness (default: 1.53)[/b]'
-                                    color: [0,0,0,1]
-                                    markup: True
-                                    text_size: self.size
-                                    halign: 'left'
-                                    size_hint_y: 0.8
+                                # Label:
+                                #     text: '[b]Touchplate thickness (default: 1.53)[/b]'
+                                #     color: [0,0,0,1]
+                                #     markup: True
+                                #     text_size: self.size
+                                #     halign: 'left'
+                                #     size_hint_y: 0.8
 
                                 GridLayout: 
                                     size: self.parent.size
@@ -173,7 +178,7 @@ Builder.load_string("""
                                     spacing: 10
 
                                     Label:
-                                        text: 'Thickness = '
+                                        text: '[b]Touchplate thickness = [/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     TextInput:
@@ -193,6 +198,7 @@ Builder.load_string("""
                                         color: [0,0,0,1]
                                         markup: True
 
+
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
@@ -200,12 +206,12 @@ Builder.load_string("""
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
-                        canvas:
-                            Color:
-                                rgba: [1,1,1,1]
-                            RoundedRectangle:
-                                pos: self.pos
-                                size: self.size
+                        # canvas:
+                        #     Color:
+                        #         rgba: [1,1,1,1]
+                        #     RoundedRectangle:
+                        #         pos: self.pos
+                        #         size: self.size
                         GridLayout: 
                             size: self.parent.size
                             pos: self.parent.pos
@@ -265,7 +271,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(192.5)
-                    height: dp(240)
+                    height: dp(320)
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
@@ -296,33 +302,28 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(130)
+                width: dp(800)
+                height: dp(80)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
+
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [52.25,31,52.25,31]
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [10, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(68)
-                            width: dp(88)
+                            height: dp(52)
+                            width: dp(60)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -340,46 +341,32 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(375)
-                    height: dp(130)
-                    padding: 0
+                    width: dp(620)
+                    height: dp(80)
+                    padding: [160, 10]
                     spacing: 0
                     orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-
                     BoxLayout:
-                        padding: [30, 10]
                         Button:
                             text: 'FACTORY RESET'
                             on_press: root.factory_reset()
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [40.25,9,40.25,9] 
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [19, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(112)
-                            width: dp(112)
+                            height: dp(60)
+                            width: dp(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -399,6 +386,8 @@ Builder.load_string("""
 """)
 
 class FactorySettingsScreen(Screen):
+
+    machine_model_values = ['SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
 
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
@@ -424,6 +413,9 @@ class FactorySettingsScreen(Screen):
 
     def on_enter(self):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
+
+    def update_model(self):
+        pass
 
     def update_z_touch_plate_thickness(self):
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)

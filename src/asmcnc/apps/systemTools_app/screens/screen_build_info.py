@@ -312,8 +312,6 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    # width: dp(192.5)
-                    # height: dp(130)
                     width: dp(80)
                     height: dp(80)
                     padding: 0
