@@ -370,6 +370,8 @@ class BuildInfoScreen(Screen):
 
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
+        self.get_smartbench_model()
+
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
