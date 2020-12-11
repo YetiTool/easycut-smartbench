@@ -187,8 +187,8 @@ Builder.load_string("""
                     padding: 10
                     spacing: 0
                     orientation: 'vertical'
-                        ScrollableLabelOSOutput:
-                            id: output_view
+                    ScrollableLabelOSOutput:
+                        id: output_view
 
                 BoxLayout:
                     size_hint: (None,None)
