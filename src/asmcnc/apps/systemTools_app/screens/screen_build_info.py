@@ -191,7 +191,7 @@ Builder.load_string("""
                 width: dp(780)
                 height: dp(130)
                 padding: 0
-                spacing: 10
+                spacing: 0
                 orientation: 'horizontal'
                 canvas:
                     Color:
@@ -242,7 +242,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(620)
                     height: dp(130)
-                    padding: 0
+                    padding: 10
                     spacing: 0
                     orientation: 'vertical'
                     # canvas:
