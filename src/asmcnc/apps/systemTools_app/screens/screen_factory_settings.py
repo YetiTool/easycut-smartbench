@@ -112,7 +112,7 @@ Builder.load_string("""
                                     padding: 10
                                     spacing: 10
                                     Label:
-                                        text: '[b]Serial number $50 = [/b]'
+                                        text: '[b]Serial number $50[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     BoxLayout: 
@@ -157,13 +157,6 @@ Builder.load_string("""
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
-                                # Label:
-                                #     text: '[b]Touchplate thickness (default: 1.53)[/b]'
-                                #     color: [0,0,0,1]
-                                #     markup: True
-                                #     text_size: self.size
-                                #     halign: 'left'
-                                #     size_hint_y: 0.8
 
                                 GridLayout: 
                                     size: self.parent.size
@@ -174,7 +167,7 @@ Builder.load_string("""
                                     spacing: 10
 
                                     Label:
-                                        text: '[b]Touchplate thickness = [/b]'
+                                        text: '[b]Touchplate thickness[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     TextInput:
@@ -330,7 +323,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(620)
                     height: dp(80)
-                    padding: [160, 10]
+                    padding: [160, 0]
                     spacing: 0
                     orientation: 'vertical'
                     BoxLayout:
