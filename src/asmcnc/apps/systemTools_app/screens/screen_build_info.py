@@ -284,7 +284,7 @@ Builder.load_string("""
 
                         Label: 
                             id: show_more_info
-                            text: root.more_info_text
+                            text: ''
                             opacity: 1
 
 
@@ -492,8 +492,6 @@ Builder.load_string("""
 
 class BuildInfoScreen(Screen):
 
-    more_info_text = ''
-
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -514,7 +512,7 @@ class BuildInfoScreen(Screen):
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
 
-        self.more_info_text = 'Software branch\n' + self.set.sw_branch + 'Software commit\n' + self.set.sw_hash + \
+        self.show_more_info.text = 'Software branch\n' + self.set.sw_branch + 'Software commit\n' + self.set.sw_hash + \
         'Platform branch\n' + self.set.pl_branch + 'Platform commit\n' + self.set.pl_hash 
 
 
