@@ -446,6 +446,6 @@ class FactorySettingsScreen(Screen):
 
     def set_smartbench_model(self):
         file = open(self.smartbench_model_path, "w+")
-        file.write(str(self.smartbench_model))
+        file.write(str(self.smartbench_model.text))
         file.close()
             
