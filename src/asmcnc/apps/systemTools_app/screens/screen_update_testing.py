@@ -141,37 +141,30 @@ Builder.load_string("""
                     Button:
                         text: 'Update all'
 
-
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(130)
+                width: dp(800)
+                height: dp(80)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [52.25,31,52.25,31]
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [10, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(68)
-                            width: dp(88)
+                            height: dp(52)
+                            width: dp(60)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -181,7 +174,7 @@ Builder.load_string("""
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
+                                    source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                                     center_x: self.parent.center_x
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
@@ -189,32 +182,30 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(385)
-                    height: dp(130)
+                    width: dp(620)
+                    height: dp(80)
                     padding: 10
                     spacing: 0
                     orientation: 'vertical'
-
-                    ScrollableLabelOSOutput:
-                        id: output_view
+                        ScrollableLabelOSOutput:
+                            id: output_view
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
+                    width: dp(80)
+                    height: dp(80)
                     padding: 0
-                    spacing: 0    
-
+                    spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [40.25,9,40.25,9] 
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [19, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(112)
-                            width: dp(112)
+                            height: dp(60)
+                            width: dp(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
