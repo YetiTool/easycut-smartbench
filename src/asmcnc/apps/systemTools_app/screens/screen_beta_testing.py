@@ -74,7 +74,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 0
                         padding: 0
-                        size_hint_y: 0.4
+                        size_hint_y: 0.6
 
                         Label
                             text: 'Run developer branch:'
