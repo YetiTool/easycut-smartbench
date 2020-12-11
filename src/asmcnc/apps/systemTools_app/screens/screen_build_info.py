@@ -261,7 +261,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(35)
                         width: dp(150)
-                        padding: 0
+                        padding: [30,0]
                         Button:
                             size_hint: (None,None)
                             height: dp(35)
@@ -275,6 +275,11 @@ Builder.load_string("""
                             text: 'More info...'
                             color: hex('#f9f9f9ff')
                             markup: True
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(285)
+                        width: dp(210)
+                        padding: [0,0]
 
 
 
