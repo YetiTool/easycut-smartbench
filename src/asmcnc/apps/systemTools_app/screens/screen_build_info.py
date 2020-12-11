@@ -271,7 +271,7 @@ Builder.load_string("""
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.exit_app()
-                            text: '[color=hex('#f9f9f9ff')]More info...[/color]'
+                            text: '[color=f9f9f9)]More info...[/color]'
                             markup: True
 
 
