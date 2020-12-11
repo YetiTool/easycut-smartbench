@@ -93,7 +93,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 8
                         size_hint: (None, None)
-                        height: dp(250)
+                        height: dp(240)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
