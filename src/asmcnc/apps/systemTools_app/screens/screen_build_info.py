@@ -93,6 +93,7 @@ Builder.load_string("""
 
                     Label:
                         text: 'Serial number:'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
@@ -100,36 +101,42 @@ Builder.load_string("""
                     Label:
                         id: machine_serial_number_label
                         text: ''
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: 'Model:'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: '-'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: 'Console serial number:'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: '-'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         text: 'Software'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
@@ -145,6 +152,7 @@ Builder.load_string("""
                         markup: 'True'
                     Label: 
                         text: 'Platform'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
@@ -160,6 +168,7 @@ Builder.load_string("""
                         markup: 'True'
                     Label: 
                         text: 'Firmware'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
@@ -175,6 +184,7 @@ Builder.load_string("""
                         markup: 'True'
                     Label: 
                         text: 'Z head'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
@@ -190,6 +200,7 @@ Builder.load_string("""
                         markup: 'True'
                     Label: 
                         text: 'Hardware'
+                        text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
                         valign: "middle"
