@@ -370,7 +370,7 @@ class BuildInfoScreen(Screen):
         self.hw_version_label.text = self.m.s.hw_version
         self.zh_version_label.text = str(self.m.z_head_version())
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
-        except: self.machine_serial_number_label.text = 'YS6'
+        except: self.machine_serial_number_label.text = '-'
 
         self.show_more_info.text = 'Software branch\n' + self.set.sw_branch + '\n\nSoftware commit\n' + self.set.sw_hash + \
         '\n\nPlatform branch\n' + self.set.pl_branch + '\n\nPlatform commit\n' + self.set.pl_hash 
@@ -408,4 +408,4 @@ class BuildInfoScreen(Screen):
             self.smartbench_model.text = '[b]' + str(file.read()) + '[/b]'
             file.close()
         except: 
-            self.smartbench_model.text = 'SmartBench'
+            self.smartbench_model.text = '[b]SmartBench CNC Router[/b]'
