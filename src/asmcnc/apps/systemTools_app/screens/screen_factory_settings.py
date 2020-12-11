@@ -445,6 +445,7 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm.open_diagnostics_screen()
 
     def set_smartbench_model(self):
+        print('Writing ' + self.smartbench_model.text)
         file = open(self.smartbench_model_path, "w+")
         file.write(str(self.smartbench_model.text))
         file.close()
