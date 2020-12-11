@@ -4,6 +4,7 @@ Build info screen for system tools app
 
 @author: Letty
 '''
+import os
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -23,6 +24,7 @@ Builder.load_string("""
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
     more_info_button: more_info_button
+    console_serial_number: console_serial_number
 
     BoxLayout:
         height: dp(800)
@@ -124,6 +126,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label:
+                        id: console_serial_number
                         text: '-'
                         color: hex('#333333ff')
                         text_size: self.size
@@ -244,7 +247,7 @@ Builder.load_string("""
                             border: [dp(7.5)]*4
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.exit_app()
+                            on_press: root.show_more_info()
                             text: 'More info...'
                             color: hex('#f9f9f9ff')
                             markup: True
@@ -257,7 +260,7 @@ Builder.load_string("""
                         Label: 
                             id: show_more_info
                             text: ''
-                            opacity: 1
+                            opacity: 0
                             color: hex('#333333ff')
 
             BoxLayout:
@@ -366,6 +369,7 @@ class BuildInfoScreen(Screen):
         self.show_more_info.text = 'Software branch\n' + self.set.sw_branch + '\n\nSoftware commit\n' + self.set.sw_hash + \
         '\n\nPlatform branch\n' + self.set.pl_branch + '\n\nPlatform commit\n' + self.set.pl_hash 
 
+        self.console_serial_number.text = os.popen('hostname').split('.')[0]
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -385,7 +389,6 @@ class BuildInfoScreen(Screen):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def show_more_info(self):
-
         if self.more_info_button.state == 'normal':
             self.show_more_info.opacity = 0
         if self.more_info_button.state == 'down':
