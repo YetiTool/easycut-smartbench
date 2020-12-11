@@ -193,12 +193,12 @@ Builder.load_string("""
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
+                canvas:
+                    Color:
+                        rgba: [1,1,1,1]
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -319,8 +319,6 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-
-
 """)
 
 class BuildInfoScreen(Screen):
