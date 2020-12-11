@@ -101,44 +101,44 @@ Builder.load_string("""
                         id: machine_serial_number_label
                         text: ''
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: 'Model:'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: '-'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: 'Console serial number:'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         text: '-'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         text: 'Software'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label:
                         id: sw_version_label
                         text: 'SW_version'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                         text_size: self.size
@@ -146,14 +146,14 @@ Builder.load_string("""
                     Label: 
                         text: 'Platform'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                         text_size: self.size
@@ -161,14 +161,14 @@ Builder.load_string("""
                     Label: 
                         text: 'Firmware'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                         text_size: self.size
@@ -176,14 +176,14 @@ Builder.load_string("""
                     Label: 
                         text: 'Z head'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         id: zh_version_label
                         text: 'ZH_version'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                         text_size: self.size
@@ -191,14 +191,14 @@ Builder.load_string("""
                     Label: 
                         text: 'Hardware'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                     Label: 
                         id: hw_version_label
                         text: 'HW_version'
                         color: [0,0,0,1]
-                    halign: "left"
+                        halign: "left"
                         valign: "middle"
                         markup: True
                         text_size: self.size
