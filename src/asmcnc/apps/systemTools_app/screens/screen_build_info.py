@@ -99,7 +99,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         id: machine_serial_number_label
                         text: ''
@@ -108,7 +108,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         text: 'Model:'
                         text_size: self.size
@@ -116,7 +116,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         text: '-'
                         text_size: self.size
@@ -124,7 +124,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         text: 'Console serial number:'
                         text_size: self.size
@@ -132,7 +132,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         text: '-'
                         text_size: self.size
@@ -140,7 +140,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         text: 'Software'
                         text_size: self.size
@@ -148,7 +148,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label:
                         id: sw_version_label
                         text: 'SW_version'
@@ -158,7 +158,7 @@ Builder.load_string("""
                         markup: True
                         text_size: self.size
                         markup: 'True'
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         text: 'Platform'
                         text_size: self.size
@@ -166,7 +166,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         id: pl_version_label
                         text: 'PL_version'
@@ -176,7 +176,7 @@ Builder.load_string("""
                         markup: True
                         text_size: self.size
                         markup: 'True'
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         text: 'Firmware'
                         text_size: self.size
@@ -184,7 +184,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         id: fw_version_label
                         text: 'FW_version'
@@ -194,7 +194,7 @@ Builder.load_string("""
                         markup: True
                         text_size: self.size
                         markup: 'True'
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         text: 'Z head'
                         text_size: self.size
@@ -202,7 +202,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         id: zh_version_label
                         text: 'ZH_version'
@@ -212,7 +212,7 @@ Builder.load_string("""
                         markup: True
                         text_size: self.size
                         markup: 'True'
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         text: 'Hardware'
                         text_size: self.size
@@ -220,7 +220,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 14
+                        font_size: 20
                     Label: 
                         id: hw_version_label
                         text: 'HW_version'
@@ -230,7 +230,7 @@ Builder.load_string("""
                         markup: True
                         text_size: self.size
                         markup: 'True'
-                        font_size: 14
+                        font_size: 20
 
 
                 # GridLayout: 
