@@ -73,7 +73,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
-                        padding: 10
+                        padding: 0
 
                         Label:
                             text: 'Latest beta version:'
@@ -88,27 +88,32 @@ Builder.load_string("""
                             font_size: 20
                             markup: True
 
-                    BoxLayout:
-                        padding: [30, 10]
-                        Button:
-                            text: 'Update to beta'
-                            on_press: root.update_to_latest_beta()
+                    Button:
+                        text: 'Update to beta'
+                        on_press: root.update_to_latest_beta()
 
-                    Label
-                        text: 'Run developer branch:'
-                        color: [0,0,0,1]
-                        font_size: 20
-                        halign: "left"
-                        markup: True
-                        size_hint_y: 0.3
-                        text_size: self.size
+                    GridLayout:
+                        size_hint_y: 0.4
+                        pos: self.parent.pos
+                        cols: 2
+                        rows: 0
+                        padding: 0
 
-                    TextInput:
-                        id: user_branch
-                        text: 'branch'
-                        multiline: False
-                        size_hint_y: 0.6
-                        font_size: 20
+                        Label
+                            text: 'Run developer branch:'
+                            color: [0,0,0,1]
+                            font_size: 20
+                            halign: "left"
+                            markup: True
+                            size_hint_y: 0.3
+                            text_size: self.size
+
+                        TextInput:
+                            id: user_branch
+                            text: 'branch'
+                            multiline: False
+                            size_hint_y: 0.6
+                            font_size: 20
 
                     Button:
                         text: 'Checkout and pull (uses wifi)'
