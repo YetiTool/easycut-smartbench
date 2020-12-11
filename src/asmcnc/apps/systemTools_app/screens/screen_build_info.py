@@ -83,7 +83,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     cols: 2
-                    rows: 6
+                    rows: 8
                     # size_hint: (None, None)
                     # height: dp(280)
                     # width: dp(580)
