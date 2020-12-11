@@ -397,7 +397,7 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_model(self):
         try:
-            file = open(self.smartbench_model_path, 'w+')
+            file = open(self.smartbench_model_path, 'r')
             self.smartbench_model.text = file.read()
             file.close()
         except: 
