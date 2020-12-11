@@ -68,29 +68,6 @@ Builder.load_string("""
                     padding: [40,20]
                     spacing: 20
                     orientation: 'vertical'
-                    GridLayout:
-                        size_hint_y: 0.4
-                        pos: self.parent.pos
-                        cols: 2
-                        rows: 0
-                        padding: 0
-
-                        Label:
-                            text: 'Latest beta version:'
-                            color: [0,0,0,1]
-                            font_size: 20
-                            markup: True
-
-                        Label:
-                            id: beta_version
-                            text: 'beta_version_no'
-                            color: [0,0,0,1]
-                            font_size: 20
-                            markup: True
-
-                    Button:
-                        text: 'Update to beta'
-                        on_press: root.update_to_latest_beta()
 
                     GridLayout:
                         pos: self.parent.pos
@@ -117,6 +94,31 @@ Builder.load_string("""
                     Button:
                         text: 'Checkout and pull (uses wifi)'
                         on_press: root.checkout_branch()
+
+                    GridLayout:
+                        size_hint_y: 0.4
+                        pos: self.parent.pos
+                        cols: 2
+                        rows: 0
+                        padding: 0
+
+                        Label:
+                            text: 'Latest beta version:'
+                            color: [0,0,0,1]
+                            font_size: 20
+                            markup: True
+
+                        Label:
+                            id: beta_version
+                            text: 'beta_version_no'
+                            color: [0,0,0,1]
+                            font_size: 20
+                            markup: True
+
+                    Button:
+                        text: 'Update to beta'
+                        on_press: root.update_to_latest_beta()
+
 
                 BoxLayout:
                     size_hint: (None,None)
