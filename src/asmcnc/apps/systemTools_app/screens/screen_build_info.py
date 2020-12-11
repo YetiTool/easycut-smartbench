@@ -408,4 +408,4 @@ class BuildInfoScreen(Screen):
             self.smartbench_model.text = '[b]' + str(file.read()) + '[/b]'
             file.close()
         except: 
-            self.smartbench_model.text = '-'
+            self.smartbench_model.text = 'SmartBench'
