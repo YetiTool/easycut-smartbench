@@ -66,18 +66,19 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(320)
-                padding: 0
+                padding: 20
                 spacing: 0
                 orientation: 'vertical'
 
-                Label:
-                    text: 'Machine Info'
-                    color: [0,0,0,1]
-                    size_hint_y: 0.2
-                    halign: "left"
-                    valign: "middle"
-                    markup: True
-                    font_size: 24
+                # Label:
+                #     text: 'Machine Info'
+                #     color: [0,0,0,1]
+                #     size_hint_y: 0.2
+                #     halign: "left"
+                #     valign: "middle"
+                #     markup: True
+                #     font_size: 24
+                #     text_size: self.size
 
                 GridLayout:
                     size: self.parent.size
@@ -87,7 +88,7 @@ Builder.load_string("""
                     # size_hint: (None, None)
                     # height: dp(280)
                     # width: dp(580)
-                    # cols_minimum: {0: dp(160), 1: dp(400)}
+                    cols_minimum: {0: dp(200), 1: dp(300)}
                     # rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
                     # spacing: [dp(20), dp(17.5)]
 
@@ -321,7 +322,7 @@ Builder.load_string("""
                 width: dp(800)
                 height: dp(80)
                 padding: 0
-                spacing: 0
+                spacing: 10
                 orientation: 'horizontal'
 
                 BoxLayout:
@@ -393,7 +394,7 @@ Builder.load_string("""
                     #         size: self.size
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
+                        height: dp(80)
                         width: dp(80)
                         padding: [19, 10, 10, 10]
                         Button:
@@ -433,8 +434,8 @@ class BuildInfoScreen(Screen):
         # self.pl_hash_label.text = self.set.pl_hash
         # self.pl_branch_label.text = self.set.pl_branch
 
-        # self.hw_version_label.text = self.m.s.hw_version
-        # self.zh_version_label.text = str(self.m.z_head_version())
+        self.hw_version_label.text = self.m.s.hw_version
+        self.zh_version_label.text = str(self.m.z_head_version())
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
 
