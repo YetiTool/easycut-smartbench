@@ -422,17 +422,18 @@ class FactorySettingsScreen(Screen):
 
     def full_console_update(self):
         ## FINISH ME
-        if self.m.serial_number() == 0:
-            pass
-        elif self.smartbench_model.text == 'Choose Model':
-            pass
-        elif self.software_version_label.text != self.latest_software_version.text:
-            pass
-        elif self.platform_version_label.text != self.latest_platform_version.text:
-            pass
-        else: 
-            pass
+        # if self.m.serial_number() == 0:
+        #     pass
+        # elif self.smartbench_model.text == 'Choose Model':
+        #     pass
+        # elif self.software_version_label.text != self.latest_software_version.text:
+        #     pass
+        # elif self.platform_version_label.text != self.latest_platform_version.text:
+        #     pass
+        # else: 
+        #     pass
         # run mega update script
+        pass
 
     def toggle_reminders(self):
         if self.maintenance_reminder_toggle.state == 'normal':
