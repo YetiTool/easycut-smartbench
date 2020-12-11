@@ -43,13 +43,13 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                rgba: hex('#f9f9f9ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
 
         BoxLayout:
-            padding: 10
+            padding: 0
             spacing: 10
             orientation: "vertical"
             BoxLayout:
@@ -57,25 +57,25 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
                         pos: self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(70)
-                    width: dp(780)
-                    text: "Update Testing"
-                    color: [0,0,0,1]
+                    height: dp(60)
+                    width: dp(800)
+                    text: "Update testing"
+                    color: hex('#f9f9f9ff')
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
                     markup: True
-       
+                   
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(240)
+                width: dp(800)
+                height: dp(320)
                 padding: 20
                 spacing: 0
                 orientation: 'vertical'
