@@ -193,28 +193,36 @@ Builder.load_string("""
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
-                    padding: 0
-                    spacing: 0
                     canvas:
                         Color:
                             rgba: [1,1,1,1]
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    # width: dp(192.5)
+                    # height: dp(130)
+                    width: dp(80)
+                    height: dp(130)
+                    padding: 0
+                    spacing: 0
+                    # canvas:
+                    #     Color:
+                    #         rgba: [1,1,1,1]
+                    #     RoundedRectangle:
+                    #         pos: self.pos
+                    #         size: self.size
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(130)
-                        width: dp(192.5)
-                        padding: [52.25,31,52.25,31]
+                        width: dp(80)
+                        padding: [10, 68, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(68)
-                            width: dp(88)
+                            height: dp(52)
+                            width: dp(60)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -232,17 +240,17 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(385)
+                    width: dp(620)
                     height: dp(130)
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
+                    # canvas:
+                    #     Color:
+                    #         rgba: [1,1,1,1]
+                    #     RoundedRectangle:
+                    #         pos: self.pos
+                    #         size: self.size
                     Label:
                         text: 'Machine Info'
                         color: [0,0,0,1]
@@ -276,26 +284,27 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
+                    # width: dp(192.5)
+                    # height: dp(130)
+                    width: dp(80)
                     height: dp(130)
                     padding: 0
                     spacing: 0
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-
+                    # canvas:
+                    #     Color:
+                    #         rgba: [1,1,1,1]
+                    #     RoundedRectangle:
+                    #         pos: self.pos
+                    #         size: self.size
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(130)
-                        width: dp(192.5)
-                        padding: [40.25,9,40.25,9] 
+                        width: dp(80)
+                        padding: [19, 60, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(112)
-                            width: dp(112)
+                            height: dp(60)
+                            width: dp(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
