@@ -68,32 +68,43 @@ Builder.load_string("""
                 height: dp(320)
                 padding: 0
                 spacing: 0
+                halign: "left"
+                valign: "middle"
+                markup: True
+                orientation: 'vertical'
 
-                GridLayout: 
+                Label:
+                    text: 'Machine Info'
+                    color: [0,0,0,1]
+                    size_hint_y: 0.2
+
+                GridLayout:
                     size: self.parent.size
                     pos: self.parent.pos
-                    cols: 6
-                    rows: 4
+                    cols: 2
+                    rows: 6
 
-                    Label: 
+                    Label:
+                        text: 'Serial number:'
+                        color: [0,0,0,1]
+                    Label:
+                        id: machine_serial_number_label
                         text: ''
+                        color: [0,0,0,1]
+                    Label:
+                        text: 'Model:'
+                        color: [0,0,0,1]
+                    Label:
+                        text: '-'
+                        color: [0,0,0,1]
+                    Label:
+                        text: 'Console serial number:'
+                        color: [0,0,0,1]
+                    Label:
+                        text: '-'
+                        color: [0,0,0,1]
                     Label: 
                         text: 'Software'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Platform'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Firmware'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Z head'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Hardware'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Version'
                         color: [0,0,0,1]
                     Label:
                         id: sw_version_label
@@ -103,6 +114,9 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'center'
                     Label: 
+                        text: 'Platform'
+                        color: [0,0,0,1]
+                    Label: 
                         id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
@@ -110,76 +124,127 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'center'
                     Label: 
+                        text: 'Firmware'
+                        color: [0,0,0,1]
+                    Label: 
                         id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
                         text_size: self.size
                         markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        id: zh_version_label
-                        text: 'ZH_version'
-                        color: [0,0,0,1]
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        id: hw_version_label
-                        text: 'HW_version'
-                        color: [0,0,0,1]
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        text: 'Branch'
-                        color: [0,0,0,1]
-                    Label: 
-                        id: sw_branch_label
-                        text: 'SW_branch'
-                        color: [0,0,0,1]
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        id: pl_branch_label
-                        text: 'PL_branch'
-                        color: [0,0,0,1]
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: 'Commit'
-                        color: [0,0,0,1]
-                    Label: 
-                        id: sw_hash_label
-                        text: 'SW_commit'
-                        color: [0,0,0,1]
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        id: pl_hash_label
-                        text: 'PL_commit'
-                        color: [0,0,0,1]
-                        markup: 'True'
-                        halign: 'center'
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
-                    Label: 
-                        text: '-'
-                        color: [0,0,0,1]
+                        halign: 'center'                     
+
+                # GridLayout: 
+                #     size: self.parent.size
+                #     pos: self.parent.pos
+                #     cols: 6
+                #     rows: 4
+
+                #     Label: 
+                #         text: ''
+                #     Label: 
+                #         text: 'Software'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Platform'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Firmware'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Z head'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Hardware'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Version'
+                #         color: [0,0,0,1]
+                #     Label:
+                #         id: sw_version_label
+                #         text: 'SW_version'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: pl_version_label
+                #         text: 'PL_version'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: fw_version_label
+                #         text: 'FW_version'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: zh_version_label
+                #         text: 'ZH_version'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: hw_version_label
+                #         text: 'HW_version'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         text: 'Branch'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         id: sw_branch_label
+                #         text: 'SW_branch'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: pl_branch_label
+                #         text: 'PL_branch'
+                #         color: [0,0,0,1]
+                #         text_size: self.size
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: 'Commit'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         id: sw_hash_label
+                #         text: 'SW_commit'
+                #         color: [0,0,0,1]
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         id: pl_hash_label
+                #         text: 'PL_commit'
+                #         color: [0,0,0,1]
+                #         markup: 'True'
+                #         halign: 'center'
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
+                #     Label: 
+                #         text: '-'
+                #         color: [0,0,0,1]
 
             BoxLayout:
                 size_hint: (None,None)
@@ -240,36 +305,7 @@ Builder.load_string("""
                     #     RoundedRectangle:
                     #         pos: self.pos
                     #         size: self.size
-                    Label:
-                        text: 'Machine Info'
-                        color: [0,0,0,1]
-                        size_hint_y: 0.2
 
-                    GridLayout:
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        cols: 2
-                        rows: 3
-
-                        Label:
-                            text: 'Serial number:'
-                            color: [0,0,0,1]
-                        Label:
-                            id: machine_serial_number_label
-                            text: ''
-                            color: [0,0,0,1]
-                        Label:
-                            text: 'Model:'
-                            color: [0,0,0,1]
-                        Label:
-                            text: '-'
-                            color: [0,0,0,1]
-                        Label:
-                            text: 'Console serial number:'
-                            color: [0,0,0,1]
-                        Label:
-                            text: '-'
-                            color: [0,0,0,1]
 
                 BoxLayout:
                     size_hint: (None,None)
