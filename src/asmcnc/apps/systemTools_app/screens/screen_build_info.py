@@ -87,13 +87,13 @@ Builder.load_string("""
                     rows: 8
                     size_hint: (None, None)
                     height: dp(280)
-                    width: dp(500)
-                    cols_minimum: {0: dp(180), 1: dp(320)}
+                    width: dp(600)
+                    cols_minimum: {0: dp(250), 1: dp(350)}
                     # rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
                     # spacing: [dp(20), dp(17.5)]
 
                     Label:
-                        text: 'Serial number:'
+                        text: '[b]Serial number[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -110,7 +110,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label:
-                        text: 'Model:'
+                        text: '[b]Model[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -126,7 +126,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label:
-                        text: 'Console serial number:'
+                        text: '[b]Console serial number[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -142,7 +142,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label: 
-                        text: 'Software'
+                        text: '[b]Software[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -160,7 +160,7 @@ Builder.load_string("""
                         markup: 'True'
                         font_size: 20
                     Label: 
-                        text: 'Platform'
+                        text: '[b]Platform[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -178,7 +178,7 @@ Builder.load_string("""
                         markup: 'True'
                         font_size: 20
                     Label: 
-                        text: 'Firmware'
+                        text: '[b]Firmware[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -196,7 +196,7 @@ Builder.load_string("""
                         markup: 'True'
                         font_size: 20
                     Label: 
-                        text: 'Z head'
+                        text: '[b]Z head[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -214,7 +214,7 @@ Builder.load_string("""
                         markup: 'True'
                         font_size: 20
                     Label: 
-                        text: 'Hardware'
+                        text: '[b]Hardware[/b]'
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
