@@ -38,7 +38,7 @@ Builder.load_string("""
 
         BoxLayout:
             padding: 0
-            spacing: 0
+            spacing: 10
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -51,10 +51,11 @@ Builder.load_string("""
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(90)
+                    height: dp(80)
                     width: dp(800)
                     text: "Build Information"
-                    color: hex('#333333ff')
+                    color: hex('#f9f9f9ff')
+                    # color: hex('#333333ff') #grey
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
@@ -64,7 +65,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(240)
+                height: dp(300)
                 padding: 0
                 spacing: 0
                 canvas:
@@ -188,8 +189,8 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(130)
+                width: dp(800)
+                height: dp(80)
                 padding: 0
                 spacing: 0
                 orientation: 'horizontal'
@@ -205,7 +206,7 @@ Builder.load_string("""
                     # width: dp(192.5)
                     # height: dp(130)
                     width: dp(80)
-                    height: dp(130)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
                     # canvas:
@@ -216,9 +217,9 @@ Builder.load_string("""
                     #         size: self.size
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
+                        height: dp(80)
                         width: dp(80)
-                        padding: [10, 68, 10, 10]
+                        padding: [10, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
                             height: dp(52)
@@ -241,7 +242,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(620)
-                    height: dp(130)
+                    height: dp(80)
                     padding: 10
                     spacing: 0
                     orientation: 'vertical'
@@ -287,7 +288,7 @@ Builder.load_string("""
                     # width: dp(192.5)
                     # height: dp(130)
                     width: dp(80)
-                    height: dp(130)
+                    height: dp(80)
                     padding: 0
                     spacing: 0
                     # canvas:
@@ -300,7 +301,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(130)
                         width: dp(80)
-                        padding: [19, 60, 10, 10]
+                        padding: [19, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
                             height: dp(60)
