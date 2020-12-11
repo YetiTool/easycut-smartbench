@@ -85,7 +85,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 20
+                        font_size: 24
 
                     GridLayout:
                         size: self.parent.size
@@ -93,7 +93,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 8
                         size_hint: (None, None)
-                        height: dp(260)
+                        height: dp(250)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
