@@ -421,7 +421,6 @@ class FactorySettingsScreen(Screen):
         self.m.write_set_up_options(True)
 
     def full_console_update(self):
-        ## FINISH ME
         # if self.m.serial_number() == 0:
         #     pass
         # elif self.smartbench_model.text == 'Choose Model':
