@@ -95,7 +95,7 @@ Builder.load_string("""
                                 spacing: 5
 
                                 Spinner:
-                                    text: 'Model'
+                                    text: 'Choose model'
                                     values: root.machine_model_values
                                     on_text: root.update_model()
 
