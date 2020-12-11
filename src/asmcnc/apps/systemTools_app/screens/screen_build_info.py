@@ -79,10 +79,12 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(280)
                     width: dp(550)
-                    cols_minimum: {0: dp(250), 1: dp(300)}
+                    cols_minimum: {0: dp(230), 1: dp(320)}
+
 
                     Label:
-                        text: '[b]Model[/b]'
+                        id: smartbench_model
+                        text: '-'
                         color: hex('#333333ff')
                         text_size: self.size
                         halign: "left"
@@ -90,8 +92,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label:
-                        id: smartbench_model
-                        text: '-'
+                        text: ''
                         color: hex('#333333ff')
                         text_size: self.size
                         halign: "left"
