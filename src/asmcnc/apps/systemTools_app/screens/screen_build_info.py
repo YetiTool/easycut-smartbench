@@ -94,6 +94,7 @@ Builder.load_string("""
 
                     Label:
                         text: '[b]Serial number[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -102,6 +103,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         id: machine_serial_number_label
+                        color: hex('#333333ff')
                         text: ''
                         text_size: self.size
                         color: [0,0,0,1]
@@ -111,6 +113,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         text: '[b]Model[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -119,6 +122,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         text: '-'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -127,6 +131,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         text: '[b]Console serial number[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -135,6 +140,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         text: '-'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -143,6 +149,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         text: '[b]Software[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -151,6 +158,7 @@ Builder.load_string("""
                         font_size: 20
                     Label:
                         id: sw_version_label
+                        color: hex('#333333ff')
                         text: 'SW_version'
                         color: [0,0,0,1]
                         halign: "left"
@@ -161,6 +169,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         text: '[b]Platform[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -169,6 +178,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         id: pl_version_label
+                        color: hex('#333333ff')
                         text: 'PL_version'
                         color: [0,0,0,1]
                         halign: "left"
@@ -179,6 +189,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         text: '[b]Firmware[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -187,6 +198,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         id: fw_version_label
+                        color: hex('#333333ff')
                         text: 'FW_version'
                         color: [0,0,0,1]
                         halign: "left"
@@ -197,6 +209,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         text: '[b]Z head[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -205,6 +218,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         id: zh_version_label
+                        color: hex('#333333ff')
                         text: 'ZH_version'
                         color: [0,0,0,1]
                         halign: "left"
@@ -215,6 +229,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         text: '[b]Hardware[/b]'
+                        color: hex('#333333ff')
                         text_size: self.size
                         color: [0,0,0,1]
                         halign: "left"
@@ -223,6 +238,7 @@ Builder.load_string("""
                         font_size: 20
                     Label: 
                         id: hw_version_label
+                        color: hex('#333333ff')
                         text: 'HW_version'
                         color: [0,0,0,1]
                         halign: "left"
