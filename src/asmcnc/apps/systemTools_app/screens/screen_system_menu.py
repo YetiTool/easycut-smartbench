@@ -207,14 +207,13 @@ class SystemMenuScreen(Screen):
     	self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
-        self.systemtools_sm.download_logs_to_usb()
+        popup_system.PopupDownloadLogs(self.systemtools_sm)
 
     def reboot(self):
-        self.systemtools_sm.sm.current = 'rebooting'
+        popup_system.RebootConsole(self.systemtools_sm)
 
     def quit_to_console(self):
-        print 'Bye!'
-        sys.exit()
+        popup_system.QuitToConsole(self.systemtools_sm)
 
     def beta_testing(self):
         popup_system.PopupBetaTesting(self.systemtools_sm)
