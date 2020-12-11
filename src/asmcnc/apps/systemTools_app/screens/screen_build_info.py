@@ -51,7 +51,7 @@ Builder.load_string("""
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(80)
+                    height: dp(60)
                     width: dp(800)
                     text: "Build Information"
                     color: hex('#f9f9f9ff')
@@ -65,15 +65,9 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(780)
-                height: dp(300)
+                height: dp(320)
                 padding: 0
                 spacing: 0
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
 
                 GridLayout: 
                     size: self.parent.size
@@ -194,12 +188,6 @@ Builder.load_string("""
                 padding: 0
                 spacing: 0
                 orientation: 'horizontal'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
 
                 BoxLayout:
                     size_hint: (None,None)
