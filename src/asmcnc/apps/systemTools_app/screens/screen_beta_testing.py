@@ -88,7 +88,7 @@ Builder.load_string("""
                             id: user_branch
                             text: 'branch'
                             multiline: False
-                            size_hint_y: 0.6
+                            size_hint_y: 0.4
                             font_size: 20
 
                     Button:
