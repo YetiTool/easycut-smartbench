@@ -22,8 +22,8 @@ Builder.load_string("""
     # pl_hash_label: pl_hash_label  
     # pl_branch_label: pl_branch_label
     fw_version_label: fw_version_label
-    hw_version_label: hw_version_label
-    zh_version_label: zh_version_label
+    # hw_version_label: hw_version_label
+    # zh_version_label: zh_version_label
     machine_serial_number_label: machine_serial_number_label
 
     BoxLayout:
@@ -363,8 +363,8 @@ class BuildInfoScreen(Screen):
         # self.pl_hash_label.text = self.set.pl_hash
         # self.pl_branch_label.text = self.set.pl_branch
 
-        self.hw_version_label.text = self.m.s.hw_version
-        self.zh_version_label.text = str(self.m.z_head_version())
+        # self.hw_version_label.text = self.m.s.hw_version
+        # self.zh_version_label.text = str(self.m.z_head_version())
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = 'YS6'
 
