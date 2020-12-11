@@ -78,7 +78,7 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(235)
+                        height: dp(210)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -102,20 +102,14 @@ Builder.load_string("""
                             BoxLayout: 
                                 orientation: 'vertical'
                                 spacing: 5
-                                # Label:
-                                #     text: '[b]Serial number (e.g., 1234.01)[/b]'
-                                #     color: [0,0,0,1]
-                                #     markup: True
-                                #     text_size: self.size
-                                #     halign: 'left'
-                                #     size_hint_y: 0.8
+
 
                                 GridLayout: 
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 0
+                                    padding: 10
                                     spacing: 10
                                     Label:
                                         text: '[b]Serial number $50 = [/b]'
@@ -132,6 +126,7 @@ Builder.load_string("""
                                             valign: 'middle'
                                             size_hint_x: 0.6
                                             input_filter: 'int'
+                                            multiline: False
 
                                         Label:
                                             text: '.'
@@ -147,6 +142,7 @@ Builder.load_string("""
                                             valign: 'middle'
                                             size_hint_x: 0.3
                                             input_filter: 'int'
+                                            multiline: False
 
                                     Button:
                                         text: 'UPDATE'
@@ -174,7 +170,7 @@ Builder.load_string("""
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 0
+                                    padding: 10
                                     spacing: 10
 
                                     Label:
@@ -188,6 +184,7 @@ Builder.load_string("""
                                         markup: True
                                         valign: 'middle'
                                         input_filter: 'float'
+                                        multiline: False
                                     Button:
                                         text: 'UPDATE'
                                         on_press: root.update_z_touch_plate_thickness()
@@ -202,16 +199,11 @@ Builder.load_string("""
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(577.5)
-                        height: dp(75)
+                        height: dp(100)
                         padding: 5
                         spacing: 0
                         orientation: 'vertical'
-                        # canvas:
-                        #     Color:
-                        #         rgba: [1,1,1,1]
-                        #     RoundedRectangle:
-                        #         pos: self.pos
-                        #         size: self.size
+
                         GridLayout: 
                             size: self.parent.size
                             pos: self.parent.pos
@@ -275,12 +267,7 @@ Builder.load_string("""
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
+
                     GridLayout: 
                         size: self.parent.size
                         pos: self.parent.pos
