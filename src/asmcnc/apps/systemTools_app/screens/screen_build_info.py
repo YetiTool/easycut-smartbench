@@ -21,6 +21,7 @@ Builder.load_string("""
     fw_version_label: fw_version_label
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
+    smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
     more_info_button: more_info_button
@@ -79,9 +80,6 @@ Builder.load_string("""
                     height: dp(280)
                     width: dp(550)
                     cols_minimum: {0: dp(250), 1: dp(300)}
-                    # rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
-                    # spacing: [dp(20), dp(17.5)]
-
 
                     Label:
                         text: '[b]Model[/b]'
@@ -92,6 +90,7 @@ Builder.load_string("""
                         markup: True
                         font_size: 20
                     Label:
+                        id: smartbench_model
                         text: '-'
                         color: hex('#333333ff')
                         text_size: self.size
@@ -344,6 +343,8 @@ Builder.load_string("""
 
 class BuildInfoScreen(Screen):
 
+    smartbench_model_path = '/home/pi/smartbench_model_name.txt'
+
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -391,3 +392,11 @@ class BuildInfoScreen(Screen):
             self.show_more_info.opacity = 0
         if self.more_info_button.state == 'down':
             self.show_more_info.opacity = 1
+
+    def get_smartbench_model(self):
+        try:
+            file = open(self.smartbench_model_path, 'w+')
+            self.smartbench_model.text = file.read()
+            file.close()
+        except: 
+            self.smartbench_model.text = '-'

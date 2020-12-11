@@ -26,6 +26,7 @@ Builder.load_string("""
     machine_touchplate_thickness: machine_touchplate_thickness
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
+    smartbench_model: smartbench_model
 
     BoxLayout:
         height: dp(800)
@@ -95,9 +96,10 @@ Builder.load_string("""
                                 spacing: 5
 
                                 Spinner:
+                                    id: smartbench_model
                                     text: 'Choose model'
                                     values: root.machine_model_values
-                                    on_text: root.update_model()
+                                    on_text: root.set_smartbench_model()
 
                             BoxLayout: 
                                 orientation: 'vertical'
@@ -368,6 +370,7 @@ Builder.load_string("""
 class FactorySettingsScreen(Screen):
 
     machine_model_values = ['SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
+    smartbench_model_path = '/home/pi/smartbench_model_name.txt'
 
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
@@ -393,9 +396,6 @@ class FactorySettingsScreen(Screen):
 
     def on_enter(self):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
-
-    def update_model(self):
-        pass
 
     def update_z_touch_plate_thickness(self):
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
@@ -443,4 +443,10 @@ class FactorySettingsScreen(Screen):
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
+
+    def set_smartbench_model(self):
+        log("Saving SmartBench model...")
+        file = open(self.smartbench_model_path, "w+")
+        file.write(str(self.smartbench_model))
+        file.close()
             
