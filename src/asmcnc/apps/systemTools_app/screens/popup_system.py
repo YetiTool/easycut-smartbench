@@ -55,7 +55,7 @@ class PopupDownloadLogs(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(200, 200),
+                      size=(360, 360),
                       auto_dismiss= False
                       )
         
@@ -107,7 +107,7 @@ class RebootConsole(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(200, 200),
+                      size=(360, 360),
                       auto_dismiss= False
                       )
         
@@ -158,7 +158,7 @@ class QuitToConsole(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(200, 200),
+                      size=(360, 360),
                       auto_dismiss= False
                       )
         
