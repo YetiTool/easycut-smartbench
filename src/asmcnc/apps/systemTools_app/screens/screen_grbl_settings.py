@@ -54,12 +54,6 @@ Builder.load_string("""
                 padding: 20
                 spacing: 0
                 orientation: 'vertical'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
 
                 GridLayout: 
                     size: self.size

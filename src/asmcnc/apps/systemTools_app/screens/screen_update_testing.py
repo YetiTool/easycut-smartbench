@@ -65,7 +65,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
-                    text: "Update testing"
+                    text: "Update Testing"
                     color: hex('#f9f9f9ff')
                     font_size: 30
                     halign: "center"
@@ -79,12 +79,6 @@ Builder.load_string("""
                 padding: 20
                 spacing: 0
                 orientation: 'vertical'
-                canvas:
-                    Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
 
                 GridLayout: 
                     size: self.size

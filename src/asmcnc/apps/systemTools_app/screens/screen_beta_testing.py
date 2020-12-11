@@ -24,13 +24,13 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                rgba: hex('#f9f9f9ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
 
         BoxLayout:
-            padding: 10
+            padding: 0
             spacing: 10
             orientation: "vertical"
             BoxLayout:
@@ -38,16 +38,16 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
-                    RoundedRectangle:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
                         pos: self.pos
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(70)
-                    width: dp(780)
+                    height: dp(60)
+                    width: dp(800)
                     text: "Beta Testing"
-                    color: [0,0,0,1]
+                    color: hex('#f9f9f9ff')
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
@@ -55,157 +55,19 @@ Builder.load_string("""
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(780)
-                height: dp(240)
+                width: dp(800)
+                height: dp(320)
                 padding: 0
                 spacing: 10
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(577.5)
-                    height: dp(240)
+                    width: dp(600)
+                    height: dp(320)
                     padding: [40,20]
                     spacing: 20
                     orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-
-                    Label
-                        text: 'Run developer branch:'
-                        color: [0,0,0,1]
-                        font_size: 20
-                        halign: "left"
-                        markup: True
-                        size_hint_y: 0.3
-                        text_size: self.size
-
-                    TextInput:
-                        id: user_branch
-                        text: 'branch'
-                        multiline: False
-                        size_hint_y: 0.6
-                        font_size: 20
-
-                    Button:
-                        text: 'Checkout and pull (uses wifi)'
-                        on_press: root.checkout_branch()
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(240)
-                    padding: 0
-                    spacing: 0
-                    orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                    BoxLayout:
-                        size_hint: (None,None)
-                        width: dp(192.5)
-                        height: dp(120)
-                        padding: [81.75, 45]
-                        spacing: 0
-                        Button:
-                            size_hint: (None,None)
-                            height: dp(30)
-                            width: dp(29)
-                            background_color: hex('#F4433600')
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            on_press: root.refresh_latest_software_version()
-                            BoxLayout:
-                                padding: 0
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                Image:
-                                    source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-                    BoxLayout:
-                        size_hint: (None,None)
-                        width: dp(192.5)
-                        height: dp(120)
-                        orientation: 'horizontal'
-                        padding: [20, 30]
-                        ToggleButton:
-                            id: usb_toggle
-                            text: 'USB'
-                            group: 'wifi-usb'
-                        ToggleButton:
-                            id: wifi_toggle
-                            text: 'WIFI'
-                            group: 'wifi-usb'
-                            state: 'down'
-
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(780)
-                height: dp(130)
-                padding: 0
-                spacing: 10
-                orientation: 'horizontal'
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
-                    padding: 0
-                    spacing: 0
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [52.25,31,52.25,31]
-                        Button:
-                            size_hint: (None,None)
-                            height: dp(68)
-                            width: dp(88)
-                            background_color: hex('#F4433600')
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            on_press: root.go_back()
-                            BoxLayout:
-                                padding: 0
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
-
-                BoxLayout:
-                    size_hint: (None,None)
-                    width: dp(375)
-                    height: dp(130)
-                    padding: 0
-                    spacing: 0
-                    orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
-
                     GridLayout:
                         size_hint_y: 0.4
                         pos: self.parent.pos
@@ -232,28 +94,138 @@ Builder.load_string("""
                             text: 'Update to beta'
                             on_press: root.update_to_latest_beta()
 
+                    Label
+                        text: 'Run developer branch:'
+                        color: [0,0,0,1]
+                        font_size: 20
+                        halign: "left"
+                        markup: True
+                        size_hint_y: 0.3
+                        text_size: self.size
+
+                    TextInput:
+                        id: user_branch
+                        text: 'branch'
+                        multiline: False
+                        size_hint_y: 0.6
+                        font_size: 20
+
+                    Button:
+                        text: 'Checkout and pull (uses wifi)'
+                        on_press: root.checkout_branch()
+
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(192.5)
-                    height: dp(130)
+                    width: dp(190)
+                    height: dp(320)
                     padding: 0
                     spacing: 0
-                    canvas:
-                        Color:
-                            rgba: [1,1,1,1]
-                        RoundedRectangle:
-                            pos: self.pos
-                            size: self.size
+                    orientation: 'vertical'
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(192.5)
+                        height: dp(120)
+                        orientation: 'horizontal'
+                        padding: [20, 30]
+                        ToggleButton:
+                            id: usb_toggle
+                            text: 'USB'
+                            group: 'wifi-usb'
+                        ToggleButton:
+                            id: wifi_toggle
+                            text: 'WIFI'
+                            group: 'wifi-usb'
+                            state: 'down'
+                    BoxLayout:
+                        size_hint: (None,None)
+                        width: dp(192.5)
+                        height: dp(120)
+                        padding: [81.75, 45]
+                        spacing: 0
+
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(30)
+                            width: dp(29)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.refresh_latest_software_version()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/wifi_app/img/mini_refresh.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(80)
+                padding: 0
+                spacing: 10
+                orientation: 'horizontal'
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(80)
+                    height: dp(80)
+                    padding: 0
+                    spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(130)
-                        width: dp(192.5)
-                        padding: [40.25,9,40.25,9] 
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [10, 10, 10, 10]
                         Button:
                             size_hint: (None,None)
-                            height: dp(112)
-                            width: dp(112)
+                            height: dp(52)
+                            width: dp(60)
+                            background_color: hex('#F4433600')
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            on_press: root.go_back()
+                            BoxLayout:
+                                padding: 0
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                                    center_x: self.parent.center_x
+                                    y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(620)
+                    height: dp(80)
+                    padding: 10
+                    spacing: 0
+                    orientation: 'vertical'
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(80)
+                    height: dp(80)
+                    padding: 0
+                    spacing: 0
+
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(80)
+                        width: dp(80)
+                        padding: [19, 10, 10, 10]
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(60)
+                            width: dp(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
