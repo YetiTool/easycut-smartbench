@@ -247,7 +247,7 @@ Builder.load_string("""
                             border: [dp(7.5)]*4
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.show_more_info()
+                            on_press: root.do_show_more_info()
                             text: 'More info...'
                             color: hex('#f9f9f9ff')
                             markup: True
@@ -388,7 +388,7 @@ class BuildInfoScreen(Screen):
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
-    def show_more_info(self):
+    def do_show_more_info(self):
         if self.more_info_button.state == 'normal':
             self.show_more_info.opacity = 0
         if self.more_info_button.state == 'down':
