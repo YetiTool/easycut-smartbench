@@ -22,8 +22,8 @@ Builder.load_string("""
     # pl_hash_label: pl_hash_label  
     # pl_branch_label: pl_branch_label
     fw_version_label: fw_version_label
-    # hw_version_label: hw_version_label
-    # zh_version_label: zh_version_label
+    hw_version_label: hw_version_label
+    zh_version_label: zh_version_label
     machine_serial_number_label: machine_serial_number_label
 
     BoxLayout:
@@ -68,71 +68,142 @@ Builder.load_string("""
                 height: dp(320)
                 padding: 0
                 spacing: 0
-                halign: "left"
-                valign: "middle"
-                markup: True
                 orientation: 'vertical'
 
                 Label:
                     text: 'Machine Info'
                     color: [0,0,0,1]
                     size_hint_y: 0.2
+                    halign: "left"
+                    valign: "middle"
+                    markup: True
+                    font_size: 24
 
                 GridLayout:
                     size: self.parent.size
                     pos: self.parent.pos
                     cols: 2
                     rows: 6
+                    # size_hint: (None, None)
+                    # height: dp(280)
+                    # width: dp(580)
+                    # cols_minimum: {0: dp(160), 1: dp(400)}
+                    # rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
+                    # spacing: [dp(20), dp(17.5)]
 
                     Label:
                         text: 'Serial number:'
                         color: [0,0,0,1]
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         id: machine_serial_number_label
                         text: ''
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         text: 'Model:'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         text: '-'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         text: 'Console serial number:'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         text: '-'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label: 
                         text: 'Software'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label:
                         id: sw_version_label
                         text: 'SW_version'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                         text_size: self.size
                         markup: 'True'
-                        halign: 'center'
                     Label: 
                         text: 'Platform'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label: 
                         id: pl_version_label
                         text: 'PL_version'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                         text_size: self.size
                         markup: 'True'
-                        halign: 'center'
                     Label: 
                         text: 'Firmware'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                     Label: 
                         id: fw_version_label
                         text: 'FW_version'
                         color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
                         text_size: self.size
                         markup: 'True'
-                        halign: 'center'                     
+                    Label: 
+                        text: 'Z head'
+                        color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
+                    Label: 
+                        id: zh_version_label
+                        text: 'ZH_version'
+                        color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
+                        text_size: self.size
+                        markup: 'True'
+                    Label: 
+                        text: 'Hardware'
+                        color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
+                    Label: 
+                        id: hw_version_label
+                        text: 'HW_version'
+                        color: [0,0,0,1]
+                    halign: "left"
+                        valign: "middle"
+                        markup: True
+                        text_size: self.size
+                        markup: 'True'
+
 
                 # GridLayout: 
                 #     size: self.parent.size
@@ -181,20 +252,8 @@ Builder.load_string("""
                 #         text_size: self.size
                 #         markup: 'True'
                 #         halign: 'center'
-                #     Label: 
-                #         id: zh_version_label
-                #         text: 'ZH_version'
-                #         color: [0,0,0,1]
-                #         text_size: self.size
-                #         markup: 'True'
-                #         halign: 'center'
-                #     Label: 
-                #         id: hw_version_label
-                #         text: 'HW_version'
-                #         color: [0,0,0,1]
-                #         text_size: self.size
-                #         markup: 'True'
-                #         halign: 'center'
+
+
                 #     Label: 
                 #         text: 'Branch'
                 #         color: [0,0,0,1]
