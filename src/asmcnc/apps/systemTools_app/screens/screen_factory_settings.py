@@ -412,15 +412,6 @@ class FactorySettingsScreen(Screen):
         Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def factory_reset(self):
-        lifetime = float(120*3600)
-        self.m.write_spindle_brush_values(0, lifetime)
-        self.m.write_z_head_maintenance_settings(0)
-        self.m.write_calibration_settings(0, float(320*3600))
-        self.m.reminders_enabled = True
-        self.m.trigger_setup = True
-        self.m.write_set_up_options(True)
-
-    def full_console_update(self):
         if self.m.serial_number() == 0:
             pass
         elif self.smartbench_model.text == 'Choose Model':
@@ -431,6 +422,17 @@ class FactorySettingsScreen(Screen):
             pass
         else: 
             pass
+
+        lifetime = float(120*3600)
+        self.m.write_spindle_brush_values(0, lifetime)
+        self.m.write_z_head_maintenance_settings(0)
+        self.m.write_calibration_settings(0, float(320*3600))
+        self.m.reminders_enabled = True
+        self.m.trigger_setup = True
+        self.m.write_set_up_options(True)
+
+    def full_console_update(self):
+        pass
         # run mega update script
         # pass
 
