@@ -17,10 +17,10 @@ Builder.load_string("""
 
     sw_version_label: sw_version_label
     pl_version_label: pl_version_label
-    sw_hash_label: sw_hash_label
-    sw_branch_label: sw_branch_label
-    pl_hash_label: pl_hash_label  
-    pl_branch_label: pl_branch_label
+    # sw_hash_label: sw_hash_label
+    # sw_branch_label: sw_branch_label
+    # pl_hash_label: pl_hash_label  
+    # pl_branch_label: pl_branch_label
     fw_version_label: fw_version_label
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
@@ -358,10 +358,10 @@ class BuildInfoScreen(Screen):
         self.pl_version_label.text = self.set.platform_version
         self.latest_sw_version = self.set.latest_sw_version
         self.latest_platform_version = self.set.latest_platform_version
-        self.sw_hash_label.text = self.set.sw_hash
-        self.sw_branch_label.text = self.set.sw_branch
-        self.pl_hash_label.text = self.set.pl_hash
-        self.pl_branch_label.text = self.set.pl_branch
+        # self.sw_hash_label.text = self.set.sw_hash
+        # self.sw_branch_label.text = self.set.sw_branch
+        # self.pl_hash_label.text = self.set.pl_hash
+        # self.pl_branch_label.text = self.set.pl_branch
 
         self.hw_version_label.text = self.m.s.hw_version
         self.zh_version_label.text = str(self.m.z_head_version())
