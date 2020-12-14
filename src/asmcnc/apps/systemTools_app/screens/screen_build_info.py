@@ -368,8 +368,8 @@ class BuildInfoScreen(Screen):
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = '-'
 
-        self.show_more_info.text = 'Software branch\n' + self.set.sw_branch + '\n\nSoftware commit\n' + self.set.sw_hash + \
-        '\n\nPlatform branch\n' + self.set.pl_branch + '\n\nPlatform commit\n' + self.set.pl_hash 
+        self.show_more_info.text = 'Software\n' + self.set.sw_branch + '\n' + self.set.sw_hash + \
+        '\n\nPlatform\n' + self.set.pl_branch + '\n' + self.set.pl_hash 
 
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
