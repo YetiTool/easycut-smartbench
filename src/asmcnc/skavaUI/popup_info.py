@@ -176,7 +176,7 @@ class PopupDatum(Widget):
 
 class PopupPark(Widget):
 
-    def __init__(self, screen_manager, machine, xy, warning_message):
+    def __init__(self, screen_manager, machine, warning_message):
         
       self.sm = screen_manager
       self.m = machine
