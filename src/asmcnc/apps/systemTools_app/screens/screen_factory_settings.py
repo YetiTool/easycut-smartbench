@@ -444,11 +444,15 @@ class FactorySettingsScreen(Screen):
 
         self.console_update_button.text = "Doing update, please wait..."
 
-        if self.set.get_sw_update_via_wifi():
-            self.set.update_platform()
-        else: 
-            message = "Could not get software update, please check connection."
-            popup_info.PopupWarning(self.sm, message)
+        def nested_full_console_update(dt):
+
+            if self.set.get_sw_update_via_wifi():
+                self.set.update_platform()
+            else: 
+                message = "Could not get software update, please check connection."
+                popup_info.PopupWarning(self.sm, message)
+
+        Clock.schedule_once(nested_full_console_update, 1)
 
 
     def toggle_reminders(self):
