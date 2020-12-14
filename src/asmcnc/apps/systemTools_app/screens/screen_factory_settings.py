@@ -415,7 +415,7 @@ class FactorySettingsScreen(Screen):
         Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def factory_reset(self):
-        if len(self.m.serial_number()) < 7:
+        if len(str(self.m.serial_number())) < 7:
             warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         elif self.smartbench_model.text == 'Choose model':
