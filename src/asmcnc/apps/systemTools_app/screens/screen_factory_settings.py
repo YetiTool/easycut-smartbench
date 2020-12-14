@@ -442,7 +442,7 @@ class FactorySettingsScreen(Screen):
 
     def full_console_update(self):
 
-        self.console_update_button.text = "Doing update, please wait..."
+        self.console_update_button.text = "Doing update,\nplease wait..."
 
         def nested_full_console_update(dt):
 
