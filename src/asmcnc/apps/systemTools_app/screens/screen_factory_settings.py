@@ -211,6 +211,7 @@ Builder.load_string("""
 
                             Button:
                                 text: 'Full Console Update (wifi)'
+                                on_press: root.full_console_update()
 
                             GridLayout: 
                                 size: self.parent.size
@@ -274,7 +275,7 @@ Builder.load_string("""
                         spacing: 10
                         ToggleButton:
                             id: maintenance_reminder_toggle
-                            text: 'Reminders on'
+                            text: 'Turn reminders off'
                             on_press: root.toggle_reminders()
                         ToggleButton:
                             id: show_spindle_overload_toggle
@@ -414,10 +415,10 @@ class FactorySettingsScreen(Screen):
         Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def factory_reset(self):
-        if self.m.serial_number() == 0:
+        if len(self.m.serial_number()) < 7:
             warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        elif self.smartbench_model.text == 'Choose Model':
+        elif self.smartbench_model.text == 'Choose model':
             warning_message = 'Please ensure machine model is set before doing a factory reset.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         elif self.software_version_label.text != self.latest_software_version.text:
@@ -448,11 +449,11 @@ class FactorySettingsScreen(Screen):
     def toggle_reminders(self):
         if self.maintenance_reminder_toggle.state == 'normal':
             self.m.reminders_enabled = True
-            self.maintenance_reminder_toggle.text = "Reminders on"
+            self.maintenance_reminder_toggle.text = "Turn reminders off"
 
         elif self.maintenance_reminder_toggle.state == 'down':
             self.m.reminders_enabled = False
-            self.maintenance_reminder_toggle.text = "Reminders off"
+            self.maintenance_reminder_toggle.text = "Turn reminders on"
 
     def toggle_spindle_mode(self):
         if self.show_spindle_overload_toggle.state == 'normal':
