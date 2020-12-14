@@ -405,9 +405,9 @@ class SC28XYMove(Widget):
         popup_input_error.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
-
+        warning = 'Is this where you want to set your\nstandby position?'
+        popup_info.PopupPark(self.sm, self.m, warning)
+        
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
             popup_info.PopupHomingWarning(self.sm, self.m, 'sC28', 'sC28')
