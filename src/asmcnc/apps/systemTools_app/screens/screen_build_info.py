@@ -54,7 +54,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
-                    text: "Build Information"
+                    text: "System Information"
                     color: hex('#f9f9f9ff')
                     # color: hex('#333333ff') #grey
                     font_size: 30

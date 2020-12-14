@@ -11,6 +11,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
+from asmcnc.skavaUI import popup_info
+
 Builder.load_string("""
 
 <FactorySettingsScreen>
@@ -208,7 +210,7 @@ Builder.load_string("""
                             spacing: 10
 
                             Button:
-                                text: 'Full Console Update'
+                                text: 'Full Console Update (wifi)'
 
                             GridLayout: 
                                 size: self.parent.size
@@ -413,28 +415,35 @@ class FactorySettingsScreen(Screen):
 
     def factory_reset(self):
         if self.m.serial_number() == 0:
-            pass
+            warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         elif self.smartbench_model.text == 'Choose Model':
-            pass
+            warning_message = 'Please ensure machine model is set before doing a factory reset.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         elif self.software_version_label.text != self.latest_software_version.text:
-            pass
+            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         elif self.platform_version_label.text != self.latest_platform_version.text:
-            pass
-        else: 
-            pass
-
-        lifetime = float(120*3600)
-        self.m.write_spindle_brush_values(0, lifetime)
-        self.m.write_z_head_maintenance_settings(0)
-        self.m.write_calibration_settings(0, float(320*3600))
-        self.m.reminders_enabled = True
-        self.m.trigger_setup = True
-        self.m.write_set_up_options(True)
+            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+        else:
+            lifetime = float(120*3600)
+            self.m.write_spindle_brush_values(0, lifetime)
+            self.m.write_z_head_maintenance_settings(0)
+            self.m.write_calibration_settings(0, float(320*3600))
+            self.m.reminders_enabled = True
+            self.m.trigger_setup = True
+            self.m.write_set_up_options(True) # use this to set warranty on restart?
+            # partially - set this flag and then if it's set check for a file containing an activation code.
+            # delete this file when it's been set. 
 
     def full_console_update(self):
-        pass
-        # run mega update script
-        # pass
+        if self.set.get_sw_update_via_wifi():
+            self.set.update_platform()
+        else: 
+            message = "Could not get software update, please check connection."
+            popup_info.PopupWarning(self.sm, message)
+
 
     def toggle_reminders(self):
         if self.maintenance_reminder_toggle.state == 'normal':

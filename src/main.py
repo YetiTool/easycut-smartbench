@@ -169,7 +169,6 @@ class SkavaUI(App):
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
 
 
-
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)

@@ -264,6 +264,16 @@ class Settings(object):
         os.system("./update_fw.sh")
         sys.exit()
 
+## PLATFORM UPDATES
 
+    def update_platform(self):
+        self.refresh_latest_platform_version()
+        self.refresh_platform_version()
+
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+
+    def platform_ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
             
