@@ -179,8 +179,8 @@ class VirtualBedControl(Widget):
         popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
+        warning = 'Is this where you want to set your\nstandby position?'
+        popup_info.PopupPark(self.sm, self.m, warning)
         
     def go_to_jobstart_xy(self):
         if self.m.is_machine_homed == False:
