@@ -29,6 +29,7 @@ Builder.load_string("""
     maintenance_reminder_toggle: maintenance_reminder_toggle
     show_spindle_overload_toggle: show_spindle_overload_toggle
     smartbench_model: smartbench_model
+    console_update_button: console_update_button
 
     BoxLayout:
         height: dp(800)
@@ -210,6 +211,7 @@ Builder.load_string("""
                             spacing: 10
 
                             Button:
+                                id: console_update_button
                                 text: 'Full Console Update (wifi)'
                                 on_press: root.full_console_update()
 
@@ -439,6 +441,9 @@ class FactorySettingsScreen(Screen):
             # delete this file when it's been set. 
 
     def full_console_update(self):
+
+        self.console_update_button.text = "Doing update, please wait..."
+
         if self.set.get_sw_update_via_wifi():
             self.set.update_platform()
         else: 
