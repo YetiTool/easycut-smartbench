@@ -131,7 +131,7 @@ Builder.load_string("""
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
-                                            size_hint_x: 0.2
+                                            size_hint_x: 0.35
                                             input_filter: 'int'
                                             multiline: False
                                         Label:
@@ -154,7 +154,7 @@ Builder.load_string("""
                                             text: '.'
                                             color: [0,0,0,1]
                                             markup: True
-                                            size_hint_x: 0.1
+                                            size_hint_x: 0.05
 
                                         TextInput:
                                             id: product_number_input
@@ -162,7 +162,7 @@ Builder.load_string("""
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
-                                            size_hint_x: 0.3
+                                            size_hint_x: 0.2
                                             input_filter: 'int'
                                             multiline: False
 
