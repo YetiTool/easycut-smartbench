@@ -113,8 +113,6 @@ if sys.platform != 'win32' and sys.platform != 'darwin':
     ## Easycut config
     check_and_update_config()
 
-    print start_screen
-
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
