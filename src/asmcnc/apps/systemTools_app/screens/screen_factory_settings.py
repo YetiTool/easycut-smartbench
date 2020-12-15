@@ -456,8 +456,7 @@ class FactorySettingsScreen(Screen):
             self.m.write_set_up_options(True) # use this to set warranty on restart?
             # partially - set this flag and then if it's set check for a file containing an activation code.
             # delete this file when it's been set.
-            # self.write_activation_code_and_serial_number_to_file()
-            self.generate_activation_code()
+            self.write_activation_code_and_serial_number_to_file()
             # os.remove("demofile.txt")
 
 
