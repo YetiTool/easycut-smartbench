@@ -13,7 +13,8 @@ from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings
+widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder
 
 Builder.load_string("""
 
@@ -39,6 +40,11 @@ Builder.load_string("""
     spindle_tab: spindle_tab
     spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
+
+    # Z touchplate and lead screw widgets
+    z_misc_save_container: z_misc_save_container
+    touchplate_offset_container: touchplate_offset_container
+    z_lubrication_reminder_container: z_lubrication_reminder_container
 
     TabbedPanel:
         id: tab_panel
@@ -371,7 +377,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(130)
                         width: dp(580)
-                        id: touchplate_offset
+                        id: touchplate_offset_container
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -401,7 +407,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(200)
                         width: dp(580)
-                        id: z_lead_screw_container
+                        id: z_lubrication_reminder_container
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -431,11 +437,13 @@ Builder.load_string("""
     BoxLayout: 
         size_hint: (None,None)
         pos: (dp(568), dp(390))
+        height: dp(90)
+        width: dp(142)        
         Image:
             size_hint: (None,None)
             height: dp(90)
             width: dp(142)
-            background_color: [0,0,0,1]
+            # background_color: hex('#2196f3fb')
             center: self.parent.center
             pos: self.parent.pos
             source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
@@ -515,7 +523,19 @@ class MaintenanceScreenClass(Screen):
         self.spindle_save_container.add_widget(self.spindle_save_widget)       
 
         self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm)
-        self.spindle_settings_container.add_widget(self.spindle_settings_widget)   
+        self.spindle_settings_container.add_widget(self.spindle_settings_widget)
+
+
+        # Z TOUCHPLATE OFFSET AND LEAD SCREW REMINDER WIDGETS
+
+        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.z_misc_save_container.add_widget(self.z_misc_save_widget)
+
+        self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm)
+        self.touchplate_offset_container.add_widget(self.touchplate_offset_widget)
+
+        self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm)
+        self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
