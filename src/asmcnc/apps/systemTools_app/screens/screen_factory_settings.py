@@ -512,7 +512,7 @@ class FactorySettingsScreen(Screen):
 
     def generate_activation_code(self):
         ActiveTempNoOnly = ''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text)))
-        print ('no only: ' + str(ActiveActiveTempNoOnly))
+        print ('no only: ' + str(ActiveTempNoOnly))
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
         print ('start: ' + ActiveTempStart)
         ActiveTempStartReduce = ActiveTempStart[0:15]
