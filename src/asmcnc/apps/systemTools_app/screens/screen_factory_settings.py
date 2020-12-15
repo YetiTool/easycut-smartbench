@@ -532,7 +532,7 @@ class FactorySettingsScreen(Screen):
         Activation_Code_13 = int(ActiveTempStartReduce[6])*53262890;
         Activation_Code_14 = int(ActiveTempStartReduce[6])*89201233;
         Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
-        print('final code' + Final_Activation_Code)
+        print('final code' + str(Final_Activation_Code))
         return Final_Activation_Code
 
     def write_activation_code_and_serial_number_to_file(self):
