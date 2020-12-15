@@ -89,6 +89,13 @@ class WelcomeScreenClass(Screen):
             Clock.schedule_once(self.go_to_next_screen, 1)
 
     def go_to_next_screen(self, dt):
+
+        if self.m.trigger_setup == True: 
+
+            activation_code_filepath = ''
+            if os.path.isfile(activation_code_filepath):
+                self.sm.current = 'warranty_1'
+
         self.sm.current = 'safety'
         
     def set_machine_value_driven_user_settings(self, dt):

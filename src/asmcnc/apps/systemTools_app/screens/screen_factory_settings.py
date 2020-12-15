@@ -4,6 +4,7 @@ Menu screen for system tools app
 
 @author: Letty
 '''
+import os
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -22,6 +23,7 @@ Builder.load_string("""
     latest_software_version: latest_software_version
     latest_platform_version: latest_platform_version
     z_touch_plate_entry: z_touch_plate_entry
+    serial_prefix: serial_prefix
     serial_number_input: serial_number_input
     product_number_input: product_number_input
     machine_serial: machine_serial
@@ -124,12 +126,27 @@ Builder.load_string("""
                                         orientation: 'horizontal'
 
                                         TextInput:
-                                            id: serial_number_input
-                                            text: '1234'
+                                            id: serial_prefix
+                                            text: 'YS6'
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
-                                            size_hint_x: 0.6
+                                            size_hint_x: 0.2
+                                            input_filter: 'int'
+                                            multiline: False
+                                        Label:
+                                            text: ' '
+                                            color: [0,0,0,1]
+                                            markup: True
+                                            size_hint_x: 0.05
+
+                                        TextInput:
+                                            id: serial_number_input
+                                            text: ''
+                                            color: [0,0,0,1]
+                                            markup: True
+                                            valign: 'middle'
+                                            size_hint_x: 0.35
                                             input_filter: 'int'
                                             multiline: False
 
@@ -141,7 +158,7 @@ Builder.load_string("""
 
                                         TextInput:
                                             id: product_number_input
-                                            text: '01'
+                                            text: ''
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
@@ -438,7 +455,11 @@ class FactorySettingsScreen(Screen):
             self.m.trigger_setup = True
             self.m.write_set_up_options(True) # use this to set warranty on restart?
             # partially - set this flag and then if it's set check for a file containing an activation code.
-            # delete this file when it's been set. 
+            # delete this file when it's been set.
+
+            
+            # os.remove("demofile.txt")
+
 
     def full_console_update(self):
 
@@ -488,6 +509,25 @@ class FactorySettingsScreen(Screen):
             file.close()
         except: 
             self.smartbench_model.text = 'Choose Model'
+
+    def generate_activation_code(self):
+        ActiveTempNoOnly = ''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text)))
+
+
+        return 1234
+
+    def write_activation_code_and_serial_number_to_file(self):
+        machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
+        activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
+        try: 
+            file = open(activation_code_filepath, "w+")
+            file.write(str(self.generate_activation_code()))
+            file.close()
+        except: 
+            warning_message = 'Problem saving activation code!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+
+
 
 
             
