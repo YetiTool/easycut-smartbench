@@ -181,40 +181,6 @@ Builder.load_string("""
                         size: self.size
                         pos: self.pos
 
-                # BoxLayout:
-                #     size_hint: (None,None)
-                #     height: dp(80)
-                #     width: dp(760)
-                #     id: monitor_strip
-                #     canvas:
-                #         Color:
-                #             rgba: 1,1,1,1
-                #         RoundedRectangle:
-                #             size: self.size
-                #             pos: self.pos
-                #     BoxLayout: 
-                #         size_hint: (None, None)
-                #         height: dp(80)
-                #         width: dp(760)
-                #         padding: [dp(10),dp(5),dp(5),dp(5)]
-                #         orientation: 'horizontal'
-                #         Label: 
-                #             color: 0,0,0,1
-                #             font_size: dp(22)
-                #             markup: True
-                #             halign: "left"
-                #             valign: "middle"
-                #             text_size: self.size
-                #             size: self.parent.size
-                #             pos: self.parent.pos
-                #             text: "[b]BRUSH MONITOR[/b]"
-
-                #         BoxLayout:
-                #             size_hint: (None,None)
-                #             height: dp(70)
-                #             width: dp(600)
-                #             id: brush_monitor_container
-
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(760)
@@ -376,9 +342,86 @@ Builder.load_string("""
 
 
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            disabled: 'True'
+            background_normal: 'asmcnc/apps/maintenance_app/img/z_misc_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/z_misc_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(804)
+                height: dp(390)
+                orientation: "horizontal" 
+                padding: (22, 20, 22, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(580)
+                    height: dp(350)
+                    orientation: "vertical" 
+                    padding: dp(0)
+                    spacing: dp(20)
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(130)
+                        width: dp(580)
+                        id: touchplate_offset
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                        # BoxLayout: 
+                        #     size_hint: (None, None)
+                        #     height: dp(50)
+                        #     width: dp(760)
+                        #     padding: [dp(10),dp(5),dp(5),dp(5)]
+                        #     orientation: 'horizontal'
+                        #     Label: 
+                        #         color: 0,0,0,1
+                        #         font_size: dp(22)
+                        #         markup: True
+                        #         halign: "left"
+                        #         valign: "middle"
+                        #         text_size: self.size
+                        #         size: self.parent.size
+                        #         pos: self.parent.pos
+                        #         text: "[b]SPINDLE COOLDOWN SETTINGS[/b]"
+
+
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(200)
+                        width: dp(580)
+                        id: z_lead_screw_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(350)
+                    width: dp(160)
+                    id: z_misc_save_container
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
+
 
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
@@ -387,16 +430,17 @@ Builder.load_string("""
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(426), dp(390))
+        pos: (dp(568), dp(390))
         Image:
             size_hint: (None,None)
             height: dp(90)
-            width: dp(284)
-            # background_color: [0,0,0,0]
+            width: dp(142)
+            background_color: [0,0,0,1]
             center: self.parent.center
             pos: self.parent.pos
-            source: "./asmcnc/apps/maintenance_app/img/long_blue_2_tabs.png"
+            source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
             allow_stretch: True
+            opacity: 1
 
     BoxLayout: 
         size_hint: (None,None)
