@@ -131,7 +131,7 @@ Builder.load_string("""
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
-                                            size_hint_x: 0.35
+                                            size_hint_x: 0.3
                                             input_filter: 'int'
                                             multiline: False
                                         Label:
@@ -162,7 +162,7 @@ Builder.load_string("""
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
-                                            size_hint_x: 0.2
+                                            size_hint_x: 0.25
                                             input_filter: 'int'
                                             multiline: False
 
