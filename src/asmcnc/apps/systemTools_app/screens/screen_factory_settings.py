@@ -511,7 +511,7 @@ class FactorySettingsScreen(Screen):
             self.smartbench_model.text = 'Choose Model'
 
     def generate_activation_code(self):
-        ActiveTempNoOnly = ''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text)))
+        ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))
         print ('no only: ' + str(ActiveTempNoOnly))
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
         print ('start: ' + ActiveTempStart)
