@@ -132,7 +132,7 @@ Builder.load_string("""
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.3
-                                            input_filter: 'int'
+                                            input_filter: 'str'
                                             multiline: False
                                         Label:
                                             text: ' '
@@ -456,7 +456,7 @@ class FactorySettingsScreen(Screen):
             self.m.write_set_up_options(True) # use this to set warranty on restart?
             # partially - set this flag and then if it's set check for a file containing an activation code.
             # delete this file when it's been set.
-
+            self.write_activation_code_and_serial_number_to_file()
             
             # os.remove("demofile.txt")
 
@@ -512,9 +512,28 @@ class FactorySettingsScreen(Screen):
 
     def generate_activation_code(self):
         ActiveTempNoOnly = ''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text)))
-
-
-        return 1234
+        print ('no only: ' + str(ActiveActiveTempNoOnly))
+        ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
+        print ('start: ' + ActiveTempStart)
+        ActiveTempStartReduce = ActiveTempStart[0:15]
+        print ('reduce: ' + ActiveTempStartReduce)
+        Activation_Code_1 = int(ActiveTempStartReduce[0])*171350;
+        Activation_Code_2 = int(ActiveTempStartReduce[3])*152740;
+        Activation_Code_3 = int(ActiveTempStartReduce[5])*213431; 
+        Activation_Code_4 = int(ActiveTempStartReduce[7])*548340;
+        Activation_Code_5 = int(ActiveTempStartReduce[11])*115270;
+        Activation_Code_6 = int(ActiveTempStartReduce[2])*4670334;
+        Activation_Code_7 = int(ActiveTempStartReduce[7])*789190;
+        Activation_Code_8 = int(ActiveTempStartReduce[6])*237358903;
+        Activation_Code_9 = int(ActiveTempStartReduce[6])*937350;
+        Activation_Code_10 = int(ActiveTempStartReduce[6])*105430;
+        Activation_Code_11 = int(ActiveTempStartReduce[6])*637820;
+        Activation_Code_12 = int(ActiveTempStartReduce[6])*67253489;
+        Activation_Code_13 = int(ActiveTempStartReduce[6])*53262890;
+        Activation_Code_14 = int(ActiveTempStartReduce[6])*89201233;
+        Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
+        print('final code' + Final_Activation_Code)
+        return Final_Activation_Code
 
     def write_activation_code_and_serial_number_to_file(self):
         machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
@@ -522,6 +541,9 @@ class FactorySettingsScreen(Screen):
         try: 
             file = open(activation_code_filepath, "w+")
             file.write(str(self.generate_activation_code()))
+            file.close()
+            file = open(machine_serial_number_filepath, "w+")
+            file.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
             file.close()
         except: 
             warning_message = 'Problem saving activation code!!'
