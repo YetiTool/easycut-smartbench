@@ -512,11 +512,11 @@ class FactorySettingsScreen(Screen):
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))
-        print ('no only: ' + str(ActiveTempNoOnly))
+        print (str(ActiveTempNoOnly)+'\n')
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
-        print ('start: ' + ActiveTempStart)
+        print (ActiveTempStart+'\n')
         ActiveTempStartReduce = ActiveTempStart[0:15]
-        print ('reduce: ' + ActiveTempStartReduce)
+        print (ActiveTempStartReduce+'\n')
         Activation_Code_1 = int(ActiveTempStartReduce[0])*171350;
         Activation_Code_2 = int(ActiveTempStartReduce[3])*152740;
         Activation_Code_3 = int(ActiveTempStartReduce[5])*213431; 
@@ -532,7 +532,7 @@ class FactorySettingsScreen(Screen):
         Activation_Code_13 = int(ActiveTempStartReduce[6])*53262890;
         Activation_Code_14 = int(ActiveTempStartReduce[6])*89201233;
         Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
-        print('final code' + str(Final_Activation_Code))
+        print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
 
     def write_activation_code_and_serial_number_to_file(self):
