@@ -437,15 +437,15 @@ class FactorySettingsScreen(Screen):
         if len(str(self.m.serial_number())) < 7:
             warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        elif self.smartbench_model.text == 'Choose model':
-            warning_message = 'Please ensure machine model is set before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        elif self.software_version_label.text != self.latest_software_version.text:
-            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        elif self.platform_version_label.text != self.latest_platform_version.text:
-            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+        # elif self.smartbench_model.text == 'Choose model':
+        #     warning_message = 'Please ensure machine model is set before doing a factory reset.'
+        #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+        # elif self.software_version_label.text != self.latest_software_version.text:
+        #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+        #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+        # elif self.platform_version_label.text != self.latest_platform_version.text:
+        #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+        #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         else:
             lifetime = float(120*3600)
             self.m.write_spindle_brush_values(0, lifetime)
