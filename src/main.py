@@ -144,6 +144,7 @@ class SkavaUI(App):
             am = app_manager.AppManagerClass(sm, m, sett)
             
             # initialise the screens
+            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
             local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
@@ -162,13 +163,11 @@ class SkavaUI(App):
             job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
             developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = sett)
             diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
-
             door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
             squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
             prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
             homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
             squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
-            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett)
             spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
             spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
             stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
