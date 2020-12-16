@@ -65,10 +65,10 @@ class WelcomeScreenClass(Screen):
         self.m=kwargs['machine']
         self.set=kwargs['settings']
         self.am = kwargs['app_manager']
-        self.set.refresh_all()
-
 
     def on_enter(self):
+
+        self.set.refresh_all()
 
         if self.m.s.is_connected():
 

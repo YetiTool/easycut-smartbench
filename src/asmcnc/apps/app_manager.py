@@ -85,19 +85,19 @@ class AppManagerClass(object):
     def start_warranty_app(self):
         if not self.sm.has_screen('warranty_1'):
             warranty_registration_1_screen = screen_warranty_registration_1.WarrantyScreen1(name = 'warranty_1', screen_manager = self.sm, machine = self.m)
-            sm.add_widget(warranty_registration_1_screen)
+            self.sm.add_widget(warranty_registration_1_screen)
         if not self.sm.has_screen('warranty_2'):
             warranty_registration_2_screen = screen_warranty_registration_2.WarrantyScreen2(name = 'warranty_2', screen_manager = self.sm, machine = self.m)
-            sm.add_widget(warranty_registration_2_screen)
+            self.sm.add_widget(warranty_registration_2_screen)
         if not self.sm.has_screen('warranty_3'):
             warranty_registration_3_screen = screen_warranty_registration_3.WarrantyScreen3(name = 'warranty_3', screen_manager = self.sm, machine = self.m)
-            sm.add_widget(warranty_registration_3_screen)
+            self.sm.add_widget(warranty_registration_3_screen)
         if not self.sm.has_screen('warranty_4'):
             warranty_registration_4_screen = screen_warranty_registration_4.WarrantyScreen4(name = 'warranty_4', screen_manager = self.sm, machine = self.m)
-            sm.add_widget(warranty_registration_4_screen)
+            self.sm.add_widget(warranty_registration_4_screen)
         if not self.sm.has_screen('warranty_5'):
             warranty_registration_5_screen = screen_warranty_registration_5.WarrantyScreen5(name = 'warranty_5', screen_manager = self.sm, machine = self.m)
-            sm.add_widget(warranty_registration_5_screen)
+            self.sm.add_widget(warranty_registration_5_screen)
 
         self.current_app = 'warranty'
         self.sm.current = 'warranty_1'
