@@ -173,6 +173,63 @@ class PopupDatum(Widget):
 
       popup.open()
 
+
+class PopupPark(Widget):
+
+    def __init__(self, screen_manager, machine, warning_message):
+        
+      self.sm = screen_manager
+      self.m = machine
+      
+      description = warning_message
+
+
+      def set_park(*args):
+        self.m.set_standby_to_pos()
+        self.m.get_grbl_status()
+
+      img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+      label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+      
+
+      ok_button = Button(text='[b]Yes[/b]', markup = True)
+      ok_button.background_normal = ''
+      ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+      back_button = Button(text='[b]No[/b]', markup = True)
+      back_button.background_normal = ''
+      back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+     
+      btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+      btn_layout.add_widget(back_button)
+      btn_layout.add_widget(ok_button)
+
+
+      layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+      layout_plan.add_widget(img)
+      layout_plan.add_widget(label)
+      layout_plan.add_widget(btn_layout)
+      
+      popup = Popup(title='Warning!',
+                    title_color=[0, 0, 0, 1],
+                    title_font= 'Roboto-Bold',
+                    title_size = '20sp',
+                    content=layout_plan,
+                    size_hint=(None, None),
+                    size=(300, 350),
+                    auto_dismiss= False
+                    )
+      
+      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_height = '4dp'
+      popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+
+      ok_button.bind(on_press=popup.dismiss)
+      ok_button.bind(on_press=set_park)
+      back_button.bind(on_press=popup.dismiss)
+
+      popup.open()
+
 class PopupStop(Widget):
 
 

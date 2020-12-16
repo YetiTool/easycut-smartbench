@@ -64,10 +64,11 @@ class WelcomeScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
+        self.set.refresh_all()
 
 
     def on_enter(self):
-        
+
         if self.m.s.is_connected():
 
             # PC boot timings
