@@ -108,7 +108,7 @@ Builder.load_string("""
 
 
 							Image:
-								source: "./asmcnc/apps/warranty_app_2/img/exit.png"
+								source: "./asmcnc/apps/warranty_app/img/exit.png"
 								size: self.parent.width, self.parent.height
 								allow_stretch: True 
 

@@ -119,7 +119,7 @@ Builder.load_string("""
 					pos: self.parent.pos 
 					
 					Image: 
-						source: "./asmcnc/apps/warranty_app_2/img/next.png"
+						source: "./asmcnc/apps/warranty_app/img/next.png"
 						size: self.parent.width, self.parent.height
 						pos: self.parent.pos
 						allow_stretch: True 
@@ -150,7 +150,7 @@ Builder.load_string("""
 
 
 					Image:
-						source: "./asmcnc/apps/warranty_app_2/img/exit.png"
+						source: "./asmcnc/apps/warranty_app/img/exit.png"
 						size: self.parent.width, self.parent.height
 						allow_stretch: True 
 		
