@@ -18,143 +18,125 @@ Builder.load_string("""
 
 	status_container:status_container 
 
-	canvas:
-        Color:
-            rgba: hex('##e5e5e5')
-        Rectangle:
-            size: self.size
-            pos: self.pos
+	BoxLayout: 
+		size_hint: (None,None)
+		width: dp(800)
+		height: dp(480)
+		orientation: 'vertical'
 
-    BoxLayout: 
-    	orientation: 'vertical'
+		canvas:
+			Color:
+				rgba: hex('##e5e5e5')
+			Rectangle:
+				size: self.size
+				pos: self.pos
 
 		BoxLayout:
-			orientation: 'vertical'
 			id: status_container 
-			pos: self.pos
-			size: self.pos 
 			size_hint_y: 0.08
 
 		BoxLayout:
-            size_hint_y: 0.9
-            orientation: 'vertical'
-            size: self.parent.size
-            pos: self.parent.pos
-
-		BoxLayout:
+			size_hint_y: 0.92
 			orientation: 'vertical'
-			
+				
 			Label:
-				font_size: '32dp'
-				text: "[color=000000] SmartBench warranty registration. [/color]"
+				font_size: '30sp'
+				text: "[color=333333ff]SmartBench Warranty Registration[/color]"
 				text_size: self.size
-				valign: 'middle'
+				valign: 'bottom'
 				halign: 'center'
 				markup: 'true'
 				bold: True
-	
+
 			BoxLayout:
 				orientation: 'vertical'
-				
+				width: dp(800)
+				height: dp(200)
+				padding: 20
+				size_hint: (None,None)
 				Label:
-					font_size: '22dp'
-					text: "[color=000000] To submit your details and receive your activation code, go to: [/color]"
+					size_hint_y: 0.3
+					font_size: '20sp'
+					text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
 
-				BoxLayout:
-					orientaion: 'vertical'
-
-					Label:
-						font_size: '26dp'
-						text: "[color=000000] https://www.yetitool.com/registration [/color]"
-						text_size: self.size
-						valign: 'middle'
-						halign: 'center'
-						markup: 'true'
-
-
+				Label:
+					size_hint_y: 0.3
+					font_size: '26sp'
+					text: "[color=333333ff]https://www.yetitool.com/registration[/color]"
+					text_size: self.size
+					valign: 'top'
+					halign: 'center'
+					markup: 'true'
+					multiline: True
 				
+				Label:
+					size_hint_y: 0.2
+					font_size: '20sp'
+					text: "[color=333333ff]Can't use web form?"
+					text_size: self.size
+					valign: 'middle'
+					halign: 'center'
+					markup: 'true'
+
+				Label:
+					size_hint_y: 0.2
+					font_size: '20sp'
+					text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
+					text_size: self.size
+					valign: 'top'
+					halign: 'center'
+					markup: 'true'
+
 			BoxLayout:
-				padding: (0,0,0,30)
-				height: dp(30)
-				
-				Label:
-					font_size: '22dp'
-					text: "[color=000000] Can't use web form?                                                                                                                       https://www.yetitool.com/support or call +44 1275 217060[/color]"
-					text_size: self.size
-					valign: 'middle'
-					halign: 'center'
-					markup: 'true'
+				orientation: 'vertical'
+				width: dp(800)
+				height: dp(80)
+				padding: [dp(254.5),0,dp(254.5),dp(1)]
+				size_hint: (None,None)
 
-			
-	
-		BoxLayout:
-			orientation: 'vertical'	
-			width: dp(402)
-			height: dp(120)	
-			size_hint: (None,None)
-			padding: (256,0,0,20)
-			
-			
-
-			Button:
-				background_color: hex('##1C00ff00')
-				width: dp(291)
-				height: dp(79)
-				on_press: root.next_screen()
-				size_hint: (None,None)				
-				pos: self.parent.pos 
-				
-
-				BoxLayout:
-					orientation: 'vertical'
+				Button:
+					background_normal: ''
+					size_hint: (None,None)
 					width: dp(291)
 					height: dp(79)
-					padding: (0,0,0,0)
-					size_hint: (None,None)
-					size: self.parent.size
-					pos: self.parent.pos 
-					
-					Image: 
-						source: "./asmcnc/apps/warranty_app/img/next.png"
-						size: self.parent.width, self.parent.height
+					on_press: root.next_screen()
+
+					BoxLayout:
+						size: self.parent.size
 						pos: self.parent.pos
-						allow_stretch: True 
-
-
-		
-
-		BoxLayout:
-			orientation: 'vertical'
-			padding: [0, 0, 0, 0]
-			size_hint: (None,None)
-			width: dp(69)
-			height: dp(60)
-
-			Button:
-				orientation: 'horizontal'
-				background_color: hex('#1C00ff00')
+						Image: 
+							source: "./asmcnc/apps/warranty_app/img/next.png"
+							size: self.parent.width, self.parent.height
+							allow_stretch: True
+								
+			BoxLayout:
+				orientation: 'vertical'
+				padding: [10, 0, 0, 10]
 				size_hint: (None,None)
-				width: dp(59)
-				height: dp(50)
+				width: dp(69)
+				height: dp(60)
 
-
-				BoxLayout:
+				Button:
+					background_normal: ''
 					size_hint: (None,None)
-					padding: [10, 0, 0, 10]
 					width: dp(59)
 					height: dp(50)
+					on_press: root.go_back()
 
+					BoxLayout:
+						size: self.parent.size
+						pos: self.parent.pos
 
-					Image:
-						source: "./asmcnc/apps/warranty_app/img/exit.png"
-						size: self.parent.width, self.parent.height
-						allow_stretch: True 
-		
-
+						Image:
+							source: "./asmcnc/apps/warranty_app/img/exit.png"
+							size: self.parent.width, self.parent.height
+							allow_stretch: True 
+							size: self.parent.size
+							pos: self.parent.pos
 
 """)
 
@@ -171,6 +153,9 @@ class WarrantyScreen2(Screen):
 
 	def next_screen(self):
 		self.sm.current = 'warranty_3'
+
+	def go_back(self):
+		self.sm.current = 'warranty_1'
 	
 
 

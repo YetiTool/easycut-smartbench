@@ -10,113 +10,93 @@ from asmcnc.skavaUI import widget_status_bar
 Builder.load_string("""
 
 <WarrantyScreen5>:
-
+				
 	status_container:status_container 
 
-	canvas:
-        Color:
-            rgba: hex('##e5e5e5')
-        Rectangle:
-            size: self.size
-            pos: self.pos
+	BoxLayout: 
+		size_hint: (None,None)
+		width: dp(800)
+		height: dp(480)
+		orientation: 'vertical'
 
-    BoxLayout: 
-    	orientation: 'vertical'
+		canvas:
+			Color:
+				rgba: hex('##e5e5e5')
+			Rectangle:
+				size: self.size
+				pos: self.pos
 
 		BoxLayout:
-			orientation: 'vertical'
 			id: status_container 
-			height: dp(100)
-			width: dp (800)
-			pos: self.pos
-			size: self.pos 
 			size_hint_y: 0.08
 
 		BoxLayout:
-            size_hint_y: 0.9
-            orientation: 'vertical'
-            size: self.parent.size
-            pos: self.parent.pos
+			size_hint_y: 0.92
+			orientation: 'vertical'
 
 			BoxLayout:
 				orientation: 'vertical'
-				size_hint: (None,None)
+				width: dp(800)
 				height: dp(200)
-				width: dp (800)
-				padding: (0,0,0,0)
-				
+				padding: [dp(20), 0]
+				size_hint: (None,None)
+
 				Label:
-					font_size: '32sp'
-					text: "[color=000000] You have sucessfully completed your warranty activation [/color]"
+					font_size: '30sp'
+					text: "[color=333333ff]You have sucessfully completed your warranty registration.[/color]"
 					text_size: self.size
-					valign: 'middle'
+					valign: 'top'
 					halign: 'center'
 					markup: 'true'
 					bold: True
-				
+
+
 			BoxLayout:
-				orientation: 'vertical'	
-				width: dp(546)
-				height: dp(120)	
+				orientation: 'vertical'
+				width: dp(800)
+				height: dp(80)
+				padding: [dp(254.5),0,dp(254.5),dp(1)]
 				size_hint: (None,None)
-				padding: (265,0,0,0)
 
 				Button:
-					background_color: hex('##1C00ff00')
+					background_normal: ''
+					size_hint: (None,None)
 					width: dp(291)
 					height: dp(79)
-					size_hint: (None,None)				
-					pos: self.parent.pos 
 					on_press: root.next_screen()
-					
-					
+
 					BoxLayout:
-						orientation: 'vertical'
-						width: dp(291)
-						height: dp(79)
-						padding: (0,0,0,0)
-						size_hint: (None,None)
 						size: self.parent.size
-						pos: self.parent.pos 
-
+						pos: self.parent.pos
 						Image: 
-							source: "./asmcnc/apps/warranty_app/img/get_started.png"
+							source: "./asmcnc/apps/warranty_app/img/next.png"
 							size: self.parent.width, self.parent.height
-							pos: self.parent.pos
-							allow_stretch: True 
+							allow_stretch: True
+								
 			BoxLayout:
 				orientation: 'vertical'
-				size_hint_y: 0.08
-
-			BoxLayout:
-				orientation: 'vertical'
-				padding: [0, 0, 0, 0]
+				padding: [10, 0, 0, 10]
 				size_hint: (None,None)
 				width: dp(69)
 				height: dp(60)
 
 				Button:
-					orientation: 'horizontal'
-					background_color: hex('#1C00ff00')
+					background_normal: ''
 					size_hint: (None,None)
 					width: dp(59)
 					height: dp(50)
-
+					on_press: root.go_back()
 
 					BoxLayout:
-						size_hint: (None,None)
-						padding: [10, 0, 0, 10]
-						width: dp(59)
-						height: dp(50)
-
+						size: self.parent.size
+						pos: self.parent.pos
 
 						Image:
 							source: "./asmcnc/apps/warranty_app/img/exit.png"
 							size: self.parent.width, self.parent.height
-							allow_stretch: True 					
-
-		
-
+							allow_stretch: True 
+							size: self.parent.size
+							pos: self.parent.pos
 
 """)
 
@@ -133,7 +113,9 @@ class WarrantyScreen5(Screen):
 
 	def next_screen(self):
 		self.sm.current = 'safety'
-	
+
+	def go_back(self):
+		self.sm.current = 'warranty_4'
 
 
 

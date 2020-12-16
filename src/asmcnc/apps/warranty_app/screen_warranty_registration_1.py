@@ -35,8 +35,8 @@ Builder.load_string("""
 			orientation: 'vertical'
 				
 			Label:
-				font_size: '32sp'
-				text: "[color=000000] SmartBench Warranty Registration [/color]"
+				font_size: '30sp'
+				text: "[color=333333ff]SmartBench Warranty Registration[/color]"
 				text_size: self.size
 				valign: 'bottom'
 				halign: 'center'
@@ -51,17 +51,17 @@ Builder.load_string("""
 				size_hint: (None,None)
 				Label:
 					size_hint_y: 0.25
-					font_size: '24sp'
-					text: "[color=000000] Thank you for purchasing SmartBench. [/color]"
+					font_size: '20sp'
+					text: "[color=333333ff]Thank you for purchasing SmartBench.[/color]"
 					text_size: self.size
-					valign: 'middle'
+					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
 
 				Label:
 					size_hint_y: 0.5
-					font_size: '24sp'
-					text: "[color=000000] Please follow the next steps to complete your warranty registration process. [/color]"
+					font_size: '20sp'
+					text: "[color=333333ff]Please follow the next steps to complete your warranty registration process.[/color]"
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
@@ -70,10 +70,10 @@ Builder.load_string("""
 				
 				Label:
 					size_hint_y: 0.25
-					font_size: '24sp'
-					text: "[color=000000] It will only a take a few minutes. [/color]"
+					font_size: '20sp'
+					text: "[color=333333ff]It will only a take a few minutes.[/color]"
 					text_size: self.size
-					valign: 'middle'
+					valign: 'top'
 					halign: 'center'
 					markup: 'true'
 

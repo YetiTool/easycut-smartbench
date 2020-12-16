@@ -13,110 +13,97 @@ Builder.load_string("""
 
 	status_container:status_container 
 
-	canvas:
-        Color:
-            rgba: hex('##e5e5e5')
-        Rectangle:
-            size: self.size
-            pos: self.pos
+	BoxLayout: 
+		size_hint: (None,None)
+		width: dp(800)
+		height: dp(480)
+		orientation: 'vertical'
 
-    BoxLayout: 
-    	orientation: 'vertical'
+		canvas:
+			Color:
+				rgba: hex('##e5e5e5')
+			Rectangle:
+				size: self.size
+				pos: self.pos
 
 		BoxLayout:
-			orientation: 'vertical'
 			id: status_container 
-			pos: self.pos
-			size: self.pos 
 			size_hint_y: 0.08
 
 		BoxLayout:
-            size_hint_y: 0.9
-            orientation: 'vertical'
-            size: self.parent.size
-            pos: self.parent.pos
+			size_hint_y: 0.92
+			orientation: 'vertical'
+				
+			Label:
+				font_size: '30sp'
+				text: "[color=333333ff]Your serial number is[/color]"
+				text_size: self.size
+				valign: 'bottom'
+				halign: 'center'
+				markup: 'true'
+				bold: True
 
 			BoxLayout:
 				orientation: 'vertical'
-				padding: (0,0,0,0)
-				
+				width: dp(800)
+				height: dp(200)
+				padding: 20
+				size_hint: (None,None)
 				Label:
-					font_size: '32sp'
-					text: "[color=000000] Your serial number is: [/color]"
-					text_size: self.size
-					valign: 'middle'
-					halign: 'center'
-					markup: 'true'
-					bold: True
-
-				Label
-					font_size: '28sp'
-					text: "[color=000000] YS28383 [/color]"
+					size_hint_y: 1
+					font_size: '30sp'
+					text: "[color=333333ff]YS28383[/color]"
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
 
 			BoxLayout:
-				orientation: 'vertical'	
-				width: dp(402)
-				height: dp(120)	
+				orientation: 'vertical'
+				width: dp(800)
+				height: dp(80)
+				padding: [dp(254.5),0,dp(254.5),dp(1)]
 				size_hint: (None,None)
-				padding: (256,0,0,20)
 
 				Button:
-					background_color: hex('##33a2ff')
+					background_normal: ''
+					size_hint: (None,None)
 					width: dp(291)
 					height: dp(79)
 					on_press: root.next_screen()
-					pos: self.parent.pos
-					size_hint: (None,None)
-					
 
 					BoxLayout:
-						orientation: 'vertical'
-						width: dp(291)
-						height: dp(79)
-						padding: (0,0,0,0)
-						size_hint: (None,None)
 						size: self.parent.size
 						pos: self.parent.pos
-
 						Image: 
 							source: "./asmcnc/apps/warranty_app/img/next.png"
 							size: self.parent.width, self.parent.height
-							allow_stretch: True 
-							pos: self.parent.pos
-							
-				
-
+							allow_stretch: True
+								
 			BoxLayout:
 				orientation: 'vertical'
-				padding: [0, 0, 0, 0]
+				padding: [10, 0, 0, 10]
 				size_hint: (None,None)
 				width: dp(69)
 				height: dp(60)
 
 				Button:
-					orientation: 'horizontal'
-					background_color: hex('#1C00ff00')
+					background_normal: ''
 					size_hint: (None,None)
 					width: dp(59)
 					height: dp(50)
-
+					on_press: root.go_back()
 
 					BoxLayout:
-						size_hint: (None,None)
-						padding: [10, 0, 0, 10]
-						width: dp(59)
-						height: dp(50)
-
+						size: self.parent.size
+						pos: self.parent.pos
 
 						Image:
 							source: "./asmcnc/apps/warranty_app/img/exit.png"
 							size: self.parent.width, self.parent.height
 							allow_stretch: True 
-
+							size: self.parent.size
+							pos: self.parent.pos
 
 """)
 
@@ -133,4 +120,8 @@ class WarrantyScreen3(Screen):
 
 	def next_screen(self):
 		self.sm.current = 'warranty_4'
+
+	def go_back(self):
+		self.sm.current = 'warranty_2'
+	
 
