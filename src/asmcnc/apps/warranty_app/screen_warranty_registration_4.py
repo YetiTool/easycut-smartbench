@@ -76,7 +76,7 @@ Builder.load_string("""
 						markup: True
 						multiline: False
 						text: ''
-						on_enter: root.next_screen()
+						# on_enter: root.next_screen()
 						
 					
 
