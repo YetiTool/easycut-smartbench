@@ -64,6 +64,7 @@ class WelcomeScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
+        self.am = kwargs['app_manager']
         self.set.refresh_all()
 
 
@@ -98,7 +99,7 @@ class WelcomeScreenClass(Screen):
             activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
 
             if os.path.isfile(activation_code_filepath):
-                self.sm.current = 'lobby'
+                self.am.start_warranty_app()
 
             else:
                 self.sm.current = 'safety'

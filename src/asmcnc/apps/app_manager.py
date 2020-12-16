@@ -3,6 +3,11 @@ Created 5 March 2020
 @author: Letty
 Module to manage apps and screens
 '''
+
+from asmcnc.apps.warranty_app import screen_warranty_registration_1, \
+screen_warranty_registration_2, screen_warranty_registration_3, \
+screen_warranty_registration_4, screen_warranty_registration_5
+
 from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
@@ -76,4 +81,41 @@ class AppManagerClass(object):
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
-    
+
+    def start_warranty_app(self):
+        if not self.sm.has_screen('warranty_1'):
+            warranty_registration_1_screen = screen_warranty_registration_1.WarrantyScreen1(name = 'warranty_1', screen_manager = self.sm, machine = self.m)
+            sm.add_widget(warranty_registration_1_screen)
+        if not self.sm.has_screen('warranty_2'):
+            warranty_registration_2_screen = screen_warranty_registration_2.WarrantyScreen2(name = 'warranty_2', screen_manager = self.sm, machine = self.m)
+            sm.add_widget(warranty_registration_2_screen)
+        if not self.sm.has_screen('warranty_3'):
+            warranty_registration_3_screen = screen_warranty_registration_3.WarrantyScreen3(name = 'warranty_3', screen_manager = self.sm, machine = self.m)
+            sm.add_widget(warranty_registration_3_screen)
+        if not self.sm.has_screen('warranty_4'):
+            warranty_registration_4_screen = screen_warranty_registration_4.WarrantyScreen4(name = 'warranty_4', screen_manager = self.sm, machine = self.m)
+            sm.add_widget(warranty_registration_4_screen)
+        if not self.sm.has_screen('warranty_5'):
+            warranty_registration_5_screen = screen_warranty_registration_5.WarrantyScreen5(name = 'warranty_5', screen_manager = self.sm, machine = self.m)
+            sm.add_widget(warranty_registration_5_screen)
+
+        self.current_app = 'warranty'
+        self.sm.current = 'warranty_1'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
