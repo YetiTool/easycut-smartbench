@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string("""
 
 <WarrantyScreen1>:
