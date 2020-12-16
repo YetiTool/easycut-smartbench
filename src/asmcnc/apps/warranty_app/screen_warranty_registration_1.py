@@ -13,103 +13,116 @@ Builder.load_string("""
 
 	status_container:status_container 
 
-	canvas:
-		Color:
-			rgba: hex('##e5e5e5')
-		Rectangle:
-			size: self.size
-			pos: self.pos
-
 	BoxLayout: 
+		size_hint: (None,None)
+		width: dp(800)
+		height: dp(480)
 		orientation: 'vertical'
 
+		canvas:
+			Color:
+				rgba: hex('##e5e5e5')
+			Rectangle:
+				size: self.size
+				pos: self.pos
+
 		BoxLayout:
-			orientation: 'vertical'
 			id: status_container 
-			pos: self.pos
-			size: self.pos 
 			size_hint_y: 0.08
 
 		BoxLayout:
-			size_hint_y: 0.9
+			size_hint_y: 0.92
 			orientation: 'vertical'
-			size: self.parent.size
-			pos: self.parent.pos
+				
+			Label:
+				font_size: '32sp'
+				text: "[color=000000] SmartBench Warranty Registration [/color]"
+				text_size: self.size
+				valign: 'bottom'
+				halign: 'center'
+				markup: 'true'
+				bold: True
 
 			BoxLayout:
 				orientation: 'vertical'
-				padding: (0,30,0,0)
-				
+				width: dp(800)
+				height: dp(200)
+				padding: 20
+				size_hint: (None,None)
 				Label:
-					font_size: '32sp'
-					text: "[color=000000] SmartBench Warranty Registration [/color]"
-					text_size: self.size
-					width: dp(800)
-					height: dp(125)
-					valign: 'middle'
-					halign: 'center'
-					markup: 'true'
-					bold: True
-				Label:
+					size_hint_y: 0.25
 					font_size: '24sp'
 					text: "[color=000000] Thank you for purchasing SmartBench. [/color]"
 					text_size: self.size
-					width: dp(800)
-					height: dp(75)
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
 
 				Label:
+					size_hint_y: 0.5
 					font_size: '24sp'
 					text: "[color=000000] Please follow the next steps to complete your warranty registration process. [/color]"
 					text_size: self.size
-					width: dp(800)
-					height: dp(75)
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
+					multiline: True
 				
 				Label:
+					size_hint_y: 0.25
 					font_size: '24sp'
 					text: "[color=000000] It will only a take a few minutes. [/color]"
 					text_size: self.size
-					width: dp(800)
-					height: dp(75)
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
 
-				BoxLayout:
-					orientation: 'vertical'
-					width: dp(546)
-					height: dp(79)
-					padding: (254,0,0,0)
-					size_hint: (None,None)
+			BoxLayout:
+				orientation: 'vertical'
+				width: dp(800)
+				height: dp(80)
+				padding: [dp(254.5),0,dp(254.5),dp(1)]
+				size_hint: (None,None)
 
-					Button:
-						background_color: hex('##1C00ff00')
-						width: dp(291)
-						height: dp(79)
-						on_press: root.next_screen()
+				Button:
+					background_normal: ''
+					size_hint: (None,None)
+					width: dp(291)
+					height: dp(79)
+					on_press: root.next_screen()
+
+					BoxLayout:
 						size: self.parent.size
 						pos: self.parent.pos
-						
+						Image: 
+							source: "./asmcnc/apps/warranty_app/img/next.png"
+							size: self.parent.width, self.parent.height
+							allow_stretch: True
+								
+			BoxLayout:
+				orientation: 'vertical'
+				padding: [10, 0, 0, 10]
+				size_hint: (None,None)
+				width: dp(69)
+				height: dp(60)
 
-						BoxLayout:
+				Button:
+					background_normal: ''
+					size_hint: (None,None)
+					width: dp(59)
+					height: dp(50)
+
+					BoxLayout:
+						size: self.parent.size
+						pos: self.parent.pos
+
+						Image:
+							source: "./asmcnc/apps/warranty_app/img/exit.png"
+							size: self.parent.width, self.parent.height
+							allow_stretch: True 
 							size: self.parent.size
 							pos: self.parent.pos
-							Image: 
-								source: "./asmcnc/apps/warranty_app/img/next.png"
-								size: self.parent.width, self.parent.height
-								allow_stretch: True 
-								
-							
 
-			BoxLayout:
-				size_hint_y: 0.20
-				size: self.size
-				pos: self.size
 		
 
 
