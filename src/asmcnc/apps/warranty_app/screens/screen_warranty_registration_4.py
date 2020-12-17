@@ -184,10 +184,18 @@ class WarrantyScreen4(Screen):
             self.activation_code_from_file  = int(str(file.read()))
             file.close()
 
+            if self.activation_code_from_file == '':
+                self.backup_generate_activation_code()
+
         except: 
             self.error_message_top.opacity = 1
-            self.error_message_top.text = 'Could not check activation code!'
+            self.error_message_top.text = 'Checking activation code...'
             self.error_message_bottom.opacity = 1
+            self.backup_generate_activation_code()
+
+    def backup_generate_activation_code(self):
+        self.activation_code_from_file = self.generate_activation_code(self.warranty_manager.sm.get_screen('warranty_3').serial_number_label.text)
+
 
     def check_activation_code(self):
 
@@ -222,3 +230,28 @@ class WarrantyScreen4(Screen):
 
     def on_leave(self):
         if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
+
+    def generate_activation_code(self, serial_number):
+        ActiveTempNoOnly = int(''.join(filter(str.isdigit, serial_number)))
+        print (str(ActiveTempNoOnly)+'\n')
+        ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
+        print (ActiveTempStart+'\n')
+        ActiveTempStartReduce = ActiveTempStart[0:15]
+        print (ActiveTempStartReduce+'\n')
+        Activation_Code_1 = int(ActiveTempStartReduce[0])*171350;
+        Activation_Code_2 = int(ActiveTempStartReduce[3])*152740;
+        Activation_Code_3 = int(ActiveTempStartReduce[5])*213431; 
+        Activation_Code_4 = int(ActiveTempStartReduce[7])*548340;
+        Activation_Code_5 = int(ActiveTempStartReduce[11])*115270;
+        Activation_Code_6 = int(ActiveTempStartReduce[2])*4670334;
+        Activation_Code_7 = int(ActiveTempStartReduce[7])*789190;
+        Activation_Code_8 = int(ActiveTempStartReduce[6])*237358903;
+        Activation_Code_9 = int(ActiveTempStartReduce[6])*937350;
+        Activation_Code_10 = int(ActiveTempStartReduce[6])*105430;
+        Activation_Code_11 = int(ActiveTempStartReduce[6])*637820;
+        Activation_Code_12 = int(ActiveTempStartReduce[6])*67253489;
+        Activation_Code_13 = int(ActiveTempStartReduce[6])*53262890;
+        Activation_Code_14 = int(ActiveTempStartReduce[6])*89201233;
+        Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
+        print(str(Final_Activation_Code)+'\n')
+        return Final_Activation_Code

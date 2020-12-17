@@ -501,7 +501,8 @@ class FactorySettingsScreen(Screen):
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
                 "" + \
                 "Maintenance reminders set and enabled.\n\n" + \
-                "[b]IMPORTANT[/b]:\nAllow the console to shutdown, and wait 10 seconds before switching off machine"
+                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE" + \
+                "Not doing this may corrupt the warranty registration start up sequence."
 
                 popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
