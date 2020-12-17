@@ -203,6 +203,7 @@ class WarrantyScreen4(Screen):
 
         if self.check_activation_code():
             if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
+            self.activation_code.focus = False
             try: 
                 self.wm.sm.current = 'warranty_5'
             except: 
