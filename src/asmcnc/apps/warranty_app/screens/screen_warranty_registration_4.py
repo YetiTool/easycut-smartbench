@@ -58,7 +58,7 @@ Builder.load_string("""
                 orientation: 'vertical'
                 width: dp(800)
                 height: dp(75)
-                padding: [dp(50), 0]
+                padding: [dp(200), 0]
                 size_hint: (None,None)
                 TextInput: 
                     id: activation_code
