@@ -160,7 +160,7 @@ class WarrantyScreen4(Screen):
 
     activationcode = ObjectProperty()
     activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-    activation_code_from_file = ''
+    activation_code_from_file = 0
     check_activation_event = None
 
     def __init__(self, **kwargs):
@@ -172,7 +172,7 @@ class WarrantyScreen4(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
 
-        self.read_in_activation_code()
+        # self.read_in_activation_code()
 
     def read_in_activation_code(self):
         try: 

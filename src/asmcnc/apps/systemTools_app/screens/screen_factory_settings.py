@@ -583,12 +583,12 @@ class FactorySettingsScreen(Screen):
     def write_activation_code_and_serial_number_to_file(self):
         activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
         try: 
-            file = open(activation_code_filepath, "w+")
-            file.write(str(self.generate_activation_code()))
-            file.close()
-            file = open(self.machine_serial_number_filepath, "w+")
-            file.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
-            file.close()
+            file_act = open(activation_code_filepath, "w+")
+            file_act.write(str(self.generate_activation_code()))
+            file_act.close()
+            file_ser = open(self.machine_serial_number_filepath, "w+")
+            file_ser.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
+            file_ser.close()
             return True
         except: 
             warning_message = 'Problem saving activation code!!'
