@@ -85,24 +85,24 @@ Builder.load_string("""
 				width: dp(70)
 				height: dp(62)
 
-                Button:
-                    size_hint: (None,None)
-                    height: dp(52)
-                    width: dp(60)
-                    background_color: hex('#F4433600')
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    on_press: root.go_back()
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                # Button:
+                #     size_hint: (None,None)
+                #     height: dp(52)
+                #     width: dp(60)
+                #     background_color: hex('#F4433600')
+                #     center: self.parent.center
+                #     pos: self.parent.pos
+                #     on_press: root.go_back()
+                #     BoxLayout:
+                #         padding: 0
+                #         size: self.parent.size
+                #         pos: self.parent.pos
+                #         Image:
+                #             source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                #             center_x: self.parent.center_x
+                #             y: self.parent.y
+                #             size: self.parent.width, self.parent.height
+                #             allow_stretch: True
 
 """)
 

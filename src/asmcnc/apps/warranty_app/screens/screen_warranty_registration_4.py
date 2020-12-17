@@ -146,7 +146,7 @@ class WarrantyScreen4(Screen):
         self.read_in_activation_code()
 
     def on_enter(self):
-        Clock.schedule_interval(lambda dt: self.next_screen, 2)
+        Clock.schedule_interval(lambda dt: self.next_screen(), 2)
 
 
     def check_activation_code(self):
