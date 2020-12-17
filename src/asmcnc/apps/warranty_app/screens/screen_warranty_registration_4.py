@@ -21,6 +21,8 @@ Builder.load_string("""
 
     status_container:status_container
     activation_code:activation_code
+    error_message_top:error_message_top
+    error_message_bottom:error_message_bottom
 
     BoxLayout: 
         size_hint: (None,None)
@@ -55,8 +57,8 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'vertical'
                 width: dp(800)
-                height: dp(200)
-                padding: [dp(50), dp(125)]
+                height: dp(75)
+                padding: [dp(50), 0]
                 size_hint: (None,None)
                 TextInput: 
                     id: activation_code
@@ -71,6 +73,34 @@ Builder.load_string("""
                     multiline: False
                     text: ''
                     input_filter: 'int'
+            BoxLayout:
+                orientation: 'vertical'
+                width: dp(800)
+                height: dp(125)
+                padding: [dp(20)]
+                size_hint: (None,None)
+                Label:
+                    id: error_message_top
+                    font_size: '20sp'
+                    text: "Please check your activation code."
+                    text_size: self.size
+                    valign: 'bottom'
+                    halign: 'center'
+                    markup: 'true'
+                    bold: True
+                    color: hex('#e64a19ff')
+                    opacity: 0
+                Label:
+                    id: error_message_bottom
+                    font_size: '20sp'
+                    text: "Stuck on this screen? Contact us at https://www.yetitool.com/support"
+                    text_size: self.size
+                    valign: 'bottom'
+                    halign: 'center'
+                    markup: 'true'
+                    bold: True
+                    color: hex('#e64a19ff')
+                    opacity: 0
 
             BoxLayout:
                 orientation: 'vertical'
@@ -146,6 +176,15 @@ class WarrantyScreen4(Screen):
 
         self.read_in_activation_code()
 
+    def read_in_activation_code(self):
+        try: 
+            file = open(self.activation_code_filepath, 'r')
+            self.activation_code_from_file  = int(file.read())
+            file.close()
+
+        except: 
+            print 'Could not get activation code! Please contact YetiTool support!'
+
     def on_enter(self):
         self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
 
@@ -160,15 +199,6 @@ class WarrantyScreen4(Screen):
         else:
             return False
 
-    def read_in_activation_code(self):
-        try: 
-            file = open(self.activation_code_filepath, 'r')
-            self.activation_code_from_file  = int(file.read())
-            file.close()
-
-        except: 
-            print 'Could not get activation code! Please contact YetiTool support!'
-
     def next_screen(self, auto = True):
 
         if self.check_activation_code():
@@ -179,7 +209,8 @@ class WarrantyScreen4(Screen):
             pass
 
         else: 
-            print 'popup'
+            self.error_message_top.opacity = 1
+            self.error_message_bottom.opacity = 1
 
     def go_back(self):
         self.wm.sm.current = 'warranty_3'
