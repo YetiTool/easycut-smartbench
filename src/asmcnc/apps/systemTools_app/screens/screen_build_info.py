@@ -242,7 +242,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(35)
                         width: dp(150)
-                        padding: [30,0]
+                        # padding: [30,0]
                         ToggleButton:
                             id: more_info_button
                             size_hint: (None,None)

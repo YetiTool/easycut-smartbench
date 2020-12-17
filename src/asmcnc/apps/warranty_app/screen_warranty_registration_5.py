@@ -58,20 +58,25 @@ Builder.load_string("""
 				padding: [dp(254.5),0,dp(254.5),dp(1)]
 				size_hint: (None,None)
 
-				Button:
-					background_normal: ''
-					size_hint: (None,None)
-					width: dp(291)
-					height: dp(79)
-					on_press: root.next_screen()
-
-					BoxLayout:
-						size: self.parent.size
-						pos: self.parent.pos
-						Image: 
-							source: "./asmcnc/apps/warranty_app/img/next.png"
-							size: self.parent.width, self.parent.height
-							allow_stretch: True
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(79)
+                    width: dp(291)
+                    
+					Button:
+	                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+	                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
+	                    border: [dp(14.5)]*4
+						size_hint: (None,None)
+						width: dp(291)
+						height: dp(79)
+						on_press: root.next_screen()
+						text: 'Get started!'
+						font_size: '20sp'
+						color: hex('#f9f9f9ff')
+						markup: True
+	                    center: self.parent.center
+	                    pos: self.parent.pos
 								
 			BoxLayout:
 				orientation: 'vertical'
