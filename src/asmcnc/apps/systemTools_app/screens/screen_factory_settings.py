@@ -413,7 +413,7 @@ class FactorySettingsScreen(Screen):
             serial_number_string = self.get_serial_number()
             self.serial_prefix.text = serial_number_string[0:3]
             self.serial_number_input.text = serial_number_string[3:7]
-            self.product_number_input.text = serial_number_string[8:9]
+            self.product_number_input.text = str(self.m.serial_number()).split(.)[1]
         except: 
             pass
 
