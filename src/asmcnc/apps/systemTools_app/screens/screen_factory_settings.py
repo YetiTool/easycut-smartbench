@@ -497,15 +497,14 @@ class FactorySettingsScreen(Screen):
             self.m.reminders_enabled = True
             self.m.trigger_setup = True
             self.m.write_set_up_options(True)
-            self.write_activation_code_and_serial_number_to_file()
+            if self.write_activation_code_and_serial_number_to_file():
+                reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
+                "" + \
+                "Maintenance reminders set and enabled.\n\n" + \
+                "[b]IMPORTANT[/b]:\nPress [b]***Remind me later***[/b] if you return to the lobby and see the welcome popup.\n\n" + \
+                "THIS IS NECESSARY TO TRIGGER THE WARRANTY AND WELCOME START-UP SEQUENCE ON REBOOT"
 
-            reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
-            "" + \
-            "Maintenance reminders set and enabled.\n\n" + \
-            "[b]IMPORTANT[/b]:\nPress [b]***Remind me later***[/b] if you return to the lobby and see the welcome popup.\n\n" + \
-            "THIS IS NECESSARY TO TRIGGER THE WARRANTY AND WELCOME START-UP SEQUENCE ON REBOOT"
-
-            popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
+                popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
     def full_console_update(self):
 
@@ -590,9 +589,11 @@ class FactorySettingsScreen(Screen):
             file = open(self.machine_serial_number_filepath, "w+")
             file.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
             file.close()
+            return True
         except: 
             warning_message = 'Problem saving activation code!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
 
     def get_serial_number(self):
         serial_number_from_file = ''
