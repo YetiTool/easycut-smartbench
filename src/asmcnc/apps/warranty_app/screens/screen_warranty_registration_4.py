@@ -133,6 +133,7 @@ class WarrantyScreen4(Screen):
     activationcode = ObjectProperty()
     activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
     activation_code_from_file = ''
+    check_activation_event = None
 
     def __init__(self, **kwargs):
         super(WarrantyScreen4, self).__init__(**kwargs)
@@ -146,14 +147,13 @@ class WarrantyScreen4(Screen):
         self.read_in_activation_code()
 
     def on_enter(self):
-        Clock.schedule_interval(lambda dt: self.next_screen(), 2)
-
+        self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
 
     def check_activation_code(self):
 
         if self.activation_code.text != '':
             if int(self.activation_code.text) == self.activation_code_from_file:
-                os.remove(self.activation_code_filepath)
+                if os.path.isfile(self.activation_code_filepath): os.remove(self.activation_code_filepath)
                 return True
             else: 
                 return False
@@ -172,9 +172,12 @@ class WarrantyScreen4(Screen):
     def next_screen(self, auto = True):
 
         if self.check_activation_code():
+            if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
             self.wm.sm.current = 'warranty_5'
+
         elif auto == True:
             pass
+
         else: 
             print 'popup'
 
