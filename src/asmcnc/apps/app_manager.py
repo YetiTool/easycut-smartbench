@@ -85,9 +85,9 @@ class AppManagerClass(object):
 
         # activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
 
-        # if os.path.isfile(activation_code_filepath):
-        self.current_app = 'warranty'
-        self.warranty_sm.open_warranty_app()
+        if os.path.isfile(activation_code_filepath):
+            self.current_app = 'warranty'
+            self.warranty_sm.open_warranty_app()
 
         else:
             self.sm.current = 'safety'

@@ -501,10 +501,15 @@ class FactorySettingsScreen(Screen):
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
                 "" + \
                 "Maintenance reminders set and enabled.\n\n" + \
-                "[b]IMPORTANT[/b]:\nPress [b]***Remind me later***[/b] if you return to the lobby and see the welcome popup.\n\n" + \
-                "THIS IS NECESSARY TO TRIGGER THE WARRANTY AND WELCOME START-UP SEQUENCE ON REBOOT"
+                "[b]IMPORTANT[/b]:\nAllow the console to shutdown, and wait 10 seconds before switching off machine"
 
                 popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
+
+            Clock.schedule_once(self.shutdown_console, 5)
+
+
+    def shutdown_console(self, dt):
+        os.system('sudo shutdown -h now')
 
     def full_console_update(self):
 
