@@ -172,12 +172,12 @@ class WarrantyScreen4(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
 
-        # self.read_in_activation_code()
+        self.read_in_activation_code()
 
     def read_in_activation_code(self):
         try: 
             file = open(self.activation_code_filepath, 'r')
-            self.activation_code_from_file  = int(file.read())
+            self.activation_code_from_file  = int(str(file.read()))
             file.close()
 
         except: 
