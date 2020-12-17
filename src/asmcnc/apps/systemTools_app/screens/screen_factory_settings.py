@@ -456,6 +456,10 @@ class FactorySettingsScreen(Screen):
 
     def update_serial_number(self):
 
+        self.serial_prefix.focus = False
+        self.serial_number_input.focus = False
+        self.product_number_input.focus = False
+
         if self.validate_serial_number():
             full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
             self.m.write_dollar_50_setting(full_serial_number)
