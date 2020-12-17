@@ -437,8 +437,9 @@ class FactorySettingsScreen(Screen):
 
     def update_z_touch_plate_thickness(self):
 
-        self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
-        self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
+        if self.validate_touch_plate_thickness():
+            self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
+            self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
     def validate_serial_number(self):
         if (int(self.serial_number_input.text) > 10000) or (int(self.serial_number_input.text) < 999):
