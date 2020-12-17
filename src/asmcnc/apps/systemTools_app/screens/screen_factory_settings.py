@@ -414,6 +414,8 @@ class FactorySettingsScreen(Screen):
             self.serial_prefix.text = serial_number_string[0:3]
             self.serial_number_input.text = serial_number_string[3:7]
             self.product_number_input.text = serial_number_string[8:10]
+        except: 
+            pass
 
     ## EXIT BUTTONS
     def go_back(self):
