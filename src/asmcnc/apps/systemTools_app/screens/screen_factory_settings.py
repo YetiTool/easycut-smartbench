@@ -436,13 +436,13 @@ class FactorySettingsScreen(Screen):
 
     def validate_serial_number(self):
         if (int(self.serial_number_input.text) > 10000) or (int(self.serial_number_input.text) < 999):
-            warning_message = 'This number should be 4 digits long.'
+            warning_message = 'Second part of the serial number should be 4 digits long.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
 
         elif not ((str(self.product_number_input.text) == '01') or (str(self.product_number_input.text) == '02') or 
             (str(self.product_number_input.text) == '03')):
-            warning_message = 'This number should 01, 02, or 03.'
+            warning_message = 'Product code should 01, 02, or 03.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
 
