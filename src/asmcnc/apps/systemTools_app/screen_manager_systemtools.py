@@ -153,6 +153,7 @@ class ScreenManagerSystemTools(object):
         self.sm.current = 'system_menu'
 
     def exit_app(self):
+        self.sm.current = 'lobby'
         self.destroy_screen('build_info')
         self.destroy_screen('system_menu')
         self.destroy_screen('beta_testing')
@@ -161,7 +162,6 @@ class ScreenManagerSystemTools(object):
         self.destroy_screen('update_testing')
         self.destroy_screen('developer_temp')
         self.destroy_screen('diagnostics')
-        self.sm.current = 'lobby'
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
