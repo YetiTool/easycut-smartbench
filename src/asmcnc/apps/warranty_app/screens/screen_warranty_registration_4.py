@@ -12,6 +12,7 @@ from kivy.uix.textinput import TextInput
 from asmcnc.skavaUI import widget_status_bar
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
+from kivy.clock import Clock
 import os
 
 Builder.load_string("""
