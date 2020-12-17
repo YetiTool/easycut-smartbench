@@ -393,6 +393,7 @@ class FactorySettingsScreen(Screen):
 
     machine_model_values = ['SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
+    machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
@@ -408,6 +409,11 @@ class FactorySettingsScreen(Screen):
         self.machine_serial.text = str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
+        try: 
+            serial_number_string = self.get_serial_number()
+            self.serial_prefix.text = serial_number_string[0:3]
+            self.serial_number_input.text = serial_number_string[3:7]
+            self.product_number_input.text = serial_number_string[8:10]
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -437,9 +443,9 @@ class FactorySettingsScreen(Screen):
         if len(str(self.m.serial_number())) < 7:
             warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        # elif self.smartbench_model.text == 'Choose model':
-        #     warning_message = 'Please ensure machine model is set before doing a factory reset.'
-        #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+        elif self.smartbench_model.text == 'Choose model':
+            warning_message = 'Please ensure machine model is set before doing a factory reset.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         # elif self.software_version_label.text != self.latest_software_version.text:
         #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
         #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
@@ -535,7 +541,6 @@ class FactorySettingsScreen(Screen):
         return Final_Activation_Code
 
     def write_activation_code_and_serial_number_to_file(self):
-        machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
         activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
         try: 
             file = open(activation_code_filepath, "w+")
@@ -548,7 +553,18 @@ class FactorySettingsScreen(Screen):
             warning_message = 'Problem saving activation code!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
 
+    def get_serial_number(self):
+        serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
+        serial_number_from_file = ''
 
+        try: 
+            file = open(serial_number_filepath, 'r')
+            serial_number_from_file  = str(file.read())
+            file.close()
 
+        except: 
+            print 'Could not get serial number! Please contact YetiTool support!'
+
+        return str(serial_number_from_file)
 
             
