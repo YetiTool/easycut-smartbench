@@ -548,7 +548,7 @@ class FactorySettingsScreen(Screen):
             file = open(activation_code_filepath, "w+")
             file.write(str(self.generate_activation_code()))
             file.close()
-            file = open(machine_serial_number_filepath, "w+")
+            file = open(self.machine_serial_number_filepath, "w+")
             file.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
             file.close()
         except: 
@@ -556,11 +556,10 @@ class FactorySettingsScreen(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
 
     def get_serial_number(self):
-        serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
         serial_number_from_file = ''
 
         try: 
-            file = open(serial_number_filepath, 'r')
+            file = open(self.machine_serial_number_filepath, 'r')
             serial_number_from_file  = str(file.read())
             file.close()
 
