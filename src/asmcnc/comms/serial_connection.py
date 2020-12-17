@@ -515,6 +515,7 @@ class SerialConnection(object):
     # Feeds and speeds
     spindle_speed = '0.0'
     feed_rate = '0.0'
+    spindle_load_voltage = '0.0'
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -685,6 +686,8 @@ class SerialConnection(object):
                     elif overload_raw_mV >= 2500 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
+
+
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state
