@@ -34,7 +34,7 @@ class Settings(object):
     
 
 ## REFRESH EVERYTHING AT START UP    
-    # def refresh_all(self):
+    def refresh_all(self):
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
@@ -138,7 +138,7 @@ class Settings(object):
 
             # Repair a git repo
             os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-            '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && ../starteasycut.sh')
+            '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
         
         if backup_EC() == True:
             clone_new_EC_and_restart()
