@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.apps.screens import popup_warranty
 
 Builder.load_string("""
 
@@ -149,6 +150,7 @@ class WarrantyScreen1(Screen):
 		self.wm.sm.current = 'warranty_2'
 
 	def quit_to_console(self):
+		popup_warranty.QuitToConsole(self.wm.sm)
 		sys.exit()
 	
 
