@@ -172,7 +172,11 @@ class WarrantyScreen4(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
 
+    def on_pre_enter(self):
         self.read_in_activation_code()
+
+    def on_enter(self):
+        self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
 
     def read_in_activation_code(self):
         try: 
@@ -184,9 +188,6 @@ class WarrantyScreen4(Screen):
             self.error_message_top.opacity = 1
             self.error_message_top.text = 'Could not check activation code!'
             self.error_message_bottom.opacity = 1
-
-    def on_enter(self):
-        self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
 
     def check_activation_code(self):
 
