@@ -428,9 +428,15 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
 
     def validate_touch_plate_thickness(self):
-        pass
+        if (float(self.z_touch_plate_entry.text) < 1) or (float(self.z_touch_plate_entry.text) > 2):
+            warning_message = 'Touchplate offset should be between 1.00 and 2.00 mm'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+        else: 
+            return True
 
     def update_z_touch_plate_thickness(self):
+
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
