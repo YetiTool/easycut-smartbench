@@ -92,19 +92,11 @@ class WelcomeScreenClass(Screen):
 
     def go_to_next_screen(self, dt):
 
-        self.am.start_warranty_app()
+        if self.m.trigger_setup == False: 
+            self.sm.current = 'safety'
 
-        # if self.m.trigger_setup == False: 
-        #     self.sm.current = 'safety'
-
-        # else:
-        #     activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-
-        #     if os.path.isfile(activation_code_filepath):
-        #         self.am.start_warranty_app()
-
-        #     else:
-        #         self.sm.current = 'safety'
+        else:
+            self.am.start_warranty_app()
             
         
     def set_machine_value_driven_user_settings(self, dt):
