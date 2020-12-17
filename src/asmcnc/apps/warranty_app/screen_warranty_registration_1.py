@@ -117,7 +117,7 @@ Builder.load_string("""
                     background_color: hex('#F4433600')
                     center: self.parent.center
                     pos: self.parent.pos
-                    on_press: root.go_back()
+                    on_press: root.quit_to_console()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -148,6 +148,8 @@ class WarrantyScreen1(Screen):
 	def next_screen(self):
 		self.sm.current = 'warranty_2'
 
+	def quit_to_console(self):
+		pass
 	
 
 
