@@ -452,10 +452,10 @@ class FactorySettingsScreen(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
 
-        # elif len(str(self.serial_prefix.text)) != 3: 
-        #     warning_message = 'First part of the serial number should be 3 characters long.'
-        #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        #     return False
+        elif len(str(self.serial_prefix.text)) != 3: 
+            warning_message = 'First part of the serial number should be 3 characters long.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
 
         else: 
             return True
