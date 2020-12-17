@@ -491,7 +491,7 @@ class FactorySettingsScreen(Screen):
         #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         else:
 
-            def nested_factory_reset(self):
+            def nested_factory_reset():
                 if self.write_activation_code_and_serial_number_to_file():
                     lifetime = float(120*3600)
                     self.m.write_spindle_brush_values(0, lifetime)
