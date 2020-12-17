@@ -132,7 +132,6 @@ Builder.load_string("""
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.3
-                                            input_filter: 'str'
                                             multiline: False
                                         Label:
                                             text: ' '
