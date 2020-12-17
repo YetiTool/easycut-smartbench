@@ -62,7 +62,7 @@ Builder.load_string("""
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(80)
-				padding: [dp(254.5),0,dp(254.5),dp(1)]
+				padding: [dp(254.5),0,dp(254.5),0]
 				size_hint: (None,None)
 
                 BoxLayout: 
@@ -79,7 +79,7 @@ Builder.load_string("""
 						height: dp(79)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '20sp'
+						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 	                    center: self.parent.center
@@ -89,26 +89,27 @@ Builder.load_string("""
 				orientation: 'vertical'
 				padding: [10, 0, 0, 10]
 				size_hint: (None,None)
-				width: dp(69)
-				height: dp(60)
+				width: dp(70)
+				height: dp(62)
 
-				Button:
-					background_normal: ''
-					size_hint: (None,None)
-					width: dp(59)
-					height: dp(50)
-					on_press: root.go_back()
-
-					BoxLayout:
-						size: self.parent.size
-						pos: self.parent.pos
-
-						Image:
-							source: "./asmcnc/apps/warranty_app/img/exit.png"
-							size: self.parent.width, self.parent.height
-							allow_stretch: True 
-							size: self.parent.size
-							pos: self.parent.pos
+                Button:
+                    size_hint: (None,None)
+                    height: dp(52)
+                    width: dp(60)
+                    background_color: hex('#F4433600')
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.go_back()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
 
 """)
 

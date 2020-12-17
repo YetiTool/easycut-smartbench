@@ -82,7 +82,7 @@ Builder.load_string("""
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(80)
-				padding: [dp(254.5),0,dp(254.5),dp(1)]
+				padding: [dp(254.5),0,dp(254.5),0]
 				size_hint: (None,None)
                 BoxLayout: 
                     size_hint: (None, None)
@@ -97,7 +97,7 @@ Builder.load_string("""
 						height: dp(79)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '20sp'
+						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 	                    center: self.parent.center
@@ -105,27 +105,29 @@ Builder.load_string("""
 								
 			BoxLayout:
 				orientation: 'vertical'
-				padding: [10, 0, 0, 10]
+				padding: [dp(738), 0, dp(10), dp(10)]
 				size_hint: (None,None)
-				width: dp(69)
-				height: dp(60)
+				width: dp(800)
+				height: dp(62)
 
-				Button:
-					background_normal: ''
-					size_hint: (None,None)
-					width: dp(59)
-					height: dp(50)
-
-					BoxLayout:
-						size: self.parent.size
-						pos: self.parent.pos
-
-						Image:
-							source: "./asmcnc/apps/warranty_app/img/exit.png"
-							size: self.parent.width, self.parent.height
-							allow_stretch: True 
-							size: self.parent.size
-							pos: self.parent.pos
+                Button:
+                    size_hint: (None,None)
+                    height: dp(52)
+                    width: dp(52)
+                    background_color: hex('#F4433600')
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.go_back()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/warranty_app/img/quit_to_console.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
 
 		
 
