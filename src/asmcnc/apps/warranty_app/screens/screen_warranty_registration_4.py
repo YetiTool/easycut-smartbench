@@ -87,7 +87,6 @@ Builder.load_string("""
                     valign: 'bottom'
                     halign: 'center'
                     markup: 'true'
-                    bold: True
                     color: hex('#e64a19ff')
                     opacity: 0
                 Label:
@@ -98,7 +97,6 @@ Builder.load_string("""
                     valign: 'bottom'
                     halign: 'center'
                     markup: 'true'
-                    bold: True
                     color: hex('#e64a19ff')
                     opacity: 0
 
@@ -183,7 +181,8 @@ class WarrantyScreen4(Screen):
             file.close()
 
         except: 
-            print 'Could not get activation code! Please contact YetiTool support!'
+            self.error_message_top.opacity = 1
+            self.error_message_top.text = 'Could not get activation code! Please contact YetiTool support!'
 
     def on_enter(self):
         self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
@@ -203,7 +202,10 @@ class WarrantyScreen4(Screen):
 
         if self.check_activation_code():
             if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
-            self.wm.sm.current = 'warranty_5'
+            try: 
+                self.wm.sm.current = 'warranty_5'
+            except: 
+                if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
 
         elif auto == True:
             pass
@@ -214,3 +216,6 @@ class WarrantyScreen4(Screen):
 
     def go_back(self):
         self.wm.sm.current = 'warranty_3'
+
+    def on_leave(self):
+        if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
