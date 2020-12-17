@@ -189,7 +189,7 @@ Builder.load_string("""
                                     spacing: 10
 
                                     Label:
-                                        text: '[b]Touchplate thickness[/b]'
+                                        text: '[b]Touchplate offset[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     TextInput:
@@ -427,19 +427,44 @@ class FactorySettingsScreen(Screen):
     def on_enter(self):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
 
+    def validate_touch_plate_thickness(self):
+        pass
+
     def update_z_touch_plate_thickness(self):
         self.m.write_z_touch_plate_thickness(self.z_touch_plate_entry.text)
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
+    def validate_serial_number(self):
+        if (int(self.serial_number_input.text) > 10000) or (int(self.serial_number_input.text) < 999):
+            warning_message = 'This number should be 4 digits long.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+        elif not ((str(self.product_number_input.text) == '01') or (str(self.product_number_input.text) == '02') or 
+            (str(self.product_number_input.text) == '03')):
+            warning_message = 'This number should 01, 02, or 03.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+        elif len(str(self.serial_prefix.text)) != 3: 
+            warning_message = 'First part of the serial number should be 3 characters long.'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+        else: 
+            return True
+
     def update_serial_number(self):
-        full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
-        self.m.write_dollar_50_setting(full_serial_number)
-        self.machine_serial.text = 'updating...'
 
-        def update_text_with_serial():
-            self.machine_serial.text = str( self.m.serial_number())
+        if self.validate_serial_number():
+            full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
+            self.m.write_dollar_50_setting(full_serial_number)
+            self.machine_serial.text = 'updating...'
 
-        Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
+            def update_text_with_serial():
+                self.machine_serial.text = str( self.m.serial_number())
+
+            Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
     def factory_reset(self):
         if len(str(self.m.serial_number())) < 7:

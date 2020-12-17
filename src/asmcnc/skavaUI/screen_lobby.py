@@ -417,7 +417,7 @@ ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files 
 class LobbyScreen(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
-    
+    trigger_update_popup = False
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -429,7 +429,12 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
-        if self.m.trigger_setup == True: self.help_popup()
+        if self.trigger_update_popup: 
+            update_message = "New software update available for download!\n\n" + \
+            "Please use the [b]Update[/b] app to get the latest version."
+            popup_info.PopupInfo(self.sm, 450, update_message)
+
+        if self.m.trigger_setup: self.help_popup()
 
     def help_popup(self):
         description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
