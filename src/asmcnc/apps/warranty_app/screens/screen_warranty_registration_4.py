@@ -182,7 +182,8 @@ class WarrantyScreen4(Screen):
 
         except: 
             self.error_message_top.opacity = 1
-            self.error_message_top.text = 'Could not get activation code! Please contact YetiTool support!'
+            self.error_message_top.text = 'Could not check activation code!'
+            self.error_message_bottom.opacity = 1
 
     def on_enter(self):
         self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
