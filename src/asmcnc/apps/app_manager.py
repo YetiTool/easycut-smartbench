@@ -3,6 +3,9 @@ Created 5 March 2020
 @author: Letty
 Module to manage apps and screens
 '''
+
+import os
+
 from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
