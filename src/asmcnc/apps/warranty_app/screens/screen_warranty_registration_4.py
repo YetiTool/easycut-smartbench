@@ -194,8 +194,7 @@ class WarrantyScreen4(Screen):
             self.backup_generate_activation_code()
 
     def backup_generate_activation_code(self):
-        self.activation_code_from_file = self.generate_activation_code(self.warranty_manager.sm.get_screen('warranty_3').serial_number_label.text)
-
+        self.activation_code_from_file = self.generate_activation_code(self.wm.sm.get_screen('warranty_3').serial_number_label.text)
 
     def check_activation_code(self):
 
