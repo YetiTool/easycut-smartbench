@@ -151,7 +151,6 @@ class WarrantyScreen1(Screen):
 
 	def quit_to_console(self):
 		popup_warranty.QuitToConsole(self.wm.sm)
-		sys.exit()
 	
 
 
