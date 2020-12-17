@@ -65,10 +65,10 @@ Builder.load_string("""
                     valign: 'middle'
                     halign: 'center'
                     height: dp(50)
-                    width: dp(700) 
+                    width: dp(400) 
                     size_hint: (None,None)
                     text_size: self.size
-                    font_size: '20sp'
+                    font_size: '30sp'
                     markup: True
                     multiline: False
                     text: ''
