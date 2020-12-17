@@ -496,12 +496,17 @@ class FactorySettingsScreen(Screen):
             self.m.write_calibration_settings(0, float(320*3600))
             self.m.reminders_enabled = True
             self.m.trigger_setup = True
-            self.m.write_set_up_options(True) # use this to set warranty on restart?
-            # partially - set this flag and then if it's set check for a file containing an activation code.
-            # delete this file when it's been set.
+            self.m.write_set_up_options(True)
             self.write_activation_code_and_serial_number_to_file()
-            # os.remove("demofile.txt")
 
+            reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
+            "" + \
+            "Maintenance reminders set and enabled.\n\n" + \
+            "IMPORTANT: Press [b]Remind me later[/b] if you return to the lobby and see the welcome popup.\n" + \
+            "This is necessary to trigger the warranty and welcome start-up sequence on reboot."
+
+
+            popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
     def full_console_update(self):
 
