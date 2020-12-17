@@ -504,7 +504,7 @@ class FactorySettingsScreen(Screen):
                 else:
                     return False
 
-            if self.nested_factory_reset():
+            if nested_factory_reset():
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
                 "" + \
                 "Maintenance reminders set and enabled.\n\n" + \
