@@ -90,7 +90,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         width: dp(291)
                         height: dp(79)
-                        on_press: root.next_screen()
+                        on_press: root.next_screen(auto=False)
                         text: 'Next...'
                         font_size: '30sp'
                         color: hex('#f9f9f9ff')
@@ -130,6 +130,8 @@ Builder.load_string("""
 class WarrantyScreen4(Screen):
 
     activationcode = ObjectProperty()
+    activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
+    activation_code_from_file = ''
 
     def __init__(self, **kwargs):
         super(WarrantyScreen4, self).__init__(**kwargs)
@@ -139,36 +141,41 @@ class WarrantyScreen4(Screen):
         self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
-    
+
+        self.read_in_activation_code()
+
+    def on_enter(self):
+        Clock.schedule_interval(lambda dt: self.next_screen, 2)
+
 
     def check_activation_code(self):
 
-        activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-        activation_code_from_file = ''
-
-        try: 
-            file = open(activation_code_filepath, 'r')
-            activation_code_from_file  = int(file.read())
-            file.close()
-
-        except: 
-            print 'Could not get activation code! Please contact YetiTool support!'
-
         if self.activation_code.text != '':
-            if int(self.activation_code.text) == activation_code_from_file:
-                os.remove(activation_code_filepath)
+            if int(self.activation_code.text) == self.activation_code_from_file:
+                os.remove(self.activation_code_filepath)
                 return True
             else: 
                 return False
         else:
             return False
 
-    def next_screen(self):
+    def read_in_activation_code(self):
+        try: 
+            file = open(self.activation_code_filepath, 'r')
+            self.activation_code_from_file  = int(file.read())
+            file.close()
+
+        except: 
+            print 'Could not get activation code! Please contact YetiTool support!'
+
+    def next_screen(self, auto = True):
 
         if self.check_activation_code():
             self.wm.sm.current = 'warranty_5'
-        else:
+        elif auto == True:
             pass
+        else: 
+            print 'popup'
 
     def go_back(self):
         self.wm.sm.current = 'warranty_3'
