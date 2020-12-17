@@ -188,13 +188,13 @@ class WarrantyScreen4(Screen):
                 self.backup_generate_activation_code()
 
         except: 
-            self.error_message_top.opacity = 1
-            self.error_message_top.text = 'Checking activation code...'
-            self.error_message_bottom.opacity = 1
+            # self.error_message_top.opacity = 1
+            # self.error_message_top.text = 'Checking activation code...'
             self.backup_generate_activation_code()
 
     def backup_generate_activation_code(self):
         self.activation_code_from_file = self.generate_activation_code(self.wm.sm.get_screen('warranty_3').serial_number_label.text)
+        self.error_message_bottom.opacity = 1
 
     def check_activation_code(self):
 

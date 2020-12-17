@@ -490,23 +490,34 @@ class FactorySettingsScreen(Screen):
         #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
         #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
         else:
-            lifetime = float(120*3600)
-            self.m.write_spindle_brush_values(0, lifetime)
-            self.m.write_z_head_maintenance_settings(0)
-            self.m.write_calibration_settings(0, float(320*3600))
-            self.m.reminders_enabled = True
-            self.m.trigger_setup = True
-            self.m.write_set_up_options(True)
-            if self.write_activation_code_and_serial_number_to_file():
+
+            def nested_factory_reset(self):
+                if self.write_activation_code_and_serial_number_to_file():
+                    lifetime = float(120*3600)
+                    self.m.write_spindle_brush_values(0, lifetime)
+                    self.m.write_z_head_maintenance_settings(0)
+                    self.m.write_calibration_settings(0, float(320*3600))
+                    self.m.reminders_enabled = True
+                    self.m.trigger_setup = True
+                    self.m.write_set_up_options(True)
+                    return True
+                else:
+                    return False
+
+            if self.nested_factory_reset():
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
                 "" + \
                 "Maintenance reminders set and enabled.\n\n" + \
                 "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE" + \
                 "Not doing this may corrupt the warranty registration start up sequence."
-
                 popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
-            Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(self.shutdown_console, 5)
+
+            else: 
+                warning_message = 'There was an issue doing the factory reset! Get Letty for help.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+
 
 
     def shutdown_console(self, dt):
@@ -563,11 +574,8 @@ class FactorySettingsScreen(Screen):
 
     def generate_activation_code(self):
         ActiveTempNoOnly = int(''.join(filter(str.isdigit, str(self.serial_prefix.text) + str(self.serial_number_input.text))))
-        print (str(ActiveTempNoOnly)+'\n')
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
-        print (ActiveTempStart+'\n')
         ActiveTempStartReduce = ActiveTempStart[0:15]
-        print (ActiveTempStartReduce+'\n')
         Activation_Code_1 = int(ActiveTempStartReduce[0])*171350;
         Activation_Code_2 = int(ActiveTempStartReduce[3])*152740;
         Activation_Code_3 = int(ActiveTempStartReduce[5])*213431; 
