@@ -29,7 +29,7 @@ class QuitToConsole(Widget):
             sys.exit()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,0], markup = True)
         
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
