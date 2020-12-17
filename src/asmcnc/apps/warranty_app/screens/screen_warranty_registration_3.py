@@ -134,7 +134,7 @@ class WarrantyScreen3(Screen):
 
         try: 
             file = open(serial_number_filepath, 'r')
-            serial_number_from_file  = int(file.read())
+            serial_number_from_file  = str(file.read())
             file.close()
 
         except: 
