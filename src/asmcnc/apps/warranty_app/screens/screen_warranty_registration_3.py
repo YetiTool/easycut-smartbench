@@ -54,11 +54,11 @@ Builder.load_string("""
                     id: serial_number_label
                     size_hint_y: 1
                     font_size: '30sp'
-                    text: "[color=333333ff]YS28383[/color]"
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
                     markup: 'true'
+                    color: hex('#333333ff')
 
             BoxLayout:
                 orientation: 'vertical'
