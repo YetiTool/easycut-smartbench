@@ -506,9 +506,8 @@ class FactorySettingsScreen(Screen):
 
             if nested_factory_reset():
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
-                "" + \
                 "Maintenance reminders set and enabled.\n\n" + \
-                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE" + \
+                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHIN.\n\n" + \
                 "Not doing this may corrupt the warranty registration start up sequence."
                 popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
