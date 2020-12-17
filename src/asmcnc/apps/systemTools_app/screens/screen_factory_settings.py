@@ -502,7 +502,7 @@ class FactorySettingsScreen(Screen):
             reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
             "" + \
             "Maintenance reminders set and enabled.\n\n" + \
-            "[b]IMPORTANT[/b]: Press [b]***Remind me later***[/b] if you return to the lobby and see the welcome popup.\n" + \
+            "[b]IMPORTANT[/b]:\nPress [b]***Remind me later***[/b] if you return to the lobby and see the welcome popup.\n\n" + \
             "THIS IS NECESSARY TO TRIGGER THE WARRANTY AND WELCOME START-UP SEQUENCE ON REBOOT"
 
             popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
