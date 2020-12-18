@@ -64,7 +64,7 @@ Builder.load_string("""
                 height: dp(50)
                 width: dp(120)
                 font_size: dp(28)
-                input_filter: 'int'
+                input_filter: 'float'
                 multiline: False
 
             Label: 
@@ -87,4 +87,4 @@ class TouchplateOffsetWidget(Widget):
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
+        

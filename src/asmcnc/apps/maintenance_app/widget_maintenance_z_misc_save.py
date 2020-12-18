@@ -78,7 +78,7 @@ class ZMiscSaveWidget(Widget):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
-    def get_info(self):
+    def get_info(self): # Rewrite me!
 
         spindle_settings_info = "[b]Spindle cooldown[/b]\nThe spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
         "We recommend the following cooldown settings:\n\n" + \
@@ -91,4 +91,33 @@ class ZMiscSaveWidget(Widget):
         popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
 
     def save(self):
-        pass
+
+        # Set offset
+        try: 
+            touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset.text)
+            if (touchplate_offset < 1) or (touchplate_offset > 2):
+                warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
+                " please contact the YetiTool support team."
+                popup_info.PopupError(self.sm, warning_message)
+                return
+            else:
+                self.m.write_z_touch_plate_thickness(touchplate_offset)
+
+        except: 
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+            popup_info.PopupError(self.sm, warning_message)
+            return
+
+        # Reset lubrication time
+        time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
+
+        if time_since_lubrication == '0 hrs':
+            
+            if self.m.write_z_head_maintenance_settings(0):
+                popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+
+            else:
+                warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+                " please contact the YetiTool support team."
+                popup_info.PopupError(self.sm, warning_message)

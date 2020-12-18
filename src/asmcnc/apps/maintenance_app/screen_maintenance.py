@@ -569,7 +569,9 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
 
-
+        # Z MISC
+        self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
+        self.z_lubrication_reminder_widget.update_time_left()
 
 
     def on_enter(self):

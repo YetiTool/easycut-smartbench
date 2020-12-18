@@ -78,7 +78,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 height: dp(120)
                 width: dp(120)
-                ToggleButton:
+                Button:
                     id: reset_0
                     on_press: root.reset_to_0()
                     size_hint: (None,None)
@@ -109,12 +109,27 @@ class ZLubricationReminderWidget(Widget):
         self.m=kwargs['machine']
 
     def update_time_left(self):
-        time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/60)
+        time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/3600)
 
-        # if time_in_hours < 30: 
-        #     self.hours_since_lubrication.color = 
-        #     self.hours_since_lubrication.text =
+        if time_in_hours < 30: 
+            self.hours_since_lubrication.color = hex('#4caf50ff')
+            self.hours_since_lubrication.text = time_in_hours + ' hrs'
 
+        elif time_in_hours < 40:
+            self.hours_since_lubrication.color = hex('#f9ce1dff')
+            self.hours_since_lubrication.text = time_in_hours + ' hrs'
+
+        elif time_in_hours < 45:
+            self.hours_since_lubrication.color = hex('#ff9903ff')
+            self.hours_since_lubrication.text = time_in_hours + ' hrs'      
+
+        else:
+            self.hours_since_lubrication.color = hex('#e64a19ff')
+            self.hours_since_lubrication.text = time_in_hours + ' hrs'
+
+    def reset_to_0(self):
+        self.hours_since_lubrication.color = hex('#4caf50ff')
+        self.hours_since_lubrication.text = '0' + ' hrs'
 
 
 
