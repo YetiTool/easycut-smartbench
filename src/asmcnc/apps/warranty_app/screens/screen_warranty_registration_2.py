@@ -66,7 +66,7 @@ Builder.load_string("""
 				Label:
 					size_hint_y: 0.3
 					font_size: '26sp'
-					text: "[color=333333ff]https://www.yetitool.com/registration[/color]"
+					text: "[color=333333ff]https://www.yetitool.com/SUPPORT/Register-Your-Product[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
