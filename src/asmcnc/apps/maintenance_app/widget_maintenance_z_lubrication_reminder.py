@@ -112,23 +112,23 @@ class ZLubricationReminderWidget(Widget):
         time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/3600)
 
         if time_in_hours < 30: 
-            self.hours_since_lubrication.color = hex('#4caf50ff')
-            self.hours_since_lubrication.text = time_in_hours + ' hrs'
+            # self.hours_since_lubrication.color = hex('#4caf50ff')
+            self.hours_since_lubrication.text = '[color=4caf50ff]' + time_in_hours + ' hrs' + '[/color]'
 
         elif time_in_hours < 40:
-            self.hours_since_lubrication.color = hex('#f9ce1dff')
-            self.hours_since_lubrication.text = time_in_hours + ' hrs'
+            # self.hours_since_lubrication.color = hex('#f9ce1dff')
+            self.hours_since_lubrication.text = '[color=f9ce1dff]' + time_in_hours + ' hrs' + '[/color]'
 
         elif time_in_hours < 45:
-            self.hours_since_lubrication.color = hex('#ff9903ff')
-            self.hours_since_lubrication.text = time_in_hours + ' hrs'      
+            # self.hours_since_lubrication.color = hex('#ff9903ff')
+            self.hours_since_lubrication.text = '[color=ff9903ff]' + time_in_hours + ' hrs' + '[/color]'
 
         else:
-            self.hours_since_lubrication.color = hex('#e64a19ff')
-            self.hours_since_lubrication.text = time_in_hours + ' hrs'
+            # self.hours_since_lubrication.color = hex('#e64a19ff')
+            self.hours_since_lubrication.text = '[color=e64a19ff]' + time_in_hours + ' hrs' + '[/color]'
 
     def reset_to_0(self):
-        self.hours_since_lubrication.color = hex('#4caf50ff')
+        # self.hours_since_lubrication.color = hex('#4caf50ff')
         self.hours_since_lubrication.text = '0' + ' hrs'
 
 
