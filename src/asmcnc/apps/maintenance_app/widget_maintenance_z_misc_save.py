@@ -94,7 +94,7 @@ class ZMiscSaveWidget(Widget):
 
         # Set offset
         try: 
-            touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset.text)
+            touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset_widget.touchplate_offset.text)
             if (touchplate_offset < 1) or (touchplate_offset > 2):
                 warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
                 " please contact the YetiTool support team."
@@ -109,15 +109,15 @@ class ZMiscSaveWidget(Widget):
             popup_info.PopupError(self.sm, warning_message)
             return
 
-        # # Reset lubrication time
-        # time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
+        # Reset lubrication time
+        time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
 
-        # if time_since_lubrication == '0 hrs':
+        if time_since_lubrication == '0 hrs':
             
-        #     if self.m.write_z_head_maintenance_settings(0):
-        #         popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+            if self.m.write_z_head_maintenance_settings(0):
+                popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
-        #     else:
-        #         warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-        #         " please contact the YetiTool support team."
-        #         popup_info.PopupError(self.sm, warning_message)
+            else:
+                warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+                " please contact the YetiTool support team."
+                popup_info.PopupError(self.sm, warning_message)
