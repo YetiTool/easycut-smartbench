@@ -515,7 +515,7 @@ class SerialConnection(object):
     # Feeds and speeds
     spindle_speed = '0.0'
     feed_rate = '0.0'
-    spindle_load_voltage = '0.0'
+    spindle_load_voltage = 0.0
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -677,6 +677,9 @@ class SerialConnection(object):
 
                 elif part.startswith('Ld:'):
                     overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
+                    
+                    self.spindle_load_voltage = overload_raw_mV
+
                     if overload_raw_mV < 400 : overload_mV_equivalent_state = 0
                     elif overload_raw_mV < 1000 : overload_mV_equivalent_state = 20
                     elif overload_raw_mV < 1500 : overload_mV_equivalent_state = 40
