@@ -66,7 +66,7 @@ Builder.load_string("""
                     color: 0,0,0,1
                     font_size: dp(100)
                     markup: True
-                    halign: "middle"
+                    halign: "center"
                     valign: "bottom"
                     text_size: self.size
                     text: "[b]50hrs[/b]"
