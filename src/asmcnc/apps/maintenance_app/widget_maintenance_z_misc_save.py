@@ -109,15 +109,15 @@ class ZMiscSaveWidget(Widget):
             popup_info.PopupError(self.sm, warning_message)
             return
 
-        # Reset lubrication time
-        time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
+        # # Reset lubrication time
+        # time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
 
-        if time_since_lubrication == '0 hrs':
+        # if time_since_lubrication == '0 hrs':
             
-            if self.m.write_z_head_maintenance_settings(0):
-                popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+        #     if self.m.write_z_head_maintenance_settings(0):
+        #         popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
-            else:
-                warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-                " please contact the YetiTool support team."
-                popup_info.PopupError(self.sm, warning_message)
+        #     else:
+        #         warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+        #         " please contact the YetiTool support team."
+        #         popup_info.PopupError(self.sm, warning_message)
