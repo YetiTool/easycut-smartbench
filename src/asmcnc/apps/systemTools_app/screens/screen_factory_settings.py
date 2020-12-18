@@ -576,7 +576,19 @@ class FactorySettingsScreen(Screen):
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
 
+    def update_product_code_with_model(self):
+        if ((self.smartbench_model.text == 'SmartBench V1.2 Standard CNC Router') or 
+        (self.smartbench_model.text == 'SmartBench V1.2 Precision CNC Router')):
+            self.product_number_input.text = '02'
+
+        elif self.smartbench_model.text == 'SmartBench V1.2 PrecisionPro CNC Router':
+            self.product_number_input.text = '03'
+
+        else: 
+            self.product_number_input = '01'
+
     def set_smartbench_model(self):
+        self.update_product_code_with_model()
         print('Writing ' + self.smartbench_model.text)
         file = open(self.smartbench_model_path, "w+")
         file.write(str(self.smartbench_model.text))
