@@ -16,6 +16,8 @@ Builder.load_string("""
 
 <ZLubricationReminderWidget>
     
+    hours_since_lubrication:hours_since_lubrication
+
     BoxLayout:
         size_hint: (None, None)
         height: dp(200)
@@ -63,6 +65,7 @@ Builder.load_string("""
                 height: dp(120)
                 width: dp(350)
                 Label: 
+                    id: hours_since_lubrication
                     color: 0,0,0,1
                     font_size: dp(100)
                     markup: True
@@ -104,3 +107,14 @@ class ZLubricationReminderWidget(Widget):
         super(ZLubricationReminderWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+
+    def update_time_left(self):
+        time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/60)
+
+        # if time_in_hours < 30: 
+        #     self.hours_since_lubrication.color = 
+        #     self.hours_since_lubrication.text =
+
+
+
+
