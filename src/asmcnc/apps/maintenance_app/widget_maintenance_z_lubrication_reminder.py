@@ -66,10 +66,10 @@ Builder.load_string("""
                     color: 0,0,0,1
                     font_size: dp(100)
                     markup: True
-                    halign: "left"
-                    valign: "middle"
+                    halign: "middle"
+                    valign: "bottom"
                     text_size: self.size
-                    text: "50hrs"
+                    text: "[b]50hrs[/b]"
 
             BoxLayout: 
                 size_hint: (None, None)
