@@ -101,7 +101,8 @@ class ZMiscSaveWidget(Widget):
                 popup_info.PopupError(self.sm, warning_message)
                 return
             else:
-                self.m.write_z_touch_plate_thickness(touchplate_offset)
+                if self.m.write_z_touch_plate_thickness(touchplate_offset):
+                    popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
         except: 
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
@@ -109,12 +110,14 @@ class ZMiscSaveWidget(Widget):
             popup_info.PopupError(self.sm, warning_message)
             return
 
-        # Reset lubrication time
-        time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.hours_since_lubrication.text
 
-        if time_since_lubrication == '0 hrs':
+
+        # Reset lubrication time
+        time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.time_in_hours
+
+        if time_since_lubrication == 0:
             
-            if self.m.write_z_head_maintenance_settings(0):
+            if self.m.write_z_head_maintenance_settings(time_since_lubrication):
                 popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
             else:
