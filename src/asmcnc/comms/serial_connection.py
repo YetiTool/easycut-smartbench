@@ -682,11 +682,9 @@ class SerialConnection(object):
                     elif overload_raw_mV < 1500 : overload_mV_equivalent_state = 40
                     elif overload_raw_mV < 2000 : overload_mV_equivalent_state = 60
                     elif overload_raw_mV < 2500 : overload_mV_equivalent_state = 80
-                    elif overload_raw_mV < 2800 : overload_mV_equivalent_state = 90
-                    elif overload_raw_mV >= 2800 : overload_mV_equivalent_state = 100
+                    elif overload_raw_mV >= 2500 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
-
 
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
