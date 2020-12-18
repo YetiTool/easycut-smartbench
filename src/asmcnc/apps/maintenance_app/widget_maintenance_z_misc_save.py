@@ -92,6 +92,15 @@ class ZMiscSaveWidget(Widget):
 
     def save(self):
 
+        if self.save_touchplate_offset() and self.save_z_head_maintenance():
+            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+        
+        else:
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+            popup_info.PopupError(self.sm, warning_message)
+
+    def save_touchplate_offset(self):
         # Set offset
         try: 
             touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset_widget.touchplate_offset.text)
@@ -99,28 +108,25 @@ class ZMiscSaveWidget(Widget):
                 warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
                 " please contact the YetiTool support team."
                 popup_info.PopupError(self.sm, warning_message)
-                return
+                return False
             else:
-                if self.m.write_z_touch_plate_thickness(touchplate_offset):
-                    popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+                if self.m.write_z_touch_plate_thickness(touchplate_offset): return True
+                else: return False
 
         except: 
-            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-            " please contact the YetiTool support team."
-            popup_info.PopupError(self.sm, warning_message)
-            return
+            return False
 
 
-
+    def save_z_head_maintenance(self):
         # Reset lubrication time
         time_since_lubrication = self.sm.get_screen('maintenance').z_lubrication_reminder_widget.time_in_hours
 
         if time_since_lubrication == 0:
             
             if self.m.write_z_head_maintenance_settings(time_since_lubrication):
-                popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+                return True
 
             else:
-                warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-                " please contact the YetiTool support team."
-                popup_info.PopupError(self.sm, warning_message)
+                return False
+        else: 
+            return True
