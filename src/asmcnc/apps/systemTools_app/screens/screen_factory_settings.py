@@ -405,7 +405,7 @@ class FactorySettingsScreen(Screen):
         self.latest_software_version.text = self.set.latest_sw_version
         self.latest_platform_version.text = self.set.latest_platform_version
 
-        self.machine_serial.text = str(self.m.serial_number())
+        self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
         try: 
@@ -523,7 +523,7 @@ class FactorySettingsScreen(Screen):
         # elif self.platform_version_label.text != self.latest_platform_version.text:
         #     warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
         #     popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
-        
+
         else:
 
             def nested_factory_reset():
