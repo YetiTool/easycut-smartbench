@@ -486,12 +486,12 @@ class FactorySettingsScreen(Screen):
         self.product_number_input.focus = False
 
         if self.validate_serial_number():
-            full_serial_number = self.serial_number_input.text + "." + self.product_number_input.text
+            full_serial_number = str(self.serial_number_input.text) + "." + str(self.product_number_input.text)
             self.m.write_dollar_50_setting(full_serial_number)
             self.machine_serial.text = 'updating...'
 
             def update_text_with_serial():
-                self.machine_serial.text = str( self.m.serial_number())
+                self.machine_serial.text = str(self.m.serial_number())
 
             Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
