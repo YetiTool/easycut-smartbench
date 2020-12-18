@@ -27,7 +27,7 @@ Builder.load_string("""
 	        size_hint: (None, None)
 	        height: dp(175)
 	        width: dp(160)
-            padding: [16,21.5,12,21.5]
+            padding: [15,21.5,13,21.5]
             ToggleButton:
                 id: save_button
                 on_press: root.save()
