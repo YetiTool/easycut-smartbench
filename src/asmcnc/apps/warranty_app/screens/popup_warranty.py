@@ -16,14 +16,14 @@ from kivy.uix.image import Image
 from kivy.graphics import Color, Rectangle
 
 ### Quit To Console
-class QuitToConsole(Widget):
+class QuitToConsoleWarranty(Widget):
     def __init__(self, screen_manager):
         
         self.systemtools_sm = screen_manager
         
-        description = "You should only quit to the console if you have been instructed to by YetiTool support.\n\n" + \
+        description = "You should only quit to the console if you have been instructed to do so by YetiTool support.\n\n" + \
+        "This will take you to the YetiTool splash screen, and exit the software.\n\n" + \
         "Would you like to quit to console now?"
-
 
         def quit_console(*args):
             sys.exit()

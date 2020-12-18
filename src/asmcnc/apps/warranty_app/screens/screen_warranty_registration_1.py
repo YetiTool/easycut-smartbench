@@ -115,20 +115,21 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(52)
                     width: dp(52)
-                    background_color: hex('#F4433600')
+                    background_color: hex('##e5e5e5')
+                    background_normal: ''
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_console()
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/apps/warranty_app/img/quit_to_console.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                    # BoxLayout:
+                    #     padding: 0
+                    #     size: self.parent.size
+                    #     pos: self.parent.pos
+                        # Image:
+                        #     source: "./asmcnc/apps/warranty_app/img/quit_to_console.png"
+                        #     center_x: self.parent.center_x
+                        #     y: self.parent.y
+                        #     size: self.parent.width, self.parent.height
+                        #     allow_stretch: True
 
 		
 
@@ -150,7 +151,7 @@ class WarrantyScreen1(Screen):
 		self.wm.sm.current = 'warranty_2'
 
 	def quit_to_console(self):
-		popup_warranty.QuitToConsole(self.wm.sm)
+		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
 	
 
 
