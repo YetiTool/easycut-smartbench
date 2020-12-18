@@ -134,14 +134,14 @@ Builder.load_string("""
                                             size_hint_x: 0.3
                                             multiline: False
                                         Label:
-                                            text: ' '
+                                            text: ''
                                             color: [0,0,0,1]
                                             markup: True
                                             size_hint_x: 0.05
 
                                         TextInput:
                                             id: serial_number_input
-                                            text: ''
+                                            text: '0000'
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
@@ -157,7 +157,7 @@ Builder.load_string("""
 
                                         TextInput:
                                             id: product_number_input
-                                            text: ''
+                                            text: '00'
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
@@ -414,7 +414,9 @@ class FactorySettingsScreen(Screen):
             self.serial_number_input.text = serial_number_string[3:7]
             self.product_number_input.text = str(self.m.serial_number()).split('.')[1]
         except: 
-            pass
+            self.serial_prefix.text = 'YS6'
+            self.serial_number_input.text = '0000'
+            self.product_number_input.text = '00'
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -427,10 +429,16 @@ class FactorySettingsScreen(Screen):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
 
     def validate_touch_plate_thickness(self):
-        if (float(self.z_touch_plate_entry.text) < 1) or (float(self.z_touch_plate_entry.text) > 2):
+        if str(self.z_touch_plate_entry.text) == '':
+            warning_message = 'Touchplate offset should be between 1.00 and 2.00 mm'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False         
+
+        elif (float(self.z_touch_plate_entry.text) < 1) or (float(self.z_touch_plate_entry.text) > 2):
             warning_message = 'Touchplate offset should be between 1.00 and 2.00 mm'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
+
         else: 
             return True
 
@@ -441,7 +449,14 @@ class FactorySettingsScreen(Screen):
             self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
 
     def validate_serial_number(self):
-        if (int(self.serial_number_input.text) > 10000) or (int(self.serial_number_input.text) < 999):
+
+        if ((str(self.serial_number_input.text) == '') or (str(self.product_number_input.text) == '') or
+            (str(self.serial_prefix.text) == '')):
+            warning_message = 'Serial number format should be: YS6-0000-.00'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+        elif len(str(self.serial_number_input.text)) != 4:
             warning_message = 'Second part of the serial number should be 4 digits long.'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
