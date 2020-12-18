@@ -476,6 +476,11 @@ class FactorySettingsScreen(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
 
+        elif len(str(self.serial_prefix.text) + str(self.serial_number_input.text) + "." + str(self.product_number_input.text)) != 10:
+            warning_message = 'Serial number format should be: YS6-0000-.00'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
         else: 
             return True
 
@@ -492,6 +497,7 @@ class FactorySettingsScreen(Screen):
 
             def update_text_with_serial():
                 self.machine_serial.text = "$50 = " + str(self.m.serial_number())
+                self.write_serial_number_to_file()
 
             Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
@@ -527,7 +533,7 @@ class FactorySettingsScreen(Screen):
         else:
 
             def nested_factory_reset():
-                if self.write_activation_code_and_serial_number_to_file():
+                if self.write_activation_code_to_file() and self.write_serial_number_to_file():
                     lifetime = float(120*3600)
                     self.m.write_spindle_brush_values(0, lifetime)
                     self.m.write_z_head_maintenance_settings(0)
@@ -640,16 +646,26 @@ class FactorySettingsScreen(Screen):
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
 
-    def write_activation_code_and_serial_number_to_file(self):
+
+    def write_serial_number_to_file(self):
+        try:
+            file_ser = open(self.machine_serial_number_filepath, "w+")
+            file_ser.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
+            file_ser.close()
+            return True
+        except: 
+            warning_message = 'Problem saving serial number!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+    def write_activation_code_to_file(self):
         activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
         try: 
             file_act = open(activation_code_filepath, "w+")
             file_act.write(str(self.generate_activation_code()))
             file_act.close()
-            file_ser = open(self.machine_serial_number_filepath, "w+")
-            file_ser.write(str(self.serial_prefix.text) + str(self.serial_number_input.text))
-            file_ser.close()
             return True
+
         except: 
             warning_message = 'Problem saving activation code!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
