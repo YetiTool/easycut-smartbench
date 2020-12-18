@@ -15,6 +15,8 @@ from asmcnc.skavaUI import popup_info
 Builder.load_string("""
 
 <TouchplateOffsetWidget>
+
+    touchplate_offset:touchplate_offset
     
     BoxLayout:
         size_hint: (None, None)
@@ -87,4 +89,3 @@ class TouchplateOffsetWidget(Widget):
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        
