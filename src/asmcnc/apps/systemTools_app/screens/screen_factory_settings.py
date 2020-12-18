@@ -119,7 +119,7 @@ Builder.load_string("""
                                     padding: 10
                                     spacing: 10
                                     Label:
-                                        text: '[b]Serial number $50[/b]'
+                                        text: '[b]Serial number[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     BoxLayout: 
@@ -491,7 +491,7 @@ class FactorySettingsScreen(Screen):
             self.machine_serial.text = 'updating...'
 
             def update_text_with_serial():
-                self.machine_serial.text = str(self.m.serial_number())
+                self.machine_serial.text = "$50 = " str(self.m.serial_number())
 
             Clock.schedule_once(lambda dt: update_text_with_serial(), 1)
 
