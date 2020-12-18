@@ -677,13 +677,13 @@ class SerialConnection(object):
 
                 elif part.startswith('Ld:'):
                     overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
-                    if overload_raw_mV < 810 : overload_mV_equivalent_state = 0
-                    elif overload_raw_mV < 1500 : overload_mV_equivalent_state = 20
-                    elif overload_raw_mV < 1700 : overload_mV_equivalent_state = 40
+                    if overload_raw_mV < 400 : overload_mV_equivalent_state = 0
+                    elif overload_raw_mV < 1000 : overload_mV_equivalent_state = 20
+                    elif overload_raw_mV < 1500 : overload_mV_equivalent_state = 40
                     elif overload_raw_mV < 2000 : overload_mV_equivalent_state = 60
-                    elif overload_raw_mV < 2250 : overload_mV_equivalent_state = 80
-                    elif overload_raw_mV < 2500 : overload_mV_equivalent_state = 90
-                    elif overload_raw_mV >= 2500 : overload_mV_equivalent_state = 100
+                    elif overload_raw_mV < 2500 : overload_mV_equivalent_state = 80
+                    elif overload_raw_mV < 2800 : overload_mV_equivalent_state = 90
+                    elif overload_raw_mV >= 2800 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
                    
 
@@ -701,7 +701,7 @@ class SerialConnection(object):
                     # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
