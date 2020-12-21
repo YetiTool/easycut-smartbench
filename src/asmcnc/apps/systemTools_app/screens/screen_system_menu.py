@@ -34,19 +34,26 @@ Builder.load_string("""
 
 		Button:
 			text: 'System Info'
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            text_size: self.size
 			on_press: root.go_to_build_info()
-            background_normal: ''
+            # background_normal: ''
             background_color: hex('#f9f9f9ff')
-            BoxLayout:
-                padding: 0
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/apps/systemTools_app/img/system_info.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+            background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+            border: [dp(25)]*4
+            # BoxLayout:
+            #     padding: 0
+            #     size: self.parent.size
+            #     pos: self.parent.pos
+            #     Image:
+            #         source: "./asmcnc/apps/systemTools_app/img/system_info.png"
+            #         center_x: self.parent.center_x
+            #         y: self.parent.y
+            #         size: self.parent.width, self.parent.height
+            #         allow_stretch: True
 
 		Button:
 			text: 'Download Logs'
