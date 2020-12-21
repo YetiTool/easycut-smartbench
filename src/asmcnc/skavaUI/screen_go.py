@@ -50,6 +50,7 @@ Builder.load_string("""
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
     # spindle_voltage: spindle_voltage
+    spindle_widgets: spindle_widgets
     
     BoxLayout:
         padding: 0
@@ -306,6 +307,7 @@ Builder.load_string("""
                                 text_size: self.size 
 
                 BoxLayout:
+                    id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
                     padding: 20
@@ -423,14 +425,18 @@ class GoScreen(Screen):
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
             self.spindle_overload_container.padding = [0,0,0,-10]
-            self.z_height_container.size_hint_y = 0.95
+            # self.z_height_container.size_hint_y = 0.95
+            self.spindle_overload_container.spacing = 10
+            self.spindle_widgets.spacing = 20
 
         else: 
             self.spindle_overload_container.height = 0
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
             self.spindle_overload_container.padding = 0
-            self.z_height_container.size_hint_y = 1.2
+            # self.z_height_container.size_hint_y = 1.2
+            self.spindle_overload_container.spacing = 0
+            self.spindle_widgets.spacing = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
