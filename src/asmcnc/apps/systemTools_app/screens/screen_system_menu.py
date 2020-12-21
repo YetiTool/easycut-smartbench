@@ -33,10 +33,11 @@ Builder.load_string("""
         rows: 2
 
 		Button:
-			text: 'System Info'
+			text: 'System Info\\n'
             valign: "bottom"
             halign: "center"
             markup: True
+            font_size: '20sp'
             text_size: self.size
 			on_press: root.go_to_build_info()
             # background_normal: ''
