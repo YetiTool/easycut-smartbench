@@ -52,7 +52,7 @@ Builder.load_string("""
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(200)
-				padding: [20, 20]
+				padding: [20, 20, 20, 0]
 				size_hint: (None,None)
 				spacing: 0
 
@@ -62,22 +62,21 @@ Builder.load_string("""
 					text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
 					text_size: self.size
 					valign: 'middle'
-					halign: 'left'
-					markup: 'true'
-
+					halign: 'center'
+					markup: True
 
 				BoxLayout:
 					orientation: 'horizontal'
 					width: dp(800)
-					height: dp(140)
+					height: dp(132)
 					# padding: [20, 0]
 					size_hint: (None,None)
 					spacing: 20
 
 	                BoxLayout:
 	                    padding: 0
-						width: dp(200)
-						height: dp(140)
+						width: dp(132)
+						height: dp(132)
 						size_hint: (None,None)
 	                    Image:
 	                        source: "./asmcnc/apps/warranty_app/img/registration-qr-code.png"
@@ -88,9 +87,9 @@ Builder.load_string("""
 
 					BoxLayout:
 						orientation: 'vertical'
-						width: dp(540)
-						height: dp(140)
-						# padding: [0,20]
+						width: dp(608)
+						height: dp(132)
+						padding: [0,0,0,20]
 						size_hint: (None,None)
 
 						Label:
