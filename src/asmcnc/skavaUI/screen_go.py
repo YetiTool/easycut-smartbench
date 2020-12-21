@@ -425,7 +425,6 @@ class GoScreen(Screen):
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
             self.spindle_overload_container.padding = [0,0,0,-10]
-            # self.z_height_container.size_hint_y = 0.95
             self.spindle_overload_container.spacing = 10
             self.spindle_widgets.spacing = 20
 
@@ -434,7 +433,6 @@ class GoScreen(Screen):
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
             self.spindle_overload_container.padding = 0
-            # self.z_height_container.size_hint_y = 1.2
             self.spindle_overload_container.spacing = 0
             self.spindle_widgets.spacing = 0
 
