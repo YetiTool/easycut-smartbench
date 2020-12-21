@@ -49,9 +49,9 @@ Builder.load_string("""
 
             Button:
                 id: shutdown_button
-                disabled: False
                 size_hint_y: 1
                 background_color: hex('#FFFFFF00')
+                on_press: root.shutdown_console()
 
                 BoxLayout:
                     size: self.parent.size
@@ -482,3 +482,6 @@ class LobbyScreen(Screen):
 
     def maintenance_app(self):
         self.am.start_maintenance_app('laser_tab') 
+
+    def shutdown_console(self):
+        os.system('sudo shutdown -h')
