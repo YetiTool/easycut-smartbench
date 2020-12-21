@@ -89,12 +89,12 @@ Builder.load_string("""
 						orientation: 'vertical'
 						width: dp(608)
 						height: dp(132)
-						padding: [0,0,0,20]
+						padding: [0,0,0,0]
 						size_hint: (None,None)
 
 						Label:
-							size_hint_y: 0.4
-							font_size: '26sp'
+							size_hint_y: 0.6
+							font_size: '20sp'
 							text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
 							text_size: self.size
 							valign: 'top'
@@ -103,8 +103,8 @@ Builder.load_string("""
 							multiline: True
 						
 						Label:
-							size_hint_y: 0.3
-							font_size: '20sp'
+							size_hint_y: 0.2
+							font_size: '14sp'
 							text: "[color=333333ff]Can't use web form?"
 							text_size: self.size
 							valign: 'middle'
@@ -112,8 +112,8 @@ Builder.load_string("""
 							markup: 'true'
 
 						Label:
-							size_hint_y: 0.3
-							font_size: '20sp'
+							size_hint_y: 0.2
+							font_size: '14sp'
 							text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
 							text_size: self.size
 							valign: 'top'
