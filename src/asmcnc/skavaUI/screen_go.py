@@ -351,7 +351,7 @@ Builder.load_string("""
                             font_size: '16px' 
                             valign: 'middle'
                             halign: 'center'
-                            size:self.texture_size
+                            # size:self.texture_size
                             text_size: self.size
                             color: [0,0,0,0.5]
 
