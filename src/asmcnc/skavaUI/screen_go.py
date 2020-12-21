@@ -430,7 +430,7 @@ class GoScreen(Screen):
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
             self.spindle_overload_container.padding = 0
-            self.z_height_container.size_hint_y = 1
+            self.z_height_container.size_hint_y = 1.2
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
