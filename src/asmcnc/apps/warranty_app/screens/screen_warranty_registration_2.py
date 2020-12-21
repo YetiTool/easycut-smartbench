@@ -49,67 +49,77 @@ Builder.load_string("""
 				bold: True
 
 			BoxLayout:
-				orientation: 'horizontal'
+				orientation: 'vertical'
 				width: dp(800)
 				height: dp(200)
-				padding: [20, 0]
+				padding: [20, 20]
 				size_hint: (None,None)
-				spacing: 20
+				spacing: 0
 
-                BoxLayout:
-                    padding: 0
-					width: dp(200)
-					height: dp(200)
-					size_hint: (None,None)
-                    Image:
-                        source: "./asmcnc/apps/systemTools_app/img/registration-qr-code.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+				Label:
+					size_hint_y: 0.3
+					font_size: '20sp'
+					text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
+					text_size: self.size
+					valign: 'middle'
+					halign: 'left'
+					markup: 'true'
+
 
 				BoxLayout:
-					orientation: 'vertical'
-					width: dp(540)
-					height: dp(200)
-					padding: [0,20]
+					orientation: 'horizontal'
+					width: dp(800)
+					height: dp(140)
+					# padding: [20, 0]
 					size_hint: (None,None)
-					Label:
-						size_hint_y: 0.3
-						font_size: '20sp'
-						text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
-						text_size: self.size
-						valign: 'middle'
-						halign: 'left'
-						markup: 'true'
+					spacing: 20
 
-					Label:
-						size_hint_y: 0.3
-						font_size: '26sp'
-						text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
-						text_size: self.size
-						valign: 'top'
-						halign: 'left'
-						markup: 'true'
-						multiline: True
-					
-					Label:
-						size_hint_y: 0.2
-						font_size: '20sp'
-						text: "[color=333333ff]Can't use web form?"
-						text_size: self.size
-						valign: 'middle'
-						halign: 'left'
-						markup: 'true'
+	                BoxLayout:
+	                    padding: 0
+						width: dp(200)
+						height: dp(140)
+						size_hint: (None,None)
+	                    Image:
+	                        source: "./asmcnc/apps/warranty_app/img/registration-qr-code.png"
+	                        center_x: self.parent.center_x
+	                        y: self.parent.y
+	                        size: self.parent.width, self.parent.height
+	                        allow_stretch: True
 
-					Label:
-						size_hint_y: 0.2
-						font_size: '20sp'
-						text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
-						text_size: self.size
-						valign: 'top'
-						halign: 'left'
-						markup: 'true'
+					BoxLayout:
+						orientation: 'vertical'
+						width: dp(540)
+						height: dp(140)
+						# padding: [0,20]
+						size_hint: (None,None)
+
+						Label:
+							size_hint_y: 0.4
+							font_size: '26sp'
+							text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
+							text_size: self.size
+							valign: 'top'
+							halign: 'left'
+							markup: 'true'
+							multiline: True
+						
+						Label:
+							size_hint_y: 0.3
+							font_size: '20sp'
+							text: "[color=333333ff]Can't use web form?"
+							text_size: self.size
+							valign: 'middle'
+							halign: 'left'
+							markup: 'true'
+
+						Label:
+							size_hint_y: 0.3
+							font_size: '20sp'
+							text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
+							text_size: self.size
+							valign: 'top'
+							halign: 'left'
+							markup: 'true'
 
 			BoxLayout:
 				orientation: 'vertical'
