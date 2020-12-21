@@ -37,7 +37,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
 			on_press: root.go_to_build_info()
             # background_normal: ''
@@ -62,7 +62,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
@@ -84,7 +84,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
@@ -106,7 +106,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
@@ -128,7 +128,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
@@ -150,7 +150,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
@@ -172,7 +172,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
@@ -194,7 +194,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
@@ -218,7 +218,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
@@ -240,7 +240,7 @@ Builder.load_string("""
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '20sp'
+            font_size: '18sp'
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
