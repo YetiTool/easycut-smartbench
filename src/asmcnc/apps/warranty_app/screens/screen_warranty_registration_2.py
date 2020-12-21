@@ -107,7 +107,7 @@ Builder.load_string("""
 							font_size: '20sp'
 							text: "[color=333333ff]Can't use the web form?"
 							text_size: self.size
-							valign: 'middle'
+							valign: 'bottom'
 							halign: 'left'
 							markup: 'true'
 
@@ -116,7 +116,7 @@ Builder.load_string("""
 							font_size: '20sp'
 							text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
 							text_size: self.size
-							valign: 'top'
+							valign: 'middle'
 							halign: 'left'
 							markup: 'true'
 
