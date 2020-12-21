@@ -71,11 +71,11 @@ Builder.load_string("""
 					height: dp(132)
 					# padding: [20, 0]
 					size_hint: (None,None)
-					spacing: 20
+					spacing: 0
 
 	                BoxLayout:
 	                    padding: [28,0,0,0]
-						width: dp(200)
+						width: dp(180)
 						height: dp(132)
 						size_hint: (None,None)
 	                    Image:
