@@ -1055,5 +1055,6 @@ class PopupShutdown(Widget):
         popup.separator_height = '4dp'
 
         cancel_button.bind(on_press=cancel_shutdown)
+        cancel_button.bind(on_press=popup.dismiss)
 
         popup.open()
