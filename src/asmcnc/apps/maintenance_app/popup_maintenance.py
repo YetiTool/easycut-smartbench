@@ -147,6 +147,8 @@ class PopupBrushInfo(Widget):
         label_bottom = Label(size_hint_y=1.5, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
         examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
         examples_label_bottom = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
+        examples_label_test = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
+
 
         img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
 
@@ -158,7 +160,7 @@ class PopupBrushInfo(Widget):
         examples_layout.add_widget(examples_label_top)  
         examples_layout.add_widget(img_brushes)
         examples_layout.add_widget(examples_label_bottom)
-        examples_layout.add_widget(examples_label_bottom)
+        examples_layout.add_widget(examples_label_test)
 
         label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5)
         label_cheat.add_widget(label_blank)
