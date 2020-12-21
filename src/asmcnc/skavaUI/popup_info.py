@@ -1016,9 +1016,11 @@ class PopupHomingWarning(Widget):
 
 class PopupShutdown(Widget):
 
-    def __init__(self, screen_manager, description):
+    def __init__(self, screen_manager):
         
         self.sm = screen_manager
+
+        description = "Shutting down..."
 
         def cancel_shutdown(*args):
           os.system('sudo shutdown -c')

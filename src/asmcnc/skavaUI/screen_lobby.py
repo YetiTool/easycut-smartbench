@@ -485,4 +485,4 @@ class LobbyScreen(Screen):
 
     def shutdown_console(self):
         os.system('sudo shutdown -h')
-        popup_info.PopupShutdown()
+        popup_info.PopupShutdown(self.sm)
