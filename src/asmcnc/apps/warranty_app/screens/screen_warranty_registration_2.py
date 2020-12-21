@@ -74,8 +74,8 @@ Builder.load_string("""
 					spacing: 0
 
 	                BoxLayout:
-	                    padding: [20,0,0,0]
-						width: dp(172)
+	                    padding: [10,0,0,0]
+						width: dp(162)
 						height: dp(132)
 						size_hint: (None,None)
 	                    Image:
@@ -87,14 +87,14 @@ Builder.load_string("""
 
 					BoxLayout:
 						orientation: 'vertical'
-						width: dp(588)
+						width: dp(598)
 						height: dp(132)
 						padding: [0,0,0,0]
 						size_hint: (None,None)
 
 						Label:
 							size_hint_y: 0.4
-							font_size: '22sp'
+							font_size: '24sp'
 							text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
 							text_size: self.size
 							valign: 'middle'
@@ -105,7 +105,7 @@ Builder.load_string("""
 						Label:
 							size_hint_y: 0.3
 							font_size: '20sp'
-							text: "[color=333333ff]Can't use web form?"
+							text: "[color=333333ff]Can't use the web form?"
 							text_size: self.size
 							valign: 'middle'
 							halign: 'left'
