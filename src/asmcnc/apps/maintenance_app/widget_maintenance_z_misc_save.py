@@ -80,18 +80,6 @@ class ZMiscSaveWidget(Widget):
 
     def get_info(self): # Rewrite me!
 
-'''
-[b]Touchplate offset[/b]
-Update the offset here to make setting the Z datum even more precise.
-Make sure you press the save button to save your settings.
-
-[b]Time since lead screw lubricated[/b]
-If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated here.
-This will reset the time until SmartBench gives you the next reminder.
-Make sure you press the save button to save your settings.
-
-'''
-
         spindle_settings_info = "[b]Spindle cooldown[/b]\nThe spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
         "We recommend the following cooldown settings:\n\n" + \
         "       Yeti: 20,000 RPM; 10 seconds\n" + \
@@ -101,6 +89,15 @@ Make sure you press the save button to save your settings.
         "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle."
 
         popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
+
+        # [b]Touchplate offset[/b]
+        # Update the offset here to make setting the Z datum even more precise.
+        # Make sure you press the save button to save your settings.
+
+        # [b]Time since lead screw lubricated[/b]
+        # If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated here.
+        # This will reset the time until SmartBench gives you the next reminder.
+        # Make sure you press the save button to save your settings.
 
     def save(self):
 
