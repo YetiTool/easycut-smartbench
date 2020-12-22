@@ -428,6 +428,7 @@ class FactorySettingsScreen(Screen):
     def on_enter(self):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
         self.set_toggle_buttons()
+        self.get_smartbench_model()
 
 
     def set_toggle_buttons(self):
@@ -704,5 +705,7 @@ class FactorySettingsScreen(Screen):
             print 'Could not get serial number! Please contact YetiTool support!'
 
         return str(serial_number_from_file)
+
+
 
             
