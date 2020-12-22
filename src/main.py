@@ -49,8 +49,6 @@ from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_done # @UnresolvedImport
-from asmcnc.skavaUI import screen_developer # @UnresolvedImport
-from asmcnc.skavaUI import screen_diagnostics # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
@@ -69,7 +67,7 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.4.3'
+initial_version = 'v1.4.4'
 
 # default starting screen
 start_screen = 'welcome'
@@ -144,7 +142,7 @@ class SkavaUI(App):
             am = app_manager.AppManagerClass(sm, m, sett)
             
             # initialise the screens
-            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett)
+            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
             local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
@@ -161,8 +159,6 @@ class SkavaUI(App):
             boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
             rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
             job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m)
-            developer_screen = screen_developer.DeveloperScreen(name = 'dev', screen_manager = sm, machine =m, settings = sett)
-            diagnostics_screen = screen_diagnostics.DiagnosticsScreen(name = 'diagnostics', screen_manager = sm, machine =m)
             door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m)
             squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
             prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
@@ -193,10 +189,7 @@ class SkavaUI(App):
             sm.add_widget(mstate_screen)
             sm.add_widget(boundary_warning_screen)
             sm.add_widget(rebooting_screen)
-            sm.add_widget(job_done_screen)
-            sm.add_widget(developer_screen)
-            sm.add_widget(diagnostics_screen)
-            
+            sm.add_widget(job_done_screen)            
             sm.add_widget(door_screen)
             sm.add_widget(squaring_decision_screen)
             sm.add_widget(prepare_to_home_screen)

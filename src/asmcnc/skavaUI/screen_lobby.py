@@ -42,14 +42,36 @@ Builder.load_string("""
         padding: 0
         spacing: 0
 
+        BoxLayout:
+            size_hint_y: 70
+            padding: [10, 10, 734, 0]
+            orientation: 'horizontal'
+
+            Button:
+                id: shutdown_button
+                size_hint_y: 1
+                background_color: hex('#FFFFFF00')
+                on_press: root.shutdown_console()
+
+                BoxLayout:
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_select
+                        source: "./asmcnc/skavaUI/img/shutdown.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True 
+
         Carousel:
-            size_hint_y: 340
+            size_hint_y: 270
             id: carousel
             loop: True
                             
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 90, 100, 50]
+                padding: [100, 20, 100, 50]
                 spacing: 20
 
                 BoxLayout:
@@ -118,7 +140,7 @@ Builder.load_string("""
             # Carousel pane 2
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 90, 100, 50]
+                padding: [100, 20, 100, 50]
                 spacing: 20
 
                 BoxLayout:
@@ -188,7 +210,7 @@ Builder.load_string("""
             # Carousel pane 3
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 90, 100, 50]
+                padding: [100, 20, 100, 50]
                 spacing: 20
 
                 BoxLayout:
@@ -257,7 +279,7 @@ Builder.load_string("""
             # Carousel pane 4
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 90, 100, 50]
+                padding: [100, 20, 100, 50]
                 spacing: 20
 
                 BoxLayout:
@@ -281,7 +303,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_developer.png"
+                                source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
                                 center_x: self.parent.center_x
                                 center_y: self.parent.center_y
                                 size: self.parent.width, self.parent.height
@@ -289,7 +311,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Developer'
+                        text: 'System Tools'
                         markup: True
 
                 # BoxLayout:
@@ -417,7 +439,7 @@ ftp_file_dir = '/home/sysop/router_ftp'   # Linux location where incoming files 
 class LobbyScreen(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
-    
+    trigger_update_popup = False
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -429,7 +451,12 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
-        if self.m.trigger_setup == True: self.help_popup()
+        if self.trigger_update_popup: 
+            update_message = "New software update available for download!\n\n" + \
+            "Please use the [b]Update[/b] app to get the latest version."
+            popup_info.PopupInfo(self.sm, 450, update_message)
+
+        if self.m.trigger_setup: self.help_popup()
 
     def help_popup(self):
         description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
@@ -456,7 +483,12 @@ class LobbyScreen(Screen):
         self.am.start_update_app()    
     
     def developer_app(self):
-        popup_info.PopupDeveloper(self.sm)
+        # popup_info.PopupDeveloper(self.sm)
+        self.am.start_systemtools_app()
 
     def maintenance_app(self):
         self.am.start_maintenance_app('laser_tab') 
+
+    def shutdown_console(self):
+        os.system('sudo shutdown -h')
+        popup_info.PopupShutdown(self.sm)
