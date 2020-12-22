@@ -433,7 +433,7 @@ class FactorySettingsScreen(Screen):
     def set_toggle_buttons(self):
 
         if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
-            self.show_spindle_overload_toggle.state = 'normal':
+            self.show_spindle_overload_toggle.state = 'normal'
             self.show_spindle_overload_toggle.text = 'Show spindle overload'
 
         elif self.systemtools_sm.sm.get_screen('go').show_spindle_overload == True:
