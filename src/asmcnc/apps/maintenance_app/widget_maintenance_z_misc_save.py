@@ -82,15 +82,14 @@ class ZMiscSaveWidget(Widget):
 
         z_misc_settings_info = (
         "[b]Touchplate offset[/b]\n" + \
-        "Update the offset here to make setting the Z datum even more precise.\n" + \
+        "Update the offset to make setting the Z datum even more precise.\n" + \
         "Make sure you press the save button to save your settings.\n\n" + \
 
         "[b]Time since lead screw lubricated[/b]\n" + \
-        "If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated here.\n" + \
+        "If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated.\n" + \
         "This will reset the time until SmartBench gives you the next reminder.\n" + \
         "Make sure you press the save button to save your settings."
         )
-
 
         popup_info.PopupInfo(self.sm, 750, z_misc_settings_info)
 

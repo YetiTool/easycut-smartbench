@@ -346,6 +346,7 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
+        # Z Misc settings (probe plate and time since lead screw lubrication)
 
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/z_misc_tab_blue.png'
@@ -384,24 +385,6 @@ Builder.load_string("""
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
-                        # BoxLayout: 
-                        #     size_hint: (None, None)
-                        #     height: dp(50)
-                        #     width: dp(760)
-                        #     padding: [dp(10),dp(5),dp(5),dp(5)]
-                        #     orientation: 'horizontal'
-                        #     Label: 
-                        #         color: 0,0,0,1
-                        #         font_size: dp(22)
-                        #         markup: True
-                        #         halign: "left"
-                        #         valign: "middle"
-                        #         text_size: self.size
-                        #         size: self.parent.size
-                        #         pos: self.parent.pos
-                        #         text: "[b]SPINDLE COOLDOWN SETTINGS[/b]"
-
-
 
                     BoxLayout:
                         size_hint: (None,None)
