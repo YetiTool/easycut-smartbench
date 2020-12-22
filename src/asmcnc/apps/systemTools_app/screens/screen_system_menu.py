@@ -68,6 +68,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -90,6 +91,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -112,6 +114,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -134,6 +137,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -179,6 +183,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -201,6 +206,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
             border: [dp(25)]*4
+            padding_y: 5
             # background_normal: ''
             # background_color: hex('#f9f9f9ff')
             # BoxLayout:
@@ -225,6 +231,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -247,6 +254,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
