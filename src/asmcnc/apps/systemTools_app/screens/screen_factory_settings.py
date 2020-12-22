@@ -427,6 +427,27 @@ class FactorySettingsScreen(Screen):
 
     def on_enter(self):
         self.z_touch_plate_entry.text = str(self.m.z_touch_plate_thickness)
+        self.set_toggle_buttons()
+
+
+    def set_toggle_buttons(self):
+
+        if self.systemtools_sm.sm.get_screen('go').show_spindle_overload == False:
+            self.show_spindle_overload_toggle.state = 'normal':
+            self.show_spindle_overload_toggle.text = 'Show spindle overload'
+
+        elif self.systemtools_sm.sm.get_screen('go').show_spindle_overload == True:
+            self.show_spindle_overload_toggle.state = 'down'
+            self.show_spindle_overload_toggle.text = 'Hide spindle overload'
+
+        if self.m.reminders_enabled == True:
+            self.maintenance_reminder_toggle.state = 'normal'
+            self.maintenance_reminder_toggle.text = "Turn reminders off"
+
+        elif self.m.reminders_enabled == False:
+            self.maintenance_reminder_toggle.state = 'down'
+            self.maintenance_reminder_toggle.text = "Turn reminders on"
+
 
     def validate_touch_plate_thickness(self):
 
@@ -548,7 +569,7 @@ class FactorySettingsScreen(Screen):
             if nested_factory_reset():
                 reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
                 "Maintenance reminders set and enabled.\n\n" + \
-                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHIN.\n\n" + \
+                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n" + \
                 "Not doing this may corrupt the warranty registration start up sequence."
                 popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
 
