@@ -45,6 +45,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
             background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
@@ -155,6 +156,7 @@ Builder.load_string("""
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             border: [dp(25)]*4
+            padding_y: 5
             # BoxLayout:
             #     padding: 0
             #     size: self.parent.size
