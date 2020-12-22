@@ -617,11 +617,9 @@ class PopupWarning(Widget):
         popup.open()
 
 class PopupWait(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, description = 'Please wait...'):
         
         self.sm = screen_manager
-        
-        description = "Please wait..."
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
