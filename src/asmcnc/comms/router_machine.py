@@ -996,6 +996,7 @@ class RouterMachine(object):
             return int(converted_speed)
         else: 
             return int(self.s.spindle_speed)
+    def spindle_load(self): return int(self.s.spindle_load_voltage)
 
 # POSITIONAL SETTERS
 

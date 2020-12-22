@@ -4,7 +4,7 @@ Info pop-up
 '''
 
 import kivy
-
+import os
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
@@ -1011,3 +1011,48 @@ class PopupHomingWarning(Widget):
       cancel_button.bind(on_press=popup.dismiss)
       
       popup.open()
+
+class PopupShutdown(Widget):
+
+    def __init__(self, screen_manager):
+        
+        self.sm = screen_manager
+
+        description = "Shutting down..."
+
+        def cancel_shutdown(*args):
+          os.system('sudo shutdown -c')
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+        
+        cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+        cancel_button.background_normal = ''
+        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        btn_layout.add_widget(cancel_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title='Information',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 300),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+
+        cancel_button.bind(on_press=cancel_shutdown)
+        cancel_button.bind(on_press=popup.dismiss)
+
+        popup.open()
