@@ -629,7 +629,7 @@ class FactorySettingsScreen(Screen):
             self.product_number_input.text = '03'
 
         else: 
-            self.product_number_input = '01'
+            self.product_number_input.text = '01'
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
