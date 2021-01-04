@@ -413,6 +413,11 @@ class FactorySettingsScreen(Screen):
             self.serial_prefix.text = serial_number_string[0:3]
             self.serial_number_input.text = serial_number_string[3:7]
             self.product_number_input.text = str(self.m.serial_number()).split('.')[1]
+
+            if self.serial_prefix.text == '': self.serial_prefix.text = 'YS6'
+            if self.serial_number_input.text == '': self.serial_number_input.text = '0000'
+            if self.product_number_input.text == '': self.product_number_input.text = '00'
+
         except: 
             self.serial_prefix.text = 'YS6'
             self.serial_number_input.text = '0000'
@@ -629,7 +634,7 @@ class FactorySettingsScreen(Screen):
             self.product_number_input.text = '03'
 
         else: 
-            self.product_number_input = '01'
+            self.product_number_input.text = '01'
 
     def set_smartbench_model(self):
         self.update_product_code_with_model()
