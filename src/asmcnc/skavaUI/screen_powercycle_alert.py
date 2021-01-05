@@ -56,7 +56,7 @@ class PowerCycleScreen(Screen):
 
     def on_enter(self):
         self.only_label.text = "Please wait..."
-        Clock.schedule_once(self.update_label, 30)
+        Clock.schedule_once(self.update_label, 25)
 
     def update_label(self, dt):
         self.only_label.text = "Please restart SmartBench now"
