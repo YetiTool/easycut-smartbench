@@ -597,6 +597,7 @@ class FactorySettingsScreen(Screen):
         def nested_full_console_update(dt):
 
             if self.set.get_sw_update_via_wifi():
+                self.set.fetch_platform_tags()
                 self.set.update_platform()
             else: 
                 message = "Could not get software update, please check connection."

@@ -58,14 +58,15 @@ class Settings(object):
         except: 
             print "Could not fetch software version tags"
 
+    def fetch_platform_tags(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
+
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
         self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        if self.sm.current == 'dev':
-            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
             
