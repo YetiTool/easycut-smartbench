@@ -764,9 +764,6 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
 
-
-
-
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
@@ -808,13 +805,11 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
     def stop_for_a_stream_pause(self):
-        self.set_pause(True)  
-        self.s.is_job_streaming = False
+        self.set_pause(True)
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.s.is_job_streaming = True
         self._grbl_resume()
 
     def set_pause(self, pauseBool):
@@ -835,7 +830,7 @@ class RouterMachine(object):
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
-   
+
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()

@@ -527,9 +527,7 @@ class CheckingScreen(Screen):
                 self.sm.current = 'home'
                 
             else:         
-                if self.m.s.is_job_streaming:
-                    self.m.s.cancel_stream()
-                                        
+                if self.m.s.is_job_streaming: self.m.s.cancel_stream()                      
                 self.sm.current = 'home'
                 
         elif self.entry_screen == 'home':
@@ -561,8 +559,7 @@ class CheckingScreen(Screen):
         self.flag_max_feed_rate = False
         self.as_high_as = 5000
         self.error_log = []
-        if self.m.s.is_job_streaming:
-            self.m.s.cancel_stream()
+        if self.m.s.is_job_streaming: self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 

@@ -243,7 +243,7 @@ class SerialConnection(object):
                         # - need to send instructions to the GUI (prior to raise?) 
     
                 # Job streaming: stuff butter
-                if self.is_job_streaming:
+                if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: 
@@ -265,7 +265,6 @@ class SerialConnection(object):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
-    is_job_finished = False
 
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
@@ -310,8 +309,6 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
         
-        self.is_job_finished = False
-        
         # TAKE IN THE FILE
         self.job_gcode = job_object
         log('Job starting...')
@@ -319,6 +316,7 @@ class SerialConnection(object):
         ### (if not initialised - come back to this one later w/ pausing functionality)
 
         def set_streaming_flags_to_true():
+            self.m.set_pause(False)
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
@@ -329,8 +327,6 @@ class SerialConnection(object):
         elif not self.job_gcode:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
-            self.is_job_finished = True
-        return
 
     def initialise_job(self):
             
@@ -339,13 +335,9 @@ class SerialConnection(object):
             self.m.zUp()
   
         self.FLUSH_FLAG = True
-        
         time.sleep(0.1)
-        
         self._reset_counters()
-
         return True
-
 
     def _reset_counters(self):
         
@@ -407,7 +399,7 @@ class SerialConnection(object):
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
-        self.is_job_finished = True
+        self.m.set_pause(False)
 
         if self.m_state != "Check":
 
@@ -460,8 +452,10 @@ class SerialConnection(object):
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
 
     def cancel_stream(self):
+
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
+        self.m.set_pause(False)
         self._reset_counters()
 
         if self.m_state != "Check":
