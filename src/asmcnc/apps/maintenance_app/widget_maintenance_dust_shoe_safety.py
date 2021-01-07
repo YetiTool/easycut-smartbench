@@ -23,7 +23,7 @@ Builder.load_string("""
         pos: self.parent.pos
         orientation: 'vertical'
         padding: dp(20)
-        spacing: dp(10)  
+        spacing: dp(6)  
 
         Label: 
             color: 0,0,0,1
@@ -40,13 +40,13 @@ Builder.load_string("""
             padding: [0,0,0,0]
             spacing: dp(20)
             size_hint: (None, None)
-            height: dp(22)
+            height: dp(23)
             width: dp(210)
 
             BoxLayout: 
                 size_hint: (None, None)
                 pos: self.parent.pos
-                height: dp(22)
+                height: dp(23)
                 width: dp(85)
                 Switch:
                     background_color: [0,0,0,0]
@@ -61,13 +61,6 @@ Builder.load_string("""
                 height: dp(60)
                 width: dp(95)
                 padding: [dp(15.5), 0]
-
-                # canvas:
-                #     Color:
-                #         rgba: 0,0,0,1
-                #     RoundedRectangle:
-                #         size: self.size
-                #         pos: self.pos
 
                 Image:
                     id: dust_shoe_image

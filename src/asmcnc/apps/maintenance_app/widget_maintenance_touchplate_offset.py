@@ -25,21 +25,21 @@ Builder.load_string("""
         pos: self.parent.pos
         orientation: 'vertical'
         padding: dp(20)
-        spacing: dp(10)      
+        spacing: dp(6)      
 
         Label: 
             color: 0,0,0,1
             font_size: dp(24)
             markup: True
             halign: "left"
-            valign: "middle"
+            valign: "top"
             text_size: self.size
             text: "[b]TOUCHPLATE OFFSET[/b]"
 
         BoxLayout: 
             orientation: 'horizontal'
             padding: [0,0,0,0]
-            spacing: 20
+            spacing: 10
             size_hint: (None, None)
             height: dp(60)
             width: dp(290) 

@@ -59,6 +59,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    dust_shoe_settings_file_path = smartbench_values_dir + 'dust_shoe_settings.txt'
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -71,6 +72,9 @@ class RouterMachine(object):
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
+
+    ## DUST SHOE SETTINGS
+    dust_shoe_safety = False
 
     ## LASER VALUES
     laser_offset_x_value = 0
