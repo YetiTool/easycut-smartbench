@@ -55,12 +55,12 @@ Builder.load_string("""
                     pos: self.parent.pos
 
             # Put the image here
-            BoxLayout: 
+            BoxLayout:
                 size_hint: (None, None)
                 # pos: self.parent.pos
                 height: dp(82)
-                width: dp(75)
-                padding: [dp(11), 0, 0, 0]
+                width: dp(85)
+                padding: [dp(21), 0, 0, 0]
 
                 Image:
                     id: dust_shoe_image
