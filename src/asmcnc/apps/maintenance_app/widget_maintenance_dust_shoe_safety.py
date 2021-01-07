@@ -58,7 +58,7 @@ Builder.load_string("""
             BoxLayout: 
                 size_hint: (None, None)
                 # pos: self.parent.pos
-                height: dp(60)
+                height: dp(82)
                 width: dp(95)
                 padding: [dp(15.5), 0]
 
