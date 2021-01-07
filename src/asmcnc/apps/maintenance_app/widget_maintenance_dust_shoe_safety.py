@@ -60,7 +60,7 @@ Builder.load_string("""
                 # pos: self.parent.pos
                 height: dp(82)
                 width: dp(75)
-                padding: [dp(5.5), 0]
+                padding: [dp(11), 0, 0, 0]
 
                 Image:
                     id: dust_shoe_image
