@@ -21,7 +21,7 @@ Builder.load_string("""
     BoxLayout:
         size_hint: (None, None)
         height: dp(130)
-        width: dp(310)
+        width: dp(330)
         pos: self.parent.pos
         orientation: 'vertical'
         padding: dp(20)
@@ -42,7 +42,7 @@ Builder.load_string("""
             spacing: 10
             size_hint: (None, None)
             height: dp(60)
-            width: dp(290) 
+            width: dp(310) 
 
             # Put the image here
             BoxLayout: 

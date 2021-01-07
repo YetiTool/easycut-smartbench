@@ -386,7 +386,7 @@ Builder.load_string("""
                         BoxLayout:
                             size_hint: (None,None)
                             height: dp(140)
-                            width: dp(310)
+                            width: dp(330)
                             id: touchplate_offset_container
                             canvas:
                                 Color:
@@ -398,7 +398,7 @@ Builder.load_string("""
                         BoxLayout:
                             size_hint: (None,None)
                             height: dp(140)
-                            width: dp(250)
+                            width: dp(230)
                             id: dust_shoe_safety_container
                             canvas:
                                 Color:

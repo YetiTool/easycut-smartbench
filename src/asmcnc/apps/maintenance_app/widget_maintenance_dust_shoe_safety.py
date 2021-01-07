@@ -19,7 +19,7 @@ Builder.load_string("""
     BoxLayout:
         size_hint: (None, None)
         height: dp(130)
-        width: dp(250)
+        width: dp(230)
         pos: self.parent.pos
         orientation: 'vertical'
         padding: dp(20)
@@ -41,7 +41,7 @@ Builder.load_string("""
             spacing: dp(20)
             size_hint: (None, None)
             height: dp(23)
-            width: dp(210)
+            width: dp(190)
 
             BoxLayout: 
                 size_hint: (None, None)
@@ -59,8 +59,8 @@ Builder.load_string("""
                 size_hint: (None, None)
                 # pos: self.parent.pos
                 height: dp(82)
-                width: dp(95)
-                padding: [dp(15.5), 0]
+                width: dp(75)
+                padding: [dp(5.5), 0]
 
                 Image:
                     id: dust_shoe_image
