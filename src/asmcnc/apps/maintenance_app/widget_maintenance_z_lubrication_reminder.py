@@ -20,12 +20,12 @@ Builder.load_string("""
 
     BoxLayout:
         size_hint: (None, None)
-        height: dp(200)
+        height: dp(190)
         width: dp(580)
         pos: self.parent.pos
         orientation: 'vertical'
         padding: 20
-        spacing: 10      
+        spacing: 0   
 
         Label: 
             color: 0,0,0,1
@@ -38,10 +38,10 @@ Builder.load_string("""
 
         BoxLayout: 
             orientation: 'horizontal'
-            padding: [0,dp(5),0,0]
+            padding: [0,0,0,0]
             spacing: 10
             size_hint: (None, None)
-            height: dp(150)
+            height: dp(120)
             width: dp(580) 
 
             # Put the image here

@@ -1,7 +1,7 @@
 '''
-Created December 2020
+Created January 2020
 @author: Letty
-widget to allow user to change touchplate offset
+widget to allow user to choose dust shoe safety settings
 '''
 
 import kivy
@@ -14,78 +14,78 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
-<TouchplateOffsetWidget>
-
-    touchplate_offset:touchplate_offset
+<DustShoeSafetyWidget>
     
     BoxLayout:
         size_hint: (None, None)
         height: dp(130)
-        width: dp(310)
+        width: dp(250)
         pos: self.parent.pos
         orientation: 'vertical'
         padding: dp(20)
-        spacing: dp(10)      
+        spacing: dp(10)  
 
         Label: 
             color: 0,0,0,1
             font_size: dp(24)
             markup: True
             halign: "left"
-            valign: "middle"
+            valign: "top"
             text_size: self.size
-            text: "[b]TOUCHPLATE OFFSET[/b]"
+            text: "[b]DUST SHOE SAFETY[/b]"
+            multiline: True
 
         BoxLayout: 
             orientation: 'horizontal'
             padding: [0,0,0,0]
-            spacing: 20
+            spacing: dp(20)
             size_hint: (None, None)
-            height: dp(60)
-            width: dp(290) 
+            height: dp(22)
+            width: dp(210)
+
+            BoxLayout: 
+                size_hint: (None, None)
+                pos: self.parent.pos
+                height: dp(22)
+                width: dp(85)
+                Switch:
+                    background_color: [0,0,0,0]
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    pos: self.parent.pos
 
             # Put the image here
             BoxLayout: 
                 size_hint: (None, None)
                 # pos: self.parent.pos
                 height: dp(60)
-                width: dp(145)
+                width: dp(95)
+                padding: [dp(15.5), 0]
+
+                # canvas:
+                #     Color:
+                #         rgba: 0,0,0,1
+                #     RoundedRectangle:
+                #         size: self.size
+                #         pos: self.pos
 
                 Image:
-                    id: touchplate_image
-                    source: "./asmcnc/apps/maintenance_app/img/touchplate_offset.png"
+                    id: dust_shoe_image
+                    source: "./asmcnc/apps/maintenance_app/img/dust_shoe_safety.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
-            # Text input
-            TextInput:
-                id: touchplate_offset
-                size_hint: (None, None)
-                height: dp(50)
-                width: dp(70)
-                font_size: dp(28)
-                input_filter: 'float'
-                multiline: False
-
-            Label: 
-                color: 0,0,0,1
-                font_size: dp(28)
-                markup: True
-                halign: "left"
-                valign: "middle"
-                text_size: self.size
-                text: "mm"
 
 
 """)
 
 
-class TouchplateOffsetWidget(Widget):
+class DustShoeSafetyWidget(Widget):
 
     def __init__(self, **kwargs):
     
-        super(TouchplateOffsetWidget, self).__init__(**kwargs)
+        super(DustShoeSafetyWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']

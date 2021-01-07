@@ -14,7 +14,7 @@ from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
 widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
-widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder, widget_maintenance_dust_shoe_safety
 
 Builder.load_string("""
 
@@ -45,6 +45,7 @@ Builder.load_string("""
     z_misc_save_container: z_misc_save_container
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
+    dust_shoe_safety_container: dust_shoe_safety_container
 
     TabbedPanel:
         id: tab_panel
@@ -376,19 +377,39 @@ Builder.load_string("""
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(130)
                         width: dp(580)
-                        id: touchplate_offset_container
-                        canvas:
-                            Color:
-                                rgba: 1,1,1,1
-                            RoundedRectangle:
-                                size: self.size
-                                pos: self.pos
+                        height: dp(350)
+                        orientation: "horizontal" 
+                        padding: dp(0)
+                        spacing: dp(20)
+
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(140)
+                            width: dp(310)
+                            id: touchplate_offset_container
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(140)
+                            width: dp(250)
+                            id: dust_shoe_safety_container
+                            canvas:
+                                Color:
+                                    rgba: 1,1,1,1
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(200)
+                        height: dp(190)
                         width: dp(580)
                         id: z_lubrication_reminder_container
                         canvas:
@@ -519,6 +540,10 @@ class MaintenanceScreenClass(Screen):
 
         self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
+
+        self.dust_shoe_safety_widget = widget_maintenance_dust_shoe_safety.DustShoeSafetyWidget(machine=self.m, screen_manager=self.sm)
+        self.dust_shoe_safety_container.add_widget(self.dust_shoe_safety_widget)
+
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
