@@ -581,6 +581,13 @@ class MaintenanceScreenClass(Screen):
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
 
+        if self.m.dust_shoe_cover_safety == True:
+            self.dust_shoe_safety_widget.dust_shoe_safety_switch.active = True
+        else: 
+            self.dust_shoe_safety_widget.dust_shoe_safety_switch.active = False
+
+        self.dust_shoe_safety_widget.toggle_dust_shoe_safety()
+
 
     def on_enter(self):
 

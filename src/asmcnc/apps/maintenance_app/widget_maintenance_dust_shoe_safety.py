@@ -15,6 +15,9 @@ from asmcnc.skavaUI import popup_info
 Builder.load_string("""
 
 <DustShoeSafetyWidget>
+
+    dust_shoe_safety_switch: dust_shoe_safety_switch
+    dust_shoe_image: dust_shoe_image
     
     BoxLayout:
         size_hint: (None, None)
@@ -49,10 +52,12 @@ Builder.load_string("""
                 height: dp(23)
                 width: dp(85)
                 Switch:
+                    id: dust_shoe_safety_switch
                     background_color: [0,0,0,0]
                     center_x: self.parent.center_x
                     y: self.parent.y
                     pos: self.parent.pos
+                    on_active: root.toggle_dust_shoe_safety()
 
             # Put the image here
             BoxLayout:
@@ -82,3 +87,12 @@ class DustShoeSafetyWidget(Widget):
         super(DustShoeSafetyWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+
+    def toggle_dust_shoe_safety(self):
+
+        if self.dust_shoe_safety_switch.active == True:
+            self.dust_shoe_image.source = "./asmcnc/apps/maintenance_app/img/dust_shoe_safety.png"
+
+        else:
+            self.dust_shoe_image.source = "./asmcnc/apps/maintenance_app/img/dust_shoe.png"
+

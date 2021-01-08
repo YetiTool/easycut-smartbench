@@ -59,7 +59,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
-    dust_shoe_settings_file_path = smartbench_values_dir + 'dust_shoe_settings.txt'
+    dust_shoe_cover_settings_file_path = smartbench_values_dir + 'dust_shoe_cover_settings.txt'
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -73,8 +73,8 @@ class RouterMachine(object):
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
 
-    ## DUST SHOE SETTINGS
-    dust_shoe_safety = False
+    ## DUST SHOE COVER SETTINGS
+    dust_shoe_cover_safety = False
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -168,6 +168,12 @@ class RouterMachine(object):
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
+        if not path.exists(self.dust_shoe_cover_settings_file_path):
+            log('Creating dust shoe cover settings file...')
+            file = open(self.dust_shoe_cover_settings_file_path, 'w+')
+            file.write(str(self.dust_shoe_cover_safety))
+            file.close()
+
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -176,7 +182,7 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
-
+        self.read_dust_shoe_cover_safety_settings()
 
     ## SET UP OPTIONS
     def read_set_up_options(self):
@@ -432,6 +438,43 @@ class RouterMachine(object):
         except: 
             log("Unable to write spindle cooldown settings")
             return False
+
+
+    ## DUST SHOE COVER SAFETY
+
+    def read_dust_shoe_cover_safety_settings(self):
+
+        try:
+            file = open(self.dust_shoe_cover_settings_file_path, 'r')
+            read_is_safety_enabled = file.read().splitlines()
+            file.close()
+
+            # file read brings value in as a string, so need to do conversions to appropriate variables: 
+            if read_is_safety_enabled == "True" or read_is_safety_enabled == True: self.dust_shoe_cover_safety = True
+            else: self.dust_shoe_cover_safety = False
+
+            log("Read in dust shoe safety settings")
+            return True
+
+        except: 
+            log("Unable to read dust shoes safety settings") 
+            return False
+
+    def write_dust_shoe_cover_safety_settings(self, enabled):
+        try:
+            file = open(self.dust_shoe_cover_settings_file_path, "w")
+            file.write(str(enabled))
+            file.close()
+
+            if enabled == "True" or enabled == True: self.dust_shoe_cover_safety = True
+            else: self.dust_shoe_cover_safety = False
+            log("Write dust shoe safety settings")
+            return True
+
+        except:
+            log("Unable to write dust shoe safety settings")
+            return False
+
 
 # GRBL SETTINGS
     def write_dollar_50_setting(self, serial_number):

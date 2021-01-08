@@ -96,7 +96,7 @@ class ZMiscSaveWidget(Widget):
 
     def save(self):
 
-        if self.save_touchplate_offset() and self.save_z_head_maintenance():
+        if self.save_touchplate_offset() and self.save_z_head_maintenance() and self.save_dust_shoe_safety():
             popup_info.PopupMiniInfo(self.sm,"Settings saved!")
         
         else:
@@ -134,3 +134,11 @@ class ZMiscSaveWidget(Widget):
                 return False
         else: 
             return True
+
+    def save_dust_shoe_safety(self):
+        self.m.dust_shoe_cover_safety = self.sm.get_screen('maintenance').dust_shoe_safety_widget.dust_shoe_safety_switch.active 
+        if self.m.write_dust_shoe_cover_safety_settings(self.m.dust_shoe_cover_safety):
+            return True
+        else:
+            return False
+
