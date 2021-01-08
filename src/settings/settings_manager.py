@@ -20,6 +20,7 @@ class Settings(object):
     sw_hash = ''
     sw_branch = ''
     latest_sw_version = ''
+    latest_sw_beta = ''
     platform_version = ''
     pl_hash = ''
     pl_branch = ''
@@ -34,7 +35,7 @@ class Settings(object):
     
 
 ## REFRESH EVERYTHING AT START UP    
-    # def refresh_all(self):
+    def refresh_all(self):
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
@@ -48,16 +49,17 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-
         try: 
             os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
-            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 2").read()).split('\n'))
+            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
+            self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
+            self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
 
-            if str(sw_version_list[1]) + '-beta' == str(sw_version_list[0]):
-                self.latest_sw_version = str(sw_version_list[1])
-            else: self.latest_sw_version = str(sw_version_list[0])
         except: 
             print "Could not fetch software version tags"
+
+    def fetch_platform_tags(self):
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
 
     def refresh_platform_version(self):
         self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
@@ -65,25 +67,29 @@ class Settings(object):
         self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        if self.sm.current == 'dev':
-            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
 
             
 ## GET SOFTWARE UPDATES
 
-    def get_sw_update_via_wifi(self):
+    def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
-        checkout_success = self.checkout_latest_version()
+        checkout_success = self.checkout_latest_version(beta)
         return checkout_success
     
-    def checkout_latest_version(self):    
+    def checkout_latest_version(self, beta = False):
+
+        if not beta:
+            version_to_checkout = self.latest_sw_version
+        else:
+            version_to_checkout = self.latest_sw_beta
+
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            if self.latest_sw_version != self.sw_version:
+            if version_to_checkout != self.sw_version:
                 os.system("cd /home/pi/easycut-smartbench/")
 
-                cmd  = ["git", "checkout", self.latest_sw_version]
+                cmd  = ["git", "checkout", version_to_checkout]
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 unformatted_git_output = p.communicate()[1]
@@ -215,7 +221,7 @@ class Settings(object):
             rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
             os.system(rm_temp_repo)
 
-    def get_sw_update_via_usb(self):
+    def get_sw_update_via_usb(self, beta = False):
         dir_path_name = self.find_usb_directory()
         
         if dir_path_name == 2 or dir_path_name == 0:
@@ -224,7 +230,7 @@ class Settings(object):
         if self.set_up_remote_repo(dir_path_name):
             log('Updating software from: ' + dir_path_name)
             self.refresh_latest_sw_version()
-            checkout_success = self.checkout_latest_version()   
+            checkout_success = self.checkout_latest_version(beta)   
 
         self.clear_remote_repo(dir_path_name)
 
@@ -259,6 +265,16 @@ class Settings(object):
         os.system("./update_fw.sh")
         sys.exit()
 
+## PLATFORM UPDATES
 
+    def update_platform(self):
+        self.refresh_latest_platform_version()
+        self.refresh_platform_version()
+
+        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+
+    def platform_ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
             

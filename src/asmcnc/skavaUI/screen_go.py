@@ -49,7 +49,8 @@ Builder.load_string("""
     btn_back_img:btn_back_img
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
-    spindle_voltage: spindle_voltage
+    # spindle_voltage: spindle_voltage
+    spindle_widgets: spindle_widgets
     
     BoxLayout:
         padding: 0
@@ -306,6 +307,7 @@ Builder.load_string("""
                                 text_size: self.size 
 
                 BoxLayout:
+                    id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
                     padding: 20
@@ -343,16 +345,17 @@ Builder.load_string("""
                             text: '[color=333333]0 %[/color]'
                             markup: True
 
-                        Label:
-                            id: spindle_voltage
-                            size_hint_y: 0.6
-                            text: '0'
-                            font_size: '16px' 
-                            valign: 'middle'
-                            halign: 'center'
-                            size:self.texture_size
-                            text_size: self.size
-                            color: [0,0,0,0.5]
+                        # Label:
+                        #     id: spindle_voltage
+                        #     size_hint_y: 0.6
+                        #     opacity: 0
+                        #     text: '0'
+                        #     font_size: '16px' 
+                        #     valign: 'middle'
+                        #     halign: 'center'
+                        #     size:self.texture_size
+                        #     text_size: self.size
+                        #     color: [0,0,0,0.5]
 
         BoxLayout:
             size_hint_y: 0.08
@@ -376,6 +379,7 @@ class GoScreen(Screen):
     btn_back_img = ObjectProperty()
     start_or_pause_button_image = ObjectProperty()
 
+    show_spindle_overload = False
 
     is_job_started_already = False
     temp_suppress_prompts = False
@@ -418,17 +422,21 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if ((str(self.m.serial_number())).endswith('03') or self.sm.get_screen('dev').developer_mode == True):
+        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True):
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
             self.spindle_overload_container.padding = [0,0,0,-10]
+            self.spindle_overload_container.spacing = 10
+            self.spindle_widgets.spacing = 20
 
         else: 
             self.spindle_overload_container.height = 0
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
             self.spindle_overload_container.padding = 0
+            self.spindle_overload_container.spacing = 0
+            self.spindle_widgets.spacing = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
@@ -633,7 +641,7 @@ class GoScreen(Screen):
 
         self.speedOverride.update_spindle_speed_label()
         self.feedOverride.update_feed_rate_label()
-        self.update_voltage_label()
+        # self.update_voltage_label()
 
 
     # Called from serial_connection if change in state seen

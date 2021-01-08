@@ -284,11 +284,27 @@ class GCodeMonitor(Widget):
             popup_info.PopupWarning(self.sm, description)
             self.popup_flag = False
         else:
-            self.m.send_any_gcode_command(str(self.gCodeInput.text))
+            if self.validate_gcode_textinput(self.gCodeInput.text):
+                self.m.send_any_gcode_command(str(self.gCodeInput.text))
+            else:
+                message = "This command is forbidden because it will alter the fundamental settings of the machine.\n\n" + \
+                "If you need to alter the fundamental settings of the machine please contact YetiTool support."
+                popup_info.PopupWarning(self.sm, message)
+
+    def validate_gcode_textinput(self, gcode_input):
+
+        if "$50" in gcode_input:
+            return False
+
+        elif "$RST" in gcode_input:
+            return False
+
+        else: 
+            return True
     
-    def send_gcode_preset(self, input):
+    def send_gcode_preset(self, gcode_input):
         
-        self.m.send_any_gcode_command(input)
+        self.m.send_any_gcode_command(gcode_input)
     
     def toggle_check_mode(self):
         

@@ -13,7 +13,8 @@ from kivy.clock import Clock
 
 from asmcnc.apps.maintenance_app import widget_maintenance_xy_move, widget_maintenance_z_move, widget_maintenance_laser_buttons, \
 widget_maintenance_laser_switch, widget_maintenance_brush_use, widget_maintenance_brush_life, widget_maintenance_brush_monitor, \
-widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings
+widget_maintenance_brush_save, widget_maintenance_spindle_save, widget_maintenance_spindle_settings, widget_maintenance_z_misc_save, \
+widget_maintenance_touchplate_offset, widget_maintenance_z_lubrication_reminder
 
 Builder.load_string("""
 
@@ -39,6 +40,11 @@ Builder.load_string("""
     spindle_tab: spindle_tab
     spindle_save_container: spindle_save_container
     spindle_settings_container: spindle_settings_container
+
+    # Z touchplate and lead screw widgets
+    z_misc_save_container: z_misc_save_container
+    touchplate_offset_container: touchplate_offset_container
+    z_lubrication_reminder_container: z_lubrication_reminder_container
 
     TabbedPanel:
         id: tab_panel
@@ -180,40 +186,6 @@ Builder.load_string("""
                     Rectangle:
                         size: self.size
                         pos: self.pos
-
-                # BoxLayout:
-                #     size_hint: (None,None)
-                #     height: dp(80)
-                #     width: dp(760)
-                #     id: monitor_strip
-                #     canvas:
-                #         Color:
-                #             rgba: 1,1,1,1
-                #         RoundedRectangle:
-                #             size: self.size
-                #             pos: self.pos
-                #     BoxLayout: 
-                #         size_hint: (None, None)
-                #         height: dp(80)
-                #         width: dp(760)
-                #         padding: [dp(10),dp(5),dp(5),dp(5)]
-                #         orientation: 'horizontal'
-                #         Label: 
-                #             color: 0,0,0,1
-                #             font_size: dp(22)
-                #             markup: True
-                #             halign: "left"
-                #             valign: "middle"
-                #             text_size: self.size
-                #             size: self.parent.size
-                #             pos: self.parent.pos
-                #             text: "[b]BRUSH MONITOR[/b]"
-
-                #         BoxLayout:
-                #             size_hint: (None,None)
-                #             height: dp(70)
-                #             width: dp(600)
-                #             id: brush_monitor_container
 
                 BoxLayout:
                     size_hint: (None,None)
@@ -374,11 +346,71 @@ Builder.load_string("""
                                 size: self.size
                                 pos: self.pos
 
+        # Z Misc settings (probe plate and time since lead screw lubrication)
 
         TabbedPanelItem:
-            background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            background_down: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
-            disabled: 'True'
+            background_normal: 'asmcnc/apps/maintenance_app/img/z_misc_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/z_misc_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(804)
+                height: dp(390)
+                orientation: "horizontal" 
+                padding: (22, 20, 22, 20)
+                spacing: (20)
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    width: dp(580)
+                    height: dp(350)
+                    orientation: "vertical" 
+                    padding: dp(0)
+                    spacing: dp(20)
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(130)
+                        width: dp(580)
+                        id: touchplate_offset_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                    BoxLayout:
+                        size_hint: (None,None)
+                        height: dp(200)
+                        width: dp(580)
+                        id: z_lubrication_reminder_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+
+                BoxLayout:
+                    size_hint: (None,None)
+                    height: dp(350)
+                    width: dp(160)
+                    id: z_misc_save_container
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
+
 
         TabbedPanelItem:
             background_normal: 'asmcnc/apps/maintenance_app/img/blank_blue_tab.png'
@@ -387,16 +419,19 @@ Builder.load_string("""
 
     BoxLayout: 
         size_hint: (None,None)
-        pos: (dp(426), dp(390))
+        pos: (dp(568), dp(390))
+        height: dp(90)
+        width: dp(142)        
         Image:
             size_hint: (None,None)
             height: dp(90)
-            width: dp(284)
-            # background_color: [0,0,0,0]
+            width: dp(142)
+            # background_color: hex('#2196f3fb')
             center: self.parent.center
             pos: self.parent.pos
-            source: "./asmcnc/apps/maintenance_app/img/long_blue_2_tabs.png"
+            source: "./asmcnc/apps/maintenance_app/img/blank_blue_tab.png"
             allow_stretch: True
+            opacity: 1
 
     BoxLayout: 
         size_hint: (None,None)
@@ -471,7 +506,19 @@ class MaintenanceScreenClass(Screen):
         self.spindle_save_container.add_widget(self.spindle_save_widget)       
 
         self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm)
-        self.spindle_settings_container.add_widget(self.spindle_settings_widget)   
+        self.spindle_settings_container.add_widget(self.spindle_settings_widget)
+
+
+        # Z TOUCHPLATE OFFSET AND LEAD SCREW REMINDER WIDGETS
+
+        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.z_misc_save_container.add_widget(self.z_misc_save_widget)
+
+        self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm)
+        self.touchplate_offset_container.add_widget(self.touchplate_offset_widget)
+
+        self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm)
+        self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -504,6 +551,11 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
+
+        # Z MISC
+        self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
+        self.z_lubrication_reminder_widget.update_time_left()
+
 
     def on_enter(self):
 

@@ -65,10 +65,12 @@ class WelcomeScreenClass(Screen):
         self.m=kwargs['machine']
         self.set=kwargs['settings']
         self.db=kwargs['database']
-
+        self.am = kwargs['app_manager']
 
     def on_enter(self):
-        
+
+        self.set.refresh_all()
+
         if self.m.s.is_connected():
 
             Clock.schedule_once(self.db._start_status_ping_schedule, 2)
@@ -89,9 +91,18 @@ class WelcomeScreenClass(Screen):
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first                
                 Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
 
+        elif sys.platform == 'win32' or sys.platform == 'darwin':
+            Clock.schedule_once(self.go_to_next_screen, 1)
+
 
     def go_to_next_screen(self, dt):
-        self.sm.current = 'safety'
+
+        if self.m.trigger_setup == False: 
+            self.sm.current = 'safety'
+
+        else:
+            self.am.start_warranty_app()
+            
         
     def set_machine_value_driven_user_settings(self, dt):
 
@@ -102,9 +113,6 @@ class WelcomeScreenClass(Screen):
 
         # SW Update available?
         if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
-            update_message = "New software update available for download!\n\n" + \
-            "Please use the [b]Update[/b] app to get the latest version."
-
-            popup_info.PopupInfo(self.sm, 450, update_message)
+            self.sm.get_screen('lobby').trigger_update_popup = True
 
 

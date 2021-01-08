@@ -515,7 +515,7 @@ class SerialConnection(object):
     # Feeds and speeds
     spindle_speed = '0.0'
     feed_rate = '0.0'
-    spindle_load_voltage = '0.0'
+    spindle_load_voltage = 0.0
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -677,16 +677,14 @@ class SerialConnection(object):
 
                 elif part.startswith('Ld:'):
                     self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
-                    if self.spindle_load_voltage < 750 : overload_mV_equivalent_state = 0
-                    elif self.spindle_load_voltage < 1750 : overload_mV_equivalent_state = 20
-                    elif self.spindle_load_voltage < 3000 : overload_mV_equivalent_state = 40
-                    elif self.spindle_load_voltage < 3750 : overload_mV_equivalent_state = 60
-                    elif self.spindle_load_voltage < 4250 : overload_mV_equivalent_state = 80
-                    elif self.spindle_load_voltage < 4750 : overload_mV_equivalent_state = 90
-                    elif self.spindle_load_voltage >= 4750 : overload_mV_equivalent_state = 100
-                    else: log("Overload value not recognised")
-                   
 
+                    if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
+                    elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
+                    elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
+                    elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
+                    elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
+                    elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
+                    else: log("Overload value not recognised")
 
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:  
@@ -697,12 +695,12 @@ class SerialConnection(object):
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
                             self.sm.get_screen('go').update_overload_peak(self.overload_state)
                         except:
-                            log('Unable to update_overlaod_state on go screen')
+                            log('Unable to update overload state on go screen')
                     
                     # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                         self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
