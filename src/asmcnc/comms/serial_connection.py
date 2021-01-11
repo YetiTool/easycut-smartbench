@@ -282,15 +282,14 @@ class SerialConnection(object):
         log('Checking job...')
 
         self.m.enable_check_mode()
-        
-        # Set up error logging
-        self.suppress_error_screens = True
-        self.response_log = []
-        
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
             if self.m_state == "Check":
+
+                # Set up error logging
+                self.suppress_error_screens = True
+                self.response_log = []
                 
                 # run job as per normal
                 self.run_job(job_object)
@@ -304,7 +303,7 @@ class SerialConnection(object):
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
 
-    def return_check_outcome(self, job_object,dt):
+    def return_check_outcome(self, job_object, dt):
         if len(self.response_log) >= len(job_object): # + 2
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
