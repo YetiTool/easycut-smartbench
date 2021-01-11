@@ -226,7 +226,7 @@ class ShapeCutterSaveJobScreenClass(Screen):
         self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
 
     def on_enter(self):
-        self.cut_time_text = self.sm.get_screen('jobdone').jobdone_text
+        self.cut_time_text = self.shapecutter_sm.sm.get_screen('jobdone').jobdone_text
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
