@@ -1266,14 +1266,15 @@ class RouterMachine(object):
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
     def probe_z(self):
 
-        self.set_led_colour("WHITE")
-        self.s.expecting_probe_result = True
-        probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
-        self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
-        self.s.write_command('G90')
-        # Serial module then looks for probe detection
-        # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
-        # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
+        if self.state() == 'Idle':
+            self.set_led_colour("WHITE")
+            self.s.expecting_probe_result = True
+            probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
+            self.s.write_command('G90')
+            # Serial module then looks for probe detection
+            # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
+            # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
 
     def probe_z_detection_event(self, z_machine_coord_when_probed):
