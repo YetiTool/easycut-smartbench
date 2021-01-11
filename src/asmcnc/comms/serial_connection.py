@@ -273,6 +273,9 @@ class SerialConnection(object):
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
+
+    stream_pause_start_time = 0
+    stream_paused_accumulated_time = 0
     
     def check_job(self, job_object):
         
@@ -345,7 +348,9 @@ class SerialConnection(object):
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
-        self.stream_start_time = time.time();
+        self.stream_pause_start_time = 0
+        self.stream_paused_accumulated_time = 0
+        self.stream_start_time = time.time()
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -392,7 +397,6 @@ class SerialConnection(object):
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
 
-
     # After streaming is completed
     def end_stream(self):
 
@@ -406,9 +410,9 @@ class SerialConnection(object):
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
             else:
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
                 self.sm.current = 'jobdone'
 
             self._reset_counters()
@@ -422,7 +426,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None 
 
-    def send_stream_time_to_job_done_screen(self):
+    def update_machine_runtime(self):
 
             # Tell user the job has finished
             log("G-code streaming finished!")
@@ -434,16 +438,18 @@ class SerialConnection(object):
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
+            only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
+
             # Add time taken in seconds to brush use: 
-            self.m.spindle_brush_use_seconds += time_taken_seconds
+            self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
             # Add time taken in seconds to calibration tracking
-            self.m.time_since_calibration_seconds += time_taken_seconds
+            self.m.time_since_calibration_seconds += only_running_time_seconds
             self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
 
             # Add time taken in seconds since Z head last lubricated
-            self.m.time_since_z_head_lubricated_seconds += time_taken_seconds
+            self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
             self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
             # send info to the job done screen
@@ -465,7 +471,10 @@ class SerialConnection(object):
      
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)            
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+
+            # Update time for maintenance reminders
+            self.update_machine_runtime()    
 
         else:
             self.m.disable_check_mode()

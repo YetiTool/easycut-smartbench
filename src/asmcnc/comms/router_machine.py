@@ -6,7 +6,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
-import sys, os
+import sys, os, time
 from datetime import datetime
 import os.path
 from os import path
@@ -813,8 +813,16 @@ class RouterMachine(object):
         self._grbl_resume()
 
     def set_pause(self, pauseBool):
+
+        if self.is_machine_paused == False and pauseBool == True:
+            self.s.stream_pause_start_time = time.time()
+
+        if self.is_machine_paused == True and pauseBool == False:
+            self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
+            self.s.stream_pause_start_time = 0
+
         self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
- 
+
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
         Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
