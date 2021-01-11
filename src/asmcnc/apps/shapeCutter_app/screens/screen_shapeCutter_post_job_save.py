@@ -17,6 +17,7 @@ Builder.load_string("""
     
     save_image: save_image
     file_name: file_name
+    cut_time_text: cut_time_text
     
     BoxLayout:
         height: dp(800)
@@ -72,7 +73,8 @@ Builder.load_string("""
                             spacing:20
 
                             Label: 
-                                text: "Your cut time was x minutes."
+                                id: cut_time_text
+                                text: ''
                                 color: 0,0,0,1
                                 font_size: 20
                                 markup: True
@@ -222,7 +224,10 @@ class ShapeCutterSaveJobScreenClass(Screen):
         self.display_profile = self.j.parameters_to_string()
         self.file_name.text = ''
         self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
-            
+
+    def on_enter(self):
+        self.cut_time_text = self.sm.get_screen('jobdone').jobdone_text
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
