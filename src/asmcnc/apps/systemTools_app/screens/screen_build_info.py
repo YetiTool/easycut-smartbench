@@ -4,7 +4,7 @@ Build info screen for system tools app
 
 @author: Letty
 '''
-import os
+import os, sys
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -352,6 +352,7 @@ class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
 
+
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -369,7 +370,8 @@ class BuildInfoScreen(Screen):
         except: self.machine_serial_number_label.text = '-'
 
         self.show_more_info.text = 'Software\n' + self.set.sw_branch + '\n' + self.set.sw_hash + \
-        '\n\nPlatform\n' + self.set.pl_branch + '\n' + self.set.pl_hash 
+        '\n\nPlatform\n' + self.set.pl_branch + '\n' + self.set.pl_hash + \
+        '\n\nIP address\n' + self.get_ip_address()
 
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
@@ -405,3 +407,30 @@ class BuildInfoScreen(Screen):
             file.close()
         except: 
             self.smartbench_model.text = '[b]SmartBench CNC Router[/b]'
+
+    def get_ip_address(self):
+
+        ip_address = ''
+
+        if sys.platform == "win32":
+            try:
+                hostname=socket.gethostname()
+                IPAddr=socket.gethostbyname(hostname)
+                ip_address = str(IPAddr)
+
+            except:
+                ip_address = ''
+        else:
+            try:
+                f = os.popen('hostname -I')
+                first_info = f.read().strip().split(' ')[0]
+                if len(first_info.split('.')) == 4:
+                    ip_address = first_info
+
+                else:
+                    ip_address = ''
+
+            except:
+                ip_address = ''
+
+        return ip_address
