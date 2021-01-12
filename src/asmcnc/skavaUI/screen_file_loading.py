@@ -229,7 +229,7 @@ class LoadingScreen(Screen):
         Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.5)        
     
     def on_pre_leave(self):
-        self.usb_status_label.canvas.before.clear()
+        # self.usb_status_label.canvas.before.clear()
         with self.usb_status_label.canvas.before:
             Color(51,51,51,1)
             Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
