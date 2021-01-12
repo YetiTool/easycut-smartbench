@@ -127,7 +127,7 @@ class QuitToConsole(Widget):
         
         self.systemtools_sm = screen_manager
         
-        description = "Would you like to quit to console now?"
+        description = "Would you like to exit the software now?"
 
         def quit_console(*args):
             sys.exit()
