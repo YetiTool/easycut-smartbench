@@ -137,7 +137,7 @@ class USB_storage(object):
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not UNmount USB'
 
-        def check_linux_usb_unmounted(popup_USB):
+        def check_linux_usb_unmounted(pass_popup = None):
             if sys.platform != "win32":
 
                 files_in_usb_dir = os.listdir(self.linux_usb_path)
@@ -171,9 +171,12 @@ class USB_storage(object):
 
                     Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
   
-        
-        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)
-    
+        if popup_USB != None:
+            poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(pass_popup = popup_USB), 0.5)
+
+        else:
+            poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(), 0.5)
+
     def mount_linux_usb(self, device):
 
         if self.mount_event != None: Clock.unschedule(self.mount_event)
