@@ -31,7 +31,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: 0
         size: root.size
         pos: root.pos
         orientation: "vertical"
@@ -68,6 +68,7 @@ Builder.load_string("""
 
 
         FileChooserIconView:
+            padding: [0,10]
             size_hint_y: 5
             id: filechooser_usb
             show_hidden: False

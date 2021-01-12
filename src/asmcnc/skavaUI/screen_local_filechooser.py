@@ -52,7 +52,7 @@ Builder.load_string("""
             orientation: 'vertical'
             size: self.parent.size
             pos: self.parent.pos
-            spacing: 10
+            spacing: 0
 
             Label:
                 canvas.before:
@@ -85,6 +85,7 @@ Builder.load_string("""
                 halign: 'center' 
                             
             FileChooserIconView:
+                padding: [0,10]
                 size_hint_y: 5
                 id: filechooser
                 rootpath: './jobCache/'
