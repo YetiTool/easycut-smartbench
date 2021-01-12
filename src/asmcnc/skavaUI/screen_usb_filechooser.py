@@ -11,6 +11,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.graphics import Color, Rectangle
 
 import sys, os
 from os.path import expanduser
