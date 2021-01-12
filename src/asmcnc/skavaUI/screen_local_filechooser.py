@@ -269,7 +269,7 @@ class LocalFileChooser(Screen):
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
             self.sm.get_screen('loading').usb_status_label.opacity = 1
             self.usb_status_label.size_hint_y = 1
-            self.usb_status_label.canvas.before.Color.rgba = '#4CAF50FF'
+            self.usb_status_label.canvas.before.Color.rgba = [76 / 255., 175 / 255., 80 / 255., 1.]
 
         else:
             self.button_usb.disabled = True
