@@ -226,28 +226,28 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.5)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
     
     def on_pre_leave(self):
         # self.usb_status_label.canvas.before.clear()
         with self.usb_status_label.canvas.before:
-            Color(51,51,51,1)
+            Color(51 / 255., 51 / 255., 51 / 255. , 1.)
             Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
     def update_usb_status(self):
         if self.usb_status == 'connected':
             self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
-            # self.usb_status_label.canvas.before.clear()
-            # with self.usb_status_label.canvas.before:
-            #     Color(76 / 255., 175 / 255., 80 / 255., 1.)
-            #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
             self.usb_status_label.text = "Ejecting USB: please wait..."
             self.usb_status_label.opacity = 1
-            # self.usb_status_label.canvas.before.clear()
-            # with self.usb_status_label.canvas.before:
-            #     Color(51,51,51,1)
-            #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(51 / 255., 51 / 255., 51 / 255. , 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
             self.usb_status_label.text = "Safe to remove USB."
             # self.usb_status_label.canvas.before.clear()
