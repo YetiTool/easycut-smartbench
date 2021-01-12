@@ -123,7 +123,7 @@ class USB_storage(object):
             self.sm.current == 'loading'):
 
             self.sm.get_screen('loading').usb_status = 'ejecting'
-            self.sm.get_screen('loading').update_usb_status()
+            # self.sm.get_screen('loading').update_usb_status()
             self.sm.get_screen('local_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
             self.sm.get_screen('usb_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
 
@@ -194,8 +194,8 @@ class USB_storage(object):
                 self.sm.current == 'usb_filechooser' or
                 self.sm.current == 'loading'):
 
-                self.sm.get_screen('loading').usb_status = 'connected'
-                self.sm.get_screen('loading').update_usb_status()
+                # self.sm.get_screen('loading').usb_status = 'connected'
+                # self.sm.get_screen('loading').update_usb_status()
                 self.sm.get_screen('local_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
                 self.sm.get_screen('usb_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
 
