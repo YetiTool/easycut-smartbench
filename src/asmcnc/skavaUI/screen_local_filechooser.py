@@ -14,6 +14,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.graphics import Color, Rectangle
 
 import sys, os
 from os.path import expanduser
@@ -43,7 +44,6 @@ Builder.load_string("""
     image_select:image_select
     file_selected_label:file_selected_label
     usb_status_label:usb_status_label
-    color_strip:color_strip
 
     BoxLayout:
         padding: 0
@@ -59,19 +59,22 @@ Builder.load_string("""
             spacing: 0
 
             Label:
+                id: usb_status_label
                 canvas.before:
                     Color:
-                        id: color_strip
                         rgba: hex('#333333FF')
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                id: usb_status_label
                 size_hint_y: 0.7
                 markup: True
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'left'
+                background_normal: ''
+                background_color: [0,0,1,1]
+                text_size: self.size
+                text: 'blep'
 
             Label:
                 canvas.before:
@@ -271,14 +274,20 @@ class LocalFileChooser(Screen):
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
             self.sm.get_screen('loading').usb_status_label.opacity = 1
             self.usb_status_label.size_hint_y = 1
-            self.color_strip.rgba = [76 / 255., 175 / 255., 80 / 255., 1.]
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+
+            with self.sm.get_screen('loading').usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.sm.get_screen('loading').usb_status_label.pos,size=self.sm.get_screen('loading').usb_status_label.size)
 
         else:
             self.button_usb.disabled = True
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
             self.sm.get_screen('loading').usb_status_label.opacity = 0
             self.usb_status_label.size_hint_y = 0
-        
 
     def open_USB(self):
 
