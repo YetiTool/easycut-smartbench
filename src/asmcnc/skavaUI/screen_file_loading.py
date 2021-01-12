@@ -231,17 +231,17 @@ class LoadingScreen(Screen):
     def update_usb_status(self):
         if self.usb_status == 'connected':
             self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
-            self.usb_status_label.canvas.before.clear()
-            with self.usb_status_label.canvas.before:
-                Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            # self.usb_status_label.canvas.before.clear()
+            # with self.usb_status_label.canvas.before:
+            #     Color(76 / 255., 175 / 255., 80 / 255., 1.)
+            #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
             self.usb_status_label.text = "Ejecting USB: please wait..."
             self.usb_status_label.opacity = 1
-            self.usb_status_label.canvas.before.clear()
-            with self.usb_status_label.canvas.before:
-                Color(51,51,51,1)
-                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            # self.usb_status_label.canvas.before.clear()
+            # with self.usb_status_label.canvas.before:
+            #     Color(51,51,51,1)
+            #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
             self.usb_status_label.text = "Safe to remove USB."
             self.usb_status_label.canvas.before.clear()
