@@ -64,7 +64,6 @@ Builder.load_string("""
                         pos: self.pos
                 id: usb_status_label
                 size_hint_y: 0.7
-                text: "USB connected: Please do not remove USB until file is loaded."
                 markup: True
                 font_size: '18sp'   
                 valign: 'middle'
@@ -266,6 +265,8 @@ class LocalFileChooser(Screen):
         if self.usb_stick.is_available():
             self.button_usb.disabled = False
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
+
+            self.sm.get_screen('loading').usb_status_label.opacity = 0
 
         else:
             self.button_usb.disabled = True

@@ -59,13 +59,13 @@ Builder.load_string("""
         size_hint_x: 1
 
         Label:
+            id: usb_status_label
             canvas.before:
                 Color:
                     rgba: hex('#333333FF')
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            id: usb_status_label
             size_hint_y: 0.7
             markup: True
             font_size: '18sp'   
