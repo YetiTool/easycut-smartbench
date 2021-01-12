@@ -46,7 +46,6 @@ Builder.load_string("""
                     pos: self.pos
             id: usb_status_label
             size_hint_y: 0.7
-            text: "USB connected: Please do not remove USB until file is loaded."
             markup: True
             font_size: '18sp'   
             valign: 'middle'
