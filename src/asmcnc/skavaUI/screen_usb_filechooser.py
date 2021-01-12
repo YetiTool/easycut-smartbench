@@ -188,7 +188,7 @@ class USBFileChooser(Screen):
     def update_usb_status(self):
         try: 
             if self.usb_stick.is_available():
-                self.usb_status_label.size_hint_y = 1
+                self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
@@ -197,14 +197,14 @@ class USBFileChooser(Screen):
 
             else:
                 self.usb_status_label.text = "USB removed! Files will not load properly."
-                self.usb_status_label.opacity = 1
+                self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(230 / 255., 74 / 255., 25 / 255., 1.)
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
         except: 
-            self.usb_status_label.size_hint_y = 0
+            pass
 
     def refresh_filechooser(self):
 
