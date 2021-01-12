@@ -43,6 +43,7 @@ Builder.load_string("""
     image_select:image_select
     file_selected_label:file_selected_label
     usb_status_label:usb_status_label
+    color_strip:color_strip
 
     BoxLayout:
         padding: 0
@@ -60,6 +61,7 @@ Builder.load_string("""
             Label:
                 canvas.before:
                     Color:
+                        id: color_strip
                         rgba: hex('#333333FF')
                     Rectangle:
                         size: self.size
@@ -269,7 +271,7 @@ class LocalFileChooser(Screen):
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
             self.sm.get_screen('loading').usb_status_label.opacity = 1
             self.usb_status_label.size_hint_y = 1
-            self.usb_status_label.canvas.before.Color.rgba = [76 / 255., 175 / 255., 80 / 255., 1.]
+            self.color_strip.rgba = [76 / 255., 175 / 255., 80 / 255., 1.]
 
         else:
             self.button_usb.disabled = True
