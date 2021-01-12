@@ -238,6 +238,7 @@ class LoadingScreen(Screen):
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
             self.usb_status_label.text = "Ejecting USB: please wait..."
+            self.usb_status_label.opacity = 1
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(51,51,51,1)
