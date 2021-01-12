@@ -19,6 +19,7 @@ from kivy.uix.progressbar import ProgressBar
 from __builtin__ import file, False
 from kivy.clock import Clock
 from functools import partial
+from kivy.graphics import Color, Rectangle
 
 
 import sys, os, time
