@@ -175,7 +175,6 @@ class USBFileChooser(Screen):
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
-    
     def on_enter(self):
 
         self.filechooser_usb.path = self.usb_path
@@ -189,11 +188,13 @@ class USBFileChooser(Screen):
     def update_usb_status(self):
         try: 
             if self.usb_stick.is_available():
+                self.usb_status_label.size_hint_y = 1
                 self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255., 175 / 255., 80 / 255., 1.)
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+
             else:
                 self.usb_status_label.text = "USB removed! Files will not load properly."
                 self.usb_status_label.opacity = 1
@@ -203,7 +204,7 @@ class USBFileChooser(Screen):
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
         except: 
-            self.usb_status_label.opacity = 0
+            self.usb_status_label.size_hint_y = 0
 
     def refresh_filechooser(self):
 
