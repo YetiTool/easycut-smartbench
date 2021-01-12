@@ -116,8 +116,20 @@ class USB_storage(object):
     def unmount_linux_usb(self):
         dismiss_event = None
         unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
-        popup_USB = popup_info.PopupUSBInfo(self.sm, False)
-        dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+
+        if not (self.sm.current_screen == 'local_filechooser' or 
+            self.sm.current_screen == 'usb_filechooser' or
+            self.sm.current_screen == 'loading'):
+
+            popup_USB = popup_info.PopupUSBInfo(self.sm, False)
+            dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+
+        else:
+            self.sm.get_screen('loading').usb_status_label.text = "Ejecting USB: please wait..."
+            self.sm.get_screen('local_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
+            self.sm.get_screen('usb_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
+
+
      
         try:
             os.system(unmount_command)
@@ -143,8 +155,17 @@ class USB_storage(object):
 
                     def tell_user_safe_to_remove_usb():
                         if dismiss_event != None: popup_USB.popup.dismiss()
-                        new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
-                        Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1.8)
+
+                        if not (self.sm.current_screen == 'local_filechooser' or 
+                            self.sm.current_screen == 'usb_filechooser' or
+                            self.sm.current_screen == 'loading'):
+                            new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
+                            Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1.8)
+
+                        else:
+                            self.sm.get_screen('loading').usb_status_label.text = "Safe to remove USB."
+                            self.sm.get_screen('local_filechooser').usb_status_label.text = "Safe to remove USB."
+                            self.sm.get_screen('usb_filechooser').usb_status_label.text = "Safe to remove USB."
 
                     Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
   
@@ -163,8 +184,18 @@ class USB_storage(object):
             self.is_usb_mounted_flag = True
             self.start_polling_for_usb() # restart checking for USB
             if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
-            popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
-            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+
+            if not (self.sm.current_screen == 'local_filechooser' or 
+                self.sm.current_screen == 'usb_filechooser' or
+                self.sm.current_screen == 'loading'):
+
+                popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
+                Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+
+            else:
+                self.sm.get_screen('loading').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.sm.get_screen('local_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.sm.get_screen('usb_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
 
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        

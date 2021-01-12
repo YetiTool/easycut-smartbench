@@ -43,6 +43,7 @@ Builder.load_string("""
     warning_body_label:warning_body_label
     quit_button_label:quit_button_label
     check_button_label:check_button_label
+    usb_status_label:usb_status_label
     
     canvas:
         Color: 
