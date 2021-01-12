@@ -124,8 +124,7 @@ class USB_storage(object):
 
             self.sm.get_screen('loading').usb_status = 'ejecting'
             self.sm.get_screen('loading').update_usb_status()
-            self.sm.get_screen('local_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
-            self.sm.get_screen('usb_filechooser').usb_status_label.text = "Ejecting USB: please wait..."
+            self.sm.get_screen('usb_filechooser').update_usb_status()
 
         else:
             popup_USB = popup_info.PopupUSBInfo(self.sm, False)
@@ -164,8 +163,7 @@ class USB_storage(object):
 
                             self.sm.get_screen('loading').usb_status = 'ejected'
                             self.sm.get_screen('loading').update_usb_status()
-                            self.sm.get_screen('local_filechooser').usb_status_label.text = "Safe to remove USB."
-                            self.sm.get_screen('usb_filechooser').usb_status_label.text = "Safe to remove USB."
+                            self.sm.get_screen('usb_filechooser').update_usb_status()
 
                         else:
                             new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
@@ -196,8 +194,7 @@ class USB_storage(object):
 
                 self.sm.get_screen('loading').usb_status = 'connected'
                 self.sm.get_screen('loading').update_usb_status()
-                self.sm.get_screen('local_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
-                self.sm.get_screen('usb_filechooser').usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.sm.get_screen('usb_filechooser').update_usb_status()
 
             else:
                 popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')

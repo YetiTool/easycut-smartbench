@@ -288,7 +288,6 @@ class LocalFileChooser(Screen):
 
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-        #self.manager.transition.direction = 'down'
         self.manager.current = 'usb_filechooser'
         
 
