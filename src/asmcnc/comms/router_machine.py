@@ -814,14 +814,19 @@ class RouterMachine(object):
 
     def set_pause(self, pauseBool):
 
-        if self.is_machine_paused == False and pauseBool == True:
-            self.s.stream_pause_start_time = time.time()
+        prev_state = self.is_machine_paused
+        self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
 
-        if self.is_machine_paused == True and pauseBool == False:
-            self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
-            self.s.stream_pause_start_time = 0
+        def record_pause_time(prev_state, pauseBool):
+            # record pause time
+            if prev_state == False and pauseBool == True:
+                self.s.stream_pause_start_time = time.time()
 
-        self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
+            if prev_state == True and pauseBool == False:
+                self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
+                self.s.stream_pause_start_time = 0
+
+        Clock.schedule_once(lambda dt: record_pause_time(prev_state, pauseBool), 0.2)
 
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
