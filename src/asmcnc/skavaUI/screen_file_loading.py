@@ -189,6 +189,8 @@ class LoadingScreen(Screen):
     minimum_feed_rate = 100
     maximum_feed_rate = 5000
 
+    usb_status = None
+
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -204,6 +206,7 @@ class LoadingScreen(Screen):
         else:
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
+        self.update_usb_status()
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
@@ -223,6 +226,28 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').job_gcode = []
         Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
     
+    def update_usb_status(self):
+        if self.usb_status == 'connected':
+            self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        elif self.usb_status == 'ejecting':
+            self.usb_status_label.text = "Ejecting USB: please wait..."
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(51,51,51,1)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        elif self.usb_status == 'ejected':
+            self.usb_status_label.text = "Safe to remove USB."
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        else: 
+            self.usb_status_label.opacity = 0
+
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.loading_file_name

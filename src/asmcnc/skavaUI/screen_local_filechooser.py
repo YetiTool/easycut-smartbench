@@ -71,10 +71,7 @@ Builder.load_string("""
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'left'
-                background_normal: ''
-                background_color: [0,0,1,1]
                 text_size: self.size
-                text: 'blep'
 
             Label:
                 canvas.before:
@@ -278,16 +275,12 @@ class LocalFileChooser(Screen):
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-
-            with self.sm.get_screen('loading').usb_status_label.canvas.before:
-                Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                Rectangle(pos=self.sm.get_screen('loading').usb_status_label.pos,size=self.sm.get_screen('loading').usb_status_label.size)
-
         else:
             self.button_usb.disabled = True
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-            self.sm.get_screen('loading').usb_status_label.opacity = 0
             self.usb_status_label.size_hint_y = 0
+            self.sm.get_screen('loading').usb_status = None
+            self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def open_USB(self):
 
