@@ -199,6 +199,9 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
 
+    # def on_pre_enter(self):
+        # self.update_usb_status()
+
     def on_enter(self):    
 
         # display file selected in the filename display label
@@ -207,7 +210,6 @@ class LoadingScreen(Screen):
         else:
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
-        self.update_usb_status()
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
