@@ -199,8 +199,8 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
 
-    # def on_pre_enter(self):
-        # self.update_usb_status()
+    def on_pre_enter(self):
+        self.update_usb_status()
 
     def on_enter(self):    
 
