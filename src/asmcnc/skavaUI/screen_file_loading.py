@@ -226,7 +226,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),1)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
     
     def on_pre_leave(self):
         self.usb_status_label.canvas.before.clear()
@@ -250,7 +250,7 @@ class LoadingScreen(Screen):
             #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
             self.usb_status_label.text = "Safe to remove USB."
-            self.usb_status_label.canvas.before.clear()
+            # self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
