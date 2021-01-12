@@ -78,7 +78,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            size_hint_y: 8.51
+            size_hint_y: 7.81
             spacing: 10
             padding: [70, 31.3, 70, 70]
              
