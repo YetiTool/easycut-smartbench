@@ -221,18 +221,11 @@ class LoadingScreen(Screen):
         self.check_button_label.text = ''
         self.quit_button_label.text = ''
 
-
 #         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
-    
-    def on_pre_leave(self):
-        # self.usb_status_label.canvas.before.clear()
-        with self.usb_status_label.canvas.before:
-            Color(51 / 255., 51 / 255., 51 / 255. , 1.)
-            Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
 
     def update_usb_status(self):
         if self.usb_status == 'connected':
