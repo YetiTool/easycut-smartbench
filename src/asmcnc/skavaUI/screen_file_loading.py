@@ -199,9 +199,6 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
 
-    def on_pre_enter(self):
-        self.update_usb_status()
-
     def on_enter(self):    
 
         # display file selected in the filename display label
@@ -209,6 +206,8 @@ class LoadingScreen(Screen):
             self.filename_label.text = self.loading_file_name.split("\\")[-1]
         else:
             self.filename_label.text = self.loading_file_name.split("/")[-1]
+
+        self.update_usb_status()
 
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
@@ -227,7 +226,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.5)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),1)        
     
     def update_usb_status(self):
         if self.usb_status == 'connected':
