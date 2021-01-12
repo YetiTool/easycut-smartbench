@@ -26,6 +26,8 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
+#:import hex kivy.utils.get_color_from_hex
+
 <LocalFileChooser>:
 
     on_enter: root.refresh_filechooser()
