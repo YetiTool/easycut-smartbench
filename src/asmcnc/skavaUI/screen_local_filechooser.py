@@ -40,6 +40,7 @@ Builder.load_string("""
     image_delete_all:image_delete_all
     image_select:image_select
     file_selected_label:file_selected_label
+    usb_status_label:usb_status_label
 
     BoxLayout:
         padding: 0
