@@ -56,7 +56,7 @@ Builder.load_string("""
     BoxLayout:
         orientation: 'vertical'
         padding: 0
-        spacing: 10
+        spacing: 0
         size_hint_x: 1
 
         Label:
