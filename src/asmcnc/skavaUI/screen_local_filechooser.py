@@ -73,6 +73,7 @@ Builder.load_string("""
                 halign: 'left'
                 text_size: self.size
                 padding: [10, 0]
+                text: "USB connected: Please do not remove USB until file is loaded."
 
             Label:
                 canvas.before:
@@ -264,6 +265,8 @@ class LocalFileChooser(Screen):
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
+    def on_leave(self):
+        self.usb_status_label.size_hint_y = 0
 
     def check_USB_status(self, dt):
         
@@ -276,7 +279,6 @@ class LocalFileChooser(Screen):
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-            self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
         else:
             self.button_usb.disabled = True
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'

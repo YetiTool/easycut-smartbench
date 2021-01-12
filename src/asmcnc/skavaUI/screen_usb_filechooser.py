@@ -51,6 +51,8 @@ Builder.load_string("""
             font_size: '18sp'   
             valign: 'middle'
             halign: 'left'
+            text_size: self.size
+            padding: [10, 0]
 
         Label:
             canvas.before:
