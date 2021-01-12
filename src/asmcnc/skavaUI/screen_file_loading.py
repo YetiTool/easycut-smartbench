@@ -199,8 +199,8 @@ class LoadingScreen(Screen):
         self.m=kwargs['machine']
         self.job_gcode=kwargs['job']
 
-    def on_pre_enter(self):
-        self.update_usb_status()
+    # def on_pre_enter(self):
+    #     self.update_usb_status()
 
     def on_enter(self):    
 
@@ -239,10 +239,10 @@ class LoadingScreen(Screen):
         elif self.usb_status == 'ejecting':
             self.usb_status_label.text = "Ejecting USB: please wait..."
             self.usb_status_label.opacity = 1
-            self.usb_status_label.canvas.before.clear()
-            with self.usb_status_label.canvas.before:
-                Color(51,51,51,1)
-                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            # self.usb_status_label.canvas.before.clear()
+            # with self.usb_status_label.canvas.before:
+            #     Color(51,51,51,1)
+            #     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
             self.usb_status_label.text = "Safe to remove USB."
             self.usb_status_label.canvas.before.clear()
