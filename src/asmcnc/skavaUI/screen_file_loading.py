@@ -228,6 +228,12 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').job_gcode = []
         Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),1)        
     
+    def on_leave(self):
+        self.usb_status_label.canvas.before.clear()
+        with self.usb_status_label.canvas.before:
+            Color(51,51,51,1)
+            Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+
     def update_usb_status(self):
         if self.usb_status == 'connected':
             self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
