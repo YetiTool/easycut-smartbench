@@ -53,7 +53,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'vertical'
-        padding: [70, 0, 70, 70]
+        padding: 0
         spacing: 70
         size_hint_x: 1
 
@@ -65,7 +65,7 @@ Builder.load_string("""
                     size: self.size
                     pos: self.pos
             id: usb_status_label
-            size_hint_y: 0.75
+            size_hint_y: 0.08
             text: "USB connected: Please do not remove USB until file is loaded."
             markup: True
             font_size: '18sp'   
@@ -75,7 +75,9 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
+            size_hint_y: 0.92
             spacing: 10
+            padding: 70
              
             Label:
                 size_hint_y: 1
