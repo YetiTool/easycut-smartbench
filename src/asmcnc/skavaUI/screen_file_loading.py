@@ -226,7 +226,7 @@ class LoadingScreen(Screen):
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.5)        
     
     def on_pre_leave(self):
         self.usb_status_label.canvas.before.clear()
