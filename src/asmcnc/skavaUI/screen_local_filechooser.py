@@ -61,6 +61,21 @@ Builder.load_string("""
                     Rectangle:
                         size: self.size
                         pos: self.pos
+                id: usb_status_label
+                size_hint_y: 0.75
+                text: "USB connected: Please do not remove USB until file is loaded."
+                markup: True
+                font_size: '18sp'   
+                valign: 'middle'
+                halign: 'left'
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: hex('#333333FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
                 id: file_selected_label
                 size_hint_y: 1
                 text: root.filename_selected_label_text
@@ -68,7 +83,6 @@ Builder.load_string("""
                 font_size: '20sp'   
                 valign: 'middle'
                 halign: 'center' 
-
                             
             FileChooserIconView:
                 size_hint_y: 5

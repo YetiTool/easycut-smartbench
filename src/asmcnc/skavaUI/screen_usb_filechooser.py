@@ -36,6 +36,20 @@ Builder.load_string("""
         pos: root.pos
         orientation: "vertical"
 
+        Label:
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: usb_status_label
+            size_hint_y: 0.75
+            text: "USB connected: Please do not remove USB until file is loaded."
+            markup: True
+            font_size: '18sp'   
+            valign: 'middle'
+            halign: 'left'
 
         Label:
             canvas.before:

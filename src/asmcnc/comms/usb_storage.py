@@ -117,7 +117,7 @@ class USB_storage(object):
         dismiss_event = None
         unmount_command = 'echo posys | sudo umount -fl '+ self.linux_usb_path
         popup_USB = popup_info.PopupUSBInfo(self.sm, False)
-        dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 2.5)
+        dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
      
         try:
             os.system(unmount_command)
@@ -144,9 +144,9 @@ class USB_storage(object):
                     def tell_user_safe_to_remove_usb():
                         if dismiss_event != None: popup_USB.popup.dismiss()
                         new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
-                        Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 2.5)
+                        Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1.8)
 
-                    Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 1)
+                    Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
   
         
         poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(popup_USB), 0.5)
@@ -164,7 +164,7 @@ class USB_storage(object):
             self.start_polling_for_usb() # restart checking for USB
             if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
             popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
-            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 2.5)
+            Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        

@@ -52,10 +52,25 @@ Builder.load_string("""
             pos: self.pos
              
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 70
+        orientation: 'vertical'
+        padding: [70, 0, 70, 70]
         spacing: 70
         size_hint_x: 1
+
+        Label:
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: usb_status_label
+            size_hint_y: 0.75
+            text: "USB connected: Please do not remove USB until file is loaded."
+            markup: True
+            font_size: '18sp'   
+            valign: 'middle'
+            halign: 'left'
 
         BoxLayout:
             orientation: 'vertical'
