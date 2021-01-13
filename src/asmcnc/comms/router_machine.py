@@ -809,8 +809,8 @@ class RouterMachine(object):
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
-        self._grbl_resume()
+        self._grbl_resume()        
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool):
 
