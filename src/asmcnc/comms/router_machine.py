@@ -7,7 +7,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
-import sys, os
+import sys, os, time
 from datetime import datetime
 import os.path
 from os import path
@@ -817,9 +817,6 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
 
-
-
-
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
@@ -861,34 +858,45 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
         
     def stop_for_a_stream_pause(self):
-        self.set_pause(True)  
-        self.s.is_job_streaming = False
+        self.set_pause(True)
         self._grbl_door() # send a soft-door command
 
     def resume_after_a_stream_pause(self):
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.1)
-        self.s.is_job_streaming = True
-        self._grbl_resume()
+        self._grbl_resume()        
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool):
-        self.is_machine_paused = pauseBool  # sets serial_connection flag to pause (allows a hard door to be detected)
- 
+
+        prev_state = self.is_machine_paused
+        self.is_machine_paused = pauseBool # sets serial_connection flag to pause (allows a hard door to be detected)
+
+        def record_pause_time(prev_state, pauseBool):
+            # record pause time
+            if prev_state == False and pauseBool == True:
+                self.s.stream_pause_start_time = time.time()
+
+            if prev_state == True and pauseBool == False:
+                self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
+                self.s.stream_pause_start_time = 0
+
+        Clock.schedule_once(lambda dt: record_pause_time(prev_state, pauseBool), 0.2)
+
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
 
     def resume_from_a_soft_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.2) 
-   
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
+
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()

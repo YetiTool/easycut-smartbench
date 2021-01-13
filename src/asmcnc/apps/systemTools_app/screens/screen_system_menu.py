@@ -72,7 +72,7 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            text: 'Quit to Console'
+            text: 'Exit Software'
             on_press: root.quit_to_console()
             valign: "bottom"
             halign: "center"

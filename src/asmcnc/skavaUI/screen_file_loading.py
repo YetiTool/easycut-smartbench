@@ -19,6 +19,7 @@ from kivy.uix.progressbar import ProgressBar
 from __builtin__ import file, False
 from kivy.clock import Clock
 from functools import partial
+from kivy.graphics import Color, Rectangle
 
 
 import sys, os, time
@@ -43,6 +44,7 @@ Builder.load_string("""
     warning_body_label:warning_body_label
     quit_button_label:quit_button_label
     check_button_label:check_button_label
+    usb_status_label:usb_status_label
     
     canvas:
         Color: 
@@ -52,15 +54,33 @@ Builder.load_string("""
             pos: self.pos
              
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        orientation: 'vertical'
+        padding: 0
+        spacing: 0
         size_hint_x: 1
+
+        Label:
+            id: usb_status_label
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: 0.7
+            markup: True
+            font_size: '18sp'   
+            valign: 'middle'
+            halign: 'left'
+            text_size: self.size
+            padding: [10, 0]
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
+            size_hint_y: 7.81
             spacing: 10
+            padding: [70, 31.3, 70, 70]
              
             Label:
                 size_hint_y: 1
@@ -172,6 +192,8 @@ class LoadingScreen(Screen):
     minimum_feed_rate = 100
     maximum_feed_rate = 5000
 
+    usb_status = None
+
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -187,6 +209,8 @@ class LoadingScreen(Screen):
         else:
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
+        self.update_usb_status()
+
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
 
         self.load_value = 0
@@ -199,13 +223,35 @@ class LoadingScreen(Screen):
         self.check_button_label.text = ''
         self.quit_button_label.text = ''
 
-
 #         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
-        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)        
-    
+        Clock.schedule_once(partial(self.objectifiled, self.loading_file_name),0.1)
+
+    def update_usb_status(self):
+        if self.usb_status == 'connected':
+            self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        elif self.usb_status == 'ejecting':
+            self.usb_status_label.text = "Ejecting USB: please wait..."
+            self.usb_status_label.opacity = 1
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(51 / 255., 51 / 255., 51 / 255. , 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        elif self.usb_status == 'ejected':
+            self.usb_status_label.text = "Safe to remove USB."
+            # self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        else: 
+            self.usb_status_label.opacity = 0
+
     def quit_to_home(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
         self.sm.get_screen('home').job_filename = self.loading_file_name
@@ -338,12 +384,12 @@ class LoadingScreen(Screen):
         else: 
 
             log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+            self.job_gcode = self.preloaded_job_gcode
             self._get_gcode_preview_and_ranges()
 
 
     def _get_gcode_preview_and_ranges(self):
 
-        self.job_gcode = self.preloaded_job_gcode
         self.load_value = 2
         self.sm.get_screen('home').job_gcode = self.job_gcode
         
@@ -355,7 +401,7 @@ class LoadingScreen(Screen):
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
 
 
-    def _finish_loading(self, non_modal_gcode_list):
+    def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
 
 
         job_box = job_envelope.BoundingBox()
