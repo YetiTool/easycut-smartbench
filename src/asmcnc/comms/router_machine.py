@@ -830,19 +830,19 @@ class RouterMachine(object):
 
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.3) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
 
     def resume_from_a_soft_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def resume_after_a_hard_door(self):
         self._grbl_resume()
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.3) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
 
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
