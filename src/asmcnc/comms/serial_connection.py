@@ -243,7 +243,7 @@ class SerialConnection(object):
                         # - need to send instructions to the GUI (prior to raise?) 
     
                 # Job streaming: stuff butter
-                if self.is_job_streaming:
+                if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: 
@@ -265,7 +265,6 @@ class SerialConnection(object):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
-    is_job_finished = False
 
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
@@ -274,21 +273,23 @@ class SerialConnection(object):
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
+
+    stream_pause_start_time = 0
+    stream_paused_accumulated_time = 0
     
     def check_job(self, job_object):
         
         log('Checking job...')
 
         self.m.enable_check_mode()
-        
-        # Set up error logging
-        self.suppress_error_screens = True
-        self.response_log = []
-        
 
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
             if self.m_state == "Check":
+
+                # Set up error logging
+                self.suppress_error_screens = True
+                self.response_log = []
                 
                 # run job as per normal
                 self.run_job(job_object)
@@ -302,15 +303,13 @@ class SerialConnection(object):
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
 
-    def return_check_outcome(self, job_object,dt):
+    def return_check_outcome(self, job_object, dt):
         if len(self.response_log) >= len(job_object): # + 2
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
         
     def run_job(self, job_object):
-        
-        self.is_job_finished = False
         
         # TAKE IN THE FILE
         self.job_gcode = job_object
@@ -319,6 +318,7 @@ class SerialConnection(object):
         ### (if not initialised - come back to this one later w/ pausing functionality)
 
         def set_streaming_flags_to_true():
+            self.m.set_pause(False)
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
@@ -329,8 +329,6 @@ class SerialConnection(object):
         elif not self.job_gcode:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
-            self.is_job_finished = True
-        return
 
     def initialise_job(self):
             
@@ -339,13 +337,9 @@ class SerialConnection(object):
             self.m.zUp()
   
         self.FLUSH_FLAG = True
-        
         time.sleep(0.1)
-        
         self._reset_counters()
-
         return True
-
 
     def _reset_counters(self):
         
@@ -353,7 +347,9 @@ class SerialConnection(object):
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
-        self.stream_start_time = time.time();
+        self.stream_pause_start_time = 0
+        self.stream_paused_accumulated_time = 0
+        self.stream_start_time = time.time()
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -400,23 +396,22 @@ class SerialConnection(object):
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
 
-
     # After streaming is completed
     def end_stream(self):
 
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
-        self.is_job_finished = True
+        self.m.set_pause(False)
 
         if self.m_state != "Check":
 
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
             else:
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
                 self.sm.current = 'jobdone'
 
             self._reset_counters()
@@ -430,7 +425,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None 
 
-    def send_stream_time_to_job_done_screen(self):
+    def update_machine_runtime(self):
 
             # Tell user the job has finished
             log("G-code streaming finished!")
@@ -442,16 +437,18 @@ class SerialConnection(object):
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
+            only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
+
             # Add time taken in seconds to brush use: 
-            self.m.spindle_brush_use_seconds += time_taken_seconds
+            self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
             # Add time taken in seconds to calibration tracking
-            self.m.time_since_calibration_seconds += time_taken_seconds
+            self.m.time_since_calibration_seconds += only_running_time_seconds
             self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
 
             # Add time taken in seconds since Z head last lubricated
-            self.m.time_since_z_head_lubricated_seconds += time_taken_seconds
+            self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
             self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
             # send info to the job done screen
@@ -460,8 +457,10 @@ class SerialConnection(object):
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
 
     def cancel_stream(self):
+
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
+        self.m.set_pause(False)
         self._reset_counters()
 
         if self.m_state != "Check":
@@ -471,7 +470,10 @@ class SerialConnection(object):
      
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)            
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+
+            # Update time for maintenance reminders
+            self.update_machine_runtime()    
 
         else:
             self.m.disable_check_mode()

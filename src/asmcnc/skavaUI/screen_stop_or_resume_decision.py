@@ -154,7 +154,6 @@ class StopOrResumeDecisionScreen(Screen):
         popup_info.PopupConfirmJobCancel(self.sm)
 
     def confirm_job_cancel(self):
-        self.m.s.is_job_streaming = True
         self.m.stop_from_soft_stop_cancel()
 
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume

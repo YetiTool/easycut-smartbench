@@ -384,12 +384,12 @@ class LoadingScreen(Screen):
         else: 
 
             log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+            self.job_gcode = self.preloaded_job_gcode
             self._get_gcode_preview_and_ranges()
 
 
     def _get_gcode_preview_and_ranges(self):
 
-        self.job_gcode = self.preloaded_job_gcode
         self.load_value = 2
         self.sm.get_screen('home').job_gcode = self.job_gcode
         
@@ -401,7 +401,7 @@ class LoadingScreen(Screen):
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
 
 
-    def _finish_loading(self, non_modal_gcode_list):
+    def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
 
 
         job_box = job_envelope.BoundingBox()
