@@ -409,7 +409,7 @@ class CheckingScreen(Screen):
         self.m.s.check_job(objectifile)
 
         self.poll_for_gcode_check_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.4)
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.6)
         
         # display the error log when it's filled - setting up the event makes it easy to unschedule
         self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
