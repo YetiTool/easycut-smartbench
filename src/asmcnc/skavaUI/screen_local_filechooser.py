@@ -251,7 +251,7 @@ class LocalFileChooser(Screen):
         self.check_for_job_cache_dir()
 
     def check_for_job_cache_dir(self):
-        if not path.exists(job_cache_dir):
+        if not os.path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
 
     def on_enter(self):
