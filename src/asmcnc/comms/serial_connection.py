@@ -318,7 +318,7 @@ class SerialConnection(object):
         ### (if not initialised - come back to this one later w/ pausing functionality)
 
         def set_streaming_flags_to_true():
-            self.m.set_pause(False)
+            # self.m.set_pause(False) # moved to go screen for timing reasons
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
@@ -460,7 +460,6 @@ class SerialConnection(object):
 
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
-        self.m.set_pause(False)
         self._reset_counters()
 
         if self.m_state != "Check":
