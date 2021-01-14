@@ -298,10 +298,10 @@ class SerialConnection(object):
                 Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
 
             else:
-                Clock.schedule_once(lambda dt: check_job_inner_function(), 0.8)
+                Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
-        Clock.schedule_once(lambda dt: check_job_inner_function(), 0.8)
+        Clock.schedule_once(lambda dt: check_job_inner_function(), 1)
 
     def return_check_outcome(self, job_object, dt):
         if len(self.response_log) >= len(job_object): # + 2
