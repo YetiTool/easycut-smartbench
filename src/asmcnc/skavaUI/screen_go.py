@@ -528,6 +528,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
+        self.m.set_pause(False)
         self.is_job_started_already = True
         log('Starting job...')
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
