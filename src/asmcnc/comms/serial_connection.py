@@ -460,7 +460,6 @@ class SerialConnection(object):
 
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
-        self.m.set_pause(False)
         self._reset_counters()
 
         if self.m_state != "Check":
