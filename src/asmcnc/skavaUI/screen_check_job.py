@@ -239,7 +239,7 @@ class CheckingScreen(Screen):
         
     def on_enter(self):
  
-        self.job_checking_checked = '[b]Getting ready...[/b]'  
+        self.job_checking_checked = 'Getting ready...'  
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.checking_file_name.split("\\")[-1]
@@ -409,7 +409,7 @@ class CheckingScreen(Screen):
         self.m.s.check_job(objectifile)
 
         self.poll_for_gcode_check_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.5)
+        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.4)
         
         # display the error log when it's filled - setting up the event makes it easy to unschedule
         self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
