@@ -276,7 +276,7 @@ class BetaTestingScreen(Screen):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
             os.system("git pull")
-            self.sm.current = 'rebooting'
+            self.systemtools_sm.sm.current = 'rebooting'
 
     def update_to_latest_beta(self):
         if self.wifi_toggle.state == 'down':
@@ -284,7 +284,7 @@ class BetaTestingScreen(Screen):
         elif self.usb_toggle.state == 'down':
             self.set.get_sw_update_via_usb(beta=True)
         self.usb_stick.disable()
-        self.sm.current = 'rebooting'
+        self.systemtools_sm.sm.current = 'rebooting'
 
     def refresh_latest_software_version(self):
         self.set.refresh_latest_sw_version()
