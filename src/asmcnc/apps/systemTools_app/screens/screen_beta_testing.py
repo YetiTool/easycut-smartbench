@@ -10,6 +10,8 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.comms import usb_storage
 
+import os
+
 Builder.load_string("""
 
 <BetaTestingScreen>
