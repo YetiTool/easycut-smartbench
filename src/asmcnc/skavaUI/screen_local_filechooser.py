@@ -248,8 +248,12 @@ class LocalFileChooser(Screen):
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
+        self.check_for_job_cache_dir()
 
-        
+    def check_for_job_cache_dir(self):
+        if not path.exists(job_cache_dir):
+            os.mkdir(job_cache_dir)
+
     def on_enter(self):
         
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
