@@ -526,8 +526,7 @@ class CheckingScreen(Screen):
                 self.sm.get_screen('home').z_datum_reminder_flag = True
                 self.sm.current = 'home'
                 
-            else:         
-                if self.m.s.is_job_streaming: self.m.s.cancel_stream()                      
+            else:            
                 self.sm.current = 'home'
                 
         elif self.entry_screen == 'home':
@@ -559,7 +558,7 @@ class CheckingScreen(Screen):
         self.flag_max_feed_rate = False
         self.as_high_as = 5000
         self.error_log = []
-        if self.m.s.is_job_streaming: self.m.s.cancel_stream()
+        self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 
