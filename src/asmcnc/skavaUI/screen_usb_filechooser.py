@@ -17,6 +17,7 @@ import sys, os
 from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
+from os import path
 
 
 Builder.load_string("""
@@ -185,6 +186,10 @@ class USBFileChooser(Screen):
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
+    def check_for_job_cache_dir(self):
+        if not path.exists(job_cache_dir):
+            os.mkdir(job_cache_dir)
+
     def update_usb_status(self):
         try: 
             if self.usb_stick.is_available():
@@ -234,6 +239,8 @@ class USBFileChooser(Screen):
 
      
     def import_usb_file(self, file_selection):
+
+        self.check_for_job_cache_dir()
         
         # Move over the nc file
         if os.path.isfile(file_selection):
