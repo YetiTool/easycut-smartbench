@@ -187,9 +187,9 @@ class USBFileChooser(Screen):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
     def check_for_job_cache_dir(self):
-        if not path.exists(self.job_cache_dir):
+        if not path.exists(job_cache_dir):
             log("Creating missing job cache dir...")
-            os.mkdir(self.job_cache_dir)
+            os.mkdir(job_cache_dir)
 
     def update_usb_status(self):
         try: 
