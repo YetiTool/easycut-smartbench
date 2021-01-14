@@ -382,7 +382,7 @@ class CheckingScreen(Screen):
             self.display_output = ''
             
             if self.m.state() == "Idle":
-                self.job_checking_checked = '[b]Checking job...[/b]'
+                self.job_checking_checked = 'Starting Check...'
                 self.check_outcome = 'Looking for gcode errors...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
