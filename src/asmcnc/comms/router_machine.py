@@ -915,7 +915,7 @@ class RouterMachine(object):
     def enable_check_mode(self):
         self._grbl_soft_reset()
         if self.s.m_state != "Check":
-            Clock.schedule_once(lambda dt: self.s.write_command('$C', altDisplayText = 'Check mode ON'), 0.2)
+            Clock.schedule_once(lambda dt: self.s.write_command('$C', altDisplayText = 'Check mode ON'), 0.6)
         else:
             log('Check mode already enabled')
 
