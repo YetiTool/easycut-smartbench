@@ -253,7 +253,7 @@ class CheckingScreen(Screen):
             try: self.boundary_check()
             except:
                 self.toggle_boundary_buttons(True)
-                self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+                self.job_checking_checked = 'Cannot Check Job' 
                 self.check_outcome = 'Cannot check job: unable to run boundary check on file. Please make sure file is in recognisable format.'
                 self.job_gcode = []
         
@@ -264,7 +264,7 @@ class CheckingScreen(Screen):
         try: self.check_gcode()
         except:
             self.toggle_boundary_buttons(True)
-            self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+            self.job_checking_checked = 'Cannot Check Job' 
             self.check_outcome = 'Cannot check job: unable to run g-code check on file. Please make sure file is in recognisable format.'
             self.job_gcode = []        
 
@@ -282,7 +282,7 @@ class CheckingScreen(Screen):
 
         else:
             log("Out of bounds...")
-            self.job_checking_checked = '[b]Boundary issue![/b]'
+            self.job_checking_checked = 'Boundary issue!'
             self.toggle_boundary_buttons(False)
             self.check_outcome = '[b]The job would exceed the working volume of the machine in one or more axes. See help notes (right).[/b]'
             self.write_boundary_output(bounds_output)
@@ -389,14 +389,14 @@ class CheckingScreen(Screen):
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
-                self.job_checking_checked = '[b]Cannot check job[/b]' 
+                self.job_checking_checked = 'Cannot check job' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
                 # self.quit_button.disabled = False
 
             
         else:
-            self.job_checking_checked = '[b]Cannot check job[/b]'
+            self.job_checking_checked = 'Cannot check job'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
             # self.quit_button.disabled = False
@@ -435,7 +435,7 @@ class CheckingScreen(Screen):
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = '[b]Errors found![/b]'
+                self.job_checking_checked = 'Errors found!'
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = 'Errors found in G-code.\n\nPlease review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
@@ -443,7 +443,7 @@ class CheckingScreen(Screen):
                 self.job_ok = False
 
             elif self.flag_min_feed_rate or self.flag_max_feed_rate:
-                self.job_checking_checked = '[b]Advisories[/b]'
+                self.job_checking_checked = 'Advisories'
                 self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
                                     'Please review your job before running it.'
                 self.job_ok = True
@@ -452,7 +452,7 @@ class CheckingScreen(Screen):
                 self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
 
             else:
-                self.job_checking_checked = '[b]File is OK![/b]'
+                self.job_checking_checked = 'File is OK!'
                 self.check_outcome =  'No errors found. You\'re good to go!'
                 self.job_ok = True
                 
