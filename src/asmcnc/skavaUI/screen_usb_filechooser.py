@@ -188,7 +188,6 @@ class USBFileChooser(Screen):
 
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
-            log("Creating missing job cache dir...")
             os.mkdir(job_cache_dir)
 
     def update_usb_status(self):
