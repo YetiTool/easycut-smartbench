@@ -365,7 +365,7 @@ class DistanceScreen1xClass(Screen):
             self.warning_label.opacity = 1
             return
         
-        if float(self.value_input.text) < float(self.expected_user_entry - 20):
+        if float(self.value_input.text) < float(self.expected_user_entry - 65):
             self.warning_label.text = '[color=ff0000]VALUE IS TOO LOW![/color]'
             self.warning_label.opacity = 1
             return    
