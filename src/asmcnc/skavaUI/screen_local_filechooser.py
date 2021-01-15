@@ -253,6 +253,11 @@ class LocalFileChooser(Screen):
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
+            
+            if not path.exists(job_cache_dir + '.gitignore'):
+                file = open(job_cache_dir + '.gitignore', "w+")
+                file.write('*.nc')
+                file.close()
 
     def on_enter(self):
         
