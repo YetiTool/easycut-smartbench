@@ -190,6 +190,11 @@ class USBFileChooser(Screen):
         if not path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
 
+            if not path.exists(job_cache_dir + '.gitignore'):
+                file = open(job_cache_dir + '.gitignore', "w+")
+                file.write('*.nc')
+                file.close()
+
     def update_usb_status(self):
         try: 
             if self.usb_stick.is_available():
