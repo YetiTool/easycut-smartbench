@@ -230,7 +230,7 @@ class CheckingScreen(Screen):
 
     flag_spindle_off = True
 
-    poll_for_serial_streaming_state = None
+    serial_function_called = False
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -410,7 +410,9 @@ class CheckingScreen(Screen):
 
         # because this is called by a clock function,
         # so put this check in just in case the user exits the screen prior to this
-        if self.sm.current == 'check_job': 
+        if self.sm.current == 'check_job':
+
+            self.serial_function_called = True
 
             # utilise check_job from serial_conn
             self.m.s.check_job(objectifile)
@@ -573,7 +575,9 @@ class CheckingScreen(Screen):
         self.sm.current = 'home'       
     
     def on_leave(self, *args):
-        self.stop_check_in_serial(0)
+        if self.serial_function_called: 
+            self.stop_check_in_serial(0)
+            self.serial_function_called = False
         if self.error_out_event != None: Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''

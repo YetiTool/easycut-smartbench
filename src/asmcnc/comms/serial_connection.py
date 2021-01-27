@@ -308,7 +308,6 @@ class SerialConnection(object):
                 Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
 
             else:
-                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
                 self.enabling_check_event = Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
