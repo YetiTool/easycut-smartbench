@@ -475,7 +475,7 @@ class CheckingScreen(Screen):
 
         self.display_output = ''
 
-        ## SPINDLE NEVER TURNED ON WARNING:
+        ## IF SPINDLE IS NOT TURNED ON:
 
         if self.flag_spindle_off:
             self.display_output = self.display_output + '[color=#FFFFFF][b]SPINDLE WARNING[/b][/color]\n\n'
