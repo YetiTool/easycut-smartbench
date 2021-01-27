@@ -277,7 +277,6 @@ class SerialConnection(object):
     stream_pause_start_time = 0
     stream_paused_accumulated_time = 0
 
-    enabling_check_event = None
     check_streaming_started = False
     
     def check_job(self, job_object):
@@ -293,9 +292,6 @@ class SerialConnection(object):
                 # check has now started:
                 self.check_streaming_started = True
 
-                # for benefit of check screen, just in case
-                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
-
                 # Set up error logging
                 self.suppress_error_screens = True
                 self.response_log = []
@@ -307,10 +303,10 @@ class SerialConnection(object):
                 Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
 
             else:
-                self.enabling_check_event = Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+                Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
-        self.enabling_check_event = Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+        Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
     def return_check_outcome(self, job_object, dt):
         if len(self.response_log) >= len(job_object):
