@@ -556,7 +556,7 @@ class CheckingScreen(Screen):
 
         elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again): self.m.disable_check_mode()
 
-        if check_again or pass_no < 3: Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 0.5)
+        if check_again or (pass_no < 3): Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 1)
 
     def quit_to_home(self): 
         
