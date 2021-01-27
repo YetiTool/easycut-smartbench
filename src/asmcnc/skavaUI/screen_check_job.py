@@ -535,13 +535,16 @@ class CheckingScreen(Screen):
         check_again = False
         pass_no +1
 
+        print self.m.s.check_streaming_started
+        print self.m.s.is_job_streaming
+
         if self.m.s.enabling_check_event != None: 
             Clock.unschedule(self.m.s.enabling_check_event)
             check_again = True
 
         if self.m.s.check_streaming_started:
             if self.m.s.is_job_streaming: self.m.s.cancel_stream()
-            else: check_agin = True
+            else: check_again = True
 
         elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again): self.m.disable_check_mode()
 
