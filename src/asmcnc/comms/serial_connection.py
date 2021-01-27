@@ -278,7 +278,6 @@ class SerialConnection(object):
     stream_paused_accumulated_time = 0
 
     enabling_check_event = None
-    waiting_for_check = False
     check_streaming_started = False
     
     def check_job(self, job_object):

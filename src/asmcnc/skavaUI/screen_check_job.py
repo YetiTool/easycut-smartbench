@@ -533,7 +533,7 @@ class CheckingScreen(Screen):
     def stop_check_in_serial(self, pass_no):
 
         check_again = False
-        pass_no +1
+        pass_no += 1
 
         print pass_no
 
