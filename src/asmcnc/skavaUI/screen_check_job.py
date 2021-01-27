@@ -444,7 +444,7 @@ class CheckingScreen(Screen):
                     self.check_outcome = 'Errors found in G-code.\n\nPlease review and re-load your job before attempting to run it.'
                 self.job_ok = False
 
-            elif self.flag_min_feed_rate or self.flag_max_feed_rate or self.flag:
+            elif self.flag_min_feed_rate or self.flag_max_feed_rate or self.flag_spindle_off:
                 self.job_checking_checked = 'Advisories'
                 self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
                                     'Please review your job before running it.'
