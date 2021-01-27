@@ -543,7 +543,10 @@ class CheckingScreen(Screen):
         print check_again
 
         if self.m.s.check_streaming_started:
-            if self.m.s.is_job_streaming: self.m.s.cancel_stream()
+            if self.m.s.is_job_streaming:
+                self.m.s.cancel_stream()
+                print 'cancel streaming'
+
             else: check_again = True
 
             print 'check streaming'
