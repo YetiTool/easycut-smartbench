@@ -230,6 +230,7 @@ class CheckingScreen(Screen):
 
     flag_spindle_off = True
 
+    poll_for_serial_streaming_state = None
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -407,14 +408,18 @@ class CheckingScreen(Screen):
      
     def check_grbl_stream(self, objectifile, dt):
 
-        #utilise check_job from serial_conn
-        self.m.s.check_job(objectifile)
+        # because this is called by a clock function,
+        # so put this check in just in case the user exits the screen prior to this
+        if self.sm.current == 'check_job': 
 
-        # self.poll_for_gcode_check_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.6)
-        
-        # display the error log when it's filled - setting up the event makes it easy to unschedule
-        self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
+            # utilise check_job from serial_conn
+            self.m.s.check_job(objectifile)
+
+            # self.poll_for_gcode_check_progress(0)
+            self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.6)
+            
+            # display the error log when it's filled - setting up the event makes it easy to unschedule
+            self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
 
 
     def poll_for_gcode_check_progress(self, dt):
@@ -523,6 +528,22 @@ class CheckingScreen(Screen):
 
 ## EXITING SCREEN
 
+    def stop_check_in_serial(self, dt):
+
+        check_again = False
+
+        if self.m.s.enabling_check_event != None: 
+            Clock.unschedule(self.m.s.enabling_check_event)
+            check_again = True
+
+        if self.m.s.check_streaming_started and not self.m.s.is_job_streaming:
+            check_again = True
+
+        if self.m.s.check_streaming_started and self.m.s.is_job_streaming:
+            self.m.s.cancel_stream()
+
+        if check_again: Clock.schedule_once(self.stop_check_in_serial, 0.5)
+
     def quit_to_home(self): 
         
         if self.entry_screen == 'file_loading':
@@ -551,10 +572,8 @@ class CheckingScreen(Screen):
         self.sm.current = 'home'       
     
     def on_leave(self, *args):
-        # self.quit_button.disabled = True
-        if self.error_out_event != None: 
-            Clock.unschedule(self.error_out_event)
-        if self.error_log == []: self.m.s.cancel_stream()
+        self.stop_check_in_serial(1)
+        if self.error_out_event != None: Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''

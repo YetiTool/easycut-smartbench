@@ -276,6 +276,9 @@ class SerialConnection(object):
 
     stream_pause_start_time = 0
     stream_paused_accumulated_time = 0
+
+    enabling_check_event = None
+    check_streaming_started = False
     
     def check_job(self, job_object):
         
@@ -286,6 +289,10 @@ class SerialConnection(object):
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
             if self.m_state == "Check":
+                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
+
+                # check has now started:
+                self.check_streaming_started = True
 
                 # Set up error logging
                 self.suppress_error_screens = True
@@ -298,10 +305,11 @@ class SerialConnection(object):
                 Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
 
             else:
-                Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
+                self.enabling_check_event = Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
-        Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+        self.enabling_check_event = Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
     def return_check_outcome(self, job_object, dt):
         if len(self.response_log) >= len(job_object):
@@ -416,6 +424,7 @@ class SerialConnection(object):
             self._reset_counters()
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             self._reset_counters()
@@ -474,6 +483,7 @@ class SerialConnection(object):
             self.update_machine_runtime()    
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             
