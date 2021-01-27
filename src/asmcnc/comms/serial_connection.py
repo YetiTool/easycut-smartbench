@@ -304,7 +304,7 @@ class SerialConnection(object):
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
     def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object): # + 2
+        if len(self.response_log) >= len(job_object):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False

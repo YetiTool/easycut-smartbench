@@ -554,6 +554,7 @@ class CheckingScreen(Screen):
         # self.quit_button.disabled = True
         if self.error_out_event != None: 
             Clock.unschedule(self.error_out_event)
+        if self.error_log == []: self.m.s.cancel_stream()
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''
@@ -566,7 +567,6 @@ class CheckingScreen(Screen):
         self.as_high_as = 5000
         self.flag_spindle_off = True
         self.error_log = []
-        if self.m.s.is_job_streaming: self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 
