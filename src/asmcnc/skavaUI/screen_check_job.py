@@ -528,21 +528,22 @@ class CheckingScreen(Screen):
 
 ## EXITING SCREEN
 
-    def stop_check_in_serial(self, dt):
+    def stop_check_in_serial(self, pass_no):
 
         check_again = False
+        pass_no +1
 
         if self.m.s.enabling_check_event != None: 
             Clock.unschedule(self.m.s.enabling_check_event)
             check_again = True
 
-        if self.m.s.check_streaming_started and not self.m.s.is_job_streaming:
-            check_again = True
+        if self.m.s.check_streaming_started:
+            if self.m.s.is_job_streaming: self.m.s.cancel_stream()
+            else: check_agin = True
 
-        if self.m.s.check_streaming_started and self.m.s.is_job_streaming:
-            self.m.s.cancel_stream()
+        elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again): self.m.disable_check_mode()
 
-        if check_again: Clock.schedule_once(self.stop_check_in_serial, 0.5)
+        if check_again or pass_no < 3: Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 0.5)
 
     def quit_to_home(self): 
         
@@ -572,7 +573,7 @@ class CheckingScreen(Screen):
         self.sm.current = 'home'       
     
     def on_leave(self, *args):
-        self.stop_check_in_serial(1)
+        self.stop_check_in_serial(0)
         if self.error_out_event != None: Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''

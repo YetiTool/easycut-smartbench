@@ -278,6 +278,7 @@ class SerialConnection(object):
     stream_paused_accumulated_time = 0
 
     enabling_check_event = None
+    waiting_for_check = False
     check_streaming_started = False
     
     def check_job(self, job_object):
@@ -289,10 +290,12 @@ class SerialConnection(object):
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
             if self.m_state == "Check":
-                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
 
                 # check has now started:
                 self.check_streaming_started = True
+
+                # for benefit of check screen, just in case
+                if self.enabling_check_event != None: Clock.unschedule(self.enabling_check_event)
 
                 # Set up error logging
                 self.suppress_error_screens = True
