@@ -480,7 +480,7 @@ class CheckingScreen(Screen):
         if self.flag_spindle_off:
             self.display_output = self.display_output + '[color=#FFFFFF][b]SPINDLE WARNING[/b][/color]\n\n'
             self.display_output = self.display_output + '[color=#FFFFFF]This file has no command to turn the spindle on.[/color]\n\n' + \
-                                '[color=#FFFFFF]This may be intended behaviour, but if you trying to do a cut ' + \
+                                '[color=#FFFFFF]This may be intended behaviour, but if you are trying to do a cut ' + \
                                 'you should review your file before trying to run it![/color]\n\n'
 
 
