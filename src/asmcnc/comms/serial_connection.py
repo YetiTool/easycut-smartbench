@@ -395,7 +395,6 @@ class SerialConnection(object):
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
-
     # After streaming is completed
     def end_stream(self):
 

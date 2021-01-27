@@ -429,10 +429,6 @@ class CheckingScreen(Screen):
         if self.error_log != []:
             Clock.unschedule(self.error_out_event)
             if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
-
-            # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
-#             del self.error_log[0]
-#             del self.error_log[(len(self.error_log)-1)]
             
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
@@ -570,7 +566,7 @@ class CheckingScreen(Screen):
         self.as_high_as = 5000
         self.flag_spindle_off = True
         self.error_log = []
-        self.m.s.cancel_stream()
+        if self.m.s.is_job_streaming: self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 
