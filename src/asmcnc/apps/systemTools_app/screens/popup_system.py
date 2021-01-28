@@ -299,10 +299,10 @@ class PopupFactorySettingsPassword(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[10,0,10,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,10,40,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(textinput)
@@ -317,7 +317,7 @@ class PopupFactorySettingsPassword(Widget):
                       size=(500, 300),
                       auto_dismiss= False,
                       pos_hint={'x': 150.0 / 800.0, 
-                                'y':280.0 /  480.0},
+                                'y':180.0 /  480.0},
                       )
         
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
