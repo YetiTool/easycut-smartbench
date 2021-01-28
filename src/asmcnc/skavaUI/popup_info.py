@@ -1029,7 +1029,7 @@ class PopupShutdown(Widget):
           os.system('sudo shutdown -h now')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.2, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
 
         ok_button = Button(text='[b]Shutdown now[/b]', markup = True)
         ok_button.background_normal = ''
@@ -1038,11 +1038,11 @@ class PopupShutdown(Widget):
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,10,0,0])
         btn_layout.add_widget(cancel_button)
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,10,20,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
