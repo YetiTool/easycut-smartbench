@@ -490,5 +490,6 @@ class LobbyScreen(Screen):
         self.am.start_maintenance_app('laser_tab') 
 
     def shutdown_console(self):
-        os.system('sudo shutdown -h')
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            os.system('sudo shutdown -h')
         popup_info.PopupShutdown(self.sm)

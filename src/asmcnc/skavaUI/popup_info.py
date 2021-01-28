@@ -1018,33 +1018,43 @@ class PopupShutdown(Widget):
         
         self.sm = screen_manager
 
-        description = "Shutting down..."
+        description = "The console will shutdown safely after 60 seconds, and close any critical processes ready for power down.\n\n" + \
+                      "This extends the lifetime of the console.\n\n" + \
+                      "You will still need to power down your machine separately after the console shutdown has finished."
 
         def cancel_shutdown(*args):
           os.system('sudo shutdown -c')
+
+        def shudown_now(*args):
+          os.system('sudo shutdown -h now')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
-        
+
+        ok_button = Button(text='[b]Shutdown now[/b]', markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         cancel_button = Button(text='[b]Cancel[/b]', markup = True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         btn_layout.add_widget(cancel_button)
+        btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title='Shutting down...',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(300, 300),
+                      # size=(300, 300),
+                      size=(500, 400),
                       auto_dismiss= False
                       )
 
