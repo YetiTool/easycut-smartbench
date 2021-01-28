@@ -112,7 +112,7 @@ Builder.load_string("""
                         text: 'PL Hard reset'
                         
                     Button:
-                        text: 'Flash FW'
+                        text: 'Flash Firmware'
                         on_press: root.update_firmware()
 
                     Button:
