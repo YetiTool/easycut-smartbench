@@ -318,7 +318,7 @@ class LoadingScreen(Screen):
                 l_block = re.sub('\s|\(.*?\)', '', (line.strip()).upper())  
                 
                 if (l_block.find('%') == -1 and l_block.find('M6') == -1 and l_block.find('M06') == -1 and l_block.find('G28') == -1
-                    and l_block.find('M30') == -1 and l_block.find('M2') == -1):    # Drop undesirable lines
+                    and l_block.find('M30') == -1 and l_block.find('M2') == -1 and l_block.find('M02') == -1):    # Drop undesirable lines
                     
                     # enforce minimum spindle speed (e.g. M3 S1000: M3 turns spindle on, S1000 sets rpm to 1000. Note incoming string may be inverted: S1000 M3)
                     if l_block.find ('M3') >= 0 or l_block.find ('M03') >= 0:
