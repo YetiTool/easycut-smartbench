@@ -112,10 +112,12 @@ Builder.load_string("""
                         text: 'PL Hard reset'
                         
                     Button:
-                        text: 'Flash FW from USB'
+                        text: 'Flash FW'
+                        on_press: root.update_firmware()
 
                     Button:
                         text: 'PL Ansible run'
+                        on_press: root.platform_ansible_service_run()
 
                     Button:
                         text: 'CO platform branch'
@@ -244,3 +246,16 @@ class UpdateTestingScreen(Screen):
 
 
 # UPDATE FUNCTIONS
+
+    def platform_ansible_service_run(self):
+        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+
+    def update_firmware(self):
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")    
+        os.system("./update_fw.sh")
+        sys.exit()
+
