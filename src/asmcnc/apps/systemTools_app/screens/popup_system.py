@@ -314,8 +314,10 @@ class PopupFactorySettingsPassword(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
-                      auto_dismiss= False
+                      size=(500, 300),
+                      auto_dismiss= False,
+                      pos_hint={'x': 150.0 / Window.width, 
+                                'y':280.0 /  Window.height},
                       )
         
         popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
