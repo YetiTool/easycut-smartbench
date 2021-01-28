@@ -108,7 +108,8 @@ Builder.load_string("""
                         text: 'EC Hard reset'
 
                     Button:
-                        text: 'PL Git repair'
+                        text: 'Flash Firmware'
+                        on_press: root.update_firmware()
                                    
                     Button:
                         text: 'PL Hard reset'
