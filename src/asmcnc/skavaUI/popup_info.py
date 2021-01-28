@@ -1054,7 +1054,7 @@ class PopupShutdown(Widget):
                       content=layout_plan,
                       size_hint=(None, None),
                       # size=(300, 300),
-                      size=(500, 400),
+                      size=(540, 400),
                       auto_dismiss= False
                       )
 
