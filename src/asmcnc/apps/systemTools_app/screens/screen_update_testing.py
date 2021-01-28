@@ -102,14 +102,14 @@ Builder.load_string("""
                         text: 'Reclone PL from web'
 
                     Button:
-                        text: 'EC Git repair'
+                        text: 'Flash Firmware'
+                        on_press: root.update_firmware()
 
                     Button:
                         text: 'EC Hard reset'
 
                     Button:
-                        text: 'Flash Firmware'
-                        on_press: root.update_firmware()
+                        text: 'PL Git repair'
                                    
                     Button:
                         text: 'PL Hard reset'
