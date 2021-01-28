@@ -236,7 +236,7 @@ class SerialConnection(object):
                         self.process_grbl_push(rec_temp)
                 except Exception as e:
                     log('Process response exception:\n' + str(e))
-                    self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
+                    # self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
                         # - this bit grinds to a halt presumably
