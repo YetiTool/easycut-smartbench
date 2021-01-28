@@ -265,10 +265,10 @@ class SafetyScreen(Screen):
         self.sm.current = 'squaring_decision'
         
         
-    def on_leave(self):
+    # def on_leave(self):
         
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
-            self.sm.remove_widget(self.sm.get_screen('safety'))
+    #     if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
+    #         self.sm.remove_widget(self.sm.get_screen('safety'))
             
 
             
