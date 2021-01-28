@@ -1018,9 +1018,9 @@ class PopupShutdown(Widget):
         
         self.sm = screen_manager
 
-        description = "The console will shutdown safely after 60 seconds, and close any critical processes ready for power down.\n\n" + \
+        description = "The console will close any critical processes and shut down safely after 60 seconds, ready for power off.\n\n" + \
                       "This extends the lifetime of the console.\n\n" + \
-                      "You will still need to power down your machine separately after the console shutdown has finished."
+                      "You will still need to power down your machine separately after the console has finished shutting down."
 
         def cancel_shutdown(*args):
           os.system('sudo shutdown -c')
