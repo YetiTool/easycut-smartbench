@@ -4,6 +4,8 @@ Update testing screen for system tools app
 
 @author: Letty
 '''
+try: import pigpio
+except: pass
 
 from kivy.lang import Builder
 from kivy.factory import Factory

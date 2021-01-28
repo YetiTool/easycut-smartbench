@@ -195,7 +195,8 @@ class SystemMenuScreen(Screen):
     	popup_system.PopupFactorySettingsPassword(self.systemtools_sm)
 
     def update_testing(self):
-        popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
+        # popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
+        self.systemtools_sm.open_update_testing_screen()
 
     def developer(self):
     	popup_system.PopupDeveloperPassword(self.systemtools_sm)
