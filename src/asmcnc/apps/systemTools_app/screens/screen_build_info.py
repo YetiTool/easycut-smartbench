@@ -470,4 +470,4 @@ class BuildInfoScreen(Screen):
     ## LOCALIZATION TESTING
 
     def choose_language(self):
-        self.l.load_in_new_language()
+        self.l.load_in_new_language('Italian (IT)')
