@@ -19,7 +19,7 @@ class Localization(object):
 	# want to test:
 	# how fast is loading in from multi-language file vs two-language file (for start-up purposes)
 
-	def __init__(self, screen_manager):
+	def __init__(self):
 		pass
 
 	def load_language(self):
