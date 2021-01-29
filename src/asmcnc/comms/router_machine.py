@@ -60,6 +60,9 @@ class RouterMachine(object):
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
 
+    ## LOCALIZATION     # ## LOCALIZATION
+    persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
+
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
     z_probe_speed = 60
@@ -162,6 +165,12 @@ class RouterMachine(object):
             log('Creating z head maintenance settings file...')
             file = open(self.z_head_maintenance_settings_file_path, 'w+')
             file.write(str(self.time_since_z_head_lubricated_seconds))
+            file.close()
+
+        if not path.exists(self.persistent_language_path):
+            log("Creating language settings file")
+            file = open(self.persistent_language_path, 'w+')
+            file.write('English')
             file.close()
 
     def get_persistent_values(self):
