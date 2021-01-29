@@ -389,7 +389,7 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
 
-        l = localization.Localization()
+        self.l = localization.Localization()
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
