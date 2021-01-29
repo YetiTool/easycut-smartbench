@@ -276,6 +276,8 @@ class SerialConnection(object):
 
     stream_pause_start_time = 0
     stream_paused_accumulated_time = 0
+
+    check_streaming_started = False
     
     def check_job(self, job_object):
         
@@ -286,6 +288,9 @@ class SerialConnection(object):
         def check_job_inner_function():
             # Check that check mode has been enabled before running:
             if self.m_state == "Check":
+
+                # check has now started:
+                self.check_streaming_started = True
 
                 # Set up error logging
                 self.suppress_error_screens = True
@@ -304,7 +309,7 @@ class SerialConnection(object):
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
     def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object): # + 2
+        if len(self.response_log) >= len(job_object):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
@@ -395,7 +400,6 @@ class SerialConnection(object):
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
-
     # After streaming is completed
     def end_stream(self):
 
@@ -417,6 +421,7 @@ class SerialConnection(object):
             self._reset_counters()
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             self._reset_counters()
@@ -475,6 +480,7 @@ class SerialConnection(object):
             self.update_machine_runtime()    
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             
