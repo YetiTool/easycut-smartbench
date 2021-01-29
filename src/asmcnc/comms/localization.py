@@ -10,8 +10,8 @@ class Localization(object):
 	dictionary = {}
 
 	# use this for just getting user language, and if it's empty just assume english
-	persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
-	complete_foriegn_dictionary_path = '/home/pi/easycut-smartbench/src/asmcnc/comms/foreign_dictionary.csv'
+	persistent_language_path = './sb_values/user_language.txt'
+	complete_foriegn_dictionary_path = './asmcnc/comms/foreign_dictionary.csv'
 
 	default_lang = 'English (GB)'
 	lang = default_lang
@@ -31,8 +31,8 @@ class Localization(object):
 		with open(self.complete_foriegn_dictionary_path, "r") as csv_file:
 		    csv_reader = csv.DictReader(csv_file, delimiter=',')
 		    for lines in csv_reader:
-		    	dictionary = {lines[self.default_lang] : lines[self.lang]}
+		    	self.dictionary = {str(lines[self.default_lang]) : str(lines[self.lang])}
 
-		print dictionary['System Information']
+		print(self.dictionary['System Information'])
 
 	supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
