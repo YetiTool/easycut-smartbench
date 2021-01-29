@@ -1,5 +1,5 @@
 import time
-import csv
+import csv, os
 
 def log(message):
     timestamp = datetime.now()
@@ -7,37 +7,49 @@ def log(message):
 
 class Localization(object):
 
-	dictionary = {}
+    dictionary = {}
 
-	# use this for just getting user language, and if it's empty just assume english
-	persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
-	complete_foreign_dictionary_path = '/home/pi/easycut-smartbench/src/asmcnc/comms/foreign_dictionary.csv'
+    # use this for just getting user language, and if it's empty just assume english
+    persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
+    complete_foreign_dictionary_path = '/home/pi/easycut-smartbench/src/asmcnc/comms/foreign_dictionary.csv'
+    fast_dictionary_path = '/home/pi/easycut-smartbench/src/sb_values/fast_dictionary.txt'
 
-	default_lang = 'English (GB)'
-	lang = default_lang
+    default_lang = 'English (GB)'
+    lang = default_lang
 
-	# want to test:
-	# how fast is loading in from multi-language file vs two-language file (for start-up purposes)
+    # want to test:
+    # how fast is loading in from multi-language file vs two-language file (for start-up purposes)
 
-	def __init__(self):
-		pass
+    def __init__(self):
 
-	def load_language(self):
-		pass
+        if os.path.exists(fast_dictionary_path):
+            self.load_language()
+        else:
+            self.load_in_new_language(lang)
 
-	def load_in_new_language(self, language):
-		self.lang = language
+    def load_language(self):
+        # I hope this will work in the way I expect, but can't be sure until it's tested
+        csv_reader = csv.DictReader(open(self.complete_foreign_dictionary_path, "r"), delimiter=',')
+        self.dictionary = dict(csv_reader)
 
-		with open(self.complete_foreign_dictionary_path, "r") as csv_file:
-		    csv_reader = csv.DictReader(csv_file, delimiter=',')
-		    for lines in csv_reader:
-		    	self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
+    def load_in_new_language(self, language):
+        self.lang = language
 
-	def save_active_dictionary(self):
-		with open(self.complete_foreign_dictionary_path,  'w', newline='') as csv_file:
-		    csv_reader = csv.DictReader(csv_file, delimiter=',')
+        with open(self.complete_foreign_dictionary_path, "r") as csv_file:
+            csv_reader = csv.DictReader(csv_file, delimiter=',')
+            for lines in csv_reader:
+                self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
-		    lang_writer = csv.writer(csvfile, delimiter=',')
-		    
+        self.save_fast_dictionary()
 
-	supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
+    def save_fast_dictionary(self):
+
+        dialect = csv.excel
+        dialect.delimiter = ','
+
+        with open(self.fast_dictionary_path,  'w', newline='') as csv_file:
+            dict_writer = csv.DictWriter(f, fieldnames=self.dictionary.keys(), dialect=dialect)
+            dict_writer.writeheader()
+            dict_writer.writerows(dict_list)
+
+    supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
