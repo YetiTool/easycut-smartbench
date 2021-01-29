@@ -47,11 +47,11 @@ class Localization(object):
 
     def save_fast_dictionary(self):
 
-        dialect = csv.excel
-        dialect.delimiter = ','
+        # dialect = csv.excel
+        # dialect.delimiter = ','
 
         with open(self.fast_dictionary_path,  'w') as csv_file:
-            dict_writer = csv.DictWriter(csv_file, fieldnames=self.dictionary.keys(), dialect=dialect)
+            dict_writer = csv.DictWriter(csv_file, fieldnames=self.dictionary.keys())
             dict_writer.writeheader()
             dict_writer.writerows(self.dictionary)
 
