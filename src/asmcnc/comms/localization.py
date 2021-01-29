@@ -10,8 +10,8 @@ class Localization(object):
 	dictionary = {}
 
 	# use this for just getting user language, and if it's empty just assume english
-	persistent_language_path = './sb_values/user_language.txt'
-	complete_foriegn_dictionary_path = './asmcnc/comms/foreign_dictionary.csv'
+	persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
+	complete_foriegn_dictionary_path = '/home/pi/easycut-smartbench/src/asmcnc/comms/foreign_dictionary.csv'
 
 	default_lang = 'English (GB)'
 	lang = default_lang
