@@ -1,4 +1,5 @@
 import time
+import csv
 
 def log(message):
     timestamp = datetime.now()
@@ -10,8 +11,10 @@ class Localization(object):
 
 	# use this for just getting user language, and if it's empty just assume english
 	persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
+	complete_foriegn_dictionary_path = '/home/pi/easycut-smartbench/src/comms/foreign_dictionary.txt'
 
-	lang = 'English'
+	default_lang = 'English (GB)'
+	lang = default_lang
 
 	# want to test:
 	# how fast is loading in from multi-language file vs two-language file (for start-up purposes)
@@ -24,6 +27,12 @@ class Localization(object):
 
 	def load_in_new_language(self, lanugage):
 		self.lang = language
-		pass
 
-	supported_languages = ['English', 'Korean', 'German', 'French', 'Italian']
+		with open(self.complete_foriegn_dictionary_path, "r") as csv_file:
+		    csv_reader = csv.DictReader(csv_file, delimiter=',')
+		    for lines in csv_reader:
+		    	dictionary = {lines[self.default_lang] : lines[self.lang]}
+
+		print dictionary['System info']
+
+	supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
