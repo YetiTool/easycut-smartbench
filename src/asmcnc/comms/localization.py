@@ -50,6 +50,6 @@ class Localization(object):
         with open(self.fast_dictionary_path,  'w') as csv_file:
             dict_writer = csv.DictWriter(csv_file, fieldnames=self.dictionary.keys(), dialect=dialect)
             dict_writer.writeheader()
-            dict_writer.writerows(dict_list)
+            dict_writer.writerows(self.dictionary)
 
     supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
