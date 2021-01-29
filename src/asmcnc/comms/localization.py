@@ -40,15 +40,11 @@ class Localization(object):
             for lines in csv_reader:
                 self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
-            print(self.dictionary)
-            print(self.dictionary.keys())
-
         self.save_fast_dictionary()
 
-    def save_fast_dictionary(self):
+        # still need to make language chosen persistent and save it
 
-        # dialect = csv.excel
-        # dialect.delimiter = ','
+    def save_fast_dictionary(self):
 
         with open(self.fast_dictionary_path,  'w') as csv_file:
             dict_writer = csv.DictWriter(csv_file, fieldnames=list(self.dictionary.keys()))

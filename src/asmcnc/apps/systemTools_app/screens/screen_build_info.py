@@ -18,6 +18,8 @@ Builder.load_string("""
 
 <BuildInfoScreen>
 
+    header: header
+
     sw_version_label: sw_version_label
     pl_version_label: pl_version_label
     fw_version_label: fw_version_label
@@ -53,6 +55,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                    id: header
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -382,7 +385,6 @@ class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
 
-
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -390,6 +392,7 @@ class BuildInfoScreen(Screen):
         self.set = kwargs['settings']
 
         self.l = localization.Localization()
+        self.update_strings()
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
@@ -471,3 +474,10 @@ class BuildInfoScreen(Screen):
 
     def choose_language(self):
         self.l.load_in_new_language('Italian (IT)')
+        self.update_strings()
+
+    def update_strings(self):
+        self.more_info_button.text = self.l.dictionary['More Info'] + '...'
+        self.header.text = self.l.dictionary['System Information']
+
+
