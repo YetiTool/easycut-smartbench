@@ -22,14 +22,14 @@ class Localization(object):
 
     def __init__(self):
 
-        if os.path.exists(fast_dictionary_path):
+        if os.path.exists(self.fast_dictionary_path):
             self.load_language()
         else:
             self.load_in_new_language(lang)
 
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
-        csv_reader = csv.DictReader(open(self.complete_foreign_dictionary_path, "r"), delimiter=',')
+        csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter=',')
         self.dictionary = dict(csv_reader)
 
     def load_in_new_language(self, language):
