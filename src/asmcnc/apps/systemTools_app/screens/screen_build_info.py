@@ -306,7 +306,7 @@ Builder.load_string("""
                             color: hex('#f9f9f9ff')
                             markup: True
                             option_cls: Factory.get("LanguageSpinner")
-                            on_text: root.update_strings()
+                            on_text: root.choose_language()
 
 
 
@@ -493,7 +493,8 @@ class BuildInfoScreen(Screen):
     ## LOCALIZATION TESTING
 
     def choose_language(self):
-        self.l.load_in_new_language('Italian (IT)')
+        chosen_lang = self.language_button.text
+        self.l.load_in_new_language(chosen_lang)
         self.update_strings()
 
     def update_strings(self):
