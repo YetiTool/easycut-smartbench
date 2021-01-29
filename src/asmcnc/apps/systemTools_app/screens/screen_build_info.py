@@ -402,6 +402,7 @@ Builder.load_string("""
 class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
+    language_list = []
 
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
