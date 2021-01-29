@@ -12,6 +12,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.comms import localization
+
 Builder.load_string("""
 
 <BuildInfoScreen>
@@ -259,7 +261,7 @@ Builder.load_string("""
                             markup: True
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(245)
+                        height: dp(100)
                         width: dp(210)
                         padding: [0,0]
 
@@ -268,6 +270,33 @@ Builder.load_string("""
                             text: ''
                             opacity: 0
                             color: hex('#333333ff')
+
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(35)
+                        width: dp(150)
+                        ToggleButton:
+                            id: language_button
+                            size_hint: (None,None)
+                            height: dp(35)
+                            width: dp(150)
+                            background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                            background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                            border: [dp(7.5)]*4
+                            center: self.parent.center
+                            pos: self.parent.pos
+                            text: 'Choose language...'
+                            color: hex('#f9f9f9ff')
+                            markup: True
+
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(110)
+                        width: dp(210)
+
+
+
+
 
             BoxLayout:
                 size_hint: (None,None)
@@ -359,6 +388,8 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
 
+        l = localization.Localization()
+
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
         self.latest_sw_version = self.set.latest_sw_version
@@ -434,3 +465,8 @@ class BuildInfoScreen(Screen):
                 ip_address = ''
 
         return ip_address
+
+    ## LOCALIZATION TESTING
+
+    def choose_language(self):
+        self.l.load_in_new_language()
