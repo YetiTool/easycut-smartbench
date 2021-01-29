@@ -25,7 +25,7 @@ class Localization(object):
 	def load_language(self):
 		pass
 
-	def load_in_new_language(self, lanugage):
+	def load_in_new_language(self, language):
 		self.lang = language
 
 		with open(self.complete_foriegn_dictionary_path, "r") as csv_file:
