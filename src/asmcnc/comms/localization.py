@@ -40,6 +40,9 @@ class Localization(object):
             for lines in csv_reader:
                 self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
+            print(self.dictionary)
+            print(self.dictionary.keys())
+
         self.save_fast_dictionary()
 
     def save_fast_dictionary(self):
