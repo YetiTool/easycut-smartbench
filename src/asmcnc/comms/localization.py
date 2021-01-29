@@ -51,7 +51,7 @@ class Localization(object):
         # dialect.delimiter = ','
 
         with open(self.fast_dictionary_path,  'w') as csv_file:
-            dict_writer = csv.DictWriter(csv_file, fieldnames=list(self.dictionary.keys())
+            dict_writer = csv.DictWriter(csv_file, fieldnames=list(self.dictionary.keys()))
             dict_writer.writeheader()
             dict_writer.writerows(self.dictionary)
 
