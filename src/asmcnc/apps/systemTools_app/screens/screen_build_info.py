@@ -80,6 +80,7 @@ Builder.load_string("""
                     halign: "center"
                     valign: "bottom"
                     markup: True
+                    font: 'DejaVuSans'
                    
                     
             BoxLayout:
@@ -307,6 +308,7 @@ Builder.load_string("""
                             markup: True
                             option_cls: Factory.get("LanguageSpinner")
                             on_text: root.choose_language()
+
 
 
 
