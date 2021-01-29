@@ -498,7 +498,7 @@ class BuildInfoScreen(Screen):
         self.update_strings()
 
     def update_strings(self):
-        self.language_list = self.l.supported_languages
+        # self.language_list = self.l.supported_languages
         self.more_info_button.text = self.l.dictionary['More info'] + '...'
         self.header.text = self.l.dictionary['System Information']
 
