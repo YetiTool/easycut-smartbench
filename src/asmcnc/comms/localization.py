@@ -33,6 +33,6 @@ class Localization(object):
 		    for lines in csv_reader:
 		    	dictionary = {lines[self.default_lang] : lines[self.lang]}
 
-		print dictionary['System info']
+		print dictionary['System Information']
 
 	supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
