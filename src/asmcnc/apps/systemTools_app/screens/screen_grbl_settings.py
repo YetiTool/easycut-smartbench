@@ -83,19 +83,19 @@ Builder.load_string("""
 
                     Button:
                         text: 'Bake defaults'
-                        on_press: root.bake_default_settings()
+                        # on_press: root.bake_default_settings()
 
                     Button:
                         text: '$RST=$'
-                        on_press: root.send_rst_dollar()
+                        # on_press: root.send_rst_dollar()
                                    
                     Button:
                         text: '$RST=*'
-                        on_press: root.send_rst_star()
+                        # on_press: root.send_rst_star()
                         
                     Button:
                         text: '$RST=#'
-                        on_press: root.send_rst_hash()
+                        # on_press: root.send_rst_hash()
 
             BoxLayout:
                 size_hint: (None,None)
