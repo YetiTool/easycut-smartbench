@@ -42,6 +42,7 @@ Builder.load_string("""
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
     more_info_button: more_info_button
+    language_button: language_button
     console_serial_number: console_serial_number
 
     BoxLayout:
@@ -305,7 +306,6 @@ Builder.load_string("""
                             color: hex('#f9f9f9ff')
                             markup: True
                             option_cls: Factory.get("LanguageSpinner")
-                            values: root.language_list
                             on_text: root.update_strings()
 
 
@@ -412,7 +412,7 @@ class BuildInfoScreen(Screen):
 
         self.l = localization.Localization()
         self.update_strings()
-        self.language_list = self.l.supported_languages
+        self.language_button.values = self.l.supported_languages
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
