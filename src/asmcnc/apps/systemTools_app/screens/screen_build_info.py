@@ -264,7 +264,7 @@ Builder.load_string("""
                             markup: True
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(100)
+                        height: dp(140)
                         width: dp(210)
                         padding: [0,0]
 
@@ -295,7 +295,7 @@ Builder.load_string("""
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(110)
+                        height: dp(70)
                         width: dp(210)
 
 
