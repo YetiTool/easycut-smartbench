@@ -31,7 +31,7 @@ class Localization(object):
 		with open(self.complete_foriegn_dictionary_path, "r") as csv_file:
 		    csv_reader = csv.DictReader(csv_file, delimiter=',')
 		    for lines in csv_reader:
-		    	self.dictionary = {str(lines[self.default_lang]) : str(lines[self.lang])}
+		    	self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
 		print(self.dictionary['System Information'])
 
