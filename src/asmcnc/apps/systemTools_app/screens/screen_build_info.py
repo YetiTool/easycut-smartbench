@@ -9,12 +9,25 @@ import os, sys
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.spinner import Spinner, SpinnerOption
 
 from asmcnc.skavaUI import popup_info
 
 from asmcnc.comms import localization
 
 Builder.load_string("""
+
+#:import Factory kivy.factory.Factory
+
+
+<LanguageSpinner@SpinnerOption>
+
+    background_normal: ''
+    background_color: [1,1,1,1]
+    height: dp(40)
+    color: 0,0,0,1
+    halign: 'left'
+    markup: 'True'
 
 <BuildInfoScreen>
 
@@ -278,20 +291,25 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(35)
                         width: dp(150)
-                        ToggleButton:
+                        Spinner:
                             id: language_button
                             size_hint: (None,None)
                             height: dp(35)
                             width: dp(150)
                             background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                            background_down: ""
                             border: [dp(7.5)]*4
                             center: self.parent.center
                             pos: self.parent.pos
                             text: 'Choose language...'
                             color: hex('#f9f9f9ff')
                             markup: True
-                            on_press: root.choose_language()
+                            option_cls: Factory.get("LanguageSpinner")
+                            values: root.language_list
+                            on_text: root.update_strings()
+
+
+
 
                     BoxLayout: 
                         size_hint: (None, None)
@@ -393,6 +411,7 @@ class BuildInfoScreen(Screen):
 
         self.l = localization.Localization()
         self.update_strings()
+        self.language_list = self.l.supported_languages
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
