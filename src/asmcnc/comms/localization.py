@@ -30,8 +30,7 @@ class Localization(object):
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
         csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter=',')
-        print(list(csv_reader))
-        self.dictionary = dict(csv_reader)
+        self.dictionary = (list(csv_reader))[0]
 
     def load_in_new_language(self, language):
         self.lang = language
