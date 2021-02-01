@@ -75,7 +75,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:20
-                    size_hint_y: 1.1
+                    size_hint_y: 1
                     BoxLayout:
                         padding: 20
                         size_hint_x: 0.25
@@ -117,7 +117,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     spacing:20
                     size_hint_x: 1
-                    size_hint_y: 0.9
+                    size_hint_y: 1
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -138,7 +138,7 @@ Builder.load_string("""
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
                                 halign: 'center'
-                                font_size: '26sp' 
+                                font_size: '30sp' 
                                 markup: True
                                 size:self.size
                                 valign: 'middle'
