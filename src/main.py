@@ -37,6 +37,7 @@ from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_go # @UnresolvedImport
+from asmcnc.skavaUI import screen_jobstart_warning
 from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
 from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
@@ -148,6 +149,7 @@ class SkavaUI(App):
             local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
             usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
             go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am)
+            jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
             loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
             checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
@@ -179,6 +181,7 @@ class SkavaUI(App):
             sm.add_widget(local_filechooser)
             sm.add_widget(usb_filechooser)
             sm.add_widget(go_screen)
+            sm.add_widget(jobstart_warning_screen)
             sm.add_widget(loading_screen)
             sm.add_widget(checking_screen)
             sm.add_widget(error_screen)
