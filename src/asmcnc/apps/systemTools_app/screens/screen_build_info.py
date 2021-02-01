@@ -427,7 +427,7 @@ class BuildInfoScreen(Screen):
         self.set = kwargs['settings']
 
         self.l = localization.Localization()
-        self.update_strings()
+        # self.update_strings()
         self.language_button.values = self.l.supported_languages
 
         self.sw_version_label.text = self.set.sw_version

@@ -24,10 +24,11 @@ class Localization(object):
 
     def __init__(self):
 
-        if os.path.exists(self.fast_dictionary_path):
-            self.load_language()
-        else:
-            self.load_in_new_language(self.lang)
+        # if os.path.exists(self.fast_dictionary_path):
+        #     self.load_language()
+        # else:
+            
+        self.load_in_new_language(self.lang)
 
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
