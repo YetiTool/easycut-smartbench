@@ -208,7 +208,7 @@ class JobstartWarningScreen(Screen):
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.sm=kwargs['machine']
+        # self.sm=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
 
