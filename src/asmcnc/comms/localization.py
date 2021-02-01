@@ -1,4 +1,4 @@
-# -*- coding: utf8-*-
+
 import time
 import csv, os
 
@@ -41,7 +41,7 @@ class Localization(object):
         with open(self.complete_foreign_dictionary_path, "r") as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter='\t')
             for lines in csv_reader:
-                self.dictionary[str(lines[self.default_lang]).decode('utf8')] = str(lines[self.lang]).decode('utf8')
+                self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
         print(list(self.dictionary))
         print(self.dictionary.keys())
