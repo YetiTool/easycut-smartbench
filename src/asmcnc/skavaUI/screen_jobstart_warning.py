@@ -78,8 +78,8 @@ Builder.load_string("""
                     size_hint_y: 1
                     BoxLayout:
                         padding: 10
+                        size_hint_x: 0.25
                         Image:
-                            size_hint_x: 0.25
                             keep_ratio: True
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/fire_warning.png"
@@ -126,8 +126,8 @@ Builder.load_string("""
 
                         BoxLayout:
                             padding: 10
+                            size_hint_x: 0.33
                             Image:
-                                size_hint_x: 0.33
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
