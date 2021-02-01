@@ -518,27 +518,18 @@ class CheckingScreen(Screen):
 
     def quit_to_home(self): 
         
-        if self.entry_screen == 'file_loading':
-        
-            if self.job_ok:
-                self.sm.get_screen('home').job_gcode = self.job_gcode
-                self.sm.get_screen('home').job_filename = self.checking_file_name
-                self.sm.get_screen('home').z_datum_reminder_flag = True
-                self.sm.current = 'home'
-                
-            else:         
-                if self.m.s.is_job_streaming:
-                    self.m.s.cancel_stream()
-                                        
-                self.sm.current = 'home'
-                
-        elif self.entry_screen == 'home':
+        if self.job_ok:
+            self.sm.get_screen('home').job_gcode = self.job_gcode
+            self.sm.get_screen('home').job_filename = self.checking_file_name
+            self.sm.get_screen('home').z_datum_reminder_flag = True
+            self.sm.current = 'home'
             
-            if self.job_ok:
-                self.sm.current = 'go'
-                
-            else:
-                self.sm.current = 'home'
+        else:         
+            if self.m.s.is_job_streaming:
+                self.m.s.cancel_stream()
+                                    
+            self.sm.current = 'home'
+
             
     def load_file_now(self):
         self.sm.get_screen('home').job_gcode = self.job_gcode
