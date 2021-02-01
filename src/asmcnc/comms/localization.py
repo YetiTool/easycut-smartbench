@@ -1,7 +1,7 @@
 # -*- coding: utf8-*-
 import time
-import os
-import unicodecsv as csv
+import os, csv
+# import unicodecsv as csv
 
 
 def log(message):
