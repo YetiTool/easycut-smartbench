@@ -273,16 +273,25 @@ Builder.load_string("""
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
+
+                    # canvas:
+                    #     Color:
+                    #         rgba: [1,1,1,1]
+                    #     Rectangle:
+                    #         pos: self.pos
+                    #         size: self.size
+
+
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(35)
-                        width: dp(150)
+                        width: dp(180)
                         # padding: [30,0]
                         ToggleButton:
                             id: more_info_button
                             size_hint: (None,None)
                             height: dp(35)
-                            width: dp(150)
+                            width: dp(180)
                             background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             border: [dp(7.5)]*4
@@ -294,7 +303,7 @@ Builder.load_string("""
                             markup: True
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(190)
+                        height: dp(200)
                         width: dp(210)
                         padding: [0,0]
 
@@ -305,22 +314,15 @@ Builder.load_string("""
                             color: hex('#333333ff')
 
 
-                    Label: 
-                        text: 'Choose language...'
-                        font_size: 18
-                        markup: True
-                        color: hex('#333333ff')
-                        halign: 'left'
-
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(35)
-                        width: dp(150)
+                        width: dp(180)
                         Spinner:
                             id: language_button
                             size_hint: (None,None)
                             height: dp(35)
-                            width: dp(150)
+                            width: dp(180)
                             background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             background_down: ""
                             border: [dp(7.5)]*4
@@ -332,14 +334,10 @@ Builder.load_string("""
                             option_cls: Factory.get("LanguageSpinner")
                             on_text: root.choose_language()
 
-
-
-
-
-                    # BoxLayout: 
-                    #     size_hint: (None, None)
-                    #     height: dp(10)
-                    #     width: dp(210)
+                    BoxLayout: 
+                        size_hint: (None, None)
+                        height: dp(10)
+                        width: dp(210)
 
 
 
