@@ -88,7 +88,7 @@ Builder.load_string("""
                         orientation: 'vertical'
                         size_hint_x: 0.75
                         Label:
-                            size_hint_y: 0.25
+                            size_hint_y: 0.2
                             text: '[color=333333][b]Significant risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
@@ -101,12 +101,12 @@ Builder.load_string("""
                             color: hex('#333333FF')
 
                         Label:
-                            size_hint_y: 0.75
+                            size_hint_y: 0.8
                             halign: 'left'
                             text: root.causes_of_fire
                             markup: True
                             size:self.size
-                            valign: 'middle'
+                            valign: 'bottom'
                             size:self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
