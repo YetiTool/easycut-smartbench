@@ -1,6 +1,7 @@
-
+# -*- coding: utf8-*-
 import time
-import csv, os
+import os
+import unicodecsv as csv
 
 
 def log(message):
@@ -13,8 +14,8 @@ class Localization(object):
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
-    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.txt'
-    fast_dictionary_path = './sb_values/fast_dictionary.txt'
+    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.csv'
+    fast_dictionary_path = './sb_values/fast_dictionary.csv'
 
     default_lang = 'English (GB)'
     lang = default_lang
@@ -32,14 +33,14 @@ class Localization(object):
 
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
-        csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter='\t')
+        csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter=',')
         self.dictionary = (list(csv_reader))[0]
 
     def load_in_new_language(self, language):
         self.lang = language
 
         with open(self.complete_foreign_dictionary_path, "r") as csv_file:
-            csv_reader = csv.DictReader(csv_file, delimiter='\t')
+            csv_reader = csv.DictReader(csv_file, delimiter=',')
             for lines in csv_reader:
                 self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
