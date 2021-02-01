@@ -124,7 +124,7 @@ Builder.load_string("""
                         spacing:20
                         size_hint_x: 0.75
                         Image:
-                            padding: 10
+                            padding: 50
                             size_hint_x: 0.33
                             keep_ratio: True
                             allow_stretch: True                           
