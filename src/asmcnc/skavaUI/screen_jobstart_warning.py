@@ -149,11 +149,11 @@ Builder.load_string("""
                         Label:
                             # size_hint_x: None
                             # width: dp(150)
-                            size_hint_y: 0.2
+                            size_hint_y: 0.18
                             text: '[color=333333][b]Learn More[/b][/color]'
                             markup: True
                             halign: 'center'
-                            font_size: '22sp' 
+                            font_size: '20sp' 
                             markup: True
                             size:self.size
                             valign: 'middle'
