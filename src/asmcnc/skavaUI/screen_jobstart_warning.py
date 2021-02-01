@@ -77,7 +77,7 @@ Builder.load_string("""
                     spacing:20
                     size_hint_y: 1.1
                     BoxLayout:
-                        padding: 10
+                        padding: 15
                         size_hint_x: 0.25
                         Image:
                             keep_ratio: True
@@ -88,7 +88,7 @@ Builder.load_string("""
                         orientation: 'vertical'
                         size_hint_x: 0.75
                         Label:
-                            size_hint_y: 0.15
+                            size_hint_y: 0.2
                             text: '[color=333333][b]Significant risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
@@ -101,7 +101,7 @@ Builder.load_string("""
                             color: hex('#333333FF')
 
                         Label:
-                            size_hint_y: 0.85
+                            size_hint_y: 0.8
                             halign: 'left'
                             text: root.causes_of_fire
                             markup: True
