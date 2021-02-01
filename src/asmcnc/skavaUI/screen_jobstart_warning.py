@@ -203,8 +203,8 @@ class JobstartWarningScreen(Screen):
 
     causes_of_fire = (
         "Common causes of fire:\n"
-        "- Processing combustible materials E.g. woods\n"
-        "- Using dull cutters can produce heat through friction\n"
+        "- Processing combustible materials, e.g. woods\n"
+        "- Using dull cutters which produce heat through friction\n"
         "- Variation in extraction\n"
         )
 
