@@ -78,6 +78,7 @@ Builder.load_string("""
                     size_hint_y: 1
 
                     Image:
+                        padding: 10
                         size_hint_x: 0.25
                         keep_ratio: True
                         allow_stretch: True                           
@@ -123,6 +124,7 @@ Builder.load_string("""
                         spacing:20
                         size_hint_x: 0.75
                         Image:
+                            padding: 10
                             size_hint_x: 0.33
                             keep_ratio: True
                             allow_stretch: True                           
@@ -208,7 +210,7 @@ class JobstartWarningScreen(Screen):
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.sm=kwargs['machine']
+        # self.sm=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
 
