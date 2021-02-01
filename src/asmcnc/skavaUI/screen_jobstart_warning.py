@@ -39,7 +39,6 @@ Builder.load_string("""
 
         BoxLayout:
             padding: 0
-            spacing: 10
             orientation: "vertical"
 
             BoxLayout:
@@ -68,13 +67,14 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(320)
-                padding: [40,20]
+                padding: [40,20,40,0]
                 spacing: 20
                 orientation: 'vertical'
              
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:20
+                    size_hint_y: 1.1
 
                     Image:
                         size_hint_x: 0.25
@@ -115,6 +115,7 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     spacing:20
                     size_hint_x: 1
+                    size_hint_y: 0.9
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -174,17 +175,6 @@ Builder.load_string("""
                 height: dp(80)
                 padding: [dp(250),dp(0), dp(250), dp(20)]
                 orientation: 'horizontal'
-                # Button:
-                #     # size_hint_y: 1.5
-                #     background_color: hex('#FFFFFF00')
-                #     on_press: root.continue_to_go_screen()
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/safety_acceptance_button.png"
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True 
 
                 RoundedButton:
                     size_hint: (None,None)
