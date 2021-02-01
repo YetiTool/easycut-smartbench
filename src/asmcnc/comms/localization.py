@@ -55,4 +55,4 @@ class Localization(object):
             dict_writer.writeheader()
             dict_writer.writerow(self.dictionary)
 
-    supported_languages = ["English", "Deutsche (DE)", "FranÃ§ais (FR)", "Italiano (IT)"]
+    supported_languages = ["English", "Deutsche (DE)", "Français (FR)", "Italiano (IT)"]
