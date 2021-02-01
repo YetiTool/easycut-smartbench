@@ -14,6 +14,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.graphics import Color, Rectangle
 
 import sys, os
 from os.path import expanduser
@@ -25,6 +26,8 @@ from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
+
+#:import hex kivy.utils.get_color_from_hex
 
 <LocalFileChooser>:
 
@@ -40,6 +43,7 @@ Builder.load_string("""
     image_delete_all:image_delete_all
     image_select:image_select
     file_selected_label:file_selected_label
+    usb_status_label:usb_status_label
 
     BoxLayout:
         padding: 0
@@ -52,7 +56,24 @@ Builder.load_string("""
             orientation: 'vertical'
             size: self.parent.size
             pos: self.parent.pos
-            spacing: 10
+            spacing: 0
+
+            Label:
+                id: usb_status_label
+                canvas.before:
+                    Color:
+                        rgba: hex('#333333FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                size_hint_y: 0.7
+                markup: True
+                font_size: '18sp'   
+                valign: 'middle'
+                halign: 'left'
+                text_size: self.size
+                padding: [10, 0]
+                text: "USB connected: Please do not remove USB until file is loaded."
 
             Label:
                 canvas.before:
@@ -68,9 +89,9 @@ Builder.load_string("""
                 font_size: '20sp'   
                 valign: 'middle'
                 halign: 'center' 
-
                             
             FileChooserIconView:
+                padding: [0,10]
                 size_hint_y: 5
                 id: filechooser
                 rootpath: './jobCache/'
@@ -227,8 +248,17 @@ class LocalFileChooser(Screen):
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
+        self.check_for_job_cache_dir()
 
-        
+    def check_for_job_cache_dir(self):
+        if not os.path.exists(job_cache_dir):
+            os.mkdir(job_cache_dir)
+            
+            if not path.exists(job_cache_dir + '.gitignore'):
+                file = open(job_cache_dir + '.gitignore', "w+")
+                file.write('*.nc')
+                file.close()
+
     def on_enter(self):
         
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
@@ -244,23 +274,31 @@ class LocalFileChooser(Screen):
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
+    def on_leave(self):
+        self.usb_status_label.size_hint_y = 0
 
     def check_USB_status(self, dt):
         
         if self.usb_stick.is_available():
             self.button_usb.disabled = False
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-
+            self.sm.get_screen('loading').usb_status_label.opacity = 1
+            self.usb_status_label.size_hint_y = 0.7
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         else:
             self.button_usb.disabled = True
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-        
+            self.usb_status_label.size_hint_y = 0
+            self.sm.get_screen('loading').usb_status = None
+            self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def open_USB(self):
 
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-        #self.manager.transition.direction = 'down'
         self.manager.current = 'usb_filechooser'
         
 

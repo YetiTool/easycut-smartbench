@@ -316,7 +316,6 @@ class DoorScreen(Screen):
                
     def cancel_stream(self):
         if self.return_to_screen == 'go':
-            self.m.s.is_job_streaming = True
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
         else:

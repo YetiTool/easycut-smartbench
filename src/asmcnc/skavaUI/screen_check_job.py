@@ -228,6 +228,9 @@ class CheckingScreen(Screen):
     flag_max_feed_rate = False
     as_high_as = 5000
 
+    flag_spindle_off = True
+
+    serial_function_called = False
     
     def __init__(self, **kwargs):
         super(CheckingScreen, self).__init__(**kwargs)
@@ -239,7 +242,7 @@ class CheckingScreen(Screen):
         
     def on_enter(self):
  
-        self.job_checking_checked = '[b]Getting ready...[/b]'  
+        self.job_checking_checked = 'Getting ready...'  
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.checking_file_name.split("\\")[-1]
@@ -253,7 +256,7 @@ class CheckingScreen(Screen):
             try: self.boundary_check()
             except:
                 self.toggle_boundary_buttons(True)
-                self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+                self.job_checking_checked = 'Cannot Check Job' 
                 self.check_outcome = 'Cannot check job: unable to run boundary check on file. Please make sure file is in recognisable format.'
                 self.job_gcode = []
         
@@ -264,7 +267,7 @@ class CheckingScreen(Screen):
         try: self.check_gcode()
         except:
             self.toggle_boundary_buttons(True)
-            self.job_checking_checked = '[b]Cannot Check Job[/b]' 
+            self.job_checking_checked = 'Cannot Check Job' 
             self.check_outcome = 'Cannot check job: unable to run g-code check on file. Please make sure file is in recognisable format.'
             self.job_gcode = []        
 
@@ -282,7 +285,7 @@ class CheckingScreen(Screen):
 
         else:
             log("Out of bounds...")
-            self.job_checking_checked = '[b]Boundary issue![/b]'
+            self.job_checking_checked = 'Boundary issue!'
             self.toggle_boundary_buttons(False)
             self.check_outcome = '[b]The job would exceed the working volume of the machine in one or more axes. See help notes (right).[/b]'
             self.write_boundary_output(bounds_output)
@@ -382,21 +385,21 @@ class CheckingScreen(Screen):
             self.display_output = ''
             
             if self.m.state() == "Idle":
-                self.job_checking_checked = '[b]Checking job...[/b]'
+                self.job_checking_checked = 'Starting Check...'
                 self.check_outcome = 'Looking for gcode errors...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
                 Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
-                self.job_checking_checked = '[b]Cannot check job[/b]' 
+                self.job_checking_checked = 'Cannot check job' 
                 self.check_outcome = 'Cannot check job: machine is not idle. Please ensure machine is in idle state before attempting to re-load the file.'
                 self.job_gcode = []
                 # self.quit_button.disabled = False
 
             
         else:
-            self.job_checking_checked = '[b]Cannot check job[/b]'
+            self.job_checking_checked = 'Cannot check job'
             self.check_outcome = 'Cannot check job: no serial connection. Please ensure your machine is connected, and re-load the file.'
             self.job_gcode = []
             # self.quit_button.disabled = False
@@ -405,14 +408,20 @@ class CheckingScreen(Screen):
      
     def check_grbl_stream(self, objectifile, dt):
 
-        #utilise check_job from serial_conn
-        self.m.s.check_job(objectifile)
+        # because this is called by a clock function,
+        # so put this check in just in case the user exits the screen prior to this
+        if self.sm.current == 'check_job':
 
-        self.poll_for_gcode_check_progress(0)
-        self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 1)
-        
-        # display the error log when it's filled - setting up the event makes it easy to unschedule
-        self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
+            self.serial_function_called = True
+
+            # utilise check_job from serial_conn
+            self.m.s.check_job(objectifile)
+
+            # self.poll_for_gcode_check_progress(0)
+            self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_gcode_check_progress, 0.6)
+            
+            # display the error log when it's filled - setting up the event makes it easy to unschedule
+            self.error_out_event = Clock.schedule_interval(partial(self.get_error_log),0.1)
 
 
     def poll_for_gcode_check_progress(self, dt):
@@ -427,23 +436,19 @@ class CheckingScreen(Screen):
         if self.error_log != []:
             Clock.unschedule(self.error_out_event)
             if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
-
-            # There is a $C on each end of the job object; these two lines just strip of the associated 'ok's        
-#             del self.error_log[0]
-#             del self.error_log[(len(self.error_log)-1)]
             
             # If 'error' is found in the error log, tell the user
             if any('error' in listitem for listitem in self.error_log):
 
-                self.job_checking_checked = '[b]Errors found![/b]'
+                self.job_checking_checked = 'Errors found!'
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = 'Errors found in G-code.\n\nPlease review your job before attempting to re-load it.'
                 elif self.entry_screen == 'home':
                     self.check_outcome = 'Errors found in G-code.\n\nPlease review and re-load your job before attempting to run it.'
                 self.job_ok = False
 
-            elif self.flag_min_feed_rate or self.flag_max_feed_rate:
-                self.job_checking_checked = '[b]Advisories[/b]'
+            elif self.flag_min_feed_rate or self.flag_max_feed_rate or self.flag_spindle_off:
+                self.job_checking_checked = 'Advisories'
                 self.check_outcome = 'This file will run, but it might not run in the way you expect.\n\n' + \
                                     'Please review your job before running it.'
                 self.job_ok = True
@@ -452,7 +457,7 @@ class CheckingScreen(Screen):
                 self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = True
 
             else:
-                self.job_checking_checked = '[b]File is OK![/b]'
+                self.job_checking_checked = 'File is OK!'
                 self.check_outcome =  'No errors found. You\'re good to go!'
                 self.job_ok = True
                 
@@ -473,7 +478,16 @@ class CheckingScreen(Screen):
 
         self.display_output = ''
 
-        ## PUT FEED/SPEED MIN/MAXES HERE: 
+        ## SPINDLE WARNING:
+
+        if self.flag_spindle_off:
+            self.display_output = self.display_output + '[color=#FFFFFF][b]SPINDLE WARNING[/b][/color]\n\n'
+            self.display_output = self.display_output + '[color=#FFFFFF]This file has no command to turn the spindle on.[/color]\n\n' + \
+                                '[color=#FFFFFF]This may be intended behaviour, but if you are trying to do a cut ' + \
+                                'you should review your file before trying to run it![/color]\n\n'
+
+
+        ## FEED/SPEED MIN/MAXES HERE: 
 
         if self.flag_max_feed_rate or self.flag_min_feed_rate:
             self.display_output = self.display_output + '[color=#FFFFFF][b]FEED RATE WARNING[/b][/color]\n\n'
@@ -516,18 +530,29 @@ class CheckingScreen(Screen):
 
 ## EXITING SCREEN
 
+    def stop_check_in_serial(self, pass_no):
+
+        check_again = False
+        pass_no += 1
+
+        if self.m.s.check_streaming_started:
+            if self.m.s.is_job_streaming: self.m.s.cancel_stream()
+            else: check_again = True
+
+        elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again): self.m.disable_check_mode()
+
+        if check_again or (pass_no < 3): Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 1)
+
     def quit_to_home(self): 
         
         if self.job_ok:
             self.sm.get_screen('home').job_gcode = self.job_gcode
             self.sm.get_screen('home').job_filename = self.checking_file_name
             self.sm.get_screen('home').z_datum_reminder_flag = True
-            
-        else:         
-            if self.m.s.is_job_streaming:
-                self.m.s.cancel_stream()
-                                    
-        self.sm.current = 'home'
+            self.sm.current = 'home'
+
+        else:            
+            self.sm.current = 'home'
 
             
     def load_file_now(self):
@@ -537,9 +562,10 @@ class CheckingScreen(Screen):
         self.sm.current = 'home'       
     
     def on_leave(self, *args):
-        # self.quit_button.disabled = True
-        if self.error_out_event != None: 
-            Clock.unschedule(self.error_out_event)
+        if self.serial_function_called: 
+            self.stop_check_in_serial(0)
+            self.serial_function_called = False
+        if self.error_out_event != None: Clock.unschedule(self.error_out_event)
         self.job_gcode = []
         self.checking_file_name = ''
         self.job_checking_checked = ''
@@ -550,9 +576,8 @@ class CheckingScreen(Screen):
         self.as_low_as = 100
         self.flag_max_feed_rate = False
         self.as_high_as = 5000
+        self.flag_spindle_off = True
         self.error_log = []
-        if self.m.s.is_job_streaming:
-            self.m.s.cancel_stream()
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
 

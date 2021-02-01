@@ -68,7 +68,7 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.5.2'
+initial_version = 'v1.5.3-beta'
 
 # default starting screen
 start_screen = 'welcome'
