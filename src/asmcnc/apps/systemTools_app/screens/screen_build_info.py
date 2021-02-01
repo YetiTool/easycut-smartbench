@@ -32,6 +32,7 @@ Builder.load_string("""
 <BuildInfoScreen>
 
     header: header
+    
 
     sw_version_label: sw_version_label
     pl_version_label: pl_version_label
