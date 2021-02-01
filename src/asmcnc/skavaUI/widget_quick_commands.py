@@ -188,7 +188,7 @@ class QuickCommands(Widget):
             if self.m.fw_can_operate_zUp_on_pause():
                 self.sm.current = 'lift_z_on_pause_or_not'
             else:
-                self.sm.current = 'go'
+                self.sm.current = 'jobstart_warning'
 
 
 
