@@ -23,11 +23,10 @@ class Localization(object):
 
     def __init__(self):
 
-        # if os.path.exists(self.fast_dictionary_path):
-        #     self.load_language()
-        # else:
-            
-        self.load_in_new_language(self.lang)
+        if os.path.exists(self.fast_dictionary_path):
+            self.load_language()
+        else:
+            self.load_in_new_language(self.lang)
 
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
@@ -42,9 +41,7 @@ class Localization(object):
             for lines in csv_reader:
                 self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
 
-        print(list(self.dictionary))
-        print(self.dictionary.keys())
-        # self.save_fast_dictionary()
+        self.save_fast_dictionary()
 
         # still need to make language chosen persistent and save it
 
