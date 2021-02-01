@@ -67,8 +67,8 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(320)
-                padding: [40,20,40,0]
+                height: dp(300)
+                padding: [40,20,40,20]
                 spacing: 20
                 orientation: 'vertical'
              
@@ -208,7 +208,7 @@ class JobstartWarningScreen(Screen):
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        # self.sm=kwargs['machine']
+        self.sm=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
 
