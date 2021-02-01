@@ -1,0 +1,11 @@
+English	Deutsche (DE)	Français (FR)	Italiano (IT)
+System Information	System Information	Informations sur le système	Informazioni di sistema
+Serial number	Ordnungsnummer	Numéro de série	Numero di serie
+Console serial number	Konsole Seriennummer	Console numéro de série	numero di serie console
+Software	Software	Logiciel	Software
+Platform	Plattform	Plate-forme	piattaforma
+Firmware	Firmware	firmware	firmware
+Z head	Z Kopf	tête Z	testa Z
+Hardware	Hardware	Matériel	Hardware
+More info	Mehr Info	Plus d'informations	Ulteriori informazioni
+Choose language	Sprache wählen	Choisissez la langue	Scegli la lingua

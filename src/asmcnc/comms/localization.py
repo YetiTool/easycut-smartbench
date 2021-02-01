@@ -1,5 +1,7 @@
+# -*- coding: utf8-*-
 import time
 import csv, os
+
 
 def log(message):
     timestamp = datetime.now()
@@ -11,7 +13,7 @@ class Localization(object):
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
-    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.csv'
+    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.txt'
     fast_dictionary_path = './sb_values/fast_dictionary.txt'
 
     default_lang = 'English (GB)'
@@ -29,16 +31,16 @@ class Localization(object):
 
     def load_language(self):
         # I hope this will work in the way I expect, but can't be sure until it's tested
-        csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter=',')
+        csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter='\t')
         self.dictionary = (list(csv_reader))[0]
 
     def load_in_new_language(self, language):
         self.lang = language
 
         with open(self.complete_foreign_dictionary_path, "r") as csv_file:
-            csv_reader = csv.DictReader(csv_file, delimiter=',')
+            csv_reader = csv.DictReader(csv_file, delimiter='\t')
             for lines in csv_reader:
-                self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
+                self.dictionary[str(lines[self.default_lang]).decode('utf8')] = str(lines[self.lang]).decode('utf8')
 
         self.save_fast_dictionary()
 
@@ -51,4 +53,4 @@ class Localization(object):
             dict_writer.writeheader()
             dict_writer.writerow(self.dictionary)
 
-    supported_languages = ['English (GB)', 'Korean (KOR)', 'German (DE)', 'French (FR)', 'Italian (IT)']
+    supported_languages = ["English", "Deutsche (DE)", "Français (FR)", "Italiano (IT)"]

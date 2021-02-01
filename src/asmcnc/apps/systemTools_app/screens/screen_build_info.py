@@ -32,7 +32,14 @@ Builder.load_string("""
 <BuildInfoScreen>
 
     header: header
-    
+    serial_number_header: serial_number_header
+    console_serial_number_header: console_serial_number_header
+    software_header: software_header
+    platform_header: platform_header
+    firmware_header: firmware_header
+    zhead_header: zhead_header
+    hardware_header: hardware_header
+    language_button: language_button
 
     sw_version_label: sw_version_label
     pl_version_label: pl_version_label
@@ -81,7 +88,6 @@ Builder.load_string("""
                     halign: "center"
                     valign: "bottom"
                     markup: True
-                    font: 'DejaVuSans'
                    
                     
             BoxLayout:
@@ -127,6 +133,7 @@ Builder.load_string("""
                         #     markup: True
                         #     font_size: 20
                         Label:
+                            id: serial_number_header
                             text: '[b]Serial number[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -145,6 +152,7 @@ Builder.load_string("""
                             font_size: 20
 
                         Label:
+                            id: console_serial_number_header
                             text: '[b]Console serial number[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -162,6 +170,7 @@ Builder.load_string("""
                             markup: True
                             font_size: 20
                         Label: 
+                            id: software_header
                             text: '[b]Software[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -180,6 +189,7 @@ Builder.load_string("""
                             markup: 'True'
                             font_size: 20
                         Label: 
+                            id: platform_header
                             text: '[b]Platform[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -198,6 +208,7 @@ Builder.load_string("""
                             markup: 'True'
                             font_size: 20
                         Label: 
+                            id: firmware_header
                             text: '[b]Firmware[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -216,6 +227,7 @@ Builder.load_string("""
                             markup: 'True'
                             font_size: 20
                         Label: 
+                            id: zhead_header
                             text: '[b]Z head[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -234,6 +246,7 @@ Builder.load_string("""
                             markup: 'True'
                             font_size: 20
                         Label: 
+                            id: hardware_header
                             text: '[b]Hardware[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
@@ -504,5 +517,13 @@ class BuildInfoScreen(Screen):
         # self.language_list = self.l.supported_languages
         self.more_info_button.text = str(self.l.dictionary['More info']) + '...'
         self.header.text = str(self.l.dictionary['System Information'])
+        self.serial_number_header.text = str(self.l.dictionary['Serial number'])
+        self.console_serial_number_header.text = str(self.l.dictionary['Console serial number'])
+        self.software_header.text = str(self.l.dictionary['Software'])
+        self.platform_header.text = str(self.l.dictionary['Platform'])
+        self.firmware_header.text = str(self.l.dictionary['Firmware'])
+        self.zhead_header.text = str(self.l.dictionary['Z head'])
+        self.hardware_header.text = str(self.l.dictionary['Hardware'])
+        self.language_button.text = str(self.l.dictionary['Choose language'])
 
 
