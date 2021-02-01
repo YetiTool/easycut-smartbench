@@ -68,7 +68,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(320)
-                padding: [40,20,40,20]
+                padding: [40,20,40,0]
                 spacing: 20
                 orientation: 'vertical'
              
@@ -173,13 +173,13 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(80)
+                height: dp(100)
                 padding: [dp(250),dp(0), dp(250), dp(20)]
                 orientation: 'horizontal'
 
                 RoundedButton:
                     size_hint: (None,None)
-                    height: dp(60)
+                    height: dp(80)
                     width: dp(300)
                     center: self.parent.center
                     pos: self.parent.pos
