@@ -76,13 +76,13 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     spacing:20
                     size_hint_y: 1
-
-                    Image:
+                    BoxLayout:
                         padding: 10
-                        size_hint_x: 0.25
-                        keep_ratio: True
-                        allow_stretch: True                           
-                        source: "./asmcnc/skavaUI/img/fire_warning.png"
+                        Image:
+                            size_hint_x: 0.25
+                            keep_ratio: True
+                            allow_stretch: True                           
+                            source: "./asmcnc/skavaUI/img/fire_warning.png"
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -123,12 +123,14 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         spacing:20
                         size_hint_x: 0.75
-                        Image:
-                            padding: 50
-                            size_hint_x: 0.33
-                            keep_ratio: True
-                            allow_stretch: True                           
-                            source: "./asmcnc/skavaUI/img/never_unattended.png"
+
+                        BoxLayout:
+                            padding: 10
+                            Image:
+                                size_hint_x: 0.33
+                                keep_ratio: True
+                                allow_stretch: True                           
+                                source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
                             size_hint_x: 0.67
