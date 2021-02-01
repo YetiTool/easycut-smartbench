@@ -92,7 +92,7 @@ Builder.load_string("""
                             text: '[color=333333][b]Significant risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
-                            font_size: '26sp' 
+                            font_size: '24sp' 
                             markup: True
                             size:self.size
                             valign: 'top'
@@ -111,7 +111,7 @@ Builder.load_string("""
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
-                            font_size: '22sp' 
+                            font_size: '20sp' 
 
                 BoxLayout:
                     orientation: 'horizontal'
