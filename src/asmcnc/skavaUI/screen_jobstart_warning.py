@@ -138,7 +138,7 @@ Builder.load_string("""
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
                                 halign: 'left'
-                                font_size: '30sp' 
+                                font_size: '32sp' 
                                 markup: True
                                 size:self.size
                                 valign: 'middle'
