@@ -92,7 +92,7 @@ Builder.load_string("""
                             text: '[color=333333][b]Significant risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
-                            font_size: '27sp' 
+                            font_size: '26sp' 
                             markup: True
                             size:self.size
                             valign: 'top'
