@@ -77,7 +77,7 @@ Builder.load_string("""
                     spacing:20
                     size_hint_y: 1.1
                     BoxLayout:
-                        padding: 15
+                        padding: 20
                         size_hint_x: 0.25
                         Image:
                             keep_ratio: True
@@ -137,7 +137,7 @@ Builder.load_string("""
                             Label:
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
-                                halign: 'left'
+                                halign: 'middle'
                                 font_size: '26sp' 
                                 markup: True
                                 size:self.size
