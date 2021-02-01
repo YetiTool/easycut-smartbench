@@ -42,6 +42,8 @@ class Localization(object):
             for lines in csv_reader:
                 self.dictionary[str(lines[self.default_lang]).decode('utf8')] = str(lines[self.lang]).decode('utf8')
 
+        print(list(self.dictionary))
+        print(self.dictionary.keys())
         self.save_fast_dictionary()
 
         # still need to make language chosen persistent and save it
