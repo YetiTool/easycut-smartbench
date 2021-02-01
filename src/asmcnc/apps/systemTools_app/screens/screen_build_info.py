@@ -28,6 +28,7 @@ Builder.load_string("""
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
+    font_size: 18
 
 <BuildInfoScreen>
 
@@ -293,7 +294,7 @@ Builder.load_string("""
                             markup: True
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(200)
+                        height: dp(190)
                         width: dp(210)
                         padding: [0,0]
 
@@ -302,6 +303,14 @@ Builder.load_string("""
                             text: ''
                             opacity: 0
                             color: hex('#333333ff')
+
+
+                    Label: 
+                        text: 'Choose language...'
+                        font_size: 18
+                        markup: True
+                        color: hex('#333333ff')
+                        halign: 'left'
 
                     BoxLayout: 
                         size_hint: (None, None)
@@ -327,10 +336,10 @@ Builder.load_string("""
 
 
 
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(10)
-                        width: dp(210)
+                    # BoxLayout: 
+                    #     size_hint: (None, None)
+                    #     height: dp(10)
+                    #     width: dp(210)
 
 
 
@@ -515,6 +524,7 @@ class BuildInfoScreen(Screen):
 
     def update_strings(self):
         # self.language_list = self.l.supported_languages
+        self.language_button.text = str(self.l.lang)
         self.more_info_button.text = str(self.l.dictionary['More info']) + '...'
         self.header.text = str(self.l.dictionary['System Information'])
         self.serial_number_header.text = str(self.l.dictionary['Serial number'])
@@ -524,6 +534,6 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = str(self.l.dictionary['Firmware'])
         self.zhead_header.text = str(self.l.dictionary['Z head'])
         self.hardware_header.text = str(self.l.dictionary['Hardware'])
-        # self.language_button.text = str(self.l.dictionary['Choose language'])
+
 
 

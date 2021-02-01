@@ -44,7 +44,7 @@ class Localization(object):
 
         print(list(self.dictionary))
         print(self.dictionary.keys())
-        self.save_fast_dictionary()
+        # self.save_fast_dictionary()
 
         # still need to make language chosen persistent and save it
 
@@ -55,4 +55,4 @@ class Localization(object):
             dict_writer.writeheader()
             dict_writer.writerow(self.dictionary)
 
-    supported_languages = ["English", "Deutsche (DE)", "Francais (FR)", "Italiano (IT)"]
+    supported_languages = ["English (GB)", "Deutsche (DE)", "Francais (FR)", "Italiano (IT)"]
