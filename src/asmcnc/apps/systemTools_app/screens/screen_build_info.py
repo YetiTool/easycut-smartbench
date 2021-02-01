@@ -524,6 +524,6 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = str(self.l.dictionary['Firmware'])
         self.zhead_header.text = str(self.l.dictionary['Z head'])
         self.hardware_header.text = str(self.l.dictionary['Hardware'])
-        self.language_button.text = str(self.l.dictionary['Choose language'])
+        # self.language_button.text = str(self.l.dictionary['Choose language'])
 
 
