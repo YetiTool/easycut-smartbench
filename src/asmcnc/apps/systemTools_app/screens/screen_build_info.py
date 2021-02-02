@@ -434,7 +434,7 @@ class BuildInfoScreen(Screen):
         self.set = kwargs['settings']
 
         self.l = localization.Localization()
-        # self.update_strings()
+        self.update_strings()
         self.language_button.values = self.l.supported_languages
 
         self.sw_version_label.text = self.set.sw_version
@@ -521,7 +521,6 @@ class BuildInfoScreen(Screen):
         self.update_strings()
 
     def update_strings(self):
-        # self.language_list = self.l.supported_languages
         self.language_button.text = str(self.l.lang)
         self.more_info_button.text = str(self.l.dictionary['More info']) + '...'
         self.header.text = str(self.l.dictionary['System Information'])
