@@ -17,16 +17,16 @@ Builder.load_string("""
 
 <SystemMenuScreen>
 
-    system_info : system_info 
-    download_logs: download_logs
-    reboot: reboot
-    exit_software: exit_software
-    beta_testing: beta_testing
-    grbl_settings: grbl_settings
-    factory: factory
-    update_testing: update_testing
-    developer: developer
-    go_back: go_back
+    button_system_info: button_system_info 
+    button_download_logs: button_download_logs
+    button_reboot: button_reboot
+    button_exit_software: button_exit_software
+    button_beta_testing: button_beta_testing
+    button_grbl_settings: button_grbl_settings
+    button_factory: button_factory
+    button_update_testing: button_update_testing
+    button_developer: button_developer
+    button_go_back: button_go_back
 
     canvas.before:
         Color: 
@@ -44,12 +44,12 @@ Builder.load_string("""
         rows: 2
 
 		Button:
-            id: system_info
+            id: button_system_info
 			text: 'System Info'
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
 			on_press: root.go_to_build_info()
             background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
@@ -58,13 +58,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: download_logs
+            id: button_download_logs
 			text: 'Download Logs'
 			on_press: root.download_logs()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
@@ -72,13 +72,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: reboot
+            id: button_reboot
 			text: 'Reboot'
 			on_press: root.reboot()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
@@ -86,13 +86,13 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            id: exit_software
+            id: button_exit_software
             text: 'Exit Software'
             on_press: root.quit_to_console()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
@@ -100,13 +100,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: beta_testing
+            id: button_beta_testing
 			text: 'Beta Testing'
 			on_press: root.beta_testing()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
@@ -114,13 +114,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: grbl_settings
+            id: button_grbl_settings
 			text: 'GRBL Settings'
 			on_press: root.grbl_settings()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
@@ -128,13 +128,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: factory
+            id: button_factory
 			text: 'Factory'
 			on_press: root.factory_settings()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
@@ -142,13 +142,13 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            id: update_testing
+            id: button_update_testing
             text: 'Update Testing'
             on_press: root.update_testing()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
@@ -156,13 +156,13 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
-            id: developer
+            id: button_developer
 			text: 'Developer'
 			on_press: root.developer()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
@@ -170,13 +170,13 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            id: go_back
+            id: button_go_back
             text: 'Go Back'
             on_press: root.go_back()
             valign: "bottom"
             halign: "center"
             markup: True
-            font_size: '16sp'
+            font_size: root.default_font_size
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
@@ -187,6 +187,8 @@ Builder.load_string("""
 
 class SystemMenuScreen(Screen):
 
+    default_font_size = 16
+
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -194,8 +196,8 @@ class SystemMenuScreen(Screen):
 
     def on_pre_enter(self):
         # check if language is up to date, if it isn't update all screen strings
-        if self.download_logs.text != str(self.l.dictionary['Download Logs']):
-            self.update_strings()
+        # if self.download_logs.text != str(self.l.dictionary['Download Logs']):
+        self.update_strings()
 
     def go_back(self):
     	self.systemtools_sm.exit_app()
@@ -227,19 +229,25 @@ class SystemMenuScreen(Screen):
     def developer(self):
     	popup_system.PopupDeveloperPassword(self.systemtools_sm)
 
-
     def update_strings(self):
-        self.system_info.text = str(self.l.dictionary['System Info'])
-        self.download_logs.text = str(self.l.dictionary['Download Logs'])
-        self.reboot.text = str(self.l.dictionary['Reboot'])
-        self.exit_software.text = str(self.l.dictionary['Exit Software'])
-        self.beta_testing.text = str(self.l.dictionary['Beta Testing'])
-        self.grbl_settings.text = str(self.l.dictionary['GRBL Settings'])
-        self.factory.text = str(self.l.dictionary['Factory'])
-        self.update_testing.text = str(self.l.dictionary['Update Testing'])
-        self.developer.text = str(self.l.dictionary['Developer'])
-        self.go_back.text = str(self.l.dictionary['Go Back'])
+        self.button_system_info.text = str(self.l.dictionary['System Info'])
+        self.update_font_size(self.button_system_info)
+        self.button_download_logs.text = str(self.l.dictionary['Download Logs'])
+        self.update_font_size(self.button_download_logs)
+        self.button_reboot.text = str(self.l.dictionary['Reboot'])
+        self.button_exit_software.text = str(self.l.dictionary['Exit Software'])
+        self.button_beta_testing.text = str(self.l.dictionary['Beta Testing'])
+        self.button_grbl_settings.text = str(self.l.dictionary['GRBL Settings'])
+        self.button_factory.text = str(self.l.dictionary['Factory'])
+        self.button_update_testing.text = str(self.l.dictionary['Update Testing'])
+        self.button_developer.text = str(self.l.dictionary['Developer'])
+        self.button_go_back.text = str(self.l.dictionary['Go Back'])
 
+    def update_font_size(self, value):
+        if len(value.text) > 18: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 24: 
+            value.font_size = self.default_font_size - 4
 
 
 
