@@ -32,6 +32,7 @@ from asmcnc.comms import router_machine  # @UnresolvedImport
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
+from asmcnc.comms import localization
 
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport

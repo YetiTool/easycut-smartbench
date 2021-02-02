@@ -13,8 +13,6 @@ from kivy.uix.spinner import Spinner, SpinnerOption
 
 from asmcnc.skavaUI import popup_info
 
-from asmcnc.comms import localization
-
 Builder.load_string("""
 
 #:import Factory kivy.factory.Factory
