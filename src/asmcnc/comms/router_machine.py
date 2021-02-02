@@ -60,7 +60,7 @@ class RouterMachine(object):
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
 
-    ## LOCALIZATION     # ## LOCALIZATION
+    ## LOCALIZATION
     persistent_language_path = '/home/pi/easycut-smartbench/src/sb_values/user_language.txt'
 
     ## PROBE SETTINGS
