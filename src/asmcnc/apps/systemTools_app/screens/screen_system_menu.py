@@ -268,12 +268,11 @@ class SystemMenuScreen(Screen):
             self.update_font_size(id_object)
 
     def update_font_size(self, value):
-        if len(value.text) < 19:
+        if len(value.text) < 16:
             value.font_size = self.default_font_size
-        elif len(value.text) > 18: 
+        elif len(value.text) > 15: 
             value.font_size = self.default_font_size - 2
-
-        if len(value.text) > 24: 
+        if len(value.text) > 20: 
             value.font_size = self.default_font_size - 4
 
 
