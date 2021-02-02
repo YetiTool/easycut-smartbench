@@ -138,10 +138,13 @@ class SkavaUI(App):
             
             # Initialise settings object
             sett = settings_manager.Settings(sm)
-            
+
+            # Localization/language object
+            l = localization.Localization()
+                        
             # App manager object
-            am = app_manager.AppManagerClass(sm, m, sett)
-            
+            am = app_manager.AppManagerClass(sm, m, sett, l)
+
             # initialise the screens
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)

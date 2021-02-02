@@ -21,11 +21,12 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings):
+    def __init__(self, screen_manager, machine, settings, localization):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
+        self.l = localization
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)

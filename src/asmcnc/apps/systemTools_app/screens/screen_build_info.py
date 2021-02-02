@@ -433,7 +433,6 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
 
-        self.l = localization.Localization()
         self.update_strings()
         self.language_button.values = self.l.supported_languages
 
