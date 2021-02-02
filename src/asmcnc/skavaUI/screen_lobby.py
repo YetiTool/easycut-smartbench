@@ -31,7 +31,7 @@ Builder.load_string("""
     pro_app_label: pro_app_label
     shapecutter_app_label: shapecutter_app_label
     wifi_app_label: wifi_app_label
-    calibrate_app_label: calibratlabel
+    calibrate_app_label: calibrate_app_label
     update_app_label: update_app_label
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
