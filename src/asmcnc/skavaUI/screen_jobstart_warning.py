@@ -125,14 +125,14 @@ Builder.load_string("""
 
                         BoxLayout:
                             padding: 0
-                            size_hint_x: 0.33
+                            size_hint_x: 0.34
                             Image:
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
-                            size_hint_x: 0.67
+                            size_hint_x: 0.66
                             Label:
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
