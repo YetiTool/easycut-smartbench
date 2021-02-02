@@ -125,7 +125,7 @@ Builder.load_string("""
                         size_hint_x: 0.75
 
                         BoxLayout:
-                            padding: -5
+                            padding: 0
                             size_hint_x: 0.33
                             Image:
                                 keep_ratio: True
