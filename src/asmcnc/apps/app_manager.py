@@ -30,12 +30,11 @@ class AppManagerClass(object):
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
-        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set)
+        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
         self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m)
 
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm)
         self.sm.add_widget(wifi_screen)
-        
 
     # here are all the functions that might be called in the lobby e.g. 
     
@@ -76,7 +75,6 @@ class AppManagerClass(object):
 
         self.sm.get_screen('maintenance').landing_tab = landing_tab
         self.sm.current = 'maintenance'
-
 
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
