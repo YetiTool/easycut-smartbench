@@ -89,10 +89,10 @@ Builder.load_string("""
                         size_hint_x: 0.75
                         Label:
                             size_hint_y: 0.2
-                            text: '[color=333333][b]Significant risk of fire[/b][/color]'
+                            text: '[color=333333][b]Risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
-                            font_size: '26sp' 
+                            font_size: '32sp' 
                             markup: True
                             size:self.size
                             valign: 'top'
@@ -115,7 +115,6 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:20
                     size_hint_x: 1
                     size_hint_y: 0.9
 
@@ -126,14 +125,14 @@ Builder.load_string("""
 
                         BoxLayout:
                             padding: 0
-                            size_hint_x: 0.33
+                            size_hint_x: 0.34
                             Image:
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
-                            size_hint_x: 0.67
+                            size_hint_x: 0.66
                             Label:
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
