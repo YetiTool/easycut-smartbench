@@ -20,3 +20,10 @@ Factory	Fabrik	Usine	Fabbrica
 Update Testing	Update Testing	Mise a jour d'essai	Test di Aggiornamento
 Developer	Entwickler	Developpeur	Sviluppatore
 Go Back	Geh Zuruck	Retourner	Torna Indietro
+CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM
+Shape Cutter	Form Cutter	Cutter Shape	Cutter di Forma
+Wifi	W-lan	Wifi	Wi-Fi
+Calibrate	Kalibrieren	Etalonner	Calibrare
+Update	Aktualisieren	Mise a Jour	Aggiornare
+Maintenance	Instandhaltung	Entretien	Manutenzione
+System Tools	System Tools	Outils Systeme	Strumenti di Sistema

@@ -210,8 +210,8 @@ class SystemMenuScreen(Screen):
 
     def on_pre_enter(self):
         # check if language is up to date, if it isn't update all screen strings
-        # if self.download_logs.text != str(self.l.dictionary['Download Logs']):
-        self.update_strings()
+        if self.download_logs.text != str(self.l.dictionary['Download Logs']):
+            self.update_strings()
 
     def go_back(self):
     	self.systemtools_sm.exit_app()

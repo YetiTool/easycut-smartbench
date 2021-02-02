@@ -28,6 +28,15 @@ Builder.load_string("""
 
     carousel:carousel
 
+    pro_app_label: pro_app_label
+    shapecutter_app_label: shlabelter_app_label
+    wifi_app_label: wifi_app_label
+    calibrate_app_label: calibratlabel
+    update_app_label: update_app_label
+    maintenance_app_label: maintenance_app_label
+    system_tools_app_label: system_tools_app_label
+
+
     canvas.before:
         Color: 
             rgba: hex('#0d47a1FF')
@@ -81,7 +90,6 @@ Builder.load_string("""
     
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -101,6 +109,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: pro_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'CAD / CAM'
@@ -113,6 +122,7 @@ Builder.load_string("""
                     spacing: 20
                                              
                     Button:
+                        
                         disabled: False
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
@@ -133,6 +143,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: shapecutter_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Shape Cutter'
@@ -150,7 +161,6 @@ Builder.load_string("""
     
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -170,6 +180,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: wifi_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Wifi'
@@ -182,7 +193,6 @@ Builder.load_string("""
     
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -202,6 +212,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: calibrate_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Calibrate'
@@ -220,7 +231,6 @@ Builder.load_string("""
     
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -240,6 +250,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: update_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Update'
@@ -252,7 +263,6 @@ Builder.load_string("""
     
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -272,6 +282,7 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: maintenance_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'Maintenance'
@@ -289,7 +300,6 @@ Builder.load_string("""
                 
                     Button:
                         size_hint_y: 8
-                        id: load_button
                         disabled: False
                         background_color: hex('#FFFFFF00')
                         on_release: 
@@ -309,42 +319,11 @@ Builder.load_string("""
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True 
                     Label:
+                        id: system_tools_app_label
                         size_hint_y: 1
                         font_size: '25sp'
                         text: 'System Tools'
                         markup: True
-
-                # BoxLayout:
-                #     orientation: 'vertical'
-                #     size_hint_x: 1
-                #     spacing: 20
-    
-                #     Button:
-                #         size_hint_y: 8
-                #         id: load_button
-                #         disabled: False
-                #         background_color: hex('#FFFFFF00')
-                #         on_release: 
-                #             self.background_color = hex('#FFFFFF00')
-                #         on_press:
-                #             root.developer_app()
-                #             self.background_color = hex('#FFFFFF00')
-                #         BoxLayout:
-                #             padding: 0
-                #             size: self.parent.size
-                #             pos: self.parent.pos
-                #             Image:
-                #                 id: image_select
-                #                 source: "./asmcnc/skavaUI/img/lobby_developer.png"
-                #                 center_x: self.parent.center_x
-                #                 center_y: self.parent.center_y
-                #                 size: self.parent.width, self.parent.height
-                #                 allow_stretch: True 
-                #     Label:
-                #         size_hint_y: 1
-                #         font_size: '25sp'
-                #         text: 'DUMMY'
-                #         markup: True
                        
         BoxLayout:
             size_hint_y: 6
@@ -446,7 +425,12 @@ class LobbyScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.am=kwargs['app_manager']
+        self.l=kwargs['localization']
 # FLAG
+    def on_pre_enter(self):
+        if self.update_app_label.text != self.l.dictionary['Update']:
+            self.update_strings()
+
     def on_enter(self):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
@@ -493,3 +477,28 @@ class LobbyScreen(Screen):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
             os.system('sudo shutdown -h')
         popup_info.PopupShutdown(self.sm)
+
+
+    def update_strings(self):
+        self.pro_app_label.text = self.l.dictionary['CAD / CAM']
+        self.shapecutter_app_label.text = self.l.dictionary['Shape Cutter']
+        self.wifi_app_label.text = self.l.dictionary['Wifi']
+        self.calibrate_app_label.text = self.l.dictionary['Calibrate']
+        self.update_app_label.text = self.l.dictionary['Update']
+        self.maintenance_app_label.text = self.l.dictionary['Maintenance']
+        self.system_tools_app_label.text = self.l.dictionary['System Tools']
+
+
+
+    #     for id_object in self.id_list:
+    #         self.update_font_size(id_object)
+
+    # def update_font_size(self, value):
+    #     if len(value.text) < 16:
+    #         value.font_size = self.default_font_size
+    #     elif len(value.text) > 15: 
+    #         value.font_size = self.default_font_size - 2
+    #     if len(value.text) > 20: 
+    #         value.font_size = self.default_font_size - 4
+    #     if len(value.text) > 22: 
+    #         value.font_size = self.default_font_size - 5
