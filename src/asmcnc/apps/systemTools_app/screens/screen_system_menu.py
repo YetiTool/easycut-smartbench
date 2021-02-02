@@ -274,6 +274,8 @@ class SystemMenuScreen(Screen):
             value.font_size = self.default_font_size - 2
         if len(value.text) > 20: 
             value.font_size = self.default_font_size - 4
+        if len(value.text) > 22: 
+            value.font_size = self.default_font_size - 5
 
 
 
