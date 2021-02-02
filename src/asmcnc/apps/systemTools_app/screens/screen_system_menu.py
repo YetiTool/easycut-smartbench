@@ -17,6 +17,17 @@ Builder.load_string("""
 
 <SystemMenuScreen>
 
+    system_info : system_info 
+    download_logs: download_logs
+    reboot: reboot
+    exit_software: exit_software
+    beta_testing: beta_testing
+    grbl_settings: grbl_settings
+    factory: factory
+    update_testing: update_testing
+    developer: developer
+    go_back: go_back
+
     canvas.before:
         Color: 
             rgba: hex('#f9f9f9ff')
@@ -33,6 +44,7 @@ Builder.load_string("""
         rows: 2
 
 		Button:
+            id: system_info
 			text: 'System Info'
             valign: "bottom"
             halign: "center"
@@ -46,6 +58,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: download_logs
 			text: 'Download Logs'
 			on_press: root.download_logs()
             valign: "bottom"
@@ -59,6 +72,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: reboot
 			text: 'Reboot'
 			on_press: root.reboot()
             valign: "bottom"
@@ -72,6 +86,7 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
+            id: exit_software
             text: 'Exit Software'
             on_press: root.quit_to_console()
             valign: "bottom"
@@ -85,6 +100,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: beta_testing
 			text: 'Beta Testing'
 			on_press: root.beta_testing()
             valign: "bottom"
@@ -98,6 +114,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: grbl_settings
 			text: 'GRBL Settings'
 			on_press: root.grbl_settings()
             valign: "bottom"
@@ -111,6 +128,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: factory
 			text: 'Factory'
 			on_press: root.factory_settings()
             valign: "bottom"
@@ -124,6 +142,7 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
+            id: update_testing
             text: 'Update Testing'
             on_press: root.update_testing()
             valign: "bottom"
@@ -137,6 +156,7 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+            id: developer
 			text: 'Developer'
 			on_press: root.developer()
             valign: "bottom"
@@ -150,6 +170,7 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
+            id: go_back
             text: 'Go Back'
             on_press: root.go_back()
             valign: "bottom"
@@ -202,6 +223,17 @@ class SystemMenuScreen(Screen):
     	popup_system.PopupDeveloperPassword(self.systemtools_sm)
 
 
+    def update_strings(self):
+        self.system_info.text = str(self.l.dictionary['System Info'])
+        self.download_logs.text = str(self.l.dictionary['Download Logs'])
+        self.reboot.text = str(self.l.dictionary['Reboot'])
+        self.exit_software.text = str(self.l.dictionary['Exit Software'])
+        self.beta_testing.text = str(self.l.dictionary['Beta Testing'])
+        self.grbl_settings.text = str(self.l.dictionary['GRBL Settings'])
+        self.factory.text = str(self.l.dictionary['Factory'])
+        self.update_testing.text = str(self.l.dictionary['Update Testing'])
+        self.developer.text = str(self.l.dictionary['Developer'])
+        self.go_back.text = str(self.l.dictionary['Go Back'])
 
 
 

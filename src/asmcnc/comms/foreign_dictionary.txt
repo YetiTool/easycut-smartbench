@@ -1,12 +1,22 @@
 English (GB)	Deutsche (DE)	Francais (FR)	Italiano (IT)
 System Information	System Information	Informations sur le systeme	Informazioni di sistema
 Serial number	Ordnungsnummer	Numero de serie	Numero di serie
-Console serial number	Konsole Seriennummer	Console numero de serie	numero di serie console
+Console serial number	Konsole Seriennummer	Console numero de serie	Numero di serie console
 Software	Software	Logiciel	Software
-Platform	Plattform	Plate-forme	piattaforma
-Firmware	Firmware	firmware	firmware
-Z head	Z Kopf	tete Z	testa Z
+Platform	Plattform	Plate-forme	Piattaforma
+Firmware	Firmware	Firmware	Firmware
+Z head	Z Kopf	Tete Z	Testa Z
 Hardware	Hardware	Materiel	Hardware
 More info	Mehr Info	Plus d'informations	Ulteriori informazioni
 Choose language	Sprache wahlen	Choisissez la langue	Scegli la lingua
 IP Address	IP Adresse	Adresse IP	Indirizzo IP
+System Info	System Info	Info Systeme	System Info
+Download Logs	Protokolle Herunterladen	Telecharger les Journaux	Logs Scarica
+Reboot	Rebooten	Reboot	Reboot
+Exit Software	Beenden Software	Logiciel de sortie	Exit Software
+Beta Testing	Beta-Test	Tests Beta	Beta Testing
+GRBL Settings	GRBL Einstellungen	GRBL Reglages	Impostazioni GRBL
+Factory	Fabrik	Usine	Fabbrica
+Update Testing	Update Testing	Mise a jour d'essai	Test di Aggiornamento
+Developer	Entwickler	Developpeur	Sviluppatore
+Go Back	Geh Zuruck	Retourner	Torna Indietro
