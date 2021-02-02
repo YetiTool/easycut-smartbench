@@ -89,10 +89,10 @@ Builder.load_string("""
                         size_hint_x: 0.75
                         Label:
                             size_hint_y: 0.2
-                            text: '[color=333333][b]Significant risk of fire[/b][/color]'
+                            text: '[color=333333][b]Risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
-                            font_size: '26sp' 
+                            font_size: '32sp' 
                             markup: True
                             size:self.size
                             valign: 'top'
@@ -115,7 +115,6 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:20
                     size_hint_x: 1
                     size_hint_y: 0.9
 
@@ -126,14 +125,14 @@ Builder.load_string("""
 
                         BoxLayout:
                             padding: 0
-                            size_hint_x: 0.33
+                            size_hint_x: 0.34
                             Image:
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
-                            size_hint_x: 0.67
+                            size_hint_x: 0.66
                             Label:
                                 text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
                                 markup: True
@@ -150,28 +149,26 @@ Builder.load_string("""
                         orientation: 'vertical'
                         size_hint_x: 0.25
 
-                        Label:
-                            # size_hint_x: None
-                            # width: dp(150)
-                            size_hint_y: 0.18
-                            text: '[color=333333][b]Learn More[/b][/color]'
-                            markup: True
-                            halign: 'center'
-                            font_size: '20sp' 
-                            markup: True
-                            size:self.size
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            color: hex('#333333FF')
-
                         Image:
                             source: "./asmcnc/skavaUI/img/qr_safety.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-
+                        Label:
+                            # size_hint_x: None
+                            # width: dp(150)
+                            size_hint_y: 0.18
+                            text: '[color=333333][b]SCAN ME[/b][/color]'
+                            markup: True
+                            halign: 'center'
+                            font_size: '22sp' 
+                            markup: True
+                            size:self.size
+                            valign: 'middle'
+                            size:self.texture_size
+                            text_size: self.size
+                            color: hex('#333333FF')
   
 
             BoxLayout:
@@ -191,7 +188,7 @@ Builder.load_string("""
                     text: 'I understand'
                     color: hex('#f9f9f9ff')
                     markup: True
-                    font_size: '22sp'
+                    font_size: '28sp'
                   
 
 """)
