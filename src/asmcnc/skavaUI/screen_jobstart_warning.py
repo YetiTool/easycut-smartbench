@@ -89,10 +89,10 @@ Builder.load_string("""
                         size_hint_x: 0.75
                         Label:
                             size_hint_y: 0.2
-                            text: '[color=333333][b]Significant risk of fire[/b][/color]'
+                            text: '[color=333333][b]Risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
-                            font_size: '26sp' 
+                            font_size: '32sp' 
                             markup: True
                             size:self.size
                             valign: 'top'
@@ -125,7 +125,7 @@ Builder.load_string("""
                         size_hint_x: 0.75
 
                         BoxLayout:
-                            padding: 0
+                            padding: -5
                             size_hint_x: 0.33
                             Image:
                                 keep_ratio: True

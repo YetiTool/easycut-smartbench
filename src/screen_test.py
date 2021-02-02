@@ -21,7 +21,8 @@ class ScreenTest(App):
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
-		jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm)
+		m = None
+		jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
 		sm.add_widget(jobstart_warning_screen)
 		sm.current = 'jobstart_warning'
 		return sm
