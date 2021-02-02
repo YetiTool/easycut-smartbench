@@ -480,6 +480,7 @@ class LobbyScreen(Screen):
 
 
     def update_strings(self):
+        keytest = str(self.l.dictionary['System Info'])
         self.pro_app_label.text = str(self.l.dictionary['CAD / CAM'])
         self.shapecutter_app_label.text = str(self.l.dictionary['Shape Cutter'])
         self.wifi_app_label.text = str(self.l.dictionary['Wifi'])
