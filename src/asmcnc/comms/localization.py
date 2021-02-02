@@ -1,6 +1,6 @@
 import time
 import os, csv
-from time import datetime
+from datetime import datetime
 
 
 def log(message):
