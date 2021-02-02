@@ -458,6 +458,10 @@ class BuildInfoScreen(Screen):
 
     ## GET BUILD INFO
     def on_pre_enter(self, *args):
+        # check if language is up to date, if it isn't update all screen strings
+        if self.serial_number_header.text != str(self.l.dictionary['Serial number']):
+            self.update_strings()
+
         self.m.send_any_gcode_command('$I')
 
     def on_enter(self, *args):

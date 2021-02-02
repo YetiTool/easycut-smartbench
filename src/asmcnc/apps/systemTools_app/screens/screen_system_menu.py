@@ -30,7 +30,7 @@ Builder.load_string("""
 
     canvas.before:
         Color: 
-            rgba: hex('#f9f9f9ff')
+            rgba: hex('#e5e5e5ff')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -191,7 +191,11 @@ class SystemMenuScreen(Screen):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
-        self.update_strings()
+
+    def on_pre_enter(self):
+        # check if language is up to date, if it isn't update all screen strings
+        if self.download_logs.text != str(self.l.dictionary['Download Logs']):
+            self.update_strings()
 
     def go_back(self):
     	self.systemtools_sm.exit_app()
