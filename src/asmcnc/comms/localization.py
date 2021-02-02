@@ -13,7 +13,7 @@ class Localization(object):
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
-    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.csv'
+    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.txt'
     fast_dictionary_path = './sb_values/fast_dictionary.csv'
 
     default_lang = 'English (GB)'
@@ -68,7 +68,7 @@ class Localization(object):
 
         try:
             with open(self.complete_foreign_dictionary_path, "r") as csv_file:
-                csv_reader = csv.DictReader(csv_file, delimiter=',')
+                csv_reader = csv.DictReader(csv_file, delimiter='\t')
                 for lines in csv_reader:
                     self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
             log("Loaded language in from full dictionary")

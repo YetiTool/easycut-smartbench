@@ -447,10 +447,6 @@ class BuildInfoScreen(Screen):
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = '-'
 
-        self.show_more_info.text = 'Software\n' + self.set.sw_branch + '\n' + self.set.sw_hash + \
-        '\n\nPlatform\n' + self.set.pl_branch + '\n' + self.set.pl_hash + \
-        '\n\nIP address\n' + self.get_ip_address()
-
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
         self.get_smartbench_model()
@@ -531,6 +527,16 @@ class BuildInfoScreen(Screen):
         self.firmware_header.text = str(self.l.dictionary['Firmware'])
         self.zhead_header.text = str(self.l.dictionary['Z head'])
         self.hardware_header.text = str(self.l.dictionary['Hardware'])
+        self.show_more_info.text = (
+            str(self.l.dictionary['Software']) + '\n' + \
+            self.set.sw_branch + '\n' + \
+            self.set.sw_hash + '\n\n' + \
+            str(self.l.dictionary['Platform']) + '\n' + \
+            self.set.pl_branch + '\n' + \
+            self.set.pl_hash + '\n\n' \
+            str(self.l.dictionary['IP Address']) + '\n' + \
+            self.get_ip_address()
+            )
 
 
 
