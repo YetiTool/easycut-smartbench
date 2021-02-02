@@ -428,8 +428,8 @@ class LobbyScreen(Screen):
         self.l=kwargs['localization']
 # FLAG
     def on_pre_enter(self):
-        if self.update_app_label.text != self.l.dictionary['Update']:
-            self.update_strings()
+        # if self.update_app_label.text != self.l.dictionary['Update']:
+        self.update_strings()
 
     def on_enter(self):
         if not sys.platform == "win32":
