@@ -115,7 +115,6 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:20
                     size_hint_x: 1
                     size_hint_y: 0.9
 
