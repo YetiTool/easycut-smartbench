@@ -189,10 +189,24 @@ class SystemMenuScreen(Screen):
 
     default_font_size = 16
 
+
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
+
+        self.id_list = [
+        self.button_system_info,
+        self.button_download_logs,
+        self.button_reboot,
+        self.button_exit_software,
+        self.button_beta_testing,
+        self.button_grbl_settings,
+        self.button_factory,
+        self.button_update_testing,
+        self.button_developer,
+        self.button_go_back
+        ]
 
     def on_pre_enter(self):
         # check if language is up to date, if it isn't update all screen strings
@@ -231,21 +245,34 @@ class SystemMenuScreen(Screen):
 
     def update_strings(self):
         self.button_system_info.text = str(self.l.dictionary['System Info'])
-        self.update_font_size(self.button_system_info)
+        # self.update_font_size(self.button_system_info)
         self.button_download_logs.text = str(self.l.dictionary['Download Logs'])
-        self.update_font_size(self.button_download_logs)
+        # self.update_font_size(self.button_download_logs)
         self.button_reboot.text = str(self.l.dictionary['Reboot'])
+        # self.update_font_size(self.button_reboot)
         self.button_exit_software.text = str(self.l.dictionary['Exit Software'])
+        # self.update_font_size(self.button_exit_software)
         self.button_beta_testing.text = str(self.l.dictionary['Beta Testing'])
+        # self.update_font_size(self.button_download_logs)
         self.button_grbl_settings.text = str(self.l.dictionary['GRBL Settings'])
+        # self.update_font_size(self.button_download_logs)
         self.button_factory.text = str(self.l.dictionary['Factory'])
+        # self.update_font_size(self.button_download_logs)
         self.button_update_testing.text = str(self.l.dictionary['Update Testing'])
+        # self.update_font_size(self.button_download_logs)
         self.button_developer.text = str(self.l.dictionary['Developer'])
+        # self.update_font_size(self.button_download_logs)
         self.button_go_back.text = str(self.l.dictionary['Go Back'])
 
+        for id_object in self.id_list:
+            self.update_font_size(id_object)
+
     def update_font_size(self, value):
-        if len(value.text) > 18: 
+        if len(value.text) < 19:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 18: 
             value.font_size = self.default_font_size - 2
+
         if len(value.text) > 24: 
             value.font_size = self.default_font_size - 4
 
