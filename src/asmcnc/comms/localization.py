@@ -25,7 +25,8 @@ class Localization(object):
             self.read_in_language_name()
 
         if os.path.exists(self.fast_dictionary_path):
-            self.load_language()
+            # self.load_language() # only use this when not adding new keys!
+            self.load_in_new_language(self.lang)
 
         else:
             self.load_in_new_language(self.lang)
