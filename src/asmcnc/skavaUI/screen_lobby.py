@@ -480,13 +480,13 @@ class LobbyScreen(Screen):
 
 
     def update_strings(self):
-        self.pro_app_label.text = self.l.dictionary['CAD / CAM']
-        self.shapecutter_app_label.text = self.l.dictionary['Shape Cutter']
-        self.wifi_app_label.text = self.l.dictionary['Wifi']
-        self.calibrate_app_label.text = self.l.dictionary['Calibrate']
-        self.update_app_label.text = self.l.dictionary['Update']
-        self.maintenance_app_label.text = self.l.dictionary['Maintenance']
-        self.system_tools_app_label.text = self.l.dictionary['System Tools']
+        self.pro_app_label.text = str(self.l.dictionary['CAD / CAM'])
+        self.shapecutter_app_label.text = str(self.l.dictionary['Shape Cutter'])
+        self.wifi_app_label.text = str(self.l.dictionary['Wifi'])
+        self.calibrate_app_label.text = str(self.l.dictionary['Calibrate'])
+        self.update_app_label.text = str(self.l.dictionary['Update'])
+        self.maintenance_app_label.text = str(self.l.dictionary['Maintenance'])
+        self.system_tools_app_label.text = str(self.l.dictionary['System Tools'])
 
 
 
