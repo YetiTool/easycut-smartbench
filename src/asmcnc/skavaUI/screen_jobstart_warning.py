@@ -149,28 +149,26 @@ Builder.load_string("""
                         orientation: 'vertical'
                         size_hint_x: 0.25
 
-                        Label:
-                            # size_hint_x: None
-                            # width: dp(150)
-                            size_hint_y: 0.18
-                            text: '[color=333333][b]Learn More[/b][/color]'
-                            markup: True
-                            halign: 'center'
-                            font_size: '20sp' 
-                            markup: True
-                            size:self.size
-                            valign: 'middle'
-                            size:self.texture_size
-                            text_size: self.size
-                            color: hex('#333333FF')
-
                         Image:
                             source: "./asmcnc/skavaUI/img/qr_safety.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-
+                        Label:
+                            # size_hint_x: None
+                            # width: dp(150)
+                            size_hint_y: 0.18
+                            text: '[color=333333][b]SCAN ME[/b][/color]'
+                            markup: True
+                            halign: 'center'
+                            font_size: '22sp' 
+                            markup: True
+                            size:self.size
+                            valign: 'middle'
+                            size:self.texture_size
+                            text_size: self.size
+                            color: hex('#333333FF')
   
 
             BoxLayout:
@@ -190,7 +188,7 @@ Builder.load_string("""
                     text: 'I understand'
                     color: hex('#f9f9f9ff')
                     markup: True
-                    font_size: '22sp'
+                    font_size: '28sp'
                   
 
 """)
