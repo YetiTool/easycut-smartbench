@@ -29,7 +29,7 @@ Builder.load_string("""
     carousel:carousel
 
     pro_app_label: pro_app_label
-    shapecutter_app_label: shlabelter_app_label
+    shapecutter_app_label: shapecutter_app_label
     wifi_app_label: wifi_app_label
     calibrate_app_label: calibratlabel
     update_app_label: update_app_label
