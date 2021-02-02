@@ -533,7 +533,7 @@ class BuildInfoScreen(Screen):
             self.set.sw_hash + '\n\n' + \
             str(self.l.dictionary['Platform']) + '\n' + \
             self.set.pl_branch + '\n' + \
-            self.set.pl_hash + '\n\n' \
+            self.set.pl_hash + '\n\n' + \
             str(self.l.dictionary['IP Address']) + '\n' + \
             self.get_ip_address()
             )
