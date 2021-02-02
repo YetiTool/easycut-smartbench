@@ -191,6 +191,7 @@ class SystemMenuScreen(Screen):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.l = kwargs['localization']
+        self.update_strings()
 
     def go_back(self):
     	self.systemtools_sm.exit_app()
