@@ -124,6 +124,7 @@ class StopOrResumeDecisionScreen(Screen):
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
  
     
     def popup_help(self):
@@ -132,7 +133,7 @@ class StopOrResumeDecisionScreen(Screen):
                 "Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.\n\n" \
                 "[b]Resume[/b]\n" \
                 "Pressing resume will continue the job from the point at which it was paused."
-        popup_info.PopupInfo(self.sm, 500, info)
+        popup_info.PopupInfo(self.sm, self.l, 500, info)
  
     
     def on_enter(self):

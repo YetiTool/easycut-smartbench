@@ -106,6 +106,7 @@ class LiftZOnPauseDecisionScreen(Screen):
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
  
     
     def popup_help(self):
@@ -116,7 +117,7 @@ class LiftZOnPauseDecisionScreen(Screen):
                 "Also, it allows the spindle to decelerate away from the job, avoiding burn marks. " \
                 "On resuming, SmartBench automatically handles returning the tool to the correct position before continuing. " \
                 "[b]Do not[/b] allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile). " 
-        popup_info.PopupInfo(self.sm, 700, info)
+        popup_info.PopupInfo(self.sm, self.l, 700, info)
  
     
     def on_enter(self):

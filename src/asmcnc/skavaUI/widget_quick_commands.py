@@ -14,7 +14,7 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 
-import sys
+import sys, textwrap
 
 Builder.load_string("""
 
@@ -135,6 +135,7 @@ class QuickCommands(Widget):
         super(QuickCommands, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -158,9 +159,12 @@ class QuickCommands(Widget):
         # Job must be within machine bounds.
 
         if self.sm.get_screen('home').job_gcode ==[]:
-            info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
+            info = (
+                self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
+                self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
+                )
 
-            popup_info.PopupInfo(self.sm, 400, info)
+            popup_info.PopupInfo(self.sm, self.l, 400, info)
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
@@ -172,7 +176,13 @@ class QuickCommands(Widget):
             self.m.request_homing_procedure('home','home')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
-                z_datum_reminder_message = 'You may need to set a new Z datum\nbefore you start a new job!\n\nPress [b]Ok[/b] to clear this reminder.'
+
+                z_datum_reminder_message = (
+                    self.format_command(self.l.get_str('You may need to set a new Z datum before you start a new job!')) + \
+                    '\n\n' + \
+                    self.format_command(self.l.get_str('Press Ok to clear this reminder.'))
+                )
+
                 popup_info.PopupWarning(self.sm, z_datum_reminder_message)
                 self.sm.get_screen('home').z_datum_reminder_flag = False
 
@@ -199,36 +209,78 @@ class QuickCommands(Widget):
         job_box = self.sm.get_screen('home').job_box
         
         # Mins
-        
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b]." + '\n\n[/color]')
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " X " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] X [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("further away from home") + '.\n\n[/color]'
+            )
+            errorfound += 1
+
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b]." + '\n\n[/color]')
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " Y " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("further away from home") + '.\n\n[/color]'
+            )
+            errorfound += 1
+
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b]." + '\n\n[/color]')
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " Z " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the lower end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("higher up") + '.\n\n[/color]'
+            )
+            errorfound += 1
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b]." + '\n\n[/color]') 
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " X " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] X [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("closer to home") + '.\n\n[/color]'
+                )
+            errorfound += 1
+
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b]." + '\n\n[/color]') 
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " Y " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("closer to home") + '.\n\n[/color]'
+                )
+            errorfound += 1
+
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append('[color=#FFFFFF]' + \
-            "The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b]." + '\n\n[/color]')
-            errorfound += 1 
+            self.sm.get_screen('boundary').job_box_details.append(
+                '[color=#FFFFFF]' + \
+                self.l.get_str("The job extent over-reaches the") + " Z " + \
+                self.l.get_str("axis") + " " + self.l.get_str("at the upper end.") + \
+                self.l.get_bold("Try positioning the machine's") + \
+                '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
+                self.l.get_bold("lower down") + '.\n\n[/color]'
+                )
+            errorfound += 1
 
         if errorfound > 0: return False
         else: return True
 
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        return wrapped_cmd
         

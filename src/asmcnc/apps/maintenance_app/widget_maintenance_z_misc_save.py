@@ -77,6 +77,7 @@ class ZMiscSaveWidget(Widget):
         super(ZMiscSaveWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
     def get_info(self): # Rewrite me!
 
@@ -91,7 +92,7 @@ class ZMiscSaveWidget(Widget):
         "Make sure you press the save button to save your settings."
         )
 
-        popup_info.PopupInfo(self.sm, 750, z_misc_settings_info)
+        popup_info.PopupInfo(self.sm, self.l, 750, z_misc_settings_info)
 
 
     def save(self):

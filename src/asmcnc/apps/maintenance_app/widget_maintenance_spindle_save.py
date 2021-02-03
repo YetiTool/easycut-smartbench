@@ -77,6 +77,7 @@ class SpindleSaveWidget(Widget):
         super(SpindleSaveWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
     def get_info(self):
 
@@ -88,7 +89,7 @@ class SpindleSaveWidget(Widget):
         "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
         "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle."
 
-        popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
+        popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
 
     def save(self):
 
@@ -180,7 +181,7 @@ class SpindleSaveWidget(Widget):
             "The 5% spindle speed adjustments in the go screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%. " + \
             "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
             
-            popup_info.PopupInfo(self.sm, 700, spindle_voltage_info)
+            popup_info.PopupInfo(self.sm, self.l, 700, spindle_voltage_info)
 
         # brands = ['YETI digital 230V', 'YETI digital 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
 

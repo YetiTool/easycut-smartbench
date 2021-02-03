@@ -399,6 +399,7 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
+        self.l = kwargs['localization']
 
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -577,7 +578,7 @@ class FactorySettingsScreen(Screen):
                 "Maintenance reminders set and enabled.\n\n" + \
                 "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n" + \
                 "Not doing this may corrupt the warranty registration start up sequence."
-                popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
+                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
 
                 Clock.schedule_once(self.shutdown_console, 5)
 

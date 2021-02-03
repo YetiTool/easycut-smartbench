@@ -266,6 +266,7 @@ class HomeScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.job_gcode = kwargs['job']
         self.set = kwargs['settings']
+        self.l = kwargs['localization']
 
         # Job tab
         self.gcode_preview_widget = widget_gcode_view.GCodeView()
@@ -292,7 +293,7 @@ class HomeScreen(Screen):
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         
         # Quick commands
-        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
+        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, localization=self.l))
 
     def on_enter(self): 
 
@@ -316,7 +317,10 @@ class HomeScreen(Screen):
                 log('Unable to preview file')
             
         else:
-            self.file_data_label.text = '[color=333333]Load a file...[/color]'
+
+            self.file_data_label.text = ('[color=333333]' + \
+                self.l.get_str('Load a file') + '...' + '[/color]'
+                )
             self.job_filename = ''
   
             self.job_box.range_x[0] = 0
@@ -348,5 +352,4 @@ class HomeScreen(Screen):
 
     def on_pre_leave(self):
         self.m.laser_off()
-
     

@@ -128,7 +128,7 @@ class ScreenManagerSystemTools(object):
 
     def open_factory_settings_screen(self):
        if not self.sm.has_screen('factory_settings'):
-           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self, settings = self.set)
+           factory_settings_screen = screen_factory_settings.FactorySettingsScreen(name = 'factory_settings', machine = self.m, system_tools = self, settings = self.set, localization = self.l)
            self.sm.add_widget(factory_settings_screen)
        self.sm.current = 'factory_settings'
 

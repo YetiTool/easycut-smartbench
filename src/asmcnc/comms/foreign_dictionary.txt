@@ -45,3 +45,22 @@ You will still need to power down your machine separately after the console has 
 Shutdown now	Shutdown jetzt	Arret maintenant	Shutdown ora
 Cancel	Stornieren	Annuler	Annulla
 Shutting down	Herunterfahren	Eteindre	Chiudere
+Load a file	Legen sie eine datei	Charger un fichier	Caricare un file
+Tap the file chooser in the first tab (top left) to load a file.	Tippen sie auf die dateiauswahl in der ersten registerkarte (oben links), um eine datei zu laden.	Appuyez sur le selecteur de fichier dans le premier onglet (en haut a gauche) pour charger un fichier.	Toccare il selettore di file nella prima scheda (in alto a sinistra) per caricare un file.
+Before running, a file needs to be loaded.	Vor dem ausfuhren muss eine datei geladen werden.	Avant d'executer, un fichier doit etre charge.	Prima di eseguire un file deve essere caricato.
+The job extent over-reaches the	Der job ausmas uber erreicht die	La mesure de l'emploi trop atteint la	L'entita di lavoro over-raggiunge il
+axis	achse	axe	asse
+at the home end.	am haus ende.	a la fin de la maison.	alla fine casa.
+Try positioning the machine's	Versuchen sie, die maschine zu positionieren	Essayez de positionner les machines de	Provare il posizionamento della macchina
+datum	datum	donnees	dato
+further away from home	weiter weg von zu hause aus	plus loin de la maison	piu lontano da casa
+at the lower end.	am unteren ende.	a l'extremite inferieure.	in corrispondenza dell'estremita inferiore.
+higher up	weiter oben	plus haut	piu in alto
+at the far end.	am anderen ende.	a la toute fin.	all'estremita.
+at the upper end.	am oberen ende.	a l'extremite superieure.	all'estremita superiore.
+lower down	weiter unten	plus bas	piu in basso
+You may need to set a new Z datum before you start a new job!	Moglicherweise mussen Sie einen neuen Z-Bezug setzen, bevor Sie einen neuen Job beginnen!	Vous devrez peut-etre definir une nouvelle donnee Z avant de commencer un nouvel emploi!	Potrebbe essere necessario impostare un nuovo dato Z prima di iniziare un nuovo lavoro!
+Press Ok to clear this reminder.	Drucken Sie Ok diese Erinnerung zu loschen.	Appuyez sur OK pour effacer ce rappel.	Premere Ok per cancellare questo promemoria.
+WARNING: Job is not within machine bounds!	ACHTUNG: Job ist nicht in der maschine grenzen!	AVERTISSEMENT: Job n'est pas dans les limites de la machine!	ATTENZIONE: Il lavoro non e nei limiti della macchina!
+Please set datum appropriately, so that job boundaries are within SmartBench limits.	Bitte satz datum entsprechend, so dass job grenzen sind innerhalb grenzen Smartbench.	S'il vous plait donnee reglee de facon appropriee, de sorte que les limites d'emploi sont dans les limites SmartBench.	Si prega di impostare in modo appropriato datum, in modo che i confini di posti di lavoro sono entro i limiti Smartbench.
+DETAILS OF BOUNDARY CONFLICT	DETAILS DER GRENZKONFLIKT	DETAILS DE CONFLIT FRONTIERE	PARTICOLARI DI CONFLITTO DI CONFINE

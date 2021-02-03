@@ -470,12 +470,13 @@ class MaintenanceScreenClass(Screen):
         super(MaintenanceScreenClass, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
         # LASER DATUM WIDGETS
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
     
-        self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm)
+        self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_move_container.add_widget(self.z_move_widget)
 
         self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm)
@@ -502,7 +503,7 @@ class MaintenanceScreenClass(Screen):
 
         # SPINDLE SETTINGS WIDGET
 
-        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_save_container.add_widget(self.spindle_save_widget)       
 
         self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm)
@@ -511,7 +512,7 @@ class MaintenanceScreenClass(Screen):
 
         # Z TOUCHPLATE OFFSET AND LEAD SCREW REMINDER WIDGETS
 
-        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.sm)
         self.z_misc_save_container.add_widget(self.z_misc_save_widget)
 
         self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm)

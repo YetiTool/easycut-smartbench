@@ -190,6 +190,7 @@ class AlarmScreenClass(Screen):
         super(AlarmScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
     
     def on_enter(self):
         
@@ -202,7 +203,7 @@ class AlarmScreenClass(Screen):
 
         def trigger_popup():
             details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
-            popup_info.PopupInfo(self.sm, 600, details)
+            popup_info.PopupInfo(self.sm, self.l, 600, details)
 
         Clock.schedule_once(lambda dt: trigger_popup(), 0.45)
 

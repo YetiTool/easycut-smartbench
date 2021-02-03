@@ -131,17 +131,25 @@ class BoundaryWarningScreen(Screen):
         super(BoundaryWarningScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
     def on_enter(self):
         
-        self.check_outcome = '[b]WARNING: Job is not within machine bounds![/b]' + \
-        '\n\nPlease set datum appropriately, so that job boundaries are within SmartBench limits.'
+        self.check_outcome = (
+            self.l.get_bold('WARNING: Job is not within machine bounds!') + \
+            '\n\n' +
+            self.l.get_str('Please set datum appropriately, so that job boundaries are within SmartBench limits.')
+            )
         
         self.write_boundary_output()
         
     def write_boundary_output(self):
-        self.display_output = '[color=#FFFFFF][b]DETAILS OF BOUNDARY CONFLICT[/b]\n\n' + \
-        '\n\n'.join(map(str,self.job_box_details))
+        self.display_output = (
+            '[color=#FFFFFF]' + \
+            self.l.get_bold('DETAILS OF BOUNDARY CONFLICT') + \
+            '\n\n' + \
+            '\n\n'.join(map(str,self.job_box_details))
+            )
         
     def quit_to_home(self): 
         self.sm.current = 'home'
