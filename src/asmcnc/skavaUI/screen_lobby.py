@@ -500,7 +500,7 @@ class LobbyScreen(Screen):
                 str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.'])
                 ) + '\n\n' + \
             self.format_command(
-                str(self.l.dictionary['If this is your first time, make sure you use the ']) + \
+                str(self.l.dictionary['If this is your first time, make sure you use the']) + ' ' + \
                 '[b]' + str(self.l.dictionary['Wifi']) + '[/b], ' + \
                 '[b]' + str(self.l.dictionary['Maintenance']) + '[/b], ' + \
                 str(self.l.dictionary['and']) + ' ' + \
@@ -516,7 +516,7 @@ class LobbyScreen(Screen):
         print self.welcome_popup_description
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=60, break_long_words=False)
         return wrapped_cmd
 
 
