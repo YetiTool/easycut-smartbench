@@ -516,7 +516,7 @@ class LobbyScreen(Screen):
         print self.welcome_popup_description
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=60, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
         return wrapped_cmd
 
 
