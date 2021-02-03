@@ -19,6 +19,9 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 
+def format_bold(string):
+  return '[b]' + string + '[/b]'
+
 class PopupWelcome(Widget):
 
     def __init__(self, screen_manager, machine, localization, description):
@@ -28,7 +31,7 @@ class PopupWelcome(Widget):
         self.l = localization
 
         title_string = str(self.l.dictionary['Welcome to SmartBench'])
-        ok_string = '[b]' + str(self.l.dictionary['Ok']) + '[/b]'
+        ok_string = format_bold(str(self.l.dictionary['Ok']))
         remind_string = '[b]' + str(self.l.dictionary['Remind me later']) + '[/b]'
         
         def set_trigger_to_false(*args):
@@ -1022,13 +1025,20 @@ class PopupHomingWarning(Widget):
 
 class PopupShutdown(Widget):
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.sm = screen_manager
+        self.l = localization
 
-        description = "The console will close any critical processes and shut down safely after 60 seconds, ready for power off.\n\n" + \
-                      "This extends the lifetime of the console.\n\n" + \
-                      "You will still need to power down your machine separately after the console has finished shutting down."
+        description = (
+                      str(self.l.dictionary['The console will close any critical processes and shut down safely after 60 seconds, ready for power off.']) + \
+                      "\n\n" + \
+                      str(self.l.dictionary['This extends the lifetime of the console.']) + '\n\n' + \
+                      str(self.l.dictionary['You will still need to power down your machine separately after the console has finished shutting down.'])
+                      )
+        title_string = str(self.l.dictionary['Shutting down']) + '...'
+        shutdown_string = format_bold(str(self.l.dictionary['Shutdown now']))
+        cancel_string = format_bold(str(self.l.dictionary['Cancel']))
 
         def cancel_shutdown(*args):
           os.system('sudo shutdown -c')
@@ -1039,10 +1049,10 @@ class PopupShutdown(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
 
-        ok_button = Button(text='[b]Shutdown now[/b]', markup = True)
+        ok_button = Button(text=shutdown_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+        cancel_button = Button(text=cancel_string, markup = True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -1055,7 +1065,7 @@ class PopupShutdown(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Shutting down...',
+        popup = Popup(title=title_string
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

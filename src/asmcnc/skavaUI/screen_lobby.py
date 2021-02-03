@@ -437,11 +437,11 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
-        if self.trigger_update_popup: 
-            # update_message = "New software update available for download!\n\n" + \
-            # "Please use the [b]Update[/b] app to get the latest version."
+        # Tell user to update if update is available
+        if self.trigger_update_popup:
             popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
 
+        # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
 
     def help_popup(self):

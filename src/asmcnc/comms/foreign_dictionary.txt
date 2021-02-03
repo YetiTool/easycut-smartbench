@@ -39,3 +39,9 @@ Information	Information	Information	Informazione
 New software update available for download!	Neues software-update zum download bereit!	Nouvelle mise a jour du logiciel disponible pour telechargement!	Aggiornamento nuovo software disponibile per il download!
 Please use the	Bitte verwenden sie die	S'il vous plait utiliser la	Si prega di utilizzare il
 app to get the latest version.	app die neueste version zu bekommen.	application pour obtenir la derniere version.	app per ottenere la versione piu recente.
+The console will close any critical processes and shut down safely after 60 seconds, ready for power off.	Die konsole wird alle kritischen prozesse schliesen und abfahren sicher nach 60 sekunden aus, die stromversorgung aus.	La console fermera tous les processus critiques et l'arret en toute securite au bout de 60 secondes, pret pour la mise hors tension.	La console chiudere i processi critici e spegnere in modo sicuro dopo 60 secondi, pronto per lo spegnimento.
+This extends the lifetime of the console.	Dies verlangert die lebensdauer der konsole.	Cela prolonge la duree de vie de la console.	Questo si estende la durata della console.
+You will still need to power down your machine separately after the console has finished shutting down.	Sie werden immer noch sie Ihre maschine an das strom mussen getrennt, nachdem die konsole heruntergefahren beendet hat.	Vous aurez toujours besoin de puissance de votre machine separement apres la console a termine la fermeture.	Sara ancora bisogno di spegnere la macchina separatamente dopo la console ha terminato lo spegnimento.
+Shutdown now	Shutdown jetzt	Arret maintenant	Shutdown ora
+Cancel	Stornieren	Annuler	Annulla
+Shutting down	Herunterfahren	Eteindre	Chiudere
