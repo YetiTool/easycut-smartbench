@@ -360,18 +360,21 @@ class PopupUSBInfo(Widget):
 
 class PopupInfo(Widget):
 
-    def __init__(self, screen_manager, popup_width, description):
+    def __init__(self, screen_manager, localization, popup_width, description):
         
         self.sm = screen_manager
+        self.l = localization
         label_width = popup_width - 40
         
+        title_string = str(self.l.dictionary['Information'])
+        ok_string = '[b]' + str(self.l.dictionary['Ok']) + '[/b]'
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
         btn_layout.add_widget(ok_button)
@@ -381,7 +384,7 @@ class PopupInfo(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

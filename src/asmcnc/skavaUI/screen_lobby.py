@@ -439,7 +439,7 @@ class LobbyScreen(Screen):
         if self.trigger_update_popup: 
             update_message = "New software update available for download!\n\n" + \
             "Please use the [b]Update[/b] app to get the latest version."
-            popup_info.PopupInfo(self.sm, 450, update_message)
+            popup_info.PopupInfo(self.sm, self.l, 450, update_message)
 
         if self.m.trigger_setup: self.help_popup()
 
