@@ -506,12 +506,9 @@ class LobbyScreen(Screen):
         self.update_message = (
             self.l.get_str('New software update available for download!') + '\n\n' + \
             self.l.get_str('Please use the') + ' ' + \
-            '[b]' + self.l.get_bold('Update') + ' ' + \
+            self.l.get_bold('Update') + ' ' + \
             self.l.get_str('app to get the latest version.')
-
             )
-
-        print self.welcome_popup_description
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
