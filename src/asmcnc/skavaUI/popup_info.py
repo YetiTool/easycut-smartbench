@@ -49,7 +49,7 @@ class PopupWelcome(Widget):
         remind_me_button.background_normal = ''
         remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[90,20,90,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[70,20,70,0])
         btn_layout.add_widget(remind_me_button)       
         btn_layout.add_widget(ok_button)
         
