@@ -519,24 +519,25 @@ class BuildInfoScreen(Screen):
         self.update_strings()
 
     def update_strings(self):
-        self.language_button.text = str(self.l.lang)
-        self.more_info_button.text = str(self.l.dictionary['More info']) + '...'
-        self.header.text = str(self.l.dictionary['System Information'])
-        self.serial_number_header.text = str(self.l.dictionary['Serial number'])
-        self.console_serial_number_header.text = str(self.l.dictionary['Console serial number'])
-        self.software_header.text = str(self.l.dictionary['Software'])
-        self.platform_header.text = str(self.l.dictionary['Platform'])
-        self.firmware_header.text = str(self.l.dictionary['Firmware'])
-        self.zhead_header.text = str(self.l.dictionary['Z head'])
-        self.hardware_header.text = str(self.l.dictionary['Hardware'])
+        self.language_button.text = self.l.lang
+        self.more_info_button.text = self.l.get_str('More info') + '...'
+        self.header.text = self.l.get_str('System Information')
+        self.serial_number_header.text = self.l.get_str('Serial number')
+        self.console_serial_number_header.text = self.l.get_str('Console serial number')
+        self.software_header.text = self.l.get_str('Software')
+        self.platform_header.text = self.l.get_str('Platform')
+        self.firmware_header.text = self.l.get_str('Firmware')
+        self.zhead_header.text = self.l.get_str('Z head')
+        self.hardware_header.text = self.l.get_str('Hardware')
+
         self.show_more_info.text = (
-            str(self.l.dictionary['Software']) + '\n' + \
+            self.l.get_str('Software') + '\n' + \
             self.set.sw_branch + '\n' + \
             self.set.sw_hash + '\n\n' + \
-            str(self.l.dictionary['Platform']) + '\n' + \
+            self.l.get_str('Platform') + '\n' + \
             self.set.pl_branch + '\n' + \
             self.set.pl_hash + '\n\n' + \
-            str(self.l.dictionary['IP Address']) + '\n' + \
+            self.l.get_str('IP Address') + '\n' + \
             self.get_ip_address()
             )
 

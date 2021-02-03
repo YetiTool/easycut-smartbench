@@ -31,6 +31,17 @@ class Localization(object):
         else:
             self.load_in_new_language(self.lang)
 
+
+    # Getters/formatters
+    def get_str(self, string):
+        return str(self.dictionary[str(string)])
+
+    def get_bold(self):
+        return ('[b]' + str(self.dictionary[str(string)]) + '[/b]')
+
+    def get_italic(self):
+        return ('[i]' + str(self.dictionary[str(string)]) + '[/i]')
+
     # Read in name of language, so it can be used as a key when accessing the complete language dictionary
     def read_in_language_name(self):
         try: 

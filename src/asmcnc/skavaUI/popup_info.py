@@ -19,9 +19,6 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 
-def format_bold(string):
-  return '[b]' + string + '[/b]'
-
 class PopupWelcome(Widget):
 
     def __init__(self, screen_manager, machine, localization, description):
@@ -30,9 +27,9 @@ class PopupWelcome(Widget):
         self.m = machine
         self.l = localization
 
-        title_string = str(self.l.dictionary['Welcome to SmartBench'])
-        ok_string = format_bold(str(self.l.dictionary['Ok']))
-        remind_string = '[b]' + str(self.l.dictionary['Remind me later']) + '[/b]'
+        title_string = self.l.get_str('Welcome to SmartBench')
+        ok_string = self.l.get_bold('Ok')
+        remind_string = self.l.get_bold('Remind me later')
         
         def set_trigger_to_false(*args):
           self.m.write_set_up_options(False)
@@ -369,8 +366,8 @@ class PopupInfo(Widget):
         self.l = localization
         label_width = popup_width - 40
         
-        title_string = str(self.l.dictionary['Information'])
-        ok_string = '[b]' + str(self.l.dictionary['Ok']) + '[/b]'
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
@@ -1031,14 +1028,14 @@ class PopupShutdown(Widget):
         self.l = localization
 
         description = (
-                      str(self.l.dictionary['The console will close any critical processes and shut down safely after 60 seconds, ready for power off.']) + \
+                      self.l.get_str('The console will close any critical processes and shut down safely after 60 seconds, ready for power off.') + \
                       "\n\n" + \
-                      str(self.l.dictionary['This extends the lifetime of the console.']) + '\n\n' + \
-                      str(self.l.dictionary['You will still need to power down your machine separately after the console has finished shutting down.'])
+                      self.l.get_str('This extends the lifetime of the console.') + '\n\n' + \
+                      self.l.get_str('You will still need to power down your machine separately after the console has finished shutting down.')
                       )
-        title_string = str(self.l.dictionary['Shutting down']) + '...'
-        shutdown_string = format_bold(str(self.l.dictionary['Shutdown now']))
-        cancel_string = format_bold(str(self.l.dictionary['Cancel']))
+        title_string = self.l.get_str('Shutting down') + '...'
+        shutdown_string = self.l.get_bold('Shutdown now')
+        cancel_string = self.l.get_bold('Cancel')
 
         def cancel_shutdown(*args):
           os.system('sudo shutdown -c')

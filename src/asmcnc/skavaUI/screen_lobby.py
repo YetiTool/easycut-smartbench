@@ -476,40 +476,38 @@ class LobbyScreen(Screen):
             os.system('sudo shutdown -h')
         popup_info.PopupShutdown(self.sm, self.l)
 
-
     def update_strings(self):
-        self.pro_app_label.text = str(self.l.dictionary['CAD / CAM'])
-        self.shapecutter_app_label.text = str(self.l.dictionary['Shape Cutter'])
-        self.wifi_app_label.text = str(self.l.dictionary['Wifi'])
-        self.calibrate_app_label.text = str(self.l.dictionary['Calibrate'])
-        self.update_app_label.text = str(self.l.dictionary['Update'])
-        self.maintenance_app_label.text = str(self.l.dictionary['Maintenance'])
-        self.system_tools_app_label.text = str(self.l.dictionary['System Tools'])
+        self.pro_app_label.text = self.l.get_str('CAD / CAM')
+        self.shapecutter_app_label.text = self.l.get_str('Shape Cutter')
+        self.wifi_app_label.text = self.l.get_str('Wifi')
+        self.calibrate_app_label.text = self.l.get_str('Calibrate')
+        self.update_app_label.text = self.l.get_str('Update')
+        self.maintenance_app_label.text = self.l.get_str('Maintenance')
+        self.system_tools_app_label.text = self.l.get_str('System Tools')
 
         self.welcome_popup_description = (
             self.format_command(
-                str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.'])
+                self.l.get_str('Use the arrows to go through the menu, and select an app to get started.')
                 ) + '\n\n' + \
             self.format_command(
-                str(self.l.dictionary['If this is your first time, make sure you use the']) + ' ' + \
-                '[b]' + str(self.l.dictionary['Wifi']) + '[/b], ' + \
-                '[b]' + str(self.l.dictionary['Maintenance']) + '[/b], ' + \
-                str(self.l.dictionary['and']) + ' ' + \
-                '[b]' + str(self.l.dictionary['Calibrate']) + '[/b] ' + \
-                str(self.l.dictionary['apps to set up SmartBench.']) 
+                self.l.get_str('If this is your first time, make sure you use the') + ' ' + \
+                self.l.get_bold('Wifi') + ', ' + \
+                self.l.get_bold('Maintenance') + ', ' + \
+                self.l.get_str('and') + ' ' + \
+                self.l.get_bold('Calibrate') + ' ' + \
+                self.l.get_str('apps to set up SmartBench.')
             ) + '\n\n' + \
             self.format_command(
-                str(self.l.dictionary['For more help, please visit:']) 
+                self.l.get_str('For more help, please visit:')
             ) + '\n' + \
             '[b]https://www.yetitool.com/support[/b]' + '\n'
             )
 
         self.update_message = (
-
-            str(self.l.dictionary['New software update available for download!']) + '\n\n' + \
-            str(self.l.dictionary['Please use the']) + ' ' + \
-            '[b]' + str(self.l.dictionary['Update']) + '[/b] ' + \
-            str(self.l.dictionary['app to get the latest version.'])
+            self.l.get_str('New software update available for download!') + '\n\n' + \
+            self.l.get_str('Please use the') + ' ' + \
+            '[b]' + self.l.get_bold('Update') + ' ' + \
+            self.l.get_str('app to get the latest version.')
 
             )
 
