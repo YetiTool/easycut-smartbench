@@ -495,16 +495,22 @@ class LobbyScreen(Screen):
         #             "If this is your first time, make sure you use the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps to set up SmartBench. \n\n " \
         #             "For more help, please visit: [b]https://www.yetitool.com/support[/b]\n"
 
-        self.welcome_popup_description = self.format_command(
-            str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.']) + '\n\n' + \
-            str(self.l.dictionary['If this is your first time, make sure you use the ']) + \
-            '[b]' + str(self.l.dictionary['Wifi']) + '[/b], ' + \
-            '[b]' + str(self.l.dictionary['Maintenance']) + '[/b], ' + \
-            str(self.l.dictionary['and']) + ' ' + \
-            '[b]' + str(self.l.dictionary['Calibrate']) + '[/b] ' + \
-            str(self.l.dictionary['apps to set up SmartBench.']) + '\n\n' + \
-            str(self.l.dictionary['For more help, please visit:']) + \
-            ' [b]https://www.yetitool.com/support[/b]'
+        self.welcome_popup_description = (
+            self.format_command(
+                str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.'])
+                ) + '\n\n' + \
+            self.format_command(
+                str(self.l.dictionary['If this is your first time, make sure you use the ']) + \
+                '[b]' + str(self.l.dictionary['Wifi']) + '[/b], ' + \
+                '[b]' + str(self.l.dictionary['Maintenance']) + '[/b], ' + \
+                str(self.l.dictionary['and']) + ' ' + \
+                '[b]' + str(self.l.dictionary['Calibrate']) + '[/b] ' + \
+                str(self.l.dictionary['apps to set up SmartBench.']) 
+            ) + '\n\n' + \
+            self.format_command(
+                str(self.l.dictionary['For more help, please visit:']) 
+            ) + '\n' + \
+            '[b]https://www.yetitool.com/support[/b]' + '\n'
             )
 
         print self.welcome_popup_description
