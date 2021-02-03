@@ -36,10 +36,10 @@ class Localization(object):
     def get_str(self, string):
         return str(self.dictionary[str(string)])
 
-    def get_bold(self):
+    def get_bold(self, string):
         return ('[b]' + str(self.dictionary[str(string)]) + '[/b]')
 
-    def get_italic(self):
+    def get_italic(self, string):
         return ('[i]' + str(self.dictionary[str(string)]) + '[/i]')
 
     # Read in name of language, so it can be used as a key when accessing the complete language dictionary
