@@ -27,3 +27,8 @@ Calibrate	Kalibrieren	Etalonner	Calibrare
 Update	Aktualisieren	Mise a Jour	Aggiornare
 Maintenance	Instandhaltung	Entretien	Manutenzione
 System Tools	System Tools	Outils Systeme	Strumenti di Sistema
+Use the arrows to go through the menu, and select an app to get started.	Verwenden sie die pfeile durch das menu zu gehen, und wahlen sie eine app, um loszulegen.	Utilisez les fleches pour passer par le menu, puis selectionnez une application pour commencer.	Usa le frecce per passare attraverso il menu e selezionare un app per iniziare.
+If this is your first time, make sure you use the 	Wenn dies das erste mal ist, stellen sie sicher, verwenden sie die	Si ceci est votre premiere fois, assurez-vous que vous utilisez la	Se questa e la prima volta, assicurarsi di utilizzare il
+apps to set up SmartBench.	apps Smartbench einzurichten.	apps pour mettre en place SmartBench.	apps per configurare Smartbench.
+and	und	et	e
+For more help, please visit:	Weitere hilfe finden sie unter:	Pour plus d'aide, visitez s'il vous plait:	Per ulteriori informazioni, visitare il sito:

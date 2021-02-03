@@ -14,7 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
 
-import sys, os
+import sys, os, textwrap
 from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
@@ -419,6 +419,7 @@ class LobbyScreen(Screen):
 
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
     trigger_update_popup = False
+    welcome_popup_description = ''
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -443,11 +444,8 @@ class LobbyScreen(Screen):
         if self.m.trigger_setup: self.help_popup()
 
     def help_popup(self):
-        description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
-                    "If this is your first time, make sure you use\n" \
-                    "the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps\nto set up SmartBench. \n\n " \
-                    "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
-        popup_info.PopupWelcome(self.sm, self.m, description)
+
+        popup_info.PopupWelcome(self.sm, self.m, self.welcome_popup_description)
  
     def pro_app(self):
         self.am.start_pro_app()
@@ -480,7 +478,6 @@ class LobbyScreen(Screen):
 
 
     def update_strings(self):
-        keytest = str(self.l.dictionary['System Info'])
         self.pro_app_label.text = str(self.l.dictionary['CAD / CAM'])
         self.shapecutter_app_label.text = str(self.l.dictionary['Shape Cutter'])
         self.wifi_app_label.text = str(self.l.dictionary['Wifi'])
@@ -489,6 +486,32 @@ class LobbyScreen(Screen):
         self.maintenance_app_label.text = str(self.l.dictionary['Maintenance'])
         self.system_tools_app_label.text = str(self.l.dictionary['System Tools'])
 
+        # self.welcome_popup_description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
+        #             "If this is your first time, make sure you use\n" \
+        #             "the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps\nto set up SmartBench. \n\n " \
+        #             "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
+
+        # self.welcome_popup_description = "\nUse the arrows to go through the menu, and select an app to get started.\n\n " \
+        #             "If this is your first time, make sure you use the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps to set up SmartBench. \n\n " \
+        #             "For more help, please visit: [b]https://www.yetitool.com/support[/b]\n"
+
+        self.welcome_popup_description = self.format_command(
+            str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.']) + '\n\n' + \
+            str(self.l.dictionary['If this is your first time, make sure you use the ']) + \
+            '[b]' + str(self.l.dictionary['Wifi']) + '[/b], ' + \
+            '[b]' + str(self.l.dictionary['Maintenance']) + '[/b], ' + \
+            str(self.l.dictionary['and']) + ' ' + \
+            '[b]' + str(self.l.dictionary['Calibrate']) + '[/b] ' + \
+            str(self.l.dictionary['apps to set up SmartBench.']) + '\n\n' + \
+            str(self.l.dictionary['For more help, please visit:']) + \
+            ' [b]https://www.yetitool.com/support[/b]'
+            )
+
+        print self.welcome_popup_description
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        return wrapped_cmd
 
 
     #     for id_object in self.id_list:
