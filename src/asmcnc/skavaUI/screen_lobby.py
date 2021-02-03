@@ -474,7 +474,7 @@ class LobbyScreen(Screen):
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
             os.system('sudo shutdown -h')
-        popup_info.PopupShutdown(self.sm)
+        popup_info.PopupShutdown(self.sm, self.l)
 
 
     def update_strings(self):
