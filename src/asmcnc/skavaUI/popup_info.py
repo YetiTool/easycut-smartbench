@@ -21,10 +21,15 @@ from kivy.graphics import Color, Rectangle
 
 class PopupWelcome(Widget):
 
-    def __init__(self, screen_manager, machine, description):
+    def __init__(self, screen_manager, machine, localization, description):
         
         self.sm = screen_manager
         self.m = machine
+        self.l = localization
+
+        title_string = str(self.l.dictionary['Welcome to SmartBench'])
+        ok_string = '[b]' + str(self.l.dictionary['Ok']) + '[/b]'
+        remind_string = '[b]' + str(self.l.dictionary['Remind me later']) + '[/b]'
         
         def set_trigger_to_false(*args):
           self.m.write_set_up_options(False)
@@ -53,7 +58,7 @@ class PopupWelcome(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Welcome to SmartBench',
+        popup = Popup(title=title_string,
 #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',

@@ -32,3 +32,6 @@ If this is your first time, make sure you use the	Wenn dies das erste mal ist, s
 apps to set up SmartBench.	apps Smartbench einzurichten.	apps pour mettre en place SmartBench.	apps per configurare Smartbench.
 and	und	et	e
 For more help, please visit:	Weitere hilfe finden sie unter:	Pour plus d'aide, visitez s'il vous plait:	Per ulteriori informazioni, visitare il sito:
+Ok	OK	Ok	Ok
+Remind me later	Erinnere mich spater	Rappelez-moi plus tard	Ricordamelo piu tardi
+Welcome to SmartBench	Willkommen bei Smartbench	Bienvenue sur SmartBench	Benvenuti a Smartbench

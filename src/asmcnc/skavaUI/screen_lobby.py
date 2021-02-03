@@ -444,8 +444,7 @@ class LobbyScreen(Screen):
         if self.m.trigger_setup: self.help_popup()
 
     def help_popup(self):
-
-        popup_info.PopupWelcome(self.sm, self.m, self.welcome_popup_description)
+        popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
  
     def pro_app(self):
         self.am.start_pro_app()
@@ -486,15 +485,6 @@ class LobbyScreen(Screen):
         self.maintenance_app_label.text = str(self.l.dictionary['Maintenance'])
         self.system_tools_app_label.text = str(self.l.dictionary['System Tools'])
 
-        # self.welcome_popup_description = "\nUse the arrows to go through the menu,\nand select an app to get started.\n\n " \
-        #             "If this is your first time, make sure you use\n" \
-        #             "the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps\nto set up SmartBench. \n\n " \
-        #             "For more help, please visit:\n[b]https://www.yetitool.com/support[/b]\n"
-
-        # self.welcome_popup_description = "\nUse the arrows to go through the menu, and select an app to get started.\n\n " \
-        #             "If this is your first time, make sure you use the [b]Wifi[/b], [b]Maintenance[/b], and [b]Calibrate[/b] apps to set up SmartBench. \n\n " \
-        #             "For more help, please visit: [b]https://www.yetitool.com/support[/b]\n"
-
         self.welcome_popup_description = (
             self.format_command(
                 str(self.l.dictionary['Use the arrows to go through the menu, and select an app to get started.'])
@@ -518,17 +508,3 @@ class LobbyScreen(Screen):
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
         return wrapped_cmd
-
-
-    #     for id_object in self.id_list:
-    #         self.update_font_size(id_object)
-
-    # def update_font_size(self, value):
-    #     if len(value.text) < 16:
-    #         value.font_size = self.default_font_size
-    #     elif len(value.text) > 15: 
-    #         value.font_size = self.default_font_size - 2
-    #     if len(value.text) > 20: 
-    #         value.font_size = self.default_font_size - 4
-    #     if len(value.text) > 22: 
-    #         value.font_size = self.default_font_size - 5
