@@ -65,3 +65,5 @@ WARNING: Job is not within machine bounds!	ACHTUNG: Job ist nicht in der maschin
 Please set datum appropriately, so that job boundaries are within SmartBench limits.	Bitte satz datum entsprechend, so dass job grenzen sind innerhalb grenzen Smartbench.	S'il vous plait donnee reglee de facon appropriee, de sorte que les limites d'emploi sont dans les limites SmartBench.	Si prega di impostare in modo appropriato datum, in modo che i confini di posti di lavoro sono entro i limiti Smartbench.
 DETAILS OF BOUNDARY CONFLICT	DETAILS DER GRENZKONFLIKT	DETAILS DE CONFLIT FRONTIERE	PARTICOLARI DI CONFLITTO DI CONFINE
 closer to home	naher zuhause	plus proche de la maison	piu vicino a casa
+Job Outside Machine Limits	Job auserhalb der grenzen der maschine	En dehors des limites de la machine de l'emploi	Lavoro fuori dai limiti della macchina
+Return	Ruckkehr	Revenir	Ritorno

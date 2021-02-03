@@ -30,7 +30,8 @@ Builder.load_string("""
 
 <BoundaryWarningScreen>:
     
-    quit_button:quit_button
+    title_label: title_label
+    quit_button: quit_button
 
     canvas:
         Color: 
@@ -51,6 +52,7 @@ Builder.load_string("""
             spacing: 10
              
             Label:
+                id: title_label
                 size_hint_y: 2
                 font_size: '40sp'
                 text: '[b]Job Outside Machine Limits[/b]'
@@ -86,7 +88,6 @@ Builder.load_string("""
                     background_normal: ''
                     background_down: ''
                     background_color: hex('#e65100')
-                    text: 'Return'
                     on_press: 
                         root.quit_to_home()
 
@@ -160,5 +161,9 @@ class BoundaryWarningScreen(Screen):
     def on_leave(self):
         self.display_output = ''
         self.job_box_details = []
+
+    def update_strings(self):
+        self.title_label = self.l.get_str('Job Outside Machine Limits')
+        self.quit_button = self.l.get_str('Return')
 
         

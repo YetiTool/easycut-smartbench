@@ -214,6 +214,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " X " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] X [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("further away from home") + '.\n\n[/color]'
@@ -225,6 +226,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " Y " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("further away from home") + '.\n\n[/color]'
@@ -236,6 +238,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " Z " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the lower end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("higher up") + '.\n\n[/color]'
@@ -249,6 +252,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " X " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] X [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("closer to home") + '.\n\n[/color]'
@@ -260,6 +264,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " Y " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("closer to home") + '.\n\n[/color]'
@@ -271,6 +276,7 @@ class QuickCommands(Widget):
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the") + " Z " + \
                 self.l.get_str("axis") + " " + self.l.get_str("at the upper end.") + \
+                '\n\n' + \
                 self.l.get_bold("Try positioning the machine's") + \
                 '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("lower down") + '.\n\n[/color]'
