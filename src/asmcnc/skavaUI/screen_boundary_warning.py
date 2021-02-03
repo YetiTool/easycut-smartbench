@@ -134,6 +134,9 @@ class BoundaryWarningScreen(Screen):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
+    def on_pre_enter(self):
+        self.update_strings()
+
     def on_enter(self):
         
         self.check_outcome = (
@@ -163,7 +166,7 @@ class BoundaryWarningScreen(Screen):
         self.job_box_details = []
 
     def update_strings(self):
-        self.title_label = self.l.get_str('Job Outside Machine Limits')
-        self.quit_button = self.l.get_str('Return')
+        self.title_label.text = self.l.get_str('Job Outside Machine Limits')
+        self.quit_button.text = self.l.get_str('Return')
 
         
