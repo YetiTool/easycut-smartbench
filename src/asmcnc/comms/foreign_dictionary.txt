@@ -36,3 +36,6 @@ Ok	OK	Ok	Ok
 Remind me later	Erinnere mich spater	Rappelez-moi plus tard	Ricordamelo piu tardi
 Welcome to SmartBench	Willkommen bei Smartbench	Bienvenue sur SmartBench	Benvenuti a Smartbench
 Information	Information	Information	Informazione
+New software update available for download!	Neues software-update zum download bereit!	Nouvelle mise a jour du logiciel disponible pour telechargement!	Aggiornamento nuovo software disponibile per il download!
+Please use the	Bitte verwenden sie die	S'il vous plait utiliser la	Si prega di utilizzare il
+app to get the latest version.	app die neueste version zu bekommen.	application pour obtenir la derniere version.	app per ottenere la versione piu recente.

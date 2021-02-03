@@ -420,6 +420,7 @@ class LobbyScreen(Screen):
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
     trigger_update_popup = False
     welcome_popup_description = ''
+    update_message = ''
     
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -437,9 +438,9 @@ class LobbyScreen(Screen):
             self.m.set_led_colour('GREEN')
 
         if self.trigger_update_popup: 
-            update_message = "New software update available for download!\n\n" + \
-            "Please use the [b]Update[/b] app to get the latest version."
-            popup_info.PopupInfo(self.sm, self.l, 450, update_message)
+            # update_message = "New software update available for download!\n\n" + \
+            # "Please use the [b]Update[/b] app to get the latest version."
+            popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
 
         if self.m.trigger_setup: self.help_popup()
 
@@ -501,6 +502,15 @@ class LobbyScreen(Screen):
                 str(self.l.dictionary['For more help, please visit:']) 
             ) + '\n' + \
             '[b]https://www.yetitool.com/support[/b]' + '\n'
+            )
+
+        self.update_message = (
+
+            str(self.l.dictionary['New software update available for download!']) + '\n\n' + \
+            str(self.l.dictionary['Please use the']) + ' ' + \
+            '[b]' + str(self.l.dictionary['Update']) + '[/b] ' + \
+            str(self.l.dictionary['app to get the latest version.'])
+
             )
 
         print self.welcome_popup_description
