@@ -41,11 +41,11 @@ class PopupWelcome(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(340, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        remind_me_button = Button(text='[b]Remind me later[/b]', markup = True)
+        remind_me_button = Button(text=remind_string, markup = True)
         remind_me_button.background_normal = ''
         remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
