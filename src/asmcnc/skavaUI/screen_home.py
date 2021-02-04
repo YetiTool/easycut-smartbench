@@ -279,7 +279,7 @@ class HomeScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
         # Bed tab
-        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm), index=100)
+        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm, localization=self.l), index=100)
 
         # Move tab
         self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm)
