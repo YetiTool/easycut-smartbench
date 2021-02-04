@@ -147,7 +147,7 @@ class PopupDatum(Widget):
 
 
       if self.m.is_laser_enabled == True:
-        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='right', valign='middle', text=chk_message, color=[0,0,0,1], padding=[10,20], markup = True)
+        chk_label = Label(size_hint_y=1, text_size=(280, None), halign='right', valign='middle', text=chk_message, color=[0,0,0,1], padding=[0,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
