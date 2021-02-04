@@ -1,19 +1,19 @@
 English (GB)	Deutsche (DE)	Francais (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polskie (PL)
-System Information	System Information	Informations sur le systeme	Informazioni di sistema	Jarjestelman tiedot	Systeem informatie	Informacje o Systemie
+System Information	Systeminformationen	Informations sur le systeme	Informazioni di sistema	Jarjestelman tiedot	Systeem informatie	Informacje o Systemie
 Serial number	Ordnungsnummer	Numero de serie	Numero di serie	Sarjanumero	Serienummer	Numer Seryjny
-Console serial number	Konsole Seriennummer	Console numero de serie	Numero di serie console	Konsolin sarjanumeroa	Console serienummer	Numer Seryjny Konsoli
+Console serial number	Bedienteil-Seriennummer	Console numero de serie	Numero di serie console	Konsolin sarjanumeroa	Console serienummer	Numer Seryjny Konsoli
 Software	Software	Logiciel	Software	Ohjelmisto	Software	Oprogramowanie
 Platform	Plattform	Plate-forme	Piattaforma	Foorumi	Platform	Platforma
 Firmware	Firmware	Firmware	Firmware	Firmware	Firmware	Firmware
-Z head	Z Kopf	Tete Z	Testa Z	Z Paa	Z Hoofd	Z glowy
+Z head	Z-Kopf	Tete Z	Testa Z	Z Paa	Z Hoofd	Z glowy
 Hardware	Hardware	Materiel	Hardware	Laitteisto	Hardware	Sprzet Komputerowy
 More info	Mehr Info	Plus d'informations	Ulteriori informazioni	Lisatietoja	Meer informatie	Wiecej informacji
 Choose language	Sprache wahlen	Choisissez la langue	Scegli la lingua	Valitse kieli	Kies een taal	Wybierz jezyk
 IP Address	IP Adresse	Adresse IP	Indirizzo IP	IP-osoite	IP adres	Adres IP
 System Info	System Info	Info Systeme	System Info	Jarjestelman tiedot	Systeeminformatie	Informacja o Systemie
 Download Logs	Protokolle Herunterladen	Telecharger les Journaux	Logs Scarica	Lataa loki	Download Logboek	Pobierz Dzienniki
-Reboot	Rebooten	Reboot	Reboot	Reboot	Reboot	Restart
-Exit Software	Beenden Software	Logiciel de sortie	Exit Software	Exit Ohjelmistopaivitys	Exit Software	Wyjscie Software
+Reboot	Neustarten	Reboot	Reboot	Reboot	Reboot	Restart
+Exit Software	Software Beenden	Logiciel de sortie	Exit Software	Exit Ohjelmistopaivitys	Exit Software	Wyjscie Software
 Beta Testing	Beta-Test	Tests Beta	Beta Testing	Beta-Testaus	Beta Testen	Testowanie Beta
 GRBL Settings	GRBL Einstellungen	GRBL Reglages	Impostazioni GRBL	GRBL Asetukset	GRBL Instellingen	Ustawienia GRBL
 Factory	Fabrik	Usine	Fabbrica	Tehdas	Fabriek	Fabryka
@@ -22,14 +22,13 @@ Developer	Entwickler	Developpeur	Sviluppatore	Kehittaja	Ontwikkelaar	Deweloper
 Go Back	Geh Zuruck	Retourner	Torna Indietro	Mene Takaisin	Ga Terug	Wroc
 CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM
 Shape Cutter	Form Cutter	Cutter Shape	Cutter di Forma	Shape Cutter	Shape Cutter	Shape Cutter
-Wifi	W-lan	Wifi	Wi-Fi	Wifi	Wifi	Wifi
+Wifi	WLAN	Wifi	Wi-Fi	Wifi	Wifi	Wifi
 Calibrate	Kalibrieren	Etalonner	Calibrare	Kalibroida	Ijken	Kalibrowac
 Update	Aktualisieren	Mise a Jour	Aggiornare	Paivittaa	Bijwerken	Aktualizacja
 Maintenance	Instandhaltung	Entretien	Manutenzione	Yllapito	Onderhoud	Konserwacja
 System Tools	System Tools	Outils Systeme	Strumenti di Sistema	Jarjestelmatyokalut	Systeem Gereedschap	Narzedzia Systemowe
 Use the arrows to go through the menu, and select an app to get started.	Verwenden sie die pfeile durch das menu zu gehen, und wahlen sie eine app, um loszulegen.	Utilisez les fleches pour passer par le menu, puis selectionnez une application pour commencer.	Usa le frecce per passare attraverso il menu e selezionare un app per iniziare.	Nuolilla lapi valikko ja valitse sovellus paasta alkuun.	Gebruik de pijltjes om te gaan door het menu, en selecteer een app om te beginnen.	Uzyj strzaLek, aby przejsc do menu, a nastepnie wybierz aplikacje, aby rozpoczac.
-If this is your first time, make sure you use the	Wenn dies das erste mal ist, stellen sie sicher, verwenden sie die	Si ceci est votre premiere fois, assurez-vous que vous utilisez la	Se questa e la prima volta, assicurarsi di utilizzare il	Jos tama on ensimmainen kerta, muista kayttaa	Als dit de eerste keer is, zorg ervoor dat u gebruik maken van de	Jesli jest to twoj pierwszy raz, upewnij sie uzyc
-apps to set up SmartBench.	apps Smartbench einzurichten.	apps pour mettre en place SmartBench.	apps per configurare Smartbench.	sovellukset perustaa SmartBench.	apps op te zetten SmartBench.	aplikacje skonfigurowac SmartBench.
+If this is your first time, make sure you use the Wifi, Maintenance, and Calibrate apps to set up SmartBench.	Wenn dies das erste mal ist, stellen sie sicher, dass sie WLAN, Instandhaltung, und Kalibrieren apps verwenden um die Smartbench einzurichten.	Si ceci est votre premiere fois, assurez-vous d'utiliser le Wifi, Entretien et Etalonner applications pour mettre en place SmartBench.	Se questa e la prima volta, assicurarsi di utilizzare il Wi-Fi, Manutenzione, e Calibrare apps per impostare Smartbench.	Jos tama on ensimmainen kerta, muista kayttaa Wifi, Jarjestelmatyokalut, ja Kalibroida sovellukset perustaa SmartBench	Als dit de eerste keer is, zorg ervoor dat u de Wifi, Onderhoud, en Ijken apps op te zetten SmartBench.	Jesli jest to twoj pierwszy raz, upewnij sie, ze korzystasz z Wifi, Konserwacja, i Kalibrowac aplikacje skonfigurowac SmartBench.
 and	und	et	e	ja	en	i
 For more help, please visit:	Weitere hilfe finden sie unter:	Pour plus d'aide, visitez s'il vous plait:	Per ulteriori informazioni, visitare il sito:	Saat apua osoitteessa:	Voor meer hulp kunt u terecht op:	Aby uzyskac wiecej pomocy, prosimy odwiedzic:
 Ok	OK	Ok	Ok	OK	OK	OK

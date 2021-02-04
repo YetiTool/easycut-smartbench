@@ -489,13 +489,21 @@ class LobbyScreen(Screen):
             self.format_command(
                 self.l.get_str('Use the arrows to go through the menu, and select an app to get started.')
                 ) + '\n\n' + \
+
             self.format_command(
-                self.l.get_str('If this is your first time, make sure you use the') + ' ' + \
-                self.l.get_bold('Wifi') + ', ' + \
-                self.l.get_bold('Maintenance') + ', ' + \
-                self.l.get_str('and') + ' ' + \
-                self.l.get_bold('Calibrate') + ' ' + \
-                self.l.get_str('apps to set up SmartBench.')
+                ((self.l.get_str('If this is your first time, make sure you use the Wifi, Maintenance, ' + \
+                    'and Calibrate apps to set up SmartBench.'
+                    ).replace(self.l.get_str('Wifi'), self.l.get_bold('Wifi'))
+                    ).replace(self.l.get_str('Maintenance'), self.l.get_bold('Maintenance'))
+                    ).replace(self.l.get_str('Calibrate'), self.l.get_bold('Calibrate')
+                )
+            # self.format_command(
+            #     self.l.get_str('If this is your first time, make sure you use the') + ' ' + \
+            #     self.l.get_bold('Wifi') + ', ' + \
+            #     self.l.get_bold('Maintenance') + ', ' + \
+            #     self.l.get_str('and') + ' ' + \
+            #     self.l.get_bold('Calibrate') + ' ' + \
+            #     self.l.get_str('apps to set up SmartBench.')
             ) + '\n\n' + \
             self.format_command(
                 self.l.get_str('For more help, please visit:')
