@@ -510,10 +510,6 @@ class LobbyScreen(Screen):
                 'Please use the Update app to get the latest version.'
                 ).replace(self.l.get_str('Update'), self.l.get_bold('Update'))
             )
-            # self.l.get_str('Please use the') + ' ' + \
-            # self.l.get_bold('Update') + ' ' + \
-            # self.l.get_str('app to get the latest version.')
-
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)

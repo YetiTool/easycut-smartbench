@@ -180,7 +180,7 @@ class QuickCommands(Widget):
                 z_datum_reminder_message = (
                     self.format_command(self.l.get_str('You may need to set a new Z datum before you start a new job!')) + \
                     '\n\n' + \
-                    self.format_command(self.l.get_str('Press Ok to clear this reminder.'))
+                    self.format_command(self.l.get_str('Press Ok to clear this reminder.').replace(self.get_str('Ok'), self.get_bold('Ok')))
                 )
 
                 popup_info.PopupWarning(self.sm, z_datum_reminder_message)
