@@ -282,7 +282,7 @@ class HomeScreen(Screen):
         self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm, localization=self.l), index=100)
 
         # Move tab
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
