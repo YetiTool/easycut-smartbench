@@ -497,13 +497,6 @@ class LobbyScreen(Screen):
                     ).replace(self.l.get_str('Maintenance'), self.l.get_bold('Maintenance'))
                     ).replace(self.l.get_str('Calibrate'), self.l.get_bold('Calibrate')
                 )
-            # self.format_command(
-            #     self.l.get_str('If this is your first time, make sure you use the') + ' ' + \
-            #     self.l.get_bold('Wifi') + ', ' + \
-            #     self.l.get_bold('Maintenance') + ', ' + \
-            #     self.l.get_str('and') + ' ' + \
-            #     self.l.get_bold('Calibrate') + ' ' + \
-            #     self.l.get_str('apps to set up SmartBench.')
             ) + '\n\n' + \
             self.format_command(
                 self.l.get_str('For more help, please visit:')
@@ -513,10 +506,14 @@ class LobbyScreen(Screen):
 
         self.update_message = (
             self.l.get_str('New software update available for download!') + '\n\n' + \
-            self.l.get_str('Please use the') + ' ' + \
-            self.l.get_bold('Update') + ' ' + \
-            self.l.get_str('app to get the latest version.')
+            self.l.get_str(
+                'Please use the Update app to get the latest version.'
+                ).replace(self.l.get_str('Update'), self.l.get_bold('Update'))
             )
+            # self.l.get_str('Please use the') + ' ' + \
+            # self.l.get_bold('Update') + ' ' + \
+            # self.l.get_str('app to get the latest version.')
+
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
