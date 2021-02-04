@@ -3,7 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
+import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -402,3 +402,7 @@ class XYMove(Widget):
     def set_y_datum(self):
         warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
         popup_info.PopupDatum(self.sm, self.m, 'Y', warning)
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd
