@@ -82,13 +82,18 @@ class PopupWelcome(Widget):
         
 class PopupDatum(Widget):
 
-    def __init__(self, screen_manager, machine, xy, warning_message):
+    def __init__(self, screen_manager, machine, localization, xy, warning_message):
         
       self.sm = screen_manager
       self.m = machine
+      self.l = localization
       
       description = warning_message
-      chk_message = "         Use laser datum?"
+      title_string = self.l.get_str('Warning!')
+      yes_string = self.l.get_bold('Yes')
+      no_string = self.l.get_bold('No')
+      # chk_message = "         Use laser datum?"
+      chk_message = self.l.get_str('Use laser datum?')
 
       def on_checkbox_active(checkbox, value):
         if value: 
@@ -99,7 +104,6 @@ class PopupDatum(Widget):
       def set_datum(*args):
 
           if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
-            print "setting datum with laser"
 
             if xy == 'X':
                 self.m.set_x_datum_with_laser() #testing!!
@@ -110,7 +114,6 @@ class PopupDatum(Widget):
                 self.m.set_workzone_to_pos_xy_with_laser()
 
           else:
-            print "setting datum without laser"
 
             if xy == 'X':
                 self.m.set_x_datum()
@@ -130,10 +133,10 @@ class PopupDatum(Widget):
       label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
       
 
-      ok_button = Button(text='[b]Yes[/b]', markup = True)
+      ok_button = Button(text=yes_string, markup = True)
       ok_button.background_normal = ''
       ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-      back_button = Button(text='[b]No[/b]', markup = True)
+      back_button = Button(text=no_string, markup = True)
       back_button.background_normal = ''
       back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -144,7 +147,7 @@ class PopupDatum(Widget):
 
 
       if self.m.is_laser_enabled == True:
-        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
+        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='right', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
@@ -156,7 +159,7 @@ class PopupDatum(Widget):
       if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
       layout_plan.add_widget(btn_layout)
       
-      popup = Popup(title='Warning!',
+      popup = Popup(title=title_string,
                     title_color=[0, 0, 0, 1],
                     title_font= 'Roboto-Bold',
                     title_size = '20sp',
@@ -181,12 +184,16 @@ class PopupDatum(Widget):
 
 class PopupPark(Widget):
 
-    def __init__(self, screen_manager, machine, warning_message):
+    def __init__(self, screen_manager, machine, localization, warning_message):
         
       self.sm = screen_manager
       self.m = machine
+      self.l = localization
       
       description = warning_message
+      title_string = self.l.get_str('Warning!')
+      yes_string = self.l.get_bold('Yes')
+      no_string = self.l.get_bold('No')
 
 
       def set_park(*args):
@@ -197,10 +204,10 @@ class PopupPark(Widget):
       label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
       
 
-      ok_button = Button(text='[b]Yes[/b]', markup = True)
+      ok_button = Button(text=yes_string, markup = True)
       ok_button.background_normal = ''
       ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-      back_button = Button(text='[b]No[/b]', markup = True)
+      back_button = Button(text=no_string, markup = True)
       back_button.background_normal = ''
       back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -215,7 +222,7 @@ class PopupPark(Widget):
       layout_plan.add_widget(label)
       layout_plan.add_widget(btn_layout)
       
-      popup = Popup(title='Warning!',
+      popup = Popup(title=title_string,
                     title_color=[0, 0, 0, 1],
                     title_font= 'Roboto-Bold',
                     title_size = '20sp',

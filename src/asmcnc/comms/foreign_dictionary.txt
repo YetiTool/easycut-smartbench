@@ -75,3 +75,7 @@ The job extent over-reaches the Z axis at the upper end.	Der Job Ausmas uber err
 Try positioning the machine's Z datum lower down.	Versuchen Sie die Positionierung der Z-Bezug der Maschine weiter unten.	Essayez le positionnement de reference Z de la machine plus bas.	Prova posizionamento datum Z della macchina piu in basso.	Kokeile paikannus koneen Z nollapisteeseen alempana.	Probeer het positioneren van de machine Z datum te verlagen naar beneden.	Sprobuj ustawic maszyne za punkt odniesienia Z nizej.
 Is this where you want to set your X-Y datum?	Ist dies, wo Sie Ihre X-Y Datum festlegen?	Est-ce la ou vous voulez definir votre donnee X-Y?	E 'questo in cui si desidera impostare il dato di X-Y?	Onko tama johon haluat asettaa X-Y tieto?	Is dit waar u uw X-Y datum ingesteld?	Jest to, w ktorym chcesz ustawic punkt odniesienia X-Y?
 Is this where you want to set your standby position?	Ist das, wo Sie Ihre Standby-Position setzen?	Est-ce la ou vous voulez definir votre position d'attente?	E 'questo in cui si desidera impostare la posizione di attesa?	Onko tama johon haluat asettaa valmiustilaan asennossa?	Is dit waar u wilt uw stand-by positie in te stellen?	Jest to, w ktorym chcesz ustawic swoja pozycje gotowosci?
+Warning!	Warnung!	Attention!	Avvertimento!	Varoitus!	Waarschuwing!	Ostrzezenie!
+Yes	Ja	Oui	Si	Joo	Ja	Tak
+No	Nein	Non	No	Ei	Nee	Nie
+Use laser datum?	Verwenden Laser Datum?	Utilisez donnee au laser?	Usa datum laser?	Kayta laser nollapisteeseen?	Met laser datum?	Zastosowanie lasera punkt odniesienia?
