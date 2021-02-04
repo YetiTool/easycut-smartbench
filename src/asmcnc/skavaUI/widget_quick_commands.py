@@ -215,26 +215,8 @@ class QuickCommands(Widget):
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
-
-                # '[b] X [/b]' + self.l.get_bold("datum") + " " + \
-                # self.l.get_bold("further away from home") + 
-                # self.l.get_str("The job extent over-reaches the") + " X " + \
-                # self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
-                # '\n\n' + \
-                # '[color=#FFFFFF]' + \
-                # self.l.get_bold("Try positioning the machine's") + \
-                # '[b] X [/b]' + self.l.get_bold("datum") + " " + \
-                # self.l.get_bold("further away from home") + '.\n\n[/color]'
-            # )
-
-
-            # "The job extent over-reaches the N axis at the home end."
-            # "Try positioning the machine's N datum further away from home."
-
-
-
             errorfound += 1
 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
@@ -244,18 +226,8 @@ class QuickCommands(Widget):
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
-
-            #     '[color=#FFFFFF]' + \
-            #     self.l.get_str("The job extent over-reaches the") + " Y " + \
-            #     self.l.get_str("axis") + " " + self.l.get_str("at the home end.") + \
-            #     '\n\n' + \
-            #     '[color=#FFFFFF]' + \
-            #     self.l.get_bold("Try positioning the machine's") + \
-            #     '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
-            #     self.l.get_bold("further away from home") + '.\n\n[/color]'
-            # )
             errorfound += 1
 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
@@ -265,97 +237,44 @@ class QuickCommands(Widget):
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
-
-
-            #     '[color=#FFFFFF]' + \
-            #     self.l.get_str("The job extent over-reaches the") + " Z " + \
-            #     self.l.get_str("axis") + " " + self.l.get_str("at the lower end.") + \
-            #     '\n\n' + \
-            #     '[color=#FFFFFF]' + \
-            #     self.l.get_bold("Try positioning the machine's") + \
-            #     '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
-            #     self.l.get_bold("higher up") + '.\n\n[/color]'
-            # )
-
-            # "The job extent over-reaches the Z axis at the lower end."
-            # "Try positioning the machine's Z datum higher up."
-
             errorfound += 1
             
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                # '[color=#FFFFFF]' + \
-                # self.l.get_str("The job extent over-reaches the") + " X " + \
-                # self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
-                # '\n\n' + \
-                # '[color=#FFFFFF]' + \
-                # self.l.get_bold("Try positioning the machine's") + \
-                # '[b] X [/b]' + self.l.get_bold("datum") + " " + \
-                # self.l.get_bold("closer to home") + '.\n\n[/color]'
-                # )
-
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + \
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
-
-            # "The job extent over-reaches the N axis at the far end."
-            # "Try positioning the machine's N datum closer to home."
-
             errorfound += 1
 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                # '[color=#FFFFFF]' + \
-                # self.l.get_str("The job extent over-reaches the") + " Y " + \
-                # self.l.get_str("axis") + " " + self.l.get_str("at the far end.") + \
-                # '\n\n' + \
-                # '[color=#FFFFFF]' + \
-                # self.l.get_bold("Try positioning the machine's") + \
-                # '[b] Y [/b]' + self.l.get_bold("datum") + " " + \
-                # self.l.get_bold("closer to home") + '.\n\n[/color]'
-                # )
-
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + \
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
 
             errorfound += 1
 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                # '[color=#FFFFFF]' + \
-                # self.l.get_str("The job extent over-reaches the") + " Z " + \
-                # self.l.get_str("axis") + " " + self.l.get_str("at the upper end.") + \
-                # '\n\n' + \
-                # '[color=#FFFFFF]' + \
-                # self.l.get_bold("Try positioning the machine's") + \
-                # '[b] Z [/b]' + self.l.get_bold("datum") + " " + \
-                # self.l.get_bold("lower down") + '.\n\n[/color]'
-                # )
-
                 '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + \
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
-                '.\n\n[/color]'
+                '\n\n[/color]'
                 )
-
-            # "The job extent over-reaches the Z axis at the upper end."
-            # "Try positioning the machine's Z datum lower down."
-
             errorfound += 1
 
         if errorfound > 0: return False
