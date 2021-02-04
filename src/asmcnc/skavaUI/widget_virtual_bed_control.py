@@ -179,7 +179,7 @@ class VirtualBedControl(Widget):
         # warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
 
         # 'Is this where you want to set your X-Y datum?'
-        warning = format_command(
+        warning = self.format_command(
             (self.l.get_str('Is this where you want to set your X-Y datum?'
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
@@ -191,7 +191,7 @@ class VirtualBedControl(Widget):
 
         # Is this where you want to set your standby position?
 
-        warning = format_command(
+        warning = self.format_command(
             self.l.get_str('Is this where you want to set your standby position?')
             )
         popup_info.PopupPark(self.sm, self.m, warning)
