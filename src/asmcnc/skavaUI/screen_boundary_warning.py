@@ -53,7 +53,7 @@ Builder.load_string("""
              
             Label:
                 id: title_label
-                size_hint_y: 1
+                size_hint_y: 2
                 font_size: '40sp'
                 text: '[b]Job Outside Machine Limits[/b]'
                 markup: True
@@ -64,7 +64,7 @@ Builder.load_string("""
  
                 
             Label:
-                size_hint_y: 4
+                size_hint_y: 3
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
