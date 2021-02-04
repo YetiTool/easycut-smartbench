@@ -180,7 +180,7 @@ class QuickCommands(Widget):
                 z_datum_reminder_message = (
                     self.format_command(self.l.get_str('You may need to set a new Z datum before you start a new job!')) + \
                     '\n\n' + \
-                    self.format_command(self.l.get_str('Press Ok to clear this reminder.').replace(self.get_str('Ok'), self.get_bold('Ok')))
+                    self.format_command(self.l.get_str('Press Ok to clear this reminder.').replace(self.l.get_str('Ok'), self.l.get_bold('Ok')))
                 )
 
                 popup_info.PopupWarning(self.sm, z_datum_reminder_message)
@@ -220,6 +220,12 @@ class QuickCommands(Widget):
                 '[b] X [/b]' + self.l.get_bold("datum") + " " + \
                 self.l.get_bold("further away from home") + '.\n\n[/color]'
             )
+
+
+
+
+
+
             errorfound += 1
 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
