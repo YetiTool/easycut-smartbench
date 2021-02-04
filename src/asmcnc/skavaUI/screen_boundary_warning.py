@@ -42,8 +42,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding: 50
+        spacing: 40
         size_hint_x: 1
 
         BoxLayout:
@@ -53,7 +53,7 @@ Builder.load_string("""
              
             Label:
                 id: title_label
-                size_hint_y: 2
+                size_hint_y: 1
                 font_size: '40sp'
                 text: '[b]Job Outside Machine Limits[/b]'
                 markup: True
@@ -64,7 +64,7 @@ Builder.load_string("""
  
                 
             Label:
-                size_hint_y: 1.7
+                size_hint_y: 4
                 text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
@@ -75,7 +75,7 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 padding: 10, 0
-                #spacing: 50
+                size_hint_y: 1
                                     
                 Button:
                     id: quit_button
@@ -98,7 +98,7 @@ Builder.load_string("""
                         
                         Label:
                             #size_hint_y: 1
-                            font_size: '18sp'
+                            font_size: '20sp'
                             text: root.exit_label
         
         BoxLayout:
