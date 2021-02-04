@@ -1,69 +1,69 @@
-English (GB)	Deutsche (DE)	Francais (FR)	Italiano (IT)
-System Information	System Information	Informations sur le systeme	Informazioni di sistema
-Serial number	Ordnungsnummer	Numero de serie	Numero di serie
-Console serial number	Konsole Seriennummer	Console numero de serie	Numero di serie console
-Software	Software	Logiciel	Software
-Platform	Plattform	Plate-forme	Piattaforma
-Firmware	Firmware	Firmware	Firmware
-Z head	Z Kopf	Tete Z	Testa Z
-Hardware	Hardware	Materiel	Hardware
-More info	Mehr Info	Plus d'informations	Ulteriori informazioni
-Choose language	Sprache wahlen	Choisissez la langue	Scegli la lingua
-IP Address	IP Adresse	Adresse IP	Indirizzo IP
-System Info	System Info	Info Systeme	System Info
-Download Logs	Protokolle Herunterladen	Telecharger les Journaux	Logs Scarica
-Reboot	Rebooten	Reboot	Reboot
-Exit Software	Beenden Software	Logiciel de sortie	Exit Software
-Beta Testing	Beta-Test	Tests Beta	Beta Testing
-GRBL Settings	GRBL Einstellungen	GRBL Reglages	Impostazioni GRBL
-Factory	Fabrik	Usine	Fabbrica
-Update Testing	Update Testing	Mise a jour d'essai	Test di Aggiornamento
-Developer	Entwickler	Developpeur	Sviluppatore
-Go Back	Geh Zuruck	Retourner	Torna Indietro
-CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM
-Shape Cutter	Form Cutter	Cutter Shape	Cutter di Forma
-Wifi	W-lan	Wifi	Wi-Fi
-Calibrate	Kalibrieren	Etalonner	Calibrare
-Update	Aktualisieren	Mise a Jour	Aggiornare
-Maintenance	Instandhaltung	Entretien	Manutenzione
-System Tools	System Tools	Outils Systeme	Strumenti di Sistema
-Use the arrows to go through the menu, and select an app to get started.	Verwenden sie die pfeile durch das menu zu gehen, und wahlen sie eine app, um loszulegen.	Utilisez les fleches pour passer par le menu, puis selectionnez une application pour commencer.	Usa le frecce per passare attraverso il menu e selezionare un app per iniziare.
-If this is your first time, make sure you use the	Wenn dies das erste mal ist, stellen sie sicher, verwenden sie die	Si ceci est votre premiere fois, assurez-vous que vous utilisez la	Se questa e la prima volta, assicurarsi di utilizzare il
-apps to set up SmartBench.	apps Smartbench einzurichten.	apps pour mettre en place SmartBench.	apps per configurare Smartbench.
-and	und	et	e
-For more help, please visit:	Weitere hilfe finden sie unter:	Pour plus d'aide, visitez s'il vous plait:	Per ulteriori informazioni, visitare il sito:
-Ok	OK	Ok	Ok
-Remind me later	Erinnere mich spater	Rappelez-moi plus tard	Ricordamelo piu tardi
-Welcome to SmartBench	Willkommen bei Smartbench	Bienvenue sur SmartBench	Benvenuti a Smartbench
-Information	Information	Information	Informazione
-New software update available for download!	Neues software-update zum download bereit!	Nouvelle mise a jour du logiciel disponible pour telechargement!	Aggiornamento nuovo software disponibile per il download!
-Please use the	Bitte verwenden sie die	S'il vous plait utiliser la	Si prega di utilizzare il
-app to get the latest version.	app die neueste version zu bekommen.	application pour obtenir la derniere version.	app per ottenere la versione piu recente.
-The console will close any critical processes and shut down safely after 60 seconds, ready for power off.	Die konsole wird alle kritischen prozesse schliesen und abfahren sicher nach 60 sekunden aus, die stromversorgung aus.	La console fermera tous les processus critiques et l'arret en toute securite au bout de 60 secondes, pret pour la mise hors tension.	La console chiudere i processi critici e spegnere in modo sicuro dopo 60 secondi, pronto per lo spegnimento.
-This extends the lifetime of the console.	Dies verlangert die lebensdauer der konsole.	Cela prolonge la duree de vie de la console.	Questo si estende la durata della console.
-You will still need to power down your machine separately after the console has finished shutting down.	Sie werden immer noch sie Ihre maschine an das strom mussen getrennt, nachdem die konsole heruntergefahren beendet hat.	Vous aurez toujours besoin de puissance de votre machine separement apres la console a termine la fermeture.	Sara ancora bisogno di spegnere la macchina separatamente dopo la console ha terminato lo spegnimento.
-Shutdown now	Shutdown jetzt	Arret maintenant	Shutdown ora
-Cancel	Stornieren	Annuler	Annulla
-Shutting down	Herunterfahren	Eteindre	Chiudere
-Load a file	Legen sie eine datei	Charger un fichier	Caricare un file
-Tap the file chooser in the first tab (top left) to load a file.	Tippen sie auf die dateiauswahl in der ersten registerkarte (oben links), um eine datei zu laden.	Appuyez sur le selecteur de fichier dans le premier onglet (en haut a gauche) pour charger un fichier.	Toccare il selettore di file nella prima scheda (in alto a sinistra) per caricare un file.
-Before running, a file needs to be loaded.	Vor dem ausfuhren muss eine datei geladen werden.	Avant d'executer, un fichier doit etre charge.	Prima di eseguire un file deve essere caricato.
-The job extent over-reaches the	Der job ausmas uber erreicht die	La mesure de l'emploi trop atteint la	L'entita di lavoro over-raggiunge il
-axis	achse	axe	asse
-at the home end.	am haus ende.	a la fin de la maison.	alla fine casa.
-Try positioning the machine's	Versuchen sie, die maschine zu positionieren	Essayez de positionner les machines de	Provare il posizionamento della macchina
-datum	datum	donnees	dato
-further away from home	weiter weg von zu hause aus	plus loin de la maison	piu lontano da casa
-at the lower end.	am unteren ende.	a l'extremite inferieure.	in corrispondenza dell'estremita inferiore.
-higher up	weiter oben	plus haut	piu in alto
-at the far end.	am anderen ende.	a la toute fin.	all'estremita.
-at the upper end.	am oberen ende.	a l'extremite superieure.	all'estremita superiore.
-lower down	weiter unten	plus bas	piu in basso
-You may need to set a new Z datum before you start a new job!	Moglicherweise mussen Sie einen neuen Z-Bezug setzen, bevor Sie einen neuen Job beginnen!	Vous devrez peut-etre definir une nouvelle donnee Z avant de commencer un nouvel emploi!	Potrebbe essere necessario impostare un nuovo dato Z prima di iniziare un nuovo lavoro!
-Press Ok to clear this reminder.	Drucken Sie Ok diese Erinnerung zu loschen.	Appuyez sur OK pour effacer ce rappel.	Premere Ok per cancellare questo promemoria.
-WARNING: Job is not within machine bounds!	ACHTUNG: Job ist nicht in der maschine grenzen!	AVERTISSEMENT: Job n'est pas dans les limites de la machine!	ATTENZIONE: Il lavoro non e nei limiti della macchina!
-Please set datum appropriately, so that job boundaries are within SmartBench limits.	Bitte satz datum entsprechend, so dass job grenzen sind innerhalb grenzen Smartbench.	S'il vous plait donnee reglee de facon appropriee, de sorte que les limites d'emploi sont dans les limites SmartBench.	Si prega di impostare in modo appropriato datum, in modo che i confini di posti di lavoro sono entro i limiti Smartbench.
-DETAILS OF BOUNDARY CONFLICT	DETAILS DER GRENZKONFLIKT	DETAILS DE CONFLIT FRONTIERE	PARTICOLARI DI CONFLITTO DI CONFINE
-closer to home	naher zuhause	plus proche de la maison	piu vicino a casa
-Job Outside Machine Limits	Job auserhalb der grenzen der maschine	En dehors des limites de la machine de l'emploi	Lavoro fuori dai limiti della macchina
-Return	Ruckkehr	Revenir	Ritorno
+English (GB)	Deutsche (DE)	Francais (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polskie (PL)
+System Information	System Information	Informations sur le systeme	Informazioni di sistema	Jarjestelman tiedot	Systeem informatie	Informacje o Systemie
+Serial number	Ordnungsnummer	Numero de serie	Numero di serie	Sarjanumero	Serienummer	Numer Seryjny
+Console serial number	Konsole Seriennummer	Console numero de serie	Numero di serie console	Konsolin sarjanumeroa	Console serienummer	Numer Seryjny Konsoli
+Software	Software	Logiciel	Software	Ohjelmisto	Software	Oprogramowanie
+Platform	Plattform	Plate-forme	Piattaforma	Foorumi	Platform	Platforma
+Firmware	Firmware	Firmware	Firmware	Firmware	Firmware	Firmware
+Z head	Z Kopf	Tete Z	Testa Z	Z Paa	Z Hoofd	Z glowy
+Hardware	Hardware	Materiel	Hardware	Laitteisto	Hardware	Sprzet Komputerowy
+More info	Mehr Info	Plus d'informations	Ulteriori informazioni	Lisatietoja	Meer informatie	Wiecej informacji
+Choose language	Sprache wahlen	Choisissez la langue	Scegli la lingua	Valitse kieli	Kies een taal	Wybierz jezyk
+IP Address	IP Adresse	Adresse IP	Indirizzo IP	IP-osoite	IP adres	Adres IP
+System Info	System Info	Info Systeme	System Info	Jarjestelman tiedot	Systeeminformatie	Informacja o Systemie
+Download Logs	Protokolle Herunterladen	Telecharger les Journaux	Logs Scarica	Lataa loki	Download Logboek	Pobierz Dzienniki
+Reboot	Rebooten	Reboot	Reboot	Reboot	Reboot	Restart
+Exit Software	Beenden Software	Logiciel de sortie	Exit Software	Exit Ohjelmistopaivitys	Exit Software	Wyjscie Software
+Beta Testing	Beta-Test	Tests Beta	Beta Testing	Beta-Testaus	Beta Testen	Testowanie Beta
+GRBL Settings	GRBL Einstellungen	GRBL Reglages	Impostazioni GRBL	GRBL Asetukset	GRBL Instellingen	Ustawienia GRBL
+Factory	Fabrik	Usine	Fabbrica	Tehdas	Fabriek	Fabryka
+Update Testing	Update Testing	Mise a jour d'essai	Test di Aggiornamento	Paivitys Testaus	Update Testen	Testowanie Aktualizacji
+Developer	Entwickler	Developpeur	Sviluppatore	Kehittaja	Ontwikkelaar	Deweloper
+Go Back	Geh Zuruck	Retourner	Torna Indietro	Mene Takaisin	Ga Terug	Wroc
+CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM	CAD / CAM
+Shape Cutter	Form Cutter	Cutter Shape	Cutter di Forma	Shape Cutter	Shape Cutter	Shape Cutter
+Wifi	W-lan	Wifi	Wi-Fi	Wifi	Wifi	Wifi
+Calibrate	Kalibrieren	Etalonner	Calibrare	Kalibroida	Ijken	Kalibrowac
+Update	Aktualisieren	Mise a Jour	Aggiornare	Paivittaa	Bijwerken	Aktualizacja
+Maintenance	Instandhaltung	Entretien	Manutenzione	Yllapito	Onderhoud	Konserwacja
+System Tools	System Tools	Outils Systeme	Strumenti di Sistema	Jarjestelmatyokalut	Systeem Gereedschap	Narzedzia Systemowe
+Use the arrows to go through the menu, and select an app to get started.	Verwenden sie die pfeile durch das menu zu gehen, und wahlen sie eine app, um loszulegen.	Utilisez les fleches pour passer par le menu, puis selectionnez une application pour commencer.	Usa le frecce per passare attraverso il menu e selezionare un app per iniziare.	Nuolilla lapi valikko ja valitse sovellus paasta alkuun.	Gebruik de pijltjes om te gaan door het menu, en selecteer een app om te beginnen.	Uzyj strzaLek, aby przejsc do menu, a nastepnie wybierz aplikacje, aby rozpoczac.
+If this is your first time, make sure you use the	Wenn dies das erste mal ist, stellen sie sicher, verwenden sie die	Si ceci est votre premiere fois, assurez-vous que vous utilisez la	Se questa e la prima volta, assicurarsi di utilizzare il	Jos tama on ensimmainen kerta, muista kayttaa	Als dit de eerste keer is, zorg ervoor dat u gebruik maken van de	Jesli jest to twoj pierwszy raz, upewnij sie uzyc
+apps to set up SmartBench.	apps Smartbench einzurichten.	apps pour mettre en place SmartBench.	apps per configurare Smartbench.	sovellukset perustaa SmartBench.	apps op te zetten SmartBench.	aplikacje skonfigurowac SmartBench.
+and	und	et	e	ja	en	i
+For more help, please visit:	Weitere hilfe finden sie unter:	Pour plus d'aide, visitez s'il vous plait:	Per ulteriori informazioni, visitare il sito:	Saat apua osoitteessa:	Voor meer hulp kunt u terecht op:	Aby uzyskac wiecej pomocy, prosimy odwiedzic:
+Ok	OK	Ok	Ok	OK	OK	OK
+Remind me later	Erinnere mich spater	Rappelez-moi plus tard	Ricordamelo piu tardi	Muistuta minua myohemmin	Herinner me later	Przypomnij mi pozniej
+Welcome to SmartBench	Willkommen bei Smartbench	Bienvenue sur SmartBench	Benvenuti a Smartbench	Tervetuloa SmartBench	Welkom bij SmartBench	Zapraszamy do SmartBench
+Information	Information	Information	Informazione	Tiedot	Informatie	Informacja
+New software update available for download!	Neues software-update zum download bereit!	Nouvelle mise a jour du logiciel disponible pour telechargement!	Aggiornamento nuovo software disponibile per il download!	Uusi ohjelmistopaivitys ladattavissa!	Nieuwe software-update beschikbaar om te downloaden!	Nowa aktualizacja do pobrania oprogramowanie!
+Please use the	Bitte verwenden sie die	S'il vous plait utiliser la	Si prega di utilizzare il	Kayta	Maak gebruik van de	Prosze uzyc
+app to get the latest version.	app die neueste version zu bekommen.	application pour obtenir la derniere version.	app per ottenere la versione piu recente.	app saada uusin versio.	app om de laatste versie te krijgen.	aplikacji, aby pobrac najnowsza wersje.
+The console will close any critical processes and shut down safely after 60 seconds, ready for power off.	Die konsole wird alle kritischen prozesse schliesen und abfahren sicher nach 60 sekunden aus, die stromversorgung aus.	La console fermera tous les processus critiques et l'arret en toute securite au bout de 60 secondes, pret pour la mise hors tension.	La console chiudere i processi critici e spegnere in modo sicuro dopo 60 secondi, pronto per lo spegnimento.	Konsoli sulkea kriittisiin prosesseihin ja sammuttaa turvallisesti 60 sekunnin kuluttua, valmiina virta.	De console zal alle kritische processen af te sluiten en af te sluiten veilig na 60 seconden, klaar voor de stroom uit.	Konsola bedzie zamknac zadnych krytycznych procesow i bezpiecznie zamkniety po 60 sekundach, gotowy do zasilania.
+This extends the lifetime of the console.	Dies verlangert die lebensdauer der konsole.	Cela prolonge la duree de vie de la console.	Questo si estende la durata della console.	Tama pidentaa elinikaa konsolin.	Dit verlengt de levensduur van de console.	WydLuza to zywotnosc konsoli.
+You will still need to power down your machine separately after the console has finished shutting down.	Sie werden immer noch sie Ihre maschine an das strom mussen getrennt, nachdem die konsole heruntergefahren beendet hat.	Vous aurez toujours besoin de puissance de votre machine separement apres la console a termine la fermeture.	Sara ancora bisogno di spegnere la macchina separatamente dopo la console ha terminato lo spegnimento.	Tulet viela taytyy sammuttaa koneen erikseen sen jalkeen, kun konsoli on valmis sammuttamista.	U moet dan nog aan de macht van uw machine apart nadat de console klaar is afgesloten.	Konieczne bedzie do wLadzy w doL komputerze oddzielnie po zakonczeniu konsola zamykania.
+Shutdown now	Shutdown jetzt	Arret maintenant	Shutdown ora	Shutdown nyt	Shutdown nu	Shutdown teraz
+Cancel	Stornieren	Annuler	Annulla	Peruuttaa	Annuleren	Anulowac
+Shutting down	Herunterfahren	Eteindre	Chiudere	Sammutetaan	Afsluiten	WyLaczanie
+Load a file	Legen sie eine datei	Charger un fichier	Caricare un file	Lataa tiedosto	Laad een file	ZaLaduj plik
+Tap the file chooser in the first tab (top left) to load a file.	Tippen sie auf die dateiauswahl in der ersten registerkarte (oben links), um eine datei zu laden.	Appuyez sur le selecteur de fichier dans le premier onglet (en haut a gauche) pour charger un fichier.	Toccare il selettore di file nella prima scheda (in alto a sinistra) per caricare un file.	Tiedosto napauttamalla chooser ensimmaisessa valilehden (ylhaalla vasemmalla) ladata tiedoston.	Tik op het bestand chooser in het eerste tabblad (linksboven) om een bestand te laden.	Dotknij wyboru pliku w pierwszej zakladce (w lewym gornym rogu), aby zaladowac plik.
+Before running, a file needs to be loaded.	Vor dem ausfuhren muss eine datei geladen werden.	Avant d'executer, un fichier doit etre charge.	Prima di eseguire un file deve essere caricato.	Ennen kaynnissa, tiedosto taytyy ladata.	Voordat u een bestand moet worden geladen.	Przed uruchomieniem, plik musi byc zaladowany.
+The job extent over-reaches the	Der job ausmas uber erreicht die	La mesure de l'emploi trop atteint la	L'entita di lavoro over-raggiunge il	Tyo maarin yli-saavuttaa	De job mate over-bereikt het	Zakres pracy nadmiernie osiagnie
+axis	achse	axe	asse	akseli	as	os
+at the home end.	am haus ende.	a la fin de la maison.	alla fine casa.	kotona lopussa.	in het huis einde.	w koncu do domu.
+Try positioning the machine's	Versuchen sie, die maschine zu positionieren	Essayez de positionner les machines de	Provare il posizionamento della macchina	Kokeile paikannus koneen	Probeer het positioneren van de machine	Sprobuj pozycjonowania maszyna
+datum	datum	donnees	dato	tieto	datum	fakt
+further away from home	weiter weg von zu hause aus	plus loin de la maison	piu lontano da casa	kauempana kotoa	verder weg van huis	dalej od domu
+at the lower end.	am unteren ende.	a l'extremite inferieure.	in corrispondenza dell'estremita inferiore.	alapaassa.	aan het ondereinde.	na dolnym koncu.
+higher up	weiter oben	plus haut	piu in alto	korkeammalle	hoger op	wyzej
+at the far end.	am anderen ende.	a la toute fin.	all'estremita.	peralla.	helemaal aan het einde.	na dalekim koncu.
+at the upper end.	am oberen ende.	a l'extremite superieure.	all'estremita superiore.	ylapaassa.	aan het boveneinde.	na gornym koncu.
+lower down	weiter unten	plus bas	piu in basso	madaltaa	naar beneden zakken	Nizej
+You may need to set a new Z datum before you start a new job!	Moglicherweise mussen sie einen neuen Z-bezug setzen, bevor sie einen neuen job beginnen!	Vous devrez peut-etre definir une nouvelle donnee Z avant de commencer un nouvel emploi!	Potrebbe essere necessario impostare un nuovo dato Z prima di iniziare un nuovo lavoro!	Saatat joutua asettamaan uuden Z peruspisteen ennen kuin aloitat uuden tyon!	U kan nodig zijn om een nieuwe Z nulpunt voordat u een nieuwe baan te beginnen!	Byc moze trzeba ustawic nowy punkt odniesienia Z przed rozpoczeciem nowej pracy!
+Press Ok to clear this reminder.	Drucken sie Ok diese erinnerung zu loschen.	Appuyez sur OK pour effacer ce rappel.	Premere Ok per cancellare questo promemoria.	Paina OK tyhjentaa muistutuksen.	Druk op OK om deze herinnering te wissen.	Nacisnij przycisk OK, aby usunac to przypomnienie.
+WARNING: Job is not within machine bounds!	ACHTUNG: Job ist nicht in der maschine grenzen!	AVERTISSEMENT: Job n'est pas dans les limites de la machine!	ATTENZIONE: Il lavoro non e nei limiti della macchina!	VAROITUS: Job ei kuulu koneen rajoja!	WAARSCHUWING: Job is niet binnen machine grenzen!	UWAGA: Praca nie jest w granicach maszyny!
+Please set datum appropriately, so that job boundaries are within SmartBench limits.	Bitte satz datum entsprechend, so dass job grenzen sind innerhalb grenzen Smartbench.	S'il vous plait donnee reglee de facon appropriee, de sorte que les limites d'emploi sont dans les limites SmartBench.	Si prega di impostare in modo appropriato datum, in modo che i confini di posti di lavoro sono entro i limiti Smartbench.	Aseta peruspiste asianmukaisesti, niin etta tyopaikkojen rajat ovat SmartBench rajoissa.	Gelieve set datum op de juiste wijze, zodat de baan grenzen binnen SmartBench grenzen.	Prosze ustawic punkt odniesienia w odpowiedni sposob, tak, ze granice pracy sa w granicach SmartBench.
+DETAILS OF BOUNDARY CONFLICT	DETAILS DER GRENZKONFLIKT	DETAILS DE CONFLIT FRONTIERE	PARTICOLARI DI CONFLITTO DI CONFINE	TIEDOT RAJAN RISTIRIITA	DETAILS VAN DE GRENS CONFLICT	SZCZEGOLY GRANICA KONFLIKTU
+closer to home	naher zuhause	plus proche de la maison	piu vicino a casa	lahempana kotia	dichter bij huis	blizej domu
+Job Outside Machine Limits	Job auserhalb der grenzen der maschine	En dehors des limites de la machine de l'emploi	Lavoro fuori dai limiti della macchina	Job Koneen Ulkopuolelle Rajat	Job Buiten Machine Grenzen	Ograniczenia Pracy Maszyny Na Zewnatrz
+Return	Ruckkehr	Revenir	Ritorno	Palata	Terugkeer	Powrot
