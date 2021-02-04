@@ -66,7 +66,7 @@ Builder.load_string("""
             Label:
                 size_hint_y: 1.7
                 text_size: self.size
-                font_size: '15sp'
+                font_size: '20sp'
                 halign: 'center'
                 valign: 'top'
                 text: root.check_outcome
@@ -125,8 +125,7 @@ class BoundaryWarningScreen(Screen):
 
     entry_screen = StringProperty()
     job_box_details = []
-    
-#     gcode_has_been_checked_and_its_ok = False # actually put this in screen_home, and route everything back there. 
+
     
     def __init__(self, **kwargs):
         super(BoundaryWarningScreen, self).__init__(**kwargs)
