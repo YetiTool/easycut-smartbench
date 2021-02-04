@@ -153,7 +153,7 @@ class PopupDatum(Widget):
         chk_layout.add_widget(chk_label)
         chk_layout.add_widget(checkbox)
 
-      layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+      layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,20,10,20])
       layout_plan.add_widget(img)
       layout_plan.add_widget(label)
       if self.m.is_laser_enabled == True: layout_plan.add_widget(chk_layout)
