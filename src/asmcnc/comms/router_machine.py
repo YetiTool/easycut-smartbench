@@ -170,7 +170,7 @@ class RouterMachine(object):
         if not path.exists(self.persistent_language_path):
             log("Creating language settings file")
             file = open(self.persistent_language_path, 'w+')
-            file.write('English')
+            file.write('English (GB)')
             file.close()
 
     def get_persistent_values(self):
