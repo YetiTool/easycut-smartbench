@@ -158,6 +158,7 @@ Builder.load_string("""
 
 class VirtualBedControl(Widget):
 
+    # localize meeee
 
     def __init__(self, **kwargs):
     
