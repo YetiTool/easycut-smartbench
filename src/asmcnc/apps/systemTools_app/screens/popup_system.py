@@ -24,6 +24,7 @@ class PopupDownloadLogs(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = self.l.get_str("Would you like to download the system logs onto a USB stick?")
         title_string = self.l.get_str('Warning!')
@@ -79,6 +80,7 @@ class RebootConsole(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = self.l.get_str("Would you like to reboot the console now?")
         title_string = self.l.get_str('Warning!')
@@ -133,6 +135,7 @@ class QuitToConsole(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = self.l.get_str("Would you like to exit the software now?")
         title_string = self.l.get_str('Warning!')
@@ -188,6 +191,7 @@ class PopupBetaTesting(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = "Beta testing allows our engineers and beta testers to try out software updates " + \
         "that might not be stable, or change how SmartBench behaves.\n\n" + \
@@ -247,6 +251,7 @@ class PopupGRBLSettingsPassword(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = "Changing the GRBL settings will change how SmartBench behaves. " + \
         "By changing the settings you may risk causing damage to SmartBench.\n" + \
@@ -301,6 +306,7 @@ class PopupFactorySettingsPassword(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = self.l.get_str("Please enter the password to use the factory settings.")
 
@@ -351,6 +357,7 @@ class PopupUpdateTestingPassword(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = "Update testing allows our engineers to try out full system updates updates " + \
         "that might not be stable, or change how SmartBench behaves. " + \
@@ -406,6 +413,7 @@ class PopupDeveloperPassword(Widget):
     def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = "The developer app is to help our engineers access extra settings " + \
         "and functions that might not be stable, or change how SmartBench behaves. " + \
