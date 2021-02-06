@@ -309,6 +309,8 @@ class PopupFactorySettingsPassword(Widget):
         self.l = localization
         
         description = self.l.get_str("Please enter the password to use the factory settings.")
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
           if textinput.text == "fac":
