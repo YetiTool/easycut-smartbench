@@ -440,7 +440,10 @@ class RebootAfterLanguageChange(Widget):
         self.systemtools_sm = screen_manager
         self.l = localization
         
-        description = self.l.get_str('Console will reboot to update language settings.')
+        description = self.l.get_str('Console needs to reboot to update language settings.')
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+        cancel_string = self.l.get_bold('Cancel')
 
         def reboot_console(*args):
             self.systemtools_sm.sm.current = 'rebooting'
@@ -448,10 +451,10 @@ class RebootAfterLanguageChange(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=cancel_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -471,7 +474,7 @@ class RebootAfterLanguageChange(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 400),
+                      size=(400, 400),
                       auto_dismiss= False
                       )
 
@@ -482,49 +485,5 @@ class RebootAfterLanguageChange(Widget):
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=reboot_console)
         back_button.bind(on_press=popup.dismiss)
-
-        popup.open()
-
-class PopupInfo(Widget):
-
-    def __init__(self, screen_manager, localization, popup_width, description):
-        
-        self.sm = screen_manager
-        self.l = localization
-        label_width = popup_width - 40
-        
-        title_string = self.l.get_str('Information')
-        ok_string = self.l.get_bold('Ok')
-
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
-        
-        ok_button = Button(text=ok_string, markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
-        btn_layout.add_widget(ok_button)
-        
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
-        layout_plan.add_widget(img)
-        layout_plan.add_widget(label)
-        layout_plan.add_widget(btn_layout)
-        
-        popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
-                      title_size = '20sp',
-                      content=layout_plan,
-                      size_hint=(None, None),
-                      size=(popup_width, 400),
-                      auto_dismiss= False
-                      )
-
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
-        popup.separator_height = '4dp'
-
-        ok_button.bind(on_press=popup.dismiss)
 
         popup.open()

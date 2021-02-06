@@ -17,7 +17,7 @@ Builder.load_string("""
 
 <RebootingScreen>:
 
-    homing_label:homing_label
+    reboot_label: reboot_label
 
     canvas:
         Color: 
@@ -37,7 +37,7 @@ Builder.load_string("""
             size_hint_x: 1
                 
             Label:
-                id: homing_label
+                id: reboot_label
                 text_size: self.size
                 size_hint_y: 0.5
                 text: "Rebooting..."
@@ -53,8 +53,11 @@ class RebootingScreen(Screen):
     def __init__(self, **kwargs):
         super(RebootingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
+        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
     
     def on_enter(self): 
+        self.reboot_label.text = self.l.get_str('Rebooting') + '...'
         Clock.schedule_once(self.reboot, 1)
         
     def reboot(self, dt):

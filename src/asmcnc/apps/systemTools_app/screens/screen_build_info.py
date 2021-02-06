@@ -548,4 +548,5 @@ class BuildInfoScreen(Screen):
 
     def restart_app(self):
         if self.reset_language == True: 
-            self.systemtools_sm.sm.current = 'rebooting'
+            popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
+

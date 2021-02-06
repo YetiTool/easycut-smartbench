@@ -100,3 +100,5 @@ Check	Prüfen	Vérifier	Dai un'occhiata	Tarkistaa	Controleren	Czek
 Help	Hilfe	Aidez-moi	Aiuto	auta	Helpen	Wsparcie
 Clear	klar	Clair	Chiaro	Asia selvä	Doorzichtig	Jasny
 Status	Status	Statut	Stato	Tila	Toestand	Status
+Console needs to reboot to update language settings.	Konsole muss Update Spracheinstellungen neu zu starten.	Console doit redémarrer pour mettre à jour les paramètres de langue.	Console ha bisogno di riavviare il sistema per le impostazioni della lingua aggiornamento.	Konsoli on käynnistettävä uudelleen Päivitettävää kieliasetukset.	Console moet herstarten om de update taalinstellingen.	Konsola musi restart do ustawień językowych aktualizacji.
+Rebooting	Neustarten	redémarrage	Riavvio	uudelleenkäynnistystä	Het rebooten	Ponowne uruchomienie
