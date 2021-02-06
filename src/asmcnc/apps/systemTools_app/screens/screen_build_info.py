@@ -549,7 +549,7 @@ class BuildInfoScreen(Screen):
         self.restart_app()
 
     def restart_app(self):
-        if self.reset_language = True: 
+        if self.reset_language == True: 
             os.system("../../starteasycut.sh")
             sys.exit()
 
