@@ -425,6 +425,7 @@ class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     language_list = []
+    reset_language = False
 
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
@@ -517,8 +518,9 @@ class BuildInfoScreen(Screen):
     def choose_language(self):
         chosen_lang = self.language_button.text
         self.l.load_in_new_language(chosen_lang)
-        # self.update_strings()
-        # self.restart_app()
+        self.update_strings()
+        self.restart_app()
+        self.reset_language = True
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -543,8 +545,12 @@ class BuildInfoScreen(Screen):
             self.get_ip_address()
             )
 
+    def on_leave(self):
+        self.restart_app()
+
     def restart_app(self):
-        os.system(".../starteasycut.sh")
-        sys.exit()
+        if self.reset_language = True: 
+            os.system("../../starteasycut.sh")
+            sys.exit()
 
 
