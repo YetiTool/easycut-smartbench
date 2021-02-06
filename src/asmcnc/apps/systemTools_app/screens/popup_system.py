@@ -449,7 +449,7 @@ class RebootAfterLanguageChange(Widget):
             self.systemtools_sm.sm.current = 'rebooting'
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(260, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.7, text_size=(260, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -459,7 +459,7 @@ class RebootAfterLanguageChange(Widget):
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
        
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
