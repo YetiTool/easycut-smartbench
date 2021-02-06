@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 12 December 2019
 Landing Screen for the Calibration App

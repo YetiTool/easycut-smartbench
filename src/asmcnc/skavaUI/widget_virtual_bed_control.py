@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 Feb 2018
 @author: Ed

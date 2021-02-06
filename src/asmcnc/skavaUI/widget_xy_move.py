@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 Feb 2018
 @author: Ed
@@ -397,11 +398,13 @@ class XYMove(Widget):
 
     def set_x_datum(self):
         warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'X', warning)
+
+        
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
         warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'Y', warning)
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

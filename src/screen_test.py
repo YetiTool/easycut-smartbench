@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
@@ -12,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_jobstart_warning
+from asmcnc.tests import screen_unicode_test
 
 
 class ScreenTest(App):
@@ -22,7 +24,7 @@ class ScreenTest(App):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
+		jobstart_warning_screen = screen_unicode_test.ScreenClass(name='jobstart_warning', screen_manager = sm, machine = m)
 		sm.add_widget(jobstart_warning_screen)
 		sm.current = 'jobstart_warning'
 		return sm

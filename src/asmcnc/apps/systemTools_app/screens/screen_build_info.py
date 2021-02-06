@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 18 November 2020
 Build info screen for system tools app

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
