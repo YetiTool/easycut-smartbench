@@ -593,16 +593,19 @@ class PopupError(Widget):
         popup.open()
 
 class PopupWarning(Widget):   
-    def __init__(self, screen_manager, warning_message):
+    def __init__(self, screen_manager, localization, warning_message):
         
         self.sm = screen_manager
+        self.l = localization
         
         description = warning_message
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -614,7 +617,7 @@ class PopupWarning(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

@@ -290,7 +290,7 @@ class HomeScreen(Screen):
         self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm))
 
         # Settings tab
-        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
+        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         
         # Quick commands
