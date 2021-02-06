@@ -221,28 +221,28 @@ class SystemMenuScreen(Screen):
     	self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
-        popup_system.PopupDownloadLogs(self.systemtools_sm)
+        popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
 
     def reboot(self):
-        popup_system.RebootConsole(self.systemtools_sm)
+        popup_system.RebootConsole(self.systemtools_sm, self.l)
 
     def quit_to_console(self):
-        popup_system.QuitToConsole(self.systemtools_sm)
+        popup_system.QuitToConsole(self.systemtools_sm, self.l)
 
     def beta_testing(self):
-        popup_system.PopupBetaTesting(self.systemtools_sm)
+        popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
 
     def grbl_settings(self):
-    	popup_system.PopupGRBLSettingsPassword(self.systemtools_sm)
+    	popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
 
     def factory_settings(self):
-    	popup_system.PopupFactorySettingsPassword(self.systemtools_sm)
+    	popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
 
     def update_testing(self):
-        popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
+        popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
 
     def developer(self):
-    	popup_system.PopupDeveloperPassword(self.systemtools_sm)
+    	popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
 
     def update_strings(self):
         self.button_system_info.text = self.l.get_str('System Info')
