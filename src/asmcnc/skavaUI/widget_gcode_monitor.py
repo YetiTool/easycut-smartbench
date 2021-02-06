@@ -111,7 +111,7 @@ Builder.load_string("""
                         id: enter_button
                         text: "Enter"
                         on_press: root.send_gcode_textinput()
-                        size_hint_x:0.2
+                        size_hint_x:0.3
                         background_color: .6, 1, 0.6, 1
       
                 ScrollableLabelCommands:
@@ -122,7 +122,7 @@ Builder.load_string("""
                 padding_horizontal: 5
                 spacing: 5
                 orientation: "vertical"
-                size_hint_x: 0.17
+                size_hint_x: 0.24
         
                 ToggleButton:
                     id: hide_ok_button
@@ -218,8 +218,8 @@ class GCodeMonitor(Widget):
 
     hide_received_ok = StringProperty('down')
     hide_received_status = StringProperty('down')
-    monitor_text_buffer = ['Welcome to the GCode console...']
-    status_report_buffer = ['Welcome to the GCode console...']
+    monitor_text_buffer = []
+    status_report_buffer = []
 
     def __init__(self, **kwargs):
     
@@ -306,7 +306,7 @@ class GCodeMonitor(Widget):
         elif self.m.s.m_state == "Idle":
             self.m.enable_check_mode()
         else:
-            self.update_monitor_text_buffer('debug', 'Could not enable check mode; please check machine is Idle.')
+            self.update_monitor_text_buffer('debug', self.l.get_str('Could not enable check mode; please check machine is Idle.'))
 
     def clear_monitor(self): 
         
