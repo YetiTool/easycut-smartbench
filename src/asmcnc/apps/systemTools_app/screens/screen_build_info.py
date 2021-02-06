@@ -518,7 +518,7 @@ class BuildInfoScreen(Screen):
         chosen_lang = self.language_button.text
         self.l.load_in_new_language(chosen_lang)
         # self.update_strings()
-        self.restart_app()
+        # self.restart_app()
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -544,7 +544,7 @@ class BuildInfoScreen(Screen):
             )
 
     def restart_app(self):
-        os.system('.../starteasycut.sh')
+        os.system(".../starteasycut.sh")
         sys.exit()
 
 
