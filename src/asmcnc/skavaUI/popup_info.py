@@ -988,15 +988,18 @@ class PopupHomingWarning(Widget):
           self.m.request_homing_procedure(return_to_screen, cancel_to_screen)
         
       stop_description = self.l.get_str("You need to home SmartBench first!")
+      title_string = self.l.get_str("Warning!")
+      home_string = self.l.get_bold("Home")
+      cancel_string = self.l.get_bold("Cancel")
       
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
-      home_button = Button(text='[b]Home[/b]', markup = True)
+      home_button = Button(text=home_string, markup = True)
       home_button.background_normal = ''
       home_button.background_color = [33 / 255., 150 / 255., 243 / 255., 98 / 100.]
 
-      cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+      cancel_button = Button(text=cancel_string, markup = True)
       cancel_button.background_normal = ''
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -1009,7 +1012,7 @@ class PopupHomingWarning(Widget):
       layout_plan.add_widget(label)
       layout_plan.add_widget(btn_layout)
       
-      popup = Popup(title='Warning!',
+      popup = Popup(title=title_string,
                     title_color=[0, 0, 0, 1],
                     title_font= 'Roboto-Bold',
                     title_size = '20sp',

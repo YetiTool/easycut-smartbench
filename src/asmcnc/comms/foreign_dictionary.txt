@@ -83,3 +83,4 @@ No	Nein	Non	No	Ei	Nee	Nie
 Use laser datum?	Verwenden Laser Datum?	Utilisez donnée au laser?	Usa datum laser?	Käytä laser nollapisteeseen?	Met laser datum?	Zastosowanie lasera punkt odniesienia?
 Is this where you want to set your N datum?	Ist das, wo Sie Ihre N Datum festlegen?	Est-ce là où vous voulez définir votre donnée N?	E 'questo in cui si desidera impostare il dato di n?	Onko tämä johon haluat asettaa N peruspiste?	Is dit waar u wilt uw N nulpunt?	Jest to, w którym chcesz ustawić punkt zerowy N?
 You need to home SmartBench first!	Sie müssen nach Hause Smartbench zuerst!	Vous devez d'abord la maison SmartBench!	Hai bisogno di casa Smartbench prima!	Sinun täytyy kotiin SmartBench ensin!	U moet eerst thuis SmartBench!	Trzeba domu pierwszego SmartBench!
+Home	Zuhause	Accueil	Casa	Koti	Huis	Dom
