@@ -199,13 +199,13 @@ class VirtualBedControl(Widget):
         
     def go_to_jobstart_xy(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_to_standby()
 

@@ -386,24 +386,31 @@ class XYMove(Widget):
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_y_datum()
 
     def set_x_datum(self):
-        warning = 'Is this where you want to set your\n[b]X[/b] datum?'
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
 
         
         popup_info.PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
-        warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
         popup_info.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
 
     def format_command(self, cmd):

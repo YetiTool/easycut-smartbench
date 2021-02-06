@@ -978,15 +978,16 @@ class PopupConfirmJobCancel(Widget):
 
 class PopupHomingWarning(Widget):
 
-    def __init__(self, screen_manager, machine, return_to_screen, cancel_to_screen):
+    def __init__(self, screen_manager, machine, localization, return_to_screen, cancel_to_screen):
 
       self.sm = screen_manager
       self.m = machine
+      self.l = localization
         
       def home_now(*args):
           self.m.request_homing_procedure(return_to_screen, cancel_to_screen)
         
-      stop_description = "You need to home SmartBench first!"
+      stop_description = self.l.get_str("You need to home SmartBench first!")
       
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
