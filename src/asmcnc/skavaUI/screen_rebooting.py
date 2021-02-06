@@ -58,7 +58,6 @@ class RebootingScreen(Screen):
         Clock.schedule_once(self.reboot, 1)
         
     def reboot(self, dt):
-
-        if sys.platform != "win32":
+        if sys.platform != "win32" and sys.platform != "darwin":
             os.system('sudo reboot')
         
