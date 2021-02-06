@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.spinner import Spinner, SpinnerOption
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string("""
 
@@ -544,9 +545,6 @@ class BuildInfoScreen(Screen):
             self.l.get_str('IP Address') + '\n' + \
             self.get_ip_address()
             )
-
-    # def on_leave(self):
-    #     self.restart_app()
 
     def restart_app(self):
         if self.reset_language == True: 
