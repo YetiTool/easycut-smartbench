@@ -545,8 +545,8 @@ class BuildInfoScreen(Screen):
             self.get_ip_address()
             )
 
-    def on_leave(self):
-        self.restart_app()
+    # def on_leave(self):
+    #     self.restart_app()
 
     def restart_app(self):
         if self.reset_language == True: 
