@@ -218,7 +218,7 @@ class GCodeMonitor(Widget):
 
     hide_received_ok = StringProperty('down')
     hide_received_status = StringProperty('down')
-    monitor_text_buffer = [self.l.get_str('Welcome to the GCode console') + '...']
+    monitor_text_buffer = []
     status_report_buffer = []
 
     def __init__(self, **kwargs):
