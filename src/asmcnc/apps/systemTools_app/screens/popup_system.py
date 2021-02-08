@@ -279,7 +279,7 @@ class PopupGRBLSettingsPassword(Widget):
             format_popup_string(self.l.get_str("Changing the GRBL settings will change how SmartBench behaves.")) + \
             " " + \
             format_popup_string(self.l.get_str("By changing the settings you may risk causing damage to SmartBench.")) + \
-             + "\n" + \
+            "\n" + \
             format_popup_string(self.l.get_str("Please enter the password if you want to continue."))
             )
 
