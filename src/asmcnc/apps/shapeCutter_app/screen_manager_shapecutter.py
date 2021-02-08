@@ -70,11 +70,12 @@ class ScreenManagerShapeCutter(object):
     
     positioned = False
     
-    def __init__(self, app_manager, screen_manager, machine):
+    def __init__(self, app_manager, screen_manager, machine, localization):
 
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
+        self.l = localization
         self.j = sC_job_parameters.ShapeCutterJobParameters(self.m, self)
 
     def prepare_tab(self):
@@ -308,7 +309,7 @@ class ScreenManagerShapeCutter(object):
                     
         elif self.sm.current == 'sC27':
             if not self.sm.has_screen('sC28'):
-                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC28_screen)
             self.sm.current = 'sC28'
             
@@ -326,7 +327,7 @@ class ScreenManagerShapeCutter(object):
                       
         elif self.sm.current == 'sC30':
             if not self.sm.has_screen('sC31'):
-                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC31_screen)
             self.sm.current = 'sC31'
                       

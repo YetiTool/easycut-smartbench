@@ -311,9 +311,10 @@ class ShapeCutter31ScreenClass(Screen):
         super(ShapeCutter31ScreenClass, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         self.j=kwargs['job_parameters']
 
-        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
+        self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(machine=self.m, localization=self.l, screen_manager=self.shapecutter_sm.sm, job_parameters = self.j)
         self.xy_move_container.add_widget(self.xy_move_widget)
         
         self.z_set_go_widget = widget_sC31_z_setgo.SC31ZSetGo(machine=self.m, screen_manager=self.shapecutter_sm.sm, )

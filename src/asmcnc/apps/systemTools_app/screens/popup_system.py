@@ -3,7 +3,7 @@
 author: @Letty
 module handles the system app popups
 '''
-import sys
+import sys, textwrap
 import kivy
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
@@ -18,6 +18,12 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
+
+
+
+def format_popup_string(cmd):
+    wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+    return wrapped_cmd
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
@@ -192,11 +198,21 @@ class PopupBetaTesting(Widget):
         
         self.systemtools_sm = screen_manager
         self.l = localization
-        
-        description = "Beta testing allows our engineers and beta testers to try out software updates " + \
-        "that might not be stable, or change how SmartBench behaves.\n\n" + \
-        "By updating to a beta version or developer branch you may risk causing damage to SmartBench.\n\n" + \
-        "Do you want to continue?"
+
+        # "Beta testing allows our engineers and beta testers to try out software updates " + \
+        # "that might not be stable, or change how SmartBench behaves.\n\n" + \
+        # "By updating to a beta version or developer branch you may risk causing damage to SmartBench.\n\n" + \
+        # "Do you want to continue?"
+
+        description = format_popup_string(
+            self.l.get_str(
+                "Beta testing allows our engineers and beta testers to try out software updates " + \
+                "that might not be stable, or change how SmartBench behaves."
+                ) + "\n\n" + \
+            self.l.get_str("By updating to a beta version or developer branch you may risk causing damage to SmartBench.") + \
+            "\n\n" + \
+            self.l.get_str("Do you want to continue?")
+        )
 
         title_string = self.l.get_str('Warning!')
         ok_string = self.l.get_bold('Yes')
@@ -253,9 +269,15 @@ class PopupGRBLSettingsPassword(Widget):
         self.systemtools_sm = screen_manager
         self.l = localization
         
-        description = "Changing the GRBL settings will change how SmartBench behaves. " + \
-        "By changing the settings you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        # description = "Changing the GRBL settings will change how SmartBench behaves." + \
+        # "By changing the settings you may risk causing damage to SmartBench.\n" + \
+        # "Please enter the password if you want to continue."
+
+        description = format_popup_string(
+            self.l.get_str("Changing the GRBL settings will change how SmartBench behaves.") + " " + \
+            self.l.get_str("By changing the settings you may risk causing damage to SmartBench.") + "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
 
         title_string = self.l.get_str('Warning!')
         ok_string = self.l.get_bold('Ok')
@@ -361,10 +383,19 @@ class PopupUpdateTestingPassword(Widget):
         self.systemtools_sm = screen_manager
         self.l = localization
         
-        description = "Update testing allows our engineers to try out full system updates updates " + \
-        "that might not be stable, or change how SmartBench behaves. " + \
-        "By carrying out any development updates you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        # description = "Update testing allows our engineers to try out full system updates " + \
+        # "that might not be stable, or change how SmartBench behaves. " + \
+        # "By carrying out any development updates you may risk causing damage to SmartBench.\n" + \
+        # "Please enter the password if you want to continue."
+
+        description = format_popup_string(
+            self.l.get_str("Update testing allows our engineers to try out full system updates " + \
+                "that might not be stable, or change how SmartBench behaves.") + \
+            " " + \
+            self.l.get_str("By carrying out any development updates you may risk causing damage to SmartBench.") + \
+            "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
 
         title_string = self.l.get_str('Warning!')
         ok_string = self.l.get_bold('Ok')
@@ -417,10 +448,19 @@ class PopupDeveloperPassword(Widget):
         self.systemtools_sm = screen_manager
         self.l = localization
         
-        description = "The developer app is to help our engineers access extra settings " + \
-        "and functions that might not be stable, or change how SmartBench behaves. " + \
-        "By using the developer app, you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        # description = "The developer app is to help our engineers access extra settings " + \
+        # "and functions that might not be stable, or change how SmartBench behaves. " + \
+        # "By using the developer app, you may risk causing damage to SmartBench.\n" + \
+        # "Please enter the password if you want to continue."
+
+        description = format_popup_string(
+            self.l.get_str("The developer app is to help our engineers access extra settings and functions " + \
+                "that might not be stable, or change how SmartBench behaves.") + \
+            " " + \
+            self.l.get_str("By using the developer app, you may risk causing damage to SmartBench.") + \
+            "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
 
         title_string = self.l.get_str('Warning!')
         ok_string = self.l.get_bold('Ok')

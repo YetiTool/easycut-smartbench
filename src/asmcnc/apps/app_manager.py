@@ -29,7 +29,7 @@ class AppManagerClass(object):
         self.l = localization
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
         self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m)
 
