@@ -309,28 +309,35 @@ class PopupStop(Widget):
 
 class PopupUSBInfo(Widget):
 
-    def __init__(self, screen_manager, safe_to_remove):
+    def __init__(self, screen_manager, localization, safe_to_remove):
         
         self.sm = screen_manager
+        self.l = localization
+
+        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button.background_normal = ''
         
         if safe_to_remove == 'mounted':
-            description = 'USB stick found!\n\nPlease don\'t remove your USB stick until it is safe to do so.'
-       
-            ok_button = Button(text='[b]Ok[/b]', markup = True)
-            ok_button.background_normal = ''
+            # description = 'USB stick found!\n\nPlease don\'t remove your USB stick until it is safe to do so.'
+            
+            description = (
+              self.l.get_str("USB stick found!") + "\n\n" + \
+              self.l.get_str("Please do not remove your USB stick until it is safe to do so.")
+              )
+
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
         
         elif safe_to_remove == False:
-            description = 'Don\'t remove your USB stick yet.\n\nPlease wait...'
-       
-            ok_button = Button(text='[b]Ok[/b]', markup = True)
-            ok_button.background_normal = ''
+
+            description = (
+              self.l.get_str("Do not remove your USB stick yet.") + "\n\n" + \
+              self.l.get_str("Please wait") + "..."
+              )
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
         elif safe_to_remove == True:
-            description = 'It is now safe to remove your USB stick.'          
-            ok_button = Button(text='[b]Ok[/b]', markup = True)
-            ok_button.background_normal = ''
+            description = self.l.get_str('It is now safe to remove your USB stick.')
+
             ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
@@ -553,16 +560,20 @@ class PopupSoftwareRepair(Widget):
         popup.open()     
 
 class PopupError(Widget):   
-    def __init__(self, screen_manager, warning_message):
+    def __init__(self, screen_manager, localization, warning_message):
         
         self.sm = screen_manager
+        self.l = localization
         
         description = warning_message
+
+        title_string = self.l.get_str('Error!')
+        ok_string = self.l.get_bold('Ok')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,10], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -574,7 +585,7 @@ class PopupError(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Error!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

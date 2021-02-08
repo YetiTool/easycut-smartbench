@@ -3,7 +3,7 @@
 author: @Letty
 module handles the system app popups
 '''
-import sys, textwrap
+import sys
 import kivy
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout

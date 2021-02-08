@@ -29,10 +29,6 @@ import re
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
 
-# from asmcnc.comms import usb_storage
-
-
-# Kivy UI builder:
 Builder.load_string("""
 
 <LoadingScreen>:

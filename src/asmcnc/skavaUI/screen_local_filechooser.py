@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
 
@@ -247,7 +248,9 @@ class LocalFileChooser(Screen):
 
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
+        self.l=kwargs['localization']
+
+        self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
     def check_for_job_cache_dir(self):
@@ -266,7 +269,9 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
-        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+        self.filename_selected_label_text = (
+            self.l.get_str("Only .nc and .gcode files will be shown. Press the icon to display the full filename here.")
+        )
     
     
     def on_pre_leave(self):
@@ -354,8 +359,8 @@ class LocalFileChooser(Screen):
             self.manager.current = 'loading'
 
         else: 
-            error_message = 'File selected does not exist!'
-            popup_info.PopupError(self.sm, error_message)
+            error_message = self.l.get_str('File selected does not exist!')
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def delete_popup(self, **kwargs):
 
@@ -388,7 +393,5 @@ class LocalFileChooser(Screen):
 
 
     def quit_to_home(self):
-
         self.manager.current = 'home'
-        #self.manager.transition.direction = 'up'   
         

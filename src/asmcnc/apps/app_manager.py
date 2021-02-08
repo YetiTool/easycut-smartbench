@@ -62,7 +62,7 @@ class AppManagerClass(object):
         self.sm.current = 'wifi'
         
     def start_update_app(self):
-        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = self.sm, settings = self.set)
+        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = self.sm, settings = self.set, localization = self.l)
         self.sm.add_widget(update_screen)
         
         self.current_app = 'update'

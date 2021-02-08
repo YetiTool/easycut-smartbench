@@ -15,7 +15,7 @@ class ScreenManagerSystemTools(object):
         self.m = machine
         self.set = settings
         self.l = localization
-        self.usb_stick = usb_storage.USB_storage(self.sm)
+        self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
 
     def open_system_tools(self):
         if not self.sm.has_screen('system_menu'): 
@@ -60,7 +60,7 @@ class ScreenManagerSystemTools(object):
 
     def open_beta_testing_screen(self):
        if not self.sm.has_screen('beta_testing'):
-           beta_testing_screen = screen_beta_testing.BetaTestingScreen(name = 'beta_testing', system_tools = self, settings = self.set)
+           beta_testing_screen = screen_beta_testing.BetaTestingScreen(name = 'beta_testing', system_tools = self, settings = self.set, localization = self.l)
            self.sm.add_widget(beta_testing_screen)
        self.sm.current = 'beta_testing'
 
