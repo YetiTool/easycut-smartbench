@@ -479,7 +479,7 @@ class ScreenManagerShapeCutter(object):
                 sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC17_screen)
             if not self.sm.has_screen('sCfilechooser'):
-                sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', job_parameters = self.j, shapecutter = self)
+                sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sCfilechooser_screen)
         elif self.sm.current == 'sC16':
             if not self.sm.has_screen('sC18'):
@@ -895,7 +895,7 @@ class ScreenManagerShapeCutter(object):
                 sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC17_screen)
             if not self.sm.has_screen('sCfilechooser'):
-                sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', job_parameters = self.j, shapecutter = self)
+                sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sCfilechooser_screen) 
         elif self.sm.current == 'sC20':
             if not self.sm.has_screen('sC18'):
@@ -1033,7 +1033,7 @@ class ScreenManagerShapeCutter(object):
 
     def filechooser_screen(self):
         if not self.sm.has_screen('sCfilechooser'):
-            sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', job_parameters = self.j, shapecutter = self)
+            sCfilechooser_screen = screen_shapeCutter_filechooser.SCFileChooser(name = 'sCfilechooser', localization = self.l, job_parameters = self.j, shapecutter = self)
             self.sm.add_widget(sCfilechooser_screen)
         self.sm.current = 'sCfilechooser'
             
