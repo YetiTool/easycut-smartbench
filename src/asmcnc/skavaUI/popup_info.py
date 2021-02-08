@@ -313,7 +313,7 @@ class PopupUSBInfo(Widget):
         title_string = self.l.get_str('Warning!')
         ok_string = self.l.get_bold('Ok')
 
-        ok_button = Button(ok_string, markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         
         if safe_to_remove == 'mounted':
