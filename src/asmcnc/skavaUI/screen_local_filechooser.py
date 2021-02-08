@@ -74,7 +74,6 @@ Builder.load_string("""
                 halign: 'left'
                 text_size: self.size
                 padding: [10, 0]
-                text: "USB connected: Please do not remove USB until file is loaded."
 
             Label:
                 canvas.before:
@@ -252,6 +251,8 @@ class LocalFileChooser(Screen):
 
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
+
+        self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
 
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
