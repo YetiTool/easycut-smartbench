@@ -213,13 +213,15 @@ class LoadingScreen(Screen):
 
         self.load_value = 0
 
-        self.check_button.disabled = True
-        self.home_button.disabled = True
-        self.progress_value = self.l.get_str('Getting ready') + '...'
-        self.warning_title_label.text = ''
-        self.warning_body_label.text = ''
-        self.check_button_label.text = ''
-        self.quit_button_label.text = ''
+        # self.check_button.disabled = True
+        # self.home_button.disabled = True
+        # self.progress_value = self.l.get_str('Getting ready') + '...'
+        self.update_screen('Getting ready')
+
+        # self.warning_title_label.text = ''
+        # self.warning_body_label.text = ''
+        # self.check_button_label.text = ''
+        # self.quit_button_label.text = ''
 
         # CAD file processing sequence
         self.job_gcode = []
@@ -378,7 +380,8 @@ class LoadingScreen(Screen):
             # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-            self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %' # update progress label
+            # self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %' # update progress label
+            self.update_screen('Preparing', percentage_progress)
             Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
         else: 
@@ -401,6 +404,37 @@ class LoadingScreen(Screen):
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
 
 
+    def update_screen(self, stage, ppercentage_progress=0):
+
+        if stage == 'Getting ready':
+            self.check_button.disabled = True
+            self.home_button.disabled = True
+            self.progress_value = self.l.get_str('Getting ready') + '...'
+            self.warning_title_label.text = ''
+            self.warning_body_label.text = ''
+            self.check_button_label.text = ''
+            self.quit_button_label.text = ''
+
+        if stage == 'Preparing':
+            self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %'
+
+        if stage == 'Analysing':
+            self.progress_value = self.l.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
+
+        if stage == 'Loaded':
+            self.progress_value = self.l.get_bold('Job loaded')
+            self.warning_title_label.text = self.l.get_str('WARNING') + ':'
+            self.warning_body_label.text = (
+                self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
+                self.l.get_str('Would you like SmartBench to check your job now?')
+                )
+            self.check_button_label.text = self.l.get_str('Yes please, check my job for errors')
+            self.quit_button_label.text = self.l.get_str('No thanks, quit to home')
+            
+            self.check_button.disabled = False
+            self.home_button.disabled = False
+
+
     def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
 
 
@@ -419,17 +453,7 @@ class LoadingScreen(Screen):
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         
-        self.progress_value = self.l.get_bold('Job loaded')
-        self.warning_title_label.text = self.l.get_str('WARNING') + ':'
-        self.warning_body_label.text = (
-            self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
-            self.l.get_str('Would you like SmartBench to check your job now?')
-            )
-        self.check_button_label.text = self.l.get_str('Yes please, check my job for errors')
-        self.quit_button_label.text = self.l.get_str('No thanks, quit to home')
-        
-        self.check_button.disabled = False
-        self.home_button.disabled = False
+        self.update_screen('Loaded')
 
         log('> END LOAD')
         

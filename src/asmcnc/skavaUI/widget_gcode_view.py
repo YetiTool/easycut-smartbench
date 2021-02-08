@@ -389,7 +389,9 @@ class GCodeView(Widget):
             # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int((self.lines_read * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-            screen_manager.get_screen('loading').progress_value = 'Analysing file: ' + str(percentage_progress) + ' %' # update progress label
+            # screen_manager.get_screen('loading').progress_value = 'Analysing file: ' + str(percentage_progress) + ' %' # update progress label
+            screen_manager.get_screen('loading').update_screen('Analysing', percentage_progress)
+
 #             Clock.schedule_once(self.get_non_modal_gcode, self.interrupt_delay)
             Clock.schedule_once(partial(self.get_non_modal_gcode, job_file_gcode, line_cap, screen_manager), self.interrupt_delay)
         
