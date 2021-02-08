@@ -170,6 +170,7 @@ class SCFileChooser(Screen):
 
         super(SCFileChooser, self).__init__(**kwargs)
         self.shapecutter_sm = kwargs['shapecutter']
+        self.l = kwargs['localization']
         self.j = kwargs['job_parameters']
 #         self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
 #         self.usb_stick.enable() # start the object scanning for USB stick
@@ -217,9 +218,9 @@ class SCFileChooser(Screen):
 
     def delete_popup(self, **kwargs):
         if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, function = self.delete_all, file_selection = 'all')
+            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, localization = self.l, function = self.delete_all, file_selection = 'all')
         else: 
-            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
+            popup_info.PopupDeleteFile(screen_manager = self.shapecutter_sm, localization = self.l, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):
         if os.path.isfile(filename):
