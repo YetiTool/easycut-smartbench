@@ -404,7 +404,7 @@ class LoadingScreen(Screen):
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
 
 
-    def update_screen(self, stage, ppercentage_progress=0):
+    def update_screen(self, stage, percentage_progress=0):
 
         if stage == 'Getting ready':
             self.check_button.disabled = True
