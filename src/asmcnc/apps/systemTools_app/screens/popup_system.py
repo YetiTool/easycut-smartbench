@@ -22,8 +22,9 @@ from kivy.graphics import Color, Rectangle
 
 
 def format_popup_string(cmd):
-    wrapped_cmd = textwrap.fill(cmd, width=80, break_long_words=False)
-    return wrapped_cmd
+    # wrapped_cmd = textwrap.fill(cmd, width=80, break_long_words=False)
+    # return wrapped_cmd
+    return cmd
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
