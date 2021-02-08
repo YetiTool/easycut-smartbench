@@ -303,10 +303,6 @@ class PopupStop(Widget):
       
       popup.open()
 
-    
-
-
-
 class PopupUSBInfo(Widget):
 
     def __init__(self, screen_manager, localization, safe_to_remove):
@@ -793,13 +789,18 @@ class PopupDeleteFile(Widget):
     def __init__(self, **kwargs):
         
         self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
         self.function = kwargs['function']
         self.file_selection = kwargs['file_selection']
         
         if self.file_selection == 'all':
-          description = "Are you sure you want to delete these files?"
+          description = self.l.get_str("Are you sure you want to delete these files?")
         else:
-          description = "Are you sure you want to delete this file?"
+          description = self.l.get_str("Are you sure you want to delete this file?")
+
+        title_string = self.l.get_str('Warning!')
+        yes_string = self.l.get_bold('Yes')
+        no_string = self.l.get_bold('No')
         
         def delete(*args):
           if self.file_selection == 'all':
@@ -813,10 +814,10 @@ class PopupDeleteFile(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -830,7 +831,7 @@ class PopupDeleteFile(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
