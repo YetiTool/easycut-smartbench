@@ -206,8 +206,7 @@ class PopupBetaTesting(Widget):
 
         description = (
             format_popup_string(self.l.get_str(
-                "Beta testing allows our engineers and beta testers to try out software updates " + \
-                "that might not be stable, or change how SmartBench behaves."
+                "Beta testing allows our engineers and beta testers to try out software updates that might not be stable, or change how SmartBench behaves."
                 )) + "\n\n" + \
             format_popup_string(
                 self.l.get_str("By updating to a beta version or developer branch you may risk causing damage to SmartBench.")
@@ -393,8 +392,7 @@ class PopupUpdateTestingPassword(Widget):
         # "Please enter the password if you want to continue."
 
         description = (
-            format_popup_string(self.l.get_str("Update testing allows our engineers to try out full system updates " + \
-                "that might not be stable, or change how SmartBench behaves.")) + \
+            format_popup_string(self.l.get_str("Update testing allows our engineers to try out full system updates that might not be stable, or change how SmartBench behaves.")) + \
             " " + \
             format_popup_string(self.l.get_str("By carrying out any development updates you may risk causing damage to SmartBench.")) + \
             "\n" + \
@@ -459,8 +457,7 @@ class PopupDeveloperPassword(Widget):
 
         description = (
             format_popup_string(
-            self.l.get_str("The developer app is to help our engineers access extra settings and functions " + \
-                "that might not be stable, or change how SmartBench behaves.")) + \
+            self.l.get_str("The developer app is to help our engineers access extra settings and functions that might not be stable, or change how SmartBench behaves.")) + \
             " " + \
             format_popup_string(self.l.get_str("By using the developer app, you may risk causing damage to SmartBench.")) + \
             "\n" + \
