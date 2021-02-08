@@ -314,11 +314,13 @@ class PopupUSBInfo(Widget):
         self.sm = screen_manager
         self.l = localization
 
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
+
+        ok_button = Button(ok_string, markup = True)
         ok_button.background_normal = ''
         
         if safe_to_remove == 'mounted':
-            # description = 'USB stick found!\n\nPlease don\'t remove your USB stick until it is safe to do so.'
             
             description = (
               self.l.get_str("USB stick found!") + "\n\n" + \
@@ -333,20 +335,17 @@ class PopupUSBInfo(Widget):
               self.l.get_str("Do not remove your USB stick yet.") + "\n\n" + \
               self.l.get_str("Please wait") + "..."
               )
+
             ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
         elif safe_to_remove == True:
             description = self.l.get_str('It is now safe to remove your USB stick.')
-
             ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
- 
- 
-       
+
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
-#         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
@@ -354,7 +353,7 @@ class PopupUSBInfo(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        self.popup = Popup(title='Warning!',
+        self.popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -368,8 +367,7 @@ class PopupUSBInfo(Widget):
         self.popup.separator_height = '4dp'
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=self.popup.dismiss)
-#         back_button.bind(on_press=popup.dismiss)       
+        ok_button.bind(on_press=self.popup.dismiss)    
 
         self.popup.open()  
 
