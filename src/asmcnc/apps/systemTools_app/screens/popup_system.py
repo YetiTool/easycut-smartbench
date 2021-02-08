@@ -22,7 +22,7 @@ from kivy.graphics import Color, Rectangle
 
 
 def format_popup_string(cmd):
-    wrapped_cmd = textwrap.fill(cmd, width=70, break_long_words=False)
+    wrapped_cmd = textwrap.fill(cmd, width=80, break_long_words=False)
     return wrapped_cmd
 
 ### DownloadLogs
