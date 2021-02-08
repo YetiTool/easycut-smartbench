@@ -249,7 +249,7 @@ class PopupBetaTesting(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(550, 400),
                       auto_dismiss= False
                       )
         
@@ -430,7 +430,7 @@ class PopupUpdateTestingPassword(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(600, 400),
                       auto_dismiss= False
                       )
         
@@ -495,7 +495,7 @@ class PopupDeveloperPassword(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(600, 400),
                       auto_dismiss= False
                       )
         
