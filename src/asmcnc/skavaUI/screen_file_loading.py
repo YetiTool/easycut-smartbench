@@ -208,20 +208,9 @@ class LoadingScreen(Screen):
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
         self.update_usb_status()
-
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
-
         self.load_value = 0
-
-        # self.check_button.disabled = True
-        # self.home_button.disabled = True
-        # self.progress_value = self.l.get_str('Getting ready') + '...'
         self.update_screen('Getting ready')
-
-        # self.warning_title_label.text = ''
-        # self.warning_body_label.text = ''
-        # self.check_button_label.text = ''
-        # self.quit_button_label.text = ''
 
         # CAD file processing sequence
         self.job_gcode = []
@@ -380,7 +369,6 @@ class LoadingScreen(Screen):
             # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-            # self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %' # update progress label
             self.update_screen('Preparing', percentage_progress)
             Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
