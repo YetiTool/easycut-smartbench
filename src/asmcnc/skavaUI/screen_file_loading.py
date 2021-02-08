@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 25 Feb 2019
 
@@ -195,6 +196,7 @@ class LoadingScreen(Screen):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         self.job_gcode=kwargs['job']
 
     def on_enter(self):    
@@ -213,13 +215,12 @@ class LoadingScreen(Screen):
 
         self.check_button.disabled = True
         self.home_button.disabled = True
-        self.progress_value = 'Getting ready...'
+        self.progress_value = self.l.get_str('Getting ready') + '...'
         self.warning_title_label.text = ''
         self.warning_body_label.text = ''
         self.check_button_label.text = ''
         self.quit_button_label.text = ''
 
-#         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
@@ -227,21 +228,20 @@ class LoadingScreen(Screen):
 
     def update_usb_status(self):
         if self.usb_status == 'connected':
-            self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+            self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
-            self.usb_status_label.text = "Ejecting USB: please wait..."
+            self.usb_status_label.text = self.l.get_str("Ejecting USB: please wait") + "..."
             self.usb_status_label.opacity = 1
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(51 / 255., 51 / 255., 51 / 255. , 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
-            self.usb_status_label.text = "Safe to remove USB."
-            # self.usb_status_label.canvas.before.clear()
+            self.usb_status_label.text = self.l.get_str("Safe to remove USB.")
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
@@ -274,7 +274,9 @@ class LoadingScreen(Screen):
             self.job_file_as_list = f.readlines()
 
         if len(self.job_file_as_list) == 0:
-            file_empty_warning = 'File is empty!\n\nPlease load a different file.'
+            file_empty_warning = self.l.get_str('File is empty!') + '\n\n' + 
+            self.l.get_str('Please load a different file.')
+
             popup_info.PopupError(self.sm, file_empty_warning)
             self.sm.current = 'local_filechooser'
             return
@@ -376,7 +378,7 @@ class LoadingScreen(Screen):
             # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-            self.progress_value = 'Preparing file: ' + str(percentage_progress) + ' %' # update progress label
+            self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %' # update progress label
             Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
         else: 
@@ -417,11 +419,14 @@ class LoadingScreen(Screen):
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         
-        self.progress_value = '[b]Job loaded[/b]'
-        self.warning_title_label.text = 'WARNING:'
-        self.warning_body_label.text = 'We strongly recommend error-checking your job before it goes to the machine. Would you like SmartBench to check your job now?'
-        self.check_button_label.text = 'Yes please, check my job for errors'
-        self.quit_button_label.text = 'No thanks, quit to home'
+        self.progress_value = self.l.get_bold('Job loaded')
+        self.warning_title_label.text = self.l.get_str('WARNING') + ':'
+        self.warning_body_label.text = (
+            self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
+            self.l.get_str('Would you like SmartBench to check your job now?')
+            )
+        self.check_button_label.text = self.l.get_str('Yes please, check my job for errors')
+        self.quit_button_label.text = self.l.get_str('No thanks, quit to home')
         
         self.check_button.disabled = False
         self.home_button.disabled = False

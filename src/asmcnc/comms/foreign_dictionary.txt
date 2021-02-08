@@ -124,3 +124,15 @@ Please wait	Warten Sie mal	S'il vous plaît, attendez	attendere prego	Odota	Wach
 Are you sure you want to delete these files?	Sind Sie sicher, dass Sie diese Dateien löschen möchten?	Etes-vous sûr de vouloir supprimer ces fichiers?	Sei sicuro di voler eliminare questi file?	Oletko varma, että haluat poistaa nämä tiedostot?	Bent u zeker dat u deze bestanden wilt verwijderen?	Czy na pewno chcesz usunąć te pliki?
 Are you sure you want to delete this file?	Sind Sie sicher, dass Sie diese Datei löschen?	Etes-vous sûr de vouloir supprimer ce fichier?	Sei sicuro di voler cancellare questo file?	Oletko varma, että haluat poistaa tämän tiedoston?	Bent u zeker dat u dit bestand wilt verwijderen?	Czy na pewno chcesz usunąć ten plik?
 Error!	Error!	Erreur!	Errore!	Virhe!	Fout!	Błąd!
+Sichere USB zu entfernen.	Coffre-fort pour enlever USB.	Sicuro per rimuovere USB.	Poistaa turvallisesti USB.	Veilig om USB te verwijderen.	Bezpiecznie usunąć USB.
+Ausstoß USB: Bitte warten	Éjectant USB: S'il vous plaît attendre	Espulsione USB: attendere prego	Irroittamista USB Odota hetki	Uitwerpen USB: Even geduld aub	Wysuwanie USB: Proszę czekać
+Die Datei ist leer!	Fichier est vide!	Il file è vuoto!	Tiedosto on tyhjä!	File is leeg!	Plik jest pusty!
+Bitte laden Sie eine andere Datei.	S'il vous plaît charger un autre fichier.	Si prega di caricare un file diverso.	Ole hyvä ja lataa eri tiedostoa.	Gelieve een ander bestand te laden.	Proszę wczytać inny plik.
+Fertig werden	Se préparer	Prepararsi	Valmistautua	Klaar maken	Przygotowywanie się
+Vorbereiten Datei	fichier préparation	Preparazione di file	Valmistellaan tiedostoa	Voorbereiden file	przygotowanie pliku
+Job geladen	Job chargé	Job caricato	Job ladattu	job geladen	Praca załadowany
+WARNUNG	ATTENTION	AVVERTIMENTO	VAROITUS	WAARSCHUWING	OSTRZEŻENIE
+Wir empfehlen dringend, Fehlerprüfung Ihre Arbeit, bevor es an die Maschine geht.	Nous vous recommandons fortement de vérifier l'erreur votre travail avant de passer à la machine.	Si consiglia vivamente di controllo degli errori il vostro lavoro prima che vada alla macchina.	Suosittelemme, virheentarkistava työsi ennen kuin se menee koneeseen.	We raden foutcontrole uw baan voordat het naar de machine.	Zalecamy błąd sprawdzania swojej pracy, zanim przejdzie do urządzenia.
+Möchten Sie, dass Smartbench Ihren Job jetzt überprüfen?	Voulez-vous que SmartBench pour vérifier votre travail maintenant?	Si desidera che Smartbench di controllare il vostro lavoro ora?	Haluatko SmartBench tarkistaa työn nyt?	Wilt u SmartBench om uw werk nu controleren?	Chciałbyś SmartBench sprawdzić teraz swoją pracę?
+Ja bitte, überprüfen Sie meine Arbeit für Fehler	Oui s'il vous plaît, vérifier mon travail pour les erreurs	Si prega di controllare il mio lavoro per errori	Kyllä kiitos, tsekkaa työtä virheiden	Ja graag, bekijk dan mijn baan voor fouten	Tak proszę sprawdzić moją pracę za błędy
+Nein danke, beenden zu Hause	Non merci, quitter la maison à	No grazie, uscire a casa	Ei kiitos, lopeta kotiin	Nee bedankt, stoppen om naar huis	Nie, dziękuję, rzucić do domu
