@@ -152,7 +152,7 @@ Builder.load_string("""
                     text_size: self.size
                     valign: "middle"
                     halign: "right"
-                    padding_x: 10
+                    padding_x: 50
 
                     # BoxLayout:
                     #     padding: 0
