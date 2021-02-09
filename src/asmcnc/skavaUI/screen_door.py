@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2020
 
@@ -35,6 +36,7 @@ Builder.load_string("""
     stop_img: stop_img
     resume_button: resume_button
     cancel_button: cancel_button
+    header_label: header_label
 
 
     canvas:
@@ -85,9 +87,9 @@ Builder.load_string("""
             height: dp(50)
             width: dp(800)
             Label:
+                id: header_label
                 size_hint: (None, None)
                 font_size: '30sp'
-                text: '[b]Stop bar pushed![/b]'
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
@@ -235,6 +237,9 @@ class DoorScreen(Screen):
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.header_label.text = self.l.get_bold('Stop bar pushed!')
 
         # # Text
         # self.door_label.font_size =  '19sp'
@@ -273,7 +278,7 @@ class DoorScreen(Screen):
         self.anim_stop_img.repeat = False 
 
     def on_leave(self):
-        self.spindle_raise_label.text = 'Preparing to resume, please wait...'
+        self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
 
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
@@ -306,7 +311,7 @@ class DoorScreen(Screen):
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
-        self.spindle_raise_label.text = '...ready to resume'
+        self.spindle_raise_label.text = '...' + self.l.get_str('ready to resume')
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):

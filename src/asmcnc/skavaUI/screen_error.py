@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Feb 2019
 
@@ -147,7 +148,6 @@ class ErrorScreenClass(Screen):
     message = StringProperty()
     button_text = StringProperty()
     getout_button = ObjectProperty()
-    user_instruction = StringProperty()
     button_function = StringProperty()
     
     return_to_screen = 'home'

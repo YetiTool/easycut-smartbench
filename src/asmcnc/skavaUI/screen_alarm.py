@@ -34,6 +34,8 @@ Builder.load_string("""
 
 <AlarmScreenClass>:
 
+    header_label: header_label
+
     canvas:
         Color: 
             rgba: [1, 1, 1, 1]
@@ -57,9 +59,9 @@ Builder.load_string("""
             height: dp(50)
             width: dp(800)
             Label:
+                id: header_label
                 size_hint: (None, None)
                 font_size: '30sp'
-                text: '[b]Alarm![/b]'
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
@@ -137,20 +139,37 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(80)
                     width: dp(280)
-                    background_color: hex('#F4433600')
-                    center: self.parent.center
-                    pos: self.parent.pos
+                    # background_color: hex('#F4433600')
+                    # center: self.parent.center
+                    # pos: self.parent.pos
+                    background_normal: "./asmcnc/skavaUI/img/show_details_blue_blank.png"
+                    background_down: "./asmcnc/skavaUI/img/show_details_blue_blank.png"
+                    border: [dp(20)]*4
                     on_press: root.show_details()
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/skavaUI/img/show_details_blue.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                    # BoxLayout:
+                    #     padding: 0
+                    #     size: self.parent.size
+                    #     pos: self.parent.pos
+                    #     Image:
+                    #         source: "./asmcnc/skavaUI/img/show_details_blue_blank.png"
+                    #         center_x: self.parent.center_x
+                    #         y: self.parent.y
+                    #         size: self.parent.width, self.parent.height
+                    #         allow_stretch: True
+
+        # Button:
+        #     id: button_system_info
+        #     text: 'System Info'
+        #     valign: "bottom"
+        #     halign: "center"
+        #     markup: True
+        #     font_size: root.default_font_size
+        #     text_size: self.size
+        #     on_press: root.go_to_build_info()
+        #     background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+        #     background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+        #     border: [dp(25)]*4
+        #     padding_y: 5
             BoxLayout: 
                 padding: [258,0,30,10]
                 spacing: 0
@@ -191,10 +210,12 @@ class AlarmScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
+
+        self.header_label.text = self.l.get_bold('Alarm!')
     
     def on_enter(self):
         
-        self.alarm_description = ALARM_CODES.get(self.message, "")
+        self.alarm_description = self.l.get_str(ALARM_CODES.get(self.message, ""))
         self.m.set_state('Alarm')
         self.m.led_restore()
 
