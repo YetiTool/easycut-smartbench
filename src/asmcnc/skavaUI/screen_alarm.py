@@ -224,7 +224,7 @@ class AlarmScreenClass(Screen):
 
         self.header_label.text = self.l.get_bold('Alarm!')
         self.show_details_button.text = self.button_space + self.l.get_str('Show Details')
-        self.update_font_size(self.l.get_str('Show Details'))
+        self.update_font_size(self.show_details_button)
     
     def on_enter(self):
         
@@ -257,13 +257,13 @@ class AlarmScreenClass(Screen):
             self.sm.current = 'lobby'
 
     def update_font_size(self, value):
-        if len(value.text) < 12:
+        if len(value.text) < 21:
             value.font_size = self.default_font_size
-        elif len(value.text) > 11: 
+        elif len(value.text) > 20: 
             value.font_size = self.default_font_size - 2
-        if len(value.text) > 16: 
+        if len(value.text) > 25: 
             value.font_size = self.default_font_size - 4
-        if len(value.text) > 22: 
+        if len(value.text) > 29: 
             value.font_size = self.default_font_size - 5
 
             
