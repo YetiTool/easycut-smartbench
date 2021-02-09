@@ -150,7 +150,7 @@ Builder.load_string("""
                     on_press: root.show_details()
                     text: '         ' + 'Show Details'
                     markup: True
-                    font_size: '30sp'
+                    font_size: root.default_font_size
                     text_size: self.size
                     valign: "middle"
                     halign: "left"
@@ -213,6 +213,8 @@ class AlarmScreenClass(Screen):
     alarm_description = StringProperty()
     message = StringProperty()
     return_to_screen = 'home'
+    button_space = '         '
+    default_font_size = 30
     
     def __init__(self, **kwargs):
         super(AlarmScreenClass, self).__init__(**kwargs)
@@ -221,7 +223,8 @@ class AlarmScreenClass(Screen):
         self.l=kwargs['localization']
 
         self.header_label.text = self.l.get_bold('Alarm!')
-        self.show_details_button.text = '         ' + self.l.get_str('Show Details')
+        self.show_details_button.text = button_space + self.l.get_str('Show Details')
+        self.update_font_size(self.l.get_str('Show Details'))
     
     def on_enter(self):
         
@@ -252,5 +255,15 @@ class AlarmScreenClass(Screen):
 
         else: 
             self.sm.current = 'lobby'
+
+    def update_font_size(self, value):
+        if len(value.text) < 12:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 11: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 16: 
+            value.font_size = self.default_font_size - 4
+        if len(value.text) > 22: 
+            value.font_size = self.default_font_size - 5
 
             
