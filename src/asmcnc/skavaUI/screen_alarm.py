@@ -151,8 +151,8 @@ Builder.load_string("""
                     font_size: '30sp'
                     text_size: self.size
                     valign: "middle"
-                    halign: "center"
-                    padding_x: 50
+                    halign: "right"
+                    padding_x: 10
 
                     # BoxLayout:
                     #     padding: 0
