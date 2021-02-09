@@ -35,6 +35,7 @@ Builder.load_string("""
 <AlarmScreenClass>:
 
     header_label: header_label
+    show_details_button: show_details_button
 
     canvas:
         Color: 
@@ -136,6 +137,7 @@ Builder.load_string("""
                 height: dp(130)
                 width: dp(400)
                 Button:
+                    id: show_details_button
                     size_hint: (None,None)
                     height: dp(80)
                     width: dp(280)
