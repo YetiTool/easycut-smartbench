@@ -107,4 +107,4 @@ class Localization(object):
             log("Could not save fast dictionary")
 
     # List of language headers
-    supported_languages = ["English (GB)", "Deutsche (DE)", "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)"]
+    supported_languages = ["English (GB)", "Deutsche (DE)", "Francais (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)"]
