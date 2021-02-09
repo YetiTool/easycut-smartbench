@@ -146,7 +146,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/show_details_blue_blank.png"
                     border: [dp(20)]*4
                     on_press: root.show_details()
-                    text: '          ' + 'Show Details'
+                    text: '         ' + 'Show Details'
                     markup: True
                     font_size: '30sp'
                     text_size: self.size
@@ -219,6 +219,7 @@ class AlarmScreenClass(Screen):
         self.l=kwargs['localization']
 
         self.header_label.text = self.l.get_bold('Alarm!')
+        self.show_details_button.text = '         ' + self.l.get_str('Show Details')
     
     def on_enter(self):
         
