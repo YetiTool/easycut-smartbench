@@ -146,6 +146,11 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/show_details_blue_blank.png"
                     border: [dp(20)]*4
                     on_press: root.show_details()
+                    text: 'Show details'
+                    markup: True
+                    font_size: '30sp'
+                    text_size: self.size
+
                     # BoxLayout:
                     #     padding: 0
                     #     size: self.parent.size
