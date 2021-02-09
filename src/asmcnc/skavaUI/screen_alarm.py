@@ -260,9 +260,6 @@ class AlarmScreenClass(Screen):
     def update_font_size(self, value):
 
         button_space = 10*" "
-
-        print(str(len(value.text)))
-
         if len(value.text) < 14:
             value.font_size = self.default_font_size
             button_space = 10*" "

@@ -251,7 +251,7 @@ class CheckingScreen(Screen):
             self.filename_label.text = self.checking_file_name.split("/")[-1]
         
         
-        self.exit_label = 'Unload job'
+        self.exit_label = self.l.get_str('Unload job')
         
         if self.entry_screen == 'file_loading':        
             try: self.boundary_check()
