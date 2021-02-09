@@ -1,4 +1,4 @@
-English (GB)	Deutsche (DE)	Francais (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polskie (PL)
+English (GB)	Deutsche (DE)	Français (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polskie (PL)
 System Information	System Information	Informations sur le système	Informazioni di sistema	järjestelmän tiedot	Systeem informatie	Informacje o systemie
 Serial number	Ordnungsnummer	Numéro de série	Numero di serie	Sarjanumero	Serienummer	Numer seryjny
 Console serial number	Konsole Seriennummer	Console numéro de série	numero di serie console	Konsolin sarjanumeroa	Console serienummer	numer seryjny konsoli
