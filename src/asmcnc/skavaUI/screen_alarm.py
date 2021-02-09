@@ -148,11 +148,11 @@ Builder.load_string("""
                     on_press: root.show_details()
                     text: 'Show Details'
                     markup: True
-                    font_size: '32sp'
+                    font_size: '30sp'
                     text_size: self.size
                     valign: "middle"
                     halign: "center"
-                    padding_y: [5, 0]
+                    padding_y: [10, 0]
 
                     # BoxLayout:
                     #     padding: 0
