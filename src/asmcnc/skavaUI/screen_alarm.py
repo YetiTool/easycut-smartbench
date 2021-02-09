@@ -150,7 +150,6 @@ Builder.load_string("""
                     on_press: root.show_details()
                     text: '         ' + 'Show Details'
                     markup: True
-                    font_size: root.default_font_size
                     text_size: self.size
                     valign: "middle"
                     halign: "left"
@@ -260,10 +259,10 @@ class AlarmScreenClass(Screen):
         if len(value.text) < 21:
             value.font_size = self.default_font_size
         elif len(value.text) > 20: 
-            value.font_size = self.default_font_size - 2
-        if len(value.text) > 25: 
             value.font_size = self.default_font_size - 4
-        if len(value.text) > 29: 
+        if len(value.text) > 25: 
             value.font_size = self.default_font_size - 5
+        if len(value.text) > 29: 
+            value.font_size = self.default_font_size - 6
 
             
