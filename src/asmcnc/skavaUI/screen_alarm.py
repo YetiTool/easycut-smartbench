@@ -223,7 +223,7 @@ class AlarmScreenClass(Screen):
         self.l=kwargs['localization']
 
         self.header_label.text = self.l.get_bold('Alarm!')
-        self.show_details_button.text = button_space + self.l.get_str('Show Details')
+        self.show_details_button.text = self.button_space + self.l.get_str('Show Details')
         self.update_font_size(self.l.get_str('Show Details'))
     
     def on_enter(self):
