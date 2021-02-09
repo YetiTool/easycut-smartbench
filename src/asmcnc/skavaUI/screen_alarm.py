@@ -263,16 +263,16 @@ class AlarmScreenClass(Screen):
 
         if len(value.text) < 12:
             value.font_size = self.default_font_size
-            button_space = 7*" "
+            button_space = 8*" "
         elif len(value.text) > 11: 
             value.font_size = self.default_font_size - 4
-            button_space = 8*" "
+            button_space = 9*" "
         if len(value.text) > 14: 
             value.font_size = self.default_font_size - 8
-            button_space = 9*" "
-        if len(value.text) > 16: 
-            value.font_size = self.default_font_size - 10
             button_space = 10*" "
+        if len(value.text) > 16: 
+            value.font_size = self.default_font_size - 9
+            button_space = 11*" "
 
         value.text = button_space + value.text
 
