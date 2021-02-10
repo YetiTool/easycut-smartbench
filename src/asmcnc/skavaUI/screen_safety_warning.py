@@ -257,10 +257,8 @@ Builder.load_string("""
   
 
             BoxLayout:
-                size_hint: (None,None)
-                width: dp(720)
-                height: dp(159)
-                padding: [dp(10),dp(20), dp(10), dp(20)]
+                size_hint_y: 1.5
+                # padding: [dp(10),dp(20), dp(10), dp(20)]
                 orientation: 'horizontal'
 
 
@@ -268,8 +266,8 @@ Builder.load_string("""
                     id: confirm_button
                     # size_hint_y: 1.5
                     # size_hint_x: 0.7
-                    width: dp(700)
-                    height: dp(119)
+                    width: dp(700*0.6)
+                    height: dp(119*0.6)
                     on_press: root.go_to_next_screen()
                     markup: True
                     font_size: '26sp'
