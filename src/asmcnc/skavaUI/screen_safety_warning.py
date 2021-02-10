@@ -250,7 +250,7 @@ Builder.load_string("""
                 size_hint_y: 1.5
                 on_press: root.go_to_next_screen()
                 markup: True
-                font_size: '30sp'
+                font_size: '26sp'
                 text_size: self.size
                 valign: "middle"
                 halign: "center"
