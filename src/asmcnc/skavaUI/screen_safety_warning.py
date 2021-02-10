@@ -247,7 +247,10 @@ Builder.load_string("""
 
             Button:
                 id: confirm_button
-                size_hint_y: 1.5
+                # size_hint_y: 1.5
+                size_hint: (None, None)
+                width: dp(704)
+                height: dp(119)
                 on_press: root.go_to_next_screen()
                 markup: True
                 font_size: '26sp'
