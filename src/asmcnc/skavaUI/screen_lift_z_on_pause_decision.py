@@ -104,7 +104,7 @@ def log(message):
 
 class LiftZOnPauseDecisionScreen(Screen):
 
-    default_font_size = '34sp'
+    default_font_size = '36sp'
 
     def __init__(self, **kwargs):
         
