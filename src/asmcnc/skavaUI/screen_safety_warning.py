@@ -259,15 +259,17 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(720)
-                height: dp(70)
-                padding: [dp(0),dp(0), dp(0), dp(0)]
+                height: dp(159)
+                padding: [dp(10),dp(20), dp(10), dp(20)]
                 orientation: 'horizontal'
 
 
-                RoundedButton:
+                Button:
                     id: confirm_button
                     # size_hint_y: 1.5
                     # size_hint_x: 0.7
+                    width: dp(700)
+                    height: dp(119)
                     on_press: root.go_to_next_screen()
                     markup: True
                     font_size: '26sp'
@@ -276,8 +278,8 @@ Builder.load_string("""
                     halign: "center"
                     center: self.parent.center
                     pos: self.parent.pos
-                    # background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    # background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
                     border: [dp(30)]*4
                     # BoxLayout:
                     #     size: self.parent.size
