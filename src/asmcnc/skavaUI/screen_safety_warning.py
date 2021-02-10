@@ -26,7 +26,8 @@ Builder.load_string("""
 
     status_container:status_container
 
-    header_label: header_label
+    header_label : header_label
+    confirm_button : confirm_button
 
     label_r1_c1 : label_r1_c1
     label_r2_c1 : label_r2_c1
@@ -245,16 +246,24 @@ Builder.load_string("""
   
 
             Button:
+                id: confirm_button
                 size_hint_y: 1.5
-                background_color: hex('#FFFFFF00')
                 on_press: root.go_to_next_screen()
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/safety_acceptance_button.png"
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+                markup: True
+                font_size: '30sp'
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
+                background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                border: [dp(30)]*4
+                # BoxLayout:
+                #     size: self.parent.size
+                #     pos: self.parent.pos
+                #     Image:
+                #         source: "./asmcnc/skavaUI/img/blank_long_button.png.png"
+                #         size: self.parent.width, self.parent.height
+                #         allow_stretch: True 
               
 
 """)
@@ -311,6 +320,8 @@ class SafetyScreen(Screen):
         self.label_r2_c2.text = self.l.get_str("Ensure the machine is powered from an earthed supply")
         self.label_r3_c2.text = self.l.get_str("Never leave the machine unattended while power is on")
         self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
+
+        self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
             
 
             
