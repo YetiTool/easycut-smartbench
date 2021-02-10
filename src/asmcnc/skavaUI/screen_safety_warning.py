@@ -278,7 +278,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    border: [dp(30)]*4
+                    border: [dp(30*0.6)]*4
                     # BoxLayout:
                     #     size: self.parent.size
                     #     pos: self.parent.pos
