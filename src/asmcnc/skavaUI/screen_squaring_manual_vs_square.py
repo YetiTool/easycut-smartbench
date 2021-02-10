@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -95,15 +96,38 @@ Builder.load_string("""
 
             Button:
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                # background_color: hex('#FFFFFF00')
                 on_press: root.already_square()
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/squaring_btn_already_square.png"
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+                text: 'No, I manually squared already'
+                valign: "middle"
+                halign: "center"
+                markup: True
+                font_size: root.default_font_size
+                text_size: self.size
+                background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                border: [dp(30)]*4
+                padding: [20, 20]
+
+                # BoxLayout:
+                #     size: self.parent.size
+                #     pos: self.parent.pos
+                #     Image:
+                #         source: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                #         size: self.parent.width, self.parent.height
+                #         allow_stretch: True
+
+                                    # text: 'System Info'
+                                    # valign: "bottom"
+                                    # halign: "center"
+                                    # markup: True
+                                    # font_size: root.default_font_size
+                                    # text_size: self.size
+                                    # on_press: root.go_to_build_info()
+                                    # background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                                    # background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+                                    # border: [dp(25)]*4
+                                    # padding_y: 5
                         
             Button:
                 size_hint_x: 0.3
@@ -125,7 +149,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/squaring_btn_decide_auto_square.png"
+                        source: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
                         
@@ -141,6 +165,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'   
     
+    default_font_size = '30sp'
     
     def __init__(self, **kwargs):
         
@@ -191,3 +216,5 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.sm.current = self.cancel_to_screen
         
         
+
+# blank_blue_btn_2-1_rectangle

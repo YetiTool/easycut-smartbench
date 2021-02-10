@@ -14,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_error
+from asmcnc.skavaUI import screen_squaring_manual_vs_square
 
 
 class ScreenTest(App):
@@ -26,12 +26,10 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
-        jobstart_warning_screen = screen_error.ErrorScreenClass(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
-        sm.add_widget(jobstart_warning_screen)
+        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_decision_screen)
 
-        sm.get_screen('jobstart_warning').message = 'error:1'
-
-        sm.current = 'jobstart_warning'
+        sm.current = 'squaring_decision'
         return sm
 
 ScreenTest().run()
