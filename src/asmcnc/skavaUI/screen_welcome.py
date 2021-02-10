@@ -22,6 +22,7 @@ Builder.load_string("""
 
 <WelcomeScreenClass>:
 
+    starting_label: starting_label
 
     canvas:
         Color: 
@@ -41,12 +42,13 @@ Builder.load_string("""
             size_hint_x: 0.8
 
             Label:
+                id: starting_label
                 text_size: self.size
                 font_size: '40sp'
                 halign: 'center'
                 valign: 'middle'
-                text: '[color=455A64]Starting SmartBench...[/color]'
                 markup: 'True'
+                color: hex('#455A64ff')
 """)
 
 
@@ -66,6 +68,9 @@ class WelcomeScreenClass(Screen):
         self.m=kwargs['machine']
         self.set=kwargs['settings']
         self.am = kwargs['app_manager']
+        self.l=kwargs['localization']
+
+        self.starting_label.text = self.l.get_str('Starting SmartBench') + '...'
 
     def on_enter(self):
 
