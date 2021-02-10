@@ -14,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_squaring_active
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision
 
 
 class ScreenTest(App):
@@ -26,10 +26,10 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
-        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
-        sm.add_widget(squaring_active_screen)
+        lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(lift_z_on_pause_decision_screen)
 
-        sm.current = 'squaring_active'
+        sm.current = 'lift_z_on_pause_or_not'
         return sm
 
 ScreenTest().run()
