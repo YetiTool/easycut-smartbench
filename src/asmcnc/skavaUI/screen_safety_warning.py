@@ -266,7 +266,7 @@ Builder.load_string("""
                     id: confirm_button
                     # size_hint_y: 1.5
                     # size_hint_x: 0.7
-                    width: dp(700*0.6)
+                    width: dp(700*0.5)
                     height: dp(119*0.6)
                     on_press: root.go_to_next_screen()
                     markup: True
