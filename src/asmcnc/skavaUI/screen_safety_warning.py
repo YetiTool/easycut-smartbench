@@ -266,7 +266,7 @@ Builder.load_string("""
                     id: confirm_button
                     # size_hint_y: 1.5
                     # size_hint_x: 0.7
-                    width: dp(700*0.5)
+                    width: dp(700*0.6)
                     height: dp(119*0.6)
                     on_press: root.go_to_next_screen()
                     markup: True
@@ -278,7 +278,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    border: [dp(30*0.6)]*4
+                    border: [dp(15)]*4
                     # BoxLayout:
                     #     size: self.parent.size
                     #     pos: self.parent.pos
