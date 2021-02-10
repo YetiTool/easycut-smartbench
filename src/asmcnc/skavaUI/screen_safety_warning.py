@@ -260,6 +260,12 @@ Builder.load_string("""
                 size_hint_y: 1.5
                 # padding: [dp(10),dp(20), dp(10), dp(20)]
                 orientation: 'horizontal'
+                canvas:
+                    Color:
+                        rgba: [0,0,0,1]
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
 
                 Button:
