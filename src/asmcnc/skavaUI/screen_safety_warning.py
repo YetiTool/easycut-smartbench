@@ -23,15 +23,15 @@ from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 # Kivy UI builder:
 Builder.load_string("""
 
-<RoundedButton@Button>:
-    background_color: 0,0,0,0
-    canvas.before:
-        Color:
-            rgba: hex('#1976d2ff')
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [dp(30), dp(30)]
+# <RoundedButton@Button>:
+#     background_color: 0,0,0,0
+#     canvas.before:
+#         Color:
+#             rgba: hex('#1976d2ff')
+#         RoundedRectangle:
+#             pos: self.pos
+#             size: self.size
+#             radius: [dp(30), dp(30)]
 
 <SafetyScreen>:
 
@@ -264,21 +264,19 @@ Builder.load_string("""
 
                 Button:
                     id: confirm_button
-                    # size_hint_y: 1.5
-                    # size_hint_x: 0.7
-                    width: dp(700*0.6)
-                    height: dp(119*0.6)
+                    width: dp(700)
+                    height: dp(90)
                     on_press: root.go_to_next_screen()
                     markup: True
                     font_size: '26sp'
                     text_size: self.size
                     valign: "middle"
                     halign: "center"
-                    center: self.parent.center
-                    pos: self.parent.pos
+                    # center: self.parent.center
+                    # pos: self.parent.pos
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    border: [dp(15)]*4
+                    border: [dp(30)]*4
                     # BoxLayout:
                     #     size: self.parent.size
                     #     pos: self.parent.pos
@@ -297,8 +295,8 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
-class RoundedButton(Button):
-    pass
+# class RoundedButton(Button):
+#     pass
 
 class SafetyScreen(Screen):
 
