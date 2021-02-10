@@ -17,6 +17,11 @@ Builder.load_string("""
 
 <SquaringScreenDecisionManualVsSquare>:
 
+    header_label: header_label
+    subtitle_label: subtitle_label
+    no_button: no_button
+    yes_button: yes_button
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -70,6 +75,7 @@ Builder.load_string("""
             
 
             Label:
+                id: header_label
                 size_hint_y: 1
                 text: '[color=333333]Does SmartBench need to [b]auto-square[/b] the XY?[/color]'
                 markup: True
@@ -78,8 +84,10 @@ Builder.load_string("""
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
          
             Label:
+                id: subtitle_label
                 size_hint_y: 1
                 text: '[color=333333]Click on the question mark to learn more about this.[/color]'
                 markup: True
@@ -88,6 +96,7 @@ Builder.load_string("""
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
      
         BoxLayout:
             orientation: 'horizontal'
@@ -95,10 +104,10 @@ Builder.load_string("""
             size_hint_y: 3
 
             Button:
+                id: no_button
                 size_hint_x: 1
-                # background_color: hex('#FFFFFF00')
                 on_press: root.already_square()
-                text: 'No, I manually squared already'
+                # text: 'No, I manually squared already'
                 valign: "middle"
                 halign: "center"
                 markup: True
@@ -108,26 +117,6 @@ Builder.load_string("""
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
                 padding: [20, 20]
-
-                # BoxLayout:
-                #     size: self.parent.size
-                #     pos: self.parent.pos
-                #     Image:
-                #         source: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                #         size: self.parent.width, self.parent.height
-                #         allow_stretch: True
-
-                                    # text: 'System Info'
-                                    # valign: "bottom"
-                                    # halign: "center"
-                                    # markup: True
-                                    # font_size: root.default_font_size
-                                    # text_size: self.size
-                                    # on_press: root.go_to_build_info()
-                                    # background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
-                                    # background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-                                    # border: [dp(25)]*4
-                                    # padding_y: 5
                         
             Button:
                 size_hint_x: 0.3
@@ -142,16 +131,19 @@ Builder.load_string("""
                         allow_stretch: True 
                         
             Button:
+                id: yes_button
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
                 on_press: root.needs_auto_squaring()
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+                # text: "Yes, enable auto-square"
+                valign: "middle"
+                halign: "center"
+                markup: True
+                font_size: root.default_font_size
+                text_size: self.size
+                background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                border: [dp(30)]*4
+                padding: [20, 20]
                         
         Label:
             size_hint_y: .5                
@@ -174,21 +166,19 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
     
+        self.update_strings()
     
     def already_square(self):
-        
         self.m.is_squaring_XY_needed_after_homing = False
         self.proceed_to_next_screen()
 
 
     def needs_auto_squaring(self):
-        
         self.m.is_squaring_XY_needed_after_homing = True
         self.proceed_to_next_screen()
 
 
     def proceed_to_next_screen(self):
-        
         self.sm.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('prepare_to_home').return_to_screen = self.return_to_screen
         self.sm.current = 'prepare_to_home'
@@ -212,9 +202,13 @@ class SquaringScreenDecisionManualVsSquare(Screen):
 
 
     def cancel(self):
-        
         self.sm.current = self.cancel_to_screen
-        
-        
+
+    def update_strings(self):
+        self.header_label.text = self.l.get_str("Does SmartBench need to auto-square the XY?").replace(self.l.get_str('auto-square'), self.l.get_bold('auto-square'))
+        self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
+        self.no_button.text = self.l.get_str("No, I manually squared already")
+        self.yes_button.text = self.l.get_str("Yes, enable auto-square")
+
 
 # blank_blue_btn_2-1_rectangle
