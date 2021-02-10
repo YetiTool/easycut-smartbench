@@ -141,4 +141,4 @@ class HomingScreenPrepare(Screen):
         self.sm.current = self.cancel_to_screen
         
     def update_strings(self):
-        self.press_to_home_label.text = self.l.get_str('Then, [b]press button[/b] to home.').replace(self.l.get_str('press button'), self.l.get_bold('press button'))
+        self.press_to_home_label.text = self.l.get_str('Then, press button to home.').replace(self.l.get_str('press button'), self.l.get_bold('press button'))
