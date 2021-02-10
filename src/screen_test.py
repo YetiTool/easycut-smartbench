@@ -14,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_squaring_manual_vs_square
+from asmcnc.skavaUI import screen_squaring_active
 
 
 class ScreenTest(App):
@@ -26,10 +26,10 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
-        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
-        sm.add_widget(squaring_decision_screen)
+        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_active_screen)
 
-        sm.current = 'squaring_decision'
+        sm.current = 'squaring_active'
         return sm
 
 ScreenTest().run()
