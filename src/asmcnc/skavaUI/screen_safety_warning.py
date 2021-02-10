@@ -256,25 +256,25 @@ Builder.load_string("""
                             color: hex('#333333ff')
   
 
-            # BoxLayout:
-            #     size_hint_y: 1.5
-            #     orientation: 'horizontal'
+            BoxLayout:
+                size_hint_y: 1.4
+                orientation: 'horizontal'
 
-            Button:
-                id: confirm_button
-                width: dp(700)
-                height: dp(90)
-                on_press: root.go_to_next_screen()
-                markup: True
-                font_size: '24sp'
-                text_size: self.size
-                valign: "middle"
-                halign: "center"
-                # center: self.parent.center
-                # pos: self.parent.pos
-                background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
-                background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                border: [dp(30)]*4
+                Button:
+                    id: confirm_button
+                    width: dp(700)
+                    height: dp(90)
+                    on_press: root.go_to_next_screen()
+                    markup: True
+                    font_size: '24sp'
+                    text_size: self.size
+                    valign: "middle"
+                    halign: "center"
+                    # center: self.parent.center
+                    # pos: self.parent.pos
+                    background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    border: [dp(30)]*4
                     # BoxLayout:
                     #     size: self.parent.size
                     #     pos: self.parent.pos
