@@ -77,7 +77,6 @@ Builder.load_string("""
             Label:
                 id: header_label
                 size_hint_y: 1
-                text: '[color=333333]Does SmartBench need to [b]auto-square[/b] the XY?[/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'bottom'
@@ -89,7 +88,6 @@ Builder.load_string("""
             Label:
                 id: subtitle_label
                 size_hint_y: 1
-                text: '[color=333333]Click on the question mark to learn more about this.[/color]'
                 markup: True
                 font_size: '18px' 
                 valign: 'top'
@@ -212,6 +210,3 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
         self.no_button.text = self.l.get_str("No, I manually squared already")
         self.yes_button.text = self.l.get_str("Yes, enable auto-square")
-
-
-# blank_blue_btn_2-1_rectangle

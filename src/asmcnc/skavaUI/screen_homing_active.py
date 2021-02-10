@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -15,6 +16,8 @@ from kivy.clock import Clock
 Builder.load_string("""
 
 <HomingScreenActive>:
+    
+    homing_label: homing_label
 
     canvas:
         Color: 
@@ -49,6 +52,7 @@ Builder.load_string("""
                         allow_stretch: True 
                         
             Label:
+                id: homing_label
                 size_hint_x: .5
                 text: '[color=333333][b]Homing...[/b][/color]'
                 markup: True
@@ -57,6 +61,7 @@ Builder.load_string("""
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
                         
             Button:
                 size_hint_x: 1
@@ -89,6 +94,9 @@ class HomingScreenActive(Screen):
         super(HomingScreenActive, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
     
     def windows_cheat_to_procede(self):
@@ -99,6 +107,8 @@ class HomingScreenActive(Screen):
 
 
     def on_enter(self):
+
+        self.update_strings()
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
@@ -180,5 +190,8 @@ class HomingScreenActive(Screen):
     def on_leave(self):
         
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+
+    def update_strings(self):
+        self.homing_label.text = self.l.get_str('Homing') + '...'
         
         
