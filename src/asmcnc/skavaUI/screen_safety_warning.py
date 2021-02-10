@@ -22,6 +22,16 @@ from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 # Kivy UI builder:
 Builder.load_string("""
 
+# <RoundedButton@Button>:
+#     background_color: 0,0,0,0
+#     canvas.before:
+#         Color:
+#             rgba: hex('#1976d2ff')
+#         RoundedRectangle:
+#             pos: self.pos
+#             size: self.size
+#             radius: [dp(30), dp(30)]
+
 <SafetyScreen>:
 
     status_container:status_container
@@ -245,28 +255,36 @@ Builder.load_string("""
                             color: hex('#333333ff')
   
 
-            Button:
-                id: confirm_button
-                size_hint_y: 1.5
-                # size_hint: (None, None)
-                width: dp(704)*0.6 #scaling
-                # height: dp(119)
-                on_press: root.go_to_next_screen()
-                markup: True
-                font_size: '26sp'
-                text_size: self.size
-                valign: "middle"
-                halign: "center"
-                background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
-                background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                border: [dp(30)]*4
-                # BoxLayout:
-                #     size: self.parent.size
-                #     pos: self.parent.pos
-                #     Image:
-                #         source: "./asmcnc/skavaUI/img/blank_long_button.png.png"
-                #         size: self.parent.width, self.parent.height
-                #         allow_stretch: True 
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(70)
+                padding: [dp(100),dp(0), dp(100), dp(0)]
+                orientation: 'horizontal'
+
+
+                Button:
+                    id: confirm_button
+                    # size_hint_y: 1.5
+                    # size_hint_x: 0.7
+                    on_press: root.go_to_next_screen()
+                    markup: True
+                    font_size: '26sp'
+                    text_size: self.size
+                    valign: "middle"
+                    halign: "center"
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    border: [dp(30)]*4
+                    # BoxLayout:
+                    #     size: self.parent.size
+                    #     pos: self.parent.pos
+                    #     Image:
+                    #         source: "./asmcnc/skavaUI/img/blank_long_button.png.png"
+                    #         size: self.parent.width, self.parent.height
+                    #         allow_stretch: True 
               
 
 """)
@@ -277,6 +295,9 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
+
+# class RoundedButton(Button):
+#     pass
 
 class SafetyScreen(Screen):
 
