@@ -39,7 +39,6 @@ Builder.load_string("""
             id: header_label
             size_hint_y: 3
             markup: True
-            # text: "[color=333333]If the job pauses, should SmartBench automatically lift the Z axis away from the job?[/color]"
             font_size: '30px' 
             valign: 'center'
             halign: 'center'
@@ -66,14 +65,6 @@ Builder.load_string("""
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
                 padding: [20, 20]
-
-                # BoxLayout:
-                #     size: self.parent.size
-                #     pos: self.parent.pos
-                #     Image:
-                #         source: "./asmcnc/skavaUI/img/decision_no.png"
-                #         size: self.parent.width, self.parent.height
-                #         allow_stretch: True 
                         
             Button:
                 size_hint_x: 0.3
@@ -100,14 +91,6 @@ Builder.load_string("""
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
                 padding: [20, 20]
-
-                # BoxLayout:
-                #     size: self.parent.size
-                #     pos: self.parent.pos
-                #     Image:
-                #         source: "./asmcnc/skavaUI/img/decision_yes.png"
-                #         size: self.parent.width, self.parent.height
-                #         allow_stretch: True 
                         
         Label:
             size_hint_y: .5                
@@ -135,29 +118,24 @@ class LiftZOnPauseDecisionScreen(Screen):
     def popup_help(self):
         
         info =  self.l.get_bold("Automatic lifting during a pause... (recommended for most tools)") + "\n\n" + \
-                self.l.get_str("If paused during a job, SmartBench can be set to automatically lift the Z axis, moving the tool away from the job.") + \
-                self.l.get_str("This can be useful to inspect the work or clear any blockages.") + \
-                self.l.get_str("Also, it allows the spindle to decelerate away from the job, avoiding burn marks.") + \
-                self.l.get_str("On resuming, SmartBench automatically handles returning the tool to the correct position before continuing.") + \
+                self.l.get_str("If paused during a job, SmartBench can be set to automatically lift the Z axis, moving the tool away from the job.") + " " + \
+                self.l.get_str("This can be useful to inspect the work or clear any blockages.") + " " + \
+                self.l.get_str("Also, it allows the spindle to decelerate away from the job, avoiding burn marks.") + " " + \
+                self.l.get_str("On resuming, SmartBench automatically handles returning the tool to the correct position before continuing.") + " " + \
                 self.l.get_bold("Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile).")
 
         popup_info.PopupInfo(self.sm, self.l, 720, info)
  
     
     def on_enter(self):
-
         self.update_strings()
     
-    
     def decision_no(self):
-        
         if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
             self.sm.get_screen('go').lift_z_on_job_pause = False
         self.sm.current = 'jobstart_warning'
 
-    
     def decision_yes(self):
-
         if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
             self.sm.get_screen('go').lift_z_on_job_pause = True
         self.sm.current = 'jobstart_warning'
