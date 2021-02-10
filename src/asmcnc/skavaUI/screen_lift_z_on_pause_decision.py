@@ -125,7 +125,7 @@ class LiftZOnPauseDecisionScreen(Screen):
         #         self.l.get_bold("Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile).")
 
         info =  self.l.get_bold("Automatic lifting during a pause (recommended for most tools)") + ":" + "\n" + \
-                self.l.get_str("If paused during a job, SmartBench can be set to automatically lift the Z axis, moving the tool away from the job.") + "\n\n" + \
+                self.l.get_str("If paused during a job, SmartBench can be set to automatically lift the Z axis, moving the tool away from the job.") + "\n" + \
                 " - " + self.l.get_str("This can be used to inspect the work or clear any blockages.") + "\n" + \
                 " - " + self.l.get_str("It allows the spindle to decelerate away from the job, avoiding burn marks.") + "\n\n" + \
                 self.l.get_str("On resuming, SmartBench automatically handles returning the tool to the correct position before continuing.") + "\n\n" + \
