@@ -17,7 +17,7 @@ Builder.load_string("""
 
 <SquaringScreenActive>:
 
-    overdrive_label overdrive_label
+    overdrive_label: overdrive_label
     squaring_label: squaring_label
 
     canvas:
