@@ -399,7 +399,7 @@ class PopupInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 420),
+                      size=(popup_width, 440),
                       auto_dismiss= False
                       )
 
