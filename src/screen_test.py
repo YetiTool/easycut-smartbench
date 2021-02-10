@@ -13,20 +13,25 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
-
-from asmcnc.tests import screen_unicode_test
+from asmcnc.comms import localization
+from asmcnc.skavaUI import screen_error
 
 
 class ScreenTest(App):
 
 
-	def build(self):
+    def build(self):
 
-		sm = ScreenManager(transition=NoTransition())
-		m = None
-		jobstart_warning_screen = screen_unicode_test.ScreenClass(name='jobstart_warning', screen_manager = sm, machine = m)
-		sm.add_widget(jobstart_warning_screen)
-		sm.current = 'jobstart_warning'
-		return sm
+        sm = ScreenManager(transition=NoTransition())
+        # Localization/language object
+        l = localization.Localization()
+        m = None
+        jobstart_warning_screen = screen_error.ErrorScreenClass(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
+        sm.add_widget(jobstart_warning_screen)
+
+        sm.get_screen('jobstart_warning').message = 'error:1'
+
+        sm.current = 'jobstart_warning'
+        return sm
 
 ScreenTest().run()

@@ -86,12 +86,11 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(self.m.s.start_services, 4)
                 # Allow time for machine reset sequence
                 Clock.schedule_once(self.go_to_next_screen, 6)
-                # Set settings that are relevant to the GUI, but which depend on getting machine settings first                
+                # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
 
         elif sys.platform == 'win32' or sys.platform == 'darwin':
             Clock.schedule_once(self.go_to_next_screen, 1)
-
 
     def go_to_next_screen(self, dt):
 

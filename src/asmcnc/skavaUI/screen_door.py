@@ -24,12 +24,6 @@ Builder.load_string("""
 
 <DoorScreen>:
 
-    # door_label:door_label
-    # status_container:status_container
-    # right_button:right_button
-    # left_button:left_button
-    # right_button_label:right_button_label
-    # left_button_label:left_button_label
     countdown_image: countdown_image
     spindle_raise_label: spindle_raise_label
     x_beam: x_beam
@@ -180,13 +174,7 @@ Builder.load_string("""
             height: dp(130)
             width: dp(800)
             padding: [0,0,0,10]
-
-            # canvas:
-            #     Color: 
-            #         rgba: [1, 1, 1, 1]
-            #     Rectangle: 
-            #         size: self.size
-            #         pos: self.pos           
+   
 
             Button:
                 id: cancel_button
