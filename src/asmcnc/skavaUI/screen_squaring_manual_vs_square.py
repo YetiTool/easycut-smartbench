@@ -167,6 +167,9 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.l=kwargs['localization']
     
         self.update_strings()
+
+    def on_enter(self):
+        self.update_strings()
     
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
@@ -186,17 +189,17 @@ class SquaringScreenDecisionManualVsSquare(Screen):
 
     def popup_help(self):
         
-        info = "[b]Manual squaring[/b]\n" \
-                "Before power up, the user manually pushes the X beam up against the bench legs at the home end. " \
-                "The power is then switched on. " \
-                "The motor coils lock the lower beam into position with a high degree of reliability. " \
-                "Thus, mechanical adjustments to square the beam can be repeated.\n\n" \
-                "[b]Auto squaring[/b]\n" \
-                "No special preparation from the user is needed. " \
-                "When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs. " \
-                "The stalling procedure can offer a general squareness. " \
-                "But at the end of the movement, the motor coils can bounce into a different step position. " \
-                "Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring. " \
+        info =  self.l.get_bold("Manual squaring") + "\n"  + \
+                self.l.get_str("Before power up, the user manually pushes the X beam up against the bench legs at the home end.") + " " + \
+                self.l.get_str("The power is then switched on.") + " " + \
+                self.l.get_str("The motor coils lock the lower beam into position with a high degree of reliability.") + " " + \
+                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated.") + "\n\n" + \
+                self.l.get_bold("Auto squaring") + "\n" + \
+                self.l.get_str("No special preparation from the user is needed.") + " " + \
+                self.l.get_str("When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs.") + " " + \
+                self.l.get_str("The stalling procedure can offer a general squareness.") + " " + \
+                self.l.get_str("But at the end of the movement, the motor coils can bounce into a different step position.") + " " + \
+                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring.")
 
         popup_info.PopupInfo(self.sm, self.l, 720, info)
 
