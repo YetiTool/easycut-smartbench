@@ -13,6 +13,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.uix.button import Button
 
 import sys, os
 from datetime import datetime
@@ -22,15 +23,15 @@ from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 # Kivy UI builder:
 Builder.load_string("""
 
-# <RoundedButton@Button>:
-#     background_color: 0,0,0,0
-#     canvas.before:
-#         Color:
-#             rgba: hex('#1976d2ff')
-#         RoundedRectangle:
-#             pos: self.pos
-#             size: self.size
-#             radius: [dp(30), dp(30)]
+<RoundedButton@Button>:
+    background_color: 0,0,0,0
+    canvas.before:
+        Color:
+            rgba: hex('#1976d2ff')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(30), dp(30)]
 
 <SafetyScreen>:
 
@@ -257,13 +258,13 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
+                width: dp(720)
                 height: dp(70)
-                padding: [dp(100),dp(0), dp(100), dp(0)]
+                padding: [dp(0),dp(0), dp(0), dp(0)]
                 orientation: 'horizontal'
 
 
-                Button:
+                RoundedButton:
                     id: confirm_button
                     # size_hint_y: 1.5
                     # size_hint_x: 0.7
@@ -275,8 +276,8 @@ Builder.load_string("""
                     halign: "center"
                     center: self.parent.center
                     pos: self.parent.pos
-                    background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    # background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    # background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
                     border: [dp(30)]*4
                     # BoxLayout:
                     #     size: self.parent.size
@@ -296,8 +297,8 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
-# class RoundedButton(Button):
-#     pass
+class RoundedButton(Button):
+    pass
 
 class SafetyScreen(Screen):
 
