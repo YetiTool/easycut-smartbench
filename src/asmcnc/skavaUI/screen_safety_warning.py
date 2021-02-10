@@ -270,8 +270,6 @@ Builder.load_string("""
                     text_size: self.size
                     valign: "middle"
                     halign: "center"
-                    # center: self.parent.center
-                    # pos: self.parent.pos
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
                     border: [dp(30)]*4
