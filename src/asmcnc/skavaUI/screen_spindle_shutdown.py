@@ -20,7 +20,7 @@ Builder.load_string("""
 <SpindleShutdownScreen>:
 
     SB_pausing_label : SB_pausing_label
-    wait_label : wait_label
+    label_wait : label_wait
 
     canvas:
         Color: 
@@ -50,7 +50,7 @@ Builder.load_string("""
             color: hex('#333333ff')
 
         Label:
-            id: wait_label
+            id: label_wait
             size_hint_y: 1
             text: '[color=333333]Please wait.[/color]'
             markup: True
@@ -108,7 +108,7 @@ class SpindleShutdownScreen(Screen):
         self.l=kwargs['localization']
     
         self.SB_pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
-        self.wait_label.text = self.l.get_str('Please wait') + '.'
+        self.label_wait.text = self.l.get_str('Please wait') + '.'
     
     def on_enter(self):
 
