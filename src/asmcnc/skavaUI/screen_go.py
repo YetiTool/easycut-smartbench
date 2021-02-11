@@ -709,8 +709,8 @@ class GoScreen(Screen):
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
 
     def update_font_size(self, value):
-        if len(value.text) > 6:
-            value.font_size = '14px'
+        if len(value.text) > 10:
+            value.font_size = '12px'
         else:
             value.font_size = '16px'
 
