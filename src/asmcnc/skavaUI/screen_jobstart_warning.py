@@ -81,7 +81,7 @@ Builder.load_string("""
              
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:20
+                    spacing:0
                     size_hint_y: 1.2
                     BoxLayout:
                         padding: 22
@@ -127,7 +127,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing:0
                         size_hint_x: 0.75
 
                         BoxLayout:
