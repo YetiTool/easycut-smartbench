@@ -103,7 +103,7 @@ Builder.load_string("""
                             markup: True
                             size:self.size
                             valign: 'top'
-                            size:self.texture_size
+                            # size:self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
 
@@ -114,7 +114,7 @@ Builder.load_string("""
                             markup: True
                             size:self.size
                             valign: 'bottom'
-                            size:self.texture_size
+                            # size: self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
