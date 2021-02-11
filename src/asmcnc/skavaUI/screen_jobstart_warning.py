@@ -208,10 +208,6 @@ class JobstartWarningScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
-
-        self.update_strings()
-
-    def on_enter(self):
         self.update_strings()
 
     def continue_to_go_screen(self):
