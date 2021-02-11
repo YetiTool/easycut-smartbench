@@ -15,6 +15,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
 from asmcnc.skavaUI import screen_go
+from asmcnc.tests import loading_screen_test
 
 
 class ScreenTest(App):
@@ -27,11 +28,14 @@ class ScreenTest(App):
         l = localization.Localization()
         m = None
         am = None
-        job_gcode = ['G1']
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am, localization = l)
-        sm.add_widget(go_screen)
+        # job_gcode = ['G1']
+        # go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am, localization = l)
+        # sm.add_widget(go_screen)
 
-        sm.current = 'go'
+        test_screen = loading_screen_test.LoadingScreenTest(name = 'test', screen_manager = sm)
+        sm.add_widget(test_screen)
+
+        sm.current = 'test'
         return sm
 
 ScreenTest().run()

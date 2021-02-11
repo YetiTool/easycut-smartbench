@@ -131,11 +131,6 @@ class StopOrResumeDecisionScreen(Screen):
  
     
     def popup_help(self):
-        
-        # info = "[b]Cancel[/b]\n" \
-        #         "Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.\n\n" \
-        #         "[b]Resume[/b]\n" \
-        #         "Pressing resume will continue the job from the point at which it was paused."
 
         info = (
             self.l.get_bold('Cancel') + \
@@ -166,13 +161,6 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
                 self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
                 )
-
-            # self.pause_description_label.text = "[color=333333]SmartBench has automatically stopped the job because it detected the spindle was starting to overload. " \
-            #                                 "This is calculated on motor temperature, spindle load and RPM. " \
-            #                                 "[b]You may resume[/b], but we recommend you allow the spindle to cool off a bit first. " \
-            #                                 "If resuming, try adjusting the speeds and feeds to reduce the load on the spindle. " \
-            #                                 "Or adjust the job to reduce the chip loading. " \
-            #                                 "Also, check other factors like extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may give the spindle a hard time.[/color]"
         
         if self.reason_for_pause == 'job_pause':
             self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
