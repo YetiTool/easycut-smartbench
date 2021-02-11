@@ -856,16 +856,22 @@ class PopupDeleteFile(Widget):
 
 class PopupReminder(Widget):
 
-    def __init__(self, screen_manager, app_manager, machine, message, go_to):
+    def __init__(self, screen_manager, app_manager, machine, localization, message, go_to):
         
         self.sm = screen_manager
         self.am = app_manager
         self.m = machine
+        self.l = localization
         
         if go_to == 'calibration':
           description = message
         else:
-          description = message + "\n\n[b]WARNING! Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts![/b]"
+          description = (
+              message + "\n\n" + \
+              self.l.get_bold("WARNING") + ": "
+              self.l.get_bold("Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts!")
+            )
+
 
         def open_app(*args):
 
@@ -887,18 +893,23 @@ class PopupReminder(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,0], markup = True)
 
+        title_string = self.l.get_str('Maintenance reminder!')
+
         if go_to == 'calibration':
-          ok_button = Button(text='[b]Calibrate now![/b]', markup = True)
-          back_button = Button(text='[b]Remind me in 320 hours[/b]', markup = True)
+          ok_text = self.l.get_bold('Calibrate now!')
+          back_text = self.l.get_bold('Remind me in 320 hours')
 
         if go_to == 'lubrication':
-          ok_button = Button(text='[b]Ok! Z-head lubricated![/b]', markup = True)
-          back_button = Button(text='[b]Remind me later[/b]', markup = True)
+          ok_text = self.l.get_bold('Ok! Z-head lubricated!')
+          back_text = self.l.get_bold('Remind me later')
 
         if go_to == 'brushes':
-          ok_button = Button(text='[b]Change brushes now![/b]', markup = True)
-          back_button = Button(text='[b]Remind me later[/b]', markup = True)
+          ok_text = self.l.get_bold('Change brushes now!')
+          back_text = self.l.get_bold('Remind me later')
 
+
+        ok_button = Button(text=ok_text, markup = True)
+        back_button = Button(text=back_text, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button.background_normal = ''
@@ -915,7 +926,7 @@ class PopupReminder(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='Maintenance reminder!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '22sp',

@@ -471,7 +471,7 @@ class GoScreen(Screen):
                         ).replace("N00", brush_lifetime_string)
                     )
 
-                brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, brush_warning, 'brushes')
+                brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, brush_warning, 'brushes')
 
             if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
 
@@ -489,7 +489,7 @@ class GoScreen(Screen):
                         self.l.get_str("Saying 'OK' will reset this reminder.")
                     )
 
-                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, lubrication_warning, 'lubrication')
+                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, lubrication_warning, 'lubrication')
 
             if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
 
@@ -508,7 +508,7 @@ class GoScreen(Screen):
                         self.l.get_str("Will you calibrate SmartBench now?")
                     )
 
-                caibration_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
+                caibration_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, calibration_warning, 'calibration')
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
