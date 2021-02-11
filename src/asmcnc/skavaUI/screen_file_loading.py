@@ -39,13 +39,11 @@ Builder.load_string("""
     filename_label:filename_label
     warning_title_label:warning_title_label
     warning_body_label:warning_body_label
-    quit_button_label:quit_button_label
-    check_button_label:check_button_label
     usb_status_label:usb_status_label
     
     canvas:
         Color: 
-            rgba: hex('#0d47a1')
+            rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -72,91 +70,143 @@ Builder.load_string("""
             text_size: self.size
             padding: [10, 0]
 
-        BoxLayout:
+        BoxLayout: 
+            spacing: 0
+            padding: 20
             orientation: 'vertical'
-            size_hint_x: 1
             size_hint_y: 7.81
-            spacing: 10
-            padding: [70, 31.3, 70, 70]
              
             Label:
+                id: header_label
                 size_hint_y: 1
+                markup: True
+                valign: 'center'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
                 font_size: '40sp'
-                text: root.progress_value
-                markup: True             
+                text: root.progress_value          
 
             Label:
                 id: filename_label
-                text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
+                size_hint_y: 0.5
+                markup: True
+                valign: 'top'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
                 text: 'Filename here'
                 
             Label:
                 id: warning_title_label
-                text_size: self.size
-                font_size: '20sp'
+                font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                text: ''
+                size_hint_y: 0.5
+                markup: True
+                valign: 'center'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+                text: "[b]WARNING![/b]"
                 
             Label:
                 id: warning_body_label
-                text_size: self.size
                 font_size: '20sp'
                 halign: 'center'
-                valign: 'top'
-                text: ''
-            
+                valign: 'bottom'
+                size_hint_y: 1
+                markup: True
+                valign: 'center'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 10, 0
-                spacing: 10
+                padding: [20,0,20,0]
+                spacing: 40
+                size_hint_y: 3
             
-                Button:
-                    size_hint_y:0.9
-                    id: check_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: True
-                    background_color: hex('#0d47a1')
-                    on_press: 
-                        root.go_to_check_job()
+                # Button:
+                #     size_hint_y:0.9
+                #     id: check_button
+                #     size: self.texture_size
+                #     valign: 'top'
+                #     halign: 'center'
+                #     disabled: True
+                #     background_color: hex('#0d47a1')
+                #     on_press: 
+                #         root.go_to_check_job()
                         
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
+                #     BoxLayout:
+                #         padding: 5
+                #         size: self.parent.size
+                #         pos: self.parent.pos
                         
-                        Label:
-                            id: check_button_label
-                            #size_hint_y: 1
-                            font_size: '18sp'
-                            text: ''
-                        
-                Button:
-                    size_hint_y:0.9
-                    id: home_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: True
-                    background_color: hex('#0d47a1')
-                    on_press: 
-                        root.quit_to_home()
+                #         Label:
+                #             id: check_button_label
+                #             #size_hint_y: 1
+                #             font_size: '18sp'
+                #             text: ''
 
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
+                Button:
+                    id: home_button
+                    size_hint_x: 1
+                    valign: "middle"
+                    halign: "center"
+                    markup: True
+                    font_size: root.default_font_size
+                    text_size: self.size
+                    background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    border: [dp(30)]*4
+                    padding: [40, 40]
+                    on_press: root.quit_to_home()
+
+                Button:
+                    id: check_button
+                    size_hint_x: 1
+                    on_press: root.go_to_check_job()
+                    valign: "middle"
+                    halign: "center"
+                    markup: True
+                    font_size: root.default_font_size
+                    text_size: self.size
+                    background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    border: [dp(30)]*4
+                    padding: [40, 40]
+
                         
-                        Label:
-                            id: quit_button_label
-                            #size_hint_y: 1
-                            font_size: '18sp'
-                            text: ''
+                # Button:
+                #     size_hint_y:0.9
+                #     id: home_button
+                #     size: self.texture_size
+                #     valign: 'top'
+                #     halign: 'center'
+                #     disabled: True
+                #     background_color: hex('#0d47a1')
+                #     on_press: 
+                #         root.quit_to_home()
+
+                #     BoxLayout:
+                #         padding: 5
+                #         size: self.parent.size
+                #         pos: self.parent.pos
+                        
+                #         Label:
+                #             id: quit_button_label
+                #             #size_hint_y: 1
+                #             font_size: '18sp'
+                #             text: ''
 
 
 
@@ -191,6 +241,7 @@ class LoadingScreen(Screen):
 
     usb_status = None
 
+    default_font_size = '30sp'
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -400,8 +451,8 @@ class LoadingScreen(Screen):
             self.progress_value = self.l.get_str('Getting ready') + '...'
             self.warning_title_label.text = ''
             self.warning_body_label.text = ''
-            self.check_button_label.text = ''
-            self.quit_button_label.text = ''
+            self.check_button.text = ''
+            self.home_button.text = ''
 
         if stage == 'Preparing':
             self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %'
@@ -416,8 +467,8 @@ class LoadingScreen(Screen):
                 self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 self.l.get_str('Would you like SmartBench to check your job now?')
                 )
-            self.check_button_label.text = self.l.get_str('Yes please, check my job for errors')
-            self.quit_button_label.text = self.l.get_str('No thanks, quit to home')
+            self.check_button.text = self.l.get_str('Yes please, check my job for errors')
+            self.home_button.text = self.l.get_str('No thanks, quit to home')
             
             self.check_button.disabled = False
             self.home_button.disabled = False

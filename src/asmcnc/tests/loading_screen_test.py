@@ -222,67 +222,6 @@ Builder.load_string("""
 """)
 
 
-
-        # Label:
-        #     id: header_label
-        #     size_hint_y: 3
-        #     markup: True
-        #     font_size: '30px' 
-        #     valign: 'center'
-        #     halign: 'center'
-        #     size:self.texture_size
-        #     text_size: self.size
-        #     color: hex('#333333ff')
-    
-        # BoxLayout:
-        #     orientation: 'horizontal'
-        #     padding: [20,0,20,0]
-        #     spacing: 40
-        #     size_hint_y: 3
-
-        #     Button:
-        #         id: no_button
-        #         size_hint_x: 1
-        #         on_press: root.decision_no()
-        #         valign: "middle"
-        #         halign: "center"
-        #         markup: True
-        #         font_size: root.default_font_size
-        #         text_size: self.size
-        #         background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-        #         background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-        #         border: [dp(30)]*4
-        #         padding: [20, 20]
-                        
-        #     Button:
-        #         size_hint_x: 0.3
-        #         background_color: hex('#FFFFFF00')
-        #         on_press: root.popup_help()
-        #         BoxLayout:
-        #             size: self.parent.size
-        #             pos: self.parent.pos
-        #             Image:
-        #                 source: "./asmcnc/skavaUI/img/help_btn_orange_round.png"
-        #                 size: self.parent.width, self.parent.height
-        #                 allow_stretch: True 
-                        
-        #     Button:
-        #         id: yes_button
-        #         size_hint_x: 1
-        #         on_press: root.decision_yes()
-        #         valign: "middle"
-        #         halign: "center"
-        #         markup: True
-        #         font_size: root.default_font_size
-        #         text_size: self.size
-        #         background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-        #         background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-        #         border: [dp(30)]*4
-        #         padding: [20, 20]
-                        
-        # Label:
-        #     size_hint_y: .5    
-
 class LoadingScreenTest(Screen):  
 
     default_font_size = '30sp'
