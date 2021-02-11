@@ -85,7 +85,7 @@ Builder.load_string("""
                     size_hint_y: 1.2
                     BoxLayout:
                         padding: 22
-                        size_hint_x: 0.25
+                        size_hint_x: 0.2
                         Image:
                             keep_ratio: True
                             allow_stretch: True                           
@@ -93,7 +93,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         orientation: 'vertical'
-                        size_hint_x: 0.75
+                        size_hint_x: 0.8
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
@@ -132,14 +132,14 @@ Builder.load_string("""
 
                         BoxLayout:
                             padding: 0
-                            size_hint_x: 0.34
+                            size_hint_x: 0.27
                             Image:
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
-                            size_hint_x: 0.66
+                            size_hint_x: 0.73
                             Label:
                                 id: never_unattended
                                 markup: True
