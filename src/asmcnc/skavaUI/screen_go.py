@@ -412,6 +412,7 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
+        self.update_strings()
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
@@ -512,6 +513,8 @@ class GoScreen(Screen):
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
+
+        self.update_strings()
 
 ### COMMON SCREEN PREP METHOD
 
@@ -694,9 +697,7 @@ class GoScreen(Screen):
     def update_voltage_label(self):
         self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
-
     def update_strings(self):
-
         self.feed_label.text = self.l.get_str("Feed")
         self.rate_label.text = self.l.get_str("rate")
         self.spindle_label.text = self.l.get_str("Spindle")
