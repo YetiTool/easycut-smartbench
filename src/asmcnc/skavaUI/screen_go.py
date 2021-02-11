@@ -698,11 +698,21 @@ class GoScreen(Screen):
 
     def update_strings(self):
         self.feed_label.text = self.l.get_str("Feed")
+        self.update_font_size(self.feed_label)
         self.rate_label.text = self.l.get_str("rate")
+        self.update_font_size(self.rate_label)
         self.spindle_label.text = self.l.get_str("Spindle")
+        self.update_font_size(self.spindle_label)
         self.speed_label.text = self.l.get_str("speed")
+        self.update_font_size(self.speed_label)
         self.job_time_label.text = self.l.get_str("Total job time") + ":"
         self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
+
+    def update_font_size(self, value):
+        if len(value.text) > 6:
+            value.font_size = '14px'
+        else:
+            value.font_size = '16px'
 
 
 
