@@ -167,6 +167,7 @@ Builder.load_string("""
                     text_size: self.size
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
                     padding: [40, 40]
                     on_press: root.quit_to_home()
@@ -182,6 +183,7 @@ Builder.load_string("""
                     text_size: self.size
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
                     padding: [40, 40]
 
@@ -446,8 +448,8 @@ class LoadingScreen(Screen):
     def update_screen(self, stage, percentage_progress=0):
 
         if stage == 'Getting ready':
-            # self.check_button.disabled = True
-            # self.home_button.disabled = True
+            self.check_button.disabled = True
+            self.home_button.disabled = True
             self.progress_value = self.l.get_str('Getting ready') + '...'
             self.warning_title_label.text = ''
             self.warning_body_label.text = ''
@@ -462,7 +464,7 @@ class LoadingScreen(Screen):
 
         if stage == 'Loaded':
             self.progress_value = self.l.get_bold('Job loaded')
-            self.warning_title_label.text = self.l.get_str('WARNING') + ':'
+            self.warning_title_label.text = self.l.get_bold('WARNING') + '[b]:[/b]'
             self.warning_body_label.text = (
                 self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 self.l.get_str('Would you like SmartBench to check your job now?')
