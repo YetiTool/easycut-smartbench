@@ -74,7 +74,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(300)
+                height: dp(310)
                 padding: [10,10,10,0]
                 spacing: 0
                 orientation: 'vertical'
@@ -96,7 +96,7 @@ Builder.load_string("""
                         size_hint_x: 0.8
                         Label:
                             id: risk_of_fire
-                            size_hint_y: 0.18
+                            size_hint_y: 0.2
                             markup: True
                             halign: 'left'
                             font_size: '32sp' 
@@ -109,7 +109,7 @@ Builder.load_string("""
 
                         Label:
                             id: causes_of_fire
-                            size_hint_y: 0.82
+                            size_hint_y: 0.8
                             halign: 'left'
                             markup: True
                             size:self.size
@@ -179,14 +179,14 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(100)
+                height: dp(90)
                 padding: [dp(250),dp(0), dp(250), dp(20)]
                 orientation: 'horizontal'
 
                 RoundedButton:
                     id: confirm_button
                     size_hint: (None,None)
-                    height: dp(80)
+                    height: dp(70)
                     width: dp(300)
                     center: self.parent.center
                     pos: self.parent.pos
