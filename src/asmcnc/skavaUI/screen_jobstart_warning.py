@@ -75,16 +75,16 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(310)
-                padding: [20,10,20,0]
+                padding: [10,10,10,0]
                 spacing: 0
                 orientation: 'vertical'
              
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:0
-                    size_hint_y: 1.2
+                    size_hint_y: 1.22
                     BoxLayout:
-                        padding: 22
+                        padding: 20
                         size_hint_x: 0.2
                         Image:
                             keep_ratio: True
@@ -123,7 +123,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_x: 1
-                    size_hint_y: 0.8
+                    size_hint_y: 0.78
 
                     BoxLayout:
                         orientation: 'horizontal'
