@@ -163,7 +163,7 @@ class StopOrResumeDecisionScreen(Screen):
                     'You may resume, but we recommend you allow the spindle to cool off first.'
                     ).replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume')) + \
                 "\n" + \
-                self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce the chip loading.') + " " + \
+                self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
                 self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
                 )
 
