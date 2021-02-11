@@ -267,10 +267,10 @@ class PopupStop(Widget):
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
       
-      resume_button = Button(text='[b]Resume[/b]', markup = True)
+      resume_button = Button(text=resume_string, markup = True)
       resume_button.background_normal = ''
       resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-      cancel_button = Button(text='[b]Cancel[/b]', markup = True)
+      cancel_button = Button(text=cancel_string, markup = True)
       cancel_button.background_normal = ''
       cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -284,7 +284,7 @@ class PopupStop(Widget):
       layout_plan.add_widget(label)
       layout_plan.add_widget(btn_layout)
       
-      popup = Popup(title='Warning!',
+      popup = Popup(title=title_string,
                     title_color=[0, 0, 0, 1],
                     title_font= 'Roboto-Bold',
                     title_size = '20sp',
