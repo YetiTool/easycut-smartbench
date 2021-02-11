@@ -112,7 +112,7 @@ Builder.load_string("""
                             size_hint_y: 0.8
                             halign: 'left'
                             markup: True
-                            valign: 'bottom'
+                            valign: 'middle'
                             size: self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
