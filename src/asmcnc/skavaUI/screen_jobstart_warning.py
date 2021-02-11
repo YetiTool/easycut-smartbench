@@ -47,7 +47,7 @@ Builder.load_string("""
         BoxLayout:
             padding: 0
             orientation: "vertical"
-            spacing: 0
+            spacing: 10
 
             BoxLayout:
                 padding: 0
@@ -75,7 +75,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(300)
-                padding: [20,20,20,0]
+                padding: [20,10,20,0]
                 spacing: 0
                 orientation: 'vertical'
              
