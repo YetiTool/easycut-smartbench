@@ -717,7 +717,7 @@ class GoScreen(Screen):
             value.font_size = '13px'
 
         if len(value.text) > 12:
-            value.font_size = '11px'
+            value.font_size = '12px'
 
 
 
