@@ -56,7 +56,7 @@ class PowerCycleScreen(Screen):
         self.l=kwargs['localization']
 
     def on_enter(self):
-        self.only_label.text = self.l.get_str("Please wait") "..."
+        self.only_label.text = self.l.get_str("Please wait") + "..."
         Clock.schedule_once(self.update_label, 25)
 
     def update_label(self, dt):
