@@ -101,9 +101,9 @@ Builder.load_string("""
                             halign: 'left'
                             font_size: '32sp' 
                             markup: True
-                            size:self.size
+                            # size:self.size
                             valign: 'top'
-                            # size:self.texture_size
+                            size:self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
 
@@ -112,9 +112,9 @@ Builder.load_string("""
                             size_hint_y: 0.8
                             halign: 'left'
                             markup: True
-                            size:self.size
+                            # size:self.size
                             valign: 'bottom'
-                            # size: self.texture_size
+                            size: self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
