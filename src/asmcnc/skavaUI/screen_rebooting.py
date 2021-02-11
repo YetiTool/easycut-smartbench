@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created Mayh 2019
 
@@ -40,7 +41,6 @@ Builder.load_string("""
                 id: reboot_label
                 text_size: self.size
                 size_hint_y: 0.5
-                text: "Rebooting..."
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'

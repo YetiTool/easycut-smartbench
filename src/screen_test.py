@@ -14,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_lift_z_on_pause_decision
+from asmcnc.skavaUI import screen_jobstart_warning
 
 
 class ScreenTest(App):
@@ -26,10 +26,10 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
-        lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
-        sm.add_widget(lift_z_on_pause_decision_screen)
+        jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
+        sm.add_widget(jobstart_warning_screen)
 
-        sm.current = 'lift_z_on_pause_or_not'
+        sm.current = 'jobstart_warning'
         return sm
 
 ScreenTest().run()

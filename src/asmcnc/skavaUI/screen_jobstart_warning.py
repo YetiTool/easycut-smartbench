@@ -27,6 +27,13 @@ Builder.load_string("""
 
 <JobstartWarningScreen>:
 
+    header_label : header_label
+    risk_of_fire : risk_of_fire
+    causes_of_fire : causes_of_fire
+    never_unattended : never_unattended
+    scan_label : scan_label
+    confirm_button : confirm_button
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -52,12 +59,12 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                    id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
@@ -88,8 +95,8 @@ Builder.load_string("""
                         orientation: 'vertical'
                         size_hint_x: 0.75
                         Label:
+                            id: risk_of_fire
                             size_hint_y: 0.2
-                            text: '[color=333333][b]Risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
                             font_size: '32sp' 
@@ -101,9 +108,9 @@ Builder.load_string("""
                             color: hex('#333333FF')
 
                         Label:
+                            id: causes_of_fire
                             size_hint_y: 0.8
                             halign: 'left'
-                            text: root.causes_of_fire
                             markup: True
                             size:self.size
                             valign: 'bottom'
@@ -134,7 +141,7 @@ Builder.load_string("""
                         BoxLayout:
                             size_hint_x: 0.66
                             Label:
-                                text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
+                                id: never_unattended
                                 markup: True
                                 halign: 'left'
                                 font_size: '32sp' 
@@ -156,10 +163,8 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
                         Label:
-                            # size_hint_x: None
-                            # width: dp(150)
+                            id: scan_label
                             size_hint_y: 0.18
-                            text: '[color=333333][b]SCAN ME[/b][/color]'
                             markup: True
                             halign: 'center'
                             font_size: '22sp' 
@@ -179,13 +184,13 @@ Builder.load_string("""
                 orientation: 'horizontal'
 
                 RoundedButton:
+                    id: confirm_button
                     size_hint: (None,None)
                     height: dp(80)
                     width: dp(300)
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.continue_to_go_screen()
-                    text: 'I understand'
                     color: hex('#f9f9f9ff')
                     markup: True
                     font_size: '28sp'
@@ -198,21 +203,32 @@ class RoundedButton(Button):
 
 class JobstartWarningScreen(Screen):
 
-    causes_of_fire = (
-        "Common causes of fire:\n"
-        "- Processing combustible materials, e.g. woods\n"
-        "- Using dull cutters which produce heat through friction\n"
-        "- Variation in extraction\n"
-        )
-
-
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.sm=kwargs['machine']
+        self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
+        self.update_strings()
+
+    def on_enter(self):
+        self.update_strings()
 
     def continue_to_go_screen(self):
         self.sm.current = 'go'
+
+    def update_strings(self):
+
+        self.header_label.text = self.l.get_str("Safety Warning")
+        self.risk_of_fire.text = self.l.get_str("Risk of fire")
+        self.causes_of_fire.text = (
+                self.l.get_str("Common causes of fire") + ":\n"
+                " - " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
+                " - " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
+                " - " + self.l.get_str("Variation in extraction") + "\n"
+            )
+        self.never_unattended.text = self.l.get_bold("Never leave CNC machines unattended")
+        self.scan_label.text = self.l.get_bold("SCAN ME")
+        self.confirm_button.text = self.l.get_str("I understand")
 

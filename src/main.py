@@ -130,8 +130,11 @@ class SkavaUI(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+        # Localization/language object
+        l = localization.Localization()
+
         if start_screen == 'pc_alert': 
-            powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
+            powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm, localization = l)
 
         else: 
             # Initialise 'm'achine object
@@ -141,9 +144,6 @@ class SkavaUI(App):
             
             # Initialise settings object
             sett = settings_manager.Settings(sm)
-
-            # Localization/language object
-            l = localization.Localization()
                         
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett, l)

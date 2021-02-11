@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2020
 
@@ -40,7 +41,6 @@ Builder.load_string("""
                 id: only_label
                 text_size: self.size
                 size_hint_y: 0.5
-                text: "Please wait..."
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
@@ -53,11 +53,12 @@ class PowerCycleScreen(Screen):
     def __init__(self, **kwargs):
         super(PowerCycleScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
     def on_enter(self):
-        self.only_label.text = "Please wait..."
+        self.only_label.text = self.l.get_str("Please wait") "..."
         Clock.schedule_once(self.update_label, 25)
 
     def update_label(self, dt):
-        self.only_label.text = "Please restart SmartBench now"
+        self.only_label.text = self.l.get_str("Please restart SmartBench now")
     
