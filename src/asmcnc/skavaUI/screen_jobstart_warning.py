@@ -75,14 +75,14 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(310)
-                padding: [10,10,10,0]
+                padding: [20,10,20,0]
                 spacing: 0
                 orientation: 'vertical'
              
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:0
-                    size_hint_y: 1.2
+                    size_hint_y: 1.3
                     BoxLayout:
                         padding: 22
                         size_hint_x: 0.2
@@ -123,7 +123,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_x: 1
-                    size_hint_y: 0.8
+                    size_hint_y: 0.7
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -179,14 +179,14 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(90)
+                height: dp(80)
                 padding: [dp(250),dp(0), dp(250), dp(20)]
                 orientation: 'horizontal'
 
                 RoundedButton:
                     id: confirm_button
                     size_hint: (None,None)
-                    height: dp(70)
+                    height: dp(60)
                     width: dp(300)
                     center: self.parent.center
                     pos: self.parent.pos
