@@ -868,7 +868,7 @@ class PopupReminder(Widget):
         else:
           description = (
               message + "\n\n" + \
-              self.l.get_bold("WARNING") + ": "
+              self.l.get_bold("WARNING") + ": " + \
               self.l.get_bold("Delaying key maintenance tasks or dismissing reminders could cause wear and breakage of important parts!")
             )
 
