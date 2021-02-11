@@ -187,7 +187,7 @@ Builder.load_string("""
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding: [20, 20]
+                    padding: [40, 40]
                     text: 'Yes, check my job for errors'
 
                 # BoxLayout:
@@ -217,7 +217,8 @@ Builder.load_string("""
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding: [20, 20]
+                    padding: [40, 40]
+                    text: 'No, quit to home'
                         
 """)
 
