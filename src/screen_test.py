@@ -14,7 +14,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_jobstart_warning
+from asmcnc.skavaUI import screen_go
 
 
 class ScreenTest(App):
@@ -26,10 +26,10 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
-        jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
-        sm.add_widget(jobstart_warning_screen)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am, localization = l)
+        sm.add_widget(go_screen)
 
-        sm.current = 'jobstart_warning'
+        sm.current = 'go'
         return sm
 
 ScreenTest().run()

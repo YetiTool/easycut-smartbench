@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
 
@@ -16,7 +17,6 @@ from __builtin__ import file, True, False
 from kivy.clock import Clock, mainthread
 from datetime import datetime
 
-
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
@@ -25,13 +25,9 @@ from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
 
-# from asmcnc.skavaUI import widget_tabbed_panel
-
-
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
-
 
 <GoScreen>:
 
@@ -49,8 +45,14 @@ Builder.load_string("""
     btn_back_img:btn_back_img
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
-    # spindle_voltage: spindle_voltage
     spindle_widgets: spindle_widgets
+
+    feed_label : feed_label
+    rate_label : rate_label
+    spindle_label : spindle_label
+    speed_label : speed_label
+    job_time_label : job_time_label
+    file_lines_streamed_label : file_lines_streamed_label
     
     BoxLayout:
         padding: 0
@@ -117,7 +119,6 @@ Builder.load_string("""
                                 text_size: self.size
                                 font_size: '20sp'
                                 markup: True
-                                text: 'Load a file...'
                                 halign: 'center'
                                 valign: 'middle'
                                 id: file_data_label
@@ -173,21 +174,25 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
                                 Label:
-                                    text: '[color=808080]Feed[/color]'
+                                    id: feed_label
+                                    # text: '[color=808080]Feed[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
+                                    color: hex('#808080ff')
                                 Label:
-                                    text: '[color=808080]rate[/color]'
+                                    id: rate_label
+                                    # text: '[color=808080]rate[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
+                                    color: hex('#808080ff')
 
                             BoxLayout:
                                 id: feed_override_container
@@ -225,21 +230,25 @@ Builder.load_string("""
                                         size: self.size
                                         pos: self.pos
                                 Label:
-                                    text: '[color=808080]Spindle[/color]'
+                                    id: spindle_label
+                                    # text: '[color=808080]Spindle[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
+                                    color: hex('#808080ff')
                                 Label:
-                                    text: '[color=808080]speed[/color]'
+                                    id: speed_label
+                                    # text: '[color=808080]speed[/color]'
                                     markup: True
                                     font_size: '16px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
+                                    color: hex('#808080ff')
 
                             BoxLayout:
                                 id: speed_override_container
@@ -268,14 +277,16 @@ Builder.load_string("""
                                     pos: self.pos
 
                             Label:
+                                id: file_lines_streamed_label
                                 size_hint_y: 1
-                                text: '[color=808080]File lines streamed:[/color]'
+                                # text: '[color=808080]File lines streamed:[/color]'
                                 markup: True                           
                                 font_size: '16px'
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
-                                text_size: self.size 
+                                text_size: self.size
+                                color: hex('#808080ff')
                             Label:
                                 size_hint_y: 3
                                 id: progress_percentage_label
@@ -287,24 +298,26 @@ Builder.load_string("""
                                 size:self.texture_size
                                 text_size: self.size 
                             Label:
+                                id: job_time_label
                                 size_hint_y: 1
-                                text: '[color=808080]Job time:[/color]'
+                                # text: '[color=808080]Job time:[/color]'
                                 markup: True                           
                                 font_size: '16px' 
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
-                                text_size: self.size 
+                                text_size: self.size
+                                color: hex('#808080ff')
                             Label:
                                 size_hint_y: 1
                                 id: run_time_label
-                                text: '[color=333333]99 hours 59 mins 59 secs[/color]'
                                 markup: True                           
                                 font_size: '20px'
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
-                                text_size: self.size 
+                                text_size: self.size
+                                color: hex('#333333ff')
 
                 BoxLayout:
                     id: spindle_widgets
@@ -344,18 +357,6 @@ Builder.load_string("""
                             halign: 'center'
                             text: '[color=333333]0 %[/color]'
                             markup: True
-
-                        # Label:
-                        #     id: spindle_voltage
-                        #     size_hint_y: 0.6
-                        #     opacity: 0
-                        #     text: '0'
-                        #     font_size: '16px' 
-                        #     valign: 'middle'
-                        #     halign: 'center'
-                        #     size:self.texture_size
-                        #     text_size: self.size
-                        #     color: [0,0,0,0.5]
 
         BoxLayout:
             size_hint_y: 0.08
@@ -398,6 +399,7 @@ class GoScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.job_gcode=kwargs['job']
         self.am=kwargs['app_manager']
+        self.l=kwargs['localization']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
@@ -450,28 +452,63 @@ class GoScreen(Screen):
         if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
             # Check brush use and lifetime: 
             if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
-                brush_warning = "[b]Check your spindle brushes before starting your job![/b]\n\n" + \
-                "You have used SmartBench for [b]" + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours[/b] " + \
-                "since you updated your spindle brush settings, and you told us that they only have lifetime of [b]" + \
-                str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours[/b]!"
+
+                brush_use_string = "[b]" + str(int(self.m.spindle_brush_use_seconds/3600)) + "[/b]"
+                brush_lifetime_string = "[b]" + str(int(self.m.spindle_brush_lifetime_seconds/3600)) + "[/b]"
+
+                brush_warning = (
+                        self.l.get_bold("Check your spindle brushes before starting your job!") + "\n\n" + \
+                        (
+                            self.l.get_str(
+                                "You have used your SmartBench for N00 hours since you updated your spindle brush settings."
+                                ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                        ).replace("N00", brush_use_string) + \
+                        " " + \
+                        (
+                            self.l.get_str(
+                                "You have told us they only have a lifetime of N00 hours!"
+                                ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                        ).replace("N00", brush_lifetime_string)
+                    )
+
                 brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, brush_warning, 'brushes')
 
             if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
-                lubrication_warning = "[b]Lubricate the z head before starting your job![/b]\n\n" + \
-                "You have used SmartBench for [b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + " hours[/b] " + \
-                "since you last told us that you lubricated the Z head\n\n" + \
-                "Will you lubricate the Z head now?\n\n" + \
-                "Saying 'OK' will reset this reminder."
+
+                time_since_lubricated_string = "[b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + "[/b]"
+
+                lubrication_warning = (
+                        self.l.get_bold("Lubricate the z head before starting your job!") + "\n\n" + \
+                        (
+                            self.l.get_str(
+                        "You have used SmartBench for N00 hours since you last told us that you lubricated the Z head."
+                                ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                        ).replace("N00", time_since_lubricated_string) + \
+                        " " + \
+                        self.l.get_str("Will you lubricate the Z head now?") + "\n\n" + \
+                        self.l.get_str("Saying 'OK' will reset this reminder.")
+                    )
+
                 lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, lubrication_warning, 'lubrication')
 
             if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
-                calibration_warning = "You have used SmartBench for [b]" + str(int(self.m.time_since_calibration_seconds/3600)) + " hours[/b] " + \
-                "since its last calibration\n\n" + \
-                "A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.\n\n" + \
-                "A calibration procedure can take approximately 10 minutes with basic tools.\n\n" + \
-                "Calibration is not compulsory.\n\n" + \
-                "Will you calibrate SmartBench now?"
-                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
+
+                time_since_calibration_string = "[b]" + str(int(self.m.time_since_calibration_seconds/3600)) + "[/b]"
+
+                calibration_warning = (
+                        (
+                            self.l.get_str(
+                                "You have used SmartBench for N00 hours since its last calibration."
+                                ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
+                        ).replace("N00", time_since_calibration_string) + \
+                        "\n\n" + \
+                        self.l.get_str("A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.") + "\n\n" + \
+                        self.l.get_str("A calibration procedure can take approximately 10 minutes with basic tools.") + "\n\n" + \
+                        self.l.get_str("Calibration is not compulsory.") + "\n\n" + \
+                        self.l.get_str("Will you calibrate SmartBench now?")
+                    )
+
+                caibration_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
 
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
@@ -617,18 +654,26 @@ class GoScreen(Screen):
             seconds = int(seconds_remainder % 60)
             
             if hours > 0:
-                self.run_time_label.text = "[color=333333]" + str(hours) + " hrs " + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
+                self.run_time_label.text = (
+                    str(hours) + " " + self.l.get_str("hours") + " " + \
+                    str(minutes) + " " + self.l.get_str("minutes") + " " + \
+                    str(seconds) + " " + self.l.get_str("seconds")
+                    )
+
             elif minutes > 0:
-                self.run_time_label.text = "[color=333333]" + str(minutes) + " mins " + str(seconds) + " secs" + "[/color]"
+                self.run_time_label.text = (
+                    str(minutes) + " " + self.l.get_str("minutes") + " " + \
+                    str(seconds) + " " + self.l.get_str("seconds")
+                    )
             else:
-                self.run_time_label.text = "[color=333333]" + str(seconds) + " secs" + "[/color]"
+                self.run_time_label.text = str(seconds) + " " + self.l.get_str("seconds")
         
         else:
-            self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
+            self.run_time_label.text = self.l.get_str("Waiting for job to be started")
     
     def poll_for_feeds_and_speeds(self, dt):
-        # Spindle speed and feed rate
 
+        # Spindle speed and feed rate
         self.speedOverride.update_spindle_speed_label()
         self.feedOverride.update_feed_rate_label()
         # self.update_voltage_label()
@@ -650,8 +695,14 @@ class GoScreen(Screen):
         self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
 
+    def update_strings(self):
 
-            
+        self.feed_label.text = self.l.get_str("Feed")
+        self.rate_label.text = self.l.get_str("rate")
+        self.spindle_label.text = self.l.get_str("Spindle")
+        self.speed_label.text = self.l.get_str("speed")
+        self.job_time_label.text = self.l.get_str("Total job time") + ":"
+        self.file_lines_streamed_label.text = self.l.get_str("File lines streamed") + ":"
 
 
 
