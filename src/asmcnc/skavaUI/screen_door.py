@@ -279,8 +279,6 @@ class DoorScreen(Screen):
 
     def check_spindle_has_raised(self):
 
-        print(str(self.m.state()))
-
         if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
 
             Clock.unschedule(self.poll_for_resume)
