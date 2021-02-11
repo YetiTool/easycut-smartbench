@@ -47,7 +47,7 @@ Builder.load_string("""
         BoxLayout:
             padding: 0
             orientation: "vertical"
-            spacing: 10
+            spacing: 0
 
             BoxLayout:
                 padding: 0
@@ -82,7 +82,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:20
-                    size_hint_y: 1.1
+                    size_hint_y: 1.2
                     BoxLayout:
                         padding: 22
                         size_hint_x: 0.25
@@ -123,7 +123,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_x: 1
-                    size_hint_y: 0.9
+                    size_hint_y: 0.8
 
                     BoxLayout:
                         orientation: 'horizontal'
@@ -224,9 +224,9 @@ class JobstartWarningScreen(Screen):
         self.risk_of_fire.text = self.l.get_str("Risk of fire")
         self.causes_of_fire.text = (
                 self.l.get_str("Common causes of fire") + ":\n"
-                " - " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
-                " - " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
-                " - " + self.l.get_str("Variation in extraction") + "\n"
+                "- " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
+                "- " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
+                "- " + self.l.get_str("Variation in extraction") + "\n"
             )
         self.never_unattended.text = self.l.get_bold("Never leave CNC machines unattended")
         self.scan_label.text = self.l.get_bold("SCAN ME")
