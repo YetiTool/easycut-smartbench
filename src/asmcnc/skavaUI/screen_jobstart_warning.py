@@ -94,6 +94,7 @@ Builder.load_string("""
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_x: 0.8
+                        padding: [0,0,20,0]
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
@@ -101,7 +102,6 @@ Builder.load_string("""
                             halign: 'left'
                             font_size: '32sp' 
                             markup: True
-                            # size:self.size
                             valign: 'top'
                             size:self.texture_size
                             text_size: self.size
@@ -112,7 +112,6 @@ Builder.load_string("""
                             size_hint_y: 0.8
                             halign: 'left'
                             markup: True
-                            # size:self.size
                             valign: 'bottom'
                             size: self.texture_size
                             text_size: self.size
