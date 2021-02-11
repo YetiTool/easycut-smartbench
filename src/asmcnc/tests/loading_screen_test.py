@@ -88,6 +88,33 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'bottom'
                 text: 'Filename here'
+                size_hint_y: 0.5
+                markup: True
+                valign: 'top'
+                halign: 'center'
+                size:self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+
+            Label:
+                id: warning_title_label
+                font_size: '24sp'
+                halign: 'center'
+                valign: 'bottom'
+                size_hint_y: 0.5
+                markup: True
+                valign: 'center'
+                halign: 'center'
+                size:self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+                text: "[b]WARNING![/b]"
+                
+            Label:
+                id: warning_body_label
+                font_size: '20sp'
+                halign: 'center'
+                valign: 'bottom'
                 size_hint_y: 1
                 markup: True
                 valign: 'center'
@@ -95,34 +122,7 @@ Builder.load_string("""
                 size:self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
-                
-            Label:
-                id: warning_title_label
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'bottom'
-                size_hint_y: 0.5
-                markup: True
-                valign: 'center'
-                halign: 'center'
-                size:self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                text: 'We strongly recommend error-checking your job before it goes to the machine.'
-                
-            Label:
-                id: warning_body_label
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'bottom'
-                size_hint_y: 0.5
-                markup: True
-                valign: 'center'
-                halign: 'center'
-                size:self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                text: 'Would you like SmartBench to check your job now?'
+                text: root.test_label
             
             BoxLayout:
                 orientation: 'horizontal'
@@ -188,9 +188,10 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
                     padding: [20, 20]
+                    text: 'Yes, check my job for errors'
 
-                BoxLayout:
-                    size_hint_x: 0.3
+                # BoxLayout:
+                #     size_hint_x: 0.3
                             
                 # Button:
                 #     size_hint_x: 0.3
@@ -285,6 +286,8 @@ Builder.load_string("""
 class LoadingScreenTest(Screen):  
 
     default_font_size = '36sp'
+
+    test_label = 'We strongly recommend error-checking your job before it goes to the machine.' + "\n" + 'Would you like SmartBench to check your job now?' 
     
     def __init__(self, **kwargs):
         super(LoadingScreenTest, self).__init__(**kwargs)
