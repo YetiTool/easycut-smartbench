@@ -484,7 +484,7 @@ class GoScreen(Screen):
                         "You have used SmartBench for N00 hours since you last told us that you lubricated the Z head."
                                 ).replace(self.l.get_str('hours'), self.l.get_bold("hours"))
                         ).replace("N00", time_since_lubricated_string) + \
-                        " " + \
+                        "\n\n" + \
                         self.l.get_str("Will you lubricate the Z head now?") + "\n\n" + \
                         self.l.get_str("Saying 'OK' will reset this reminder.")
                     )
