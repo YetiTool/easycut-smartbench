@@ -188,7 +188,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
                     padding: [40, 40]
-                    text: 'Yes, check my job for errors'
+                    text: 'Nein, aufhören zu Hause'
 
                 # BoxLayout:
                 #     size_hint_x: 0.3
@@ -218,8 +218,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
                     padding: [40, 40]
-                    text: 'No, quit to home'
-                        
+                    text: 'Ja, überprüfen Sie meine Arbeit für Fehler'
 """)
 
 
