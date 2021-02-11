@@ -44,7 +44,7 @@ Builder.load_string("""
 
             Label:
                 id: pause_reason_label
-                size_hint_y: 1
+                size_hint_y: 0.8
                 markup: True
                 font_size: '30px' 
                 valign: 'center'
@@ -55,7 +55,7 @@ Builder.load_string("""
          
             Label:
                 id: pause_description_label
-                size_hint_y: 2
+                size_hint_y: 2.2
                 markup: True
                 font_size: '18px' 
                 valign: 'center'
@@ -158,11 +158,11 @@ class StopOrResumeDecisionScreen(Screen):
             self.pause_description_label.text = (
 
                 self.l.get_str('SmartBench has automatically stopped the job because it detected the spindle was starting to overload.') + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str(
                     'You may resume, but we recommend you allow the spindle to cool off first.'
                     ).replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume')) + \
-                "\n\n" + \
+                "\n" + \
                 self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce the chip loading.') + " " + \
                 self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
                 )
