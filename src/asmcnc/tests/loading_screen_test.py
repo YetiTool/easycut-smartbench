@@ -285,7 +285,7 @@ Builder.load_string("""
 
 class LoadingScreenTest(Screen):  
 
-    default_font_size = '36sp'
+    default_font_size = '30sp'
 
     test_label = 'We strongly recommend error-checking your job before it goes to the machine.' + "\n" + 'Would you like SmartBench to check your job now?' 
     
