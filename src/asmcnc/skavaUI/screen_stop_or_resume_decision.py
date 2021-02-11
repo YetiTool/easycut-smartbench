@@ -180,7 +180,7 @@ class StopOrResumeDecisionScreen(Screen):
 
     
     def cancel_job(self):
-        popup_info.PopupConfirmJobCancel(self.sm)
+        popup_info.PopupConfirmJobCancel(self.sm, self.l)
 
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
