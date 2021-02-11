@@ -299,8 +299,7 @@ Builder.load_string("""
                                 text_size: self.size 
                             Label:
                                 id: job_time_label
-                                size_hint_y: 1
-                                # text: '[color=808080]Job time:[/color]'
+                                size_hint_y: 0.6
                                 markup: True                           
                                 font_size: '16px' 
                                 valign: 'middle'
@@ -309,10 +308,10 @@ Builder.load_string("""
                                 text_size: self.size
                                 color: hex('#808080ff')
                             Label:
-                                size_hint_y: 1
+                                size_hint_y: 1.4
                                 id: run_time_label
                                 markup: True                           
-                                font_size: '20px'
+                                font_size: '18px'
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size
