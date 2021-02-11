@@ -245,22 +245,24 @@ class PopupPark(Widget):
 
 class PopupStop(Widget):
 
-
-    def __init__(self, machine, screen_manager):
+    def __init__(self, machine, screen_manager, localization):
         
       self.m = machine
       self.m.soft_stop()
 
       self.sm = screen_manager
+      self.l = localization
         
       def machine_reset(*args):
           self.m.stop_from_soft_stop_cancel()
 
-
       def machine_resume(*args):
           self.m.resume_from_a_soft_door()
         
-      stop_description = "Is everything OK? You can resume the job, or cancel it completely."
+      stop_description = self.l.get_str("Is everything OK? You can resume the job, or cancel it completely.")
+      resume_string = self.l.get_bold("Cancel")
+      cancel_string = self.l.get_bold("Resume")
+      title_string = self.l.get_str("Warning!")
       
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
       label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=stop_description, color=[0,0,0,1], padding=[0,0], markup = True)
