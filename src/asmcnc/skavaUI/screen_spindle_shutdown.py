@@ -120,6 +120,9 @@ class SpindleShutdownScreen(Screen):
 
         # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
         self.spindle_decel_poll = Clock.schedule_once(self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest)
+
+        self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
+        self.label_wait.text = self.l.get_str('Please wait') + '.'
         
         
     def start_polling_for_z_rest(self, dt):
