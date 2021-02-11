@@ -75,7 +75,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(300)
-                padding: [20,10,20,0]
+                padding: [10,10,10,0]
                 spacing: 0
                 orientation: 'vertical'
              
@@ -96,7 +96,7 @@ Builder.load_string("""
                         size_hint_x: 0.8
                         Label:
                             id: risk_of_fire
-                            size_hint_y: 0.2
+                            size_hint_y: 0.18
                             markup: True
                             halign: 'left'
                             font_size: '32sp' 
@@ -109,7 +109,7 @@ Builder.load_string("""
 
                         Label:
                             id: causes_of_fire
-                            size_hint_y: 0.8
+                            size_hint_y: 0.82
                             halign: 'left'
                             markup: True
                             size:self.size
