@@ -26,6 +26,7 @@ class ScreenTest(App):
         # Localization/language object
         l = localization.Localization()
         m = None
+        job_gcode = ['G1']
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am, localization = l)
         sm.add_widget(go_screen)
 
