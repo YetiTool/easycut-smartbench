@@ -446,8 +446,8 @@ class LoadingScreen(Screen):
     def update_screen(self, stage, percentage_progress=0):
 
         if stage == 'Getting ready':
-            self.check_button.disabled = True
-            self.home_button.disabled = True
+            # self.check_button.disabled = True
+            # self.home_button.disabled = True
             self.progress_value = self.l.get_str('Getting ready') + '...'
             self.warning_title_label.text = ''
             self.warning_body_label.text = ''
@@ -467,8 +467,8 @@ class LoadingScreen(Screen):
                 self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 self.l.get_str('Would you like SmartBench to check your job now?')
                 )
-            self.check_button.text = self.l.get_str('Yes please, check my job for errors')
-            self.home_button.text = self.l.get_str('No thanks, quit to home')
+            self.check_button.text = self.l.get_str('Yes, check my job for errors')
+            self.home_button.text = self.l.get_str('No, quit to home')
             
             self.check_button.disabled = False
             self.home_button.disabled = False
