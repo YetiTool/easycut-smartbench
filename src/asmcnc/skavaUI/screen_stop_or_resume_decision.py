@@ -44,7 +44,7 @@ Builder.load_string("""
 
             Label:
                 id: pause_reason_label
-                size_hint_y: 0.8
+                size_hint_y: 0.6
                 markup: True
                 font_size: '30px' 
                 valign: 'center'
@@ -55,7 +55,7 @@ Builder.load_string("""
          
             Label:
                 id: pause_description_label
-                size_hint_y: 2.2
+                size_hint_y: 2.4
                 markup: True
                 font_size: '18px' 
                 valign: 'center'
