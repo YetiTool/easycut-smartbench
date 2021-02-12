@@ -78,7 +78,7 @@ Builder.load_string("""
              
             Label:
                 id: header_label
-                size_hint_y: 0.8
+                size_hint_y: 1
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -93,7 +93,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.4
+                size_hint_y: 0.3
                 markup: True
                 valign: 'top'
                 halign: 'center'
@@ -109,7 +109,7 @@ Builder.load_string("""
                 valign: 'bottom'
                 size_hint_y: 0.4
                 markup: True
-                valign: 'center'
+                valign: 'bottom'
                 halign: 'center'
                 size: self.texture_size
                 text_size: self.size
@@ -121,7 +121,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 1.4
+                size_hint_y: 1.3
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -131,7 +131,7 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [20,0,20,0]
+                padding: [20,10,20,10]
                 spacing: 60
                 size_hint_y: 3
             
@@ -169,7 +169,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding: [40, 40]
+                    padding: [30, 30]
                     on_press: root.quit_to_home()
 
                 Button:
@@ -185,7 +185,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding: [40, 40]
+                    padding: [30, 30]
 
                         
                 # Button:
