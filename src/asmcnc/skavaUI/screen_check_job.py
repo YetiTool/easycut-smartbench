@@ -171,7 +171,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding: [20, 0]
+                    padding: [10, 0]
                                         
                     # Button:
                         # id: quit_button
