@@ -138,7 +138,7 @@ class SkavaUI(App):
 
         else: 
             # Initialise 'm'achine object
-            m = router_machine.RouterMachine(Cmport, sm)
+            m = router_machine.RouterMachine(Cmport, sm, l)
             
             job_gcode = []  # declare g-code object
             

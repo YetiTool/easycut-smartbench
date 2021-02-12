@@ -97,9 +97,10 @@ class RouterMachine(object):
 
     trigger_setup = False
             
-    def __init__(self, win_serial_port, screen_manager):
+    def __init__(self, win_serial_port, screen_manager, localization):
 
         self.sm = screen_manager
+        self.l = localization
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
@@ -1040,7 +1041,13 @@ class RouterMachine(object):
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                "Laser datum is out of bounds!" + \
+                "\n\n" + \
+                "Datum has not been set." + \
+                "Please choose a different datum using the laser crosshair."
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
@@ -1053,7 +1060,13 @@ class RouterMachine(object):
             x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                "Laser datum is out of bounds!" + \
+                "\n\n" + \
+                "Datum has not been set." + \
+                "Please choose a different datum using the laser crosshair."
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_y_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('Y'): 
@@ -1066,7 +1079,13 @@ class RouterMachine(object):
             y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                "Laser datum is out of bounds!" + \
+                "\n\n" + \
+                "Datum has not been set." + \
+                "Please choose a different datum using the laser crosshair."
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
 
     def set_jobstart_z(self):
