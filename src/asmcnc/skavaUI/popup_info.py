@@ -415,14 +415,18 @@ class PopupInfo(Widget):
 
 class PopupMiniInfo(Widget):
 
-    def __init__(self, screen_manager, description):
+    def __init__(self, screen_manager, localization, description):
         
         self.sm = screen_manager
+        self.l = localization
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
@@ -435,7 +439,7 @@ class PopupMiniInfo(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -455,13 +459,20 @@ class PopupMiniInfo(Widget):
 
 
 class PopupSoftwareUpdateSuccess(Widget):
-    def __init__(self, screen_manager, message):
+    def __init__(self, screen_manager, localization, message):
         
         self.sm = screen_manager
+        self.l = localization
         
-        description = "Software update was successful.\n\n Update message: " + \
+        description = self.l.get_str("Software update was successful.") + \
+                    "\n\n" + \
+                    self.l.get_str("Update message") + ": " + \
                     message + \
-                    "\nPlease do not restart your machine until you are prompted to do so."
+                    "\n" + \
+                    self.l.get_str("Please do not restart your machine until you are prompted to do so.")
+
+        title_string = self.l.get_str('Update Successful!')
+        ok_string = self.l.get_bold('Ok')
 
         def reboot(*args):
             self.sm.current = 'rebooting'
@@ -469,7 +480,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,10], markup = True)
    
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
       
@@ -481,7 +492,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Update Successful!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

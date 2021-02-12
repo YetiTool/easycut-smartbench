@@ -429,7 +429,7 @@ class WifiScreen(Screen):
 
     def connect_wifi(self):
         message = 'Please wait...\n\nConsole will reboot to connect to network'
-        popup_info.PopupMiniInfo(self.sm, message)
+        popup_info.PopupMiniInfo(self.sm, self.l, message)
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'

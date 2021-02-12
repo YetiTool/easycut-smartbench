@@ -42,11 +42,11 @@ class ScreenManagerSystemTools(object):
                 self.usb_stick.disable()
 
                 message = 'Logs downloaded'
-                popup_info.PopupMiniInfo(self.sm, description = message)
+                popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
             elif count > 30:
                 message = 'No USB found!'
-                popup_info.PopupMiniInfo(self.sm, description = message)
+                popup_info.PopupMiniInfo(self.sm, self.l, description = message)
                 wait_popup.popup.dismiss()
                 if self.usb_stick.is_available(): self.usb_stick.disable()
 
@@ -87,7 +87,7 @@ class ScreenManagerSystemTools(object):
               self.usb_stick.disable()
 
               message = 'GRBL settings downloaded'
-              popup_info.PopupMiniInfo(self.sm, description = message)
+              popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
           else:
               Clock.schedule_once(lambda dt: get_grbl_settings_onto_usb(), 0.2)
@@ -107,10 +107,10 @@ class ScreenManagerSystemTools(object):
               self.usb_stick.disable()
               if success_flag:
                   message = 'GRBL settings restored!'
-                  popup_info.PopupMiniInfo(self.sm, description = message)
+                  popup_info.PopupMiniInfo(self.sm, self.l, description = message)
               else:
                   message = 'Could not restore settings, please check file!'
-                  popup_info.PopupMiniInfo(self.sm, description = message)
+                  popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
           else:
               Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
@@ -122,10 +122,10 @@ class ScreenManagerSystemTools(object):
         success_flag = self.m.restore_grbl_settings_from_file(filename)
         if success_flag:
             message = 'GRBL settings restored!'
-            popup_info.PopupMiniInfo(self.sm, description = message)
+            popup_info.PopupMiniInfo(self.sm, self.l, description = message)
         else:
             message = 'Could not restore settings, please check file!'
-            popup_info.PopupMiniInfo(self.sm, description = message)   
+            popup_info.PopupMiniInfo(self.sm, self.l, description = message)   
 
     def open_factory_settings_screen(self):
        if not self.sm.has_screen('factory_settings'):

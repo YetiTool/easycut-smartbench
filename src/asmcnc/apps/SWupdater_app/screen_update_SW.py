@@ -494,10 +494,10 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, outcome)
 
             else: 
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
 
                 message = 'Please wait...\n\nConsole will reboot to finish update.'
-                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
+                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
@@ -550,10 +550,10 @@ class SWUpdateScreen(Screen):
             else:
                 self.usb_stick.disable()
                 update_success = outcome
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
+                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
 
                 message = 'Please wait...\n\nConsole will reboot to finish update.'
-                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
+                Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
                 

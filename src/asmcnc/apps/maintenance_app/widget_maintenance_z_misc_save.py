@@ -98,7 +98,7 @@ class ZMiscSaveWidget(Widget):
     def save(self):
 
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
-            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, "Settings saved!")
         
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
