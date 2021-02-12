@@ -91,7 +91,7 @@ Builder.load_string("""
             Label:
                 id: filename_label
                 font_size: '20sp'
-                size_hint_y: 0.3
+                size_hint_y: 0.5
                 markup: True
                 valign: 'top'
                 halign: 'center'
@@ -105,7 +105,7 @@ Builder.load_string("""
                 font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.6
+                size_hint_y: 0.4
                 markup: True
                 size: self.texture_size
                 text_size: self.size
@@ -116,7 +116,7 @@ Builder.load_string("""
                 id: warning_body_label
                 font_size: '20sp'
                 halign: 'center'
-                valign: 'bottom'
+                valign: 'center'
                 size_hint_y: 1.3
                 markup: True
                 size: self.texture_size
