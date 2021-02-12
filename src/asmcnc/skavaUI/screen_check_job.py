@@ -85,7 +85,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#0d47a1')
+            rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -103,7 +103,7 @@ Builder.load_string("""
             id: header_label
             size_hint_y: 1.04
             markup: True
-            valign: 'bottom'
+            valign: 'center'
             halign: 'center'
             size: self.texture_size
             text_size: self.size
@@ -133,30 +133,6 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_x: 1
                 spacing: 10
-                 
-                # Label:
-                #     size_hint_y: 1.6
-                #     id: header_label
-                #     # size_hint_y: 0.8
-                #     markup: True
-                #     valign: 'top'
-                #     halign: 'center'
-                #     size: self.texture_size
-                #     text_size: self.size
-                #     color: hex('#333333ff')
-                #     font_size: '40sp'
-                #     text: root.job_checking_checked
-     
-                # Label:
-                #     id: filename_label
-                #     size_hint_y: 0.4
-                #     size: self.texture_size
-                #     text_size: self.size
-                #     color: hex('#333333ff')
-                #     font_size: '20sp'
-                #     halign: 'center'
-                #     valign: 'center'
-                #     text: root.checking_file_name
                     
                 Label:
                     size_hint_y: 3
@@ -359,7 +335,7 @@ class CheckingScreen(Screen):
         
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + " " + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
                 '[/color]'
@@ -368,7 +344,7 @@ class CheckingScreen(Screen):
 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + " " + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
                 '[/color]'
@@ -377,7 +353,7 @@ class CheckingScreen(Screen):
 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + " " + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
                 '[/color]'
@@ -388,7 +364,7 @@ class CheckingScreen(Screen):
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + " " + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
                 '[/color]'
@@ -396,7 +372,7 @@ class CheckingScreen(Screen):
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + " " + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
                 '[/color]'
@@ -404,7 +380,7 @@ class CheckingScreen(Screen):
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
-            error_message = error_message + ( "\n\n\t[color=#FFCC00]" + \
+            error_message = error_message + ( "\n\n\t" + \
                 self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + " " + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
                 '[/color]'
@@ -417,23 +393,22 @@ class CheckingScreen(Screen):
     def write_boundary_output(self, bounds_output):
         
         self.display_output = (
-            '[color=#FFFFFF]' + self.l.get_bold('BOUNDARY CONFLICT HELP') + '\n\n[/color]' + \
-            '[color=#FFFFFF]' + self.l.get_str('It looks like your job exceeds the bounds of the machine') + ':\n\n[/color]' + \
-            '[color=#FFCC00]' + bounds_output + '\n\n[/color]' + \
-            '[color=#FFFFFF]' + \
+            self.l.get_bold('BOUNDARY CONFLICT HELP') + '\n\n' + \
+            self.l.get_str('It looks like your job exceeds the bounds of the machine') + ':\n\n' + \
+            bounds_output + '\n\n' + \
             self.l.get_str("The job datum is set in the wrong place.") + " " + \
             self.l.get_str("Press Adjust datums and then reposition the X, Y or Z datums as suggested above so that the job box is within the machine's boundaries.").replace(self.l.get_str('Adjust datums'), self.l.get_bold('Adjust datums')) + " " + \
             self.l.get_str('Use the manual move controls and set datum buttons to achieve this.').replace(self.l.get_str('set datum'), self.l.get_bold('set datum')) + " " + \
             self.l.get_str('You should then reload the job and re-run this check.') + \
-            '\n\n[/color]' + '[color=#FFFFFF]' + \
+            '\n\n' + \
             self.l.get_str('If you have already tried to reposition the datum, but cannot get the job to fit within the machine bounds, your job may simply be set up incorrectly in your CAD/CAM software.') + " " + \
             self.l.get_str('Common causes include setting the CAD/CAM job datum far away from the actual design, or exporting the job from the CAM software in the wrong units.') + " " + \
             self.l.get_str('Check your design and export settings.') + " " + \
-            self.l.get_str('You should then reload the job and re-run the check.') + '\n\n[/color]' + \
-            '[color=#FFFFFF]' + \
+            self.l.get_str('You should then reload the job and re-run the check.') + \
+            '\n\n' + \
             self.l.get_str('Finally, if you have already tried to reposition the datum, or if the graphics on the job previews do not look normal, your G-code may be corrupt.') + " " + \
             self.l.get_str('If this is the case, you many want to press Check G-code.').replace(self.l.get_str('Check G-code'), self.l.get_bold('Check G-code')) + " " + \
-            self.l.get_bold("WARNING") + "[b]:[/b] " + self.l.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n[/color]'
+            self.l.get_bold("WARNING") + "[b]:[/b] " + self.l.get_bold("Checking the job's G-code when it is outside of the machine bounds may trigger an alarm screen.") + '\n\n'
             )
 
     def toggle_boundary_buttons(self, hide_boundary_buttons):
@@ -578,36 +553,31 @@ class CheckingScreen(Screen):
         ## SPINDLE WARNING:
 
         if self.flag_spindle_off:
-            self.display_output = self.display_output + '[color=#FFFFFF]' + self.l.get_bold('SPINDLE WARNING') + '[/color]\n\n'
-            self.display_output = self.display_output + '[color=#FFFFFF]' + self.l.get_str('This file has no command to turn the spindle on.') + '[/color]\n\n' + \
-                                '[color=#FFFFFF]' + \
+            self.display_output = self.display_output + self.l.get_bold('SPINDLE WARNING') + '\n\n'
+            self.display_output = self.display_output + self.l.get_str('This file has no command to turn the spindle on.') + '\n\n' + \
                                 self.l.get_str('This may be intended behaviour, but if you are trying to do a cut you should review your file before trying to run it!') + \
-                                '[/color]\n\n'
+                                '\n\n'
 
 
         ## FEED/SPEED MIN/MAXES HERE: 
 
         if self.flag_max_feed_rate or self.flag_min_feed_rate:
-            self.display_output = self.display_output + '[color=#FFFFFF]' + self.l.get_bold('FEED RATE WARNING') + '[/color]\n\n'
+            self.display_output = self.display_output + self.l.get_bold('FEED RATE WARNING') + '\n\n'
 
             if self.flag_min_feed_rate: 
                 self.display_output = self.display_output + (
-                    '[color=#FFFFFF]' + \
                     self.l.get_str('This file contains feed rate commands as low as N00 mm/min.').replace('N00', str(self.as_low_as)) + \
-                    '[/color]\n\n' + \
-                    '[color=#FFFFFF]' + \
+                    '\n\n' + \
                     self.l.get_str('The recommended minimum feed rate is 100 mm/min.') + \
-                    '[/color]\n\n'
+                    '\n\n'
                 )
 
             if self.flag_max_feed_rate:
                 self.display_output = self.display_output + (
-                    '[color=#FFFFFF]' + \
                     self.l.get_str('This file contains feed rate commands as high as N00 mm/min.').replace('N00', str(self.as_high_as)) + \
-                    '[/color]\n\n' + \
-                    '[color=#FFFFFF]' + \
+                    '\n\n' + \
                     self.l.get_str('The recommended maximum feed rate is 5000 mm/min.') + \
-                    '[/color]\n\n'
+                    '\n\n'
                 )
         
         error_summary = []
@@ -619,19 +589,18 @@ class CheckingScreen(Screen):
         for idx, f in enumerate(no_empties):
             if f[0].find('error') != -1:
                 error_description = self.l.get_str(ERROR_CODES.get(f[0], ""))
-                error_summary.append('[color=#FFFFFF]' + self.l.get_bold('Line') + '[b] ' + str(idx) + ':[/b][/color]')
+                error_summary.append(self.l.get_bold('Line') + '[b] ' + str(idx) + ':[/b]')
                 error_summary.append(
-                    '[color=#FFFFFF]' + \
                     ((f[0].replace(':',' ')).replace('error', self.l.get_str('error'))).capitalize() + \
-                    ': ' + error_description + '[/color]' +'\n\n'
+                    ': ' + error_description +'\n\n'
                     )
-                error_summary.append('[color=#FFFFFF]G-code: "' + f[1] + '"[/color]\n\n')
+                error_summary.append('G-code: "' + f[1] + '"\n\n')
         
         if error_summary == []:
             self.display_output = self.display_output + ''
         else:
             # Put everything into a giant string for the ReStructed Text object        
-            self.display_output = self.display_output + '[color=#FFFFFF]' + self.l.get_bold('ERROR SUMMARY') + '[/color]\n\n' + \
+            self.display_output = self.display_output + self.l.get_bold('ERROR SUMMARY') + '\n\n' + \
             '\n\n'.join(map(str,error_summary))
         
 #        # If want to print all the lines of the file and oks:
