@@ -51,7 +51,7 @@ Builder.load_string("""
 
         Label:
             id: title_label
-            size_hint_y: 1.69
+            size_hint_y: 1.04
             size_hint_x: 1
             markup: True
             valign: 'center'
@@ -65,7 +65,7 @@ Builder.load_string("""
             orientation: 'horizontal'
             padding: 0
             spacing: 40
-            size_hint_y: 6.12
+            size_hint_y: 6.77
 
             BoxLayout:
                 orientation: 'vertical'
@@ -149,7 +149,9 @@ class BoundaryWarningScreen(Screen):
     def on_enter(self):
         
         self.check_outcome = (
-            self.l.get_bold('WARNING: Job is not within machine bounds!') + \
+            self.l.get_bold('WARNING') + \
+            '[b]:[/b]\n' + \
+            self.l.get_bold('Job is not within machine bounds!') + \
             '\n\n' +
             self.l.get_str('Please set datum appropriately, so that job boundaries are within SmartBench limits.')
             )

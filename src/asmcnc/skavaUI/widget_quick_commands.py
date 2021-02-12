@@ -124,8 +124,6 @@ Builder.load_string("""
     
 # Valid states types: Idle, Run, Hold, Jog, Alarm, Door, Check, Home, Sleep
 
-
-
 class QuickCommands(Widget):
 
 
@@ -199,8 +197,6 @@ class QuickCommands(Widget):
             else:
                 self.sm.current = 'jobstart_warning'
 
-
-
         
     def is_job_within_bounds(self):
 
@@ -210,12 +206,10 @@ class QuickCommands(Widget):
         # Mins
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
-                '\n\n[/color]'
+                '\n\n'
                 )
             errorfound += 1
 
@@ -226,18 +220,16 @@ class QuickCommands(Widget):
                 '\n\n' + \
                 '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
-                '\n\n[/color]'
+                '\n\n'
                 )
             errorfound += 1
 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
-                '\n\n[/color]'
+                '\n\n'
                 )
             errorfound += 1
             
@@ -245,35 +237,29 @@ class QuickCommands(Widget):
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
-                '\n\n[/color]'
+                '\n\n'
                 )
             errorfound += 1
 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
-                '\n\n[/color]'
+                '\n\n'
                 )
 
             errorfound += 1
 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             self.sm.get_screen('boundary').job_box_details.append(
-                '[color=#FFFFFF]' + \
                 self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + \
                 '\n\n' + \
-                '[color=#FFFFFF]' + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
-                '\n\n[/color]'
+                '\n\n'
                 )
             errorfound += 1
 
