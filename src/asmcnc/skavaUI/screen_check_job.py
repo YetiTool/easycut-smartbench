@@ -83,7 +83,7 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
             radius: [dp(30), dp(30)]
-            segments: 50
+            segments: 80
 
 <MiniRoundedButton@Button>:
     background_color: 0,0,0,0
@@ -93,8 +93,8 @@ Builder.load_string("""
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(10), dp(10)]
-            segments: 40
+            radius: [dp(15), dp(15)]
+            segments: 80
 
 <CheckingScreen>:
     
@@ -383,7 +383,7 @@ class CheckingScreen(Screen):
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n" + \
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X')
                 )
             errorfound += 1
@@ -391,7 +391,7 @@ class CheckingScreen(Screen):
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n" + \
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y')
                 )
             errorfound += 1 
@@ -399,7 +399,7 @@ class CheckingScreen(Screen):
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n" + \
+                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.")
                 )
             errorfound += 1 
@@ -409,21 +409,21 @@ class CheckingScreen(Screen):
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n" + \
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X')
                 )
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n" + \
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y')
                 )
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n" + \
+                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n\t" + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.")
                 )
             errorfound += 1 
