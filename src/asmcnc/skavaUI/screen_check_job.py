@@ -99,7 +99,6 @@ Builder.load_string("""
             size_hint_y: 0.7
 
         Label:
-            # size_hint_y: 1
             id: header_label
             size_hint_y: 1.04
             markup: True

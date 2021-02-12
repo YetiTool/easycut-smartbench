@@ -51,7 +51,7 @@ Builder.load_string("""
 
         Label:
             id: title_label
-            size_hint_y: 1.04
+            size_hint_y: 1.69
             markup: True
             valign: 'center'
             halign: 'center'
@@ -71,17 +71,17 @@ Builder.load_string("""
                 size_hint_x: 1
                 spacing: 0
                 padding: 20
-                    
+
                 Label:
-                    id: body_label
-                    size_hint_y: 0.65
+                    size_hint_y: 3
                     size: self.texture_size
                     text_size: self.size
                     color: hex('#333333ff')
                     font_size: '20sp'
                     halign: 'center'
-                    valign: 'top'
+                    valign: 'middle'
                     text: root.check_outcome
+                    markup: True
                     
                 BoxLayout:
                     orientation: 'horizontal'
