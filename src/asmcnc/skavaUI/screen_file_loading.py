@@ -105,7 +105,7 @@ Builder.load_string("""
                 font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.4
+                size_hint_y: 0.5
                 markup: True
                 size: self.texture_size
                 text_size: self.size
@@ -117,7 +117,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'center'
-                size_hint_y: 1.3
+                size_hint_y: 1.2
                 markup: True
                 size: self.texture_size
                 text_size: self.size
