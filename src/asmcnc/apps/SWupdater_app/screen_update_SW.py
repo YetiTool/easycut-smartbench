@@ -504,7 +504,7 @@ class SWUpdateScreen(Screen):
     def repair_sw_over_wifi(self):
             
         description = "DO NOT restart your machine until you see instructions to do so on the screen."
-        popup_info.PopupWarning(self.sm, description)
+        popup_info.PopupWarning(self.sm, self.l, description)
                
         def delay_clone_to_update_screen():
             if self.wifi_image.source == self.wifi_on:

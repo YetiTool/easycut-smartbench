@@ -392,6 +392,7 @@ class WifiScreen(Screen):
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
@@ -416,12 +417,12 @@ class WifiScreen(Screen):
         if len(self.netname) < 1: 
 
             message = "Please enter a valid network name."
-            popup_info.PopupWarning(self.sm, message)
+            popup_info.PopupWarning(self.sm, self.l, message)
 
         elif (len(self.password) < 8 or len(self.password) > 63): 
 
             message = "Please enter a password between 8 and 63 characters."
-            popup_info.PopupWarning(self.sm, message)
+            popup_info.PopupWarning(self.sm, self.l, message)
 
         else: 
             self.connect_wifi()
