@@ -101,7 +101,7 @@ Builder.load_string("""
             spacing: 10
              
             Label:
-                size_hint_y: 1
+                size_hint_y: 1.6
                 id: header_label
                 # size_hint_y: 0.8
                 markup: True
@@ -115,7 +115,7 @@ Builder.load_string("""
  
             Label:
                 id: filename_label
-                size_hint_y: 1
+                size_hint_y: 0.4
                 size: self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
