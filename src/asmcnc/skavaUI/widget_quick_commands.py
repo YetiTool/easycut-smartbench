@@ -164,7 +164,7 @@ class QuickCommands(Widget):
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
                 )
 
-            popup_info.PopupInfo(self.sm, self.l, 400, info)
+            popup_info.PopupInfo(self.sm, self.l, 450, info)
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
