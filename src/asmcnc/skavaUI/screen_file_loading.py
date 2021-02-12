@@ -116,7 +116,7 @@ Builder.load_string("""
                 id: warning_body_label
                 font_size: '20sp'
                 halign: 'center'
-                valign: 'center'
+                valign: 'top'
                 size_hint_y: 1.2
                 markup: True
                 size: self.texture_size
