@@ -74,6 +74,16 @@ ERROR_CODES = {
 
 Builder.load_string("""
 
+<RoundedButton@Button>:
+    background_color: 0,0,0,0
+    canvas.before:
+        Color:
+            rgba: hex('#1976d2ff')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(15), dp(15)]
+
 <CheckingScreen>:
     
     quit_button:quit_button
@@ -132,7 +142,8 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_x: 1
-                spacing: 10
+                spacing: 0
+                padding: 20
                     
                 Label:
                     size_hint_y: 3
@@ -147,30 +158,43 @@ Builder.load_string("""
                     
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding: 10, 0
                     size_hint_y: 1
                                         
-                    Button:
-                        id: quit_button
-                        size_hint_y:0.8
-                        size_hint_x: 0.6
-                        size: self.texture_size
-                        valign: 'top'
-                        halign: 'center'
-                        disabled: False
-                        background_color: hex('#0d47a1')
-                        on_press: 
-                            root.quit_to_home()
+                    # Button:
+                        # id: quit_button
+                        # size_hint_y:0.8
+                        # size_hint_x: 0.6
+                        # size: self.texture_size
+                        # valign: 'top'
+                        # halign: 'center'
+                        # disabled: False
+                        # background_color: hex('#0d47a1')
+                        # on_press: 
+                        #     root.quit_to_home()
 
-                        BoxLayout:
-                            padding: 5
-                            size: self.parent.size
-                            pos: self.parent.pos
+                    RoundedButton:
+                        id: quit_button
+                        # size_hint: (None,None)
+                        # height: dp(60)
+                        # width: dp(300)
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        size: self.parent.size
+                        on_press: root.quit_to_home()
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        font_size: '28sp'
+                        text: root.exit_label
+
+                        # BoxLayout:
+                        #     padding: 5
+                        #     size: self.parent.size
+                        #     pos: self.parent.pos
                             
-                            Label:
-                                #size_hint_y: 1
-                                font_size: '20sp'
-                                text: root.exit_label
+                        #     Label:
+                        #         #size_hint_y: 1
+                        #         font_size: '20sp'
+                        #         text: root.exit_label
             
             BoxLayout:
                 size_hint_x: 1
@@ -186,7 +210,7 @@ Builder.load_string("""
                     
                     RstDocument:
                         text: root.display_output
-                        background_color: hex('#0d47a1')
+                        background_color: hex('#E5E5E5FF')
 
                 BoxLayout:
                     orientation: 'horizontal'
