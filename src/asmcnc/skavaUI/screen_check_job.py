@@ -171,7 +171,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding: [10, 0]
+                    padding: [0, 0]
                                         
                     # Button:
                         # id: quit_button
@@ -195,7 +195,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         width: dp(291)
                         height: dp(79)
-                        font_size: '30sp'
+                        font_size: '28sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
@@ -221,7 +221,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 0.15
-                    spacing: 20
+                    spacing: 10
                     
                     Button:
                         id: load_file_now_button
@@ -234,6 +234,7 @@ Builder.load_string("""
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
+
                        
                         # Label:
                         #     id: load_file_now_label
@@ -703,4 +704,15 @@ class CheckingScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         self.toggle_boundary_buttons(True)
 
+
+    def update_font_size(self, value):
+
+        if len(value.text) < 20:
+            value.font_size = '16px'
+
+        if len(value.text) > 10:
+            value.font_size = '13px'
+
+        if len(value.text) > 12:
+            value.font_size = '11px'
 
