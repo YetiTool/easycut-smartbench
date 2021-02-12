@@ -160,7 +160,6 @@ class BoundaryWarningScreen(Screen):
         
     def write_boundary_output(self):
         self.display_output = (
-            '[color=#FFFFFF]' + \
             self.l.get_bold('DETAILS OF BOUNDARY CONFLICT') + \
             '\n\n' + \
             '\n\n'.join(map(str,self.job_box_details))
@@ -168,9 +167,6 @@ class BoundaryWarningScreen(Screen):
         
     def quit_to_home(self): 
         self.sm.current = 'home'
-            
-    def button_press(self):
-        self.quit_button.background_color = get_color_from_hex('#c43c00')
         
     def on_leave(self):
         self.display_output = ''
