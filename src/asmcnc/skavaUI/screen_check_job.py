@@ -88,9 +88,9 @@ Builder.load_string("""
     
     quit_button:quit_button
     load_file_now_button:load_file_now_button
-    load_file_now_label:load_file_now_label
+    # load_file_now_label:load_file_now_label
     check_gcode_button:check_gcode_button
-    check_gcode_label:check_gcode_label
+    # check_gcode_label:check_gcode_label
     filename_label:filename_label
 
     canvas:
@@ -159,6 +159,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
+                    padding: [20, 10]
                                         
                     # Button:
                         # id: quit_button
@@ -200,6 +201,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 orientation: 'vertical'
                 spacing: 10
+                padding: [0,0,20,0]
                                 
                 ScrollView:
                     size_hint: 1, 1
@@ -217,33 +219,39 @@ Builder.load_string("""
                     size_hint_y: 0.15
                     spacing: 20
                     
-                    Button:
+                    RoundedButton:
                         id: load_file_now_button
-                        background_color: hex('#0d47a1')
-                        on_press:
-                            root.load_file_now()
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        size: self.parent.size
+                        on_press: root.load_file_now()
                        
-                        Label:
-                            id: load_file_now_label
-                            text: ''
-                            markup: True
-                            #text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
+                        # Label:
+                        #     id: load_file_now_label
+                        #     text: ''
+                        #     markup: True
+                        #     #text_size: self.size
+                        #     size: self.parent.size
+                        #     pos: self.parent.pos
                         
-                    Button:
+                    RoundedButton:
                         id: check_gcode_button
-                        background_color: hex('#0d47a1')
-                        on_press:
-                            root.check_gcode()
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        size: self.parent.size
+                        on_press: root.check_gcode()
                         
-                        Label:
-                            id: check_gcode_label
-                            text: ''
-                            markup: True
-                            #text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
+                        # Label:
+                        #     id: check_gcode_label
+                        #     text: ''
+                        #     markup: True
+                        #     #text_size: self.size
+                        #     size: self.parent.size
+                        #     pos: self.parent.pos
                              
 """)
 
@@ -438,7 +446,7 @@ class CheckingScreen(Screen):
     def toggle_boundary_buttons(self, hide_boundary_buttons):
         
         if hide_boundary_buttons:
-            self.check_gcode_label.text = ''
+            self.check_gcode_button.text = ''
             self.check_gcode_button.disabled = True
             self.check_gcode_button.opacity = 0
             self.check_gcode_button.size_hint_y = None
@@ -447,7 +455,7 @@ class CheckingScreen(Screen):
             self.check_gcode_button.width = '0dp'
     
             
-            self.load_file_now_label.text = ''
+            self.load_file_now_button.text = ''
             self.load_file_now_button.disabled = True
             self.load_file_now_button.opacity = 0
             self.load_file_now_button.size_hint_y = None 
@@ -456,7 +464,7 @@ class CheckingScreen(Screen):
             self.load_file_now_button.width = '0dp'
             
         else:
-            self.check_gcode_label.text = self.l.get_str('Check G-code')
+            self.check_gcode_button.text = self.l.get_str('Check G-code')
             self.check_gcode_button.disabled = False
             self.check_gcode_button.opacity = 1
             self.check_gcode_button.size_hint_y = 1
@@ -465,7 +473,7 @@ class CheckingScreen(Screen):
             self.check_gcode_button.width = '0dp'
     
             
-            self.load_file_now_label.text = self.l.get_str('Adjust datums')
+            self.load_file_now_button.text = self.l.get_str('Adjust datums')
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1 
