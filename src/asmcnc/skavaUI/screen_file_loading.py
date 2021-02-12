@@ -121,7 +121,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 1
+                size_hint_y: 1.4
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -132,8 +132,8 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 padding: [20,0,20,0]
-                spacing: 40
-                size_hint_y: 3
+                spacing: 60
+                size_hint_y: 2.6
             
                 # Button:
                 #     size_hint_y:0.9
