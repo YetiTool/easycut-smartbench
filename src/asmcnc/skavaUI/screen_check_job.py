@@ -540,7 +540,7 @@ class CheckingScreen(Screen):
 
         percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
         if percent_thru_job > 100: percent_thru_job = 100
-        self.job_checking_checked = self.l.get_str("Checking job") +  ": " + str(percent_thru_job) + "  %"
+        self.job_checking_checked = self.l.get_str("Checking job") +  ": " + str(percent_thru_job) + " %"
 
     
     def get_error_log(self, dt):  
