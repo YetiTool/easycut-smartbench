@@ -1042,10 +1042,10 @@ class RouterMachine(object):
 
         else: 
             error_message = (
-                "Laser datum is out of bounds!" + \
+                self.l.get_str("Laser datum is out of bounds!") + \
                 "\n\n" + \
-                "Datum has not been set." + \
-                "Please choose a different datum using the laser crosshair."
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
             popup_info.PopupError(self.sm, self.l, error_message)
 
@@ -1061,10 +1061,10 @@ class RouterMachine(object):
 
         else: 
             error_message = (
-                "Laser datum is out of bounds!" + \
+                self.l.get_str("Laser datum is out of bounds!") + \
                 "\n\n" + \
-                "Datum has not been set." + \
-                "Please choose a different datum using the laser crosshair."
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
             popup_info.PopupError(self.sm, self.l, error_message)
 
@@ -1080,10 +1080,10 @@ class RouterMachine(object):
 
         else: 
             error_message = (
-                "Laser datum is out of bounds!" + \
+                self.l.get_str("Laser datum is out of bounds!") + \
                 "\n\n" + \
-                "Datum has not been set." + \
-                "Please choose a different datum using the laser crosshair."
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
             popup_info.PopupError(self.sm, self.l, error_message)
 
