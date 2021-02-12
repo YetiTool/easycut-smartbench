@@ -93,7 +93,7 @@ Builder.load_string("""
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(15), dp(15)]
+            radius: [dp(10), dp(10)]
             segments: 80
 
 <CheckingScreen>:
@@ -185,19 +185,32 @@ Builder.load_string("""
                         # on_press: 
                         #     root.quit_to_home()
 
-                    RoundedButton:
+                    Button:
                         id: quit_button
-                        # size_hint: (None,None)
-                        # height: dp(60)
-                        # width: dp(300)
-                        center: self.parent.center
-                        pos: self.parent.pos
-                        size: self.parent.size
+                        # # size_hint: (None,None)
+                        # # height: dp(60)
+                        # # width: dp(300)
+                        # center: self.parent.center
+                        # pos: self.parent.pos
+                        # size: self.parent.size
                         on_press: root.quit_to_home()
+                        # color: hex('#f9f9f9ff')
+                        # markup: True
+                        # font_size: '28sp'
+                        text: root.exit_label
+                        background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+                        background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                        border: [dp(14.5)]*4
+                        size_hint: (None,None)
+                        width: dp(291)
+                        height: dp(79)
+                        on_press: root.next_screen()
+                        text: 'Next...'
+                        font_size: '30sp'
                         color: hex('#f9f9f9ff')
                         markup: True
-                        font_size: '28sp'
-                        text: root.exit_label
+                        center: self.parent.center
+                        pos: self.parent.pos
 
                         # BoxLayout:
                         #     padding: 5
@@ -231,7 +244,7 @@ Builder.load_string("""
                     size_hint_y: 0.15
                     spacing: 20
                     
-                    MiniRoundedButton:
+                    Button:
                         id: load_file_now_button
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -239,6 +252,9 @@ Builder.load_string("""
                         pos: self.parent.pos
                         height: self.parent.height
                         on_press: root.load_file_now()
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
                        
                         # Label:
                         #     id: load_file_now_label
@@ -248,7 +264,7 @@ Builder.load_string("""
                         #     size: self.parent.size
                         #     pos: self.parent.pos
                         
-                    MiniRoundedButton:
+                    Button:
                         id: check_gcode_button
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -256,6 +272,9 @@ Builder.load_string("""
                         pos: self.parent.pos
                         height: self.parent.height
                         on_press: root.check_gcode()
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
                         
                         # Label:
                         #     id: check_gcode_label
@@ -383,7 +402,7 @@ class CheckingScreen(Screen):
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X')
                 )
             errorfound += 1
@@ -391,7 +410,7 @@ class CheckingScreen(Screen):
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the home end. Try positioning the machine's [b]Y datum further away from home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y')
                 )
             errorfound += 1 
@@ -399,7 +418,7 @@ class CheckingScreen(Screen):
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the lower end. Try positioning the machine's [b]Z datum higher up[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.")
                 )
             errorfound += 1 
@@ -409,21 +428,21 @@ class CheckingScreen(Screen):
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the far end. Try positioning the machine's [b]X datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X')
                 )
             errorfound += 1 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y')
                 )
             errorfound += 1 
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
             error_message = error_message + ( "\n\n\t" + \
-                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n\t" + \
+                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + "\n\n\t" + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.")
                 )
             errorfound += 1 
