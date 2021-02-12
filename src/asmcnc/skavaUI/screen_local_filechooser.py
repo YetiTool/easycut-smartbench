@@ -86,7 +86,7 @@ Builder.load_string("""
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
-                font_size: '20sp'   
+                font_size: '18sp'   
                 valign: 'middle'
                 halign: 'center' 
                             
