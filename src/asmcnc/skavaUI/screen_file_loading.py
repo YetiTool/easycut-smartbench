@@ -72,13 +72,13 @@ Builder.load_string("""
 
         BoxLayout: 
             spacing: 0
-            padding: 20
+            padding: [20, 0, 20, 20]
             orientation: 'vertical'
             size_hint_y: 7.81
              
             Label:
                 id: header_label
-                size_hint_y: 1
+                size_hint_y: 0.8
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -93,7 +93,7 @@ Builder.load_string("""
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.5
+                size_hint_y: 0.4
                 markup: True
                 valign: 'top'
                 halign: 'center'
@@ -107,7 +107,7 @@ Builder.load_string("""
                 font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.5
+                size_hint_y: 0.4
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -133,7 +133,7 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 padding: [20,0,20,0]
                 spacing: 60
-                size_hint_y: 2.6
+                size_hint_y: 3
             
                 # Button:
                 #     size_hint_y:0.9
