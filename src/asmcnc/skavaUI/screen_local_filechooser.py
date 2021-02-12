@@ -271,7 +271,7 @@ class LocalFileChooser(Screen):
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
         self.filename_selected_label_text = (
-            self.l.get_str("Only .nc and .gcode files will be shown. Press the icon to display the full filename here.")
+            self.l.get_str("Press the icon to display the full filename here.")
         )
     
     
