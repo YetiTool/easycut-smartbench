@@ -52,13 +52,14 @@ Builder.load_string("""
         Label:
             id: title_label
             size_hint_y: 1.69
+            size_hint_x: 1
             markup: True
             valign: 'center'
             halign: 'center'
             size: self.texture_size
             text_size: self.size
             color: hex('#333333ff')
-            font_size: '40sp'
+            font_size: '36sp'
 
         BoxLayout:
             orientation: 'horizontal'
@@ -86,7 +87,7 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding: [0, 0]
+                    padding: [44.5, 0]
 
                     Button:
                         id: quit_button
@@ -119,7 +120,11 @@ Builder.load_string("""
                     
                     RstDocument:
                         text: root.display_output
-                        background_color: hex('#E5E5E5FF')                         
+                        background_color: hex('#E5E5E5FF')
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: 0.15                       
 """)
 
 class BoundaryWarningScreen(Screen):
