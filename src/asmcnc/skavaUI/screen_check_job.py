@@ -200,8 +200,8 @@ Builder.load_string("""
             BoxLayout:
                 size_hint_x: 1
                 orientation: 'vertical'
-                spacing: 10
-                padding: [0,0,20,0]
+                spacing: 5
+                padding: [0,0,20,20]
                                 
                 ScrollView:
                     size_hint: 1, 1
@@ -225,7 +225,7 @@ Builder.load_string("""
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-                        size: self.parent.size
+                        height: self.parent.height
                         on_press: root.load_file_now()
                        
                         # Label:
@@ -242,7 +242,7 @@ Builder.load_string("""
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-                        size: self.parent.size
+                        height: self.parent.height
                         on_press: root.check_gcode()
                         
                         # Label:
@@ -292,6 +292,9 @@ class CheckingScreen(Screen):
         self.job_gcode=kwargs['job']
         
         self.gcode_preview_widget = widget_gcode_view.GCodeView()
+
+    def on_pre_enter(self):
+        self.toggle_boundary_buttons(True)
         
     def on_enter(self):
  
