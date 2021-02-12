@@ -185,8 +185,8 @@ Builder.load_string("""
                 Button:
                     id: confirm_button
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(221)
+                    # height: dp(60)
+                    # width: dp(300)
                     # center: self.parent.center
                     # pos: self.parent.pos
                     on_press: root.continue_to_go_screen()
@@ -198,8 +198,8 @@ Builder.load_string("""
                     background_down: "./asmcnc/apps/warranty_app/img/next.png"
                     border: [dp(14.5)]*4
                     # size_hint: (None,None)
-                    # width: dp(291)
-                    # height: dp(79)
+                    width: dp(291)
+                    height: dp(79)
                     font_size: '28sp'
                     color: hex('#f9f9f9ff')
                     markup: True

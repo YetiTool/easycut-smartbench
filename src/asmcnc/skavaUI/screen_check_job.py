@@ -704,15 +704,3 @@ class CheckingScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         self.toggle_boundary_buttons(True)
 
-
-    def update_font_size(self, value):
-
-        if len(value.text) < 20:
-            value.font_size = '16px'
-
-        if len(value.text) > 10:
-            value.font_size = '13px'
-
-        if len(value.text) > 12:
-            value.font_size = '11px'
-
