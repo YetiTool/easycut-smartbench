@@ -78,9 +78,9 @@ Builder.load_string("""
              
             Label:
                 id: header_label
-                size_hint_y: 1.1
+                size_hint_y: 0.8
                 markup: True
-                valign: 'center'
+                valign: 'bottom'
                 halign: 'center'
                 size: self.texture_size
                 text_size: self.size
@@ -91,8 +91,6 @@ Builder.load_string("""
             Label:
                 id: filename_label
                 font_size: '20sp'
-                halign: 'center'
-                valign: 'top'
                 size_hint_y: 0.3
                 markup: True
                 valign: 'top'
@@ -107,10 +105,8 @@ Builder.load_string("""
                 font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.3
+                size_hint_y: 0.6
                 markup: True
-                valign: 'bottom'
-                halign: 'center'
                 size: self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
@@ -123,8 +119,6 @@ Builder.load_string("""
                 valign: 'bottom'
                 size_hint_y: 1.3
                 markup: True
-                valign: 'center'
-                halign: 'center'
                 size: self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
