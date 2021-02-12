@@ -92,8 +92,11 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        padding: 50
+        padding: 0
         spacing: 0
+
+        BoxLayout:
+            size_hint_y: 0.7
 
         Label:
             # size_hint_y: 1
@@ -108,23 +111,23 @@ Builder.load_string("""
             font_size: '40sp'
             text: root.job_checking_checked
 
-            Label:
-                id: filename_label
-                size_hint_y: 0.2
-                size: self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'center'
-                text: root.checking_file_name
+        Label:
+            id: filename_label
+            size_hint_y: 0.2
+            size: self.texture_size
+            text_size: self.size
+            color: hex('#333333ff')
+            font_size: '20sp'
+            halign: 'center'
+            valign: 'center'
+            text: root.checking_file_name
 
 
         BoxLayout:
             orientation: 'horizontal'
             padding: 0
             spacing: 40
-            size_hint_y: 5
+            size_hint_y: 6.81
 
             BoxLayout:
                 orientation: 'vertical'
