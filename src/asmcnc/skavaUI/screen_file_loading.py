@@ -78,7 +78,7 @@ Builder.load_string("""
              
             Label:
                 id: header_label
-                size_hint_y: 1
+                size_hint_y: 1.1
                 markup: True
                 valign: 'center'
                 halign: 'center'
@@ -92,7 +92,7 @@ Builder.load_string("""
                 id: filename_label
                 font_size: '20sp'
                 halign: 'center'
-                valign: 'bottom'
+                valign: 'top'
                 size_hint_y: 0.3
                 markup: True
                 valign: 'top'
@@ -107,7 +107,7 @@ Builder.load_string("""
                 font_size: '24sp'
                 halign: 'center'
                 valign: 'bottom'
-                size_hint_y: 0.4
+                size_hint_y: 0.3
                 markup: True
                 valign: 'bottom'
                 halign: 'center'
