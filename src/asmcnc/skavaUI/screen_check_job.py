@@ -102,15 +102,23 @@ Builder.load_string("""
              
             Label:
                 size_hint_y: 1
-                font_size: '40sp'
-                text: root.job_checking_checked
+                id: header_label
+                # size_hint_y: 0.8
                 markup: True
                 valign: 'top'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+                font_size: '40sp'
+                text: root.job_checking_checked
  
             Label:
                 id: filename_label
                 size_hint_y: 1
+                size: self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'center'
@@ -118,7 +126,9 @@ Builder.load_string("""
                 
             Label:
                 size_hint_y: 3
+                size: self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
                 font_size: '20sp'
                 halign: 'center'
                 valign: 'middle'

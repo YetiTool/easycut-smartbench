@@ -100,18 +100,6 @@ Builder.load_string("""
                 color: hex('#333333ff')
                 text: 'Filename here'
                 
-            # Label:
-            #     id: warning_title_label
-            #     font_size: '24sp'
-            #     halign: 'center'
-            #     valign: 'bottom'
-            #     size_hint_y: 0.5
-            #     markup: True
-            #     size: self.texture_size
-            #     text_size: self.size
-            #     color: hex('#333333ff')
-            #     text: "[b]WARNING![/b]"
-                
             Label:
                 id: warning_body_label
                 font_size: '22sp'
@@ -128,28 +116,6 @@ Builder.load_string("""
                 padding: [20,10,20,10]
                 spacing: 60
                 size_hint_y: 3
-            
-                # Button:
-                #     size_hint_y:0.9
-                #     id: check_button
-                #     size: self.texture_size
-                #     valign: 'top'
-                #     halign: 'center'
-                #     disabled: True
-                #     background_color: hex('#0d47a1')
-                #     on_press: 
-                #         root.go_to_check_job()
-                        
-                #     BoxLayout:
-                #         padding: 5
-                #         size: self.parent.size
-                #         pos: self.parent.pos
-                        
-                #         Label:
-                #             id: check_button_label
-                #             #size_hint_y: 1
-                #             font_size: '18sp'
-                #             text: ''
 
                 Button:
                     id: home_button
@@ -179,34 +145,7 @@ Builder.load_string("""
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding: [30, 30]
-
-                        
-                # Button:
-                #     size_hint_y:0.9
-                #     id: home_button
-                #     size: self.texture_size
-                #     valign: 'top'
-                #     halign: 'center'
-                #     disabled: True
-                #     background_color: hex('#0d47a1')
-                #     on_press: 
-                #         root.quit_to_home()
-
-                #     BoxLayout:
-                #         padding: 5
-                #         size: self.parent.size
-                #         pos: self.parent.pos
-                        
-                #         Label:
-                #             id: quit_button_label
-                #             #size_hint_y: 1
-                #             font_size: '18sp'
-                #             text: ''
-
-
-
-                            
+                    padding: [30, 30]                            
 """)
 
 
