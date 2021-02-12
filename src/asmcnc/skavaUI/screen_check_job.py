@@ -83,6 +83,18 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
             radius: [dp(20), dp(20)]
+            segments: 40
+
+<MiniRoundedButton@Button>:
+    background_color: 0,0,0,0
+    canvas.before:
+        Color:
+            rgba: hex('#1976d2ff')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10), dp(10)]
+            segments: 20
 
 <CheckingScreen>:
     
@@ -219,7 +231,7 @@ Builder.load_string("""
                     size_hint_y: 0.15
                     spacing: 20
                     
-                    RoundedButton:
+                    MiniRoundedButton:
                         id: load_file_now_button
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -236,7 +248,7 @@ Builder.load_string("""
                         #     size: self.parent.size
                         #     pos: self.parent.pos
                         
-                    RoundedButton:
+                    MiniRoundedButton:
                         id: check_gcode_button
                         color: hex('#f9f9f9ff')
                         markup: True
