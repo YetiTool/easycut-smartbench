@@ -187,16 +187,7 @@ Builder.load_string("""
 
                     Button:
                         id: quit_button
-                        # # size_hint: (None,None)
-                        # # height: dp(60)
-                        # # width: dp(300)
-                        # center: self.parent.center
-                        # pos: self.parent.pos
-                        # size: self.parent.size
                         on_press: root.quit_to_home()
-                        # color: hex('#f9f9f9ff')
-                        # markup: True
-                        # font_size: '28sp'
                         text: root.exit_label
                         background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                         background_down: "./asmcnc/apps/warranty_app/img/next.png"
@@ -204,23 +195,11 @@ Builder.load_string("""
                         size_hint: (None,None)
                         width: dp(291)
                         height: dp(79)
-                        on_press: root.next_screen()
-                        text: 'Next...'
                         font_size: '30sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-
-                        # BoxLayout:
-                        #     padding: 5
-                        #     size: self.parent.size
-                        #     pos: self.parent.pos
-                            
-                        #     Label:
-                        #         #size_hint_y: 1
-                        #         font_size: '20sp'
-                        #         text: root.exit_label
             
             BoxLayout:
                 size_hint_x: 1
