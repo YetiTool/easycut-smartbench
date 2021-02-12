@@ -37,7 +37,7 @@ Builder.load_string("""
     check_button:check_button
     home_button:home_button
     filename_label:filename_label
-    warning_title_label:warning_title_label
+    # warning_title_label:warning_title_label
     warning_body_label:warning_body_label
     usb_status_label:usb_status_label
     
@@ -100,24 +100,24 @@ Builder.load_string("""
                 color: hex('#333333ff')
                 text: 'Filename here'
                 
-            Label:
-                id: warning_title_label
-                font_size: '24sp'
-                halign: 'center'
-                valign: 'bottom'
-                size_hint_y: 0.5
-                markup: True
-                size: self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                text: "[b]WARNING![/b]"
+            # Label:
+            #     id: warning_title_label
+            #     font_size: '24sp'
+            #     halign: 'center'
+            #     valign: 'bottom'
+            #     size_hint_y: 0.5
+            #     markup: True
+            #     size: self.texture_size
+            #     text_size: self.size
+            #     color: hex('#333333ff')
+            #     text: "[b]WARNING![/b]"
                 
             Label:
                 id: warning_body_label
-                font_size: '20sp'
+                font_size: '22sp'
                 halign: 'center'
                 valign: 'top'
-                size_hint_y: 1.2
+                size_hint_y: 1.7
                 markup: True
                 size: self.texture_size
                 text_size: self.size
@@ -458,8 +458,9 @@ class LoadingScreen(Screen):
 
         if stage == 'Loaded':
             self.progress_value = self.l.get_bold('Job loaded')
-            self.warning_title_label.text = self.l.get_bold('WARNING') + '[b]:[/b]'
+            # self.warning_title_label.text = self.l.get_bold('WARNING') + '[b]:[/b]'
             self.warning_body_label.text = (
+                self.l.get_bold('WARNING') + '[b]:[/b]' + \
                 self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 "\n" + \
                 self.l.get_str('Would you like SmartBench to check your job now?')
