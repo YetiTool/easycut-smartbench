@@ -89,33 +89,28 @@ Builder.load_string("""
         Rectangle: 
             size: self.size
             pos: self.pos
-             
-    BoxLayout:
-        orientation: 'horizontal'
-        padding: 50
-        spacing: 40
 
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 1
-            spacing: 10
-             
-            Label:
-                size_hint_y: 1.6
-                id: header_label
-                # size_hint_y: 0.8
-                markup: True
-                valign: 'top'
-                halign: 'center'
-                size: self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                font_size: '40sp'
-                text: root.job_checking_checked
- 
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 0
+
+        Label:
+            # size_hint_y: 1
+            id: header_label
+            size_hint_y: 0.8
+            markup: True
+            valign: 'top'
+            halign: 'center'
+            size: self.texture_size
+            text_size: self.size
+            color: hex('#333333ff')
+            font_size: '40sp'
+            text: root.job_checking_checked
+
             Label:
                 id: filename_label
-                size_hint_y: 0.4
+                size_hint_y: 0.2
                 size: self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
@@ -123,93 +118,129 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'center'
                 text: root.checking_file_name
-                
-            Label:
-                size_hint_y: 3
-                size: self.texture_size
-                text_size: self.size
-                color: hex('#333333ff')
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'middle'
-                text: root.check_outcome
-                markup: True
-                
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: 10, 0
-                size_hint_y: 1
-                                    
-                Button:
-                    id: quit_button
-                    size_hint_y:0.8
-                    size_hint_x: 0.6
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: False
-                    background_color: hex('#0d47a1')
-                    on_press: 
-                        root.quit_to_home()
 
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 0
+            spacing: 40
+            size_hint_y: 5
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 1
+                spacing: 10
+                 
+                # Label:
+                #     size_hint_y: 1.6
+                #     id: header_label
+                #     # size_hint_y: 0.8
+                #     markup: True
+                #     valign: 'top'
+                #     halign: 'center'
+                #     size: self.texture_size
+                #     text_size: self.size
+                #     color: hex('#333333ff')
+                #     font_size: '40sp'
+                #     text: root.job_checking_checked
+     
+                # Label:
+                #     id: filename_label
+                #     size_hint_y: 0.4
+                #     size: self.texture_size
+                #     text_size: self.size
+                #     color: hex('#333333ff')
+                #     font_size: '20sp'
+                #     halign: 'center'
+                #     valign: 'center'
+                #     text: root.checking_file_name
+                    
+                Label:
+                    size_hint_y: 3
+                    size: self.texture_size
+                    text_size: self.size
+                    color: hex('#333333ff')
+                    font_size: '20sp'
+                    halign: 'center'
+                    valign: 'middle'
+                    text: root.check_outcome
+                    markup: True
+                    
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: 10, 0
+                    size_hint_y: 1
+                                        
+                    Button:
+                        id: quit_button
+                        size_hint_y:0.8
+                        size_hint_x: 0.6
+                        size: self.texture_size
+                        valign: 'top'
+                        halign: 'center'
+                        disabled: False
+                        background_color: hex('#0d47a1')
+                        on_press: 
+                            root.quit_to_home()
+
+                        BoxLayout:
+                            padding: 5
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Label:
+                                #size_hint_y: 1
+                                font_size: '20sp'
+                                text: root.exit_label
+            
+            BoxLayout:
+                size_hint_x: 1
+                orientation: 'vertical'
+                spacing: 10
+                                
+                ScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    scroll_type: ['content']
+                    
+                    RstDocument:
+                        text: root.display_output
+                        background_color: hex('#0d47a1')
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: 0.15
+                    spacing: 20
+                    
+                    Button:
+                        id: load_file_now_button
+                        background_color: hex('#0d47a1')
+                        on_press:
+                            root.load_file_now()
+                       
+                        Label:
+                            id: load_file_now_label
+                            text: ''
+                            markup: True
+                            #text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
+                        
+                    Button:
+                        id: check_gcode_button
+                        background_color: hex('#0d47a1')
+                        on_press:
+                            root.check_gcode()
                         
                         Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: root.exit_label
-        
-        BoxLayout:
-            size_hint_x: 1
-            orientation: 'vertical'
-            spacing: 10
-                            
-            ScrollView:
-                size_hint: 1, 1
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: True
-                do_scroll_y: True
-                scroll_type: ['content']
-                
-                RstDocument:
-                    text: root.display_output
-                    background_color: hex('#0d47a1')
-
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: 0.15
-                spacing: 20
-                
-                Button:
-                    id: load_file_now_button
-                    background_color: hex('#0d47a1')
-                    on_press:
-                        root.load_file_now()
-                   
-                    Label:
-                        id: load_file_now_label
-                        text: ''
-                        markup: True
-                        #text_size: self.size
-                        size: self.parent.size
-                        pos: self.parent.pos
-                    
-                Button:
-                    id: check_gcode_button
-                    background_color: hex('#0d47a1')
-                    on_press:
-                        root.check_gcode()
-                    
-                    Label:
-                        id: check_gcode_label
-                        text: ''
-                        markup: True
-                        #text_size: self.size
-                        size: self.parent.size
-                        pos: self.parent.pos
+                            id: check_gcode_label
+                            text: ''
+                            markup: True
+                            #text_size: self.size
+                            size: self.parent.size
+                            pos: self.parent.pos
                              
 """)
 
