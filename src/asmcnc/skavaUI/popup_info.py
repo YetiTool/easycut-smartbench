@@ -553,7 +553,7 @@ class PopupSoftwareRepair(Widget):
         ok_button.bind(on_press=repair)
         back_button.bind(on_press=popup.dismiss)       
 
-        popup.open()     
+        popup.open()
 
 class PopupError(Widget):   
     def __init__(self, screen_manager, localization, warning_message):

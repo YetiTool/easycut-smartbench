@@ -138,12 +138,12 @@ Builder.load_string("""
 
 class LaserDatumButtons(Widget):
 
-
     def __init__(self, **kwargs):
     
         super(LaserDatumButtons, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
     def reset_button_press(self):
         popup_maintenance.PopupResetOffset(self.sm)
@@ -154,7 +154,7 @@ class LaserDatumButtons(Widget):
         else:
             warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
             ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
@@ -170,7 +170,7 @@ class LaserDatumButtons(Widget):
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
         
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 

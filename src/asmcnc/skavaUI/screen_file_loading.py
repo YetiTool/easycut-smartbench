@@ -254,7 +254,7 @@ class LoadingScreen(Screen):
             file_empty_warning = (self.l.get_str('File is empty!') + '\n\n' + \
             self.l.get_str('Please load a different file.'))
 
-            popup_info.PopupError(self.sm, file_empty_warning)
+            popup_info.PopupError(self.sm, self.l, file_empty_warning)
             self.sm.current = 'local_filechooser'
             return
 

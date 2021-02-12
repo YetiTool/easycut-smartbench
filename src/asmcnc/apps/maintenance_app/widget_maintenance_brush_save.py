@@ -77,6 +77,7 @@ class BrushSaveWidget(Widget):
         super(BrushSaveWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
     def get_info(self):
 
@@ -98,7 +99,7 @@ class BrushSaveWidget(Widget):
             brush_use_validation_error = "The number of hours the brushes have been used for should be between 0 and 999.\n\n" + \
             "Please enter a new value."
 
-            popup_info.PopupError(self.sm, brush_use_validation_error)
+            popup_info.PopupError(self.sm, self.l, brush_use_validation_error)
             return
 
 
@@ -109,7 +110,7 @@ class BrushSaveWidget(Widget):
             brush_life_validation_error = "The maximum brush lifetime should be between 100 and 999 hours.\n\n" + \
             "Please enter a new value."
 
-            popup_info.PopupError(self.sm, brush_life_validation_error)
+            popup_info.PopupError(self.sm, self.l, brush_life_validation_error)
             return
 
         # Check use <= lifetime
@@ -119,7 +120,7 @@ class BrushSaveWidget(Widget):
             brush_both_validation_error = "The brush use hours should be less than or equal to the lifetime!\n\n" + \
             "Please check your values."
 
-            popup_info.PopupError(self.sm, brush_both_validation_error)
+            popup_info.PopupError(self.sm, self.l, brush_both_validation_error)
             return
 
 
@@ -130,7 +131,7 @@ class BrushSaveWidget(Widget):
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
 
         # Update the monitor :)

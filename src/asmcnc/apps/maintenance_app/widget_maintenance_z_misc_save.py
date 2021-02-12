@@ -103,7 +103,7 @@ class ZMiscSaveWidget(Widget):
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
     def save_touchplate_offset(self):
         # Set offset
@@ -112,7 +112,7 @@ class ZMiscSaveWidget(Widget):
             if (touchplate_offset < 1) or (touchplate_offset > 2):
                 warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
                 " please contact the YetiTool support team."
-                popup_info.PopupError(self.sm, warning_message)
+                popup_info.PopupError(self.sm, self.l, warning_message)
                 return False
             else:
                 if self.m.write_z_touch_plate_thickness(touchplate_offset): return True

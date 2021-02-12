@@ -479,7 +479,7 @@ class MaintenanceScreenClass(Screen):
         self.z_move_widget = widget_maintenance_z_move.MaintenanceZMove(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_move_container.add_widget(self.z_move_widget)
 
-        self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm)
+        self.laser_datum_buttons_widget = widget_maintenance_laser_buttons.LaserDatumButtons(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.laser_button_container.add_widget(self.laser_datum_buttons_widget)
 
         self.laser_switch_widget = widget_maintenance_laser_switch.LaserOnOffWidget(machine=self.m, screen_manager=self.sm)
@@ -493,7 +493,7 @@ class MaintenanceScreenClass(Screen):
         self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(machine=self.m, screen_manager=self.sm)
         self.brush_life_container.add_widget(self.brush_life_widget)
 
-        self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_save_container.add_widget(self.brush_save_widget)
 
         self.monitor_percentage = 1 - (self.m.spindle_brush_use_seconds/self.m.spindle_brush_lifetime_seconds)

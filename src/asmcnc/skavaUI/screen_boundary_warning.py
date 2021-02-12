@@ -36,86 +36,90 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#fb8c00')
+            rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
             pos: self.pos
-             
+
     BoxLayout:
-        orientation: 'horizontal'
-        padding: 50
-        spacing: 40
-        size_hint_x: 1
+        orientation: 'vertical'
+        padding: 0
+        spacing: 0
 
         BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: 1
-            spacing: 10
-             
-            Label:
-                id: title_label
-                size_hint_y: 2
-                font_size: '40sp'
-                text: '[b]Job Outside Machine Limits[/b]'
-                markup: True
-                valign: 'top'
-                halign: 'center'
-                text_size: self.size
-                
- 
-                
-            Label:
-                size_hint_y: 3
-                text_size: self.size
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'top'
-                text: root.check_outcome
-                markup: True
-                
+            size_hint_y: 0.7
+
+        Label:
+            id: title_label
+            size_hint_y: 1.04
+            markup: True
+            valign: 'center'
+            halign: 'center'
+            size: self.texture_size
+            text_size: self.size
+            color: hex('#333333ff')
+            font_size: '40sp'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 0
+            spacing: 40
+            size_hint_y: 6.12
+
             BoxLayout:
-                orientation: 'horizontal'
-                padding: 10, 0
-                size_hint_y: 1
-                                    
-                Button:
-                    id: quit_button
-                    size_hint_y:0.8
-                    size_hint_x: 0.6
+                orientation: 'vertical'
+                size_hint_x: 1
+                spacing: 0
+                padding: 20
+                    
+                Label:
+                    id: body_label
+                    size_hint_y: 0.65
                     size: self.texture_size
-                    valign: 'top'
+                    text_size: self.size
+                    color: hex('#333333ff')
+                    font_size: '20sp'
                     halign: 'center'
-                    disabled: False
-                    background_normal: ''
-                    background_down: ''
-                    background_color: hex('#e65100')
-                    on_press: 
-                        root.quit_to_home()
+                    valign: 'top'
+                    text: root.check_outcome
+                    
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: 1
+                    padding: [0, 0]
 
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
+                    Button:
+                        id: quit_button
+                        on_press: root.quit_to_home()
+                        text: root.exit_label
+                        background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+                        background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                        border: [dp(14.5)]*4
+                        size_hint: (None,None)
+                        width: dp(291)
+                        height: dp(79)
+                        font_size: '28sp'
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        center: self.parent.center
                         pos: self.parent.pos
-                        
-                        Label:
-                            #size_hint_y: 1
-                            font_size: '20sp'
-                            text: root.exit_label
-        
-        BoxLayout:
-            orientation: 'vertical'
-                            
-            ScrollView:
-                size_hint: 1, 1
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                do_scroll_x: True
-                do_scroll_y: True
-                scroll_type: ['content']
-                
-                RstDocument:
-                    text: root.display_output
-                    background_color: hex('#fb8c00')
-                             
+            
+            BoxLayout:
+                size_hint_x: 1
+                orientation: 'vertical'
+                spacing: 5
+                padding: [0,0,20,20]
+                                
+                ScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    scroll_type: ['content']
+                    
+                    RstDocument:
+                        text: root.display_output
+                        background_color: hex('#E5E5E5FF')                         
 """)
 
 class BoundaryWarningScreen(Screen):

@@ -380,11 +380,11 @@ class SWUpdateScreen(Screen):
                     else:
                         if self.wifi_image.source != self.wifi_on:
                             refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
-                            popup_info.PopupError(self.sm, refresh_error_message)
+                            popup_info.PopupError(self.sm, self.l, refresh_error_message)
                 else:
                     if self.wifi_image.source != self.wifi_on:
                         refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
-                        popup_info.PopupError(self.sm, refresh_error_message)
+                        popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
                 self.set.clear_remote_repo(dir_path_name)                 
 
@@ -393,7 +393,7 @@ class SWUpdateScreen(Screen):
 
             if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
                 refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
-                popup_info.PopupError(self.sm, refresh_error_message)
+                popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
             self.update_screen_with_latest_version()
 
@@ -434,7 +434,7 @@ class SWUpdateScreen(Screen):
         def check_connection_and_version():
             if self.wifi_image.source != self.wifi_on:
                 description = "No WiFi connection!"
-                popup_info.PopupError(self.sm, description)
+                popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
 
@@ -455,7 +455,7 @@ class SWUpdateScreen(Screen):
         def check_connection_and_version():
             if self.usb_image.source != self.usb_on:
                 description = "No USB drive found!"
-                popup_info.PopupError(self.sm, description)
+                popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
 
@@ -487,11 +487,11 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupSoftwareRepair(self.sm, self, description)
 
             elif outcome == "Software already up to date!": 
-                popup_info.PopupError(self.sm, outcome)
+                popup_info.PopupError(self.sm, self.l, outcome)
                 
             elif outcome == "Could not resolve host: github.com":
                 description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, outcome)
+                popup_info.PopupError(self.sm, self.l, outcome)
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
@@ -513,11 +513,11 @@ class SWUpdateScreen(Screen):
                 if outcome == False:
                     description = "It was not possible to backup the software safely, please try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
-                    popup_info.PopupError(self.sm, description)           
+                    popup_info.PopupError(self.sm, self.l, description)           
             else: 
                 description = "No WiFi connection!\n\nYou MUST have a stable wifi connection to repair your software.\n\n" + \
                 "Please try again later."
-                popup_info.PopupError(self.sm, description)
+                popup_info.PopupError(self.sm, self.l, description)
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
@@ -531,12 +531,12 @@ class SWUpdateScreen(Screen):
             if outcome == 2:
                 description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
                 "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
-                popup_info.PopupError(self.sm, description)
+                popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == 0:
                 description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
                 "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
-                popup_info.PopupError(self.sm, description)
+                popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == "update failed":
                 
@@ -545,7 +545,7 @@ class SWUpdateScreen(Screen):
                 description = "It was not possible to update your software from the USB drive.\n\n" + \
                 "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
                 "internet to update your software, and repair it if necessary.\n\n"
-                popup_info.PopupError(self.sm, description)              
+                popup_info.PopupError(self.sm, self.l, description)              
             
             else:
                 self.usb_stick.disable()

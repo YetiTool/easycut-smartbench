@@ -106,7 +106,7 @@ class SpindleSaveWidget(Widget):
                 brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
                 "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
 
-                popup_info.PopupError(self.sm, brand_validation_error)
+                popup_info.PopupError(self.sm, self.l, brand_validation_error)
                 return
 
         except:
@@ -114,7 +114,7 @@ class SpindleSaveWidget(Widget):
             brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
             "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
 
-            popup_info.PopupError(self.sm, brand_validation_error)
+            popup_info.PopupError(self.sm, self.l, brand_validation_error)
             return               
 
 
@@ -130,14 +130,14 @@ class SpindleSaveWidget(Widget):
                 time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
                 "Please enter a new value."
 
-                popup_info.PopupError(self.sm, time_validation_error)
+                popup_info.PopupError(self.sm, self.l, time_validation_error)
                 return
 
         except: 
             time_validation_error = "The spindle cooldown time should be a number between 10 and 20 seconds.\n\n" + \
             "Please enter a new value."
 
-            popup_info.PopupError(self.sm, time_validation_error)
+            popup_info.PopupError(self.sm, self.l, time_validation_error)
             return
 
 
@@ -153,14 +153,14 @@ class SpindleSaveWidget(Widget):
                 speed_validation_error = "The spindle cooldown speed should be between 10,000 and 20,000 RPM.\n\n" + \
                 "Please enter a new value."
 
-                popup_info.PopupError(self.sm, speed_validation_error)
+                popup_info.PopupError(self.sm, self.l, speed_validation_error)
                 return
 
         except:
             speed_validation_error = "The spindle cooldown speed should be a number between 10,000 and 20,000 RPM.\n\n" + \
             "Please enter a new value."
 
-            popup_info.PopupError(self.sm, speed_validation_error)
+            popup_info.PopupError(self.sm, self.l, speed_validation_error)
             return
 
 
@@ -171,7 +171,7 @@ class SpindleSaveWidget(Widget):
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."
 
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
         if voltage == '110':
             spindle_voltage_info = "When using a 110V spindle as part of your SmartBench, please be aware of the following:\n\n" + \

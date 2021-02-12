@@ -74,28 +74,6 @@ ERROR_CODES = {
 
 Builder.load_string("""
 
-<RoundedButton@Button>:
-    background_color: 0,0,0,0
-    canvas.before:
-        Color:
-            rgba: hex('#1976d2ff')
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [dp(30), dp(30)]
-            segments: 80
-
-<MiniRoundedButton@Button>:
-    background_color: 0,0,0,0
-    canvas.before:
-        Color:
-            rgba: hex('#1976d2ff')
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: [dp(10), dp(10)]
-            segments: 80
-
 <CheckingScreen>:
     
     quit_button:quit_button
@@ -172,18 +150,6 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     size_hint_y: 1
                     padding: [0, 0]
-                                        
-                    # Button:
-                        # id: quit_button
-                        # size_hint_y:0.8
-                        # size_hint_x: 0.6
-                        # size: self.texture_size
-                        # valign: 'top'
-                        # halign: 'center'
-                        # disabled: False
-                        # background_color: hex('#0d47a1')
-                        # on_press: 
-                        #     root.quit_to_home()
 
                     Button:
                         id: quit_button
@@ -234,15 +200,6 @@ Builder.load_string("""
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
-
-                       
-                        # Label:
-                        #     id: load_file_now_label
-                        #     text: ''
-                        #     markup: True
-                        #     #text_size: self.size
-                        #     size: self.parent.size
-                        #     pos: self.parent.pos
                         
                     Button:
                         id: check_gcode_button
@@ -255,14 +212,6 @@ Builder.load_string("""
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
-                        
-                        # Label:
-                        #     id: check_gcode_label
-                        #     text: ''
-                        #     markup: True
-                        #     #text_size: self.size
-                        #     size: self.parent.size
-                        #     pos: self.parent.pos
                              
 """)
 

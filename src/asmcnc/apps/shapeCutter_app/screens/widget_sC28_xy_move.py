@@ -403,7 +403,7 @@ class SC28XYMove(Widget):
 
     def set_workzone_to_pos_xy(self):
         warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        popup_input_error.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
         warning = 'Is this where you want to set your\nstandby position?'
@@ -423,8 +423,8 @@ class SC28XYMove(Widget):
 
     def set_x_datum(self):
         warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, self.l, 'X', warning)
+        popup_input_error.PopupDatum(self.sm, self.m, 'X', warning)
 
     def set_y_datum(self):
         warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
+        popup_input_error.PopupDatum(self.sm, self.m, 'Y', warning)
