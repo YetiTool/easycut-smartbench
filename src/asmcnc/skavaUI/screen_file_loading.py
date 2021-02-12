@@ -460,7 +460,7 @@ class LoadingScreen(Screen):
             self.progress_value = self.l.get_bold('Job loaded')
             # self.warning_title_label.text = self.l.get_bold('WARNING') + '[b]:[/b]'
             self.warning_body_label.text = (
-                self.l.get_bold('WARNING') + '[b]:[/b]\n\n' + \
+                self.l.get_bold('WARNING') + '[b]:[/b]\n' + \
                 self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
                 "\n" + \
                 self.l.get_str('Would you like SmartBench to check your job now?')
