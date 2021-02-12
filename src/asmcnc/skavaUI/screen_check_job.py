@@ -101,9 +101,9 @@ Builder.load_string("""
         Label:
             # size_hint_y: 1
             id: header_label
-            size_hint_y: 0.8
+            size_hint_y: 1.04
             markup: True
-            valign: 'top'
+            valign: 'bottom'
             halign: 'center'
             size: self.texture_size
             text_size: self.size
@@ -113,13 +113,13 @@ Builder.load_string("""
 
         Label:
             id: filename_label
-            size_hint_y: 0.2
+            size_hint_y: 0.65
             size: self.texture_size
             text_size: self.size
             color: hex('#333333ff')
             font_size: '20sp'
             halign: 'center'
-            valign: 'center'
+            valign: 'top'
             text: root.checking_file_name
 
 
@@ -127,7 +127,7 @@ Builder.load_string("""
             orientation: 'horizontal'
             padding: 0
             spacing: 40
-            size_hint_y: 6.81
+            size_hint_y: 6.12
 
             BoxLayout:
                 orientation: 'vertical'
