@@ -45,19 +45,16 @@ class micrometer(object):
         self.SerialRxthread = threading.Thread(target=self.read_from_port)
         self.SerialRxthread.start()
         time.sleep(.1)   # Wait for initialize
-        self.dti_serial.flushInput()  # Flush startup text in serial input        
-
+        self.dti_serial.flushInput()  # Flush startup text in serial input
         
     def read_mm(self):
         return self.result_mm
-
 
     # core read response thread
     def read_from_port(self):
         while True:
             if (self.stop_threads == True): 
                 break
-
             try:
                 dti_bytes = self.dti_serial.read_until(b'\r',20) # Wait for response with carriage return
             except:

@@ -13,6 +13,8 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 
+from asmcnc.production import process_micrometer_read
+
 Builder.load_string("""
 
 <ScrollableLabelLogsView>:
@@ -121,7 +123,8 @@ Builder.load_string("""
                         rows: 4
 
                         Button:
-                            text: ''
+                            text: 'Micrometer'
+                            on_press: root.open_micrometer_jig_screen()
                                     
                         Button:
                             text: ''
@@ -304,3 +307,10 @@ class DeveloperTempScreen(Screen):
 
     def send_gcode_textinput(self): 
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
+
+    def open_micrometer_jig_screen(self):
+        if not self.systemtools_sm.sm.has_screen('micrometer_screen'):
+            screen_process_micrometer_read = process_micrometer_read.ProcessMicrometerScreen(name = 'micrometer_screen', screen_manager = self.systemtools_sm.sm, machine = self.m)
+            self.systemtools_sm.sm.add_widget(screen_process_micrometer_read)
+
+        self.systemtools_sm.sm.current = 'micrometer_screen'
