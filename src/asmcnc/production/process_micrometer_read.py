@@ -366,10 +366,10 @@ class ProcessMicrometerScreen(Screen):
 
         Clock.unschedule(self.test_run)
 
-            if self.HOME_SIDE:
-                self.home_side_status = 'Collected'
-            else:
-                self.far_side_status = 'Collected'
+        if self.HOME_SIDE:
+            self.home_side_status = 'Collected'
+        else:
+            self.far_side_status = 'Collected'
 
 
     def set_max_pos(self):
