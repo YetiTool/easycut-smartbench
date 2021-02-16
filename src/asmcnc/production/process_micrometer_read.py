@@ -216,6 +216,12 @@ class ProcessMicrometerScreen(Screen):
     HOME_Y_pos_list = []
     HOME_DTI_abs_list = []
 
+    HOME_DTI_abs_list_converted = []
+    FAR_DTI_abs_list_converted = []
+
+    HOME_zeroed_converted = []
+    FAR_zeroed_converted = []
+
     FAR_Y_pos_list = []
     FAR_DTI_abs_list = []
 
@@ -434,21 +440,17 @@ class ProcessMicrometerScreen(Screen):
         try: 
             self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
             self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
+            self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
+            self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
+            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
         except: pass
         try: 
             self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
             self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
+            self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
+            self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)        
+            self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
         except: pass
-
-        
-        
-
-        self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-        self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-        self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
-        self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)
-        self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
-        self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
 
 
     def convert_to_json(self, data):
@@ -502,17 +504,17 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        if self.HOME_DTI_abs_list_converted != []:
+        if self.HOME_zeroed_converted != []:
             self.home_data_status = 'Sending...'
             worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
-            worksheet.update('D3:D', self.HOME_DTI_abs_list_converted)
+            worksheet.update('D3:D', self.HOME_zeroed_converted)
             log('Home side data sent')
 
-        if self.FAR_DTI_abs_list_converted != []:
+        if self.FAR_zeroed_converted != []:
             self.far_data_status = 'Sending...'
             worksheet.update('E2:E', self.FAR_Y_pos_list_converted)
-            worksheet.update('F2:F', self.FAR_DTI_abs_list_converted)
-            log('Home side data sent')
+            worksheet.update('F2:F', self.FAR_zeroed_converted)
+            log('Far side data sent')
 
         current_utc = datetime.utcnow()
         current_date = datetime.date()
