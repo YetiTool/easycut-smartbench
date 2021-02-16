@@ -30,7 +30,10 @@ class micrometer(object):
 
         self.stop_threads = False
         self.result_mm = 0
-        self.init_serial(addr)
+        try: 
+            self.init_serial(addr)
+        except: 
+            print('no DTI connected')
         self.connected = False
 
 
