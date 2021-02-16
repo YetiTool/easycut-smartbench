@@ -544,7 +544,7 @@ class ProcessMicrometerScreen(Screen):
             worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
         except: 
             worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
-            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.sheet1
+            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.sheet1)
 
         log("Writing DTI measurements to Gsheet")
 
