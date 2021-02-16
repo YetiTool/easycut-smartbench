@@ -509,8 +509,7 @@ class ProcessMicrometerScreen(Screen):
             # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SHEET
             self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-            self.active_spreadsheet_object.share('lettie.adkins@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
-            self.active_spreadsheet_object.share('ed.sells@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
+            # self.active_spreadsheet_object.share('lettie.adkins@yetitool.com', perm_type='user', role='writer', notify=False)
             self.move_sheet_to_operator_resources()
 
         else:
