@@ -348,7 +348,7 @@ class ProcessMicrometerScreen(Screen):
             ## SET VARIABLES
             self.clear_data()
             self.starting_pos = float(self.m.mpos_y())
-            self.DTI_initial_value = DTI.read_mm()
+            DTI_initial_value = DTI.read_mm()
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
@@ -386,11 +386,11 @@ class ProcessMicrometerScreen(Screen):
 
             if self.HOME_SIDE: 
                 self.HOME_Y_pos_list.append(float(self.m.mpos_y()))
-                self.HOME_DTI_abs_list.append(float(self.DTI.read_mm()))
+                self.HOME_DTI_abs_list.append(float(DTI.read_mm()))
 
             else:
                 self.FAR_Y_pos_list.append(float(self.m.mpos_y()))
-                self.FAR_DTI_abs_list.append(float(self.DTI.read_mm()))
+                self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
 
             self.m.send_any_gcode_command('G0 G91 Y10')
 
