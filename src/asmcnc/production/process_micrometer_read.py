@@ -476,10 +476,22 @@ class ProcessMicrometerScreen(Screen):
     # SEND DATA (reformat this)
 
     def send_data(self):
+        self.update_screen_before_doing_data_send()
+        Clock.schedule_once(self.do_data_send, 2)
 
+
+    def update_screen_before_doing_data_send(self):
         self.send_data_button.text = 'SENDING DATA...'
 
-        self.active_spreadsheet_name = str(datetime.now()) + ' straightness measurement ' + self.bench_id.text
+        if self.home_data_status == 'Collected':
+            self.home_data_status = 'Sending...'
+
+        if self.far_data_status == 'Collected':
+            self.far_data_status = 'Sending...'
+
+
+    def do_data_send(self, dt):
+        self.active_spreadsheet_name = str(datetime.now()) + ' ' + self.bench_id.text
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
@@ -496,17 +508,16 @@ class ProcessMicrometerScreen(Screen):
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
             self.active_spreadsheet_object.share('lettie.adkins@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
             self.active_spreadsheet_object.share('ed.sells@yetitool.com', perm_type='user', role='writer', notify=True, email_message=self.bench_id.text, with_link=False)
+            self.move_sheet_to_operator_resources()
 
         else:
             # OTHERWISE OPEN THE EXISTING SHEET
-            spread = client.open(self.active_spreadsheet_name)
-
-        self.active_spreadsheet_id = self.active_spreadsheet_object.id
-        self.move_sheet_to_operator_resources()
+            spread = gsheet_client.open(self.active_spreadsheet_name) # might want to make this the ID instead
 
 
     def move_sheet_to_operator_resources(self):
         # Take the file ID and move it into the operator resources folder
+        self.active_spreadsheet_id = self.active_spreadsheet_object.id
 
         # Retrieve the existing parents to remove
         file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
@@ -523,8 +534,8 @@ class ProcessMicrometerScreen(Screen):
         # INDICATE IF BENCH OR EXTRUSION
         test_data_worksheet_name = self.test_type + ': TEST ' + self.test_id.text
 
-        try: worksheet = active_spreadsheet_object.worksheet(test_data_worksheet_name)
-        except: worksheet = active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+        try: worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
+        except: worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         log("Writing DTI measurements to Gsheet")
 
@@ -532,12 +543,14 @@ class ProcessMicrometerScreen(Screen):
             self.home_data_status = 'Sending...'
             worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
             worksheet.update('D3:D', self.HOME_zeroed_converted)
+            self.home_data_status = 'Sent'
             log('Home side data sent')
 
         if self.FAR_zeroed_converted != []:
             self.far_data_status = 'Sending...'
             worksheet.update('E2:E', self.FAR_Y_pos_list_converted)
             worksheet.update('F2:F', self.FAR_zeroed_converted)
+            self.far_data_status = 'Sent'
             log('Far side data sent')
 
         current_utc = datetime.utcnow()
