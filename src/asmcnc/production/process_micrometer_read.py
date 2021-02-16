@@ -9,7 +9,7 @@ import gspread
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pprint
-from datetime import datetime
+from datetime import datetime, date
 
 
 import requests.auth
@@ -501,7 +501,11 @@ class ProcessMicrometerScreen(Screen):
 
     def open_spreadsheet(self):
 
-        if self.bench_id.text != self.last_bench:
+        if self.bench_id.text != self.last_bench: # want to make this more advanced, based on whether there is already a sheet in the folder with bench name... 
+
+        # at least if on the same day?? OR don't at all, just have every day/time separate
+
+            log('Creating new sheet')
 
             # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SHEET
             self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
@@ -516,6 +520,9 @@ class ProcessMicrometerScreen(Screen):
 
 
     def move_sheet_to_operator_resources(self):
+
+        log('Moving sheet to production > operator resources > live measurements')
+
         # Take the file ID and move it into the operator resources folder
         self.active_spreadsheet_id = self.active_spreadsheet_object.id
 
@@ -554,7 +561,7 @@ class ProcessMicrometerScreen(Screen):
             log('Far side data sent')
 
         current_utc = datetime.utcnow()
-        current_date = datetime.date()
+        current_date = date.today()
         # Date
         worksheet.update('A2', str(current_date))
         # Time
@@ -565,7 +572,6 @@ class ProcessMicrometerScreen(Screen):
         worksheet.update('A8', str(self.test_type))
         # Test no: 
         worksheet.update('I3', str(self.test_id.text))      
-
 
         if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
             self.last_bench = self.bench_id.text
