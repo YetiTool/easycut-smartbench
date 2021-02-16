@@ -217,7 +217,7 @@ class ProcessMicrometerScreen(Screen):
     send_far_data = False
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = '10jyrzSH-_pvieqFW7TTF3JvU786XXVzwrPR-nx0Lx_o'
+    master_sheet_key = '1XGraPNhcRMbwpsapBQCugnGbzI2ybppZPD7yryYP7Xg'
     gsheet_client = None
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
@@ -242,9 +242,9 @@ class ProcessMicrometerScreen(Screen):
             'https://www.googleapis.com/auth/drive',
             'https://www.googleapis.com/auth/drive.file'
             ]
-        # file_name = os.path.dirname(os.path.realpath(__file__)) + 'asmcnc/production/gsheet_client_key.json'
-        # creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
-        # self.gsheet_client = gspread.authorize(creds)
+        file_name = os.path.dirname(os.path.realpath(__file__)) + 'asmcnc/production/keys/live-measurements-api-key.json'
+        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+        self.gsheet_client = gspread.authorize(creds)
 
     def on_enter(self):
 
@@ -262,12 +262,12 @@ class ProcessMicrometerScreen(Screen):
     def toggle_home_far(self):
 
         if self.side_toggle.state == 'down':
-            self.side_toggle.background_color = [0,1,0,0]
+            self.side_toggle.background_color = [0,1,0,1]
             self.side_toggle.text = 'FAR SIDE'
             self.HOME_SIDE = False
 
         elif self.side_toggle.state == 'normal':
-            self.side_toggle.background_color = [0,0,1,0]
+            self.side_toggle.background_color = [0,0,1,1]
             self.side_toggle.text = 'HOME SIDE'
             self.HOME_SIDE = True
 
@@ -491,14 +491,7 @@ class ProcessMicrometerScreen(Screen):
 
 
     def go_to_lobby(self):
-        self.sm.current = 'lobby'
-
-
-
-
-
-
-
+        self.sm.current = 'developer_temp'
 
 
 
