@@ -242,6 +242,8 @@ class ProcessMicrometerScreen(Screen):
     straightness_measurements_id = '12H3XlLc876qia0i9s1a8FQCo7rK7fUzl'
 
     gsheet_client = None
+    drive_service = None
+
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
     active_spreadsheet_id = ''
@@ -275,7 +277,7 @@ class ProcessMicrometerScreen(Screen):
             ]
         file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
         creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
-        service = build('drive', 'v3', credentials=creds)
+        self.drive_service = build('drive', 'v3', credentials=creds)
         self.gsheet_client = gspread.authorize(creds)
 
     def on_enter(self):
@@ -507,11 +509,11 @@ class ProcessMicrometerScreen(Screen):
         # Take the file ID and move it into the operator resources folder
 
         # Retrieve the existing parents to remove
-        file = drive_service.files().get(fileId=active_spreadsheet_id,
+        file = self.drive_service.files().get(fileId=active_spreadsheet_id,
                                          fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
-        file = drive_service.files().update(fileId=active_spreadsheet_id,
+        file = self.drive_service.files().update(fileId=active_spreadsheet_id,
                                             addParents=straightness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
