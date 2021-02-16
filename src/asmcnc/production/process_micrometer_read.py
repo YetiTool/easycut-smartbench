@@ -384,7 +384,7 @@ class ProcessMicrometerScreen(Screen):
 
         elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
 
-            if HOME_SIDE: 
+            if self.HOME_SIDE: 
                 self.HOME_Y_pos_list.append(float(self.m.mpos_y()))
                 self.HOME_DTI_abs_list.append(float(self.DTI.read_mm()))
 
