@@ -440,9 +440,42 @@ class ProcessMicrometerScreen(Screen):
 
     ## SENDING DATA
 
+
+    # MAIN FUNCTION CALLED BY BUTTON
+    def send_data(self):
+
+        # screen needs to be updated before sending data
+        # as data sending is an intensive process and locks up kivy
+        self.update_screen_before_doing_data_send()
+
+        # start main data sending processes after 2 seconds
+        Clock.schedule_once(self.do_data_send, 2)
+
+
+    # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
+    def update_screen_before_doing_data_send(self):
+
+        self.send_data_button.text = 'SENDING DATA...'
+
+        if self.home_data_status == 'Collected':
+            self.home_data_status = 'Sending...'
+
+        if self.far_data_status == 'Collected':
+            self.far_data_status = 'Sending...'
+
+
+    def do_data_send(self, dt):
+
+        self.active_spreadsheet_name = str(datetime.now()) + ' ' + self.bench_id.text
+        self.format_output()
+        self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
+        self.write_to_worksheet()
+
+        self.send_data_button.text = 'SEND DATA'
+
+
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
     def format_output(self):
-
 
         try: 
             self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
@@ -461,6 +494,8 @@ class ProcessMicrometerScreen(Screen):
 
 
     def convert_to_json(self, data):
+        # Need to convert to json format in order to export to gsheets
+
         new_data = []
 
         data = [str(x).split() for x in data]
@@ -472,32 +507,7 @@ class ProcessMicrometerScreen(Screen):
         return new_data
 
 
-    # SEND DATA (reformat this)
-
-    def send_data(self):
-        self.update_screen_before_doing_data_send()
-        Clock.schedule_once(self.do_data_send, 2)
-
-
-    def update_screen_before_doing_data_send(self):
-        self.send_data_button.text = 'SENDING DATA...'
-
-        if self.home_data_status == 'Collected':
-            self.home_data_status = 'Sending...'
-
-        if self.far_data_status == 'Collected':
-            self.far_data_status = 'Sending...'
-
-
-    def do_data_send(self, dt):
-        self.active_spreadsheet_name = str(datetime.now()) + ' ' + self.bench_id.text
-        self.format_output()
-        self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        self.write_to_worksheet()
-
-        self.send_data_button.text = 'SEND DATA'
-
-
+    # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
     def open_spreadsheet(self):
 
         if self.bench_id.text != self.last_bench: # want to make this more advanced, based on whether there is already a sheet in the folder with bench name... 
@@ -534,6 +544,7 @@ class ProcessMicrometerScreen(Screen):
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
 
+    # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
@@ -543,7 +554,7 @@ class ProcessMicrometerScreen(Screen):
             worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
         except: 
             worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
-            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.sheet1)
+            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
 
         log("Writing DTI measurements to Gsheet")
 
@@ -588,8 +599,8 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.background_color = [0,0.502,0,1]
 
 
-    # UPDATE SCREEN WITH STATUS
-
+    ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
+    # 
     def update_screen(self, dt):
 
         self.home_data_status_label.text = self.home_data_status
