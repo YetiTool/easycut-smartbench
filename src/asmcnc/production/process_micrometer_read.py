@@ -323,7 +323,7 @@ class ProcessMicrometerScreen(Screen):
 
             self.m.send_any_gcode_command('$H')
 
-            self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 1)
+            self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 3)
 
         elif self.home_stop.state == 'normal':
 
@@ -371,6 +371,9 @@ class ProcessMicrometerScreen(Screen):
             self.home_data_status = 'Collected'
         else:
             self.far_data_status = 'Collected'
+
+        self.home_stop.background_color = [0,0.502,0,1]
+        self.home_stop.text = 'HOME'
 
 
     def set_max_pos(self):
@@ -542,6 +545,10 @@ class ProcessMicrometerScreen(Screen):
             Clock.unschedule(self.check_for_home_end_event)
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
+            print('not homing')
+
+        else: 
+            print('homing')
 
 
     def on_leave(self):
