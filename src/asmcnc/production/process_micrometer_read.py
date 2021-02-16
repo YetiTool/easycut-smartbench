@@ -7,6 +7,7 @@ import operator
 import gspread
 # from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
+from googleapiclient.discovery import build
 import pprint
 from datetime import datetime
 
@@ -237,9 +238,13 @@ class ProcessMicrometerScreen(Screen):
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
     master_sheet_key = '1XGraPNhcRMbwpsapBQCugnGbzI2ybppZPD7yryYP7Xg'
+
+    straightness_measurements_id = '12H3XlLc876qia0i9s1a8FQCo7rK7fUzl'
+
     gsheet_client = None
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
+    active_spreadsheet_id = ''
 
     last_bench = ''
     last_test = ''
@@ -270,6 +275,7 @@ class ProcessMicrometerScreen(Screen):
             ]
         file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
         creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
+        service = build('drive', 'v3', credentials=creds)
         self.gsheet_client = gspread.authorize(creds)
 
     def on_enter(self):
@@ -380,7 +386,7 @@ class ProcessMicrometerScreen(Screen):
             self.far_data_status = 'Collected'
 
         self.go_stop.background_color = [0,0.502,0,1]
-        self.go_stop.text = 'HOME'
+        self.go_stop.text = 'GO'
 
 
     def set_max_pos(self):
@@ -493,14 +499,30 @@ class ProcessMicrometerScreen(Screen):
             # OTHERWISE OPEN THE EXISTING SHEET
             spread = client.open(self.active_spreadsheet_name)
 
+        self.active_spreadsheet_id = self.active_spreadsheet_object.id
+        self.move_sheet_to_operator_resources()
+
+
+    def move_sheet_to_operator_resources(self):
+        # Take the file ID and move it into the operator resources folder
+
+        # Retrieve the existing parents to remove
+        file = drive_service.files().get(fileId=active_spreadsheet_id,
+                                         fields='parents').execute()
+        previous_parents = ",".join(file.get('parents'))
+        # Move the file to the new folder
+        file = drive_service.files().update(fileId=active_spreadsheet_id,
+                                            addParents=straightness_measurements_id,
+                                            removeParents=previous_parents,
+                                            fields='id, parents').execute()
 
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
         test_data_worksheet_name = self.test_type + ': TEST ' + self.test_id.text
 
-        try: worksheet = spread.worksheet(test_data_worksheet_name)
-        except: worksheet = spread.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+        try: worksheet = active_spreadsheet_object.worksheet(test_data_worksheet_name)
+        except: worksheet = active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
         log("Writing DTI measurements to Gsheet")
 
@@ -529,15 +551,16 @@ class ProcessMicrometerScreen(Screen):
         # Test no: 
         worksheet.update('I3', str(self.test_id.text))      
 
-        self.last_bench = self.bench_id.text
-        self.last_test = self.test_id.text
-        self.test_id.text = str(int(self.last_test) + 1)
+
+        if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
+            self.last_bench = self.bench_id.text
+            self.last_test = self.test_id.text
+            self.test_id.text = str(int(self.last_test) + 1)
+            self.clear_data()
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
         self.go_stop.background_color = [0,0.502,0,1]
-
-        self.clear_data()
 
 
     # UPDATE SCREEN WITH STATUS
