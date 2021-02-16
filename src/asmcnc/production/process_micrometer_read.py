@@ -243,7 +243,7 @@ class ProcessMicrometerScreen(Screen):
             'https://www.googleapis.com/auth/drive',
             'https://www.googleapis.com/auth/drive.file'
             ]
-        file_name = os.path.dirname(os.path.realpath(__file__)) + 'asmcnc/production/keys/live-measurements-api-key.json'
+        file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
         # creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
         creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
         self.gsheet_client = gspread.authorize(creds)
