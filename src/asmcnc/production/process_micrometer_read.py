@@ -239,8 +239,8 @@ class ProcessMicrometerScreen(Screen):
     last_test = ''
 
     # STATUS FLAGS
-    home_side_status = 'Ready'
-    far_side_status = 'Ready'
+    home_data_status = 'Ready'
+    far_data_status = 'Ready'
     dti_read = ''
 
     poll_for_screen = None
@@ -354,9 +354,9 @@ class ProcessMicrometerScreen(Screen):
             self.test_run = Clock.schedule_interval(self.do_test_step, 1)
 
             if self.HOME_SIDE:
-                self.home_side_status = 'Collecting'
+                self.home_data_status = 'Collecting'
             else:
-                self.far_side_status = 'Collecting'
+                self.far_data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
             self.end_of_test_sequence()
@@ -367,9 +367,9 @@ class ProcessMicrometerScreen(Screen):
         Clock.unschedule(self.test_run)
 
         if self.HOME_SIDE:
-            self.home_side_status = 'Collected'
+            self.home_data_status = 'Collected'
         else:
-            self.far_side_status = 'Collected'
+            self.far_data_status = 'Collected'
 
 
     def set_max_pos(self):
@@ -410,12 +410,12 @@ class ProcessMicrometerScreen(Screen):
         if self.HOME_SIDE:
             self.HOME_Y_pos_list = []
             self.HOME_DTI_abs_list = []
-            self.home_side_status = 'Cleared'
+            self.home_data_status = 'Cleared'
 
         else:
             self.FAR_Y_pos_list = []
             self.FAR_DTI_abs_list = []
-            self.far_side_status = 'Cleared'
+            self.far_data_status = 'Cleared'
 
 
     ## SENDING DATA
@@ -491,13 +491,13 @@ class ProcessMicrometerScreen(Screen):
         log("Writing DTI measurements to Gsheet")
 
         if self.HOME_DTI_abs_list != []:
-            self.home_side_status = 'Sending...'
+            self.home_data_status = 'Sending...'
             worksheet.update('C3:C', self.HOME_Y_pos_list)
             worksheet.update('D3:D', self.HOME_DTI_abs_list)
             log('Home side data sent')
 
         if self.FAR_DTI_abs_list != []:
-            self.far_side_status = 'Sending...'
+            self.far_data_status = 'Sending...'
             worksheet.update('E2:E', self.FAR_Y_pos_list)
             worksheet.update('F2:F', self.FAR_DTI_abs_list)
             log('Home side data sent')
