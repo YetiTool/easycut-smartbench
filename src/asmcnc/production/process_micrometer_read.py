@@ -237,8 +237,9 @@ class ProcessMicrometerScreen(Screen):
     send_far_data = False
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = '1XGraPNhcRMbwpsapBQCugnGbzI2ybppZPD7yryYP7Xg'
+    master_sheet_key = '10jyrzSH-_pvieqFW7TTF3JvU786XXVzwrPR-nx0Lx_o'
 
+    # FOLDER ID TO COLLATE RESULTS
     straightness_measurements_id = '12H3XlLc876qia0i9s1a8FQCo7rK7fUzl'
 
     gsheet_client = None
@@ -422,7 +423,7 @@ class ProcessMicrometerScreen(Screen):
             self.go_stop.background_color = [0,0.502,0,1]
 
 
-    # CLEAR (RESET) DATA 
+    # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
 
     def clear_data(self):
 
@@ -438,10 +439,8 @@ class ProcessMicrometerScreen(Screen):
 
 
     ## SENDING DATA
+
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
-
-    # need to track this, and actually just send one data set at a time... 
-
     def format_output(self):
 
 
@@ -516,7 +515,7 @@ class ProcessMicrometerScreen(Screen):
 
         else:
             # OTHERWISE OPEN THE EXISTING SHEET
-            spread = gsheet_client.open(self.active_spreadsheet_name) # might want to make this the ID instead
+            self.active_spreadsheet_object = gsheet_client.open(self.active_spreadsheet_name) # might want to make this the ID instead
 
 
     def move_sheet_to_operator_resources(self):
@@ -541,8 +540,11 @@ class ProcessMicrometerScreen(Screen):
         # INDICATE IF BENCH OR EXTRUSION
         test_data_worksheet_name = self.test_type + ': TEST ' + self.test_id.text
 
-        try: worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
-        except: worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+        try: 
+            worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
+        except: 
+            worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.sheet1
 
         log("Writing DTI measurements to Gsheet")
 
@@ -555,10 +557,13 @@ class ProcessMicrometerScreen(Screen):
 
         if self.FAR_zeroed_converted != []:
             self.far_data_status = 'Sending...'
-            worksheet.update('E2:E', self.FAR_Y_pos_list_converted)
-            worksheet.update('F2:F', self.FAR_zeroed_converted)
+            worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
+            worksheet.update('F3:F', self.FAR_zeroed_converted)
             self.far_data_status = 'Sent'
             log('Far side data sent')
+
+
+        log("Recording test metadata")
 
         current_utc = datetime.utcnow()
         current_date = date.today()
