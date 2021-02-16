@@ -321,7 +321,8 @@ class ProcessMicrometerScreen(Screen):
             self.home_stop.background_color = [1,0,0,1]
             self.home_stop.text = 'STOP'
 
-            self.m.send_any_gcode_command('$H')
+            normal_homing_sequence = ['$H']
+            self.m.s.start_sequential_stream(normal_homing_sequence)
 
             self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 3)
 
@@ -541,7 +542,7 @@ class ProcessMicrometerScreen(Screen):
 
     def check_home_completion(self, dt):
 
-        if self.m.state() != 'Home':
+        if not self.m.s.is_sequential_streaming:
             Clock.unschedule(self.check_for_home_end_event)
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
