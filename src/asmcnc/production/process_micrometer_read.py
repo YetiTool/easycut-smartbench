@@ -600,7 +600,7 @@ class ProcessMicrometerScreen(Screen):
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
-    # 
+    # update with general status information - DTI read & data sending info
     def update_screen(self, dt):
 
         self.home_data_status_label.text = self.home_data_status
@@ -608,6 +608,7 @@ class ProcessMicrometerScreen(Screen):
         self.dti_read_label.text = str(DTI.read_mm())
 
 
+    # update home button when homing has finished
     def check_home_completion(self, dt):
 
         if not self.m.s.is_sequential_streaming:
