@@ -48,6 +48,7 @@ Builder.load_string("""
     test_id:test_id
     travel:travel
     go_stop: go_stop
+    home_stop:home_stop
     test_type_toggle:test_type_toggle
     side_toggle:side_toggle
     send_data_button:send_data_button
