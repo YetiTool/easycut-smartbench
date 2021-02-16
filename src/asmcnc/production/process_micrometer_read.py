@@ -53,6 +53,9 @@ Builder.load_string("""
     test_type_toggle:test_type_toggle
     side_toggle:side_toggle
     send_data_button:send_data_button
+    home_data_status_label:home_data_status_label
+    far_data_status_label:far_data_status_label
+    dti_read_label:dti_read_label
 
     BoxLayout:
         padding: 0
@@ -75,7 +78,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 2
-                cols: 7
+                cols: 8
 
                 # Test set up labels
 
@@ -103,6 +106,10 @@ Builder.load_string("""
 
                 Label: 
                     text: "FAR DATA"
+                    color: 0,0,0,1
+
+                Label:
+                    text: "DTI Read"
                     color: 0,0,0,1
 
                 # Test setting inputs/buttons
@@ -135,13 +142,18 @@ Builder.load_string("""
                     on_press: root.toggle_home_far()
 
                 Label: 
-                    id: home_data_status
+                    id: home_data_status_label
                     text: "status"
                     color: 0,0,0,1
 
                 Label: 
-                    id: far_data_status
+                    id: far_data_status_label
                     text: "status"
+                    color: 0,0,0,1
+
+                Label: 
+                    id: dti_read_label
+                    text: "-"
                     color: 0,0,0,1
 
             GridLayout: 
@@ -226,6 +238,13 @@ class ProcessMicrometerScreen(Screen):
     last_bench = ''
     last_test = ''
 
+    # STATUS FLAGS
+    home_side_status = 'Ready'
+    far_side_status = 'Ready'
+    dti_read = ''
+
+    poll_for_screen = None
+
     def __init__(self, **kwargs):
 
         super(ProcessMicrometerScreen, self).__init__(**kwargs)
@@ -244,11 +263,12 @@ class ProcessMicrometerScreen(Screen):
             'https://www.googleapis.com/auth/drive.file'
             ]
         file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
-        # creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
         creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
         self.gsheet_client = gspread.authorize(creds)
 
     def on_enter(self):
+
+        self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
 
         self.home_stop.background_color = [0,0.502,0,1]
 
@@ -257,6 +277,9 @@ class ProcessMicrometerScreen(Screen):
             self.go_stop.background_color = [0,0.502,0,1]
 
         self.toggle_home_far()
+
+    def go_to_lobby(self):
+        self.sm.current = 'developer_temp'
 
 
     # TEST SET UP
@@ -328,6 +351,11 @@ class ProcessMicrometerScreen(Screen):
             ## START THE TEST
             self.test_run = Clock.schedule_interval(self.do_test_step, 1)
 
+            if self.HOME_SIDE:
+                self.home_side_status = 'Collecting'
+            else:
+                self.far_side_status = 'Collecting'
+
         elif self.go_stop.state == 'normal':
             self.end_of_test_sequence()
 
@@ -335,11 +363,11 @@ class ProcessMicrometerScreen(Screen):
     def end_of_test_sequence(self):
 
         Clock.unschedule(self.test_run)
-        self.go_stop.text = 'UPLOADING...'
 
-        ## GET DATA UPDATED
-        # CREATE NEW SPREADSHEET TO HOLD EACH TEST
-        Clock.schedule_once(lambda dt: self.create_new_spreadsheet(), 1)
+            if self.HOME_SIDE:
+                self.home_side_status = 'Collected'
+            else:
+                self.far_side_status = 'Collected'
 
 
     def set_max_pos(self):
@@ -380,10 +408,12 @@ class ProcessMicrometerScreen(Screen):
         if self.HOME_SIDE:
             self.HOME_Y_pos_list = []
             self.HOME_DTI_abs_list = []
+            self.home_side_status = 'Cleared'
 
         else:
             self.FAR_Y_pos_list = []
             self.FAR_DTI_abs_list = []
+            self.far_side_status = 'Cleared'
 
 
     ## SENDING DATA
@@ -459,11 +489,13 @@ class ProcessMicrometerScreen(Screen):
         log("Writing DTI measurements to Gsheet")
 
         if self.HOME_DTI_abs_list != []:
+            self.home_side_status = 'Sending...'
             worksheet.update('C3:C', self.HOME_Y_pos_list)
             worksheet.update('D3:D', self.HOME_DTI_abs_list)
             log('Home side data sent')
 
         if self.FAR_DTI_abs_list != []:
+            self.far_side_status = 'Sending...'
             worksheet.update('E2:E', self.FAR_Y_pos_list)
             worksheet.update('F2:F', self.FAR_DTI_abs_list)
             log('Home side data sent')
@@ -492,9 +524,19 @@ class ProcessMicrometerScreen(Screen):
         self.clear_data()
 
 
-    def go_to_lobby(self):
-        self.sm.current = 'developer_temp'
+    # UPDATE SCREEN WITH STATUS
 
+    def update_screen(self, dt):
+
+        self.home_data_status_label.text = self.home_data_status
+        self.far_data_status_label.text = self.far_data_status
+        self.dti_read_label.text = str(DTI.read_mm())
+
+
+    def on_leave(self):
+
+        if self.poll_for_screen != None:
+            Clock.unschedule(self.poll_for_screen)
 
 
 
