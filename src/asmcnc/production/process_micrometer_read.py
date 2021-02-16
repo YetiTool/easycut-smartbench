@@ -277,6 +277,7 @@ class ProcessMicrometerScreen(Screen):
             self.go_stop.background_color = [0,0.502,0,1]
 
         self.toggle_home_far()
+        self.toggle_test_type()
 
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
@@ -300,12 +301,12 @@ class ProcessMicrometerScreen(Screen):
     def toggle_test_type(self):
 
         if self.test_type_toggle.state == 'down':
-            self.test_type_toggle.background_color = [0,1,0,0]
+            self.test_type_toggle.background_color = [0,1,0,1]
             self.test_type = 'BENCH'
             self.test_type_toggle.text = self.test_type
 
         elif self.test_type_toggle.state == 'normal':
-            self.test_type_toggle.background_color = [0,0,1,0]
+            self.test_type_toggle.background_color = [0,0,1,1]
             self.test_type = 'EXTRUSION'
             self.test_type_toggle.text = self.test_type
 
