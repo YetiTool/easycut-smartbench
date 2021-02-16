@@ -379,8 +379,8 @@ class ProcessMicrometerScreen(Screen):
         else:
             self.far_data_status = 'Collected'
 
-        self.home_stop.background_color = [0,0.502,0,1]
-        self.home_stop.text = 'HOME'
+        self.go_stop.background_color = [0,0.502,0,1]
+        self.go_stop.text = 'HOME'
 
 
     def set_max_pos(self):
