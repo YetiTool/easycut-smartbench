@@ -173,7 +173,7 @@ Builder.load_string("""
                 ToggleButton:
                     id: go_stop
                     text: "GO"
-                    # on_press: root.run_stop_test()
+                    on_press: root.run_stop_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
@@ -321,6 +321,8 @@ class ProcessMicrometerScreen(Screen):
             self.home_stop.text = 'STOP'
 
             self.m.send_any_gcode_command('$H')
+
+            self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 1)
 
         elif self.home_stop.state == 'normal':
 
@@ -531,6 +533,14 @@ class ProcessMicrometerScreen(Screen):
         self.home_data_status_label.text = self.home_data_status
         self.far_data_status_label.text = self.far_data_status
         self.dti_read_label.text = str(DTI.read_mm())
+
+
+    def check_home_completion(self, dt):
+
+        if self.m.state() != 'Home':
+            Clock.unschedule(self.check_for_home_end_event)
+            self.home_stop.text = 'HOME'
+            self.home_stop.background_color = [0,0.502,0,1]
 
 
     def on_leave(self):
