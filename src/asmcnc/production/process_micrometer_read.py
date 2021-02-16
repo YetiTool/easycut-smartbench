@@ -509,12 +509,12 @@ class ProcessMicrometerScreen(Screen):
         # Take the file ID and move it into the operator resources folder
 
         # Retrieve the existing parents to remove
-        file = self.drive_service.files().get(fileId=active_spreadsheet_id,
+        file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
                                          fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
-        file = self.drive_service.files().update(fileId=active_spreadsheet_id,
-                                            addParents=straightness_measurements_id,
+        file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
+                                            addParents=self.straightness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
 
