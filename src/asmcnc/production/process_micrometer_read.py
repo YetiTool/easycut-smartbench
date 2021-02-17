@@ -426,7 +426,7 @@ class ProcessMicrometerScreen(Screen):
 
     def clear_data(self, clearall = False):
 
-        if self.HOME_SIDE or clearall:
+        if self.HOME_SIDE:
 
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
@@ -438,7 +438,30 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_zeroed_converted = []
             self.home_data_status = 'Cleared'
 
-        elif (not self.HOME_SIDE) or clearall:
+        else:
+
+            self.FAR_DTI_abs_list = []
+            self.FAR_Y_pos_list = []
+
+            self.FAR_abs_initial_value = 0
+            self.FAR_zeroed_list = []
+            self.FAR_Y_pos_list_converted = []
+            self.FAR_DTI_abs_list_converted = []
+            self.FAR_zeroed_converted = []
+            self.far_data_status = 'Cleared'
+
+
+        if clearall: 
+
+            self.HOME_DTI_abs_list = []
+            self.HOME_Y_pos_list = []
+
+            self.HOME_abs_initial_value = 0
+            self.HOME_zeroed_list = []
+            self.HOME_Y_pos_list_converted = []
+            self.HOME_DTI_abs_list_converted = []
+            self.HOME_zeroed_converted = []
+            self.home_data_status = 'Cleared'
 
             self.FAR_DTI_abs_list = []
             self.FAR_Y_pos_list = []
