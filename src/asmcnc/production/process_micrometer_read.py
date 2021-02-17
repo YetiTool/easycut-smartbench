@@ -593,8 +593,11 @@ class ProcessMicrometerScreen(Screen):
             log('Using worksheet ' + str(test_data_worksheet_name))
 
         except: 
+
+
+            id_to_copy_from = (self.active_spreadsheet_object.worksheets()[0]).id
             # if worksheet for this test does not exist yet, create a new one
-            worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+            worksheet = self.active_spreadsheet_object.duplicate_sheet(id_to_copy_from, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
 
             # need to clear data if duplicating sheets
             self.delete_existing_spreadsheet_data(test_data_worksheet_name)
