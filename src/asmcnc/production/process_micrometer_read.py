@@ -520,10 +520,12 @@ class ProcessMicrometerScreen(Screen):
         q_str = "\"'" + self.straightness_measurements_id + "'" + " in " + "'parents'\""
          # + ' and ' "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
 
+         q_str = "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
+
         # try:   
         while True:
             log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q="'12H3XlLc876qia0i9s1a8FQCo7rK7fUzl' in 'parents",
+            lookup_file = self.drive_service.files().list(q=q_str,
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=page_token).execute()
