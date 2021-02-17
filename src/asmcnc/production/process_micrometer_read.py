@@ -517,7 +517,7 @@ class ProcessMicrometerScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "'parents'"
+        q_str = "\"'" + self.straightness_measurements_id + "'" + " in " + "'parents'\""
          # + ' and ' "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
 
         # try:   
