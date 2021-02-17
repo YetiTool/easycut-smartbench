@@ -424,14 +424,14 @@ class ProcessMicrometerScreen(Screen):
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
 
-    def clear_data(self):
+    def clear_data(self, clearall = False):
 
-        if self.HOME_SIDE:
+        if self.HOME_SIDE or clearall:
             self.HOME_Y_pos_list = []
             self.HOME_DTI_abs_list = []
             self.home_data_status = 'Cleared'
 
-        else:
+        elif not self.HOME_SIDE or clearall:
             self.FAR_Y_pos_list = []
             self.FAR_DTI_abs_list = []
             self.far_data_status = 'Cleared'
@@ -643,9 +643,7 @@ class ProcessMicrometerScreen(Screen):
             self.last_bench = self.bench_id.text
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
-            self.clear_data()
-            self.HOME_SIDE = not self.HOME_SIDE
-            self.clear_data()
+            self.clear_data(clearall = True)
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
