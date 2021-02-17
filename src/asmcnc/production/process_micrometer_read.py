@@ -1,11 +1,10 @@
 '''
-Module to process readings from DTI
+Module to process readings from DTI, and send to Production > Operator Resources > Live Measurements > Straightness Data
 '''
 import os
 import math
 import operator
 import gspread
-# from oauth2client.service_account import ServiceAccountCredentials
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pprint
@@ -466,7 +465,7 @@ class ProcessMicrometerScreen(Screen):
 
     def do_data_send(self, dt):
 
-        self.active_spreadsheet_name = str(datetime.now()) + ' ' + self.bench_id.text
+        self.active_spreadsheet_name = self.bench_id.text + ' ' + str(date.today())
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
@@ -508,23 +507,54 @@ class ProcessMicrometerScreen(Screen):
 
 
     # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
+
     def open_spreadsheet(self):
 
-        if self.bench_id.text != self.last_bench: # want to make this more advanced, based on whether there is already a sheet in the folder with bench name... 
+        # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
 
-        # at least if on the same day?? OR don't at all, just have every day/time separate
+        page_token = None
+        create_new_sheet = True
+
+        # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
+        # and with a name that contains the current bench id
+        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "'parents'" + ' and ' "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
+
+        while True:
+            lookup_file = self.drive_service.files().list(  q=q_str,
+                                                            spaces='drive',
+                                                            fields='nextPageToken, files(id, name)',
+                                                            pageToken=page_token
+                                                            ).execute()
+            for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
+
+                log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
+                self.active_spreadsheet_object = gsheet_client.open_by_key(file.get('id'))
+                self.rename_file_with_current_date()
+                create_new_sheet = False
+
+            if not create_new_sheet:
+                break
+
+            page_token = response.get('nextPageToken', None)
+            if page_token is None:
+                break
+
+        # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
+        if create_new_sheet:
 
             log('Creating new sheet')
-
-            # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SHEET
             self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-            # self.active_spreadsheet_object.share('lettie.adkins@yetitool.com', perm_type='user', role='writer', notify=False)
             self.move_sheet_to_operator_resources()
 
-        else:
-            # OTHERWISE OPEN THE EXISTING SHEET
-            self.active_spreadsheet_object = gsheet_client.open(self.active_spreadsheet_name) # might want to make this the ID instead
+    def rename_file_with_current_date(self):
+
+        file_metadata = {
+            'name': "'" + self.active_spreadsheet_name + "'"
+            }        
+
+        file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
+                                                body = file_metadata)
 
 
     def move_sheet_to_operator_resources(self):
@@ -544,17 +574,30 @@ class ProcessMicrometerScreen(Screen):
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
 
+
     # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        test_data_worksheet_name = self.test_type + ': TEST ' + self.test_id.text
+        test_data_worksheet_name = str(date.today()) + " " + self.test_type + ": " + self.test_id.text
 
         try: 
+            # try accessing worksheet, which will work if it already exists
             worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
+            log('Using worksheet ' + str(test_data_worksheet_name))
+
         except: 
+            # if worksheet for this test does not exist yet, create a new one
             worksheet = self.active_spreadsheet_object.duplicate_sheet(0, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
-            self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
+
+            # need to clear data if duplicating sheets
+            self.delete_existing_spreadsheet_data(test_data_worksheet_name)
+
+            log('Created worksheet ' + str(test_data_worksheet_name))
+
+            # delete Sheet1 if it exists (for sake of tidyness)
+            try: self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
+            except: pass
 
         log("Writing DTI measurements to Gsheet")
 
@@ -576,17 +619,18 @@ class ProcessMicrometerScreen(Screen):
         log("Recording test metadata")
 
         current_utc = datetime.utcnow()
+        current_time = current_utc.strftime("%H:%M:%S")
         current_date = date.today()
         # Date
         worksheet.update('A2', str(current_date))
         # Time
-        worksheet.update('A4', str(current_utc))
+        worksheet.update('A4', str(current_time))
         # Bench ID:
         worksheet.update('A6', str(self.bench_id.text))
         # Test Type:
         worksheet.update('A8', str(self.test_type))
         # Test no: 
-        worksheet.update('I3', str(self.test_id.text))      
+        worksheet.update('A10', str(self.test_id.text))  
 
         if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
             self.last_bench = self.bench_id.text
@@ -597,6 +641,19 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
         self.go_stop.background_color = [0,0.502,0,1]
+
+
+    def delete_existing_spreadsheet_data(self, worksheet_name):
+
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
+
+        self.active_spreadsheet_object.values_clear(C_str_to_clear)
+        self.active_spreadsheet_object.values_clear(D_str_to_clear)
+        self.active_spreadsheet_object.values_clear(E_str_to_clear)
+        self.active_spreadsheet_object.values_clear(F_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
