@@ -535,7 +535,7 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
 
             # specific to far pos - coordinates need flipping because far side is flipped
-            self.FAR_Y_pos_list = [(y_length - POS) for POS in self.FAR_Y_pos_list]
+            self.FAR_Y_pos_list = [(y_length + POS) for POS in self.FAR_Y_pos_list]
 
             # convert to json format
             self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
@@ -569,7 +569,7 @@ class ProcessMicrometerScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "fullText" + " contains " + "'" + self.bench_id.text + "'"
+        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
 
         while True:
             log('Looking for existing file to send data to...')
