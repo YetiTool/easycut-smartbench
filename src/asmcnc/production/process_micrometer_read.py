@@ -27,7 +27,7 @@ from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_mo
 from asmcnc.production import micrometer
 
 
-PORT = '/dev/ttyUSB1'
+PORT = '/dev/ttyUSB0'
 DTI = micrometer.micrometer(PORT)
 
 # reading = DTI.read_mm()
