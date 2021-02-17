@@ -427,13 +427,27 @@ class ProcessMicrometerScreen(Screen):
     def clear_data(self, clearall = False):
 
         if self.HOME_SIDE or clearall:
-            self.HOME_Y_pos_list = []
+
             self.HOME_DTI_abs_list = []
+            self.HOME_Y_pos_list = []
+
+            self.HOME_abs_initial_value = 0
+            self.HOME_zeroed_list = []
+            self.HOME_Y_pos_list_converted = []
+            self.HOME_DTI_abs_list_converted = []
+            self.HOME_zeroed_converted = []
             self.home_data_status = 'Cleared'
 
-        elif not self.HOME_SIDE or clearall:
-            self.FAR_Y_pos_list = []
+        elif (not self.HOME_SIDE) or clearall:
+
             self.FAR_DTI_abs_list = []
+            self.FAR_Y_pos_list = []
+
+            self.FAR_abs_initial_value = 0
+            self.FAR_zeroed_list = []
+            self.FAR_Y_pos_list_converted = []
+            self.FAR_DTI_abs_list_converted = []
+            self.FAR_zeroed_converted = []
             self.far_data_status = 'Cleared'
 
 
@@ -519,9 +533,6 @@ class ProcessMicrometerScreen(Screen):
         # and with a name that contains the current bench id
         q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "fullText" + " contains " + "'" + self.bench_id.text + "'"
 
-        # q_str = "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
-
-        # try:   
         while True:
             log('Looking for existing file to send data to...')
             lookup_file = self.drive_service.files().list(q=q_str,
@@ -542,8 +553,6 @@ class ProcessMicrometerScreen(Screen):
             page_token = lookup_file.get('nextPageToken', None)
             if page_token is None:
                 break
-        # except:
-        #     pass
 
         # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
         if create_new_sheet:
