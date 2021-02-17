@@ -61,13 +61,13 @@ class micrometer(object):
             try:
                 dti_bytes = self.dti_serial.read_until(b'\r',20) # Wait for response with carriage return
             except:
-                # print('DTI read_until ERROR')
+                print('DTI read_until ERROR')
                 pass            
             
             try:
                 self.result_mm = int(dti_bytes[1:2]+dti_bytes[3:9])*0.001
             except:
-                #print('DTI decode ERROR')                
+                print('DTI decode ERROR')             
                 pass
                 
 # ################################ setup micrometer ################################ 
