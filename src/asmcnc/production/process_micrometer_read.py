@@ -517,8 +517,7 @@ class ProcessMicrometerScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        # q_str = "\"'" + self.straightness_measurements_id + "'" + " in " + "'parents'\""
-         # + ' and ' "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
+        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "fullText" + " contains " + "'" + self.bench_id.text + "'"
 
         # q_str = "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
 
@@ -533,7 +532,7 @@ class ProcessMicrometerScreen(Screen):
             for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                self.active_spreadsheet_object = gsheet_client.open_by_key(file.get('id'))
+                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
                 self.rename_file_with_current_date()
                 create_new_sheet = False
 
