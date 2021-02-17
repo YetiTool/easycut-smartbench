@@ -521,10 +521,11 @@ class ProcessMicrometerScreen(Screen):
 
         # try:   
         while True:
+            log('Looking for existing file to send data to...')
             lookup_file = self.drive_service.files().list(  q=q_str,
                                                             spaces='drive',
-                                                            fields='nextPageToken, files(id, name)',
-                                                            pageToken=page_token
+                                                            fields='nextPageToken, files(id, name)'
+                                                            # pageToken=page_token
                                                             ).execute()
             for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
