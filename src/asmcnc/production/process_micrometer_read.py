@@ -644,6 +644,8 @@ class ProcessMicrometerScreen(Screen):
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
             self.clear_data()
+            self.HOME_SIDE = not self.HOME_SIDE
+            self.clear_data()
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
