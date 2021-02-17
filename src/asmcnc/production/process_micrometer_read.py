@@ -523,7 +523,7 @@ class ProcessMicrometerScreen(Screen):
         # try:   
         while True:
             log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q=q_str,
+            lookup_file = self.drive_service.files().list(q="'12H3XlLc876qia0i9s1a8FQCo7rK7fUzl' in 'parents",
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=page_token).execute()
