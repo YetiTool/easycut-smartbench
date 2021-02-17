@@ -517,14 +517,14 @@ class ProcessMicrometerScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "fullText" + " contains " + "'" + self.bench_id.text + "'"
+        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + )' and ' "fullText" + " contains " + "'" + self.bench_id.text + "'"
 
         # q_str = "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
 
         # try:   
         while True:
             log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q="fullText contains 'default'",
+            lookup_file = self.drive_service.files().list(q=q_str,
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=page_token).execute()
