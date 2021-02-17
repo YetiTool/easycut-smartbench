@@ -43,7 +43,7 @@ class SerialConnection(object):
     grbl_out = ""
     job_gcode = []
     response_log = []
-    suppress_error_screens = False
+    suppress_error_screens = True # console and arduino running different GRBL
     FLUSH_FLAG = False
     
     write_command_buffer = []
