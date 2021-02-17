@@ -519,28 +519,28 @@ class ProcessMicrometerScreen(Screen):
         # and with a name that contains the current bench id
         q_str = "'" + self.straightness_measurements_id + "'" + " in " + "'parents'" + ' and ' "'fullText'" + " contains " + "'" + self.bench_id.text + "'"
 
-        try:   
-            while True:
-                lookup_file = self.drive_service.files().list(  q=q_str,
-                                                                spaces='drive',
-                                                                fields='nextPageToken, files(id, name)',
-                                                                pageToken=page_token
-                                                                ).execute()
-                for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
+        # try:   
+        while True:
+            lookup_file = self.drive_service.files().list(  q=q_str,
+                                                            spaces='drive',
+                                                            fields='nextPageToken, files(id, name)',
+                                                            pageToken=page_token
+                                                            ).execute()
+            for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
-                    log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                    self.active_spreadsheet_object = gsheet_client.open_by_key(file.get('id'))
-                    self.rename_file_with_current_date()
-                    create_new_sheet = False
+                log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
+                self.active_spreadsheet_object = gsheet_client.open_by_key(file.get('id'))
+                self.rename_file_with_current_date()
+                create_new_sheet = False
 
-                if not create_new_sheet:
-                    break
+            if not create_new_sheet:
+                break
 
-                page_token = response.get('nextPageToken', None)
-                if page_token is None:
-                    break
-        except:
-            pass
+            page_token = lookup_file.get('nextPageToken', None)
+            if page_token is None:
+                break
+        # except:
+        #     pass
 
         # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
         if create_new_sheet:
