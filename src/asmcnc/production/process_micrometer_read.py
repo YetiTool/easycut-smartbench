@@ -390,6 +390,7 @@ class ProcessMicrometerScreen(Screen):
 
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'GO'
+        self.go_stop.state = 'normal'
 
 
     def set_max_pos(self):
@@ -726,6 +727,7 @@ class ProcessMicrometerScreen(Screen):
             Clock.unschedule(self.check_for_home_end_event)
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
+            self.home_stop.state = 'normal'
             print('not homing')
 
         else: 
