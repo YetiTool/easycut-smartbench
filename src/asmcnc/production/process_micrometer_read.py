@@ -425,7 +425,7 @@ class ProcessMicrometerScreen(Screen):
                 self.FAR_Y_pos_list.append(float(self.m.mpos_y()))
                 self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
 
-            self.m.send_any_gcode_command('G0 G91 Y10')
+            self.m.send_any_gcode_command('G0 G91 X10')
 
         elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
             self.end_of_test_sequence()
