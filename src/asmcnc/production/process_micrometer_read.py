@@ -407,7 +407,7 @@ class ProcessMicrometerScreen(Screen):
 
 
     def set_max_pos(self):
-        return self.starting_pos + float(self.travel.text)
+        return self.starting_pos - float(self.travel.text)
 
 
     def do_test_step(self, dt):
@@ -415,7 +415,7 @@ class ProcessMicrometerScreen(Screen):
         if self.m.state() == 'Run':
             pass
 
-        elif self.m.state() == 'Idle' and self.m.mpos_x() <= self.max_pos:
+        elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
 
             if self.HOME_SIDE: 
                 self.HOME_Y_pos_list.append(float(self.m.mpos_x()))
@@ -427,7 +427,7 @@ class ProcessMicrometerScreen(Screen):
 
             self.m.send_any_gcode_command('G0 G91 X-10')
 
-        elif self.m.state() == 'Idle' and self.m.mpos_x() > self.max_pos:
+        elif self.m.state() == 'Idle' and self.m.mpos_x() < self.max_pos:
             self.end_of_test_sequence()
 
         else: 
