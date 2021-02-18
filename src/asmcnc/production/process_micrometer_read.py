@@ -596,7 +596,7 @@ class ProcessMicrometerScreen(Screen):
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
                 self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                self.rename_file_with_current_date()
+                # self.rename_file_with_current_date() can't make it work yet
                 create_new_sheet = False
 
             if not create_new_sheet:
