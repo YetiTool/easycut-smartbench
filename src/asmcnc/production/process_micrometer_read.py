@@ -376,7 +376,7 @@ class ProcessMicrometerScreen(Screen):
 
             ## SET VARIABLES
             self.clear_data()
-            self.starting_pos = float(self.m.mpos_y())
+            self.starting_pos = float(self.m.mpos_x())
             DTI_initial_value = DTI.read_mm()
             self.max_pos = self.set_max_pos()
 
@@ -415,19 +415,19 @@ class ProcessMicrometerScreen(Screen):
         if self.m.state() == 'Run':
             pass
 
-        elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
+        elif self.m.state() == 'Idle' and self.m.mpos_x() <= self.max_pos:
 
             if self.HOME_SIDE: 
-                self.HOME_Y_pos_list.append(float(self.m.mpos_y()))
+                self.HOME_Y_pos_list.append(float(self.m.mpos_x()))
                 self.HOME_DTI_abs_list.append(float(DTI.read_mm()))
 
             else:
-                self.FAR_Y_pos_list.append(float(self.m.mpos_y()))
+                self.FAR_Y_pos_list.append(float(self.m.mpos_x()))
                 self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
 
             self.m.send_any_gcode_command('G0 G91 X-10')
 
-        elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
+        elif self.m.state() == 'Idle' and self.m.mpos_x() > self.max_pos:
             self.end_of_test_sequence()
 
         else: 
@@ -617,7 +617,7 @@ class ProcessMicrometerScreen(Screen):
     def rename_file_with_current_date(self):
 
         file_metadata = {
-            'name': "'" + self.active_spreadsheet_name + "'"
+            'name': "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
             }        
 
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
