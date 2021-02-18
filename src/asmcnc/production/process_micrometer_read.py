@@ -621,7 +621,7 @@ class ProcessMicrometerScreen(Screen):
             }        
 
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-                                                body = file_metadata)
+                                                body = file_metadata).execute()
 
 
     def move_sheet_to_operator_resources(self):
