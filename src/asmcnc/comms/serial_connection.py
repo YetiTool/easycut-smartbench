@@ -172,7 +172,7 @@ class SerialConnection(object):
             
             # Polling 
             if self.next_poll_time < time.time():
-                self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
+                # self.write_direct('?', realtime = True, show_in_sys = False, show_in_console = False)
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
 
             # Process anything in the write_command and write_realtime lists,
