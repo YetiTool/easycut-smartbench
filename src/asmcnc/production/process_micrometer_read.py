@@ -1,7 +1,7 @@
 '''
 Module to process readings from DTI, and send to Production > Operator Resources > Live Measurements > Straightness Data
 '''
-import os
+import os, sys
 import math
 import operator
 import gspread
@@ -214,25 +214,32 @@ Builder.load_string("""
 
 class ProcessMicrometerScreen(Screen):
 
+    # LISTS TO HOLD RAW RECORDED DATA
     HOME_Y_pos_list = []
     HOME_DTI_abs_list = []
 
+    FAR_Y_pos_list = []
+    FAR_DTI_abs_list = []
+
+    # LISTS FOR NORMALIZED DATA (against first value...might make this average value?)
+    HOME_zeroed_list = []
+    FAR_zeroed_list = []
+
+    # JSON FORMAT LISTS
     HOME_DTI_abs_list_converted = []
     FAR_DTI_abs_list_converted = []
 
     HOME_zeroed_converted = []
     FAR_zeroed_converted = []
 
-    FAR_Y_pos_list = []
-    FAR_DTI_abs_list = []
-
+    # TEST PARAMETERS
     HOME_SIDE = True
     test_type = 'BENCH'
     starting_pos = 0
     max_pos = 0
-
     DTI_initial_value = 0
 
+    # DATA STATUS
     send_home_data = False
     send_far_data = False
 
@@ -242,6 +249,7 @@ class ProcessMicrometerScreen(Screen):
     # FOLDER ID TO COLLATE RESULTS
     straightness_measurements_id = '12H3XlLc876qia0i9s1a8FQCo7rK7fUzl'
 
+    # GOOGLE API OBJECTS
     gsheet_client = None
     drive_service = None
 
@@ -255,8 +263,11 @@ class ProcessMicrometerScreen(Screen):
     # STATUS FLAGS
     home_data_status = 'Ready'
     far_data_status = 'Ready'
+
+    # READ IN VALUE
     dti_read = ''
 
+    # SET UP KIVY CLOCK EVENT OBJECTS
     poll_for_screen = None
 
     def __init__(self, **kwargs):
@@ -271,15 +282,17 @@ class ProcessMicrometerScreen(Screen):
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
         self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
 
-        ## GSHEET SETUP
-        scope = [
-            'https://www.googleapis.com/auth/drive',
-            'https://www.googleapis.com/auth/drive.file'
-            ]
-        file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
-        creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
-        self.drive_service = build('drive', 'v3', credentials=creds)
-        self.gsheet_client = gspread.authorize(creds)
+
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+            ## GSHEET SETUP
+            scope = [
+                'https://www.googleapis.com/auth/drive',
+                'https://www.googleapis.com/auth/drive.file'
+                ]
+            file_name = os.path.dirname(os.path.realpath(__file__)) + '/keys/live-measurements-api-key.json'
+            creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
+            self.drive_service = build('drive', 'v3', credentials=creds)
+            self.gsheet_client = gspread.authorize(creds)
 
     def on_enter(self):
 
@@ -728,10 +741,6 @@ class ProcessMicrometerScreen(Screen):
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
             self.home_stop.state = 'normal'
-            print('not homing')
-
-        else: 
-            print('homing')
 
 
     def on_leave(self):
