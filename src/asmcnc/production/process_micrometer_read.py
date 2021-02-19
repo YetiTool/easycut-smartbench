@@ -384,7 +384,7 @@ class ProcessMicrometerScreen(Screen):
 
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
-            self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 0.2)
 
             if self.HOME_SIDE:
                 self.home_data_status = 'Collecting'
