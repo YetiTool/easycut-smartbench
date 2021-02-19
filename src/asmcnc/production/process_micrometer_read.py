@@ -381,7 +381,10 @@ class ProcessMicrometerScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            self.test_run = Clock.schedule_interval(self.do_test_step, 1)
+
+            run_command = 'G0 G91 X-' + self.max_pos
+            self.m.send_any_gcode_command('G0 G91 X-10')
+            self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
             if self.HOME_SIDE:
                 self.home_data_status = 'Collecting'
@@ -425,7 +428,7 @@ class ProcessMicrometerScreen(Screen):
                 self.FAR_Y_pos_list.append(float(self.m.mpos_x()))
                 self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
 
-            self.m.send_any_gcode_command('G0 G91 X-10')
+            # self.m.send_any_gcode_command('G0 G91 X-10')
 
         elif self.m.state() == 'Idle' and self.m.mpos_x() < self.max_pos:
             self.end_of_test_sequence()
