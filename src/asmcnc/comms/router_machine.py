@@ -36,7 +36,7 @@ class RouterMachine(object):
     
     # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
-    limit_switch_safety_distance = 1.0 
+    limit_switch_safety_distance = 1.1 
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
