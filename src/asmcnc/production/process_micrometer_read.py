@@ -9,7 +9,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pprint
 from datetime import datetime, date
-
+from numpy import median
 
 import requests.auth
 import binascii
@@ -538,9 +538,14 @@ class ProcessMicrometerScreen(Screen):
         # HOME SIDE
         try: 
 
-            # normalize data against first measured value
-            self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
-            self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
+            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
+
+            # # normalize data against first measured value
+            # self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
+            # self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
+
+            # normalize against median value
+            self.HOME_zeroed_list = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
 
             # multiply by -1 for google sheets display purposes
             self.HOME_Y_pos_list = [(-1*POS) for POS in self.HOME_Y_pos_list]
@@ -549,15 +554,20 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
             self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
             self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
-            
+
         except: pass
 
         # FAR SIDE
         try: 
 
-            # normalize data against first measured value
-            self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
-            self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
+            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
+
+            # # normalize data against first measured value
+            # self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
+            # self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
+
+            # normalize against median value
+            self.FAR_zeroed_list = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
 
             # specific to far pos - coordinates need flipping because far side is flipped
             # multiply by -1 for google sheets display purposes
