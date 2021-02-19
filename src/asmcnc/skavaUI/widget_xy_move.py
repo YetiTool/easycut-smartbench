@@ -69,7 +69,7 @@ Builder.load_string("""
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
                 on_press: 
-                    root.buttonJogXY('X+')
+                    root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
@@ -192,7 +192,7 @@ Builder.load_string("""
                     self.background_color = hex('#F4433600')
                 on_press: 
                     print('press')
-                    root.buttonJogXY('X-')
+                    root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
