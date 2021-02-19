@@ -648,3 +648,8 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+        
+        
+        
+        
+        
