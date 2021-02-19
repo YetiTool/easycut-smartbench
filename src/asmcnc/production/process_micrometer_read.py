@@ -383,8 +383,8 @@ class ProcessMicrometerScreen(Screen):
             ## START THE TEST
 
             run_command = 'G0 G91 X' + str(self.max_pos)
-            self.m.send_any_gcode_command(run_command)
-            self.test_run = Clock.schedule_interval(self.do_test_step, 0.2)
+            # self.m.send_any_gcode_command(run_command)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 1)
 
             if self.HOME_SIDE:
                 self.home_data_status = 'Collecting'
@@ -419,9 +419,9 @@ class ProcessMicrometerScreen(Screen):
     def do_test_step(self, dt):
 
         if self.m.state() == 'Run' and self.m.mpos_x() >= self.max_pos:
-            # pass
+            pass
 
-        # elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
+        elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
 
             if self.HOME_SIDE: 
                 self.HOME_Y_pos_list.append(float(self.m.mpos_x()))
@@ -431,7 +431,7 @@ class ProcessMicrometerScreen(Screen):
                 self.FAR_Y_pos_list.append(float(self.m.mpos_x()))
                 self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
 
-            # self.m.send_any_gcode_command('G0 G91 X-10')
+            self.m.send_any_gcode_command('G0 G91 X-10')
 
         elif self.m.state() == 'Idle' or self.m.mpos_x() < self.max_pos:
             self.end_of_test_sequence()
@@ -601,8 +601,11 @@ class ProcessMicrometerScreen(Screen):
             for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                self.found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                self.rename_file_with_current_date() # can't make it work yet
+                found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                if found_spreadsheet_object.title != self.active_spreadsheet_name:
+                    self.rename_file_with_current_date(found_spreadsheet_object) # can't make it work yet
+                else:
+                    self.active_spreadsheet_object = found_spreadsheet_object
                 create_new_sheet = False
 
             if not create_new_sheet:
@@ -620,7 +623,7 @@ class ProcessMicrometerScreen(Screen):
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
             self.move_sheet_to_operator_resources()
 
-    def rename_file_with_current_date(self):
+    def rename_file_with_current_date(self, found_spreadsheet):
 
         # file_metadata = {
         #     'name': "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
@@ -636,8 +639,8 @@ class ProcessMicrometerScreen(Screen):
 
         # self.active_spreadsheet_object.title = self.active_spreadsheet_name
 
-        self.active_spreadsheet_object = self.gsheet_client.copy(self.found_spreadsheet_object.id, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.gsheet_client.del_spreadsheet(self.found_spreadsheet_object.id)
+        self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
+        self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
 
 
     def move_sheet_to_operator_resources(self):
