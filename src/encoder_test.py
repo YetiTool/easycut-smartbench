@@ -15,5 +15,6 @@ e_test = encoder_connection.EncoderConnection(sm, AMA0)
 
 
 while True: 
-	print(str(float(e_test.F_side + e_test.H_side)))
+	# print(str(float(e_test.F_side + e_test.H_side)))
+	print(e_test.raw_message)
 	time.sleep(2)

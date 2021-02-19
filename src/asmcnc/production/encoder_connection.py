@@ -31,6 +31,8 @@ class EncoderConnection(object):
 
     prev_message = ''
 
+    raw_message = ''
+
     def __init__(self, screen_manager, port):
 
         self.sm = screen_manager
@@ -120,6 +122,8 @@ class EncoderConnection(object):
 # PUSH MESSAGE HANDLING
 
     def process_grbl_push(self, message):
+
+        self.raw_message = message
 
         if message.startswith('H:'):
                 self.H_side = float(message.split(':')[1])
