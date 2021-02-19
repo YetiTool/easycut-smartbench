@@ -382,8 +382,8 @@ class ProcessMicrometerScreen(Screen):
 
             ## START THE TEST
 
-            run_command = 'G0 G91 X-' + self.max_pos
-            self.m.send_any_gcode_command('G0 G91 X-10')
+            run_command = 'G0 G91 X-' + str(self.max_pos)
+            self.m.send_any_gcode_command(run_command)
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.5)
 
             if self.HOME_SIDE:
