@@ -3,6 +3,7 @@ Test to read in encoder & print live readings
 
 '''
 import time
+from asmcnc.production import encoder_connection
 
 AMA0 = 'ttyAMA0' # check these when HW is installed
 AMA1 = 'ttyAMA1' # check these when HW is installed
