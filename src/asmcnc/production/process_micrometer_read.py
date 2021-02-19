@@ -596,7 +596,7 @@ class ProcessMicrometerScreen(Screen):
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
                 self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                # self.rename_file_with_current_date() can't make it work yet
+                self.rename_file_with_current_date() # can't make it work yet
                 create_new_sheet = False
 
             if not create_new_sheet:
@@ -623,10 +623,12 @@ class ProcessMicrometerScreen(Screen):
         # file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
         #                                         body = file_metadata).execute()
 
-        file = self.drive_service.files().get(fileId=self.active_spreadsheet_id).execute()
-        file['name'] = "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
-        updated_file = self.drive_service.files().update(fileId=self.active_spreadsheet_id, body=file).execute()
+        # file = self.drive_service.files().get(fileId=self.active_spreadsheet_id).execute()
+        # file['name'] = "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
+        # updated_file = self.drive_service.files().update(fileId=self.active_spreadsheet_id, body=file).execute()
 
+
+        self.active_spreadsheet_object.title() = self.active_spreadsheet_name
 
     def move_sheet_to_operator_resources(self):
 
