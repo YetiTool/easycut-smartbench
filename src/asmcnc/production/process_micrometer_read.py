@@ -595,7 +595,7 @@ class ProcessMicrometerScreen(Screen):
             for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                self.found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
                 self.rename_file_with_current_date() # can't make it work yet
                 create_new_sheet = False
 
@@ -628,21 +628,24 @@ class ProcessMicrometerScreen(Screen):
         # updated_file = self.drive_service.files().update(fileId=self.active_spreadsheet_id, body=file).execute()
 
 
-        self.active_spreadsheet_object.title = self.active_spreadsheet_name
+        # self.active_spreadsheet_object.title = self.active_spreadsheet_name
+
+        self.active_spreadsheet_object = self.gsheet_client.copy(self.found_spreadsheet_object.id, title = self.active_spreadsheet_name, copy_permissions = True)
+        self.gsheet_client.del_spreadsheet(self.found_spreadsheet_object.id)
+
 
     def move_sheet_to_operator_resources(self):
 
         log('Moving sheet to production > operator resources > live measurements')
 
         # Take the file ID and move it into the operator resources folder
-        self.active_spreadsheet_id = self.active_spreadsheet_object.id
 
         # Retrieve the existing parents to remove
-        file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
+        file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
                                          fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
-        file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
+        file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
                                             addParents=self.straightness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
