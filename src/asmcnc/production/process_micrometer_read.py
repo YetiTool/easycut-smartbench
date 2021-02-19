@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "default"
+                    text: "increment-test"
                     multiline: False
 
                 ToggleButton:
@@ -556,7 +556,7 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
 
             # specific to far pos - coordinates need flipping because far side is flipped
-            self.FAR_Y_pos_list = [(y_length + POS) for POS in self.FAR_Y_pos_list]
+            self.FAR_Y_pos_list = [(-y_length + POS) for POS in self.FAR_Y_pos_list]
 
             # convert to json format
             self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
