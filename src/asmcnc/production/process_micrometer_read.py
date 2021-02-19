@@ -542,10 +542,14 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
             self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
 
+            # multiply by -1 for google sheets display purposes
+            self.HOME_Y_pos_list = [(-1*POS) for POS in self.HOME_Y_pos_list]
+
             # convert to json format
             self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
             self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
             self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+            
         except: pass
 
         # FAR SIDE
@@ -556,12 +560,14 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
 
             # specific to far pos - coordinates need flipping because far side is flipped
-            self.FAR_Y_pos_list = [(-y_length + POS) for POS in self.FAR_Y_pos_list]
+            # multiply by -1 for google sheets display purposes
+            self.FAR_Y_pos_list = [(-1*(-y_length + POS)) for POS in self.FAR_Y_pos_list]
 
             # convert to json format
             self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
             self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)        
             self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
+
         except: pass
 
 
