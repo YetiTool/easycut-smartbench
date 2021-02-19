@@ -15,5 +15,5 @@ e_test = encoder_connection.EncoderConnection(sm, AMA0)
 
 
 while True: 
-	print(str(float(e_test.F_side + e_test.F_side)*encoder_resolution))
+	print(str(float(e_test.F_side + e_test.F_side)))
 	time.sleep(2)
