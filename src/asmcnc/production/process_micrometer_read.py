@@ -304,8 +304,13 @@ class ProcessMicrometerScreen(Screen):
         if DTI != None:
             self.go_stop.background_color = [0,0.502,0,1]
 
-        self.toggle_home_far()
+        # self.toggle_home_far()
+        self.go_stop.state == 'normal'
+        self.go_stop.background_color = [0,0.502,0,1]
+        self.go_stop.text = 'GO'
+
         self.toggle_test_type()
+
 
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
@@ -390,7 +395,7 @@ class ProcessMicrometerScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-
+            log('Starting test...')
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
@@ -401,6 +406,7 @@ class ProcessMicrometerScreen(Screen):
                 self.far_data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
+            log('Cancel from button')
             self.end_of_test_sequence()
 
             if self.m.state() == 'Run':
@@ -444,6 +450,7 @@ class ProcessMicrometerScreen(Screen):
             # self.m.send_any_gcode_command('G0 G91 X-10')
 
         else:
+            log('Cancel from test step')
             self.end_of_test_sequence()
 
         # else: 
