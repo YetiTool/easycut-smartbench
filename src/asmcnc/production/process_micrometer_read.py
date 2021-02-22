@@ -222,13 +222,6 @@ class ProcessMicrometerScreen(Screen):
     FAR_DTI_abs_list = []
 
     # LISTS FOR NORMALIZED DATA (against first value...might make this average value?)
-    HOME_zeroed_list = []
-    FAR_zeroed_list = []
-
-    # JSON FORMAT LISTS
-    HOME_DTI_abs_list_converted = []
-    FAR_DTI_abs_list_converted = []
-
     HOME_zeroed_converted = []
     FAR_zeroed_converted = []
 
@@ -468,11 +461,9 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
 
-            self.HOME_abs_initial_value = 0
-            self.HOME_zeroed_list = []
             self.HOME_Y_pos_list_converted = []
-            self.HOME_DTI_abs_list_converted = []
             self.HOME_zeroed_converted = []
+
             self.home_data_status = 'Cleared'
 
         else:
@@ -480,11 +471,9 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_DTI_abs_list = []
             self.FAR_Y_pos_list = []
 
-            self.FAR_abs_initial_value = 0
-            self.FAR_zeroed_list = []
             self.FAR_Y_pos_list_converted = []
-            self.FAR_DTI_abs_list_converted = []
             self.FAR_zeroed_converted = []
+
             self.far_data_status = 'Cleared'
 
 
@@ -493,21 +482,17 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
 
-            self.HOME_abs_initial_value = 0
-            self.HOME_zeroed_list = []
             self.HOME_Y_pos_list_converted = []
-            self.HOME_DTI_abs_list_converted = []
             self.HOME_zeroed_converted = []
+
             self.home_data_status = 'Cleared'
 
             self.FAR_DTI_abs_list = []
             self.FAR_Y_pos_list = []
 
-            self.FAR_abs_initial_value = 0
-            self.FAR_zeroed_list = []
             self.FAR_Y_pos_list_converted = []
-            self.FAR_DTI_abs_list_converted = []
             self.FAR_zeroed_converted = []
+
             self.far_data_status = 'Cleared'
 
 
@@ -560,14 +545,14 @@ class ProcessMicrometerScreen(Screen):
             # self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
 
             # normalize against median value
-            self.HOME_zeroed_list = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
+            self.HOME_zeroed_converted = self.convert_to_json([(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list])
 
             # multiply by -1 for google sheets display purposes
-            self.HOME_Y_pos_list = [(-1*POS) for POS in self.HOME_Y_pos_list]
+            self.HOME_Y_pos_list_converted = self.convert_to_json([(-1*POS) for POS in self.HOME_Y_pos_list])
 
             # convert to json format
-            self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+            # self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
+            # self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
             # self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
             
 
@@ -583,15 +568,15 @@ class ProcessMicrometerScreen(Screen):
             # self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
 
             # normalize against median value
-            self.FAR_zeroed_list = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+            self.FAR_zeroed_converted = self.convert_to_json([(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list])
 
             # specific to far pos - coordinates need flipping because far side is flipped
             # # this gives out coord as positive value, which is great for google sheets display purposes
-            self.FAR_Y_pos_list = [(y_length + POS) for POS in self.FAR_Y_pos_list] 
+            self.FAR_Y_pos_list_converted = self.convert_to_json([(y_length + POS) for POS in self.FAR_Y_pos_list])
 
             # convert to json format
-            self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-            self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
+            # self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
+            # self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
             # self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)  
             
 
