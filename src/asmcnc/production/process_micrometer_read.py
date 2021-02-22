@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "increment-test"
+                    text: "increment-test01"
                     multiline: False
 
                 ToggleButton:
@@ -397,7 +397,7 @@ class ProcessMicrometerScreen(Screen):
             log('Starting test...')
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
-            self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 0.2)
 
             if self.HOME_SIDE:
                 self.home_data_status = 'Collecting'
