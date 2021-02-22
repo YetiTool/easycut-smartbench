@@ -547,26 +547,26 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def do_cycle(self):
 
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
-        self.m.s.write_command('G0 Z-150')
-        self.m.s.write_command('G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
 
 
     def run_spindle_check(self):
@@ -648,14 +648,8 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
-
-
-
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
