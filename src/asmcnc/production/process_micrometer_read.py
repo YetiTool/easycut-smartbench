@@ -363,6 +363,15 @@ class ProcessMicrometerScreen(Screen):
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
 
+    # update home button when homing has finished
+    def check_home_completion(self, dt):
+
+        if not self.m.s.is_sequential_streaming:
+            Clock.unschedule(self.check_for_home_end_event)
+            self.home_stop.text = 'HOME'
+            self.home_stop.background_color = [0,0.502,0,1]
+            self.home_stop.state = 'normal'
+
 
     # MACHINE RUN TEST FUNCTIONS
 
@@ -552,8 +561,9 @@ class ProcessMicrometerScreen(Screen):
 
             # convert to json format
             self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-            self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
-            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)®
+            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+            # self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
+            
 
         except: pass
 
@@ -575,8 +585,9 @@ class ProcessMicrometerScreen(Screen):
 
             # convert to json format
             self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-            self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)        
             self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
+            # self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)  
+            
 
         except: pass
 
@@ -721,7 +732,7 @@ class ProcessMicrometerScreen(Screen):
         # Test no: 
         worksheet.update('A10', str(self.test_id.text))  
 
-        if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
+        if ((self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != [])):
             self.last_bench = self.bench_id.text
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
@@ -753,16 +764,6 @@ class ProcessMicrometerScreen(Screen):
         self.home_data_status_label.text = self.home_data_status
         self.far_data_status_label.text = self.far_data_status
         self.dti_read_label.text = str(DTI.read_mm())
-
-
-    # update home button when homing has finished
-    def check_home_completion(self, dt):
-
-        if not self.m.s.is_sequential_streaming:
-            Clock.unschedule(self.check_for_home_end_event)
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
-            self.home_stop.state = 'normal'
 
 
     def on_leave(self):
