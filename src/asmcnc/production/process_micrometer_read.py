@@ -744,6 +744,8 @@ class ProcessMicrometerScreen(Screen):
             self.test_id.text = str(int(self.last_test) + 1)
             self.clear_data(clearall = True)
 
+        log('Finished writing data')
+
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
         self.go_stop.background_color = [0,0.502,0,1]
