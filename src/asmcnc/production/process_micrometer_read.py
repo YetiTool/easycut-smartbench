@@ -445,12 +445,6 @@ class ProcessMicrometerScreen(Screen):
             log('Cancel from test step')
             self.end_of_test_sequence()
 
-        # else: 
-        #     Clock.unschedule(self.test_run)
-        #     self.go_stop.state = 'normal'
-        #     self.go_stop.text = 'GO'
-        #     self.go_stop.background_color = [0,0.502,0,1]
-
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
 
@@ -540,20 +534,11 @@ class ProcessMicrometerScreen(Screen):
 
             HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
 
-            # # normalize data against first measured value
-            # self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
-            # self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
-
             # normalize against median value
             self.HOME_zeroed_converted = self.convert_to_json([(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list])
 
             # multiply by -1 for google sheets display purposes
             self.HOME_Y_pos_list_converted = self.convert_to_json([(-1*POS) for POS in self.HOME_Y_pos_list])
-
-            # convert to json format
-            # self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-            # self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
-            # self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
             
 
         except: pass
@@ -563,10 +548,6 @@ class ProcessMicrometerScreen(Screen):
 
             FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
 
-            # # normalize data against first measured value
-            # self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
-            # self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
-
             # normalize against median value
             self.FAR_zeroed_converted = self.convert_to_json([(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list])
 
@@ -574,10 +555,6 @@ class ProcessMicrometerScreen(Screen):
             # # this gives out coord as positive value, which is great for google sheets display purposes
             self.FAR_Y_pos_list_converted = self.convert_to_json([(y_length + POS) for POS in self.FAR_Y_pos_list])
 
-            # convert to json format
-            # self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-            # self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
-            # self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)  
             
 
         except: pass
