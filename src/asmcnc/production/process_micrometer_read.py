@@ -434,14 +434,14 @@ class ProcessMicrometerScreen(Screen):
             # incremental
             # self.m.send_any_gcode_command('G0 G91 X-10')
 
-        elif self.m.state() == 'Idle' or self.m.mpos_x() < self.max_pos:
+        else:
             self.end_of_test_sequence()
 
-        else: 
-            Clock.unschedule(self.test_run)
-            self.go_stop.state = 'normal'
-            self.go_stop.text = 'GO'
-            self.go_stop.background_color = [0,0.502,0,1]
+        # else: 
+        #     Clock.unschedule(self.test_run)
+        #     self.go_stop.state = 'normal'
+        #     self.go_stop.text = 'GO'
+        #     self.go_stop.background_color = [0,0.502,0,1]
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
@@ -553,7 +553,7 @@ class ProcessMicrometerScreen(Screen):
             # convert to json format
             self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
             self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
-            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)®
 
         except: pass
 
@@ -570,8 +570,8 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_zeroed_list = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
 
             # specific to far pos - coordinates need flipping because far side is flipped
-            # multiply by -1 for google sheets display purposes
-            self.FAR_Y_pos_list = [(-1*(-y_length + POS)) for POS in self.FAR_Y_pos_list]
+            # # this gives out coord as positive value, which is great for google sheets display purposes
+            self.FAR_Y_pos_list = [(y_length + POS) for POS in self.FAR_Y_pos_list] 
 
             # convert to json format
             self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
@@ -642,20 +642,6 @@ class ProcessMicrometerScreen(Screen):
 
     def rename_file_with_current_date(self, found_spreadsheet):
 
-        # file_metadata = {
-        #     'name': "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
-        #     }        
-
-        # file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-        #                                         body = file_metadata).execute()
-
-        # file = self.drive_service.files().get(fileId=self.active_spreadsheet_id).execute()
-        # file['name'] = "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
-        # updated_file = self.drive_service.files().update(fileId=self.active_spreadsheet_id, body=file).execute()
-
-
-        # self.active_spreadsheet_object.title = self.active_spreadsheet_name
-
         self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
         self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
 
@@ -705,14 +691,14 @@ class ProcessMicrometerScreen(Screen):
         log("Writing DTI measurements to Gsheet")
 
         if self.HOME_zeroed_converted != []:
-            self.home_data_status = 'Sending...'
+
             worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
             worksheet.update('D3:D', self.HOME_zeroed_converted)
             self.home_data_status = 'Sent'
             log('Home side data sent')
 
         if self.FAR_zeroed_converted != []:
-            self.far_data_status = 'Sending...'
+
             worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
             worksheet.update('F3:F', self.FAR_zeroed_converted)
             self.far_data_status = 'Sent'
@@ -761,6 +747,7 @@ class ProcessMicrometerScreen(Screen):
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
     # update with general status information - DTI read & data sending info
+
     def update_screen(self, dt):
 
         self.home_data_status_label.text = self.home_data_status
