@@ -304,12 +304,11 @@ class ProcessMicrometerScreen(Screen):
         if DTI != None:
             self.go_stop.background_color = [0,0.502,0,1]
 
-        # self.toggle_home_far()
         self.go_stop.state == 'normal'
-        self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'GO'
 
         self.toggle_test_type()
+        self.toggle_home_far()
 
 
     def go_to_lobby(self):
@@ -433,7 +432,7 @@ class ProcessMicrometerScreen(Screen):
 
     def do_test_step(self, dt):
 
-        if self.m.state() == 'Run' and self.m.mpos_x() >= self.max_pos:
+        if self.m.mpos_x() >= self.max_pos:
         #     pass
 
         # elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
