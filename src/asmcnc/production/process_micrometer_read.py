@@ -730,30 +730,15 @@ class ProcessMicrometerScreen(Screen):
 
         worksheet.update('B4:B', self.all_dti_measurements)
 
-        if self.HOME_Y_pos_list_converted != []:
-            worksheet.update('D4:D', self.HOME_Y_pos_list_converted)
+        if self.HOME_Y_pos_list != []:
+            worksheet.update('C4:C', self.HOME_Y_pos_list_converted)
             self.home_data_status = 'Sent'
             log('Home side data sent')
 
-        if self.FAR_Y_pos_list_converted != []:
-            worksheet.update('E4:E', self.FAR_Y_pos_list_converted)
+        if self.FAR_Y_pos_list != []:
+            worksheet.update('D4:D', self.FAR_Y_pos_list_converted)
             self.far_data_status = 'Sent'
             log('Far side data sent')
-
-        # if self.HOME_zeroed_converted != []:
-
-        #     worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
-        #     worksheet.update('D3:D', self.HOME_zeroed_converted)
-        #     self.home_data_status = 'Sent'
-        #     log('Home side data sent')
-
-        # if self.FAR_zeroed_converted != []:
-
-        #     worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
-        #     worksheet.update('F3:F', self.FAR_zeroed_converted)
-        #     self.far_data_status = 'Sent'
-        #     log('Far side data sent')
-
 
         log("Recording test metadata")
 
@@ -771,7 +756,7 @@ class ProcessMicrometerScreen(Screen):
         # Test no: 
         worksheet.update('A10', str(self.test_id.text))  
 
-        if ((self.HOME_Y_pos_list_converted != []) and (self.FAR_Y_pos_list_converted != [])):
+        if ((self.HOME_Y_pos_list != []) and (self.FAR_Y_pos_list != [])):
             self.last_bench = self.bench_id.text
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
@@ -785,11 +770,6 @@ class ProcessMicrometerScreen(Screen):
 
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
-
-        # C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
-        # D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
-        # E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
-        # F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
 
         B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
         C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
