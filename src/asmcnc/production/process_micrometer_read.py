@@ -599,7 +599,8 @@ class ProcessMicrometerScreen(Screen):
         print(self.HOME_Y_pos_list)
         print(self.FAR_Y_pos_list)
 
-        HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list].extend(data_extension)
+        HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
+        HOME_y_pos_raw.extend(data_extension)
 
         print(HOME_y_pos_raw)
         self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
