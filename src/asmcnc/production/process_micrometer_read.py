@@ -227,8 +227,8 @@ class ProcessMicrometerScreen(Screen):
 
     # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
     all_dti_measurements = []
-    HOME_Y_pos_list_converted
-    FAR_Y_pos_list_converted
+    HOME_Y_pos_list_converted = []
+    FAR_Y_pos_list_converted = []
 
     # TEST PARAMETERS
     HOME_SIDE = True
