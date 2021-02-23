@@ -12,9 +12,9 @@ encoder_resolution = 0.025 # mm (25 microns)
 
 sm = None
 e_test = encoder_connection.EncoderConnection(sm, AMA0)
+e_test.establish_connection()
 
+while True:
+	if len(e_test.raw_message):
 
-while True: 
-	# print(str(float(e_test.F_side + e_test.H_side)))
-	print(e_test.raw_message)
-	time.sleep(2)
+		print(e_test.raw_message)

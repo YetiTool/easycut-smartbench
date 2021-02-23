@@ -4,7 +4,7 @@ from os import listdir
 from kivy.clock import Clock
 
 
-BAUD_RATE = 9600
+BAUD_RATE = 115200
 
 def log(message):
     timestamp = datetime.now()
@@ -52,13 +52,15 @@ class EncoderConnection(object):
                 # EITHER: USB Comms hardware
                 # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
                 # OR: UART Comms hardware
-                if line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
+                # if line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
+                #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                #     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+                if (line[:12] == 'tty.usbmodem'): # look for...   
                     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-                elif (line[:12] == 'tty.usbmodem'): # look for...   
-                    devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    log('Connected to ' + str(devicePort))
 
         except: 
             log('No arduino connected')
@@ -100,7 +102,6 @@ class EncoderConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.e.readline().strip() #Block the executing thread indefinitely until a line arrives
-
                 except Exception as exc:
                     log('serial.readline exception:\n' + str(exc))
                     rec_temp = ''
@@ -113,6 +114,7 @@ class EncoderConnection(object):
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
                 try:
+                    print(rec_temp)
                     self.process_grbl_push(rec_temp)
 
                 except Exception as exc:
@@ -125,7 +127,7 @@ class EncoderConnection(object):
 
         self.raw_message = message
 
-        if message.startswith('H:'):
+        if message.startswith('R:'):
                 self.H_side = float(message.split(':')[1])
         elif message.startswith('F:'):
                 self.F_side = float(message.split(':')[1])
