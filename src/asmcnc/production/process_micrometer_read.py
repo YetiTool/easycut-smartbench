@@ -591,35 +591,31 @@ class ProcessMicrometerScreen(Screen):
 
 
         #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
-        # try: 
-        data_extension = len(self.FAR_Y_pos_list)*['']
-        # multiply by -1 for google sheets display purposes
+        try:
 
-        print(data_extension)
-        print(self.HOME_Y_pos_list)
-        print(self.FAR_Y_pos_list)
+            # multiply by -1 for google sheets display purposes
+            HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
 
-        HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
-        HOME_y_pos_raw.extend(data_extension)
+            # extend data to match length of FAR data
+            data_extension = len(self.FAR_Y_pos_list)*['']
+            HOME_y_pos_raw.extend(data_extension)
 
-        print(HOME_y_pos_raw)
+        except: 
+            HOME_y_pos_raw = []
+
+        try:
+            # offset data to match length of FAR data
+            FAR_y_pos_raw = len(self.HOME_Y_pos_list)*['']
+
+            # specific to far pos - coordinates need flipping because far side is flipped
+            # # this gives out coord as positive value, which is great for google sheets display purposes
+            FAR_y_pos_raw.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
+
+        except: 
+            FAR_y_pos_raw = []
+
         self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
-
-
-        
-
-        # except: 
-        #     self.HOME_Y_pos_list_converted = self.convert_to_json([])
-
-        # # try: 
-        # data_offset = len(self.HOME_Y_pos_list)*['']
-        # # specific to far pos - coordinates need flipping because far side is flipped
-        # # # this gives out coord as positive value, which is great for google sheets display purposes
-        # FAR_y_pos_raw = data_offset.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
-        # self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
-
-        # except: 
-        #     self.FAR_Y_pos_list_converted = self.convert_to_json([])
+        self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
 
 
     def convert_to_json(self, data):
@@ -680,6 +676,7 @@ class ProcessMicrometerScreen(Screen):
             self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
             self.move_sheet_to_operator_resources()
+
 
     def rename_file_with_current_date(self, found_spreadsheet):
 
