@@ -221,9 +221,14 @@ class ProcessMicrometerScreen(Screen):
     FAR_Y_pos_list = []
     FAR_DTI_abs_list = []
 
-    # LISTS FOR NORMALIZED DATA (against first value...might make this average value?)
-    HOME_zeroed_converted = []
-    FAR_zeroed_converted = []
+    # LISTS FOR NORMALIZED DATA (against median value)
+    HOME_normalized = []
+    FAR_normalized = []
+
+    # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
+    all_dti_measurements = []
+    HOME_Y_pos_list_converted
+    FAR_Y_pos_list_converted
 
     # TEST PARAMETERS
     HOME_SIDE = True
@@ -290,7 +295,6 @@ class ProcessMicrometerScreen(Screen):
     def on_enter(self):
 
         self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
-
         self.home_stop.background_color = [0,0.502,0,1]
 
         # TURNS BUTTON GREEN IF DTI IS CONNECTED
@@ -450,13 +454,16 @@ class ProcessMicrometerScreen(Screen):
 
     def clear_data(self, clearall = False):
 
+        self.all_dti_measurements = []
+
+
         if self.HOME_SIDE:
 
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
 
             self.HOME_Y_pos_list_converted = []
-            self.HOME_zeroed_converted = []
+            self.HOME_normalized = []
 
             self.home_data_status = 'Cleared'
 
@@ -466,7 +473,7 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_Y_pos_list = []
 
             self.FAR_Y_pos_list_converted = []
-            self.FAR_zeroed_converted = []
+            self.FAR_normalized = []
 
             self.far_data_status = 'Cleared'
 
@@ -477,7 +484,7 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_Y_pos_list = []
 
             self.HOME_Y_pos_list_converted = []
-            self.HOME_zeroed_converted = []
+            self.HOME_normalized = []
 
             self.home_data_status = 'Cleared'
 
@@ -485,7 +492,7 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_Y_pos_list = []
 
             self.FAR_Y_pos_list_converted = []
-            self.FAR_zeroed_converted = []
+            self.FAR_normalized = []
 
             self.far_data_status = 'Cleared'
 
@@ -529,35 +536,79 @@ class ProcessMicrometerScreen(Screen):
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
     def format_output(self):
 
-        # HOME SIDE
-        try: 
+        # # HOME SIDE
+        # try: 
 
-            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
+        #     HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
 
-            # normalize against median value
-            self.HOME_zeroed_converted = self.convert_to_json([(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list])
+        #     # normalize against median value
+        #     self.HOME_zeroed_converted = self.convert_to_json([(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list])
 
-            # multiply by -1 for google sheets display purposes
-            self.HOME_Y_pos_list_converted = self.convert_to_json([(-1*POS) for POS in self.HOME_Y_pos_list])
+        #     # multiply by -1 for google sheets display purposes
+        #     self.HOME_Y_pos_list_converted = self.convert_to_json([(-1*POS) for POS in self.HOME_Y_pos_list])
             
 
-        except: pass
+        # except: pass
 
-        # FAR SIDE
+        # # FAR SIDE
+        # try: 
+
+        #     FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
+
+        #     # normalize against median value
+        #     self.FAR_zeroed_converted = self.convert_to_json([(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list])
+
+        #     # specific to far pos - coordinates need flipping because far side is flipped
+        #     # # this gives out coord as positive value, which is great for google sheets display purposes
+        #     self.FAR_Y_pos_list_converted = self.convert_to_json([(y_length + POS) for POS in self.FAR_Y_pos_list])
+            
+        # except: pass
+
+
+        # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
+        x_axis = []
+        self.all_dti_measurements = []
+
         try: 
-
-            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-
             # normalize against median value
-            self.FAR_zeroed_converted = self.convert_to_json([(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list])
+            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
+            self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
+            x_axis.extend(self.HOME_normalized)
 
+        except: 
+            self.HOME_normalized = []
+
+        try: 
+            # normalize against median value
+            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
+            self.FAR_normalized = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+            x_axis.extend(self.FAR_normalized)
+
+        except: 
+            self.FAR_normalized = []
+
+        self.all_dti_measurements = self.convert_to_json(x_axis)
+
+
+        #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
+        try: 
+            data_extension = len(self.FAR_Y_pos_list)*['']
+            # multiply by -1 for google sheets display purposes
+            HOME_y_pos_raw = ([(-1*POS) for POS in self.HOME_Y_pos_list]).extend(data_extension)
+            self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
+
+        except: 
+            self.HOME_Y_pos_list_converted = self.convert_to_json([])
+
+        try: 
+            data_offset = len(self.HOME_Y_pos_list)*['']
             # specific to far pos - coordinates need flipping because far side is flipped
             # # this gives out coord as positive value, which is great for google sheets display purposes
-            self.FAR_Y_pos_list_converted = self.convert_to_json([(y_length + POS) for POS in self.FAR_Y_pos_list])
+            FAR_y_pos_raw = data_offset.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
+            self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
 
-            
-
-        except: pass
+        except: 
+            self.FAR_Y_pos_list_converted = self.convert_to_json([])
 
 
     def convert_to_json(self, data):
@@ -669,19 +720,31 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        if self.HOME_zeroed_converted != []:
+        worksheet.update('B4:B', self.all_dti_measurements)
 
-            worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
-            worksheet.update('D3:D', self.HOME_zeroed_converted)
+        if self.HOME_Y_pos_list_converted != []:
+            worksheet.update('D4:D', self.HOME_Y_pos_list_converted)
             self.home_data_status = 'Sent'
             log('Home side data sent')
 
-        if self.FAR_zeroed_converted != []:
-
-            worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
-            worksheet.update('F3:F', self.FAR_zeroed_converted)
+        if self.FAR_Y_pos_list_converted != []:
+            worksheet.update('E4:E', self.FAR_Y_pos_list_converted)
             self.far_data_status = 'Sent'
             log('Far side data sent')
+
+        # if self.HOME_zeroed_converted != []:
+
+        #     worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
+        #     worksheet.update('D3:D', self.HOME_zeroed_converted)
+        #     self.home_data_status = 'Sent'
+        #     log('Home side data sent')
+
+        # if self.FAR_zeroed_converted != []:
+
+        #     worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
+        #     worksheet.update('F3:F', self.FAR_zeroed_converted)
+        #     self.far_data_status = 'Sent'
+        #     log('Far side data sent')
 
 
         log("Recording test metadata")
@@ -700,7 +763,7 @@ class ProcessMicrometerScreen(Screen):
         # Test no: 
         worksheet.update('A10', str(self.test_id.text))  
 
-        if ((self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != [])):
+        if ((self.HOME_Y_pos_list_converted != []) and (self.FAR_Y_pos_list_converted != [])):
             self.last_bench = self.bench_id.text
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
@@ -715,15 +778,18 @@ class ProcessMicrometerScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
+        # C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
+        # D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
+        # E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
+        # F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
 
-        self.active_spreadsheet_object.values_clear(C_str_to_clear)
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
+
+        self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
-        self.active_spreadsheet_object.values_clear(F_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
