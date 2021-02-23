@@ -595,17 +595,22 @@ class ProcessMicrometerScreen(Screen):
         data_extension = len(self.FAR_Y_pos_list)*['']
         # multiply by -1 for google sheets display purposes
         HOME_y_pos_raw = ([(-1*POS) for POS in self.HOME_Y_pos_list]).extend(data_extension)
+
+        print(HOME_y_pos_raw)
         self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
+
+
+        
 
         # except: 
         #     self.HOME_Y_pos_list_converted = self.convert_to_json([])
 
-        # try: 
-        data_offset = len(self.HOME_Y_pos_list)*['']
-        # specific to far pos - coordinates need flipping because far side is flipped
-        # # this gives out coord as positive value, which is great for google sheets display purposes
-        FAR_y_pos_raw = data_offset.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
-        self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
+        # # try: 
+        # data_offset = len(self.HOME_Y_pos_list)*['']
+        # # specific to far pos - coordinates need flipping because far side is flipped
+        # # # this gives out coord as positive value, which is great for google sheets display purposes
+        # FAR_y_pos_raw = data_offset.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
+        # self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
 
         # except: 
         #     self.FAR_Y_pos_list_converted = self.convert_to_json([])
