@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "variation_test"
+                    text: "data-format"
                     multiline: False
 
                 ToggleButton:
