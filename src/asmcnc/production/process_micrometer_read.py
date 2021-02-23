@@ -594,6 +594,11 @@ class ProcessMicrometerScreen(Screen):
         # try: 
         data_extension = len(self.FAR_Y_pos_list)*['']
         # multiply by -1 for google sheets display purposes
+
+        print(data_extension)
+        print(self.HOME_Y_pos_list)
+        print(self.FAR_Y_pos_list)
+
         HOME_y_pos_raw = ([(-1*POS) for POS in self.HOME_Y_pos_list]).extend(data_extension)
 
         print(HOME_y_pos_raw)
