@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "data-format"
+                    text: "id"
                     multiline: False
 
                 ToggleButton:
