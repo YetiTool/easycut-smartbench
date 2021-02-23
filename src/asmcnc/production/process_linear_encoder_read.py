@@ -41,15 +41,16 @@ def log(message):
 
 Builder.load_string("""
 
-<ProcessMicrometerScreen>:
+<ProcessLinearEncoderScreen>:
 
     bench_id : bench_id 
     direction_toggle : direction_toggle
     travel : travel
     test_id : test_id
-    data_status : data_status
-    H_read_label : H_read_label
-    F_read_label : F_read_label
+    bench_width : bench_width
+    data_status_label : data_status_label
+    h_read_label : h_read_label
+    f_read_label : f_read_label
 
     home_stop : home_stop
     go_stop : go_stop
@@ -80,7 +81,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 2
-                cols: 7
+                cols: 8
 
                 # Test set up labels
 
@@ -98,6 +99,10 @@ Builder.load_string("""
 
                 Label: 
                     text: "Test no."
+                    color: 0,0,0,1
+                
+                Label: 
+                    text: "Bench width."
                     color: 0,0,0,1
 
                 Label: 
@@ -122,7 +127,7 @@ Builder.load_string("""
 
                 ToggleButton:
                     id: direction_toggle
-                    text: "FORWARDS"
+                    text: "Forwards"
                     on_press: root.toggle_direction()
 
                 TextInput: 
@@ -135,6 +140,11 @@ Builder.load_string("""
                     id: test_id
                     text: "1"
                     input_filter: 'int'
+                    multiline: False
+
+                TextInput: 
+                    id: bench_width
+                    text: "46"
                     multiline: False
 
                 Label: 
@@ -210,43 +220,28 @@ Builder.load_string("""
 class ProcessLinearEncoderScreen(Screen):
 
     # LISTS TO HOLD RAW RECORDED DATA
-    HOME_Y_pos_list = []
+    Y_pos_list = []
     HOME_raw_pulse_list = []
-
-    FAR_Y_pos_list = []
     FAR_raw_pulse_list = []
 
-    # LISTS FOR MANIPULATED DATA (against first value...might make this average value?)
-
-    # L_diff_list = []
-    # R_diff_list = []
-    # Y_travel_list = []
-
-    # L_pulse_raw = []
-    # R_pulse_raw = []
-
-
-    # JSON FORMAT LISTS
-    HOME_DTI_abs_list_converted = []
-    FAR_DTI_abs_list_converted = []
-
-    HOME_zeroed_converted = []
-    FAR_zeroed_converted = []
+    # JSON FORMAT LISTS (AFTER CALCULATIONS)
+    self.machine_Y_coordinate = []
+    self.encoder_measurement_midpoint = []
+    self.Y_axis_linear_offset = []
+    self.angle_off_square = []
+    self.HOME_encoder_measurement = []
+    self.FAR_encoder_measurement = []
 
     # TEST PARAMETERS
     FORWARDS = True
     starting_pos = 0
     max_pos = 0
 
-    # L_abs_initial_value = 0
-    # R_abs_initial_value = 0
-
-
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
     master_sheet_key = ''
 
     # FOLDER ID TO COLLATE RESULTS
-    straightness_measurements_id = ''
+    squareness_measurements_id = '1WcHTrNSNO3skkT3-kKhAi4qjv6-t2xQV'
 
     # GOOGLE API OBJECTS
     gsheet_client = None
@@ -260,8 +255,6 @@ class ProcessLinearEncoderScreen(Screen):
     last_test = ''
 
     # STATUS FLAGS
-    send_home_data = False
-    send_far_data = False
     data_status = 'Ready'
 
     # READ IN VALUES
@@ -307,7 +300,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.home_stop.background_color = [0,0.502,0,1]
 
         # TURNS BUTTON GREEN IF DTI IS CONNECTED
-        if self.H_E.is_connected() and self.F_E.is_connected():
+        if self.e0.is_connected() and self.e1.is_connected():
             self.go_stop.background_color = [0,0.502,0,1]
 
         self.toggle_direction()
@@ -326,11 +319,11 @@ class ProcessLinearEncoderScreen(Screen):
 
     def toggle_direction(self):
         if self.direction_toggle.state == 'down':
-            self.direction_toggle.text = 'Going Backwards'
-            self.direction = 'backward'
+            self.direction_toggle.text = 'Backwards'
+            self.FORWARDS = False
         elif self.direction_toggle.state == 'normal':
-            self.direction_toggle.text = 'Going Forwards'
-            self.direction = 'forward'
+            self.direction_toggle.text = 'Forwards'
+            self.FORWARDS = True
 
     # HOME FUNCTION
 
@@ -417,11 +410,9 @@ class ProcessLinearEncoderScreen(Screen):
 
         elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
 
-            self.HOME_Y_pos_list.append(float(self.m.mpos_y()))
-            self.HOME_raw_pulse_list.append(float(self.e0.F_side + self.e1.F_side))
-
-            self.FAR_Y_pos_list.append(float(self.m.mpos_y()))
-            self.FAR_raw_pulse_list.append(float(self.e0.H_side + self.e1.H_side ))
+            self.HOME_raw_pulse_list.append(float(self.e0.H_side + self.e1.H_side))
+            self.FAR_raw_pulse_list.append(float(self.e0.F_side + self.e1.F_side))
+            self.Y_pos_list.append(float(self.m.mpos_y()))
 
             self.m.send_any_gcode_command('G0 G91 Y10')
 
@@ -439,27 +430,24 @@ class ProcessLinearEncoderScreen(Screen):
 
     def clear_data(self, clearall = False):
 
-            # write this after formatting/data manipulation done
+        # LISTS TO HOLD RAW RECORDED DATA
+        Y_pos_list = []
+        HOME_raw_pulse_list = []
+        FAR_raw_pulse_list = []
 
-            # self.HOME_DTI_abs_list = []
-            # self.HOME_Y_pos_list = []
+        # JSON FORMAT LISTS (AFTER CALCULATIONS)
+        self.machine_Y_coordinate = []
+        self.encoder_measurement_midpoint = []
+        self.Y_axis_linear_offset = []
+        self.angle_off_square = []
+        self.HOME_encoder_measurement = []
+        self.FAR_encoder_measurement = []
 
-            # self.HOME_abs_initial_value = 0
-            # self.HOME_zeroed_list = []
-            # self.HOME_Y_pos_list_converted = []
-            # self.HOME_DTI_abs_list_converted = []
-            # self.HOME_zeroed_converted = []
-            # self.home_data_status = 'Cleared'
+        # TEST PARAMETERS
+        starting_pos = 0
+        max_pos = 0
 
-            # self.FAR_DTI_abs_list = []
-            # self.FAR_Y_pos_list = []
-
-            # self.FAR_abs_initial_value = 0
-            # self.FAR_zeroed_list = []
-            # self.FAR_Y_pos_list_converted = []
-            # self.FAR_DTI_abs_list_converted = []
-            # self.FAR_zeroed_converted = []
-            data_status = 'Cleared'
+        data_status = 'Cleared'
 
 
     ## SENDING DATA
@@ -492,43 +480,43 @@ class ProcessLinearEncoderScreen(Screen):
         self.send_data_button.text = 'SEND DATA'
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
+
+    # DEV NOTE: THIS FUNCTION SHOULD BE GOOD TO GO NOW, BUT STILL NEEDS TESTING
+    # YOU NEED TO WORK ON DATA FORMATTING NEXT, AND MATCHING VARIABLES HERE TO DECLARED CLASS VARIABLES
+    # THEN FOCUS ON WHAT NEEDS TO BE CLEARED (FOR DATA RESET) AND DELETED FROM A SPREADSHEET
+    # ALSO YOU HAD A GREAT IDEA ABOUT SETTING UP A SHEET THAT SHOWS THE ANGLES ON A PI CHART
+
     def format_output(self):
 
-        try: 
-            # work out distance travelled from raw pulses
-            if self.FORWARDS:
-                self.HOME_measured_distance_list = [float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-                self.FAR_measured_distance_list = [float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]    
-            else:
-                self.HOME_measured_distance_list = [float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-                self.FAR_measured_distance_list = [float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]
+        # work out distance travelled from raw pulses
+        if self.FORWARDS:
+            HOME_measured_distance = [float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]    
+        else:
+            HOME_measured_distance = [float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]
 
 
+        # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
+        opposite_side = list(map(lambda h, f: math.fabs(operator.sub(h,f)), HOME_measured_distance, FAR_measured_distance))
 
+        # work out midpoint of measurement difference
+        midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
 
-            # convert to json format
-            self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-            self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
-            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+        # calculate offset between each midpoint
+        delta_y = list(map(operator.sub, self.Y_pos_list, midpoints))
 
+        # calculate angle at each data point using artan trig (tan(theta) = opp/adj)
+        adjacent_side = float(self.bench_width.text)
+        angle = list(map(lambda o: math.atan(o/adjacent_side), opposite_side)) # radians
 
-        except: pass
-
-        # FAR SIDE
-        try: 
-
-            # normalize data against first measured value
-            self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
-            self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
-
-            # specific to far pos - coordinates need flipping because far side is flipped
-            self.FAR_Y_pos_list = [(y_length + POS) for POS in self.FAR_Y_pos_list]
-
-            # convert to json format
-            self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-            self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)        
-            self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
-        except: pass
+        # convert everthing into json format, ready to send out to gsheets
+        self.machine_Y_coordinate = convert_to_json(self.Y_pos_list)
+        self.encoder_measurement_midpoint = convert_to_json(midpoints)
+        self.Y_axis_linear_offset = convert_to_json(delta_y)
+        self.angle_off_square = convert_to_json(angle)
+        self.HOME_encoder_measurement = convert_to_json(HOME_measured_distance)
+        self.FAR_encoder_measurement = convert_to_json(FAR_measured_distance)
 
 
     def convert_to_json(self, data):
@@ -705,7 +693,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status_label.text = self.data_status
 
         # show distance encoder thinks it's travelled on screen, to 3dp
-        self.H_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side)*encoder_resolution)
-        self.F_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side)*encoder_resolution)
+        self.h_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side)*encoder_resolution)
+        self.f_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side)*encoder_resolution)
 
 

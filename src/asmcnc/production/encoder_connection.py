@@ -4,7 +4,7 @@ from os import listdir
 from kivy.clock import Clock
 
 
-BAUD_RATE = 115200
+BAUD_RATE = 9600
 
 def log(message):
     timestamp = datetime.now()
@@ -48,26 +48,35 @@ class EncoderConnection(object):
             filesForDevice = listdir('/dev/') # put all device files into list[]
             for line in filesForDevice: # run through all files
 
+                if sys.platform == 'darwin':
+
+                    if (line[:12] == 'tty.usbmodem'): # look for...   
+                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                        self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
                 # FLAG: This if statement is only relevant in linux environment. 
                 # EITHER: USB Comms hardware
                 # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
                 # OR: UART Comms hardware
-                # if line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
-                #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                #     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-
-                if (line[:12] == 'tty.usbmodem'): # look for...   
+                elif line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
                     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-                    log('Connected to ' + str(devicePort))
+                # if (line[:12] == 'tty.usbmodem'): # look for...   
+                #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                #     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
         except: 
             log('No arduino connected')
 
         if self.is_connected():
+            log('Connected to ' + str(devicePort))
             log('Initialising encoder...')
-            Clock.schedule_once(self.start_services, 1)
+            if sys.platform == 'darwin':
+                self.start_services(1)
+            else: 
+                Clock.schedule_once(self.start_services, 1)
+            
 
     # is serial port connected?
     def is_connected(self):
@@ -102,6 +111,8 @@ class EncoderConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.e.readline().strip() #Block the executing thread indefinitely until a line arrives
+                    # log('New serial output')
+                    log(rec_temp)
                 except Exception as exc:
                     log('serial.readline exception:\n' + str(exc))
                     rec_temp = ''
@@ -114,7 +125,6 @@ class EncoderConnection(object):
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
                 try:
-                    print(rec_temp)
                     self.process_grbl_push(rec_temp)
 
                 except Exception as exc:
@@ -125,14 +135,14 @@ class EncoderConnection(object):
 
     def process_grbl_push(self, message):
 
-        self.raw_message = message
+        # self.raw_message = message
 
-        if message.startswith('R:'):
+        if message.startswith('H:'):
                 self.H_side = float(message.split(':')[1])
         elif message.startswith('F:'):
                 self.F_side = float(message.split(':')[1])
                 
-        if self.prev_message != message: 
-            log(message)
-            self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', "Pulse out " + PORT + ": "+ message)
-            self.prev_message = message
+        # if self.prev_message != message: 
+        #     log(message)
+        #     # self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', "Pulse out " + PORT + ": "+ message)
+        #     self.prev_message = message

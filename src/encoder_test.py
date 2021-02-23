@@ -15,6 +15,7 @@ e_test = encoder_connection.EncoderConnection(sm, AMA0)
 e_test.establish_connection()
 
 while True:
-	if len(e_test.raw_message):
+	continue
+	# if len(e_test.raw_message):
 
-		print(e_test.raw_message)
+	# 	print(e_test.raw_message)
