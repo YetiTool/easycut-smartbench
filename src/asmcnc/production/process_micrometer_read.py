@@ -792,12 +792,12 @@ class ProcessMicrometerScreen(Screen):
         # F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
 
         B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
         D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
+        self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
-        self.active_spreadsheet_object.values_clear(E_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
