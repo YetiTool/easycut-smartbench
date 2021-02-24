@@ -483,13 +483,13 @@ class ProcessLinearEncoderScreen(Screen):
         # multiply everything by -1 to get a positive number, which affects graph formatting in google sheets
         if self.FORWARDS:
 
-            HOME_measured_distance = [((-1*(float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list)]
-            FAR_measured_distance = [((-1*(float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list)]    
+            HOME_measured_distance = [(-1*(float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [(-1*(float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list]    
         
         else:
 
-            HOME_measured_distance = [((-1*(float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list)]
-            FAR_measured_distance = [((-1*(float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list)]
+            HOME_measured_distance = [(-1*(float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [(-1*(float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list]
 
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
