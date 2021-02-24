@@ -613,7 +613,7 @@ class ProcessLinearEncoderScreen(Screen):
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        test_data_worksheet_name = str(date.today()) + " " + self.test_type + ": " + self.test_id.text
+        test_data_worksheet_name = str(date.today()) + ": " + self.test_id.text
 
         try: 
             # try accessing worksheet, which will work if it already exists
