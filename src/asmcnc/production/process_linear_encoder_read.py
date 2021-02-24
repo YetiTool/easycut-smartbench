@@ -27,8 +27,8 @@ from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_mo
 from asmcnc.production import encoder_connection
 
 
-AMA0 = 'ttyAMA0' # check these when HW is installed
-AMA1 = 'ttyAMA1' # check these when HW is installed
+AMA0 = 'ttyACM0' # check these when HW is installed
+AMA1 = 'ttyACM1' # check these when HW is installed
 y_length = float(2640 - 20) #mm
 encoder_resolution = 0.025 # mm (25 microns)
 x_beam_length = 1300 # mm
