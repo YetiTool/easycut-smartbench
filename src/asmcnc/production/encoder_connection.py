@@ -45,29 +45,32 @@ class EncoderConnection(object):
     def establish_connection(self):
 
         try:
-            filesForDevice = listdir('/dev/') # put all device files into list[]
-            for line in filesForDevice: # run through all files
+
+            self.e = serial.Serial('/dev/' + str(PORT), BAUD_RATE, timeout = 6, writeTimeout = 20)
+
+            # filesForDevice = listdir('/dev/') # put all device files into list[]
+            # for line in filesForDevice: # run through all files
 
 
-                print(line)
+            #     print(line)
 
-                # if sys.platform == 'darwin':
+            #     # if sys.platform == 'darwin':
 
-                #     if (line[:12] == 'tty.usbmodem'): # look for...   
-                #         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                #         self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            #     #     if (line[:12] == 'tty.usbmodem'): # look for...   
+            #     #         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+            #     #         self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-                # FLAG: This if statement is only relevant in linux environment. 
-                # EITHER: USB Comms hardware
-                # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-                # OR: UART Comms hardware
-                if line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
-                    devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            #     # FLAG: This if statement is only relevant in linux environment. 
+            #     # EITHER: USB Comms hardware
+            #     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+            #     # OR: UART Comms hardware
+            #     if line[:7] == PORT: # looks specifically for USB port that encoder is plugged into
+            #         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+            #         self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-                # if (line[:12] == 'tty.usbmodem'): # look for...   
-                #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                #     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            #     # if (line[:12] == 'tty.usbmodem'): # look for...   
+            #     #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+            #     #     self.e = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
         except: 
             log('No arduino connected')
