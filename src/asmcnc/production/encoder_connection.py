@@ -36,7 +36,7 @@ class EncoderConnection(object):
     def __init__(self, screen_manager, port):
 
         self.sm = screen_manager
-        PORT = port # e.g. 'ttyACM0' or 'ttyACM1'
+        self.PORT = port # e.g. 'ttyACM0' or 'ttyACM1'
 
     def __del__(self):
         print 'Destructor'
@@ -44,7 +44,7 @@ class EncoderConnection(object):
 
     def establish_connection(self):
 
-        self.e = serial.Serial('/dev/' + str(PORT), BAUD_RATE, timeout = 6, writeTimeout = 20)
+        self.e = serial.Serial('/dev/' + str(self.PORT), BAUD_RATE, timeout = 6, writeTimeout = 20)
 
         # try:
 
