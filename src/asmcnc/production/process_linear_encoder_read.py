@@ -145,7 +145,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_width
-                    text: "46"
+                    text: "460"
                     multiline: False
 
                 Label: 
@@ -519,6 +519,9 @@ class ProcessLinearEncoderScreen(Screen):
         self.Y_axis_angular_offset = self.convert_to_json(delta_y_alpha)
         self.aggregate_offset = self.convert_to_json(DELTA_Y)
 
+        self.HOME_distance_abs = self.convert_to_json(HOME_measured_distance)
+        self.FAR_distance_abs = self.convert_to_json(FAR_measured_distance)        
+
 
     def convert_to_json(self, data):
         # Need to convert to json format in order to export to gsheets
@@ -636,6 +639,8 @@ class ProcessLinearEncoderScreen(Screen):
         worksheet.update('D4:D', self.Y_axis_linear_offset)
         worksheet.update('E4:E', self.Y_axis_angular_offset)
         worksheet.update('F4:F', self.aggregate_offset)
+        worksheet.update('I4:I', self.HOME_distance_abs)
+        worksheet.update('J4:J', self.FAR_distance_abs)
 
         self.data_status ='Sent'
 
@@ -688,12 +693,16 @@ class ProcessLinearEncoderScreen(Screen):
         D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
         E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
         F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F4:F"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I4:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J4:J"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
         self.active_spreadsheet_object.values_clear(F_str_to_clear)
+        self.active_spreadsheet_object.values_clear(I_str_to_clear)
+        self.active_spreadsheet_object.values_clear(J_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
