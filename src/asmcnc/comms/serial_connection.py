@@ -98,7 +98,7 @@ class SerialConnection(object):
 
                     # FLAG: This if statement is only relevant in linux environment. 
                     # FORCE USB CONNECTION
-                    if (line[:6] == 'ttyACM'): # look for...   
+                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for... 
                         # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign

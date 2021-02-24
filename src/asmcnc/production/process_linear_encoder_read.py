@@ -29,8 +29,9 @@ from asmcnc.production import encoder_connection
 
 AMA0 = 'ttyAMA0' # check these when HW is installed
 AMA1 = 'ttyAMA1' # check these when HW is installed
-y_length = float(2645 - 20)
+y_length = float(2640 - 20) #mm
 encoder_resolution = 0.025 # mm (25 microns)
+x_beam_length = 1300 # mm
 
 
 def log(message):
@@ -154,7 +155,7 @@ Builder.load_string("""
 
                 Label: 
                     id: h_read_label
-                    text: "status"
+                    text: "-"
                     color: 0,0,0,1
 
                 Label: 
@@ -225,12 +226,12 @@ class ProcessLinearEncoderScreen(Screen):
     FAR_raw_pulse_list = []
 
     # JSON FORMAT LISTS (AFTER CALCULATIONS)
-    self.machine_Y_coordinate = []
-    self.encoder_measurement_midpoint = []
-    self.Y_axis_linear_offset = []
-    self.angle_off_square = []
-    self.HOME_encoder_measurement = []
-    self.FAR_encoder_measurement = []
+    machine_Y_coordinate = []
+    angle_off_square = []
+    Y_axis_linear_offset = []
+    Y_axis_angular_offset = []
+    aggregate_offset = []
+    sanity_check = []
 
     # TEST PARAMETERS
     FORWARDS = True
@@ -238,7 +239,7 @@ class ProcessLinearEncoderScreen(Screen):
     max_pos = 0
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = ''
+    master_sheet_key = '1KKSV7X8VIR5BuYNEBThrVrt0d9SfrbVVlBcUFU2a-uc'
 
     # FOLDER ID TO COLLATE RESULTS
     squareness_measurements_id = '1WcHTrNSNO3skkT3-kKhAi4qjv6-t2xQV'
@@ -250,9 +251,6 @@ class ProcessLinearEncoderScreen(Screen):
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
     active_spreadsheet_id = ''
-
-    last_bench = ''
-    last_test = ''
 
     # STATUS FLAGS
     data_status = 'Ready'
@@ -291,6 +289,9 @@ class ProcessLinearEncoderScreen(Screen):
         # ENCODER SERIAL CONNECTION SET UP
         self.e0 = encoder_connection.EncoderConnection(self.sm, AMA0)
         self.e1 = encoder_connection.EncoderConnection(self.sm, AMA1)
+
+        self.e0.establish_connection()
+        self.e1.establish_connection()
 
 
     def on_enter(self):
@@ -416,14 +417,8 @@ class ProcessLinearEncoderScreen(Screen):
 
             self.m.send_any_gcode_command('G0 G91 Y10')
 
-        elif self.m.state() == 'Idle' and self.m.mpos_y() > self.max_pos:
+        else:
             self.end_of_test_sequence()
-
-        else: 
-            Clock.unschedule(self.test_run)
-            self.go_stop.state = 'normal'
-            self.go_stop.text = 'GO'
-            self.go_stop.background_color = [0,0.502,0,1]
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
@@ -431,23 +426,23 @@ class ProcessLinearEncoderScreen(Screen):
     def clear_data(self, clearall = False):
 
         # LISTS TO HOLD RAW RECORDED DATA
-        Y_pos_list = []
-        HOME_raw_pulse_list = []
-        FAR_raw_pulse_list = []
+        self.Y_pos_list = []
+        self.HOME_raw_pulse_list = []
+        self.FAR_raw_pulse_list = []
 
         # JSON FORMAT LISTS (AFTER CALCULATIONS)
         self.machine_Y_coordinate = []
-        self.encoder_measurement_midpoint = []
-        self.Y_axis_linear_offset = []
         self.angle_off_square = []
-        self.HOME_encoder_measurement = []
-        self.FAR_encoder_measurement = []
+        self.Y_axis_linear_offset = []
+        self.Y_axis_angular_offset = []
+        self.aggregate_offset = []
+        self.sanity_check = []
 
         # TEST PARAMETERS
-        starting_pos = 0
-        max_pos = 0
+        self.starting_pos = 0
+        self.max_pos = 0
 
-        data_status = 'Cleared'
+        self.data_status = 'Cleared'
 
 
     ## SENDING DATA
@@ -467,8 +462,7 @@ class ProcessLinearEncoderScreen(Screen):
     def update_screen_before_doing_data_send(self):
 
         self.send_data_button.text = 'SENDING DATA...'
-        self.data_status == 'Collected'
-
+        self.data_status == 'Sending'
 
     def do_data_send(self, dt):
 
@@ -481,20 +475,21 @@ class ProcessLinearEncoderScreen(Screen):
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
 
-    # DEV NOTE: THIS FUNCTION SHOULD BE GOOD TO GO NOW, BUT STILL NEEDS TESTING
-    # YOU NEED TO WORK ON DATA FORMATTING NEXT, AND MATCHING VARIABLES HERE TO DECLARED CLASS VARIABLES
-    # THEN FOCUS ON WHAT NEEDS TO BE CLEARED (FOR DATA RESET) AND DELETED FROM A SPREADSHEET
-    # ALSO YOU HAD A GREAT IDEA ABOUT SETTING UP A SHEET THAT SHOWS THE ANGLES ON A PI CHART
+    # DEV NOTE: THIS FUNCTION IS ALMOST DONE, BUT STILL NEEDS TESTING
 
     def format_output(self):
 
         # work out distance travelled from raw pulses
+        # multiply everything by -1 to get a positive number, which affects graph formatting in google sheets
         if self.FORWARDS:
-            HOME_measured_distance = [float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]    
+
+            HOME_measured_distance = [-1*(float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list)]
+            FAR_measured_distance = [-1*(float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list)]    
+        
         else:
-            HOME_measured_distance = [float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list]
+
+            HOME_measured_distance = [-1*(float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)) for H in self.HOME_raw_pulse_list)]
+            FAR_measured_distance = [-1*(float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)) for F in self.FAR_raw_pulse_list)]
 
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
@@ -503,20 +498,31 @@ class ProcessLinearEncoderScreen(Screen):
         # work out midpoint of measurement difference
         midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
 
-        # calculate offset between each midpoint
-        delta_y = list(map(operator.sub, self.Y_pos_list, midpoints))
+        # calculate linear drift: offset between each midpoint and the reported Y position from the machine
+        delta_y_linear = list(map(operator.sub, self.Y_pos_list, midpoints))
 
         # calculate angle at each data point using artan trig (tan(theta) = opp/adj)
         adjacent_side = float(self.bench_width.text)
-        angle = list(map(lambda o: math.atan(o/adjacent_side), opposite_side)) # radians
+        angle_radians = list(map(lambda o: (math.atan(o/adjacent_side)), opposite_side)) # radians
+        angle_degrees = list(map(lambda a: a*(180/math.pi), angle_radians))
+
+        # calculate maximum mm offset at extremes due to angle out of square
+        delta_y_alpha = list(map(lambda a: x_beam_length*(math.sin(a))/2, angle_radians))
+
+        # calculate maximum aggregate offset due to both linear drift and angle out of square
+        DELTA_Y = list(map(lambda a, l: math.fabs(a) + math.fabs(l), delta_y_alpha, delta_y_linear))
+
+        # SANITY CHECK: 
+        # this should be the same as the largest difference between Y Pos and the encoder measurements
+        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h+y), math.fabs(f+y)), HOME_measured_distance, FAR_measured_distance, self.Y_pos_list))
 
         # convert everthing into json format, ready to send out to gsheets
         self.machine_Y_coordinate = convert_to_json(self.Y_pos_list)
-        self.encoder_measurement_midpoint = convert_to_json(midpoints)
-        self.Y_axis_linear_offset = convert_to_json(delta_y)
-        self.angle_off_square = convert_to_json(angle)
-        self.HOME_encoder_measurement = convert_to_json(HOME_measured_distance)
-        self.FAR_encoder_measurement = convert_to_json(FAR_measured_distance)
+        self.angle_off_square = convert_to_json(angle_degrees)
+        self.Y_axis_linear_offset = convert_to_json(delta_y_linear)
+        self.Y_axis_angular_offset = convert_to_json(delta_y_alpha)
+        self.aggregate_offset = convert_to_json(DELTA_Y)
+        self.sanity_check = convert_to_json(SANITY_CHECK)
 
 
     def convert_to_json(self, data):
@@ -544,7 +550,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
+        q_str = "'" + self.squareness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
 
         while True:
             log('Looking for existing file to send data to...')
@@ -598,7 +604,7 @@ class ProcessLinearEncoderScreen(Screen):
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-                                            addParents=self.straightness_measurements_id,
+                                            addParents=self.squareness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
 
@@ -630,42 +636,51 @@ class ProcessLinearEncoderScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        if self.HOME_zeroed_converted != []:
-            self.home_data_status = 'Sending...'
-            worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
-            worksheet.update('D3:D', self.HOME_zeroed_converted)
-            self.home_data_status = 'Sent'
-            log('Home side data sent')
+        worksheet.update('B2:B', self.machine_Y_coordinate)
+        worksheet.update('C2:C', self.angle_off_square)
+        worksheet.update('D2:D', self.Y_axis_linear_offset)
+        worksheet.update('E2:E', self.Y_axis_angular_offset)
+        worksheet.update('F2:F', self.aggregate_offset)
+        worksheet.update('G2:G', self.sanity_check)
 
-        if self.FAR_zeroed_converted != []:
-            self.far_data_status = 'Sending...'
-            worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
-            worksheet.update('F3:F', self.FAR_zeroed_converted)
-            self.far_data_status = 'Sent'
-            log('Far side data sent')
+        self.data_status ='Sent'
+
+        log('Experiment data sent')
 
 
         log("Recording test metadata")
 
+
+        # Bench ID:
+        worksheet.update('A2', str(self.bench_id.text))
+
+        # Get time and date
         current_utc = datetime.utcnow()
         current_time = current_utc.strftime("%H:%M:%S")
         current_date = date.today()
-        # Date
-        worksheet.update('A2', str(current_date))
-        # Time
-        worksheet.update('A4', str(current_time))
-        # Bench ID:
-        worksheet.update('A6', str(self.bench_id.text))
-        # Test Type:
-        worksheet.update('A8', str(self.test_type))
-        # Test no: 
-        worksheet.update('A10', str(self.test_id.text))  
 
-        if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
-            self.last_bench = self.bench_id.text
-            self.last_test = self.test_id.text
-            self.test_id.text = str(int(self.last_test) + 1)
-            self.clear_data(clearall = True)
+        # Date
+        worksheet.update('A4', str(current_date))
+        
+        # Time
+        worksheet.update('A6', str(current_time))
+
+        # Test no: 
+        worksheet.update('A8', str(self.test_id.text))          
+
+        # Bench width: 
+        worksheet.update('A10', str(self.bench_width.text))  
+
+        # Direction:
+        worksheet.update('A12', str(self.direction_toggle.text))
+
+        # Travel:
+        worksheet.update('A14', str(self.travel.text))
+
+
+        log('Clear local test data')
+        self.clear_data()
+        self.test_id.text = str(int(self.test_id.text) + 1)
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
@@ -674,16 +689,19 @@ class ProcessLinearEncoderScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B2:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C2:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D2:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E2:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F2:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G2:G"
 
+        self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
         self.active_spreadsheet_object.values_clear(F_str_to_clear)
-
+        self.active_spreadsheet_object.values_clear(G_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
@@ -693,7 +711,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status_label.text = self.data_status
 
         # show distance encoder thinks it's travelled on screen, to 3dp
-        self.h_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side)*encoder_resolution)
-        self.f_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side)*encoder_resolution)
+        self.h_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side)*encoder_resolution)
+        self.f_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side)*encoder_resolution)
 
 
