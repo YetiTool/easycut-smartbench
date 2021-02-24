@@ -46,13 +46,9 @@ class EncoderConnection(object):
 
         try:
 
-            self.e = serial.Serial('/dev/' + str(PORT), BAUD_RATE, timeout = 6, writeTimeout = 20)
-
             filesForDevice = listdir('/dev/') # put all device files into list[]
+
             for line in filesForDevice: # run through all files
-
-
-                print(line)
 
                 if sys.platform == 'darwin':
 
