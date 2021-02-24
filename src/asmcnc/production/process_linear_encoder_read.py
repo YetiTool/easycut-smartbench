@@ -516,7 +516,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         # SANITY CHECK: 
         # this should be the same as the largest difference between Y Pos and the encoder measurements
-        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h+y), math.fabs(f+y)), HOME_measured_distance, FAR_measured_distance, machine_coordinates))
+        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h-y), math.fabs(f-y)), HOME_measured_distance, FAR_measured_distance, machine_coordinates))
 
         # convert everthing into json format, ready to send out to gsheets
         self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
