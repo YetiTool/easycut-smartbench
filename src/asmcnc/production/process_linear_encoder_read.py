@@ -517,12 +517,12 @@ class ProcessLinearEncoderScreen(Screen):
         SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h+y), math.fabs(f+y)), HOME_measured_distance, FAR_measured_distance, self.Y_pos_list))
 
         # convert everthing into json format, ready to send out to gsheets
-        self.machine_Y_coordinate = convert_to_json(self.Y_pos_list)
-        self.angle_off_square = convert_to_json(angle_degrees)
-        self.Y_axis_linear_offset = convert_to_json(delta_y_linear)
-        self.Y_axis_angular_offset = convert_to_json(delta_y_alpha)
-        self.aggregate_offset = convert_to_json(DELTA_Y)
-        self.sanity_check = convert_to_json(SANITY_CHECK)
+        self.machine_Y_coordinate = self.convert_to_json(self.Y_pos_list)
+        self.angle_off_square = self.convert_to_json(angle_degrees)
+        self.Y_axis_linear_offset = self.convert_to_json(delta_y_linear)
+        self.Y_axis_angular_offset = self.convert_to_json(delta_y_alpha)
+        self.aggregate_offset = self.convert_to_json(DELTA_Y)
+        self.sanity_check = self.convert_to_json(SANITY_CHECK)
 
 
     def convert_to_json(self, data):
