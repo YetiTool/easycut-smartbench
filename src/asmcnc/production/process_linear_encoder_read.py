@@ -483,14 +483,16 @@ class ProcessLinearEncoderScreen(Screen):
         # multiply everything by -1 to get a positive number, which affects graph formatting in google sheets
         if self.FORWARDS:
 
-            HOME_measured_distance = [(-1*(float(self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [(-1*(float(self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list]    
+            HOME_measured_distance = [(float(-1*self.starting_pos + ((H - self.HOME_raw_pulse_list[0])*encoder_resolution))) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [(float(-1*self.starting_pos + ((F - self.FAR_raw_pulse_list[0])*encoder_resolution))) for F in self.FAR_raw_pulse_list]    
         
         else:
 
-            HOME_measured_distance = [(-1*(float(self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution)))) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [(-1*(float(self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution)))) for F in self.FAR_raw_pulse_list]
+            HOME_measured_distance = [(float(-1*self.starting_pos - ((H - self.HOME_raw_pulse_list[0])*encoder_resolution))) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [(float(-1*self.starting_pos - ((F - self.FAR_raw_pulse_list[0])*encoder_resolution))) for F in self.FAR_raw_pulse_list]
 
+        # make positive for benefits of graphing
+        machine_coordinates = [-1*Y for Y in self.Y_pos_list]
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
         opposite_side = list(map(lambda h, f: math.fabs(operator.sub(h,f)), HOME_measured_distance, FAR_measured_distance))
@@ -499,7 +501,7 @@ class ProcessLinearEncoderScreen(Screen):
         midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
 
         # calculate linear drift: offset between each midpoint and the reported Y position from the machine
-        delta_y_linear = list(map(operator.sub, self.Y_pos_list, midpoints))
+        delta_y_linear = list(map(operator.sub, machine_coordinates, midpoints))
 
         # calculate angle at each data point using artan trig (tan(theta) = opp/adj)
         adjacent_side = float(self.bench_width.text)
@@ -514,10 +516,10 @@ class ProcessLinearEncoderScreen(Screen):
 
         # SANITY CHECK: 
         # this should be the same as the largest difference between Y Pos and the encoder measurements
-        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h+y), math.fabs(f+y)), HOME_measured_distance, FAR_measured_distance, self.Y_pos_list))
+        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h+y), math.fabs(f+y)), HOME_measured_distance, FAR_measured_distance, machine_coordinates))
 
         # convert everthing into json format, ready to send out to gsheets
-        self.machine_Y_coordinate = self.convert_to_json(self.Y_pos_list)
+        self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
         self.angle_off_square = self.convert_to_json(angle_degrees)
         self.Y_axis_linear_offset = self.convert_to_json(delta_y_linear)
         self.Y_axis_angular_offset = self.convert_to_json(delta_y_alpha)
@@ -636,12 +638,12 @@ class ProcessLinearEncoderScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        worksheet.update('B2:B', self.machine_Y_coordinate)
-        worksheet.update('C2:C', self.angle_off_square)
-        worksheet.update('D2:D', self.Y_axis_linear_offset)
-        worksheet.update('E2:E', self.Y_axis_angular_offset)
-        worksheet.update('F2:F', self.aggregate_offset)
-        worksheet.update('G2:G', self.sanity_check)
+        worksheet.update('B4:B', self.machine_Y_coordinate)
+        worksheet.update('C4:C', self.angle_off_square)
+        worksheet.update('D4:D', self.Y_axis_linear_offset)
+        worksheet.update('E4:E', self.Y_axis_angular_offset)
+        worksheet.update('F4:F', self.aggregate_offset)
+        worksheet.update('G4:G', self.sanity_check)
 
         self.data_status ='Sent'
 
@@ -689,12 +691,12 @@ class ProcessLinearEncoderScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B2:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C2:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D2:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E2:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F2:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G2:G"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F4:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G4:G"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
