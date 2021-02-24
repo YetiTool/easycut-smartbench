@@ -48,6 +48,9 @@ class EncoderConnection(object):
             filesForDevice = listdir('/dev/') # put all device files into list[]
             for line in filesForDevice: # run through all files
 
+
+                print(line)
+                
                 if sys.platform == 'darwin':
 
                     if (line[:12] == 'tty.usbmodem'): # look for...   
