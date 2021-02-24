@@ -231,7 +231,6 @@ class ProcessLinearEncoderScreen(Screen):
     Y_axis_linear_offset = []
     Y_axis_angular_offset = []
     aggregate_offset = []
-    sanity_check = []
 
     # TEST PARAMETERS
     FORWARDS = True
@@ -436,7 +435,6 @@ class ProcessLinearEncoderScreen(Screen):
         self.Y_axis_linear_offset = []
         self.Y_axis_angular_offset = []
         self.aggregate_offset = []
-        self.sanity_check = []
 
         # TEST PARAMETERS
         self.starting_pos = 0
@@ -514,17 +512,12 @@ class ProcessLinearEncoderScreen(Screen):
         # calculate maximum aggregate offset due to both linear drift and angle out of square
         DELTA_Y = list(map(lambda a, l: math.fabs(a) + math.fabs(l), delta_y_alpha, delta_y_linear))
 
-        # SANITY CHECK: 
-        # this should be the same as the largest difference between Y Pos and the encoder measurements
-        SANITY_CHECK = list(map(lambda h, f, y: max(math.fabs(h-y), math.fabs(f-y)), HOME_measured_distance, FAR_measured_distance, machine_coordinates))
-
         # convert everthing into json format, ready to send out to gsheets
         self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
         self.angle_off_square = self.convert_to_json(angle_degrees)
         self.Y_axis_linear_offset = self.convert_to_json(delta_y_linear)
         self.Y_axis_angular_offset = self.convert_to_json(delta_y_alpha)
         self.aggregate_offset = self.convert_to_json(DELTA_Y)
-        self.sanity_check = self.convert_to_json(SANITY_CHECK)
 
 
     def convert_to_json(self, data):
@@ -643,7 +636,6 @@ class ProcessLinearEncoderScreen(Screen):
         worksheet.update('D4:D', self.Y_axis_linear_offset)
         worksheet.update('E4:E', self.Y_axis_angular_offset)
         worksheet.update('F4:F', self.aggregate_offset)
-        worksheet.update('G4:G', self.sanity_check)
 
         self.data_status ='Sent'
 
@@ -696,14 +688,12 @@ class ProcessLinearEncoderScreen(Screen):
         D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
         E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
         F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F4:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G4:G"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
         self.active_spreadsheet_object.values_clear(F_str_to_clear)
-        self.active_spreadsheet_object.values_clear(G_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
