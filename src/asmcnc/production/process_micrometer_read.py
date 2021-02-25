@@ -569,13 +569,16 @@ class ProcessMicrometerScreen(Screen):
 
         # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
         x_axis = []
+        raw_data = []
         self.all_dti_measurements = []
+        self.raw_dti_measurements = []
 
         try: 
             # normalize against median value
             HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
             self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
             x_axis.extend(self.HOME_normalized)
+            raw_data.extend(self.HOME_DTI_abs_list)
 
         except: 
             self.HOME_normalized = []
@@ -585,13 +588,13 @@ class ProcessMicrometerScreen(Screen):
             FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
             self.FAR_normalized = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
             x_axis.extend(self.FAR_normalized)
+            raw_data.extend(self.FAR_DTI_abs_list)
 
         except: 
             self.FAR_normalized = []
 
         self.all_dti_measurements = self.convert_to_json(x_axis)
-
-        self.raw_dti_measurements = self.convert_to_json(self.HOME_DTI_abs_list.extend(self.FAR_DTI_abs_list))
+        self.raw_dti_measurements = self.convert_to_json(raw_data)
 
         #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
         try:
