@@ -231,6 +231,16 @@ class ProcessLinearEncoderScreen(Screen):
     Y_axis_linear_offset = []
     Y_axis_angular_offset = []
     aggregate_offset = []
+    Y_true = []
+
+    HOME_distance_abs = []
+    FAR_distance_abs = []
+    HOME_raw_converted = []
+    FAR_raw_converted = []
+    Y_true = []
+    DELTA_Y_X_BEAM = []
+    DELTA_Y_Home = []
+    DELTA_Y_Far = []
 
     # TEST PARAMETERS
     FORWARDS = True
@@ -238,7 +248,7 @@ class ProcessLinearEncoderScreen(Screen):
     max_pos = 0
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = '1KKSV7X8VIR5BuYNEBThrVrt0d9SfrbVVlBcUFU2a-uc'
+    master_sheet_key = '12Yqkp4ZT6xJvXJ5CTkkeS_N5zmgD3beNv2ZIhEg9mrA'
 
     # FOLDER ID TO COLLATE RESULTS
     squareness_measurements_id = '1WcHTrNSNO3skkT3-kKhAi4qjv6-t2xQV'
@@ -436,6 +446,15 @@ class ProcessLinearEncoderScreen(Screen):
         self.Y_axis_angular_offset = []
         self.aggregate_offset = []
 
+        self.HOME_distance_abs = []
+        self.FAR_distance_abs = []
+        self.HOME_raw_converted = []
+        self.FAR_raw_converted = []
+        self.Y_true = []
+        self.DELTA_Y_X_BEAM = []
+        self.DELTA_Y_Home = []
+        self.DELTA_Y_Far = []
+
         # TEST PARAMETERS
         self.starting_pos = 0
         self.max_pos = 0
@@ -493,34 +512,49 @@ class ProcessLinearEncoderScreen(Screen):
         machine_coordinates = [-1*Y for Y in self.Y_pos_list]
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
-        opposite_side = list(map(lambda h, f: math.fabs(operator.sub(h,f)), HOME_measured_distance, FAR_measured_distance))
+        opposite_side = list(map(lambda h, f: (operator.sub(h,f), HOME_measured_distance, FAR_measured_distance)))
 
         # work out midpoint of measurement difference
         midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
 
         # calculate linear drift: offset between each midpoint and the reported Y position from the machine
-        delta_y_linear = list(map(operator.sub, machine_coordinates, midpoints))
+        delta_y_linear = list(map(operator.sub, midpoints, machine_coordinates))
 
         # calculate angle at each data point using artan trig (tan(theta) = opp/adj)
         adjacent_side = float(self.bench_width.text)
         angle_radians = list(map(lambda o: (math.atan(o/adjacent_side)), opposite_side)) # radians
         angle_degrees = list(map(lambda a: a*(180/math.pi), angle_radians))
 
-        # calculate maximum mm offset at extremes due to angle out of square
-        delta_y_alpha = list(map(lambda a: x_beam_length*(math.sin(a))/2, angle_radians))
+        # calculate maximum y difference across beam ends
+        DELTA_Y_X = list(map(lambda a: x_beam_length*(math.sin(a)), angle_radians))
 
-        # calculate maximum aggregate offset due to both linear drift and angle out of square
-        DELTA_Y = list(map(lambda a, l: math.fabs(a) + math.fabs(l), delta_y_alpha, delta_y_linear))
+        # calculate maximum mm offset at extremes due to angle out of square
+        delta_y_mid_end = list(map(lambda d: d/2, DELTA_Y_X))
+
+        # calculate aggregate offset due to both linear drift and angle out of square at home side
+        DELTA_Y_H = list(map(lambda l, a: l+a, delta_y_linear, delta_y_mid_end))
+
+        # calculate aggregate offset due to both linear drift and angle out of square at far side
+        DELTA_Y_F = list(map(lambda l, a: l-a, delta_y_linear, delta_y_mid_end))
 
         # convert everthing into json format, ready to send out to gsheets
         self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
         self.angle_off_square = self.convert_to_json(angle_degrees)
         self.Y_axis_linear_offset = self.convert_to_json(delta_y_linear)
-        self.Y_axis_angular_offset = self.convert_to_json(delta_y_alpha)
-        self.aggregate_offset = self.convert_to_json(DELTA_Y)
+        self.Y_axis_angular_offset = self.convert_to_json(delta_y_mid_end)
 
         self.HOME_distance_abs = self.convert_to_json(HOME_measured_distance)
-        self.FAR_distance_abs = self.convert_to_json(FAR_measured_distance)   
+        self.FAR_distance_abs = self.convert_to_json(FAR_measured_distance)
+
+        self.HOME_raw_converted = self.convert_to_json(self.HOME_raw_pulse_list)
+        self.FAR_raw_converted = self.convert_to_json(self.FAR_raw_pulse_list)
+
+        self.Y_true = self.convert_to_json(midpoints)
+        self.DELTA_Y_X_BEAM = self.convert_to_json(DELTA_Y_X)
+        self.DELTA_Y_Home = self.convert_to_json(DELTA_Y_H)
+        self.DELTA_Y_Far = self.convert_to_json(DELTA_Y_F)
+
+
 
 
     def convert_to_json(self, data):
@@ -635,12 +669,20 @@ class ProcessLinearEncoderScreen(Screen):
         log("Writing DTI measurements to Gsheet")
 
         worksheet.update('B4:B', self.machine_Y_coordinate)
-        worksheet.update('C4:C', self.angle_off_square)
-        worksheet.update('D4:D', self.Y_axis_linear_offset)
-        worksheet.update('E4:E', self.Y_axis_angular_offset)
-        worksheet.update('F4:F', self.aggregate_offset)
-        worksheet.update('I4:I', self.HOME_distance_abs)
-        worksheet.update('J4:J', self.FAR_distance_abs)
+        worksheet.update('C4:C', self.HOME_raw_converted)
+        worksheet.update('D4:D', self.FAR_raw_converted)
+        worksheet.update('E4:E', self.HOME_distance_abs)
+        worksheet.update('F4:F', self.FAR_distance_abs)
+        worksheet.update('G4:G', self.Y_true)
+        worksheet.update('H4:H', self.angle_off_square)
+        worksheet.update('I4:I', self.Y_axis_linear_offset)
+        worksheet.update('J4:J', self.Y_axis_angular_offset)
+        worksheet.update('K4:K', self.DELTA_Y_Home)
+        worksheet.update('L4:L', self.DELTA_Y_Far)
+        worksheet.update('M4:M', self.DELTA_Y_X_BEAM)
+
+        # self.HOME_raw_converted
+        # self.FAR_raw_converted
 
         self.data_status ='Sent'
 
@@ -695,6 +737,9 @@ class ProcessLinearEncoderScreen(Screen):
         F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F4:F"
         I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I4:I"
         J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J4:J"
+        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K4:K"
+        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L4:L"
+        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M4:M"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
@@ -703,7 +748,9 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_spreadsheet_object.values_clear(F_str_to_clear)
         self.active_spreadsheet_object.values_clear(I_str_to_clear)
         self.active_spreadsheet_object.values_clear(J_str_to_clear)
-
+        self.active_spreadsheet_object.values_clear(K_str_to_clear)
+        self.active_spreadsheet_object.values_clear(L_str_to_clear)
+        self.active_spreadsheet_object.values_clear(M_str_to_clear)
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
     # update with general status information - DTI read & data sending info
