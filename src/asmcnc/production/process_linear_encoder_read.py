@@ -512,7 +512,7 @@ class ProcessLinearEncoderScreen(Screen):
         machine_coordinates = [-1*Y for Y in self.Y_pos_list]
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
-        opposite_side = list(map(lambda h, f: operator.sub(h,f), HOME_measured_distance, FAR_measured_distance)))
+        opposite_side = list(map(lambda h, f: operator.sub(h,f), HOME_measured_distance, FAR_measured_distance))
 
         # work out midpoint of measurement difference
         midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
