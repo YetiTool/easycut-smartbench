@@ -229,6 +229,7 @@ class ProcessMicrometerScreen(Screen):
     all_dti_measurements = []
     HOME_Y_pos_list_converted = []
     FAR_Y_pos_list_converted = []
+    raw_dti_measurements = []
 
     # TEST PARAMETERS
     HOME_SIDE = True
@@ -455,6 +456,7 @@ class ProcessMicrometerScreen(Screen):
     def clear_data(self, clearall = False):
 
         self.all_dti_measurements = []
+        self.raw_dti_measurements = []
 
 
         if self.HOME_SIDE:
@@ -589,6 +591,7 @@ class ProcessMicrometerScreen(Screen):
 
         self.all_dti_measurements = self.convert_to_json(x_axis)
 
+        self.raw_dti_measurements = seld.converst_to_json(self.HOME_DTI_abs_list.extend(self.FAR_DTI_abs_list))
 
         #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
         try:
@@ -728,15 +731,16 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        worksheet.update('B4:B', self.all_dti_measurements)
+        worksheet.update('B4:B' , self.raw_dti_measurements)
+        worksheet.update('C4:C', self.all_dti_measurements)
 
         if self.HOME_Y_pos_list != []:
-            worksheet.update('C4:C', self.HOME_Y_pos_list_converted)
+            worksheet.update('D4:D', self.HOME_Y_pos_list_converted)
             self.home_data_status = 'Sent'
             log('Home side data sent')
 
         if self.FAR_Y_pos_list != []:
-            worksheet.update('D4:D', self.FAR_Y_pos_list_converted)
+            worksheet.update('E4:E', self.FAR_Y_pos_list_converted)
             self.far_data_status = 'Sent'
             log('Far side data sent')
 
@@ -774,10 +778,12 @@ class ProcessMicrometerScreen(Screen):
         B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
         C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
         D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
+        self.active_spreadsheet_object.values_clear(E_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
