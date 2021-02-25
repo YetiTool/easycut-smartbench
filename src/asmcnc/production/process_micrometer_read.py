@@ -591,7 +591,7 @@ class ProcessMicrometerScreen(Screen):
 
         self.all_dti_measurements = self.convert_to_json(x_axis)
 
-        self.raw_dti_measurements = self.converst_to_json(self.HOME_DTI_abs_list.extend(self.FAR_DTI_abs_list))
+        self.raw_dti_measurements = self.convert_to_json(self.HOME_DTI_abs_list.extend(self.FAR_DTI_abs_list))
 
         #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
         try:
