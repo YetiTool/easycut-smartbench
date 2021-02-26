@@ -763,7 +763,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status_label.text = self.data_status
 
         # show distance encoder thinks it's travelled on screen, to 3dp
-        self.h_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side)*encoder_resolution)
-        self.f_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side)*encoder_resolution)
+        self.h_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side*encoder_resolution))
+        self.f_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side*encoder_resolution))
 
 
