@@ -241,6 +241,7 @@ class ProcessLinearEncoderScreen(Screen):
     DELTA_Y_X_BEAM = []
     DELTA_Y_Home = []
     DELTA_Y_Far = []
+    DELTA_Y_PER_METER = []
 
     # TEST PARAMETERS
     FORWARDS = True
@@ -454,6 +455,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.DELTA_Y_X_BEAM = []
         self.DELTA_Y_Home = []
         self.DELTA_Y_Far = []
+        self.DELTA_Y_PER_METER = []
 
         # TEST PARAMETERS
         self.starting_pos = 0
@@ -537,6 +539,8 @@ class ProcessLinearEncoderScreen(Screen):
         # calculate aggregate offset due to both linear drift and angle out of square at far side
         DELTA_Y_F = list(map(lambda l, a: l-a, delta_y_linear, delta_y_mid_end))
 
+        DELTA_Y_PM = list(map(lambda a: (1000*math.tan(a)), angle_radians))
+
         # convert everthing into json format, ready to send out to gsheets
         self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
         self.angle_off_square = self.convert_to_json(angle_degrees)
@@ -553,8 +557,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.DELTA_Y_X_BEAM = self.convert_to_json(DELTA_Y_X)
         self.DELTA_Y_Home = self.convert_to_json(DELTA_Y_H)
         self.DELTA_Y_Far = self.convert_to_json(DELTA_Y_F)
-
-
+        self.DELTA_Y_PER_METER = self.convert_to_json(DELTA_Y_PM)
 
 
     def convert_to_json(self, data):
@@ -680,9 +683,7 @@ class ProcessLinearEncoderScreen(Screen):
         worksheet.update('K4:K', self.DELTA_Y_Home)
         worksheet.update('L4:L', self.DELTA_Y_Far)
         worksheet.update('M4:M', self.DELTA_Y_X_BEAM)
-
-        # self.HOME_raw_converted
-        # self.FAR_raw_converted
+        worksheet.update('N4:N', self.DELTA_Y_PER_METER)
 
         self.data_status ='Sent'
 
@@ -740,6 +741,7 @@ class ProcessLinearEncoderScreen(Screen):
         K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K4:K"
         L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L4:L"
         M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M4:M"
+        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N4:N"
 
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
@@ -751,6 +753,8 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_spreadsheet_object.values_clear(K_str_to_clear)
         self.active_spreadsheet_object.values_clear(L_str_to_clear)
         self.active_spreadsheet_object.values_clear(M_str_to_clear)
+        self.active_spreadsheet_object.values_clear(N_str_to_clear)
+
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
     # update with general status information - DTI read & data sending info
