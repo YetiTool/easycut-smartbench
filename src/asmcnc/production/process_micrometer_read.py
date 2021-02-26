@@ -538,35 +538,6 @@ class ProcessMicrometerScreen(Screen):
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
     def format_output(self):
 
-        # # HOME SIDE
-        # try: 
-
-        #     HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
-
-        #     # normalize against median value
-        #     self.HOME_zeroed_converted = self.convert_to_json([(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list])
-
-        #     # multiply by -1 for google sheets display purposes
-        #     self.HOME_Y_pos_list_converted = self.convert_to_json([(-1*POS) for POS in self.HOME_Y_pos_list])
-            
-
-        # except: pass
-
-        # # FAR SIDE
-        # try: 
-
-        #     FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-
-        #     # normalize against median value
-        #     self.FAR_zeroed_converted = self.convert_to_json([(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list])
-
-        #     # specific to far pos - coordinates need flipping because far side is flipped
-        #     # # this gives out coord as positive value, which is great for google sheets display purposes
-        #     self.FAR_Y_pos_list_converted = self.convert_to_json([(y_length + POS) for POS in self.FAR_Y_pos_list])
-            
-        # except: pass
-
-
         # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
         x_axis = []
         raw_data = []
@@ -586,7 +557,7 @@ class ProcessMicrometerScreen(Screen):
         try: 
             # normalize against median value
             FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-            self.FAR_normalized = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+            self.FAR_normalized = [-1*(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
             x_axis.extend(self.FAR_normalized)
             raw_data.extend(self.FAR_DTI_abs_list)
 
