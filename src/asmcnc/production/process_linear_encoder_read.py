@@ -600,6 +600,7 @@ class ProcessLinearEncoderScreen(Screen):
                 self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
                 self.rename_file_with_current_date()
                 create_new_sheet = False
+                break
 
             if not create_new_sheet:
                 break
@@ -669,7 +670,7 @@ class ProcessLinearEncoderScreen(Screen):
             try: self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
             except: pass
 
-        log("Writing DTI measurements to Gsheet")
+        log("Writing calibration measurements to Gsheet")
 
         worksheet.update('B4:B', self.machine_Y_coordinate)
         worksheet.update('C4:C', self.HOME_raw_converted)
