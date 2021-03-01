@@ -4,7 +4,7 @@ from os import listdir
 from kivy.clock import Clock
 
 
-BAUD_RATE = 9600
+BAUD_RATE = 115200
 
 def log(message):
     timestamp = datetime.now()
