@@ -392,7 +392,7 @@ class ProcessLinearEncoderScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            self.test_run = Clock.schedule_interval(self.do_test_step, 1)
+            self.test_run = Clock.schedule_interval(self.do_test_step, 10)
             self.data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
