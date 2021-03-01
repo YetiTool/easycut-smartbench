@@ -137,9 +137,11 @@ class EncoderConnection(object):
 
     def process_grbl_push(self, message):
 
-        print(message)
+        try: 
+            if message.startswith('H:'):
+                    self.H_side = (message.split(':')[1])
+            elif message.startswith('F:'):
+                    self.F_side = (message.split(':')[1])
 
-        if message.startswith('H:'):
-                self.H_side = (message.split(':')[1])
-        elif message.startswith('F:'):
-                self.F_side = (message.split(':')[1])
+        except:
+            log('Could not split message')
