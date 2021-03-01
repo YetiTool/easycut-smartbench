@@ -421,8 +421,8 @@ class ProcessLinearEncoderScreen(Screen):
 
         elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
 
-            self.HOME_raw_pulse_list.append(float(self.e0.H_side + self.e1.H_side))
-            self.FAR_raw_pulse_list.append(float(self.e0.F_side + self.e1.F_side))
+            self.HOME_raw_pulse_list.append(self.e0.H_side + self.e1.H_side)
+            self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
             self.Y_pos_list.append(float(self.m.mpos_y()))
 
             self.m.send_any_gcode_command('G0 G91 Y10')
@@ -763,7 +763,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status_label.text = self.data_status
 
         # show distance encoder thinks it's travelled on screen, to 3dp
-        self.h_read_label.text = "{:.3f}".format(float(self.e0.H_side + self.e1.H_side*encoder_resolution))
-        self.f_read_label.text = "{:.3f}".format(float(self.e0.F_side + self.e1.F_side*encoder_resolution))
+        self.h_read_label.text = "{:.3f}".format((self.e0.H_side + self.e1.H_side)*encoder_resolution)
+        self.f_read_label.text = "{:.3f}".format((self.e0.F_side + self.e1.F_side)*encoder_resolution)
 
 
