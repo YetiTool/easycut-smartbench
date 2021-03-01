@@ -502,13 +502,13 @@ class ProcessLinearEncoderScreen(Screen):
         # multiply everything by -1 to get a positive number, which affects graph formatting in google sheets
         if self.FORWARDS:
 
-            HOME_measured_distance = [-1*(self.starting_pos + (H - self.starting_H)*encoder_resolution) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [-1*(self.starting_pos + (F - self.starting_F)*encoder_resolution) for F in self.FAR_raw_pulse_list]
+            HOME_measured_distance = [-1*(self.starting_pos + (H - self.starting_H)) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [-1*(self.starting_pos + (F - self.starting_F)) for F in self.FAR_raw_pulse_list]
         
         else:
 
-            HOME_measured_distance = [-1*(self.starting_pos - (H - self.starting_H)*encoder_resolution) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [-1*(self.starting_pos - (F - self.starting_F)*encoder_resolution) for F in self.FAR_raw_pulse_list]
+            HOME_measured_distance = [-1*(self.starting_pos - (H - self.starting_H)) for H in self.HOME_raw_pulse_list]
+            FAR_measured_distance = [-1*(self.starting_pos - (F - self.starting_F)) for F in self.FAR_raw_pulse_list]
 
         # make positive for benefits of graphing
         machine_coordinates = [-1*Y for Y in self.Y_pos_list]
@@ -763,7 +763,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status_label.text = self.data_status
 
         # show distance encoder thinks it's travelled on screen, to 3dp
-        self.h_read_label.text = "{:.3f}".format((self.e0.H_side + self.e1.H_side)*encoder_resolution)
-        self.f_read_label.text = "{:.3f}".format((self.e0.F_side + self.e1.F_side)*encoder_resolution)
+        self.h_read_label.text = "{:.3f}".format(self.e0.H_side + self.e1.H_side)
+        self.f_read_label.text = "{:.3f}".format(self.e0.F_side + self.e1.F_side)
 
 
