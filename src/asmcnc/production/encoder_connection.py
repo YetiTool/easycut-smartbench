@@ -137,7 +137,9 @@ class EncoderConnection(object):
 
     def process_grbl_push(self, message):
 
+        print(message)
+
         if message.startswith('H:'):
-                self.H_side = float(message.split(':')[1])
+                self.H_side = (message.split(':')[1])
         elif message.startswith('F:'):
-                self.F_side = float(message.split(':')[1])
+                self.F_side = (message.split(':')[1])
