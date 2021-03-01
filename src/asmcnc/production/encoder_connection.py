@@ -139,9 +139,9 @@ class EncoderConnection(object):
 
         try: 
             if message.startswith('H:'):
-                    self.H_side = (message.split(':')[1])
+                    self.H_side = long(message.split(':')[1])
             elif message.startswith('F:'):
-                    self.F_side = (message.split(':')[1])
+                    self.F_side = long(message.split(':')[1])
 
         except:
             log('Could not split message')
