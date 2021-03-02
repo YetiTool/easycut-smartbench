@@ -123,7 +123,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "test-1-secs"
+                    text: "test-half-secs"
                     multiline: False
 
                 ToggleButton:
@@ -220,7 +220,7 @@ Builder.load_string("""
 
 class ProcessLinearEncoderScreen(Screen):
 
-    POLL_TIME = 1
+    POLL_TIME = 0.5
 
     # LISTS TO HOLD RAW RECORDED DATA
     Y_pos_list = []
