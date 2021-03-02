@@ -429,7 +429,8 @@ class ProcessLinearEncoderScreen(Screen):
             self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
             self.Y_pos_list.append(float(self.m.mpos_y()))
 
-            self.m.send_any_gcode_command('G0 G91 Y10')
+            if self.FORWARDS: self.m.send_any_gcode_command('G0 G91 Y10')
+            else: self.m.send_any_gcode_command('G0 G91 Y-10')
 
         else:
             self.end_of_test_sequence()
