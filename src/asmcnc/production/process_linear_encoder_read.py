@@ -123,7 +123,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "default"
+                    text: "test-1-secs"
                     multiline: False
 
                 ToggleButton:
@@ -219,6 +219,8 @@ Builder.load_string("""
 """)
 
 class ProcessLinearEncoderScreen(Screen):
+
+    POLL_TIME = 1
 
     # LISTS TO HOLD RAW RECORDED DATA
     Y_pos_list = []
@@ -392,7 +394,7 @@ class ProcessLinearEncoderScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            self.test_run = Clock.schedule_interval(self.do_test_step, 10)
+            self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
             self.data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
