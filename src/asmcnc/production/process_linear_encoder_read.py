@@ -123,7 +123,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "test-10-secs"
+                    text: "test-continuous-0.1"
                     multiline: False
 
                 ToggleButton:
@@ -139,7 +139,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: test_id
-                    text: "6"
+                    text: "1"
                     input_filter: 'int'
                     multiline: False
 
@@ -220,7 +220,7 @@ Builder.load_string("""
 
 class ProcessLinearEncoderScreen(Screen):
 
-    POLL_TIME = 10
+    POLL_TIME = 0.1
 
     # LISTS TO HOLD RAW RECORDED DATA
     Y_pos_list = []
@@ -393,6 +393,10 @@ class ProcessLinearEncoderScreen(Screen):
 
             self.max_pos = self.set_max_pos()
 
+            # CONTINUOUS
+            run_command = 'G0 G91 X' + str(self.max_pos)
+            self.m.send_any_gcode_command(run_command)
+
             ## START THE TEST
             self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
             self.data_status = 'Collecting'
@@ -420,20 +424,36 @@ class ProcessLinearEncoderScreen(Screen):
 
     def do_test_step(self, dt):
 
-        if self.m.state() == 'Run':
-            pass
+        ## INCREMENTAL
 
-        elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
+        # if self.m.state() == 'Run':
+        #     pass
 
+        # elif self.m.state() == 'Idle' and self.m.mpos_y() <= self.max_pos:
+
+        #     self.HOME_raw_pulse_list.append(self.e0.H_side + self.e1.H_side)
+        #     self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
+        #     self.Y_pos_list.append(float(self.m.mpos_y()))
+
+        #     if self.FORWARDS: self.m.send_any_gcode_command('G0 G91 Y10')
+        #     else: self.m.send_any_gcode_command('G0 G91 Y-10')
+
+        # else:
+        #     self.end_of_test_sequence()
+
+
+        ## CONTINUOUS
+
+        if self.m.mpos_x() >= self.max_pos:
             self.HOME_raw_pulse_list.append(self.e0.H_side + self.e1.H_side)
             self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
             self.Y_pos_list.append(float(self.m.mpos_y()))
 
-            if self.FORWARDS: self.m.send_any_gcode_command('G0 G91 Y10')
-            else: self.m.send_any_gcode_command('G0 G91 Y-10')
-
         else:
+            log('Cancel from test step')
             self.end_of_test_sequence()
+
+
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
