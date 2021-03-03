@@ -493,7 +493,10 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_spreadsheet_name = self.bench_id.text + ' ' + str(date.today())
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        self.write_to_worksheet()
+        try: self.write_to_worksheet()
+        except: 
+            log('Failed to write to sheet')
+            self.data_status ='Try Resending'
 
         self.send_data_button.text = 'SEND DATA'
 
