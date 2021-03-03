@@ -394,7 +394,7 @@ class ProcessLinearEncoderScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             # CONTINUOUS
-            run_command = 'G0 G91 Y-' + str(self.max_pos)
+            run_command = 'G0 G91 Y-' + self.travel.text
             self.m.send_any_gcode_command(run_command)
 
             ## START THE TEST
