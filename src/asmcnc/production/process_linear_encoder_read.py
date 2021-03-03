@@ -444,7 +444,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         ## CONTINUOUS
 
-        if self.m.mpos_x() >= self.max_pos:
+        if self.m.mpos_y() <= self.max_pos:
             self.HOME_raw_pulse_list.append(self.e0.H_side + self.e1.H_side)
             self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
             self.Y_pos_list.append(float(self.m.mpos_y()))
