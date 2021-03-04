@@ -137,11 +137,17 @@ class EncoderConnection(object):
 
     def process_grbl_push(self, message):
 
+        # try: 
+        #     if message.startswith('H:'):
+        #             self.H_side = long(message.split(':')[1])
+        #     elif message.startswith('F:'):
+        #             self.F_side = long(message.split(':')[1])
+
         try: 
-            if message.startswith('H:'):
-                    self.H_side = long(message.split(':')[1])
-            elif message.startswith('F:'):
-                    self.F_side = long(message.split(':')[1])
+            if self.PORT == 'ttyACM0':
+                self.H_side = long(message)
+            else:
+                self.F_side = long(message)
 
         except:
             log('Could not split message')
