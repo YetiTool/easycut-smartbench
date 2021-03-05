@@ -54,8 +54,6 @@ Builder.load_string("""
 
     prep_test : prep_test
     go_stop : go_stop
-    send_data_button : send_data_button
-    
     move_container : move_container
     gcode_monitor_container : gcode_monitor_container
     status_container : status_container
