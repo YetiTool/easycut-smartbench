@@ -293,9 +293,12 @@ class ProcessLinearEncoderScreen(Screen):
 
         self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
 
-        # TURNS BUTTON GREEN IF DTI IS CONNECTED
-        if self.e0.is_connected() and self.e1.is_connected():
-            self.go_stop.background_color = [0,0.502,0,1]
+        if self.m.is_machine_homed:
+            self.prep_test.background_color = [0,0.502,0,1]
+
+            # TURNS BUTTON GREEN IF DTI IS CONNECTED
+            if self.e0.is_connected() and self.e1.is_connected():
+                self.go_stop.background_color = [0,0.502,0,1]
 
 
     def go_to_lobby(self):
