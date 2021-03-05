@@ -121,7 +121,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: travel
-                    text: "2500"
+                    text: "2490"
                     input_filter: 'float'
                     multiline: False
 
