@@ -311,6 +311,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     def set_up_for_test(self):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
+        self.m.jog_absolute_single_axis('Y', (self.m.y_min_jog_abs_limit + 10.00), 6000)
         # self.m.send_any_gcode_command('G0 G91 Y10')
 
 
