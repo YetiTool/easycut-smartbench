@@ -297,8 +297,6 @@ class ProcessLinearEncoderScreen(Screen):
         if self.e0.is_connected() and self.e1.is_connected():
             self.go_stop.background_color = [0,0.502,0,1]
 
-        self.toggle_direction()
-
 
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
@@ -665,10 +663,7 @@ class ProcessLinearEncoderScreen(Screen):
         worksheet.update('A8', str(self.test_id.text))          
 
         # Bench width: 
-        worksheet.update('A10', str(self.bench_width.text))  
-
-        # Direction:
-        worksheet.update('A12', str(self.direction_toggle.text))
+        worksheet.update('A10', str(self.bench_width.text))
 
         # Travel:
         worksheet.update('A14', str(self.travel.text))
