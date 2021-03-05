@@ -29,8 +29,12 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 10
+        padding: 20
         spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
         
         GridLayout:
             cols: 3
@@ -38,31 +42,13 @@ Builder.load_string("""
             spacing: 0
             size_hint_y: None
             height: self.width
+            padding: 10
     
-
-            # go x datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.go_x_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/go_datum_x.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True               
+                pos: self.parent.pos           
             
-
 
             Button:
                 background_color: hex('#F4433600')
@@ -84,27 +70,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
 
-            # go y datum
             BoxLayout:
                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.go_y_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/go_datum_y.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True  
+
                             
             Button:
                 background_color: hex('#F4433600')
@@ -163,27 +133,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
 
-            # set x datum
+
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.set_x_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/set_datum_x.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True               
+                pos: self.parent.pos             
 
             Button:
                 background_color: hex('#F4433600')
@@ -207,7 +161,6 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                     
 
-            # set y datum
 
             # speed toggle
             BoxLayout:
@@ -229,67 +182,13 @@ Builder.load_string("""
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True  
-
-                # Button:
-                #     background_color: hex('#F4433600')
-                #     on_release: 
-                #         self.background_color = hex('#F4433600')
-                #     on_press: 
-                #         root.set_y_datum()
-                #         self.background_color = hex('#F44336FF')
-                #     BoxLayout:
-                #         padding: 0
-                #         size: self.parent.size
-                #         pos: self.parent.pos  
-                #         Image:
-                #             source: "./asmcnc/skavaUI/img/set_datum_y.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True   
+                        allow_stretch: True
                 
         BoxLayout:
             orientation: 'horizontal'
             spacing: 10
 
 
-
-            # Button:
-            #     background_color: hex('#F4433600')
-            #     on_release: 
-            #         self.background_color = hex('#F4433600')
-            #     on_press: 
-            #         root.set_standby_to_pos()
-            #         self.background_color = hex('#F44336FF')
-            #     BoxLayout:
-            #         padding: [0, 20, 40, 20]
-            #         size: self.parent.size
-            #         pos: self.parent.pos      
-            #         Image:
-            #             source: "./asmcnc/skavaUI/img/set_park.png"
-            #             center_x: self.parent.center_x
-            #             y: self.parent.y
-            #             size: self.parent.width, self.parent.height
-            #             allow_stretch: True            
-
-            # Button:
-            #     background_color: hex('#F4433600')
-            #     on_release: 
-            #         self.background_color = hex('#F4433600')
-            #     on_press: 
-            #         root.set_workzone_to_pos_xy()
-            #         self.background_color = hex('#F44336FF')
-            #     BoxLayout:
-            #         padding: [40, 20, 0, 20]
-            #         size: self.parent.size
-            #         pos: self.parent.pos      
-            #         Image:
-            #             source: "./asmcnc/skavaUI/img/set_jobstart.png"
-            #             center_x: self.parent.center_x
-            #             y: self.parent.y
-            #             size: self.parent.width, self.parent.height
-            #             allow_stretch: True
         
 """)
     
