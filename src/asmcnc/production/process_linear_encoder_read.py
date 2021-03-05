@@ -80,8 +80,8 @@ Builder.load_string("""
                 size_hint_y: 0.17
                 rows: 2
                 cols: 7
-                cols_minimum: {'0': 200, '1': 100, '2': 100, '3': 100, '4': 100, '5': 100, '6': 100}
-                rows_minimum: {'0': 10, '1': 30}
+                cols_minimum: {0: 200, 1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100}
+                rows_minimum: {0: 10, 1: 30}
 
                 # Test set up labels
 
