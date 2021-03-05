@@ -439,7 +439,6 @@ class ProcessLinearEncoderScreen(Screen):
     # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
     def update_screen_before_doing_data_send(self):
 
-        self.send_data_button.text = 'SENDING DATA...'
         self.data_status == 'Sending'
 
     def do_data_send(self, dt):
@@ -451,8 +450,6 @@ class ProcessLinearEncoderScreen(Screen):
         except: 
             log('Failed to write to sheet')
             self.data_status ='Try Resending'
-
-        self.send_data_button.text = 'SEND DATA'
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
 
