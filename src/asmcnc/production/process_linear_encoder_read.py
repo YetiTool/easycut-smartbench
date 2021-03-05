@@ -24,7 +24,7 @@ from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_move
 
-from asmcnc.production import encoder_connection
+from asmcnc.production import encoder_connection, linear_encoder_widget_xy_move
 
 
 AMA0 = 'ttyACM0' # check these when HW is installed
@@ -267,7 +267,8 @@ class ProcessLinearEncoderScreen(Screen):
         # WIDGET SETUP
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
-        self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
+        # self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
+        self.move_container.add_widget(linear_encoder_widget_xy_move.LinEncXYMove(machine=self.m, screen_manager=self.sm))
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
 

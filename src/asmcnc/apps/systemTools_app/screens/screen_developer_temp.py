@@ -127,7 +127,7 @@ Builder.load_string("""
                             on_press: root.open_micrometer_jig_screen()
                                     
                         Button:
-                            text: 'Squareness'
+                            text: 'Calibration'
                             on_press: root.open_squareness_jig_screen()
                                        
                         Button:
