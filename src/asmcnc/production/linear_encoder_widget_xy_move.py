@@ -29,7 +29,6 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 20
         spacing: 10
 
         BoxLayout:
