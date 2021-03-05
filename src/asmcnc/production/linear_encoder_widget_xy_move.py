@@ -30,10 +30,7 @@ Builder.load_string("""
         pos: self.parent.pos      
         orientation: 'vertical'
         spacing: 10
-
-        BoxLayout:
-            orientation: 'horizontal'
-            spacing: 10
+        padding: [0, 20, 0, 0]
         
         GridLayout:
             cols: 3
@@ -182,11 +179,6 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
-                
-        BoxLayout:
-            orientation: 'horizontal'
-            spacing: 10
-
 
         
 """)
