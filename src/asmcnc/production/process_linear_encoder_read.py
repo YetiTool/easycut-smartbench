@@ -120,23 +120,27 @@ Builder.load_string("""
                     id: bench_id 
                     text: "id"
                     multiline: False
+                    font_size: '20sp'
 
                 TextInput: 
                     id: travel
                     text: "2490"
                     input_filter: 'float'
                     multiline: False
+                    font_size: '20sp'
 
                 TextInput: 
                     id: test_id
                     text: "1"
                     input_filter: 'int'
                     multiline: False
+                    font_size: '20sp'
 
                 TextInput: 
                     id: bench_width
                     text: "460"
                     multiline: False
+                    font_size: '20sp'
 
                 Label: 
                     id: data_status_label
