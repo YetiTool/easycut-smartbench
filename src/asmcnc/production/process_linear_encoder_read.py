@@ -77,11 +77,11 @@ Builder.load_string("""
 
             GridLayout: 
                 pos: self.parent.pos
-                size_hint_y: 0.2
+                size_hint_y: 0.17
                 rows: 2
                 cols: 7
                 cols_minimum: {'0': 200, '1': 100, '2': 200, '3': 100, '4': 100, '5': 100, '6': 100}
-                rows_minimum: {'0': 30, '1': 40}
+                rows_minimum: {'0': 10, '1': 30}
 
                 # Test set up labels
 
@@ -155,7 +155,7 @@ Builder.load_string("""
 
             GridLayout: 
                 pos: self.parent.pos
-                size_hint_y: 0.1
+                size_hint_y: 0.13
                 rows: 1
                 cols: 4
                 spacing: 5
