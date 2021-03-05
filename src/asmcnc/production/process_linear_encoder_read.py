@@ -45,7 +45,6 @@ Builder.load_string("""
 <ProcessLinearEncoderScreen>:
 
     bench_id : bench_id 
-    direction_toggle : direction_toggle
     travel : travel
     test_id : test_id
     bench_width : bench_width
@@ -53,7 +52,7 @@ Builder.load_string("""
     h_read_label : h_read_label
     f_read_label : f_read_label
 
-    home_stop : home_stop
+    prep_test : prep_test
     go_stop : go_stop
     send_data_button : send_data_button
     
@@ -82,16 +81,12 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 2
-                cols: 8
+                cols: 7
 
                 # Test set up labels
 
                 Label: 
                     text: "Bench ID"
-                    color: 0,0,0,1
-                
-                Label: 
-                    text: "Going"
                     color: 0,0,0,1
 
                 Label: 
@@ -125,11 +120,6 @@ Builder.load_string("""
                     id: bench_id 
                     text: "id"
                     multiline: False
-
-                ToggleButton:
-                    id: direction_toggle
-                    text: "Forwards"
-                    on_press: root.toggle_direction()
 
                 TextInput: 
                     id: travel
@@ -167,13 +157,13 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
-                cols: 5
+                cols: 4
                 spacing: 5
 
                 ToggleButton:
-                    id: home_stop
-                    text: "HOME"
-                    on_press: root.home_machine_pre_test()
+                    id: prep_test
+                    text: "GET READY"
+                    on_press: root.set_up_for_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
@@ -187,11 +177,6 @@ Builder.load_string("""
                 Button:
                     text: "RESET DATA"
                     on_press: root.clear_data()
-                
-                Button:
-                    id: send_data_button
-                    text: "SEND DATA"
-                    on_press: root.send_data()
 
                 Button:
                     text: "QUIT"
@@ -330,46 +315,9 @@ class ProcessLinearEncoderScreen(Screen):
 
     # TEST SET UP
 
-    def toggle_direction(self):
-        if self.direction_toggle.state == 'down':
-            self.direction_toggle.text = 'Backwards'
-            self.FORWARDS = False
-        elif self.direction_toggle.state == 'normal':
-            self.direction_toggle.text = 'Forwards'
-            self.FORWARDS = True
-
-    # HOME FUNCTION
-
-    def home_machine_pre_test(self):
-
-        if self.home_stop.state == 'down':
-
-            ## CHANGE BUTTON
-            self.home_stop.background_color = [1,0,0,1]
-            self.home_stop.text = 'STOP'
-
-            normal_homing_sequence = ['$H']
-            self.m.s.start_sequential_stream(normal_homing_sequence)
-
-            self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 3)
-
-        elif self.home_stop.state == 'normal':
-
-            # CANCEL HOMING
-            self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
-            self.m.reset_on_cancel_homing()
-
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
-
-    # update home button when homing has finished
-    def check_home_completion(self, dt):
-
-        if not self.m.s.is_sequential_streaming:
-            Clock.unschedule(self.check_for_home_end_event)
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
-            self.home_stop.state = 'normal'
+    def set_up_for_test(self):
+        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
+        self.m.send_any_gcode_command('G0 G91 Y10')
 
 
     # MACHINE RUN TEST FUNCTIONS
@@ -431,8 +379,7 @@ class ProcessLinearEncoderScreen(Screen):
             self.FAR_raw_pulse_list.append(self.e0.F_side + self.e1.F_side)
             self.Y_pos_list.append(float(self.m.mpos_y()))
 
-            if self.FORWARDS: self.m.send_any_gcode_command('G0 G91 Y10')
-            else: self.m.send_any_gcode_command('G0 G91 Y-10')
+            self.m.send_any_gcode_command('G0 G91 Y10')
 
         else:
             self.end_of_test_sequence()
