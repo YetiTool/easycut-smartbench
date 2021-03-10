@@ -591,11 +591,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     def rename_template_sheets(self):
 
-        # order of this might be important, as it will dictate how the Summary sheet looks at data sheets:
-        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
-        straightness_data_worksheet_name =  'Straightness' + " - " + str(date.today()) + " - " + self.test_id.text
-        summary_data_worksheet_name =  'Summary' + " - " + str(date.today()) + " - " + self.test_id.text
-
+        # this function can only be used on fresh duplicated spreadsheet - not individually copied sheets
         self.active_spreadsheet_object.worksheet('Calibration - Date - Test').update_title(calibration_data_worksheet_name)
         self.active_spreadsheet_object.worksheet('Straightness - Date - Test').update_title(straightness_data_worksheet_name)
         self.active_spreadsheet_object.worksheet('Summary - Date - Test').update_title(summary_data_worksheet_name)
@@ -603,16 +599,38 @@ class ProcessLinearEncoderScreen(Screen):
 
     def copy_template_worksheets_to_existing_spread(self):
 
+        # order of this important - need to trick the summary sheet into looking at the new copied data sheets
+
+        # set up new names
+        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
+        straightness_data_worksheet_name =  'Straightness' + " - " + str(date.today()) + " - " + self.test_id.text
+        summary_data_worksheet_name =  'Summary' + " - " + str(date.today()) + " - " + self.test_id.text
+
+        # set up worksheet objects from the master sheet, which we'll copy across individually
         master_sheet_object = self.gsheet_client.open_by_key(self.master_sheet_key)
         Calibration_master_sheet = master_sheet_object.worksheet('Calibration - Date - Test')
         Straightness_master_sheet = master_sheet_object.worksheet('Straightness - Date - Test')
         Summary_master_sheet = master_sheet_object.worksheet('Summary - Date - Test')
 
+        # first, ONLY copy the data sheets
         Calibration_master_sheet.copy_to(self.active_spreadsheet_object.id)
         Straightness_master_sheet.copy_to(self.active_spreadsheet_object.id)
+
+        # when they are individually copied, they come across as "Copy of X" - need to rename them so that the Summary sheet will recognize
+        # the template naming convention
+        self.active_spreadsheet_object.worksheet('Copy of Calibration - Date - Test').update_title('Calibration - Date - Test')
+        self.active_spreadsheet_object.worksheet('Copy of Straightness - Date - Test').update_title('Straightness - Date - Test')
+
+        # Now copy the master sheet
         Summary_master_sheet.copy_to(self.active_spreadsheet_object.id)
 
-        self.rename_template_sheets()
+        # When master sheet is looking at the right data sheets, rename them all together
+        self.active_spreadsheet_object.worksheet('Copy of Calibration - Date - Test').update_title(calibration_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Copy of Straightness - Date - Test').update_title(straightness_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Copy of Summary - Date - Test').update_title(summary_data_worksheet_name)
+
+        # Update index of most recent summary sheet so that it sits at the front of the worksheet (after the key)
+        self.active_spreadsheet_object.worksheet(summary_data_worksheet_name).update_index(1)
 
 
     def move_sheet_to_operator_resources(self):
