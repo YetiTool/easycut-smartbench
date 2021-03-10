@@ -246,7 +246,7 @@ class ProcessLinearEncoderScreen(Screen):
     master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
     # FOLDER ID TO COLLATE RESULTS
-    squareness_measurements_id = '1WcHTrNSNO3skkT3-kKhAi4qjv6-t2xQV'
+    live_measurements_id = '15iBk8f-_VqnOwfOuWBJQBgTFznjY_TQu'
 
     # GOOGLE API OBJECTS
     gsheet_client = None
@@ -442,7 +442,7 @@ class ProcessLinearEncoderScreen(Screen):
     # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
     def do_data_send(self, dt):
 
-        self.active_spreadsheet_name = self.bench_id.text + ' ' + str(date.today())
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + self.test_id.text
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
@@ -453,8 +453,6 @@ class ProcessLinearEncoderScreen(Screen):
         #     self.data_status ='Try Resending'
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
-
-    # DEV NOTE: THIS FUNCTION IS ALMOST DONE, BUT STILL NEEDS TESTING
 
     def format_output(self):
 
@@ -536,29 +534,55 @@ class ProcessLinearEncoderScreen(Screen):
 
 
     # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
-    # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
 
     def open_spreadsheet(self):
 
         # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
 
-        page_token = None
+        # CHANGING THIS FUNCTION ATM TO SEARCH FOR FOLDERS INSTEAD, AND THEN WILL DO FILE SEARCH
+
+        folder_page_token = None
+        create_new_folder = True
+
         create_new_document = True
+
+        # FOLDER SEARCH
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.squareness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
+        folder_q_str = "'" + self.live_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'" + \
+         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
 
         while True:
             log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q=q_str,
+            lookup_folder = self.drive_service.files().list(q=folder_q_str,
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
-                                                        pageToken=page_token).execute()
+                                                        pageToken=folder_page_token).execute()
 
-            for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
+            for file in lookup_folder.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
-                log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
+                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
+
+                # GET FOLDER ID
+                folder_id = file.get('id')
+
+            if not create_new_folder:
+                break
+
+            folder_page_token = lookup_folder.get('nextPageToken', None)
+            if folder_page_token is None:
+                break
+
+
+
+
+
+            # GO INTO FOLDER AND LIST FILES:
+            file_q_str = "'" + folder_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.active_spreadsheet_name + "'"
+
+
+
                 found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
                 if found_spreadsheet_object.title != self.active_spreadsheet_name:
                     self.rename_file_with_current_date(found_spreadsheet_object)
@@ -645,7 +669,7 @@ class ProcessLinearEncoderScreen(Screen):
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.squareness_measurements_id,
+                                            addParents=self.live_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
     # def open_spreadsheet(self):
