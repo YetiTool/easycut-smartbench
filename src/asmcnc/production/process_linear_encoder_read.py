@@ -624,7 +624,7 @@ class ProcessLinearEncoderScreen(Screen):
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.straightness_measurements_id,
+                                            addParents=self.squareness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
     # def open_spreadsheet(self):
