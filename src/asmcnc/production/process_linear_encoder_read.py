@@ -433,7 +433,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
-        self.data_status == 'Sending'
+        self.data_status = 'Sending'
 
         # start main data sending processes after 2 seconds
         Clock.schedule_once(self.do_data_send, 2)
@@ -600,6 +600,7 @@ class ProcessLinearEncoderScreen(Screen):
 
 
     def copy_template_worksheets_to_existing_spread(self):
+
         master_sheet_object = self.gsheet_client.open_by_key(self.master_sheet_key)
         Calibration_master_sheet = master_sheet_object.worksheet('Calibration - Date - Test')
         Straightness_master_sheet = master_sheet_object.worksheet('Straightness - Date - Test')
@@ -704,15 +705,15 @@ class ProcessLinearEncoderScreen(Screen):
         # INDICATE IF BENCH OR EXTRUSION
         calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
 
-        try: 
-            # try accessing worksheet, which will work if it already exists
-            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
-            log('Using existing worksheet ' + str(calibration_data_worksheet_name))
+        # try: 
+        #     # try accessing worksheet, which will work if it already exists
+        #     worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+        #     log('Using existing worksheet ' + str(calibration_data_worksheet_name))
 
-        except:
-            self.copy_template_worksheets_to_existing_spread()
-            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
-            log('Using new worksheet ' + str(calibration_data_worksheet_name))
+        # except:
+        self.copy_template_worksheets_to_existing_spread()
+        worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+        log('Using new worksheet ' + str(calibration_data_worksheet_name))
 
         # pre-clear data
         self.delete_existing_spreadsheet_data(calibration_data_worksheet_name)
