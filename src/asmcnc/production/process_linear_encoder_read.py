@@ -625,8 +625,8 @@ class ProcessLinearEncoderScreen(Screen):
         Summary_master_sheet.copy_to(self.active_spreadsheet_object.id)
 
         # When master sheet is looking at the right data sheets, rename them all together
-        self.active_spreadsheet_object.worksheet('Copy of Calibration - Date - Test').update_title(calibration_data_worksheet_name)
-        self.active_spreadsheet_object.worksheet('Copy of Straightness - Date - Test').update_title(straightness_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Calibration - Date - Test').update_title(calibration_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Straightness - Date - Test').update_title(straightness_data_worksheet_name)
         self.active_spreadsheet_object.worksheet('Copy of Summary - Date - Test').update_title(summary_data_worksheet_name)
 
         # Update index of most recent summary sheet so that it sits at the front of the worksheet (after the key)
