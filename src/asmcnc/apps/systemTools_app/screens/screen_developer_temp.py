@@ -13,7 +13,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 
-from asmcnc.production import process_micrometer_read
+from asmcnc.production import process_micrometer_read, process_linear_encoder_read
 
 Builder.load_string("""
 
@@ -127,7 +127,8 @@ Builder.load_string("""
                             on_press: root.open_micrometer_jig_screen()
                                     
                         Button:
-                            text: ''
+                            text: 'Calibration'
+                            on_press: root.open_squareness_jig_screen()
                                        
                         Button:
                             text: ''
@@ -314,3 +315,10 @@ class DeveloperTempScreen(Screen):
             self.systemtools_sm.sm.add_widget(screen_process_micrometer_read)
 
         self.systemtools_sm.sm.current = 'micrometer_screen'
+
+    def open_squareness_jig_screen(self):
+        if not self.systemtools_sm.sm.has_screen('squareness_jig_screen'):
+            screen_process_linear_encoder_read = process_linear_encoder_read.ProcessLinearEncoderScreen(name = 'squareness_jig_screen', screen_manager = self.systemtools_sm.sm, machine = self.m)
+            self.systemtools_sm.sm.add_widget(screen_process_linear_encoder_read)
+
+        self.systemtools_sm.sm.current = 'squareness_jig_screen'
