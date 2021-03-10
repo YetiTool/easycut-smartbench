@@ -124,7 +124,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: travel
-                    text: "2490"
+                    text: "2489"
                     input_filter: 'float'
                     multiline: False
                     font_size: '20sp'
@@ -164,7 +164,7 @@ Builder.load_string("""
                 cols: 4
                 spacing: 5
 
-                ToggleButton:
+                Button:
                     id: prep_test
                     text: "GET READY"
                     on_press: root.set_up_for_test()
@@ -211,36 +211,39 @@ class ProcessLinearEncoderScreen(Screen):
 
     POLL_TIME = 1
 
-    # LISTS TO HOLD RAW RECORDED DATA
+    # LISTS TO HOLD RAW RECORDED DATA AS IT COMES IN
     Y_pos_list = []
     HOME_raw_pulse_list = []
     FAR_raw_pulse_list = []
 
     # JSON FORMAT LISTS (AFTER CALCULATIONS)
     machine_Y_coordinate = []
-    angle_off_square = []
-    Y_axis_linear_offset = []
-    Y_axis_angular_offset = []
-    aggregate_offset = []
-    Y_true = []
+
+    HOME_raw_converted = []
+    FAR_raw_converted = []
 
     HOME_distance_abs = []
     FAR_distance_abs = []
-    HOME_raw_converted = []
-    FAR_raw_converted = []
+
     Y_true = []
+    angle_off_square = []
+
+    delta_y_grbl_home = []
+    delta_y_grbl_far = []
+    Y_axis_linear_drift = []
+    Y_axis_angular_offset = []
+    delta_y_home = []
+    delta_y_far = []
+
     DELTA_Y_X_BEAM = []
-    DELTA_Y_Home = []
-    DELTA_Y_Far = []
     DELTA_Y_PER_METER = []
 
     # TEST PARAMETERS
-    FORWARDS = True
     starting_pos = 0
     max_pos = 0
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = '12Yqkp4ZT6xJvXJ5CTkkeS_N5zmgD3beNv2ZIhEg9mrA'
+    master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
     # FOLDER ID TO COLLATE RESULTS
     squareness_measurements_id = '1WcHTrNSNO3skkT3-kKhAi4qjv6-t2xQV'
@@ -401,26 +404,26 @@ class ProcessLinearEncoderScreen(Screen):
 
         # JSON FORMAT LISTS (AFTER CALCULATIONS)
         self.machine_Y_coordinate = []
-        self.angle_off_square = []
-        self.Y_axis_linear_offset = []
-        self.Y_axis_angular_offset = []
-        self.aggregate_offset = []
-
-        self.HOME_distance_abs = []
-        self.FAR_distance_abs = []
         self.HOME_raw_converted = []
         self.FAR_raw_converted = []
+        self.HOME_distance_abs = []
+        self.FAR_distance_abs = []
         self.Y_true = []
+        self.angle_off_square = []
+        self.delta_y_grbl_home = []
+        self.delta_y_grbl_far = []
+        self.Y_axis_linear_drift = []
+        self.Y_axis_angular_offset = []
+        self.delta_y_home = []
+        self.delta_y_far = []
         self.DELTA_Y_X_BEAM = []
-        self.DELTA_Y_Home = []
-        self.DELTA_Y_Far = []
         self.DELTA_Y_PER_METER = []
 
         # TEST PARAMETERS
         self.starting_pos = 0
         self.max_pos = 0
 
-        self.data_status = 'Cleared'
+        self.data_status = 'Ready'
 
 
     ## SENDING DATA
@@ -430,17 +433,13 @@ class ProcessLinearEncoderScreen(Screen):
 
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
-        self.update_screen_before_doing_data_send()
+        self.data_status == 'Sending'
 
         # start main data sending processes after 2 seconds
         Clock.schedule_once(self.do_data_send, 2)
 
 
     # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
-    def update_screen_before_doing_data_send(self):
-
-        self.data_status == 'Sending'
-
     def do_data_send(self, dt):
 
         self.active_spreadsheet_name = self.bench_id.text + ' ' + str(date.today())
@@ -458,19 +457,11 @@ class ProcessLinearEncoderScreen(Screen):
     def format_output(self):
 
         # work out distance travelled from raw pulses
-        # multiply everything by -1 to get a positive number, which affects graph formatting in google sheets
-        if self.FORWARDS:
+        HOME_measured_distance = [(self.starting_pos + float((H - self.starting_H)*encoder_resolution)) for H in self.HOME_raw_pulse_list]
+        FAR_measured_distance = [(self.starting_pos + float((F - self.starting_F)*encoder_resolution)) for F in self.FAR_raw_pulse_list]
 
-            HOME_measured_distance = [-1*(self.starting_pos + float((H - self.starting_H)*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [-1*(self.starting_pos + float((F - self.starting_F)*encoder_resolution)) for F in self.FAR_raw_pulse_list]
-        
-        else:
-
-            HOME_measured_distance = [-1*(self.starting_pos - float((H - self.starting_H)*encoder_resolution)) for H in self.HOME_raw_pulse_list]
-            FAR_measured_distance = [-1*(self.starting_pos - float((F - self.starting_F)*encoder_resolution)) for F in self.FAR_raw_pulse_list]
-
-        # make positive for benefits of graphing
-        machine_coordinates = [-1*Y for Y in self.Y_pos_list]
+        # grbl machine coordinates
+        machine_coordinates = self.Y_pos_list
 
         # work out absolute difference between measurements (or as modulus in the absolute value maths sense)
         opposite_side = list(map(lambda h, f: operator.sub(h,f), HOME_measured_distance, FAR_measured_distance))
@@ -479,7 +470,11 @@ class ProcessLinearEncoderScreen(Screen):
         midpoints = list(map(lambda h, f: (h+f)/2, HOME_measured_distance, FAR_measured_distance))
 
         # calculate linear drift: offset between each midpoint and the reported Y position from the machine
-        delta_y_linear = list(map(operator.sub, midpoints, machine_coordinates))
+        linear_drift = list(map(operator.sub, midpoints, machine_coordinates))
+
+        # calculate diff between grbl value and each measurement
+        delta_y_grbl_h = list(map(operator.sub, HOME_measured_distance, machine_coordinates))
+        delta_y_grbl_f = list(map(operator.sub, FAR_measured_distance, machine_coordinates))
 
         # calculate angle at each data point using artan trig (tan(theta) = opp/adj)
         adjacent_side = float(self.bench_width.text)
@@ -493,29 +488,34 @@ class ProcessLinearEncoderScreen(Screen):
         delta_y_mid_end = list(map(lambda d: d/2, DELTA_Y_X))
 
         # calculate aggregate offset due to both linear drift and angle out of square at home side
-        DELTA_Y_H = list(map(lambda l, a: l+a, delta_y_linear, delta_y_mid_end))
+        delta_y_h = list(map(lambda l, a: l+a, linear_drift, delta_y_mid_end))
 
         # calculate aggregate offset due to both linear drift and angle out of square at far side
-        DELTA_Y_F = list(map(lambda l, a: l-a, delta_y_linear, delta_y_mid_end))
+        delta_y_f = list(map(lambda l, a: l-a, linear_drift, delta_y_mid_end))
 
         DELTA_Y_PM = list(map(lambda a: (1000*math.tan(a)), angle_radians))
 
         # convert everthing into json format, ready to send out to gsheets
-        self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
-        self.angle_off_square = self.convert_to_json(angle_degrees)
-        self.Y_axis_linear_offset = self.convert_to_json(delta_y_linear)
-        self.Y_axis_angular_offset = self.convert_to_json(delta_y_mid_end)
-
-        self.HOME_distance_abs = self.convert_to_json(HOME_measured_distance)
-        self.FAR_distance_abs = self.convert_to_json(FAR_measured_distance)
-
         self.HOME_raw_converted = self.convert_to_json(self.HOME_raw_pulse_list)
         self.FAR_raw_converted = self.convert_to_json(self.FAR_raw_pulse_list)
 
+        self.HOME_distance_abs = self.convert_to_json(HOME_measured_distance)
+        self.FAR_distance_abs = self.convert_to_json(FAR_measured_distance)
         self.Y_true = self.convert_to_json(midpoints)
+
+        self.machine_Y_coordinate = self.convert_to_json(machine_coordinates)
+
+        self.angle_off_square = self.convert_to_json(angle_degrees)
+
+        self.delta_y_grbl_home = self.convert_to_json(delta_y_grbl_h)
+        self.delta_y_grbl_far = self.convert_to_json(delta_y_grbl_f)
+        self.Y_axis_linear_drift = self.convert_to_json(linear_drift)
+        self.Y_axis_angular_offset = self.convert_to_json(delta_y_mid_end)
+
+        self.delta_y_home = self.convert_to_json(delta_y_h)
+        self.delta_y_far = self.convert_to_json(delta_y_f)
+
         self.DELTA_Y_X_BEAM = self.convert_to_json(DELTA_Y_X)
-        self.DELTA_Y_Home = self.convert_to_json(DELTA_Y_H)
-        self.DELTA_Y_Far = self.convert_to_json(DELTA_Y_F)
         self.DELTA_Y_PER_METER = self.convert_to_json(DELTA_Y_PM)
 
 
@@ -534,13 +534,14 @@ class ProcessLinearEncoderScreen(Screen):
 
 
     # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
+    # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
 
     def open_spreadsheet(self):
 
         # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
 
         page_token = None
-        create_new_sheet = True
+        create_new_document = True
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
@@ -556,12 +557,14 @@ class ProcessLinearEncoderScreen(Screen):
             for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
 
                 log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                self.rename_file_with_current_date()
-                create_new_sheet = False
-                break
+                found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                if found_spreadsheet_object.title != self.active_spreadsheet_name:
+                    self.rename_file_with_current_date(found_spreadsheet_object)
+                else:
+                    self.active_spreadsheet_object = found_spreadsheet_object
+                create_new_document = False
 
-            if not create_new_sheet:
+            if not create_new_document:
                 break
 
             page_token = lookup_file.get('nextPageToken', None)
@@ -569,89 +572,173 @@ class ProcessLinearEncoderScreen(Screen):
                 break
 
         # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
-        if create_new_sheet:
+        if create_new_document:
 
-            log('Creating new sheet')
+            log('Creating new document')
             self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+            self.rename_template_sheets()
             self.move_sheet_to_operator_resources()
 
-    def rename_file_with_current_date(self):
 
-        file_metadata = {
-            'name': "'" + self.active_spreadsheet_name + "'"
-            }        
+    def rename_file_with_current_date(self, found_spreadsheet):
 
-        file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-                                                body = file_metadata)
+        self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
+        self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
+
+
+    def rename_template_sheets(self):
+
+        # order of this might be important, as it will dictate how the Summary sheet looks at data sheets:
+        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
+        straightness_data_worksheet_name =  'Straightness' + " - " + str(date.today()) + " - " + self.test_id.text
+        summary_data_worksheet_name =  'Summary' + " - " + str(date.today()) + " - " + self.test_id.text
+
+        self.active_spreadsheet_object.worksheet('Calibration - Date - Test').update_title(calibration_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Straightness - Date - Test').update_title(straightness_data_worksheet_name)
+        self.active_spreadsheet_object.worksheet('Summary - Date - Test').update_title(summary_data_worksheet_name)
+
+
+    def copy_template_worksheets_to_existing_spread(self):
+        master_sheet_object = self.gsheet_client.open_by_key(self.master_sheet_key)
+        Calibration_master_sheet = master_sheet_object.worksheet('Calibration - Date - Test')
+        Straightness_master_sheet = master_sheet_object.worksheet('Straightness - Date - Test')
+        Summary_master_sheet = master_sheet_object.worksheet('Summary - Date - Test')
+
+        Calibration_master_sheet.copy_to(self.active_spreadsheet_object.id)
+        Straightness_master_sheet.copy_to(self.active_spreadsheet_object.id)
+        Summary_master_sheet.copy_to(self.active_spreadsheet_object.id)
+
+        self.rename_template_sheets()
 
 
     def move_sheet_to_operator_resources(self):
 
-        log('Moving sheet to production > operator resources > live measurements')
+        log('Moving document to production > operator resources > live measurements')
 
         # Take the file ID and move it into the operator resources folder
-        self.active_spreadsheet_id = self.active_spreadsheet_object.id
 
         # Retrieve the existing parents to remove
-        file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
+        file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
                                          fields='parents').execute()
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
-        file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-                                            addParents=self.squareness_measurements_id,
+        file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
+                                            addParents=self.straightness_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
+    # def open_spreadsheet(self):
+
+    #     # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
+
+    #     page_token = None
+    #     create_new_document = True
+
+    #     # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
+    #     # and with a name that contains the current bench id
+    #     q_str = "'" + self.squareness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
+
+    #     while True:
+    #         log('Looking for existing file to send data to...')
+    #         lookup_file = self.drive_service.files().list(q=q_str,
+    #                                                     spaces='drive',
+    #                                                     fields='nextPageToken, files(id, name)',
+    #                                                     pageToken=page_token).execute()
+
+    #         for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
+
+    #             log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
+    #             self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+    #             self.rename_file_with_current_date()
+    #             create_new_document = False
+    #             break
+
+    #         if not create_new_document:
+    #             break
+
+    #         page_token = lookup_file.get('nextPageToken', None)
+    #         if page_token is None:
+    #             break
+
+    #     # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
+    #     if create_new_document:
+
+    #         log('Creating new sheet')
+    #         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
+    #         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+    #         self.move_sheet_to_operator_resources()
+
+
+    # def rename_file_with_current_date(self):
+
+    #     file_metadata = {
+    #         'name': "'" + self.active_spreadsheet_name + "'"
+    #         }        
+
+    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
+    #                                             body = file_metadata)
+
+
+
+    # def move_sheet_to_operator_resources(self):
+
+    #     log('Moving sheet to production > operator resources > live measurements')
+
+    #     # Take the file ID and move it into the operator resources folder
+    #     self.active_spreadsheet_id = self.active_spreadsheet_object.id
+
+    #     # Retrieve the existing parents to remove
+    #     file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
+    #                                      fields='parents').execute()
+    #     previous_parents = ",".join(file.get('parents'))
+    #     # Move the file to the new folder
+    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
+    #                                         addParents=self.squareness_measurements_id,
+    #                                         removeParents=previous_parents,
+    #                                         fields='id, parents').execute()
 
 
     # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        test_data_worksheet_name = str(date.today()) + ": " + self.test_id.text
+        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
 
         try: 
             # try accessing worksheet, which will work if it already exists
-            worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
-            log('Using worksheet ' + str(test_data_worksheet_name))
+            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+            log('Using existing worksheet ' + str(calibration_data_worksheet_name))
 
         except:
-            id_to_copy_from = (self.active_spreadsheet_object.worksheets()[0]).id
-            # if worksheet for this test does not exist yet, create a new one
-            worksheet = self.active_spreadsheet_object.duplicate_sheet(id_to_copy_from, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+            self.copy_template_worksheets_to_existing_spread()
+            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+            log('Using new worksheet ' + str(calibration_data_worksheet_name))
 
-            # need to clear data if duplicating sheets
-            self.delete_existing_spreadsheet_data(test_data_worksheet_name)
-
-            log('Created worksheet ' + str(test_data_worksheet_name))
-
-            # delete Sheet1 if it exists (for sake of tidyness)
-            try: self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
-            except: pass
+        # pre-clear data
+        self.delete_existing_spreadsheet_data(calibration_data_worksheet_name)
 
         log("Writing calibration measurements to Gsheet")
 
-        worksheet.update('B4:B', self.machine_Y_coordinate)
-        worksheet.update('C4:C', self.HOME_raw_converted)
-        worksheet.update('D4:D', self.FAR_raw_converted)
-        worksheet.update('E4:E', self.HOME_distance_abs)
-        worksheet.update('F4:F', self.FAR_distance_abs)
-        worksheet.update('G4:G', self.Y_true)
-        worksheet.update('H4:H', self.angle_off_square)
-        worksheet.update('I4:I', self.Y_axis_linear_offset)
-        worksheet.update('J4:J', self.Y_axis_angular_offset)
-        worksheet.update('K4:K', self.DELTA_Y_Home)
-        worksheet.update('L4:L', self.DELTA_Y_Far)
-        worksheet.update('M4:M', self.DELTA_Y_X_BEAM)
-        worksheet.update('N4:N', self.DELTA_Y_PER_METER)
+        worksheet.update('A5:A', self.machine_Y_coordinate)
+        worksheet.update('B5:B', self.HOME_raw_converted)
+        worksheet.update('C5:C', self.FAR_raw_converted)
+        worksheet.update('D5:D', self.HOME_distance_abs)
+        worksheet.update('E5:E', self.FAR_distance_abs)
+        worksheet.update('F5:F', self.Y_true)
+        worksheet.update('G5:G', self.angle_off_square)
+        worksheet.update('H5:H', self.delta_y_grbl_home)
+        worksheet.update('I5:I', self.delta_y_grbl_far)
+        worksheet.update('K5:K', self.Y_axis_linear_drift)
+        worksheet.update('J5:J', self.Y_axis_angular_offset)
+        worksheet.update('L5:L', self.delta_y_home)
+        worksheet.update('M5:M', self.delta_y_far)
+        worksheet.update('N5:N', self.DELTA_Y_X_BEAM)
+        worksheet.update('O5:O', self.DELTA_Y_PER_METER)
 
         self.data_status ='Sent'
-
-        log('Experiment data sent')
-
+        log('Calibration test data sent')
 
         log("Recording test metadata")
-
 
         # Bench ID:
         worksheet.update('A2', str(self.bench_id.text))
@@ -662,20 +749,19 @@ class ProcessLinearEncoderScreen(Screen):
         current_date = date.today()
 
         # Date
-        worksheet.update('A4', str(current_date))
+        worksheet.update('B2', str(current_date))
         
         # Time
-        worksheet.update('A6', str(current_time))
+        worksheet.update('C2', str(current_time))
 
         # Test no: 
-        worksheet.update('A8', str(self.test_id.text))          
+        worksheet.update('D2', str(self.test_id.text))          
 
         # Bench width: 
-        worksheet.update('A10', str(self.bench_width.text))
+        worksheet.update('E2', str(self.bench_width.text))
 
         # Travel:
-        worksheet.update('A14', str(self.travel.text))
-
+        worksheet.update('F2', str(self.travel.text))
 
         log('Clear local test data')
         self.clear_data()
@@ -688,29 +774,37 @@ class ProcessLinearEncoderScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F4:F"
-        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I4:I"
-        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J4:J"
-        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K4:K"
-        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L4:L"
-        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M4:M"
-        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N4:N"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A5:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B5:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C5:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D5:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E5:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F5:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G5:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H5:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I5:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J5:J"
+        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K5:K"
+        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L5:L"
+        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M5:M"
+        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N5:N"
+        O_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "O5:O"
 
+        self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
         self.active_spreadsheet_object.values_clear(F_str_to_clear)
+        self.active_spreadsheet_object.values_clear(G_str_to_clear)
+        self.active_spreadsheet_object.values_clear(H_str_to_clear)
         self.active_spreadsheet_object.values_clear(I_str_to_clear)
         self.active_spreadsheet_object.values_clear(J_str_to_clear)
         self.active_spreadsheet_object.values_clear(K_str_to_clear)
         self.active_spreadsheet_object.values_clear(L_str_to_clear)
         self.active_spreadsheet_object.values_clear(M_str_to_clear)
         self.active_spreadsheet_object.values_clear(N_str_to_clear)
+        self.active_spreadsheet_object.values_clear(O_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
