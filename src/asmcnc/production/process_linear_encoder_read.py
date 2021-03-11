@@ -252,6 +252,7 @@ class ProcessLinearEncoderScreen(Screen):
     gsheet_client = None
     drive_service = None
 
+    active_folder_id = ''
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
     active_spreadsheet_id = ''
@@ -537,14 +538,16 @@ class ProcessLinearEncoderScreen(Screen):
 
     def open_spreadsheet(self):
 
-        # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
+        if self.look_for_existing_folder():
+            if self.look_for_existing_file(): pass
+            else: self.create_new_document()
 
-        # CHANGING THIS FUNCTION ATM TO SEARCH FOR FOLDERS INSTEAD, AND THEN WILL DO FILE SEARCH
+        else:
+            self.create_new_folder()
+            self.create_new_document()
 
-        folder_page_token = None
-        create_new_folder = True
 
-        create_new_document = True
+    def look_for_existing_folder(self):
 
         # FOLDER SEARCH
 
@@ -554,208 +557,88 @@ class ProcessLinearEncoderScreen(Screen):
          ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
 
         while True:
-            log('Looking for existing file to send data to...')
+            log('Looking for existing folder to send data to...')
             lookup_folder = self.drive_service.files().list(q=folder_q_str,
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=folder_page_token).execute()
 
-            for file in lookup_folder.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
-
+            for file in lookup_folder.get('files', []):
                 log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
-
-                # GET FOLDER ID
-                folder_id = file.get('id')
-
-            if not create_new_folder:
-                break
+                self.active_folder_id = file.get('id')
+                return True
 
             folder_page_token = lookup_folder.get('nextPageToken', None)
             if folder_page_token is None:
-                break
+                self.active_folder_id = ''
+                return False
 
 
+    def look_for_existing_file(self):
+
+        # GO INTO FOLDER AND LIST FILES:
+        file_q_str = "'" + self.active_folder_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.active_spreadsheet_name + "'"
+
+        while True:
+            log('Looking for existing file to send data to...')
+            lookup_file = self.drive_service.files().list(q=file_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=document_page_token).execute()
+
+            for file in lookup_file.get('files', []):
+                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                return True
+
+            document_page_token = lookup_file.get('nextPageToken', None)
+            if document_page_token is None:
+                return False
 
 
+    def create_new_folder(self):
 
-            # GO INTO FOLDER AND LIST FILES:
-            file_q_str = "'" + folder_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.active_spreadsheet_name + "'"
+        file_metadata = {
+            'name': self.bench_id.text,
+            'mimeType': 'application/vnd.google-apps.folder',
+            'parents': self.live_measurements_id
+        }
 
-
-
-                found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                if found_spreadsheet_object.title != self.active_spreadsheet_name:
-                    self.rename_file_with_current_date(found_spreadsheet_object)
-                else:
-                    self.active_spreadsheet_object = found_spreadsheet_object
-                create_new_document = False
-
-            if not create_new_document:
-                break
-
-            page_token = lookup_file.get('nextPageToken', None)
-            if page_token is None:
-                break
-
-        # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
-        if create_new_document:
-
-            log('Creating new document')
-            self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-            self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-            self.rename_template_sheets()
-            self.move_sheet_to_operator_resources()
+        file = drive_service.files().create(body=file_metadata,
+                                            fields='id').execute()
+        self.active_folder_id = file.get('id')
+        log('Found folder: ' + str(file.get('id')))
 
 
-    def rename_file_with_current_date(self, found_spreadsheet):
-
-        self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
-
-
-    def rename_template_sheets(self):
-
-        # this function can only be used on fresh duplicated spreadsheet - not individually copied sheets
-        self.active_spreadsheet_object.worksheet('Calibration - Date - Test').update_title(calibration_data_worksheet_name)
-        self.active_spreadsheet_object.worksheet('Straightness - Date - Test').update_title(straightness_data_worksheet_name)
-        self.active_spreadsheet_object.worksheet('Summary - Date - Test').update_title(summary_data_worksheet_name)
+    def create_new_document(self):
+        log('Creating new document')
+        self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
+        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+        self.move_document_to_bench_folder()
 
 
-    def copy_template_worksheets_to_existing_spread(self):
+    def move_document_to_bench_folder(self):
 
-        # order of this important - need to trick the summary sheet into looking at the new copied data sheets
+        log("Moving document to production > operator resources > live measurements > [serial_number]")
 
-        # set up new names
-        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
-        straightness_data_worksheet_name =  'Straightness' + " - " + str(date.today()) + " - " + self.test_id.text
-        summary_data_worksheet_name =  'Summary' + " - " + str(date.today()) + " - " + self.test_id.text
-
-        # set up worksheet objects from the master sheet, which we'll copy across individually
-        master_sheet_object = self.gsheet_client.open_by_key(self.master_sheet_key)
-        Calibration_master_sheet = master_sheet_object.worksheet('Calibration - Date - Test')
-        Straightness_master_sheet = master_sheet_object.worksheet('Straightness - Date - Test')
-        Summary_master_sheet = master_sheet_object.worksheet('Summary - Date - Test')
-
-        # first, ONLY copy the data sheets
-        Calibration_master_sheet.copy_to(self.active_spreadsheet_object.id)
-        Straightness_master_sheet.copy_to(self.active_spreadsheet_object.id)
-
-        # when they are individually copied, they come across as "Copy of X" - need to rename them so that the Summary sheet will recognize
-        # the template naming convention
-        self.active_spreadsheet_object.worksheet('Copy of Calibration - Date - Test').update_title('Calibration - Date - Test')
-        self.active_spreadsheet_object.worksheet('Copy of Straightness - Date - Test').update_title('Straightness - Date - Test')
-
-        # Now copy the master sheet
-        Summary_master_sheet.copy_to(self.active_spreadsheet_object.id)
-
-        # When master sheet is looking at the right data sheets, rename them all together
-        self.active_spreadsheet_object.worksheet('Calibration - Date - Test').update_title(calibration_data_worksheet_name)
-        self.active_spreadsheet_object.worksheet('Straightness - Date - Test').update_title(straightness_data_worksheet_name)
-        self.active_spreadsheet_object.worksheet('Copy of Summary - Date - Test').update_title(summary_data_worksheet_name)
-
-        # Update index of most recent summary sheet so that it sits at the front of the worksheet (after the key)
-        self.active_spreadsheet_object.worksheet(summary_data_worksheet_name).update_index(1)
-
-
-    def move_sheet_to_operator_resources(self):
-
-        log('Moving document to production > operator resources > live measurements')
-
-        # Take the file ID and move it into the operator resources folder
+        # Take the file ID and move it into the folder for the bench (named by serial number)
 
         # Retrieve the existing parents to remove
         file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
                                          fields='parents').execute()
+
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.live_measurements_id,
+                                            addParents=self.active_folder_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
-    # def open_spreadsheet(self):
-
-    #     # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
-
-    #     page_token = None
-    #     create_new_document = True
-
-    #     # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
-    #     # and with a name that contains the current bench id
-    #     q_str = "'" + self.squareness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
-
-    #     while True:
-    #         log('Looking for existing file to send data to...')
-    #         lookup_file = self.drive_service.files().list(q=q_str,
-    #                                                     spaces='drive',
-    #                                                     fields='nextPageToken, files(id, name)',
-    #                                                     pageToken=page_token).execute()
-
-    #         for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
-
-    #             log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-    #             self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-    #             self.rename_file_with_current_date()
-    #             create_new_document = False
-    #             break
-
-    #         if not create_new_document:
-    #             break
-
-    #         page_token = lookup_file.get('nextPageToken', None)
-    #         if page_token is None:
-    #             break
-
-    #     # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
-    #     if create_new_document:
-
-    #         log('Creating new sheet')
-    #         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-    #         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-    #         self.move_sheet_to_operator_resources()
-
-
-    # def rename_file_with_current_date(self):
-
-    #     file_metadata = {
-    #         'name': "'" + self.active_spreadsheet_name + "'"
-    #         }        
-
-    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-    #                                             body = file_metadata)
-
-
-
-    # def move_sheet_to_operator_resources(self):
-
-    #     log('Moving sheet to production > operator resources > live measurements')
-
-    #     # Take the file ID and move it into the operator resources folder
-    #     self.active_spreadsheet_id = self.active_spreadsheet_object.id
-
-    #     # Retrieve the existing parents to remove
-    #     file = self.drive_service.files().get(fileId=self.active_spreadsheet_id,
-    #                                      fields='parents').execute()
-    #     previous_parents = ",".join(file.get('parents'))
-    #     # Move the file to the new folder
-    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-    #                                         addParents=self.squareness_measurements_id,
-    #                                         removeParents=previous_parents,
-    #                                         fields='id, parents').execute()
 
 
     # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        calibration_data_worksheet_name =  'Calibration' + " - " + str(date.today()) + " - " + self.test_id.text
-
-        # try: 
-        #     # try accessing worksheet, which will work if it already exists
-        #     worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
-        #     log('Using existing worksheet ' + str(calibration_data_worksheet_name))
-
-        # except:
-        self.copy_template_worksheets_to_existing_spread()
+        calibration_data_worksheet_name =  'Calibration Data'
         worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
         log('Using new worksheet ' + str(calibration_data_worksheet_name))
 
