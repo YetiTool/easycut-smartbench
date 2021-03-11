@@ -118,7 +118,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "test-reformat"
+                    text: "YB"
                     multiline: False
                     font_size: '20sp'
 
@@ -448,10 +448,10 @@ class ProcessLinearEncoderScreen(Screen):
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
 
-        # try: self.write_to_worksheet()
-        # except: 
-        #     log('Failed to write to sheet')
-        #     self.data_status ='Try Resending'
+        try: self.write_to_worksheet()
+        except: 
+            Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
+            log('Failed to write to sheet, trying again in 10 seconds')
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
 
