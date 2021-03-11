@@ -578,7 +578,7 @@ class ProcessLinearEncoderScreen(Screen):
     def look_for_existing_file(self):
 
         # GO INTO FOLDER AND LIST FILES:
-        print(self.active_spreadsheet_name)
+        log('Filename: ' + self.active_spreadsheet_name)
         file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
         document_page_token = None
 
