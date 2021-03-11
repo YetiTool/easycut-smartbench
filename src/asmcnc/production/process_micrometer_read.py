@@ -332,20 +332,17 @@ class ProcessMicrometerScreen(Screen):
     max_pos = 0
     DTI_initial_value = 0
 
-    # DATA STATUS
-    send_home_data = False
-    send_far_data = False
-
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
-    master_sheet_key = '10jyrzSH-_pvieqFW7TTF3JvU786XXVzwrPR-nx0Lx_o'
+    master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
     # FOLDER ID TO COLLATE RESULTS
-    straightness_measurements_id = '12H3XlLc876qia0i9s1a8FQCo7rK7fUzl'
+    live_measurements_id = '15iBk8f-_VqnOwfOuWBJQBgTFznjY_TQu'
 
     # GOOGLE API OBJECTS
     gsheet_client = None
     drive_service = None
 
+    active_folder_id = ''
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
     active_spreadsheet_id = ''
@@ -772,7 +769,7 @@ class ProcessMicrometerScreen(Screen):
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        test_data_worksheet_name = str(date.today()) + " " + self.test_type + ": " + self.test_id.text
+        test_data_worksheet_name = 'Straightness Data'
 
         try: 
             # try accessing worksheet, which will work if it already exists
