@@ -555,6 +555,7 @@ class ProcessLinearEncoderScreen(Screen):
         # and with a name that contains the current bench id
         folder_q_str = "'" + self.live_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'" + \
          ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
+         folder_page_token = None
 
         while True:
             log('Looking for existing folder to send data to...')
@@ -578,6 +579,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         # GO INTO FOLDER AND LIST FILES:
         file_q_str = "'" + self.active_folder_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.active_spreadsheet_name + "'"
+        document_page_token = None
 
         while True:
             log('Looking for existing file to send data to...')
