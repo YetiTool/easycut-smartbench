@@ -308,29 +308,35 @@ Builder.load_string("""
 
 class ProcessMicrometerScreen(Screen):
 
-    # LISTS TO HOLD RAW RECORDED DATA
-    HOME_Y_pos_list = []
-    HOME_DTI_abs_list = []
+    # CALIBRATORS AND CONSTANTS
+    Calibration_list = []
+    translation_from_jig_to_Y_pos = 0
+    arbitrary_width_constant = 1
 
-    FAR_Y_pos_list = []
-    FAR_DTI_abs_list = []
+    # LISTS TO HOLD RAW RECORDED DATA
+    jig_pos_list = []
+    DTI_read_home = []
+    DTI_read_far = []
 
     # LISTS FOR NORMALIZED DATA (against median value)
+    Y_pos = []
     HOME_normalized = []
     FAR_normalized = []
 
     # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
-    all_dti_measurements = []
-    HOME_Y_pos_list_converted = []
-    FAR_Y_pos_list_converted = []
-    raw_dti_measurements = []
+    jig_position_converted = []
+    y_pos_converted = []
+    calibration_list_converted = []
+    home_raw_converted = []
+    far_raw_converted = []
+    home_measurement_converted = []
+    far_measurement_converted = []
 
     # TEST PARAMETERS
-    HOME_SIDE = True
-    test_type = 'BENCH'
-    starting_pos = 0
+    starting_jig_pos = 0
     max_pos = 0
-    DTI_initial_value = 0
+    DTI_initial_value_home = 0
+    DTI_initial_value_far = 0
 
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
     master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
@@ -346,9 +352,6 @@ class ProcessMicrometerScreen(Screen):
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
     active_spreadsheet_id = ''
-
-    last_bench = ''
-    last_test = ''
 
     # STATUS FLAGS
     data_status = 'Ready'
@@ -503,55 +506,37 @@ class ProcessMicrometerScreen(Screen):
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
-    # THIS NEEDS REDOING
     def clear_data(self, clearall = False):
 
-        self.all_dti_measurements = []
-        self.raw_dti_measurements = []
+        # LISTS TO HOLD RAW RECORDED DATA
+        self.jig_pos_list = []
+        self.DTI_read_home = []
+        self.DTI_read_far = []
 
+        # LISTS FOR NORMALIZED DATA (against median value)
+        self.Y_pos = []
+        self.HOME_normalized = []
+        self.FAR_normalized = []
 
-        if self.HOME_SIDE:
+        # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
+        self.jig_position_converted = []
+        self.y_pos_converted = []
+        self.calibration_list_converted = []
+        self.home_raw_converted = []
+        self.far_raw_converted = []
+        self.home_measurement_converted = []
+        self.far_measurement_converted = []
 
-            self.HOME_DTI_abs_list = []
-            self.HOME_Y_pos_list = []
+        # TEST PARAMETERS
+        self.starting_jig_pos = 0
+        self.max_pos = 0
+        self.DTI_initial_value_home = 0
+        self.DTI_initial_value_far = 0
 
-            self.HOME_Y_pos_list_converted = []
-            self.HOME_normalized = []
-
-            self.home_data_status = 'Cleared'
-
-        else:
-
-            self.FAR_DTI_abs_list = []
-            self.FAR_Y_pos_list = []
-
-            self.FAR_Y_pos_list_converted = []
-            self.FAR_normalized = []
-
-            self.far_data_status = 'Cleared'
-
-
-        if clearall: 
-
-            self.HOME_DTI_abs_list = []
-            self.HOME_Y_pos_list = []
-
-            self.HOME_Y_pos_list_converted = []
-            self.HOME_normalized = []
-
-            self.home_data_status = 'Cleared'
-
-            self.FAR_DTI_abs_list = []
-            self.FAR_Y_pos_list = []
-
-            self.FAR_Y_pos_list_converted = []
-            self.FAR_normalized = []
-
-            self.far_data_status = 'Cleared'
+        self.data_status = 'Cleared'
 
 
     ## SENDING DATA
-
 
     # MAIN FUNCTION CALLED BY BUTTON
     def send_data(self):
@@ -579,6 +564,33 @@ class ProcessMicrometerScreen(Screen):
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
     # NEEDS REDOING
     def format_output(self):
+
+
+        # LISTS TO HOLD RAW RECORDED DATA
+        self.jig_pos_list = []
+        self.DTI_read_home = []
+        self.DTI_read_far = []
+
+        # LISTS FOR NORMALIZED DATA (against median value)
+        self.Y_pos = []
+        self.HOME_normalized = []
+        self.FAR_normalized = []
+
+        # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
+        self.jig_position_converted = []
+        self.y_pos_converted = []
+        self.calibration_list_converted = []
+        self.home_raw_converted = []
+        self.far_raw_converted = []
+        self.home_measurement_converted = []
+        self.far_measurement_converted = []
+
+        # TEST PARAMETERS
+        self.starting_pos = 0
+        self.max_pos = 0
+        self.DTI_initial_value_home = 0
+        self.DTI_initial_value_far = 0
+
 
         # self.starting_jig_pos
 
