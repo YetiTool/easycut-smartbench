@@ -625,8 +625,8 @@ class ProcessLinearEncoderScreen(Screen):
 
 
         # Remove the API service bot's default parents, which will hopefully enable access
-        folder = self.drive_service.files().get(self.active_folder_id,
-                                         fields='parents').execute()
+        folder = self.drive_service.files().get(fileId=self.active_folder_id,
+                                            fields='parents').execute()
 
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
