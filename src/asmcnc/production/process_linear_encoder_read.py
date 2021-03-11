@@ -443,7 +443,7 @@ class ProcessLinearEncoderScreen(Screen):
     # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
     def do_data_send(self, dt):
 
-        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + self.test_id.text
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
@@ -553,7 +553,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        folder_q_str = "'" + self.live_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'" + \
+        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
          ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
         folder_page_token = None
 
@@ -578,7 +578,7 @@ class ProcessLinearEncoderScreen(Screen):
     def look_for_existing_file(self):
 
         # GO INTO FOLDER AND LIST FILES:
-        file_q_str = "'" + self.active_folder_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.active_spreadsheet_name + "'"
+        file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
         document_page_token = None
 
         while True:
