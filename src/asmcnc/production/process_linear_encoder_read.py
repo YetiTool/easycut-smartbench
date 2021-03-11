@@ -567,20 +567,6 @@ class ProcessLinearEncoderScreen(Screen):
             for file in lookup_folder.get('files', []):
                 log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
                 self.active_folder_id = file.get('id')
-
-                # temp to debug
-
-                # Remove the API service bot's default parents, which will hopefully enable access
-                folder = self.drive_service.files().get(self.active_folder_id,
-                                                 fields='parents').execute()
-
-                previous_parents = ",".join(file.get('parents'))
-                # Move the file to the new folder
-                folder = self.drive_service.files().update(fileId=self.active_folder_id,
-                                                    addParents=self.live_measurements_id,
-                                                    removeParents=previous_parents,
-                                                    fields='id, parents').execute()
-
                 return True
 
             folder_page_token = lookup_folder.get('nextPageToken', None)
@@ -623,7 +609,6 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Found folder: ' + str(folder.get('id')))
 
-
         # Remove the API service bot's default parents, which will hopefully enable access
         folder = self.drive_service.files().get(fileId=self.active_folder_id,
                                             fields='parents').execute()
@@ -634,8 +619,6 @@ class ProcessLinearEncoderScreen(Screen):
                                             addParents=self.live_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
-
-
 
 
     def create_new_document(self):
