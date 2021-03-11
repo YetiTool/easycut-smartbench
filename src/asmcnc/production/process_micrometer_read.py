@@ -22,16 +22,14 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.properties import ObjectProperty
-from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor, widget_xy_move
+from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
 
-from asmcnc.production import micrometer
+from asmcnc.production import micrometer, dti_widget_xy_move
 
 
-PORT = '/dev/ttyUSB0'
-DTI = micrometer.micrometer(PORT)
+USB0 = '/dev/ttyUSB0'
+USB1 = '/dev/ttyUSB1'
 y_length = float(2645 - 20)
-
-# reading = DTI.read_mm()
 
 def log(message):
     timestamp = datetime.now()
@@ -46,17 +44,25 @@ Builder.load_string("""
     status_container:status_container
     gcode_monitor_container:gcode_monitor_container
     move_container: move_container
-    bench_id:bench_id 
-    test_id:test_id
-    travel:travel
-    go_stop: go_stop
-    home_stop:home_stop
-    test_type_toggle:test_type_toggle
-    side_toggle:side_toggle
-    send_data_button:send_data_button
-    home_data_status_label:home_data_status_label
-    far_data_status_label:far_data_status_label
-    dti_read_label:dti_read_label
+
+    bench_id : bench_id 
+    test_id : test_id
+    travel : travel
+    data_status_label : data_status_label
+    h_read_label : h_read_label
+    f_read_label : f_read_label
+
+    prep_test : prep_test
+    go_stop : go_stop
+    calibrate_stop : calibrate_stop
+
+
+    # test_type_toggle:test_type_toggle
+    # side_toggle:side_toggle
+    # send_data_button:send_data_button
+    # home_data_status_label:home_data_status_label
+    # far_data_status_label:far_data_status_label
+    # dti_read_label:dti_read_label
 
     BoxLayout:
         padding: 0
@@ -75,11 +81,14 @@ Builder.load_string("""
             spacing: 10
             orientation: "vertical"
 
+
             GridLayout: 
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 2
-                cols: 8
+                cols: 6
+                cols_minimum: {0: 200, 1: 100, 2: 100, 3: 100, 4: 150, 5: 150}
+                rows_minimum: {0: 10, 1: 20}
 
                 # Test set up labels
 
@@ -88,104 +97,189 @@ Builder.load_string("""
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Testing:"
-                    color: 0,0,0,1
-                Label: 
                     text: "Travel"
                     color: 0,0,0,1
+
                 Label: 
                     text: "Test no."
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Measuring:"
+                    text: "Data status:"
                     color: 0,0,0,1
 
                 Label: 
-                    text: "HOME DATA"
+                    text: "DTI Home"
                     color: 0,0,0,1
 
                 Label: 
-                    text: "FAR DATA"
+                    text: "DTI Far"
                     color: 0,0,0,1
 
-                Label:
-                    text: "DTI Read"
-                    color: 0,0,0,1
 
                 # Test setting inputs/buttons
 
                 TextInput: 
                     id: bench_id 
-                    text: "id"
+                    text: "YB"
                     multiline: False
-
-                ToggleButton:
-                    id: test_type_toggle
-                    text: "EXTRUSION"
-                    on_press: root.toggle_test_type()
+                    font_size: '20sp'
 
                 TextInput: 
                     id: travel
-                    text: "2500"
+                    text: "2489"
                     input_filter: 'float'
                     multiline: False
+                    font_size: '20sp'
 
                 TextInput: 
                     id: test_id
                     text: "1"
                     input_filter: 'int'
                     multiline: False
-
-                ToggleButton:
-                    id: side_toggle
-                    text: "HOME SIDE"
-                    on_press: root.toggle_home_far()
+                    font_size: '20sp'
 
                 Label: 
-                    id: home_data_status_label
+                    id: data_status_label
                     text: "status"
                     color: 0,0,0,1
 
                 Label: 
-                    id: far_data_status_label
-                    text: "status"
-                    color: 0,0,0,1
-
-                Label: 
-                    id: dti_read_label
+                    id: h_read_label
                     text: "-"
                     color: 0,0,0,1
+
+                Label: 
+                    id: f_read_label
+                    text: "-"
+                    color: 0,0,0,1
+
+# ## OLD:                     
+#             GridLayout: 
+#                 pos: self.parent.pos
+#                 size_hint_y: 0.15
+#                 rows: 2
+#                 cols: 8
+
+#                 # Test set up labels
+
+#                 Label: 
+#                     text: "Bench ID"
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     text: "Testing:"
+#                     color: 0,0,0,1
+#                 Label: 
+#                     text: "Travel"
+#                     color: 0,0,0,1
+#                 Label: 
+#                     text: "Test no."
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     text: "Measuring:"
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     text: "HOME DATA"
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     text: "FAR DATA"
+#                     color: 0,0,0,1
+
+#                 Label:
+#                     text: "DTI Read"
+#                     color: 0,0,0,1
+
+#                 # Test setting inputs/buttons
+
+#                 TextInput: 
+#                     id: bench_id 
+#                     text: "id"
+#                     multiline: False
+
+#                 ToggleButton:
+#                     id: test_type_toggle
+#                     text: "EXTRUSION"
+#                     on_press: root.toggle_test_type()
+
+#                 TextInput: 
+#                     id: travel
+#                     text: "2500"
+#                     input_filter: 'float'
+#                     multiline: False
+
+#                 TextInput: 
+#                     id: test_id
+#                     text: "1"
+#                     input_filter: 'int'
+#                     multiline: False
+
+#                 ToggleButton:
+#                     id: side_toggle
+#                     text: "HOME SIDE"
+#                     on_press: root.toggle_home_far()
+
+#                 Label: 
+#                     id: home_data_status_label
+#                     text: "status"
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     id: far_data_status_label
+#                     text: "status"
+#                     color: 0,0,0,1
+
+#                 Label: 
+#                     id: dti_read_label
+#                     text: "-"
+#                     color: 0,0,0,1
 
             GridLayout: 
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
-                cols: 5
+                cols: 4
                 spacing: 5
 
+                # ToggleButton:
+                #     id: home_stop
+                #     text: "HOME"
+                #     on_press: root.home_machine_pre_test()
+                #     background_color: [0,0,0,1]
+                #     background_normal: ''
+
                 ToggleButton:
-                    id: home_stop
-                    text: "HOME"
-                    on_press: root.home_machine_pre_test()
+                    id: prep_test
+                    text: "GET READY"
+                    on_press: root.set_up_for_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
                 ToggleButton:
                     id: go_stop
-                    text: "GO"
+                    text: "MEASURE"
                     on_press: root.run_stop_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
-                Button:
-                    text: "RESET DATA"
-                    on_press: root.clear_data()
+                ToggleButton:
+                    id: calibrate_stop
+                    text: "CALIBRATE"
+                    on_press: root.run_stop_test()
+                    background_color: [0,0,0,1]
+                    background_normal: ''
+
+                # Button:
+                #     text: "RESET DATA"
+                #     on_press: root.clear_data()
                 
-                Button:
-                    id: send_data_button
-                    text: "SEND DATA"
-                    on_press: root.send_data()
+                # Button:
+                #     id: send_data_button
+                #     text: "SEND DATA"
+                #     on_press: root.send_data()
 
                 Button:
                     text: "QUIT"
@@ -260,11 +354,11 @@ class ProcessMicrometerScreen(Screen):
     last_test = ''
 
     # STATUS FLAGS
-    home_data_status = 'Ready'
-    far_data_status = 'Ready'
+    data_status = 'Ready'
 
     # READ IN VALUE
-    dti_read = ''
+    home_dti_read = ''
+    far_dti_read = ''
 
     # SET UP KIVY CLOCK EVENT OBJECTS
     poll_for_screen = None
@@ -272,18 +366,16 @@ class ProcessMicrometerScreen(Screen):
     def __init__(self, **kwargs):
 
         super(ProcessMicrometerScreen, self).__init__(**kwargs)
-
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
 
         # WIDGET SETUP
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
-        self.move_container.add_widget(widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm))
+        self.move_container.add_widget(dti_widget_xy_move.DTIJigXYMove(machine=self.m, screen_manager=self.sm))
 
-
+        ## GSHEET SETUP
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            ## GSHEET SETUP
             scope = [
                 'https://www.googleapis.com/auth/drive',
                 'https://www.googleapis.com/auth/drive.file'
@@ -293,20 +385,26 @@ class ProcessMicrometerScreen(Screen):
             self.drive_service = build('drive', 'v3', credentials=creds)
             self.gsheet_client = gspread.authorize(creds)
 
+        # MICROMETER CONNECTION
+        self.DTI_H = micrometer.micrometer(USB0)
+        self.DTI_F = micrometer.micrometer(USB1)
+
     def on_enter(self):
 
         self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
-        self.home_stop.background_color = [0,0.502,0,1]
+        if self.m.is_machine_homed:
+            self.prep_test.background_color = [0,0.502,0,1]
 
         # TURNS BUTTON GREEN IF DTI IS CONNECTED
-        if DTI != None:
+        if self.DTI_H != None and self.DTI_F != None:
             self.go_stop.background_color = [0,0.502,0,1]
+            self.calibrate_stop.background_color = [0,0.502,0,1]
 
         self.go_stop.state == 'normal'
-        self.go_stop.text = 'GO'
+        self.go_stop.text = 'MEASURE'
 
-        self.toggle_test_type()
-        self.toggle_home_far()
+        self.calibrate_stop.state == 'normal'
+        self.calibrate_stop.text = 'CALIBRATE'
 
 
     def go_to_lobby(self):
@@ -314,65 +412,44 @@ class ProcessMicrometerScreen(Screen):
 
 
     # TEST SET UP
-
-    def toggle_home_far(self):
-
-        if self.side_toggle.state == 'down':
-            self.side_toggle.background_color = [0,1,0,1]
-            self.side_toggle.text = 'FAR SIDE'
-            self.HOME_SIDE = False
-
-        elif self.side_toggle.state == 'normal':
-            self.side_toggle.background_color = [0,0,1,1]
-            self.side_toggle.text = 'HOME SIDE'
-            self.HOME_SIDE = True
-
-
-    def toggle_test_type(self):
-
-        if self.test_type_toggle.state == 'down':
-            self.test_type_toggle.background_color = [0,1,0,1]
-            self.test_type = 'BENCH'
-            self.test_type_toggle.text = self.test_type
-
-        elif self.test_type_toggle.state == 'normal':
-            self.test_type_toggle.background_color = [0,0,1,1]
-            self.test_type = 'EXTRUSION'
-            self.test_type_toggle.text = self.test_type
+    def  set_up_for_test(self):
+        self.home_machine_pre_test()
+        # might also want to add a command that takes the jig to a start point - 
+        # perhaps in line with the first metal datum? 
 
 
     # HOME FUNCTION
 
     def home_machine_pre_test(self):
 
-        if self.home_stop.state == 'down':
+        if self.prep_test.state == 'down':
 
             ## CHANGE BUTTON
-            self.home_stop.background_color = [1,0,0,1]
-            self.home_stop.text = 'STOP'
+            self.prep_test.background_color = [1,0,0,1]
+            self.prep_test.text = 'STOP'
 
             normal_homing_sequence = ['$H']
             self.m.s.start_sequential_stream(normal_homing_sequence)
 
             self.check_for_home_end_event = Clock.schedule_interval(self.check_home_completion, 3)
 
-        elif self.home_stop.state == 'normal':
+        elif self.prep_test.state == 'normal':
 
             # CANCEL HOMING
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
             self.m.reset_on_cancel_homing()
 
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
+            self.prep_test.text = 'GET READY'
+            self.prep_test.background_color = [0,0.502,0,1]
 
     # update home button when homing has finished
     def check_home_completion(self, dt):
 
         if not self.m.s.is_sequential_streaming:
             Clock.unschedule(self.check_for_home_end_event)
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
-            self.home_stop.state = 'normal'
+            self.prep_test.text = 'GET READY'
+            self.prep_test.background_color = [0,0.502,0,1]
+            self.prep_test.state = 'normal'
 
 
     # MACHINE RUN TEST FUNCTIONS
@@ -387,20 +464,15 @@ class ProcessMicrometerScreen(Screen):
 
             ## SET VARIABLES
             self.clear_data()
-            self.starting_pos = float(self.m.mpos_x())
-            DTI_initial_value = DTI.read_mm()
+            self.starting_jig_pos = float(self.m.mpos_x())
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
             log('Starting test...')
+            self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
-
-            if self.HOME_SIDE:
-                self.home_data_status = 'Collecting'
-            else:
-                self.far_data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
             log('Cancel from button')
@@ -413,38 +485,20 @@ class ProcessMicrometerScreen(Screen):
     def end_of_test_sequence(self):
 
         Clock.unschedule(self.test_run)
-
-        if self.HOME_SIDE:
-            self.home_data_status = 'Collected'
-        else:
-            self.far_data_status = 'Collected'
-
+        self.data_status = 'Collected'
         self.go_stop.background_color = [0,0.502,0,1]
-        self.go_stop.text = 'GO'
+        self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
-
 
     def set_max_pos(self):
         return self.starting_pos - float(self.travel.text)
 
-
     def do_test_step(self, dt):
 
         if self.m.mpos_x() >= self.max_pos:
-        #     pass
-
-        # elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
-
-            if self.HOME_SIDE: 
-                self.HOME_Y_pos_list.append(float(self.m.mpos_x()))
-                self.HOME_DTI_abs_list.append(float(DTI.read_mm()))
-
-            else:
-                self.FAR_Y_pos_list.append(float(self.m.mpos_x()))
-                self.FAR_DTI_abs_list.append(float(DTI.read_mm()))
-
-            # incremental
-            # self.m.send_any_gcode_command('G0 G91 X-10')
+            self.jig_pos_list.append(float(self.m.mpos_x()))
+            self.DTI_read_home.append(float(self.DTI_H.read_mm()))
+            self.DTI_read_far.append(float(self.DTI_F.read_mm()))
 
         else:
             log('Cancel from test step')
@@ -452,7 +506,7 @@ class ProcessMicrometerScreen(Screen):
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
-
+    # THIS NEEDS REDOING
     def clear_data(self, clearall = False):
 
         self.all_dti_measurements = []
@@ -507,36 +561,29 @@ class ProcessMicrometerScreen(Screen):
 
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
-        self.update_screen_before_doing_data_send()
+        self.data_status = 'Sending'
 
         # start main data sending processes after 2 seconds
         Clock.schedule_once(self.do_data_send, 2)
 
 
-    # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
-    def update_screen_before_doing_data_send(self):
-
-        self.send_data_button.text = 'SENDING DATA...'
-
-        if self.home_data_status == 'Collected':
-            self.home_data_status = 'Sending...'
-
-        if self.far_data_status == 'Collected':
-            self.far_data_status = 'Sending...'
-
-
     def do_data_send(self, dt):
 
-        self.active_spreadsheet_name = self.bench_id.text + ' ' + str(date.today())
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         self.write_to_worksheet()
 
-        self.send_data_button.text = 'SEND DATA'
-
+        try: self.write_to_worksheet()
+        except: 
+            Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
+            log('Failed to write to sheet, trying again in 10 seconds')
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
+    # NEEDS REDOING
     def format_output(self):
+
+        # self.starting_jig_pos
 
         # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
         x_axis = []
@@ -613,70 +660,113 @@ class ProcessMicrometerScreen(Screen):
 
     def open_spreadsheet(self):
 
-        # CHECK WHETHER SPREADSHEET FOR SERIAL NUMBER ALREADY EXISTS
+        if self.look_for_existing_folder():
+            if self.look_for_existing_file(): pass
+            else: self.create_new_document()
 
-        page_token = None
-        create_new_sheet = True
+        else:
+            self.create_new_folder()
+            self.create_new_document()
+
+
+    def look_for_existing_folder(self):
+
+        # FOLDER SEARCH
 
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
-        q_str = "'" + self.straightness_measurements_id + "'" + " in " + "parents" + ' and ' "name" + " contains " + "'" + self.bench_id.text + "'"
+        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
+         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
+        folder_page_token = None
+
+        while True:
+            log('Looking for existing folder to send data to...')
+            lookup_folder = self.drive_service.files().list(q=folder_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=folder_page_token).execute()
+
+            for file in lookup_folder.get('files', []):
+                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
+                self.active_folder_id = file.get('id')
+                return True
+
+            folder_page_token = lookup_folder.get('nextPageToken', None)
+            if folder_page_token is None:
+                self.active_folder_id = ''
+                return False
+
+
+    def look_for_existing_file(self):
+
+        # GO INTO FOLDER AND LIST FILES:
+        log('Filename: ' + self.active_spreadsheet_name)
+        file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
+        document_page_token = None
 
         while True:
             log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q=q_str,
+            lookup_file = self.drive_service.files().list(q=file_q_str,
                                                         spaces='drive',
                                                         fields='nextPageToken, files(id, name)',
-                                                        pageToken=page_token).execute()
+                                                        pageToken=document_page_token).execute()
 
-            for file in lookup_file.get('files', []): # this is written to loop through and find multiple files, but actually we only want one (and only expect one!)
+            for file in lookup_file.get('files', []):
+                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                return True
 
-                log('Found file: %s (%s)' % (file.get('name'), file.get('id')))
-                found_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                if found_spreadsheet_object.title != self.active_spreadsheet_name:
-                    self.rename_file_with_current_date(found_spreadsheet_object) # can't make it work yet
-                else:
-                    self.active_spreadsheet_object = found_spreadsheet_object
-                create_new_sheet = False
-
-            if not create_new_sheet:
-                break
-
-            page_token = lookup_file.get('nextPageToken', None)
-            if page_token is None:
-                break
-
-        # IF THIS IS A NEW BENCH/EXTRUSION, CREATE A NEW SPREADSHEET
-        if create_new_sheet:
-
-            log('Creating new sheet')
-            self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-            self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-            self.move_sheet_to_operator_resources()
+            document_page_token = lookup_file.get('nextPageToken', None)
+            if document_page_token is None:
+                return False
 
 
-    def rename_file_with_current_date(self, found_spreadsheet):
+    def create_new_folder(self):
 
-        self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
+        folder_metadata = {
+            'name': self.bench_id.text,
+            'mimeType': 'application/vnd.google-apps.folder',
+        }
+
+        folder = self.drive_service.files().create(body=folder_metadata,
+                                            fields='id').execute()
+        self.active_folder_id = folder.get('id')
+        log('Found folder: ' + str(folder.get('id')))
+
+        # Remove the API service bot's default parents, which will hopefully enable access
+        folder = self.drive_service.files().get(fileId=self.active_folder_id,
+                                            fields='parents').execute()
+
+        previous_parents = ",".join(folder.get('parents'))
+        # Move the file to the new folder
+        folder = self.drive_service.files().update(fileId=self.active_folder_id,
+                                            addParents=self.live_measurements_id,
+                                            removeParents=previous_parents,
+                                            fields='id, parents').execute()
 
 
-    def move_sheet_to_operator_resources(self):
+    def create_new_document(self):
+        log('Creating new document')
+        self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
+        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+        self.move_document_to_bench_folder()
 
-        log('Moving sheet to production > operator resources > live measurements')
 
-        # Take the file ID and move it into the operator resources folder
+    def move_document_to_bench_folder(self):
+
+        log("Moving document to production > operator resources > live measurements > [serial_number]")
+
+        # Take the file ID and move it into the folder for the bench (named by serial number)
 
         # Retrieve the existing parents to remove
         file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
                                          fields='parents').execute()
+
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.straightness_measurements_id,
+                                            addParents=self.active_folder_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
-
 
     # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
@@ -743,7 +833,7 @@ class ProcessMicrometerScreen(Screen):
         log('Finished writing data')
 
         self.go_stop.state = 'normal'
-        self.go_stop.text = 'GO'
+        self.go_stop.text = 'MEASURE'
         self.go_stop.background_color = [0,0.502,0,1]
 
 
@@ -765,9 +855,9 @@ class ProcessMicrometerScreen(Screen):
 
     def update_screen(self, dt):
 
-        self.home_data_status_label.text = self.home_data_status
-        self.far_data_status_label.text = self.far_data_status
-        self.dti_read_label.text = str(DTI.read_mm())
+        self.data_status_label.text = self.data_status
+        self.h_read_label.text = str(self.DTI_H.read_mm())
+        self.f_read_label.text = str(self.DTI_F.read_mm())
 
 
     def on_leave(self):

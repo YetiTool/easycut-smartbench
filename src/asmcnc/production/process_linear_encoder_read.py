@@ -45,8 +45,8 @@ Builder.load_string("""
 <ProcessLinearEncoderScreen>:
 
     bench_id : bench_id 
-    travel : travel
     test_id : test_id
+    travel : travel
     bench_width : bench_width
     data_status_label : data_status_label
     h_read_label : h_read_label
@@ -90,11 +90,11 @@ Builder.load_string("""
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Travel"
+                    text: "Test no."
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Test no."
+                    text: "Travel"
                     color: 0,0,0,1
                 
                 Label: 
@@ -123,16 +123,16 @@ Builder.load_string("""
                     font_size: '20sp'
 
                 TextInput: 
-                    id: travel
-                    text: "2489"
-                    input_filter: 'float'
+                    id: test_id
+                    text: "1"
+                    input_filter: 'int'
                     multiline: False
                     font_size: '20sp'
 
                 TextInput: 
-                    id: test_id
-                    text: "1"
-                    input_filter: 'int'
+                    id: travel
+                    text: "2489"
+                    input_filter: 'float'
                     multiline: False
                     font_size: '20sp'
 
@@ -440,7 +440,6 @@ class ProcessLinearEncoderScreen(Screen):
         Clock.schedule_once(self.do_data_send, 2)
 
 
-    # FUNCTIONS DIRECTLY CALLED BY SEND_DATA()
     def do_data_send(self, dt):
 
         self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
