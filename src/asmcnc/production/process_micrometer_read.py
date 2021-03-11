@@ -117,7 +117,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_id 
-                    text: "increment-test"
+                    text: "id"
                     multiline: False
 
                 ToggleButton:
@@ -221,16 +221,15 @@ class ProcessMicrometerScreen(Screen):
     FAR_Y_pos_list = []
     FAR_DTI_abs_list = []
 
-    # LISTS FOR NORMALIZED DATA (against first value...might make this average value?)
-    HOME_zeroed_list = []
-    FAR_zeroed_list = []
+    # LISTS FOR NORMALIZED DATA (against median value)
+    HOME_normalized = []
+    FAR_normalized = []
 
-    # JSON FORMAT LISTS
-    HOME_DTI_abs_list_converted = []
-    FAR_DTI_abs_list_converted = []
-
-    HOME_zeroed_converted = []
-    FAR_zeroed_converted = []
+    # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
+    all_dti_measurements = []
+    HOME_Y_pos_list_converted = []
+    FAR_Y_pos_list_converted = []
+    raw_dti_measurements = []
 
     # TEST PARAMETERS
     HOME_SIDE = True
@@ -297,15 +296,18 @@ class ProcessMicrometerScreen(Screen):
     def on_enter(self):
 
         self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
-
         self.home_stop.background_color = [0,0.502,0,1]
 
         # TURNS BUTTON GREEN IF DTI IS CONNECTED
         if DTI != None:
             self.go_stop.background_color = [0,0.502,0,1]
 
-        self.toggle_home_far()
+        self.go_stop.state == 'normal'
+        self.go_stop.text = 'GO'
+
         self.toggle_test_type()
+        self.toggle_home_far()
+
 
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
@@ -363,6 +365,15 @@ class ProcessMicrometerScreen(Screen):
             self.home_stop.text = 'HOME'
             self.home_stop.background_color = [0,0.502,0,1]
 
+    # update home button when homing has finished
+    def check_home_completion(self, dt):
+
+        if not self.m.s.is_sequential_streaming:
+            Clock.unschedule(self.check_for_home_end_event)
+            self.home_stop.text = 'HOME'
+            self.home_stop.background_color = [0,0.502,0,1]
+            self.home_stop.state = 'normal'
+
 
     # MACHINE RUN TEST FUNCTIONS
 
@@ -381,7 +392,7 @@ class ProcessMicrometerScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-
+            log('Starting test...')
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
@@ -392,6 +403,7 @@ class ProcessMicrometerScreen(Screen):
                 self.far_data_status = 'Collecting'
 
         elif self.go_stop.state == 'normal':
+            log('Cancel from button')
             self.end_of_test_sequence()
 
             if self.m.state() == 'Run':
@@ -418,7 +430,7 @@ class ProcessMicrometerScreen(Screen):
 
     def do_test_step(self, dt):
 
-        if self.m.state() == 'Run' and self.m.mpos_x() >= self.max_pos:
+        if self.m.mpos_x() >= self.max_pos:
         #     pass
 
         # elif self.m.state() == 'Idle' and self.m.mpos_x() >= self.max_pos:
@@ -434,30 +446,27 @@ class ProcessMicrometerScreen(Screen):
             # incremental
             # self.m.send_any_gcode_command('G0 G91 X-10')
 
-        elif self.m.state() == 'Idle' or self.m.mpos_x() < self.max_pos:
+        else:
+            log('Cancel from test step')
             self.end_of_test_sequence()
-
-        else: 
-            Clock.unschedule(self.test_run)
-            self.go_stop.state = 'normal'
-            self.go_stop.text = 'GO'
-            self.go_stop.background_color = [0,0.502,0,1]
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
 
     def clear_data(self, clearall = False):
 
+        self.all_dti_measurements = []
+        self.raw_dti_measurements = []
+
+
         if self.HOME_SIDE:
 
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
 
-            self.HOME_abs_initial_value = 0
-            self.HOME_zeroed_list = []
             self.HOME_Y_pos_list_converted = []
-            self.HOME_DTI_abs_list_converted = []
-            self.HOME_zeroed_converted = []
+            self.HOME_normalized = []
+
             self.home_data_status = 'Cleared'
 
         else:
@@ -465,11 +474,9 @@ class ProcessMicrometerScreen(Screen):
             self.FAR_DTI_abs_list = []
             self.FAR_Y_pos_list = []
 
-            self.FAR_abs_initial_value = 0
-            self.FAR_zeroed_list = []
             self.FAR_Y_pos_list_converted = []
-            self.FAR_DTI_abs_list_converted = []
-            self.FAR_zeroed_converted = []
+            self.FAR_normalized = []
+
             self.far_data_status = 'Cleared'
 
 
@@ -478,21 +485,17 @@ class ProcessMicrometerScreen(Screen):
             self.HOME_DTI_abs_list = []
             self.HOME_Y_pos_list = []
 
-            self.HOME_abs_initial_value = 0
-            self.HOME_zeroed_list = []
             self.HOME_Y_pos_list_converted = []
-            self.HOME_DTI_abs_list_converted = []
-            self.HOME_zeroed_converted = []
+            self.HOME_normalized = []
+
             self.home_data_status = 'Cleared'
 
             self.FAR_DTI_abs_list = []
             self.FAR_Y_pos_list = []
 
-            self.FAR_abs_initial_value = 0
-            self.FAR_zeroed_list = []
             self.FAR_Y_pos_list_converted = []
-            self.FAR_DTI_abs_list_converted = []
-            self.FAR_zeroed_converted = []
+            self.FAR_normalized = []
+
             self.far_data_status = 'Cleared'
 
 
@@ -535,50 +538,61 @@ class ProcessMicrometerScreen(Screen):
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
     def format_output(self):
 
-        # HOME SIDE
+        # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
+        x_axis = []
+        raw_data = []
+        self.all_dti_measurements = []
+        self.raw_dti_measurements = []
+
         try: 
-
-            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
-
-            # # normalize data against first measured value
-            # self.HOME_abs_initial_value = self.HOME_DTI_abs_list[0]
-            # self.HOME_zeroed_list = [(H - self.HOME_abs_initial_value) for H in self.HOME_DTI_abs_list]
-
             # normalize against median value
-            self.HOME_zeroed_list = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
+            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
+            self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
+            x_axis.extend(self.HOME_normalized)
+            raw_data.extend(self.HOME_DTI_abs_list)
+
+        except: 
+            self.HOME_normalized = []
+
+        try: 
+            # normalize against median value
+            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
+            self.FAR_normalized = [-1*(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+            x_axis.extend(self.FAR_normalized)
+            raw_data.extend(self.FAR_DTI_abs_list)
+
+        except: 
+            self.FAR_normalized = []
+
+        self.all_dti_measurements = self.convert_to_json(x_axis)
+        self.raw_dti_measurements = self.convert_to_json(raw_data)
+
+        #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
+        try:
 
             # multiply by -1 for google sheets display purposes
-            self.HOME_Y_pos_list = [(-1*POS) for POS in self.HOME_Y_pos_list]
+            HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
 
-            # convert to json format
-            self.HOME_Y_pos_list_converted = self.convert_to_json(self.HOME_Y_pos_list)
-            self.HOME_DTI_abs_list_converted = self.convert_to_json(self.HOME_DTI_abs_list)
-            self.HOME_zeroed_converted = self.convert_to_json(self.HOME_zeroed_list)
+            # extend data to match length of FAR data
+            data_extension = len(self.FAR_Y_pos_list)*['']
+            HOME_y_pos_raw.extend(data_extension)
 
-        except: pass
+        except: 
+            HOME_y_pos_raw = []
 
-        # FAR SIDE
-        try: 
-
-            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-
-            # # normalize data against first measured value
-            # self.FAR_abs_initial_value = self.FAR_DTI_abs_list[0]
-            # self.FAR_zeroed_list = [(F - self.FAR_abs_initial_value) for F in self.FAR_DTI_abs_list]
-
-            # normalize against median value
-            self.FAR_zeroed_list = [(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+        try:
+            # offset data to match length of FAR data
+            FAR_y_pos_raw = len(self.HOME_Y_pos_list)*['']
 
             # specific to far pos - coordinates need flipping because far side is flipped
-            # multiply by -1 for google sheets display purposes
-            self.FAR_Y_pos_list = [(-1*(-y_length + POS)) for POS in self.FAR_Y_pos_list]
+            # # this gives out coord as positive value, which is great for google sheets display purposes
+            FAR_y_pos_raw.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
 
-            # convert to json format
-            self.FAR_Y_pos_list_converted = self.convert_to_json(self.FAR_Y_pos_list)
-            self.FAR_DTI_abs_list_converted = self.convert_to_json(self.FAR_DTI_abs_list)        
-            self.FAR_zeroed_converted = self.convert_to_json(self.FAR_zeroed_list)
+        except: 
+            FAR_y_pos_raw = []
 
-        except: pass
+        self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
+        self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
 
 
     def convert_to_json(self, data):
@@ -640,21 +654,8 @@ class ProcessMicrometerScreen(Screen):
             self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
             self.move_sheet_to_operator_resources()
 
+
     def rename_file_with_current_date(self, found_spreadsheet):
-
-        # file_metadata = {
-        #     'name': "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
-        #     }        
-
-        # file = self.drive_service.files().update(fileId=self.active_spreadsheet_id,
-        #                                         body = file_metadata).execute()
-
-        # file = self.drive_service.files().get(fileId=self.active_spreadsheet_id).execute()
-        # file['name'] = "'" + self.bench_id.text + ' ' + str(date.today()) + "'"
-        # updated_file = self.drive_service.files().update(fileId=self.active_spreadsheet_id, body=file).execute()
-
-
-        # self.active_spreadsheet_object.title = self.active_spreadsheet_name
 
         self.active_spreadsheet_object = self.gsheet_client.copy(found_spreadsheet.id, title = self.active_spreadsheet_name, copy_permissions = True)
         self.gsheet_client.del_spreadsheet(found_spreadsheet.id)
@@ -704,20 +705,18 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing DTI measurements to Gsheet")
 
-        if self.HOME_zeroed_converted != []:
-            self.home_data_status = 'Sending...'
-            worksheet.update('C3:C', self.HOME_Y_pos_list_converted)
-            worksheet.update('D3:D', self.HOME_zeroed_converted)
+        worksheet.update('B4:B' , self.raw_dti_measurements)
+        worksheet.update('C4:C', self.all_dti_measurements)
+
+        if self.HOME_Y_pos_list != []:
+            worksheet.update('D4:D', self.HOME_Y_pos_list_converted)
             self.home_data_status = 'Sent'
             log('Home side data sent')
 
-        if self.FAR_zeroed_converted != []:
-            self.far_data_status = 'Sending...'
-            worksheet.update('E3:E', self.FAR_Y_pos_list_converted)
-            worksheet.update('F3:F', self.FAR_zeroed_converted)
+        if self.FAR_Y_pos_list != []:
+            worksheet.update('E4:E', self.FAR_Y_pos_list_converted)
             self.far_data_status = 'Sent'
             log('Far side data sent')
-
 
         log("Recording test metadata")
 
@@ -735,11 +734,13 @@ class ProcessMicrometerScreen(Screen):
         # Test no: 
         worksheet.update('A10', str(self.test_id.text))  
 
-        if (self.HOME_zeroed_converted != []) and (self.FAR_zeroed_converted != []):
+        if ((self.HOME_Y_pos_list != []) and (self.FAR_Y_pos_list != [])):
             self.last_bench = self.bench_id.text
             self.last_test = self.test_id.text
             self.test_id.text = str(int(self.last_test) + 1)
             self.clear_data(clearall = True)
+
+        log('Finished writing data')
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
@@ -748,34 +749,25 @@ class ProcessMicrometerScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C3:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D3:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E3:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F3:F"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
 
+        self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
-        self.active_spreadsheet_object.values_clear(F_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
     # update with general status information - DTI read & data sending info
+
     def update_screen(self, dt):
 
         self.home_data_status_label.text = self.home_data_status
         self.far_data_status_label.text = self.far_data_status
         self.dti_read_label.text = str(DTI.read_mm())
-
-
-    # update home button when homing has finished
-    def check_home_completion(self, dt):
-
-        if not self.m.s.is_sequential_streaming:
-            Clock.unschedule(self.check_for_home_end_event)
-            self.home_stop.text = 'HOME'
-            self.home_stop.background_color = [0,0.502,0,1]
-            self.home_stop.state = 'normal'
 
 
     def on_leave(self):
