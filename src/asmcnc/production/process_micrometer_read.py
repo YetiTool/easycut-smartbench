@@ -250,6 +250,7 @@ class ProcessMicrometerScreen(Screen):
 
     # STATUS FLAGS
     data_status = 'Ready'
+    test_completed = False
 
     # READ IN VALUE
     home_dti_read = ''
@@ -353,6 +354,7 @@ class ProcessMicrometerScreen(Screen):
 
     def run_stop_test(self):
 
+        # TEST GETS STARTED
         if self.go_stop.state == 'down':
 
             ## CHANGE BUTTON
@@ -368,13 +370,17 @@ class ProcessMicrometerScreen(Screen):
 
             ## START THE TEST
             log('Starting test...')
+            self.test_completed = False
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
             self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
 
+        # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
-            log('Cancel from button')
+
+            log('Test cancelled')
+            self.test_completed = False
             self.end_of_test_sequence()
 
             if self.m.state() == 'Run':
@@ -384,11 +390,16 @@ class ProcessMicrometerScreen(Screen):
     def end_of_test_sequence(self):
 
         Clock.unschedule(self.test_run)
-        self.data_status = 'Collected'
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
-        Clock.schedule_once(lambda dt: self.send_data(), 1)
+
+        if self.test_completed:
+            self.data_status = 'Collected'
+            Clock.schedule_once(lambda dt: self.send_data(), 1)
+        else: 
+            self.data_status = 'Test cancelled'
+            self.clear_data()
 
 
     def set_max_pos(self):
@@ -402,7 +413,8 @@ class ProcessMicrometerScreen(Screen):
             self.DTI_read_far.append(float(self.DTI_F.read_mm()))
 
         else:
-            log('Cancel from test step')
+            log('Test finished')
+            self.test_completed = True
             self.end_of_test_sequence()
 
 

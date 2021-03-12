@@ -259,6 +259,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     # STATUS FLAGS
     data_status = 'Ready'
+    test_completed = False
 
     # READ IN VALUES
     H_read = ''
@@ -333,6 +334,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     def run_stop_test(self):
 
+        # TEST GETS STARTED
         if self.go_stop.state == 'down':
 
             ## CHANGE BUTTON
@@ -341,34 +343,37 @@ class ProcessLinearEncoderScreen(Screen):
 
             ## SET VARIABLES
             self.clear_data()
-            self.starting_pos = float(self.m.mpos_y())
-
-            # don't need to worry about which arduino is in which port
-            # this is only raw counts
             self.starting_H = self.e0.H_side + self.e1.H_side
             self.starting_F = self.e0.F_side + self.e1.F_side
-
+            self.starting_pos = float(self.m.mpos_y())
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
+            log('Starting test...')
+            self.test_completed = False
             self.data_status = 'Collecting'
+            self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
 
+        # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
+            log('Test cancelled')
+            self.test_completed = False
             self.end_of_test_sequence()
 
 
     def end_of_test_sequence(self):
 
         Clock.unschedule(self.test_run)
-
-        self.data_status = 'Collected'
-
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'GO'
         self.go_stop.state = 'normal'
 
-        Clock.schedule_once(lambda dt: self.send_data(), 1)
+        if self.test_completed:
+            self.data_status = 'Collected'
+            Clock.schedule_once(lambda dt: self.send_data(), 1)
+        else: 
+            self.data_status = 'Test cancelled'
+            self.clear_data()
 
 
     def set_max_pos(self):
@@ -391,6 +396,8 @@ class ProcessLinearEncoderScreen(Screen):
             self.m.send_any_gcode_command('G0 G91 Y10')
 
         else:
+            log('Test finished')
+            self.test_completed = True
             self.end_of_test_sequence()
 
 
