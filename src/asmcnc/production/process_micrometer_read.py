@@ -92,7 +92,7 @@ Builder.load_string("""
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Test no."
+                    text: "Test ID"
                     color: 0,0,0,1
 
                 Label: 

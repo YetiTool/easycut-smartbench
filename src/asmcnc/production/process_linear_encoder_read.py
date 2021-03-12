@@ -90,7 +90,7 @@ Builder.load_string("""
                     color: 0,0,0,1
 
                 Label: 
-                    text: "Test no."
+                    text: "Test ID"
                     color: 0,0,0,1
 
                 Label: 
@@ -162,7 +162,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
-                cols: 4
+                cols: 3
                 spacing: 5
 
                 Button:
@@ -178,10 +178,6 @@ Builder.load_string("""
                     on_press: root.run_stop_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
-
-                Button:
-                    text: "RESET DATA"
-                    on_press: root.clear_data()
 
                 Button:
                     text: "QUIT"
@@ -530,8 +526,6 @@ class ProcessLinearEncoderScreen(Screen):
 
 
     def do_data_send(self, dt):
-
-        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         try: self.write_to_worksheet()
@@ -629,66 +623,6 @@ class ProcessLinearEncoderScreen(Screen):
 
         if self.active_spreadsheet_object == None:
             self.create_new_document()
-
-        # if self.look_for_existing_folder():
-        #     if self.look_for_existing_file(): pass
-        #     else: self.create_new_document()
-
-        # else:
-        #     self.create_new_folder()
-        #     self.create_new_document()
-
-
-
-    # def look_for_existing_folder(self):
-
-    #     # FOLDER SEARCH
-
-    #     # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
-    #     # and with a name that contains the current bench id
-    #     folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
-    #      ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
-    #     folder_page_token = None
-
-    #     while True:
-    #         log('Looking for existing folder to send data to...')
-    #         lookup_folder = self.drive_service.files().list(q=folder_q_str,
-    #                                                     spaces='drive',
-    #                                                     fields='nextPageToken, files(id, name)',
-    #                                                     pageToken=folder_page_token).execute()
-
-    #         for file in lookup_folder.get('files', []):
-    #             log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
-    #             self.active_folder_id = file.get('id')
-    #             return True
-
-    #         folder_page_token = lookup_folder.get('nextPageToken', None)
-    #         if folder_page_token is None:
-    #             self.active_folder_id = ''
-    #             return False
-
-
-    # def look_for_existing_file(self):
-
-    #     # GO INTO FOLDER AND LIST FILES:
-    #     log('Filename: ' + self.active_spreadsheet_name)
-    #     file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
-    #     document_page_token = None
-
-    #     while True:
-    #         log('Looking for existing file to send data to...')
-    #         lookup_file = self.drive_service.files().list(q=file_q_str,
-    #                                                     spaces='drive',
-    #                                                     fields='nextPageToken, files(id, name)',
-    #                                                     pageToken=document_page_token).execute()
-
-    #         for file in lookup_file.get('files', []):
-    #             self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-    #             return True
-
-    #         document_page_token = lookup_file.get('nextPageToken', None)
-    #         if document_page_token is None:
-    #             return False
 
 
     def create_new_folder(self):
