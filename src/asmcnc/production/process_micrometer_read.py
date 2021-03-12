@@ -389,6 +389,8 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
+        Clock.schedule_once(lambda dt: self.send_data(), 1)
+
 
     def set_max_pos(self):
         return self.starting_pos - float(self.travel.text)
