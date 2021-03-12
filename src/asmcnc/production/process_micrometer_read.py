@@ -483,7 +483,7 @@ class ProcessMicrometerScreen(Screen):
         ## adjust data: convert, adjust to baseline and calibration. 
 
         # convert jig coordinates into associated y coordinates
-        Y_pos = [((-1*x) - translation_from_jig_to_Y_pos) for x in self.jig_pos_list]
+        Y_pos = [((-1*x) - self.translation_from_jig_to_Y_pos) for x in self.jig_pos_list]
 
         # adjust by calibration values
         # this needs checking - need to think about the way that calibration works, and how to "bin" data
