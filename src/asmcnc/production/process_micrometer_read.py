@@ -311,11 +311,11 @@ class ProcessMicrometerScreen(Screen):
 
     # TEST SET UP
     def generate_test_id(self):
-        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
         if self.look_for_existing_folder():
             self.look_for_existing_file()
         else:
             self.test_id.text = "1"
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
 
     def look_for_existing_folder(self):
@@ -536,6 +536,7 @@ class ProcessMicrometerScreen(Screen):
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
         self.data_status = 'Sending'
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
         # start main data sending processes after 2 seconds
         Clock.schedule_once(self.do_data_send, 2)
