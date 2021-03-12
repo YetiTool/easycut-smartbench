@@ -361,9 +361,10 @@ class ProcessMicrometerScreen(Screen):
                                                         pageToken=document_page_token).execute()
 
             for file in lookup_file.get('files', []):
-                log('Found existing file')
+                filename = file.get('name')
+                log('Found existing file ' + filename)
                 # self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                test_ids.append(int(file.get('name').split(' - ')[1]))
+                test_ids.append(int(filename.split(' - ')[1]))
 
                 # return True
 
@@ -372,9 +373,11 @@ class ProcessMicrometerScreen(Screen):
                 break
 
         if test_ids == []:
+            log('First test of this bench')
             self.test_id.text = "1"
 
         else: 
+            log('Ticking up test ID')
             self.test_id.text = str(max(test_ids) + 1)
 
 
