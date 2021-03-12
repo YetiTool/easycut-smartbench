@@ -121,6 +121,7 @@ Builder.load_string("""
                     text: "YB"
                     multiline: False
                     font_size: '20sp'
+                    on_text_validate: root.generate_test_id()
 
                 TextInput: 
                     id: test_id
