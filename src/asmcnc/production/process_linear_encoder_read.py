@@ -675,9 +675,7 @@ class ProcessLinearEncoderScreen(Screen):
         worksheet.update('N5:N', self.DELTA_Y_X_BEAM)
         worksheet.update('O5:O', self.DELTA_Y_PER_METER)
 
-        self.data_status ='Sent'
         log('Calibration test data sent')
-
         log("Recording test metadata")
 
         # Bench ID:
@@ -703,6 +701,7 @@ class ProcessLinearEncoderScreen(Screen):
         # Travel:
         worksheet.update('F2', str(self.travel.text))
 
+        self.data_status ='Sent'
         log('Clear local test data')
         self.clear_data()
         self.test_id.text = str(int(self.test_id.text) + 1)

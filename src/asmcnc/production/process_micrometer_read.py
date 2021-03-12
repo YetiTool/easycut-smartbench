@@ -56,14 +56,6 @@ Builder.load_string("""
     go_stop : go_stop
     calibrate_stop : calibrate_stop
 
-
-    # test_type_toggle:test_type_toggle
-    # side_toggle:side_toggle
-    # send_data_button:send_data_button
-    # home_data_status_label:home_data_status_label
-    # far_data_status_label:far_data_status_label
-    # dti_read_label:dti_read_label
-
     BoxLayout:
         padding: 0
         spacing: 0
@@ -154,102 +146,12 @@ Builder.load_string("""
                     text: "-"
                     color: 0,0,0,1
 
-# ## OLD:                     
-#             GridLayout: 
-#                 pos: self.parent.pos
-#                 size_hint_y: 0.15
-#                 rows: 2
-#                 cols: 8
-
-#                 # Test set up labels
-
-#                 Label: 
-#                     text: "Bench ID"
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     text: "Testing:"
-#                     color: 0,0,0,1
-#                 Label: 
-#                     text: "Travel"
-#                     color: 0,0,0,1
-#                 Label: 
-#                     text: "Test no."
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     text: "Measuring:"
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     text: "HOME DATA"
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     text: "FAR DATA"
-#                     color: 0,0,0,1
-
-#                 Label:
-#                     text: "DTI Read"
-#                     color: 0,0,0,1
-
-#                 # Test setting inputs/buttons
-
-#                 TextInput: 
-#                     id: bench_id 
-#                     text: "id"
-#                     multiline: False
-
-#                 ToggleButton:
-#                     id: test_type_toggle
-#                     text: "EXTRUSION"
-#                     on_press: root.toggle_test_type()
-
-#                 TextInput: 
-#                     id: travel
-#                     text: "2500"
-#                     input_filter: 'float'
-#                     multiline: False
-
-#                 TextInput: 
-#                     id: test_id
-#                     text: "1"
-#                     input_filter: 'int'
-#                     multiline: False
-
-#                 ToggleButton:
-#                     id: side_toggle
-#                     text: "HOME SIDE"
-#                     on_press: root.toggle_home_far()
-
-#                 Label: 
-#                     id: home_data_status_label
-#                     text: "status"
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     id: far_data_status_label
-#                     text: "status"
-#                     color: 0,0,0,1
-
-#                 Label: 
-#                     id: dti_read_label
-#                     text: "-"
-#                     color: 0,0,0,1
-
             GridLayout: 
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
                 cols: 4
                 spacing: 5
-
-                # ToggleButton:
-                #     id: home_stop
-                #     text: "HOME"
-                #     on_press: root.home_machine_pre_test()
-                #     background_color: [0,0,0,1]
-                #     background_normal: ''
 
                 ToggleButton:
                     id: prep_test
@@ -271,15 +173,6 @@ Builder.load_string("""
                     on_press: root.run_stop_test()
                     background_color: [0,0,0,1]
                     background_normal: ''
-
-                # Button:
-                #     text: "RESET DATA"
-                #     on_press: root.clear_data()
-                
-                # Button:
-                #     id: send_data_button
-                #     text: "SEND DATA"
-                #     on_press: root.send_data()
 
                 Button:
                     text: "QUIT"
@@ -308,20 +201,20 @@ Builder.load_string("""
 
 class ProcessMicrometerScreen(Screen):
 
-    # CALIBRATORS AND CONSTANTS
-    Calibration_list = []
+    # HARDWARE PARAMETERS
+    ## will need final jig to measure these
+    X_start_coordinate = 0 
     translation_from_jig_to_Y_pos = 0
+
+    # CALIBRATORS AND CONSTANTS
+    Calibration_list_home = []
+    Calibration_list_far = []
     arbitrary_width_constant = 1
 
     # LISTS TO HOLD RAW RECORDED DATA
     jig_pos_list = []
     DTI_read_home = []
     DTI_read_far = []
-
-    # LISTS FOR NORMALIZED DATA (against median value)
-    Y_pos = []
-    HOME_normalized = []
-    FAR_normalized = []
 
     # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
     jig_position_converted = []
@@ -331,6 +224,8 @@ class ProcessMicrometerScreen(Screen):
     far_raw_converted = []
     home_measurement_converted = []
     far_measurement_converted = []
+    home_with_offset_converted = []
+    far_with_offset_converted = []
 
     # TEST PARAMETERS
     starting_jig_pos = 0
@@ -410,13 +305,15 @@ class ProcessMicrometerScreen(Screen):
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
 
+    def on_leave(self):
+        if self.poll_for_screen != None:
+            Clock.unschedule(self.poll_for_screen)
+
 
     # TEST SET UP
     def  set_up_for_test(self):
         self.home_machine_pre_test()
-        # might also want to add a command that takes the jig to a start point - 
-        # perhaps in line with the first metal datum? 
-
+        # the check home event (set up in homing function) then also sends command to set specific X coordinate when homing complete
 
     # HOME FUNCTION
 
@@ -447,6 +344,7 @@ class ProcessMicrometerScreen(Screen):
 
         if not self.m.s.is_sequential_streaming:
             Clock.unschedule(self.check_for_home_end_event)
+            self.m.jog_absolute_single_axis('X', self.X_start_coordinate, 3000)
             self.prep_test.text = 'GET READY'
             self.prep_test.background_color = [0,0.502,0,1]
             self.prep_test.state = 'normal'
@@ -465,6 +363,8 @@ class ProcessMicrometerScreen(Screen):
             ## SET VARIABLES
             self.clear_data()
             self.starting_jig_pos = float(self.m.mpos_x())
+            self.DTI_initial_value_home = float(self.DTI_H.read_mm())
+            self.DTI_initial_value_far = float(self.DTI_F.read_mm())
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
@@ -505,6 +405,11 @@ class ProcessMicrometerScreen(Screen):
             self.end_of_test_sequence()
 
 
+    # CALIBRATION
+    def calibrate_straightness_jig(self):
+        pass
+
+
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
     def clear_data(self, clearall = False):
 
@@ -512,11 +417,6 @@ class ProcessMicrometerScreen(Screen):
         self.jig_pos_list = []
         self.DTI_read_home = []
         self.DTI_read_far = []
-
-        # LISTS FOR NORMALIZED DATA (against median value)
-        self.Y_pos = []
-        self.HOME_normalized = []
-        self.FAR_normalized = []
 
         # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
         self.jig_position_converted = []
@@ -526,6 +426,8 @@ class ProcessMicrometerScreen(Screen):
         self.far_raw_converted = []
         self.home_measurement_converted = []
         self.far_measurement_converted = []
+        self.home_with_offset_converted = []
+        self.far_with_offset_converted = []
 
         # TEST PARAMETERS
         self.starting_jig_pos = 0
@@ -565,106 +467,47 @@ class ProcessMicrometerScreen(Screen):
     # NEEDS REDOING
     def format_output(self):
 
+        ## adjust data: convert, adjust to baseline and calibration. 
 
-        # # LISTS TO HOLD RAW RECORDED DATA
-        # self.jig_pos_list = []
-        # self.DTI_read_home = []
-        # self.DTI_read_far = []
+        # convert jig coordinates into associated y coordinates
+        Y_pos = [((-1*x) - translation_from_jig_to_Y_pos) for x in self.jig_pos_list]
 
-        # # LISTS FOR NORMALIZED DATA (against median value)
-        # self.Y_pos = []
-        # self.HOME_normalized = []
-        # self.FAR_normalized = []
+        # adjust by calibration values
+        # this needs checking - need to think about the way that calibration works, and how to "bin" data
+        # and will need function to scrape the calibration data
+        HOME_baseline_corrected = list(map(lambda h, c: h - self.DTI_initial_value_home + c, self.DTI_read_home, self.Calibration_list_home))
+        # multiply far side by -1 for symmetry
+        FAR_baseline_corrected = list(map(lambda f, c: -1*(f - self.DTI_initial_value_far + c), self.DTI_read_far, self.Calibration_list_far))
+        
+        # add arbitrary width so that bench shape is visible on graphs
+        HOME_with_offset = [(arbitrary_width_constant + m) for m in HOME_baseline_corrected]
+        FAR_with_offset = [(-arbitrary_width_constant - n) for n in FAR_baseline_corrected]
 
-        # # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
-        # self.jig_position_converted = []
-        # self.y_pos_converted = []
-        # self.calibration_list_converted = []
-        # self.home_raw_converted = []
-        # self.far_raw_converted = []
-        # self.home_measurement_converted = []
-        # self.far_measurement_converted = []
-
-        # # TEST PARAMETERS
-
-        # self.starting_jig_pos
-        # self.max_pos = 0
-        # self.DTI_initial_value_home = 0
-        # self.DTI_initial_value_far = 0
-
-
-
-    #     ## OLD: 
-
-    #     # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
-    #     x_axis = []
-    #     raw_data = []
-    #     self.all_dti_measurements = []
-    #     self.raw_dti_measurements = []
-
-    #     try: 
-    #         # normalize against median value
-    #         HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
-    #         self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
-    #         x_axis.extend(self.HOME_normalized)
-    #         raw_data.extend(self.HOME_DTI_abs_list)
-
-    #     except: 
-    #         self.HOME_normalized = []
-
-    #     try: 
-    #         # normalize against median value
-    #         FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-    #         self.FAR_normalized = [-1*(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
-    #         x_axis.extend(self.FAR_normalized)
-    #         raw_data.extend(self.FAR_DTI_abs_list)
-
-    #     except: 
-    #         self.FAR_normalized = []
-
-    #     self.all_dti_measurements = self.convert_to_json(x_axis)
-    #     self.raw_dti_measurements = self.convert_to_json(raw_data)
-
-    #     #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
-    #     try:
-
-    #         # multiply by -1 for google sheets display purposes
-    #         HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
-
-    #         # extend data to match length of FAR data
-    #         data_extension = len(self.FAR_Y_pos_list)*['']
-    #         HOME_y_pos_raw.extend(data_extension)
-
-    #     except: 
-    #         HOME_y_pos_raw = []
-
-    #     try:
-    #         # offset data to match length of FAR data
-    #         FAR_y_pos_raw = len(self.HOME_Y_pos_list)*['']
-
-    #         # specific to far pos - coordinates need flipping because far side is flipped
-    #         # # this gives out coord as positive value, which is great for google sheets display purposes
-    #         FAR_y_pos_raw.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
-
-    #     except: 
-    #         FAR_y_pos_raw = []
-
-    #     self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
-    #     self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
+        ## convert to json format for API:
+        self.jig_position_converted = self.convert_to_json(self.jig_pos_list)
+        self.y_pos_converted = self.convert_to_json(Y_pos)
+        self.home_calibration_list_converted = self.convert_to_json(self.Calibration_list_home)
+        self.far_calibration_list_converted = self.convert_to_json(self.Calibration_list_far)
+        self.home_raw_converted = self.convert_to_json(self.DTI_read_home)
+        self.far_raw_converted = self.convert_to_json(self.DTI_read_far)
+        self.home_measurement_converted = self.convert_to_json(HOME_baseline_corrected)
+        self.far_measurement_converted = self.convert_to_json(FAR_baseline_corrected)
+        self.home_with_offset_converted = self.convert_to_json(HOME_with_offset)
+        self.far_with_offset_converted = self.convert_to_json(FAR_with_offset)
 
 
-    # def convert_to_json(self, data):
-    #     # Need to convert to json format in order to export to gsheets
+    def convert_to_json(self, data):
+        # Need to convert to json format in order to export to gsheets
 
-    #     new_data = []
+        new_data = []
 
-    #     data = [str(x).split() for x in data]
+        data = [str(x).split() for x in data]
 
-    #     for list in data:
-    #         new_list_item = [float(e) for e in list]
-    #         new_data.append(new_list_item)
+        for list in data:
+            new_list_item = [float(e) for e in list]
+            new_data.append(new_list_item)
 
-    #     return new_data
+        return new_data
 
 
     # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
@@ -783,65 +626,60 @@ class ProcessMicrometerScreen(Screen):
     def write_to_worksheet(self):
 
         # INDICATE IF BENCH OR EXTRUSION
-        test_data_worksheet_name = 'Straightness Data'
+        straightness_data_worksheet_name = 'Straightness Data'
 
-        try: 
-            # try accessing worksheet, which will work if it already exists
-            worksheet = self.active_spreadsheet_object.worksheet(test_data_worksheet_name)
-            log('Using worksheet ' + str(test_data_worksheet_name))
+        worksheet = self.active_spreadsheet_object.worksheet(straightness_data_worksheet_name)
+        log('Using new worksheet ' + str(straightness_data_worksheet_name))
 
-        except:
-            id_to_copy_from = (self.active_spreadsheet_object.worksheets()[0]).id
-            # if worksheet for this test does not exist yet, create a new one
-            worksheet = self.active_spreadsheet_object.duplicate_sheet(id_to_copy_from, insert_sheet_index=None, new_sheet_id=None, new_sheet_name=test_data_worksheet_name)
+        # pre-clear data (this includes any rows that just contain dummy data to force the charts to work)
+        self.delete_existing_spreadsheet_data(straightness_data_worksheet_name)
 
-            # need to clear data if duplicating sheets
-            self.delete_existing_spreadsheet_data(test_data_worksheet_name)
+        log("Writing straightness measurements to Gsheet")
 
-            log('Created worksheet ' + str(test_data_worksheet_name))
+        worksheet.update('A5:A', self.jig_position_converted)
+        worksheet.update('B5:B', self.y_pos_converted)
+        worksheet.update('C5:C', self.home_calibration_list_converted)
+        worksheet.update('D5:D', self.far_calibration_list_converted)
+        worksheet.update('E5:E', self.home_raw_converted)
+        worksheet.update('F5:F', self.far_raw_converted)
+        worksheet.update('G5:G', self.home_measurement_converted)
+        worksheet.update('H5:H', self.far_measurement_converted)
+        worksheet.update('I5:I', self.home_with_offset_converted)
+        worksheet.update('K5:K', self.far_with_offset_converted)
 
-            # delete Sheet1 if it exists (for sake of tidyness)
-            try: self.active_spreadsheet_object.del_worksheet(self.active_spreadsheet_object.worksheet('Sheet1'))
-            except: pass
-
-        log("Writing DTI measurements to Gsheet")
-
-        worksheet.update('B4:B' , self.raw_dti_measurements)
-        worksheet.update('C4:C', self.all_dti_measurements)
-
-        if self.HOME_Y_pos_list != []:
-            worksheet.update('D4:D', self.HOME_Y_pos_list_converted)
-            self.home_data_status = 'Sent'
-            log('Home side data sent')
-
-        if self.FAR_Y_pos_list != []:
-            worksheet.update('E4:E', self.FAR_Y_pos_list_converted)
-            self.far_data_status = 'Sent'
-            log('Far side data sent')
-
+        log('Straightness test data sent')
         log("Recording test metadata")
 
+        # Bench ID:
+        worksheet.update('A2', str(self.bench_id.text))
+
+        # Get time and date
         current_utc = datetime.utcnow()
         current_time = current_utc.strftime("%H:%M:%S")
         current_date = date.today()
+
         # Date
-        worksheet.update('A2', str(current_date))
+        worksheet.update('B2', str(current_date))
+        
         # Time
-        worksheet.update('A4', str(current_time))
-        # Bench ID:
-        worksheet.update('A6', str(self.bench_id.text))
-        # Test Type:
-        worksheet.update('A8', str(self.test_type))
+        worksheet.update('C2', str(current_time))
+
         # Test no: 
-        worksheet.update('A10', str(self.test_id.text))  
+        worksheet.update('D2', str(self.test_id.text))
 
-        if ((self.HOME_Y_pos_list != []) and (self.FAR_Y_pos_list != [])):
-            self.last_bench = self.bench_id.text
-            self.last_test = self.test_id.text
-            self.test_id.text = str(int(self.last_test) + 1)
-            self.clear_data(clearall = True)
+        # Travel:
+        worksheet.update('E2', str(self.travel.text))
 
-        log('Finished writing data')
+        # DTI initial value home side
+        worksheet.update('F2', str(self.DTI_initial_value_home))
+
+        # DTI initial value far side
+        worksheet.update('G2', str(self.DTI_initial_value_far))
+
+        self.data_status ='Sent'
+        log('Clear local test data')
+        self.clear_data()
+        self.test_id.text = str(int(self.test_id.text) + 1)
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'MEASURE'
@@ -850,15 +688,27 @@ class ProcessMicrometerScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B4:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C4:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D4:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E4:E"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A5:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B5:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C5:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D5:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E5:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F5:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G5:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H5:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I5:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J5:J"
 
+        self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
         self.active_spreadsheet_object.values_clear(C_str_to_clear)
         self.active_spreadsheet_object.values_clear(D_str_to_clear)
         self.active_spreadsheet_object.values_clear(E_str_to_clear)
+        self.active_spreadsheet_object.values_clear(F_str_to_clear)
+        self.active_spreadsheet_object.values_clear(G_str_to_clear)
+        self.active_spreadsheet_object.values_clear(H_str_to_clear)
+        self.active_spreadsheet_object.values_clear(I_str_to_clear)
+        self.active_spreadsheet_object.values_clear(J_str_to_clear)
 
 
     ## ENSURE SCREEN IS UPDATED TO REFLECT STATUS
@@ -869,13 +719,6 @@ class ProcessMicrometerScreen(Screen):
         self.data_status_label.text = self.data_status
         self.h_read_label.text = str(self.DTI_H.read_mm())
         self.f_read_label.text = str(self.DTI_F.read_mm())
-
-
-    def on_leave(self):
-
-        if self.poll_for_screen != None:
-            Clock.unschedule(self.poll_for_screen)
-
 
 
 
