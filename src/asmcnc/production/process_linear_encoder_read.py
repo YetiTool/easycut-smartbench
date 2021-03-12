@@ -396,7 +396,8 @@ class ProcessLinearEncoderScreen(Screen):
             worksheet = self.active_spreadsheet_object.worksheet('Calibration Data')
             
             # here need to check if data is in the file!
-            if worksheet.acell('B2').value != '':
+            print(str(worksheet.acell('B2').value))
+            if str(worksheet.acell('B2').value) != '':
 
                 # if it has then don't use this spreadsheet - tick up the test number and make a new one
                 self.active_spreadsheet_object = None
