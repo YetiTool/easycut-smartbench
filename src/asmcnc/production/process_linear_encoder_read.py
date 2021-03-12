@@ -393,7 +393,7 @@ class ProcessLinearEncoderScreen(Screen):
 
             # open the spreadsheet to see if it's already been written to
             self.active_spreadsheet_object = self.gsheet_client.open(self.bench_id.text + ' - ' + str(self.test_id.text))
-            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+            worksheet = self.active_spreadsheet_object.worksheet('Calibration Data')
             
             # here need to check if data is in the file!
             if worksheet.acell('B2').value != '':
