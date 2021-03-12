@@ -202,7 +202,7 @@ class ProcessMicrometerScreen(Screen):
 
     # HARDWARE PARAMETERS
     ## will need final jig to measure these
-    X_start_coordinate = 0 
+    X_start_coordinate = -1260
     translation_from_jig_to_Y_pos = 0
     y_length = float(2645 - 20)
 
@@ -287,13 +287,10 @@ class ProcessMicrometerScreen(Screen):
     def on_enter(self):
 
         self.poll_for_screen = Clock.schedule_interval(self.update_screen, 0.2)
-        if self.m.is_machine_homed:
-            self.prep_test.background_color = [0,0.502,0,1]
 
         # TURNS BUTTON GREEN IF DTI IS CONNECTED
         if self.DTI_H != None and self.DTI_F != None:
-            self.go_stop.background_color = [0,0.502,0,1]
-            self.calibrate_stop.background_color = [0,0.502,0,1]
+            self.prep_test.background_color = [0,0.502,0,1]
 
         self.go_stop.state == 'normal'
         self.go_stop.text = 'MEASURE'
@@ -348,6 +345,8 @@ class ProcessMicrometerScreen(Screen):
             self.prep_test.text = 'GET READY'
             self.prep_test.background_color = [0,0.502,0,1]
             self.prep_test.state = 'normal'
+            self.go_stop.background_color = [0,0.502,0,1]
+            self.calibrate_stop.background_color = [0,0.502,0,1]
 
 
     # MACHINE RUN TEST FUNCTIONS
