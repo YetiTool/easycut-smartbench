@@ -488,9 +488,14 @@ class ProcessMicrometerScreen(Screen):
         # adjust by calibration values
         # this needs checking - need to think about the way that calibration works, and how to "bin" data
         # and will need function to scrape the calibration data
-        HOME_baseline_corrected = list(map(lambda h, c: h - self.DTI_initial_value_home + c, self.DTI_read_home, self.Calibration_list_home))
+        # HOME_baseline_corrected = list(map(lambda h, c: h - float(self.DTI_initial_value_home) + c, self.DTI_read_home, self.Calibration_list_home))
+        # # multiply far side by -1 for symmetry
+        # FAR_baseline_corrected = list(map(lambda f, c: -1*(f - float(self.DTI_initial_value_far) + c), self.DTI_read_far, self.Calibration_list_far))
+
+        # for debugging
+        HOME_baseline_corrected = list(map(lambda h: h - float(self.DTI_initial_value_home), self.DTI_read_home))
         # multiply far side by -1 for symmetry
-        FAR_baseline_corrected = list(map(lambda f, c: -1*(f - self.DTI_initial_value_far + c), self.DTI_read_far, self.Calibration_list_far))
+        FAR_baseline_corrected = list(map(lambda f: -1*(f - float(self.DTI_initial_value_far)), self.DTI_read_far))
         
         # add arbitrary width so that bench shape is visible on graphs
         HOME_with_offset = [(arbitrary_width_constant + m) for m in HOME_baseline_corrected]
