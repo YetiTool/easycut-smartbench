@@ -498,8 +498,8 @@ class ProcessMicrometerScreen(Screen):
         FAR_baseline_corrected = list(map(lambda f: -1*(f - float(self.DTI_initial_value_far)), self.DTI_read_far))
         
         # add arbitrary width so that bench shape is visible on graphs
-        HOME_with_offset = [(arbitrary_width_constant + m) for m in HOME_baseline_corrected]
-        FAR_with_offset = [(-arbitrary_width_constant - n) for n in FAR_baseline_corrected]
+        HOME_with_offset = [(self.arbitrary_width_constant + m) for m in HOME_baseline_corrected]
+        FAR_with_offset = [(-self.arbitrary_width_constant - n) for n in FAR_baseline_corrected]
 
         ## convert to json format for API:
         self.jig_position_converted = self.convert_to_json(self.jig_pos_list)
