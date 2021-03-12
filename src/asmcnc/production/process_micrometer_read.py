@@ -566,103 +566,105 @@ class ProcessMicrometerScreen(Screen):
     def format_output(self):
 
 
-        # LISTS TO HOLD RAW RECORDED DATA
-        self.jig_pos_list = []
-        self.DTI_read_home = []
-        self.DTI_read_far = []
+        # # LISTS TO HOLD RAW RECORDED DATA
+        # self.jig_pos_list = []
+        # self.DTI_read_home = []
+        # self.DTI_read_far = []
 
-        # LISTS FOR NORMALIZED DATA (against median value)
-        self.Y_pos = []
-        self.HOME_normalized = []
-        self.FAR_normalized = []
+        # # LISTS FOR NORMALIZED DATA (against median value)
+        # self.Y_pos = []
+        # self.HOME_normalized = []
+        # self.FAR_normalized = []
 
-        # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
-        self.jig_position_converted = []
-        self.y_pos_converted = []
-        self.calibration_list_converted = []
-        self.home_raw_converted = []
-        self.far_raw_converted = []
-        self.home_measurement_converted = []
-        self.far_measurement_converted = []
+        # # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
+        # self.jig_position_converted = []
+        # self.y_pos_converted = []
+        # self.calibration_list_converted = []
+        # self.home_raw_converted = []
+        # self.far_raw_converted = []
+        # self.home_measurement_converted = []
+        # self.far_measurement_converted = []
 
-        # TEST PARAMETERS
-        self.starting_pos = 0
-        self.max_pos = 0
-        self.DTI_initial_value_home = 0
-        self.DTI_initial_value_far = 0
-
+        # # TEST PARAMETERS
 
         # self.starting_jig_pos
-
-        # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
-        x_axis = []
-        raw_data = []
-        self.all_dti_measurements = []
-        self.raw_dti_measurements = []
-
-        try: 
-            # normalize against median value
-            HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
-            self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
-            x_axis.extend(self.HOME_normalized)
-            raw_data.extend(self.HOME_DTI_abs_list)
-
-        except: 
-            self.HOME_normalized = []
-
-        try: 
-            # normalize against median value
-            FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
-            self.FAR_normalized = [-1*(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
-            x_axis.extend(self.FAR_normalized)
-            raw_data.extend(self.FAR_DTI_abs_list)
-
-        except: 
-            self.FAR_normalized = []
-
-        self.all_dti_measurements = self.convert_to_json(x_axis)
-        self.raw_dti_measurements = self.convert_to_json(raw_data)
-
-        #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
-        try:
-
-            # multiply by -1 for google sheets display purposes
-            HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
-
-            # extend data to match length of FAR data
-            data_extension = len(self.FAR_Y_pos_list)*['']
-            HOME_y_pos_raw.extend(data_extension)
-
-        except: 
-            HOME_y_pos_raw = []
-
-        try:
-            # offset data to match length of FAR data
-            FAR_y_pos_raw = len(self.HOME_Y_pos_list)*['']
-
-            # specific to far pos - coordinates need flipping because far side is flipped
-            # # this gives out coord as positive value, which is great for google sheets display purposes
-            FAR_y_pos_raw.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
-
-        except: 
-            FAR_y_pos_raw = []
-
-        self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
-        self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
+        # self.max_pos = 0
+        # self.DTI_initial_value_home = 0
+        # self.DTI_initial_value_far = 0
 
 
-    def convert_to_json(self, data):
-        # Need to convert to json format in order to export to gsheets
 
-        new_data = []
+    #     ## OLD: 
 
-        data = [str(x).split() for x in data]
+    #     # x axis has to be a continuous list for both datasets to be mapped against, so both sets of data have to be conjoined
+    #     x_axis = []
+    #     raw_data = []
+    #     self.all_dti_measurements = []
+    #     self.raw_dti_measurements = []
 
-        for list in data:
-            new_list_item = [float(e) for e in list]
-            new_data.append(new_list_item)
+    #     try: 
+    #         # normalize against median value
+    #         HOME_NORMALIZATION_VALUE = median(self.HOME_DTI_abs_list)
+    #         self.HOME_normalized = [(H - HOME_NORMALIZATION_VALUE) for H in self.HOME_DTI_abs_list]
+    #         x_axis.extend(self.HOME_normalized)
+    #         raw_data.extend(self.HOME_DTI_abs_list)
 
-        return new_data
+    #     except: 
+    #         self.HOME_normalized = []
+
+    #     try: 
+    #         # normalize against median value
+    #         FAR_NORMALIZATION_VALUE = median(self.FAR_DTI_abs_list)
+    #         self.FAR_normalized = [-1*(F - FAR_NORMALIZATION_VALUE) for F in self.FAR_DTI_abs_list]
+    #         x_axis.extend(self.FAR_normalized)
+    #         raw_data.extend(self.FAR_DTI_abs_list)
+
+    #     except: 
+    #         self.FAR_normalized = []
+
+    #     self.all_dti_measurements = self.convert_to_json(x_axis)
+    #     self.raw_dti_measurements = self.convert_to_json(raw_data)
+
+    #     #  both positional datasets need to be the same length, so that both y series can be mapped to the same x axis. 
+    #     try:
+
+    #         # multiply by -1 for google sheets display purposes
+    #         HOME_y_pos_raw = [(-1*POS) for POS in self.HOME_Y_pos_list]
+
+    #         # extend data to match length of FAR data
+    #         data_extension = len(self.FAR_Y_pos_list)*['']
+    #         HOME_y_pos_raw.extend(data_extension)
+
+    #     except: 
+    #         HOME_y_pos_raw = []
+
+    #     try:
+    #         # offset data to match length of FAR data
+    #         FAR_y_pos_raw = len(self.HOME_Y_pos_list)*['']
+
+    #         # specific to far pos - coordinates need flipping because far side is flipped
+    #         # # this gives out coord as positive value, which is great for google sheets display purposes
+    #         FAR_y_pos_raw.extend([(y_length + POS) for POS in self.FAR_Y_pos_list])
+
+    #     except: 
+    #         FAR_y_pos_raw = []
+
+    #     self.HOME_Y_pos_list_converted = self.convert_to_json(HOME_y_pos_raw)
+    #     self.FAR_Y_pos_list_converted = self.convert_to_json(FAR_y_pos_raw)
+
+
+    # def convert_to_json(self, data):
+    #     # Need to convert to json format in order to export to gsheets
+
+    #     new_data = []
+
+    #     data = [str(x).split() for x in data]
+
+    #     for list in data:
+    #         new_list_item = [float(e) for e in list]
+    #         new_data.append(new_list_item)
+
+    #     return new_data
 
 
     # FUNCTIONS TO MANAGE SPREADSHEET - OPENING AND MOVING
