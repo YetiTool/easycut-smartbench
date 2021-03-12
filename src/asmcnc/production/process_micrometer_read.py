@@ -363,7 +363,7 @@ class ProcessMicrometerScreen(Screen):
             for file in lookup_file.get('files', []):
                 log('Found existing file')
                 # self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                test_ids.append(int((self.gsheet_client.open_by_key(file.get('name'))).split(' - ')[1]))
+                test_ids.append(int(file.get('name').split(' - ')[1]))
 
                 # return True
 
