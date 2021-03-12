@@ -374,7 +374,7 @@ class ProcessMicrometerScreen(Screen):
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
-            self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)
+            Clock.schedule_once(self.start_recording_data, 0.3)
 
         # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
@@ -404,6 +404,11 @@ class ProcessMicrometerScreen(Screen):
 
     def set_max_pos(self):
         return self.starting_jig_pos - float(self.travel.text)
+
+
+    def start_recording_data(self, dt):
+        self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)        
+
 
     def do_test_step(self, dt):
 
@@ -469,8 +474,6 @@ class ProcessMicrometerScreen(Screen):
         self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        self.write_to_worksheet()
-
         try: self.write_to_worksheet()
         except: 
             Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
@@ -654,16 +657,16 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing straightness measurements to Gsheet")
 
-        worksheet.update('A5:A', self.jig_position_converted)
-        worksheet.update('B5:B', self.y_pos_converted)
-        worksheet.update('C5:C', self.home_calibration_list_converted)
-        worksheet.update('D5:D', self.far_calibration_list_converted)
-        worksheet.update('E5:E', self.home_raw_converted)
-        worksheet.update('F5:F', self.far_raw_converted)
-        worksheet.update('G5:G', self.home_measurement_converted)
-        worksheet.update('H5:H', self.far_measurement_converted)
-        worksheet.update('I5:I', self.home_with_offset_converted)
-        worksheet.update('K5:K', self.far_with_offset_converted)
+        worksheet.update('A7:A', self.jig_position_converted)
+        worksheet.update('B7:B', self.y_pos_converted)
+        worksheet.update('C7:C', self.home_calibration_list_converted)
+        worksheet.update('D7:D', self.far_calibration_list_converted)
+        worksheet.update('E7:E', self.home_raw_converted)
+        worksheet.update('F7:F', self.far_raw_converted)
+        worksheet.update('G7:G', self.home_measurement_converted)
+        worksheet.update('H7:H', self.far_measurement_converted)
+        worksheet.update('I7:I', self.home_with_offset_converted)
+        worksheet.update('J7:J', self.far_with_offset_converted)
 
         log('Straightness test data sent')
         log("Recording test metadata")
@@ -706,16 +709,16 @@ class ProcessMicrometerScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A5:A"
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B5:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C5:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D5:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E5:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F5:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G5:G"
-        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H5:H"
-        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I5:I"
-        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J5:J"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A7:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B7:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C7:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D7:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E7:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F7:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G7:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H7:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I7:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J7:J"
 
         self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
