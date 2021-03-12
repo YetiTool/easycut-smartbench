@@ -403,7 +403,7 @@ class ProcessMicrometerScreen(Screen):
 
 
     def set_max_pos(self):
-        return self.starting_pos - float(self.travel.text)
+        return self.starting_jig_pos - float(self.travel.text)
 
     def do_test_step(self, dt):
 
