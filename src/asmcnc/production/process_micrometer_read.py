@@ -315,7 +315,7 @@ class ProcessMicrometerScreen(Screen):
         if self.look_for_existing_folder():
             self.look_for_existing_file()
         else:
-            self.test_id.text = 1
+            self.test_id.text = "1"
 
 
     def look_for_existing_folder(self):
@@ -372,10 +372,10 @@ class ProcessMicrometerScreen(Screen):
                 break
 
         if test_ids == []:
-            self.test_id.text = 1
+            self.test_id.text = "1"
 
         else: 
-            self.test_id.text = max(test_ids) + 1
+            self.test_id.text = str(max(test_ids) + 1)
 
 
     def  set_up_for_test(self):
