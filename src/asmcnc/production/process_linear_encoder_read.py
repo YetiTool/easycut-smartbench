@@ -255,7 +255,6 @@ class ProcessLinearEncoderScreen(Screen):
     active_folder_id = ''
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
-    active_spreadsheet_id = ''
 
     # STATUS FLAGS
     data_status = 'Ready'
@@ -323,6 +322,87 @@ class ProcessLinearEncoderScreen(Screen):
 
 
     # TEST SET UP
+    def generate_test_id(self):
+        if self.look_for_existing_folder():
+            self.look_for_existing_file()
+        else:
+            self.test_id.text = "1"
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+
+    def look_for_existing_folder(self):
+
+        # FOLDER SEARCH
+
+        # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
+        # and with a name that contains the current bench id
+        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
+         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
+        folder_page_token = None
+
+        while True:
+            log('Looking for existing folder to send data to...')
+            lookup_folder = self.drive_service.files().list(q=folder_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=folder_page_token).execute()
+
+            for file in lookup_folder.get('files', []):
+                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
+                self.active_folder_id = file.get('id')
+                return True
+
+            folder_page_token = lookup_folder.get('nextPageToken', None)
+            if folder_page_token is None:
+                self.active_folder_id = ''
+                return False
+
+
+    def look_for_existing_file(self):
+
+        # GO INTO FOLDER AND LIST FILES:
+        file_q_str = "'" + self.active_folder_id + "'" + " in parents"
+        document_page_token = None
+        test_ids = []
+
+        while True:
+            log('Looking for existing file to send data to...')
+            lookup_file = self.drive_service.files().list(q=file_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=document_page_token).execute()
+
+            for file in lookup_file.get('files', []):
+                filename = file.get('name')
+                log('Found existing file ' + filename)
+                # self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                test_ids.append(int(filename.split(' - ')[1]))
+
+            document_page_token = lookup_file.get('nextPageToken', None)
+            if document_page_token is None:
+                break
+
+        if test_ids == []:
+            log('First test of this bench')
+            self.test_id.text = "1"
+            self.active_spreadsheet_object = None
+
+        else: 
+           # get lastest test id by default
+            self.test_id.text = str(max(test_ids))
+
+            # open the spreadsheet to see if it's already been written to
+            self.active_spreadsheet_object = self.gsheet_client.open(self.bench_id.text + ' - ' + str(self.test_id.text))
+            worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
+            
+            # here need to check if data is in the file!
+            if worksheet.acell('B2').value != '':
+
+                # if it has then don't use this spreadsheet - tick up the test number and make a new one
+                self.active_spreadsheet_object = None
+                self.test_id.text = str(max(test_ids) + 1)
+
+            self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+
 
     def set_up_for_test(self):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, 6000)
@@ -442,6 +522,7 @@ class ProcessLinearEncoderScreen(Screen):
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
         self.data_status = 'Sending'
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
         # start main data sending processes after 2 seconds
         Clock.schedule_once(self.do_data_send, 2)
@@ -544,64 +625,71 @@ class ProcessLinearEncoderScreen(Screen):
 
     def open_spreadsheet(self):
 
-        if self.look_for_existing_folder():
-            if self.look_for_existing_file(): pass
-            else: self.create_new_document()
-
-        else:
+        if self.active_folder_id == '':
             self.create_new_folder()
+
+        if self.active_spreadsheet_object == None:
             self.create_new_document()
 
+        # if self.look_for_existing_folder():
+        #     if self.look_for_existing_file(): pass
+        #     else: self.create_new_document()
 
-    def look_for_existing_folder(self):
-
-        # FOLDER SEARCH
-
-        # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
-        # and with a name that contains the current bench id
-        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
-         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
-        folder_page_token = None
-
-        while True:
-            log('Looking for existing folder to send data to...')
-            lookup_folder = self.drive_service.files().list(q=folder_q_str,
-                                                        spaces='drive',
-                                                        fields='nextPageToken, files(id, name)',
-                                                        pageToken=folder_page_token).execute()
-
-            for file in lookup_folder.get('files', []):
-                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
-                self.active_folder_id = file.get('id')
-                return True
-
-            folder_page_token = lookup_folder.get('nextPageToken', None)
-            if folder_page_token is None:
-                self.active_folder_id = ''
-                return False
+        # else:
+        #     self.create_new_folder()
+        #     self.create_new_document()
 
 
-    def look_for_existing_file(self):
 
-        # GO INTO FOLDER AND LIST FILES:
-        log('Filename: ' + self.active_spreadsheet_name)
-        file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
-        document_page_token = None
+    # def look_for_existing_folder(self):
 
-        while True:
-            log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q=file_q_str,
-                                                        spaces='drive',
-                                                        fields='nextPageToken, files(id, name)',
-                                                        pageToken=document_page_token).execute()
+    #     # FOLDER SEARCH
 
-            for file in lookup_file.get('files', []):
-                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                return True
+    #     # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
+    #     # and with a name that contains the current bench id
+    #     folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
+    #      ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
+    #     folder_page_token = None
 
-            document_page_token = lookup_file.get('nextPageToken', None)
-            if document_page_token is None:
-                return False
+    #     while True:
+    #         log('Looking for existing folder to send data to...')
+    #         lookup_folder = self.drive_service.files().list(q=folder_q_str,
+    #                                                     spaces='drive',
+    #                                                     fields='nextPageToken, files(id, name)',
+    #                                                     pageToken=folder_page_token).execute()
+
+    #         for file in lookup_folder.get('files', []):
+    #             log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
+    #             self.active_folder_id = file.get('id')
+    #             return True
+
+    #         folder_page_token = lookup_folder.get('nextPageToken', None)
+    #         if folder_page_token is None:
+    #             self.active_folder_id = ''
+    #             return False
+
+
+    # def look_for_existing_file(self):
+
+    #     # GO INTO FOLDER AND LIST FILES:
+    #     log('Filename: ' + self.active_spreadsheet_name)
+    #     file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
+    #     document_page_token = None
+
+    #     while True:
+    #         log('Looking for existing file to send data to...')
+    #         lookup_file = self.drive_service.files().list(q=file_q_str,
+    #                                                     spaces='drive',
+    #                                                     fields='nextPageToken, files(id, name)',
+    #                                                     pageToken=document_page_token).execute()
+
+    #         for file in lookup_file.get('files', []):
+    #             self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+    #             return True
+
+    #         document_page_token = lookup_file.get('nextPageToken', None)
+    #         if document_page_token is None:
+    #             return False
 
 
     def create_new_folder(self):
