@@ -211,6 +211,8 @@ class ProcessMicrometerScreen(Screen):
     Calibration_list_home = []
     Calibration_list_far = []
     arbitrary_width_constant = 1
+    bin_boundaries = np.linspace(0,-2600, 260)
+    calibration_run = False
 
     # LISTS TO HOLD RAW RECORDED DATA
     jig_pos_list = []
@@ -239,6 +241,9 @@ class ProcessMicrometerScreen(Screen):
 
     # FOLDER ID TO COLLATE RESULTS
     live_measurements_id = '15iBk8f-_VqnOwfOuWBJQBgTFznjY_TQu'
+
+    # FILE THAT CONTAINS CALIBRATION DATA
+    calibration_file_for_straightness_jig_id = '1yKo1dutsUszTgas9n-lCovCiExM1zH1uG14JoULGqv8'
 
     # GOOGLE API OBJECTS
     gsheet_client = None
@@ -423,6 +428,41 @@ class ProcessMicrometerScreen(Screen):
 
 
     # MACHINE RUN TEST FUNCTIONS
+    def run_calibration(self):
+        # TEST GETS STARTED
+        if self.prep_test.state == 'down':
+
+            ## CHANGE BUTTON
+            self.prep_test.background_color = [1,0,0,1]
+            self.prep_test.text = 'STOP'
+
+            ## SET VARIABLES
+            self.clear_data()
+            self.starting_jig_pos = float(self.m.mpos_x())
+            self.DTI_initial_value_home = float(self.DTI_H.read_mm())
+            self.DTI_initial_value_far = float(self.DTI_F.read_mm())
+            self.max_pos = self.set_max_pos()
+
+            ## START THE TEST
+            log('Starting test...')
+            self.calibration_run = True
+            self.test_completed = False
+            self.data_status = 'Collecting'
+            run_command = 'G0 G91 X' + str(self.max_pos)
+            self.m.send_any_gcode_command(run_command)
+            Clock.schedule_once(self.start_recording_data, 0.3)
+
+        # TEST GETS STOPPED PREMATURELY
+        elif self.prep_test.state == 'normal':
+
+            log('Test cancelled')
+            self.test_completed = False
+            self.end_of_test_sequence()
+
+            if self.m.state() == 'Run':
+                self.m.soft_stop()
+                self.m.stop_from_soft_stop_cancel()
+
 
     def run_stop_test(self):
 
@@ -442,6 +482,7 @@ class ProcessMicrometerScreen(Screen):
 
             ## START THE TEST
             log('Starting test...')
+            self.calibration_run = False
             self.test_completed = False
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
@@ -468,7 +509,11 @@ class ProcessMicrometerScreen(Screen):
 
         if self.test_completed:
             self.data_status = 'Collected'
-            Clock.schedule_once(lambda dt: self.send_data(), 1)
+
+            if calibration_run:
+                Clock.schedule_once(lambda dt: self.send_calibration_data(), 1)
+            else:
+                Clock.schedule_once(lambda dt: self.send_data(), 1)
         else: 
             self.data_status = 'Test cancelled'
             self.clear_data()
@@ -496,8 +541,20 @@ class ProcessMicrometerScreen(Screen):
 
 
     # CALIBRATION
-    def calibrate_straightness_jig(self):
-        pass
+    def send_calibration_data(self):
+        pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
+
+        bin_range = range(max(pos_bin_array) + 1)
+        for n in bin_range:
+            try:
+                idx = pos_bin_array.index(n)
+                calibration_list_home.append(float(self.DTI_read_home(idx))-self.DTI_initial_value_home)
+                calibration_list_far.append(float(self.DTI_read_far(idx))-self.DTI_initial_value_far)
+            except:
+                pass
+
+        calibration_for_straightness_jig_worksheet = self.gsheet_client.open_by_key(calibration_file_for_straightness_jig_id).worksheet(0)
+        calibration_for_straightness_jig_worksheet.update('A1:B', calibration_list_home, calibration_list_far)
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
@@ -552,29 +609,42 @@ class ProcessMicrometerScreen(Screen):
             log('Failed to write to sheet, trying again in 10 seconds')
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
-    # NEEDS REDOING
-    def format_output(self):
 
+    def format_output(self):
         ## adjust data: convert, adjust to baseline and calibration. 
 
         # convert jig coordinates into associated y coordinates
         Y_pos = [((-1*x) - self.translation_from_jig_to_Y_pos) for x in self.jig_pos_list]
 
+        HOME_baseline_corrected = [(h-self.DTI_initial_value_home) for h in self.DTI_read_home]
+        FAR_baseline_corrected = [(f-self.DTI_initial_value_home) for f in self.DTI_read_far]
+
         # adjust by calibration values
         # this needs checking - need to think about the way that calibration works, and how to "bin" data
         # and will need function to scrape the calibration data
-        # HOME_baseline_corrected = list(map(lambda h, c: h - float(self.DTI_initial_value_home) + c, self.DTI_read_home, self.Calibration_list_home))
-        # # multiply far side by -1 for symmetry
-        # FAR_baseline_corrected = list(map(lambda f, c: -1*(f - float(self.DTI_initial_value_far) + c), self.DTI_read_far, self.Calibration_list_far))
+        pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
-        # for debugging
-        HOME_baseline_corrected = list(map(lambda h: h - float(self.DTI_initial_value_home), self.DTI_read_home))
-        # multiply far side by -1 for symmetry
-        FAR_baseline_corrected = list(map(lambda f: -1*(f - float(self.DTI_initial_value_far)), self.DTI_read_far))
+        calibration_for_straightness_jig_worksheet = self.gsheet_client.open_by_key(calibration_file_for_straightness_jig_id).worksheet(0)
+        calibration_list_home = calibration_for_straightness_jig_worksheet.col_values(1)
+        calibration_list_far = calibration_for_straightness_jig_worksheet.col_values(2)
+
+        for idx, bin_number in enumerate(pos_bin_array):
+            HOME_read_calibrated.append(HOME_baseline_corrected[idx] -  calibration_list_home(bin_number))
+            FAR_read_calibrated.append(-1*(FAR_baseline_corrected[idx] -  calibration_list_far(bin_number)))
+
+
+        # HOME_baseline_corrected = list(map(lambda h, c: h - float(self.DTI_initial_value_home) - c, self.DTI_read_home, calibration_list_home))
+        # # # multiply far side by -1 for symmetry
+        # FAR_baseline_corrected = list(map(lambda f, c: -1*(f - float(self.DTI_initial_value_far) - c), self.DTI_read_far, calibration_list_far))
+
+        # # for debugging
+        # HOME_baseline_corrected = list(map(lambda h: h - float(self.DTI_initial_value_home), self.DTI_read_home))
+        # # multiply far side by -1 for symmetry
+        # FAR_baseline_corrected = list(map(lambda f: -1*(f - float(self.DTI_initial_value_far)), self.DTI_read_far))
         
         # add arbitrary width so that bench shape is visible on graphs
-        HOME_with_offset = [(self.arbitrary_width_constant + m) for m in HOME_baseline_corrected]
-        FAR_with_offset = [(-self.arbitrary_width_constant - n) for n in FAR_baseline_corrected]
+        HOME_with_offset = [(self.arbitrary_width_constant + m) for m in HOME_read_calibrated]
+        FAR_with_offset = [(-self.arbitrary_width_constant - n) for n in FAR_read_calibrated]
 
         ## convert to json format for API:
         self.jig_position_converted = self.convert_to_json(self.jig_pos_list)
