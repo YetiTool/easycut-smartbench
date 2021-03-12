@@ -115,6 +115,7 @@ Builder.load_string("""
                     text: "YB"
                     multiline: False
                     font_size: '20sp'
+                    on_text: root.generate_test_id()
 
                 TextInput: 
                     id: travel
@@ -309,6 +310,74 @@ class ProcessMicrometerScreen(Screen):
 
 
     # TEST SET UP
+    def generate_test_id(self):
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+        if self.look_for_existing_folder():
+            self.look_for_existing_file()
+        else:
+            self.test_id.text = 1
+
+
+    def look_for_existing_folder(self):
+
+        # FOLDER SEARCH
+
+        # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
+        # and with a name that contains the current bench id
+        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
+         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
+        folder_page_token = None
+
+        while True:
+            log('Looking for existing folder to send data to...')
+            lookup_folder = self.drive_service.files().list(q=folder_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=folder_page_token).execute()
+
+            for file in lookup_folder.get('files', []):
+                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
+                self.active_folder_id = file.get('id')
+                return True
+
+            folder_page_token = lookup_folder.get('nextPageToken', None)
+            if folder_page_token is None:
+                self.active_folder_id = ''
+                return False
+
+
+    def look_for_existing_file(self):
+
+        # GO INTO FOLDER AND LIST FILES:
+        file_q_str = "'" + self.active_folder_id + "'" + " in parents"
+        document_page_token = None
+        test_ids = []
+
+        while True:
+            log('Looking for existing file to send data to...')
+            lookup_file = self.drive_service.files().list(q=file_q_str,
+                                                        spaces='drive',
+                                                        fields='nextPageToken, files(id, name)',
+                                                        pageToken=document_page_token).execute()
+
+            for file in lookup_file.get('files', []):
+                log('Found existing file')
+                # self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
+                test_ids.append(int((self.gsheet_client.open_by_key(file.get('name'))).split(' - ')[1]))
+
+                # return True
+
+            document_page_token = lookup_file.get('nextPageToken', None)
+            if document_page_token is None:
+                break
+
+        if test_ids == []:
+            self.test_id.text = 1
+
+        else: 
+            self.test_id.text = max(test_ids) + 1
+
+
     def  set_up_for_test(self):
         self.home_machine_pre_test()
         # the check home event (set up in homing function) then also sends command to set specific X coordinate when homing complete
@@ -471,7 +540,6 @@ class ProcessMicrometerScreen(Screen):
 
     def do_data_send(self, dt):
 
-        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
         try: self.write_to_worksheet()
@@ -535,64 +603,10 @@ class ProcessMicrometerScreen(Screen):
 
     def open_spreadsheet(self):
 
-        if self.look_for_existing_folder():
-            if self.look_for_existing_file(): pass
-            else: self.create_new_document()
-
-        else:
+        if self.active_folder_id == '':
             self.create_new_folder()
-            self.create_new_document()
 
-
-    def look_for_existing_folder(self):
-
-        # FOLDER SEARCH
-
-        # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
-        # and with a name that contains the current bench id
-        folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
-         ' and ' + "mimeType = 'application/vnd.google-apps.folder'"
-        folder_page_token = None
-
-        while True:
-            log('Looking for existing folder to send data to...')
-            lookup_folder = self.drive_service.files().list(q=folder_q_str,
-                                                        spaces='drive',
-                                                        fields='nextPageToken, files(id, name)',
-                                                        pageToken=folder_page_token).execute()
-
-            for file in lookup_folder.get('files', []):
-                log('Found folder: %s (%s)' % (file.get('name'), file.get('id')))
-                self.active_folder_id = file.get('id')
-                return True
-
-            folder_page_token = lookup_folder.get('nextPageToken', None)
-            if folder_page_token is None:
-                self.active_folder_id = ''
-                return False
-
-
-    def look_for_existing_file(self):
-
-        # GO INTO FOLDER AND LIST FILES:
-        log('Filename: ' + self.active_spreadsheet_name)
-        file_q_str = "'" + self.active_folder_id + "'" + " in parents and name = " + "'" + self.active_spreadsheet_name + "'"
-        document_page_token = None
-
-        while True:
-            log('Looking for existing file to send data to...')
-            lookup_file = self.drive_service.files().list(q=file_q_str,
-                                                        spaces='drive',
-                                                        fields='nextPageToken, files(id, name)',
-                                                        pageToken=document_page_token).execute()
-
-            for file in lookup_file.get('files', []):
-                self.active_spreadsheet_object = self.gsheet_client.open_by_key(file.get('id'))
-                return True
-
-            document_page_token = lookup_file.get('nextPageToken', None)
-            if document_page_token is None:
-                return False
+        self.create_new_document()
 
 
     def create_new_folder(self):
@@ -650,7 +664,7 @@ class ProcessMicrometerScreen(Screen):
         straightness_data_worksheet_name = 'Straightness Data'
 
         worksheet = self.active_spreadsheet_object.worksheet(straightness_data_worksheet_name)
-        log('Using new worksheet ' + str(straightness_data_worksheet_name))
+        log('Using worksheet ' + str(straightness_data_worksheet_name))
 
         # pre-clear data (this includes any rows that just contain dummy data to force the charts to work)
         self.delete_existing_spreadsheet_data(straightness_data_worksheet_name)
