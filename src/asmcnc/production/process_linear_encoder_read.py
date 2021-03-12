@@ -659,21 +659,21 @@ class ProcessLinearEncoderScreen(Screen):
 
         log("Writing calibration measurements to Gsheet")
 
-        worksheet.update('A5:A', self.machine_Y_coordinate)
-        worksheet.update('B5:B', self.HOME_raw_converted)
-        worksheet.update('C5:C', self.FAR_raw_converted)
-        worksheet.update('D5:D', self.HOME_distance_abs)
-        worksheet.update('E5:E', self.FAR_distance_abs)
-        worksheet.update('F5:F', self.Y_true)
-        worksheet.update('G5:G', self.angle_off_square)
-        worksheet.update('H5:H', self.delta_y_grbl_home)
-        worksheet.update('I5:I', self.delta_y_grbl_far)
-        worksheet.update('K5:K', self.Y_axis_linear_drift)
-        worksheet.update('J5:J', self.Y_axis_angular_offset)
-        worksheet.update('L5:L', self.delta_y_home)
-        worksheet.update('M5:M', self.delta_y_far)
-        worksheet.update('N5:N', self.DELTA_Y_X_BEAM)
-        worksheet.update('O5:O', self.DELTA_Y_PER_METER)
+        worksheet.update('A9:A', self.machine_Y_coordinate)
+        worksheet.update('B9:B', self.HOME_raw_converted)
+        worksheet.update('C9:C', self.FAR_raw_converted)
+        worksheet.update('D9:D', self.HOME_distance_abs)
+        worksheet.update('E9:E', self.FAR_distance_abs)
+        worksheet.update('F9:F', self.Y_true)
+        worksheet.update('G9:G', self.angle_off_square)
+        worksheet.update('H9:H', self.delta_y_grbl_home)
+        worksheet.update('I9:I', self.delta_y_grbl_far)
+        worksheet.update('K9:K', self.Y_axis_linear_drift)
+        worksheet.update('J9:J', self.Y_axis_angular_offset)
+        worksheet.update('L9:L', self.delta_y_home)
+        worksheet.update('M9:M', self.delta_y_far)
+        worksheet.update('N9:N', self.DELTA_Y_X_BEAM)
+        worksheet.update('O9:O', self.DELTA_Y_PER_METER)
 
         log('Calibration test data sent')
         log("Recording test metadata")
@@ -713,21 +713,21 @@ class ProcessLinearEncoderScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A5:A"
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B5:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C5:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D5:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E5:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F5:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G5:G"
-        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H5:H"
-        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I5:I"
-        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J5:J"
-        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K5:K"
-        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L5:L"
-        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M5:M"
-        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N5:N"
-        O_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "O5:O"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A9:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B9:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C9:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D9:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E9:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F9:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G9:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H9:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I9:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J9:J"
+        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K9:K"
+        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L9:L"
+        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M9:M"
+        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N9:N"
+        O_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "O9:O"
 
         self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)

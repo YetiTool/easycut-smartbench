@@ -29,7 +29,6 @@ from asmcnc.production import micrometer, dti_widget_xy_move
 
 USB0 = '/dev/ttyUSB0'
 USB1 = '/dev/ttyUSB1'
-y_length = float(2645 - 20)
 
 def log(message):
     timestamp = datetime.now()
@@ -205,6 +204,7 @@ class ProcessMicrometerScreen(Screen):
     ## will need final jig to measure these
     X_start_coordinate = 0 
     translation_from_jig_to_Y_pos = 0
+    y_length = float(2645 - 20)
 
     # CALIBRATORS AND CONSTANTS
     Calibration_list_home = []
