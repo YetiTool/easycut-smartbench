@@ -668,7 +668,6 @@ class ProcessMicrometerScreen(Screen):
         straightness_data_worksheet_name = 'Straightness Data'
 
         worksheet = self.active_spreadsheet_object.worksheet(straightness_data_worksheet_name)
-        log('Using worksheet ' + str(straightness_data_worksheet_name))
 
         # pre-clear data (this includes any rows that just contain dummy data to force the charts to work)
         self.delete_existing_spreadsheet_data(straightness_data_worksheet_name)

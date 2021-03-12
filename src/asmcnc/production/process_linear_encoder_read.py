@@ -534,8 +534,6 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(date.today()) + ' - ' + str(self.test_id.text)
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        self.write_to_worksheet()
-
         try: self.write_to_worksheet()
         except: 
             Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
@@ -748,7 +746,6 @@ class ProcessLinearEncoderScreen(Screen):
         # INDICATE IF BENCH OR EXTRUSION
         calibration_data_worksheet_name =  'Calibration Data'
         worksheet = self.active_spreadsheet_object.worksheet(calibration_data_worksheet_name)
-        log('Using new worksheet ' + str(calibration_data_worksheet_name))
 
         # pre-clear data
         self.delete_existing_spreadsheet_data(calibration_data_worksheet_name)
