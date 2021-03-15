@@ -586,11 +586,11 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.state = 'normal'
 
         self.calibrate_home_stop.background_color = [0,0.502,0,1]
-        self.calibrate_home_stop.text = 'CALIBRATE'
+        self.calibrate_home_stop.text = 'CALIBRATE HOME'
         self.calibrate_home_stop.state = 'normal'
 
         self.calibrate_far_stop.background_color = [0,0.502,0,1]
-        self.calibrate_far_stop.text = 'CALIBRATE'
+        self.calibrate_far_stop.text = 'CALIBRATE FAR'
         self.calibrate_far_stop.state = 'normal'
 
         self.bindex = 0
