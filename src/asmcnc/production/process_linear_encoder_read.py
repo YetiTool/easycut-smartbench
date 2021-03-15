@@ -528,10 +528,19 @@ class ProcessLinearEncoderScreen(Screen):
     def do_data_send(self, dt):
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        try: self.write_to_worksheet()
-        except: 
-            Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
-            log('Failed to write to sheet, trying again in 10 seconds')
+
+        try_writing_event = None
+
+        def try_writing_nested_function(self, dt):
+
+            try: 
+                self.write_to_worksheet()
+                Clock.unschedule(try_writing_event)
+            except: 
+                # Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
+                log('Failed to write to sheet, trying again in 30 seconds')
+
+        try_writing_event = Clock.schedule_interval(try_writing_nested_function, 30)
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
 
