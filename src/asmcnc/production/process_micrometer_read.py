@@ -387,7 +387,7 @@ class ProcessMicrometerScreen(Screen):
             self.test_id.text = str(max(test_ids) + 1)
 
 
-    def  set_up_for_test(self):
+    def set_up_for_test(self):
         self.home_machine_pre_test()
         # the check home event (set up in homing function) then also sends command to set specific X coordinate when homing complete
 
@@ -504,7 +504,7 @@ class ProcessMicrometerScreen(Screen):
                 self.m.stop_from_soft_stop_cancel()
 
 
-    def do_threshold_step(self):
+    def do_threshold_step(self, dt):
 
         if self.m.mpos_x() >= self.max_pos:
             if (self.m.mpos_x() < self.bin_boundaries[self.bindex]):
