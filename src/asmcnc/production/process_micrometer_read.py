@@ -532,7 +532,7 @@ class ProcessMicrometerScreen(Screen):
         if self.test_completed:
             self.data_status = 'Collected'
 
-            if calibration_run:
+            if self.calibration_run:
                 Clock.schedule_once(lambda dt: self.send_calibration_data(), 1)
             else:
                 Clock.schedule_once(lambda dt: self.send_data(), 1)
