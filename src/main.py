@@ -62,7 +62,6 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
-from asmcnc.apps.maintenance_app import screen_maintenance
 
 # developer testing
 Cmport = 'COM3'
@@ -208,6 +207,7 @@ class SkavaUI(App):
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
         sm.current = start_screen
+  
 
         log('Screen manager activated: ' + str(sm.current))
 

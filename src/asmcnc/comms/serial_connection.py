@@ -43,7 +43,11 @@ class SerialConnection(object):
     grbl_out = ""
     job_gcode = []
     response_log = []
+    
     suppress_error_screens = True # console and arduino running different GRBL
+    suppress_alarm_screens = False
+    suppress_door_screens = False
+
     FLUSH_FLAG = False
     
     write_command_buffer = []
@@ -53,10 +57,12 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
+    # For Z Head Diagnostics only:
+    overload_pin_mV = 0
+
     def __init__(self, machine, screen_manager):
 
-        self.sm = screen_manager
-        # This seems to work fine, but feel wrong - should I be using super()? Maybe? But super() creates module errors...       
+        self.sm = screen_manager   
         self.m = machine
         
     def __del__(self):
@@ -677,8 +683,10 @@ class SerialConnection(object):
                         self.m.set_pause(True) # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
                             log("Hard " + self.m_state)
-                            self.sm.get_screen('door').return_to_screen = self.sm.current 
-                            self.sm.current = 'door'
+
+                            if self.suppress_door_screens == False:
+                                self.sm.get_screen('door').return_to_screen = self.sm.current 
+                                self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
                     self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
@@ -691,20 +699,22 @@ class SerialConnection(object):
                     elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
 
-                    # update stuff if there's a change
-                    if overload_mV_equivalent_state != self.overload_state:  
-                        self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
+                    self.overload_pin_mV = overload_raw_mV
+
+                    # # update stuff if there's a change
+                    # if overload_mV_equivalent_state != self.overload_state:  
+                    #     self.overload_state = overload_mV_equivalent_state
+                    #     log("Overload state change: " + str(self.overload_state))
                     
-                        try:
-                            self.sm.get_screen('go').update_overload_label(self.overload_state)
-                        except:
-                            log('Unable to update overload state on go screen')
+                    #     try:
+                    #         self.sm.get_screen('go').update_overload_label(self.overload_state)
+                    #     except:
+                    #         log('Unable to update overload state on go screen')
                     
-                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
-                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
+                    # # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                    # if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                    #     self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                    #     Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
@@ -720,13 +730,14 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            if self.sm.current != 'alarmScreen':
-                self.sm.get_screen('alarmScreen').message = message
-                if self.sm.current == 'errorScreen':
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-                else:
-                    self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-                self.sm.current = 'alarmScreen'
+            if self.suppress_alarm_screens == False:
+                if self.sm.current != 'alarmScreen':
+                    self.sm.get_screen('alarmScreen').message = message
+                    if self.sm.current == 'errorScreen':
+                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+                    else:
+                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
+                    self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             log(message)

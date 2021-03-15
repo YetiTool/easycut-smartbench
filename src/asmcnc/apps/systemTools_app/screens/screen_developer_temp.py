@@ -13,7 +13,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 
-from asmcnc.production import process_micrometer_read, process_linear_encoder_read
+from asmcnc.production import process_micrometer_read, process_linear_encoder_read, screen_z_head_diagnostics
 
 Builder.load_string("""
 
@@ -131,7 +131,8 @@ Builder.load_string("""
                             on_press: root.open_squareness_jig_screen()
                                        
                         Button:
-                            text: ''
+                            text: 'Z head diagnostics'
+                            on_press: root.open_z_head_diagnostics()
                             
                         Button:
                             text: ''
@@ -322,3 +323,10 @@ class DeveloperTempScreen(Screen):
             self.systemtools_sm.sm.add_widget(screen_process_linear_encoder_read)
 
         self.systemtools_sm.sm.current = 'squareness_jig_screen'
+
+    def open_z_head_diagnostics(self):
+        if not self.systemtools_sm.sm.has_screen('z_head_diagnostics'):
+            z_head_diagnostics_screen = screen_z_head_diagnostics.ZHeadDiagnosticsScreen(name = 'z_head_diagnostics', screen_manager = sm, machine = m)
+            sm.add_widget(z_head_diagnostics_screen)
+
+        self.systemtools_sm.sm.current = 'z_head_diagnostics'

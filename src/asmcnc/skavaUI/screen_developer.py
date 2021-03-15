@@ -65,9 +65,8 @@ Builder.load_string("""
             size_hint_y: 0.4
 
             Button:
-                text: 'Allow Remote Access'
-#                 on_press: root.allow_access()
-                disabled: 'true'
+                text: 'Z Head Diagnostics'
+                on_press: root.z_head_diagnostics()
                 
             Button:
                 text: 'Download logs'
@@ -616,8 +615,5 @@ class DeveloperScreen(Screen):
 #         os.system("./update_fw.sh")
 #         # sys.exit()
 #     
-
-
-
 
 
