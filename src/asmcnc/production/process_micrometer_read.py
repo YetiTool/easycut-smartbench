@@ -687,8 +687,11 @@ class ProcessMicrometerScreen(Screen):
         pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
         calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
-        calibration_list_home = calibration_for_straightness_jig_worksheet.col_values(1)
-        calibration_list_far = calibration_for_straightness_jig_worksheet.col_values(2)
+        calibration_list_home = calibration_for_straightness_jig_worksheet.col_values(1, value_render_option='UNFORMATTED_VALUE')
+        calibration_list_far = calibration_for_straightness_jig_worksheet.col_values(2, value_render_option='UNFORMATTED_VALUE')
+
+        print(calibration_list_home)
+        print(calibration_list_far)
 
         HOME_read_calibrated = []
         FAR_read_calibrated = []
