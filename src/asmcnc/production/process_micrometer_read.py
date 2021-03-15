@@ -694,8 +694,8 @@ class ProcessMicrometerScreen(Screen):
         FAR_read_calibrated = []
 
         for idx, bin_number in enumerate(pos_bin_array):
-            HOME_read_calibrated.append(HOME_baseline_corrected[idx] -  calibration_list_home(bin_number))
-            FAR_read_calibrated.append(-1*(FAR_baseline_corrected[idx] -  calibration_list_far(bin_number)))
+            HOME_read_calibrated.append(HOME_baseline_corrected[idx] -  calibration_list_home[bin_number])
+            FAR_read_calibrated.append(-1*(FAR_baseline_corrected[idx] -  calibration_list_far[bin_number]))
 
 
         # HOME_baseline_corrected = list(map(lambda h, c: h - float(self.DTI_initial_value_home) - c, self.DTI_read_home, calibration_list_home))
