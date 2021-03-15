@@ -576,7 +576,7 @@ class ProcessMicrometerScreen(Screen):
             except:
                 pass
 
-        calibration_for_straightness_jig_worksheet = self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id).worksheet(0)
+        calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).worksheet(0)
         calibration_for_straightness_jig_worksheet.update('A1:B', calibration_list_home, calibration_list_far)
 
 
@@ -647,7 +647,7 @@ class ProcessMicrometerScreen(Screen):
         # and will need function to scrape the calibration data
         pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
-        calibration_for_straightness_jig_worksheet = self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id).worksheet(0)
+        calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).worksheet(0)
         calibration_list_home = calibration_for_straightness_jig_worksheet.col_values(1)
         calibration_list_far = calibration_for_straightness_jig_worksheet.col_values(2)
 
