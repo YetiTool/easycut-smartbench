@@ -326,7 +326,7 @@ class DeveloperTempScreen(Screen):
 
     def open_z_head_diagnostics(self):
         if not self.systemtools_sm.sm.has_screen('z_head_diagnostics'):
-            z_head_diagnostics_screen = screen_z_head_diagnostics.ZHeadDiagnosticsScreen(name = 'z_head_diagnostics', screen_manager = sm, machine = m)
+            z_head_diagnostics_screen = screen_z_head_diagnostics.ZHeadDiagnosticsScreen(name = 'z_head_diagnostics', screen_manager = self.systemtools_sm.sm, machine = self.m)
             sm.add_widget(z_head_diagnostics_screen)
 
         self.systemtools_sm.sm.current = 'z_head_diagnostics'
