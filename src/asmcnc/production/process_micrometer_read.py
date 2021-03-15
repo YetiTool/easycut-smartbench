@@ -445,7 +445,7 @@ class ProcessMicrometerScreen(Screen):
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
-            log('Starting test...')
+            log('Starting calibration...')
             self.calibration_run = True
             self.test_completed = False
             self.data_status = 'Collecting'
@@ -457,7 +457,7 @@ class ProcessMicrometerScreen(Screen):
         # TEST GETS STOPPED PREMATURELY
         elif self.calibrate_stop.state == 'normal':
 
-            log('Test cancelled')
+            log('Calibration cancelled')
             self.test_completed = False
             self.end_of_test_sequence()
 
@@ -529,6 +529,10 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
 
+        self.calibrate_stop.background_color = [0,0.502,0,1]
+        self.calibrate_stop.text = 'CALIBRATE'
+        self.calibrate_stop.state = 'normal'
+
         if self.test_completed:
             self.data_status = 'Collected'
 
@@ -565,23 +569,26 @@ class ProcessMicrometerScreen(Screen):
 
     # CALIBRATION
     def send_calibration_data(self):
+        log('Sending calibration data...')
         pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
         calibration_list_home = []
         calibration_list_far = []
 
+        log('Binning cailbration data')
         if pos_bin_array != []:
             bin_range = range(max(pos_bin_array) + 1)
             for n in bin_range:
                 try:
                     idx = pos_bin_array.index(n)
-                    calibration_list_home.append(float(self.DTI_read_home(idx))-self.DTI_initial_value_home)
-                    calibration_list_far.append(float(self.DTI_read_far(idx))-self.DTI_initial_value_far)
+                    calibration_list_home.append(self.DTI_read_home[idx]-self.DTI_initial_value_home)
+                    calibration_list_far.append(self.DTI_read_far[idx]-self.DTI_initial_value_far)
                 except:
                     pass
 
         calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
         calibration_for_straightness_jig_worksheet.update('A:B', [calibration_list_home, calibration_list_far])
+        log('Calibration data sent to sheet')
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
