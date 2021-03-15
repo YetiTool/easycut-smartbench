@@ -9,7 +9,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pprint
 from datetime import datetime, date
-from numpy import median
+import numpy as np
 
 import requests.auth
 import binascii
