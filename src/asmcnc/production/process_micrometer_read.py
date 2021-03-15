@@ -567,14 +567,15 @@ class ProcessMicrometerScreen(Screen):
     def send_calibration_data(self):
         pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
-        bin_range = range(max(pos_bin_array) + 1)
-        for n in bin_range:
-            try:
-                idx = pos_bin_array.index(n)
-                calibration_list_home.append(float(self.DTI_read_home(idx))-self.DTI_initial_value_home)
-                calibration_list_far.append(float(self.DTI_read_far(idx))-self.DTI_initial_value_far)
-            except:
-                pass
+        if pos_bin_array != []
+            bin_range = range(max(pos_bin_array) + 1)
+            for n in bin_range:
+                try:
+                    idx = pos_bin_array.index(n)
+                    calibration_list_home.append(float(self.DTI_read_home(idx))-self.DTI_initial_value_home)
+                    calibration_list_far.append(float(self.DTI_read_far(idx))-self.DTI_initial_value_far)
+                except:
+                    pass
 
         calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
         calibration_for_straightness_jig_worksheet.update('A1:B', calibration_list_home, calibration_list_far)
