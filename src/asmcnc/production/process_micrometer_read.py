@@ -55,7 +55,8 @@ Builder.load_string("""
 
     prep_test : prep_test
     go_stop : go_stop
-    calibrate_stop : calibrate_stop
+    calibrate_home_stop : calibrate_home_stop
+    calibrate_far_stop : calibrate_far_stop
 
     BoxLayout:
         padding: 0
@@ -152,7 +153,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
-                cols: 4
+                cols: 5
                 spacing: 5
 
                 ToggleButton:
@@ -170,8 +171,15 @@ Builder.load_string("""
                     background_normal: ''
 
                 ToggleButton:
-                    id: calibrate_stop
-                    text: "CALIBRATE"
+                    id: calibrate_home_stop
+                    text: "CALIBRATE HOME"
+                    on_press: root.run_calibration()
+                    background_color: [0,0,0,1]
+                    background_normal: ''
+
+                ToggleButton:
+                    id: calibrate_far_stop
+                    text: "CALIBRATE FAR"
                     on_press: root.run_calibration()
                     background_color: [0,0,0,1]
                     background_normal: ''
@@ -214,6 +222,8 @@ class ProcessMicrometerScreen(Screen):
     bin_boundaries = np.linspace(0,-2600, 260)
     bindex = 0
     calibration_run = False
+    calibrate_home = False
+    calibrate_far = False
 
     # LISTS TO HOLD RAW RECORDED DATA
     jig_pos_list = []
@@ -429,24 +439,24 @@ class ProcessMicrometerScreen(Screen):
 
 
     # MACHINE RUN TEST FUNCTIONS
-    def run_calibration(self):
+    def run_calibration_home(self):
         # TEST GETS STARTED
-        if self.calibrate_stop.state == 'down':
+        if self.calibrate_home_stop.state == 'down':
 
             ## CHANGE BUTTON
-            self.calibrate_stop.background_color = [1,0,0,1]
-            self.calibrate_stop.text = 'STOP'
+            self.calibrate_home_stop.background_color = [1,0,0,1]
+            self.calibrate_home_stop.text = 'STOP'
 
             ## SET VARIABLES
             self.clear_data()
             self.starting_jig_pos = float(self.m.mpos_x())
             self.DTI_initial_value_home = float(self.DTI_H.read_mm())
-            self.DTI_initial_value_far = float(self.DTI_F.read_mm())
             self.max_pos = self.set_max_pos()
 
             ## START THE TEST
             log('Starting calibration...')
             self.calibration_run = True
+            self.calibrate_home = True
             self.test_completed = False
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
@@ -455,7 +465,7 @@ class ProcessMicrometerScreen(Screen):
             self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
 
         # TEST GETS STOPPED PREMATURELY
-        elif self.calibrate_stop.state == 'normal':
+        elif self.calibrate_home_stop.state == 'normal':
 
             log('Calibration cancelled')
             self.test_completed = False
@@ -464,6 +474,43 @@ class ProcessMicrometerScreen(Screen):
             if self.m.state() == 'Run':
                 self.m.soft_stop()
                 self.m.stop_from_soft_stop_cancel()
+
+    def run_calibration_far(self):
+        # TEST GETS STARTED
+        if self.calibrate_far_stop.state == 'down':
+
+            ## CHANGE BUTTON
+            self.calibrate_far_stop.background_color = [1,0,0,1]
+            self.calibrate_far_stop.text = 'STOP'
+
+            ## SET VARIABLES
+            self.clear_data()
+            self.starting_jig_pos = float(self.m.mpos_x())
+            self.DTI_initial_value_far = float(self.DTI_F.read_mm())
+            self.max_pos = self.set_max_pos()
+
+            ## START THE TEST
+            log('Starting calibration...')
+            self.calibration_run = True
+            self.calibrate_far = True
+            self.test_completed = False
+            self.data_status = 'Collecting'
+            run_command = 'G0 G91 X' + str(self.max_pos)
+            self.m.send_any_gcode_command(run_command)
+            # Clock.schedule_once(self.start_recording_data, 0.1)
+            self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
+
+        # TEST GETS STOPPED PREMATURELY
+        elif self.calibrate_far_stop.state == 'normal':
+
+            log('Calibration cancelled')
+            self.test_completed = False
+            self.end_of_test_sequence()
+
+            if self.m.state() == 'Run':
+                self.m.soft_stop()
+                self.m.stop_from_soft_stop_cancel()
+
 
 
     def run_stop_test(self):
@@ -528,9 +575,13 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
 
-        self.calibrate_stop.background_color = [0,0.502,0,1]
-        self.calibrate_stop.text = 'CALIBRATE'
-        self.calibrate_stop.state = 'normal'
+        self.calibrate_home_stop.background_color = [0,0.502,0,1]
+        self.calibrate_home_stop.text = 'CALIBRATE'
+        self.calibrate_home_stop.state = 'normal'
+
+        self.calibrate_far_stop.background_color = [0,0.502,0,1]
+        self.calibrate_far_stop.text = 'CALIBRATE'
+        self.calibrate_far_stop.state = 'normal'
 
         self.bindex = 0
 
@@ -584,8 +635,9 @@ class ProcessMicrometerScreen(Screen):
             for n in bin_range:
                 try:
                     idx = pos_bin_array.index(n)
-                    calibration_list_home.append(self.DTI_read_home[idx]-self.DTI_initial_value_home)
-                    calibration_list_far.append(self.DTI_read_far[idx]-self.DTI_initial_value_far)
+                    if self.calibrate_home: calibration_list_home.append(self.DTI_read_home[idx]-self.DTI_initial_value_home)
+                    if self.calibrate_far: calibration_list_far.append(self.DTI_read_far[idx]-self.DTI_initial_value_far)
+
                 except:
                     pass
 
@@ -596,7 +648,10 @@ class ProcessMicrometerScreen(Screen):
 
             try: 
                 calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
-                calibration_for_straightness_jig_worksheet.update('A:B', [calibration_list_home, calibration_list_far])
+                if self.calibrate_home:
+                    calibration_for_straightness_jig_worksheet.update('A:A', calibration_list_home)
+                if self.calibrate_far:
+                    calibration_for_straightness_jig_worksheet.update('B:B', calibration_list_far)
                 Clock.unschedule(try_writing_event)
                 log('Calibration data sent to sheet')
                 self.clear_data()
@@ -639,6 +694,9 @@ class ProcessMicrometerScreen(Screen):
 
         self.test_completed = False
         self.calibration_run = False
+
+        self.calibrate_home = False
+        self.calibrate_far = False
 
 
     ## SENDING DATA
