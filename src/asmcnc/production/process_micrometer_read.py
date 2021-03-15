@@ -313,9 +313,11 @@ class ProcessMicrometerScreen(Screen):
         self.go_stop.state == 'normal'
         self.go_stop.text = 'MEASURE'
 
-        self.calibrate_stop.state == 'normal'
-        self.calibrate_stop.text = 'CALIBRATE'
+        self.calibrate_home_stop.state == 'normal'
+        self.calibrate_home_stop.text = 'CALIBRATE HOME'
 
+        self.calibrate_far_stop.state == 'normal'
+        self.calibrate_far_stop.text = 'CALIBRATE FAR'
 
     def go_to_lobby(self):
         self.sm.current = 'developer_temp'
@@ -434,8 +436,14 @@ class ProcessMicrometerScreen(Screen):
             self.prep_test.text = 'GET READY'
             self.prep_test.background_color = [0,0.502,0,1]
             self.prep_test.state = 'normal'
+            self.go_stop.state = 'normal'
             self.go_stop.background_color = [0,0.502,0,1]
-            self.calibrate_stop.background_color = [0,0.502,0,1]
+
+            self.calibrate_home_stop.state == 'normal'
+            self.calibrate_home_stop.text = 'CALIBRATE HOME'
+
+            self.calibrate_far_stop.state == 'normal'
+            self.calibrate_far_stop.text = 'CALIBRATE FAR'
 
 
     # MACHINE RUN TEST FUNCTIONS
