@@ -26,6 +26,8 @@ class micrometer(object):
     Class to support reading from DTI
 
     """
+    port = ''
+
     def __init__(self, addr=DTI_COM_DEFAULT):
 
         self.stop_threads = False
