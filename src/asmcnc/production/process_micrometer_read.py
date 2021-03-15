@@ -173,14 +173,14 @@ Builder.load_string("""
                 ToggleButton:
                     id: calibrate_home_stop
                     text: "CALIBRATE HOME"
-                    on_press: root.run_calibration()
+                    on_press: root.run_calibration_home()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
                 ToggleButton:
                     id: calibrate_far_stop
                     text: "CALIBRATE FAR"
-                    on_press: root.run_calibration()
+                    on_press: root.run_calibration_far()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
