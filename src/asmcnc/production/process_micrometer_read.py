@@ -602,6 +602,7 @@ class ProcessMicrometerScreen(Screen):
             except: 
                 # Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
                 log('Failed to write calibration data to sheet, trying again in 30 seconds')
+                self.data_status = 'Failed, retrying...'
 
         try_writing_event = Clock.schedule_interval(try_writing_nested_function, 30)
 
