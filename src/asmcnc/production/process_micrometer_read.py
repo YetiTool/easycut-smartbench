@@ -26,8 +26,10 @@ from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
 
 from asmcnc.production import micrometer, dti_widget_xy_move
 
-
+# HOME SIDE
 USB0 = '/dev/ttyUSB0'
+
+# FAR SIDE
 USB1 = '/dev/ttyUSB1'
 
 def log(message):
