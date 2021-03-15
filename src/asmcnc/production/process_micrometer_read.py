@@ -717,8 +717,8 @@ class ProcessMicrometerScreen(Screen):
         ## convert to json format for API:
         self.jig_position_converted = self.convert_to_json(self.jig_pos_list)
         self.y_pos_converted = self.convert_to_json(Y_pos)
-        self.home_calibration_list_converted = self.convert_to_json(self.Calibration_list_home)
-        self.far_calibration_list_converted = self.convert_to_json(self.Calibration_list_far)
+        self.home_calibration_list_converted = self.convert_to_json(HOME_read_calibrated)
+        self.far_calibration_list_converted = self.convert_to_json(FAR_read_calibrated)
         self.home_raw_converted = self.convert_to_json(self.DTI_read_home)
         self.far_raw_converted = self.convert_to_json(self.DTI_read_far)
         self.home_measurement_converted = self.convert_to_json(HOME_baseline_corrected)
