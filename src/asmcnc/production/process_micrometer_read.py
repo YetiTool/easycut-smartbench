@@ -208,8 +208,6 @@ class ProcessMicrometerScreen(Screen):
     y_length = float(2645 - 20)
 
     # CALIBRATORS AND CONSTANTS
-    Calibration_list_home = []
-    Calibration_list_far = []
     arbitrary_width_constant = 1
     bin_boundaries = np.linspace(0,-2600, 260)
     bindex = 0
@@ -516,7 +514,6 @@ class ProcessMicrometerScreen(Screen):
                 self.bindex+=1
 
         else:
-            log('Test finished')
             self.test_completed = True
             self.end_of_test_sequence()
 
@@ -533,14 +530,19 @@ class ProcessMicrometerScreen(Screen):
         self.calibrate_stop.text = 'CALIBRATE'
         self.calibrate_stop.state = 'normal'
 
+        self.bindex = 0
+
         if self.test_completed:
             self.data_status = 'Collected'
 
             if self.calibration_run:
+                log('Calibration finished')
                 Clock.schedule_once(lambda dt: self.send_calibration_data(), 1)
             else:
+                log('Test finished')
                 Clock.schedule_once(lambda dt: self.send_data(), 1)
         else: 
+            log('Run cancelled')
             self.data_status = 'Test cancelled'
             self.clear_data()
 
@@ -562,7 +564,6 @@ class ProcessMicrometerScreen(Screen):
             self.DTI_read_far.append(float(self.DTI_F.read_mm()))
 
         else:
-            log('Test finished')
             self.test_completed = True
             self.end_of_test_sequence()
 
@@ -586,9 +587,23 @@ class ProcessMicrometerScreen(Screen):
                 except:
                     pass
 
-        calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
-        calibration_for_straightness_jig_worksheet.update('A:B', [calibration_list_home, calibration_list_far])
-        log('Calibration data sent to sheet')
+
+        try_writing_event = None
+
+        def try_writing_nested_function(self, dt):
+
+            try: 
+                calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
+                calibration_for_straightness_jig_worksheet.update('A:B', [calibration_list_home, calibration_list_far])
+                Clock.unschedule(try_writing_event)
+                log('Calibration data sent to sheet')
+                self.clear_data()
+
+            except: 
+                # Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
+                log('Failed to write calibration data to sheet, trying again in 30 seconds')
+
+        try_writing_event = Clock.schedule_interval(try_writing_nested_function, 30)
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
@@ -602,7 +617,8 @@ class ProcessMicrometerScreen(Screen):
         # LISTS FOR DATA THAT GOES TO GOOGLE SHEETS
         self.jig_position_converted = []
         self.y_pos_converted = []
-        self.calibration_list_converted = []
+        self.home_calibration_list_converted = []
+        self.far_calibration_list_converted = []
         self.home_raw_converted = []
         self.far_raw_converted = []
         self.home_measurement_converted = []
@@ -617,6 +633,9 @@ class ProcessMicrometerScreen(Screen):
         self.DTI_initial_value_far = 0
 
         self.data_status = 'Cleared'
+
+        self.test_completed = False
+        self.calibration_run = False
 
 
     ## SENDING DATA
@@ -637,10 +656,19 @@ class ProcessMicrometerScreen(Screen):
 
         self.format_output()
         self.open_spreadsheet() # I.E. OPEN GOOGLE SHEETS DOCUMENT
-        try: self.write_to_worksheet()
-        except: 
-            Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
-            log('Failed to write to sheet, trying again in 10 seconds')
+
+        try_writing_event = None
+
+        def try_writing_nested_function(self, dt):
+
+            try: 
+                self.write_to_worksheet()
+                Clock.unschedule(try_writing_event)
+            except: 
+                # Clock.schedule_once(lambda dt: self.write_to_worksheet(), 10)
+                log('Failed to write to sheet, trying again in 30 seconds')
+
+        try_writing_event = Clock.schedule_interval(try_writing_nested_function, 30)
 
     # GOOGLE SHEETS DATA FORMATTING FUNCTIONS
 
