@@ -23,7 +23,7 @@ DTI_COM_DEFAULT = "COM5"
 
 class micrometer(object):
     """
-    Class to support reading from DIT
+    Class to support reading from DTI
 
     """
     def __init__(self, addr=DTI_COM_DEFAULT):
@@ -32,6 +32,7 @@ class micrometer(object):
         self.result_mm = 0
         try: 
             self.init_serial(addr)
+            self.port = str(addr)
         except: 
             print('no DTI connected')
         self.connected = False
@@ -67,7 +68,7 @@ class micrometer(object):
             try:
                 self.result_mm = int(dti_bytes[1:2]+dti_bytes[3:9])*0.001
             except:
-                print('DTI decode ERROR')             
+                print('DTI decode ERROR on ' + self.port)             
                 pass
                 
 # ################################ setup micrometer ################################ 
