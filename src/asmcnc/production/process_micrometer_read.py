@@ -651,6 +651,9 @@ class ProcessMicrometerScreen(Screen):
         calibration_list_home = calibration_for_straightness_jig_worksheet.col_values(1)
         calibration_list_far = calibration_for_straightness_jig_worksheet.col_values(2)
 
+        HOME_read_calibrated = []
+        FAR_read_calibrated = []
+
         for idx, bin_number in enumerate(pos_bin_array):
             HOME_read_calibrated.append(HOME_baseline_corrected[idx] -  calibration_list_home(bin_number))
             FAR_read_calibrated.append(-1*(FAR_baseline_corrected[idx] -  calibration_list_far(bin_number)))
