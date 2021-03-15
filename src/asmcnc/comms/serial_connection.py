@@ -699,7 +699,7 @@ class SerialConnection(object):
                     elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
                     else: log("Overload value not recognised")
 
-                    self.overload_pin_mV = overload_raw_mV
+                    self.overload_pin_mV = self.spindle_load_voltage
 
                     # # update stuff if there's a change
                     # if overload_mV_equivalent_state != self.overload_state:  
