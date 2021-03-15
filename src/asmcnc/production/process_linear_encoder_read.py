@@ -531,7 +531,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         try_writing_event = None
 
-        def try_writing_nested_function(self, dt):
+        def try_writing_nested_function(dt):
 
             try: 
                 self.write_to_worksheet()
