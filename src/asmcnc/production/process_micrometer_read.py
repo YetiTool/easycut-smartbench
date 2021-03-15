@@ -567,6 +567,9 @@ class ProcessMicrometerScreen(Screen):
     def send_calibration_data(self):
         pos_bin_array = np.digitize(self.jig_pos_list, self.bin_boundaries)
 
+        calibration_list_home = []
+        calibration_list_far = []
+
         if pos_bin_array != []:
             bin_range = range(max(pos_bin_array) + 1)
             for n in bin_range:
