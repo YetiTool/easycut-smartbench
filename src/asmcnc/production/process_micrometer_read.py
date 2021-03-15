@@ -581,7 +581,7 @@ class ProcessMicrometerScreen(Screen):
                     pass
 
         calibration_for_straightness_jig_worksheet = (self.gsheet_client.open_by_key(self.calibration_file_for_straightness_jig_id)).sheet1
-        calibration_for_straightness_jig_worksheet.update('A1:B', calibration_list_home, calibration_list_far)
+        calibration_for_straightness_jig_worksheet.update('A:B', [calibration_list_home, calibration_list_far])
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
