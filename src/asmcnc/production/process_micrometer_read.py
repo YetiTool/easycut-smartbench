@@ -170,7 +170,7 @@ Builder.load_string("""
                 ToggleButton:
                     id: calibrate_stop
                     text: "CALIBRATE"
-                    on_press: root.run_stop_test()
+                    on_press: root.run_calibration()
                     background_color: [0,0,0,1]
                     background_normal: ''
 
@@ -212,6 +212,7 @@ class ProcessMicrometerScreen(Screen):
     Calibration_list_far = []
     arbitrary_width_constant = 1
     bin_boundaries = np.linspace(0,-2600, 260)
+    bindex = 0
     calibration_run = False
 
     # LISTS TO HOLD RAW RECORDED DATA
@@ -430,11 +431,11 @@ class ProcessMicrometerScreen(Screen):
     # MACHINE RUN TEST FUNCTIONS
     def run_calibration(self):
         # TEST GETS STARTED
-        if self.prep_test.state == 'down':
+        if self.calibrate_stop.state == 'down':
 
             ## CHANGE BUTTON
-            self.prep_test.background_color = [1,0,0,1]
-            self.prep_test.text = 'STOP'
+            self.calibrate_stop.background_color = [1,0,0,1]
+            self.calibrate_stop.text = 'STOP'
 
             ## SET VARIABLES
             self.clear_data()
@@ -450,10 +451,11 @@ class ProcessMicrometerScreen(Screen):
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
-            Clock.schedule_once(self.start_recording_data, 0.3)
+            # Clock.schedule_once(self.start_recording_data, 0.1)
+            self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
 
         # TEST GETS STOPPED PREMATURELY
-        elif self.prep_test.state == 'normal':
+        elif self.calibrate_stop.state == 'normal':
 
             log('Test cancelled')
             self.test_completed = False
@@ -487,7 +489,8 @@ class ProcessMicrometerScreen(Screen):
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
-            Clock.schedule_once(self.start_recording_data, 0.3)
+            # Clock.schedule_once(self.start_recording_data, 0.1)
+            self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
 
         # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
@@ -499,6 +502,25 @@ class ProcessMicrometerScreen(Screen):
             if self.m.state() == 'Run':
                 self.m.soft_stop()
                 self.m.stop_from_soft_stop_cancel()
+
+
+    def do_threshold_step(self):
+
+        if self.m.mpos_x() >= self.max_pos:
+            if (self.m.mpos_x() < self.bin_boundaries[self.bindex]):
+
+                self.jig_pos_list.append(float(self.m.mpos_x()))
+                self.DTI_read_home.append(float(self.DTI_H.read_mm()))
+                self.DTI_read_far.append(float(self.DTI_F.read_mm()))
+
+                self.bindex+=1
+
+        else:
+            log('Test finished')
+            self.test_completed = True
+            self.end_of_test_sequence()
+
+
 
     def end_of_test_sequence(self):
 
@@ -524,7 +546,8 @@ class ProcessMicrometerScreen(Screen):
 
 
     def start_recording_data(self, dt):
-        self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)        
+        # self.test_run = Clock.schedule_interval(self.do_test_step, 0.1)        
+        self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
 
 
     def do_test_step(self, dt):
