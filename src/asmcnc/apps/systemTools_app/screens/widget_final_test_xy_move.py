@@ -32,11 +32,11 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
             padding: 0
+            spacing: 0
 
             Button:
-                size: self.parent.size
-                pos: self.parent.pos
                 background_color: hex('#F4433600')
+                size_hint_y: 1
                 on_release:
                     root.quit_jog_z()
                     self.background_color = hex('#F4433600')
@@ -184,6 +184,35 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
 
+        BoxLayout:
+            padding: 0
+            orientation: 'horizontal'
+
+            Button:
+                size_hint_y: 1
+                background_color: hex('#F4433600')
+                on_release: 
+                    root.quit_jog_z()
+                    self.background_color = hex('#F4433600')
+                on_press:
+                    root.jog_z('Z-') 
+                    self.background_color = hex('#F44336FF')
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/z_jog_down.png"
+                        source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+            BoxLayout:
+                padding: 0
+                orientation: 'horizontal'
+
                 ToggleButton:
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
@@ -199,35 +228,6 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-        BoxLayout:
-            padding: 0
-            orientation: 'horizontal'
-
-            Button:
-                size: self.parent.size
-                pos: self.parent.pos
-                background_color: hex('#F4433600')
-                on_release: 
-                    root.quit_jog_z()
-                    self.background_color = hex('#F4433600')
-                on_press:
-                    root.jog_z('Z-') 
-                    self.background_color = hex('#F44336FF')
-                BoxLayout:
-                    padding: 0
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/z_jog_down.png"
-                        source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
-                        # center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
-
-            BoxLayout:
-                padding: 0
-                orientation: 'horizontal'
 
 """)
     
