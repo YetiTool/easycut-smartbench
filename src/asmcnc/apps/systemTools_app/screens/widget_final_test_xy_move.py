@@ -26,29 +26,33 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        spacing: 10
-        padding: [0, 20, 0, 0]
+        spacing: 0
+        padding: [0, 0, 0, 0]
         
+        BoxLayout:
+            padding: 10
+            size: self.parent.size
+            pos: self.parent.pos
+            Button:
+                size_hint_y: 1
+                background_color: hex('#F4433600')
+                on_release:
+                    root.quit_jog_z()
+                    self.background_color = hex('#F4433600')
+                on_press:
+                    root.jog_z('Z+') 
+                    self.background_color = hex('#F44336FF')
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-        Button:
-            size_hint_y: 1
-            background_color: hex('#F4433600')
-            on_release:
-                root.quit_jog_z()
-                self.background_color = hex('#F4433600')
-            on_press:
-                root.jog_z('Z+') 
-                self.background_color = hex('#F44336FF')
-            BoxLayout:
-                padding: 0
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
         GridLayout:
             cols: 3
             orientation: 'horizontal'
@@ -190,27 +194,30 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-
-        Button:
-            size_hint_y: 1
-            background_color: hex('#F4433600')
-            on_release: 
-                root.quit_jog_z()
-                self.background_color = hex('#F4433600')
-            on_press:
-                root.jog_z('Z-') 
-                self.background_color = hex('#F44336FF')
-            BoxLayout:
-                padding: 0
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/skavaUI/img/z_jog_down.png"
-                    source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+        BoxLayout:
+            padding: 10
+            size: self.parent.size
+            pos: self.parent.pos
+            Button:
+                size_hint_y: 1
+                background_color: hex('#F4433600')
+                on_release: 
+                    root.quit_jog_z()
+                    self.background_color = hex('#F4433600')
+                on_press:
+                    root.jog_z('Z-') 
+                    self.background_color = hex('#F44336FF')
+                BoxLayout:
+                    padding: 0
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/z_jog_down.png"
+                        source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
 
 
