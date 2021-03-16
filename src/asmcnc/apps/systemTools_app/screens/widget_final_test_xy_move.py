@@ -30,8 +30,8 @@ Builder.load_string("""
         padding: [0, 0, 0, 0]
         
         BoxLayout:
-            padding: 0
             orientation: 'horizontal'
+            padding: 0
 
             Button:
                 size: self.parent.size
@@ -55,7 +55,8 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                    padding: 0
+                padding: 0
+                orientation: 'horizontal'
 
         GridLayout:
             cols: 3
@@ -226,10 +227,8 @@ Builder.load_string("""
 
             BoxLayout:
                 padding: 0
+                orientation: 'horizontal'
 
-
-
-        
 """)
     
 
