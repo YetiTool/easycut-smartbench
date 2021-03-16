@@ -33,6 +33,7 @@ Builder.load_string("""
             orientation: 'horizontal'
             padding: 0
             spacing: 0
+            size_hint_y: 1
 
             Button:
                 background_color: hex('#F4433600')
@@ -62,9 +63,9 @@ Builder.load_string("""
             cols: 3
             orientation: 'horizontal'
             spacing: 0
-            size_hint_y: None
+            size_hint_y: 3
             height: self.width
-            padding: 10
+            padding: 0
     
             BoxLayout:
                 padding: 10
@@ -184,9 +185,26 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
 
+                ToggleButton:
+                    id: speed_toggle
+                    on_press: root.set_jog_speeds()
+                    background_color: 1, 1, 1, 0 
+                    BoxLayout:
+                        padding: 10
+                        size: self.parent.size
+                        pos: self.parent.pos      
+                        Image:
+                            id: speed_image
+                            source: "./asmcnc/skavaUI/img/slow.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
         BoxLayout:
             padding: 0
             orientation: 'horizontal'
+            size_hint_y: 1
 
             Button:
                 size_hint_y: 1
@@ -212,22 +230,6 @@ Builder.load_string("""
             BoxLayout:
                 padding: 0
                 orientation: 'horizontal'
-
-                ToggleButton:
-                    id: speed_toggle
-                    on_press: root.set_jog_speeds()
-                    background_color: 1, 1, 1, 0 
-                    BoxLayout:
-                        padding: 10
-                        size: self.parent.size
-                        pos: self.parent.pos      
-                        Image:
-                            id: speed_image
-                            source: "./asmcnc/skavaUI/img/slow.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
 
 """)
     
