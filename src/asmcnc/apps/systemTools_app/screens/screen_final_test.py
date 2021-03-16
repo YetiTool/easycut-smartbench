@@ -49,26 +49,18 @@ Builder.load_string("""
                 Button:
                     text: "G91 G0 X1150.3"
                     on_press: root.X_plus()
-                    background_color: [0,0,0,1]
-                    background_normal: ''
 
                 Button:
                 	text: "G91 G0 X-1150.3"
                     on_press: root.X_minus()
-                    background_color: [0,0,0,1]
-                    background_normal: ''
 
                 Button:
 					text: "G91 G0 Y1636.6"
                     on_press: root.Y_plus()
-                    background_color: [0,0,0,1]
-                    background_normal: ''
 
                 Button:
                 	text: "G91 G0 Y-1636.6"
                     on_press: root.Y_minus()
-                    background_color: [0,0,0,1]
-                    background_normal: ''
 
                 Button:
                     text: "Factory Settings"

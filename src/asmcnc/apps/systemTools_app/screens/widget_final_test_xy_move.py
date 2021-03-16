@@ -64,7 +64,26 @@ Builder.load_string("""
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos                 
+                pos: self.parent.pos
+                Button:
+                    size_hint_y: 1
+                    background_color: hex('#F4433600')
+                    on_release:
+                        root.quit_jog_z()
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.jog_z('Z+') 
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True             
                             
             Button:
                 background_color: hex('#F4433600')
@@ -125,7 +144,23 @@ Builder.load_string("""
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos             
+                pos: self.parent.pos
+                ToggleButton:
+                    id: speed_toggle
+                    on_press: root.set_jog_speeds()
+                    background_color: 1, 1, 1, 0 
+                    BoxLayout:
+                        padding: 10
+                        size: self.parent.size
+                        pos: self.parent.pos      
+                        Image:
+                            id: speed_image
+                            source: "./asmcnc/skavaUI/img/slow.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
             Button:
                 background_color: hex('#F4433600')
                 always_release: True
@@ -152,21 +187,29 @@ Builder.load_string("""
                 padding: 10
                 size: self.parent.size
                 pos: self.parent.pos
-            ToggleButton:
-                id: speed_toggle
-                on_press: root.set_jog_speeds()
-                background_color: 1, 1, 1, 0 
-                BoxLayout:
-                    padding: 10
-                    size: self.parent.size
-                    pos: self.parent.pos      
-                    Image:
-                        id: speed_image
-                        source: "./asmcnc/skavaUI/img/slow.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+                Button:
+                    size_hint_y: 1
+                    background_color: hex('#F4433600')
+                    on_release: 
+                        root.quit_jog_z()
+                        self.background_color = hex('#F4433600')
+                    on_press:
+                        root.jog_z('Z-') 
+                        self.background_color = hex('#F44336FF')
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/skavaUI/img/z_jog_down.png"
+                            source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+
+
         
 """)
     
