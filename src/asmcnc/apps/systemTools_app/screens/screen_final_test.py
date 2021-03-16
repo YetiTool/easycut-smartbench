@@ -43,7 +43,7 @@ Builder.load_string("""
                 pos: self.parent.pos
                 size_hint_y: 0.15
                 rows: 1
-                cols: 3
+                cols: 6
                 spacing: 5
 
                 Button:
@@ -110,9 +110,9 @@ class FinalTestScreen(Screen):
         self.m = kwargs['machine']
 
         # WIDGET SETUP
-        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
-        self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm))
-        self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.sm))
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
+        self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm.sm))
+        self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()

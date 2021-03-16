@@ -13,6 +13,7 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.apps.systemTools_app.screens import screen_final_test
 
 Builder.load_string("""
 
@@ -302,6 +303,9 @@ Builder.load_string("""
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
+                        Button:
+                            text: 'Final test'
+                            on_press: root.final_test()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -711,6 +715,9 @@ class FactorySettingsScreen(Screen):
             print 'Could not get serial number! Please contact YetiTool support!'
 
         return str(serial_number_from_file)
+
+
+    def final_test(self):
 
 
 
