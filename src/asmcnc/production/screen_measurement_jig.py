@@ -7,7 +7,7 @@ import os
 import math
 import operator
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 import pprint
 from datetime import datetime
 
@@ -368,7 +368,7 @@ class JigScreen(Screen):
             'https://www.googleapis.com/auth/drive.file'
             ]
         file_name = os.path.dirname(os.path.realpath(__file__)) + '/gsheet_client_key.json'
-        creds = ServiceAccountCredentials.from_json_keyfile_name(file_name,scope)
+        creds = service_account.Credentials.from_service_account_file(file_name, scopes=scope)
         client = gspread.authorize(creds)
 
         if self.bench_id.text != self.last_bench:
