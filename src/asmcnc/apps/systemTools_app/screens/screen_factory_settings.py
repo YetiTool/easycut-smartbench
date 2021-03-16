@@ -13,7 +13,6 @@ from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
 
 from asmcnc.skavaUI import popup_info
-from asmcnc.apps.systemTools_app.screens import screen_final_test
 
 Builder.load_string("""
 
