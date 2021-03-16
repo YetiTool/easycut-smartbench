@@ -14,7 +14,7 @@ from kivy.core.window import Window
 
 from asmcnc.skavaUI import screen_jobstart_warning
 
-
+Cmport = 'COM3'
 
 class ScreenTest(App):
 

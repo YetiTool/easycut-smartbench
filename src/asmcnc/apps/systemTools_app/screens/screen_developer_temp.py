@@ -13,7 +13,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 
-from asmcnc.production import process_micrometer_read, process_linear_encoder_read, screen_z_head_diagnostics
+from asmcnc.production import process_micrometer_read, process_linear_encoder_read, screen_z_head_diagnostics, screen_measurement_jig
 
 Builder.load_string("""
 
@@ -135,7 +135,8 @@ Builder.load_string("""
                             on_press: root.open_z_head_diagnostics()
                             
                         Button:
-                            text: ''
+                            text: 'Rotary Jig'
+                            on_press: root.open_rotary_jig()
 
                         Button:
                             text: ''
@@ -330,3 +331,10 @@ class DeveloperTempScreen(Screen):
             self.systemtools_sm.sm.add_widget(z_head_diagnostics_screen)
 
         self.systemtools_sm.sm.current = 'z_head_diagnostics'
+
+    def open_rotary_jig(self):
+        if not self.systemtools_sm.sm.has_screen('rotary_jig'):
+            y_measurement_jig_screen = screen_measurement_jig.JigScreen(name = 'rotary_jig', screen_manager = self.systemtools_sm.sm, machine = self.m)
+            self.systemtools_sm.sm.add_widget(y_measurement_jig_screen)
+
+        self.systemtools_sm.sm.current = 'rotary_jig'
