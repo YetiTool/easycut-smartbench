@@ -718,7 +718,7 @@ class FactorySettingsScreen(Screen):
 
 
     def final_test(self):
-
+        self.systemtools_sm.open_final_test_screen()
 
 
             
