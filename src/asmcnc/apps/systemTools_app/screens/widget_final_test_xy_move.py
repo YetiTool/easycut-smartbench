@@ -63,7 +63,7 @@ Builder.load_string("""
             cols: 3
             orientation: 'horizontal'
             spacing: 0
-            size_hint_y: 3
+            size_hint_y: 4
             height: self.width
             padding: 0
     
