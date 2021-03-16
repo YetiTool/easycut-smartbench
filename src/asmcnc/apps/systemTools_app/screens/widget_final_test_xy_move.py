@@ -31,6 +31,7 @@ Builder.load_string("""
         
         BoxLayout:
             padding: 0
+            orientation: 'horizontal'
 
             Button:
                 size: self.parent.size
@@ -44,14 +45,17 @@ Builder.load_string("""
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
-                    # size: self.parent.size
-                    # pos: self.parent.pos
+                    size: self.parent.size
+                    pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
-                        # center_x: self.parent.center_x
+                        center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+
+            BoxLayout:
+                    padding: 0
 
         GridLayout:
             cols: 3
@@ -196,6 +200,7 @@ Builder.load_string("""
                             allow_stretch: True
         BoxLayout:
             padding: 0
+            orientation: 'horizontal'
 
             Button:
                 size: self.parent.size
@@ -209,8 +214,8 @@ Builder.load_string("""
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
                     padding: 0
-                    # size: self.parent.size
-                    # pos: self.parent.pos
+                    size: self.parent.size
+                    pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
@@ -218,6 +223,9 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+
+            BoxLayout:
+                padding: 0
 
 
 
