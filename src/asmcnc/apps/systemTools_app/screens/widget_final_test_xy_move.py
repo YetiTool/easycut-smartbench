@@ -214,11 +214,13 @@ Builder.load_string("""
             BoxLayout:
                 padding: 0
                 orientation: 'horizontal'
+                size_hint_y: 1
 
                 ToggleButton:
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
                     background_color: 1, 1, 1, 0 
+                    size_hint_y: 1
                     BoxLayout:
                         padding: 10
                         size: self.parent.size
