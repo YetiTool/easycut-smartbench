@@ -222,7 +222,6 @@ Builder.load_string("""
                     background_color: 1, 1, 1, 0 
                     size_hint_y: 1
                     BoxLayout:
-                        padding: 10
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
