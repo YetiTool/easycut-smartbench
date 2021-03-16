@@ -289,7 +289,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 3
+                        rows: 4
                         padding: 10
                         spacing: 10
                         ToggleButton:
