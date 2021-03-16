@@ -140,7 +140,7 @@ class ScreenManagerSystemTools(object):
 
     def open_final_test_screen(self):
       if not self.sm.has_screen('final_test'):
-        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', screen_manager = self.sm, machine = self.m)
+        final_test_screen = screen_final_test.FinalTestScreen(name='final_test', machine = self.m, system_tools = self)
         self.sm.add_widget(final_test_screen)
       self.sm.current = 'final_test'
 
