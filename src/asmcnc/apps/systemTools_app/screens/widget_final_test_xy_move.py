@@ -48,7 +48,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
-                        center_x: self.parent.center_x
+                        # center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
@@ -214,7 +214,7 @@ Builder.load_string("""
                     Image:
                         source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
-                        center_x: self.parent.center_x
+                        # center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
@@ -336,3 +336,45 @@ class FinalTestXYMove(Widget):
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
+
+    def jog_z(self, case):
+
+        self.m.set_led_colour('WHITE')
+
+        feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
+        
+        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free':
+            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
+                                                             self.m.z_min_jog_abs_limit,
+                                                             feed_speed)
+            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
+                                                             self.m.z_max_jog_abs_limit,
+                                                             feed_speed)
+
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-01':
+            if case == 'Z+': self.m.jog_relative('Z', 0.01, feed_speed)
+            if case == 'Z-': self.m.jog_relative('Z', -0.01, feed_speed)
+        
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_0-1':
+            if case == 'Z+': self.m.jog_relative('Z', 0.1, feed_speed)
+            if case == 'Z-': self.m.jog_relative('Z', -0.1, feed_speed)
+        
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_1':
+            if case == 'Z+': self.m.jog_relative('Z', 1, feed_speed)
+            if case == 'Z-': self.m.jog_relative('Z', -1, feed_speed)
+        
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'plus_10':
+            if case == 'Z+': self.m.jog_relative('Z', 10, feed_speed)
+            if case == 'Z-': self.m.jog_relative('Z', -10, feed_speed)
+        
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job':
+            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
+                                                             self.m.z_min_jog_abs_limit,
+                                                             feed_speed)
+            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
+                                                             self.m.z_max_jog_abs_limit,
+                                                             feed_speed)
+
+    def quit_jog_z(self):
+        if self.sm.get_screen('home').xy_move_widget.jogMode == 'free': self.m.quit_jog()
+        elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job': self.m.quit_jog()
