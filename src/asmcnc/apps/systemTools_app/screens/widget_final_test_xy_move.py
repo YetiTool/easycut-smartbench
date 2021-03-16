@@ -30,11 +30,11 @@ Builder.load_string("""
         padding: [0, 0, 0, 0]
         
         BoxLayout:
-            padding: 10
-            size: self.parent.size
-            pos: self.parent.pos
+            padding: 0
+
             Button:
-                size_hint_y: 1
+                size: self.parent.size
+                pos: self.parent.pos
                 background_color: hex('#F4433600')
                 on_release:
                     root.quit_jog_z()
@@ -195,11 +195,11 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
         BoxLayout:
-            padding: 10
-            size: self.parent.size
-            pos: self.parent.pos
+            padding: 0
+
             Button:
-                size_hint_y: 1
+                size: self.parent.size
+                pos: self.parent.pos
                 background_color: hex('#F4433600')
                 on_release: 
                     root.quit_jog_z()
