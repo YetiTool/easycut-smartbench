@@ -59,6 +59,10 @@ Builder.load_string("""
                 padding: 0
                 orientation: 'horizontal'
 
+                Button: 
+                    text: 'Y-Home, X-mid'
+                    on_press: root.y_home_x_mid()
+
         GridLayout:
             cols: 3
             orientation: 'horizontal'
@@ -388,3 +392,8 @@ class FinalTestXYMove(Widget):
     def quit_jog_z(self):
         if self.sm.get_screen('home').xy_move_widget.jogMode == 'free': self.m.quit_jog()
         elif self.sm.get_screen('home').xy_move_widget.jogMode == 'job': self.m.quit_jog()
+
+
+    def y_home_x_mid(self):
+        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, fast_y_speed)
+        self.m.jog_absolute_single_axis('X', -705, fast_x_speed)
