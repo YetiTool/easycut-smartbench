@@ -353,7 +353,7 @@ class FinalTestXYMove(Widget):
 
     def jog_z(self, case):
 
-        self.m.set_led_colour('WHITE')
+        self.m.set_led_colour('BLUE')
 
         feed_speed = self.sm.get_screen('home').common_move_widget.feedSpeedJogZ
         
@@ -397,3 +397,4 @@ class FinalTestXYMove(Widget):
     def y_home_x_mid(self):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, self.fast_y_speed)
         self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
+        self.m.set_led_colour('BLUE')

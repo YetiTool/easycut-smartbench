@@ -107,10 +107,11 @@ class FinalTestScreen(Screen):
         self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def on_enter(self):
-        self.m.laser_on()
+        self.m.send_any_gcode_command("AZ")
+        self.m.set_led_colour('BLUE')
 
     def on_leave(self):
-        self.m.laser_off()
+        self.m.send_any_gcode_command("AX")
 
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -120,13 +121,17 @@ class FinalTestScreen(Screen):
 
     def X_plus(self):
     	self.m.send_any_gcode_command("G91 G0 X1150.3")
+        self.m.set_led_colour('BLUE')
 
     def X_minus(self):
     	self.m.send_any_gcode_command("G91 G0 X-1150.3")
+        self.m.set_led_colour('BLUE')
 
     def Y_plus(self):
     	self.m.send_any_gcode_command("G91 G0 Y1636.6")
+        self.m.set_led_colour('BLUE')
 
     def Y_minus(self):
     	self.m.send_any_gcode_command("G91 G0 Y-1636.6")
+        self.m.set_led_colour('BLUE')
 
