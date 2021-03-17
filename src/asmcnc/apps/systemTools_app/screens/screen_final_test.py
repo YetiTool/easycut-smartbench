@@ -107,10 +107,10 @@ class FinalTestScreen(Screen):
         self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def on_enter(self):
-        self.laser_on()
+        self.m.laser_on()
 
     def on_leave(self):
-        self.laser_off()
+        self.m.laser_off()
 
     def go_back(self):
         self.systemtools_sm.open_factory_settings_screen()
