@@ -96,7 +96,6 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             BoxLayout:
-                padding: 10
                 size: self.parent.size
                 pos: self.parent.pos
                 Button: 

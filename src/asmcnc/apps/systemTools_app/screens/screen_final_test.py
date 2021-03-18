@@ -41,7 +41,7 @@ Builder.load_string("""
 
             GridLayout: 
                 pos: self.parent.pos
-                size_hint_y: 0.1
+                size_hint_y: 0.13
                 rows: 1
                 cols: 6
                 spacing: 5
@@ -75,11 +75,11 @@ Builder.load_string("""
                 #     on_press: root.exit_app()
 
             BoxLayout:
-                size_hint_y: 0.67
+                size_hint_y: 0.64
                 orientation: 'horizontal'
                 BoxLayout:
                     height: self.parent.height
-                    size_hint_x: 0.6
+                    size_hint_x: 0.7
                     id: move_container
                     canvas:
                         Color:
