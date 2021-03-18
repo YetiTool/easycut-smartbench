@@ -42,7 +42,7 @@ Builder.load_string("""
             GridLayout: 
                 height: self.parent.height
                 pos: self.parent.pos
-                rows: 4
+                rows: 6
                 cols: 1
                 spacing: 0
                 size_hint_x: 0.2
@@ -67,6 +67,10 @@ Builder.load_string("""
                     text: "G91 G0 X575.0"
                     on_press: root.X_575()
 
+                Button:
+                    text: "G91 G0 X575.0"
+                    on_press: root.X_575()
+
             BoxLayout:
                 height: self.parent.height
                 padding: 0
@@ -84,9 +88,9 @@ Builder.load_string("""
                         text: "G91 G0 X1150.3"
                         on_press: root.X_plus()
 
-                    Button:
-                    	text: "G91 G0 X-1150.3"
-                        on_press: root.X_minus()
+                    # Button:
+                    # 	text: "G91 G0 X-1150.3"
+                    #     on_press: root.X_minus()
 
          #            Button:
     					# text: "G91 G0 Y1636.6"
