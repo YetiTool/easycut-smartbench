@@ -39,6 +39,34 @@ Builder.load_string("""
             spacing: 2
             orientation: "horizontal"
 
+            GridLayout: 
+                height: self.parent.height
+                pos: self.parent.pos
+                rows: 4
+                cols: 1
+                spacing: 0
+                size_hint_x: 0.2
+
+                Button:
+                    text: "G91 G0 X1150.3"
+                    on_press: root.X_plus()
+
+                Button:
+                    text: "G91 G0 X-1150.3"
+                    on_press: root.X_minus()
+
+                Button:
+                    text: "G91 G0 Y1636.6"
+                    on_press: root.Y_plus()
+
+                Button:
+                    text: "G91 G0 Y-1636.6"
+                    on_press: root.Y_minus()
+
+                Button:
+                    text: "G91 G0 X575.0"
+                    on_press: root.X_575()
+
             BoxLayout:
                 height: self.parent.height
                 padding: 0
@@ -49,7 +77,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     size_hint_y: 0.22
                     rows: 2
-                    cols: 5
+                    cols: 3
                     spacing: 0
 
                     Button:
@@ -60,17 +88,17 @@ Builder.load_string("""
                     	text: "G91 G0 X-1150.3"
                         on_press: root.X_minus()
 
-                    Button:
-    					text: "G91 G0 Y1636.6"
-                        on_press: root.Y_plus()
+         #            Button:
+    					# text: "G91 G0 Y1636.6"
+         #                on_press: root.Y_plus()
 
-                    Button:
-                    	text: "G91 G0 Y-1636.6"
-                        on_press: root.Y_minus()
+         #            Button:
+         #            	text: "G91 G0 Y-1636.6"
+         #                on_press: root.Y_minus()
 
-                    Button:
-                        text: "G91 G0 X575.0"
-                        on_press: root.X_575()
+         #            Button:
+         #                text: "G91 G0 X575.0"
+         #                on_press: root.X_575()
 
     ## --------------------------------------
 
@@ -109,7 +137,7 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.3
+                size_hint_x: 0.4
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
