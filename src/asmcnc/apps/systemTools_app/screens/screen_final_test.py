@@ -76,13 +76,13 @@ Builder.load_string("""
                 padding: 0
                 spacing: 0
                 orientation: "vertical"
-                size_hint_x: 0.3
+                size_hint_x: 0.35
 
                 GridLayout: 
                     pos: self.parent.pos
                     size_hint_y: 0.22
                     rows: 2
-                    cols: 3
+                    cols: 2
                     spacing: 0
 
                     Button:
@@ -141,7 +141,7 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.5
+                size_hint_x: 0.45
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
