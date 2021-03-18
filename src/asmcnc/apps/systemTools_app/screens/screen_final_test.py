@@ -36,7 +36,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.92
             padding: 0
-            spacing: 2
+            spacing: 0
             orientation: "horizontal"
 
             GridLayout: 
@@ -47,13 +47,13 @@ Builder.load_string("""
                 spacing: 0
                 size_hint_x: 0.2
 
-                Button:
-                    text: "G91 G0 X1150.3"
-                    on_press: root.X_plus()
+                Button: 
+                    text: 'Home'
+                    on_press: root.y_home_x_mid()
 
-                Button:
-                    text: "G91 G0 X-1150.3"
-                    on_press: root.X_minus()
+                Button: 
+                    text: 'Y-Home, X-mid'
+                    on_press: root.y_home_x_mid()
 
                 Button:
                     text: "G91 G0 Y1636.6"
@@ -64,12 +64,13 @@ Builder.load_string("""
                     on_press: root.Y_minus()
 
                 Button:
-                    text: "G91 G0 X575.0"
-                    on_press: root.X_575()
+                    text: "Cal Y"
+                    on_press: root.go_back()
 
                 Button:
-                    text: "G91 G0 X575.0"
-                    on_press: root.X_575()
+                    text: "Factory Settings"
+                    on_press: root.go_back()
+
 
             BoxLayout:
                 height: self.parent.height
@@ -85,46 +86,21 @@ Builder.load_string("""
                     cols: 2
                     spacing: 0
 
+
                     Button:
                         text: "G91 G0 X1150.3"
                         on_press: root.X_plus()
 
-                    # Button:
-                    # 	text: "G91 G0 X-1150.3"
-                    #     on_press: root.X_minus()
-
-         #            Button:
-    					# text: "G91 G0 Y1636.6"
-         #                on_press: root.Y_plus()
-
-         #            Button:
-         #            	text: "G91 G0 Y-1636.6"
-         #                on_press: root.Y_minus()
-
-         #            Button:
-         #                text: "G91 G0 X575.0"
-         #                on_press: root.X_575()
-
-    ## --------------------------------------
-
-                    # Button: 
-                    #     text: 'Home'
-                    #     on_press: root.y_home_x_mid()
-
-                    # Button: 
-                    #     text: 'Y-Home, X-mid'
-                    #     on_press: root.y_home_x_mid()
+                    Button:
+                        text: "G91 G0 X-1150.3"
+                        on_press: root.X_minus()
 
                     Button:
-                        text: "??"
+                        text: "G91 G0 X575.0"
+                        on_press: root.X_575()
 
                     Button:
-                        text: "Factory Settings"
-                        on_press: root.go_back()
-
-                    Button:
-                        text: "Lobby"
-                        on_press: root.exit_app()
+                        text: "Cal X"
 
                 BoxLayout:
                     size_hint_y: 0.67
