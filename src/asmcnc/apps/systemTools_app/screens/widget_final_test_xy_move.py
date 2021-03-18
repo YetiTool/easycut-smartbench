@@ -98,7 +98,10 @@ Builder.load_string("""
             BoxLayout:
                 padding: 10
                 size: self.parent.size
-                pos: self.parent.pos         
+                pos: self.parent.pos
+                Button: 
+                    text: 'Home'
+                    on_press: root.y_home_x_mid()
                             
             Button:
                 background_color: hex('#F4433600')

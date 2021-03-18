@@ -41,7 +41,7 @@ Builder.load_string("""
 
             GridLayout: 
                 pos: self.parent.pos
-                size_hint_y: 0.15
+                size_hint_y: 0.1
                 rows: 1
                 cols: 6
                 spacing: 5
@@ -63,19 +63,23 @@ Builder.load_string("""
                     on_press: root.Y_minus()
 
                 Button:
+                    text: "G91 G0 X575.0"
+                    on_press: root.X_575()
+
+                Button:
                     text: "Factory Settings"
                     on_press: root.go_back()
 
-                Button:
-                    text: "Lobby"
-                    on_press: root.exit_app()
+                # Button:
+                #     text: "Lobby"
+                #     on_press: root.exit_app()
 
             BoxLayout:
-                size_hint_y: 0.62
+                size_hint_y: 0.67
                 orientation: 'horizontal'
                 BoxLayout:
                     height: self.parent.height
-                    size_hint_x: 0.57
+                    size_hint_x: 0.6
                     id: move_container
                     canvas:
                         Color:
@@ -133,5 +137,9 @@ class FinalTestScreen(Screen):
 
     def Y_minus(self):
     	self.m.send_any_gcode_command("G91 G0 Y-1636.6")
+        self.m.set_led_colour('BLUE')
+
+    def X_575(self):
+        self.m.send_any_gcode_command("G91 G0 X575.0")
         self.m.set_led_colour('BLUE')
 
