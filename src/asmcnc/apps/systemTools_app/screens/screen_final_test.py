@@ -36,7 +36,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.92
             padding: 0
-            spacing: 10
+            spacing: 2
             orientation: "vertical"
 
             GridLayout: 
