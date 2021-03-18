@@ -69,6 +69,8 @@ Builder.load_string("""
                         font_size: '24sp'
                         text_size: self.size
                         markup: True
+                        multiline: False
+                        input_filter: 'int'
 
                     Button:
                         text: "Set"
@@ -125,6 +127,8 @@ Builder.load_string("""
                             font_size: '24sp'
                             text_size: self.size
                             markup: True
+                            multiline: False
+                            input_filter: 'int'
 
                         Button:
                             text: "Set"
@@ -220,11 +224,11 @@ class FinalTestScreen(Screen):
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
     def set_x_steps(self):
-        x_overstep = self.x_over_count*self.x_calibration_scale_factor
+        x_overstep = float(self.x_over_count.text)*self.x_calibration_scale_factor
         self.m.send_any_gcode_command("$100 = " + str(self.m.s.setting_100 - x_overstep))
         self.m.send_any_gcode_command("$$")
 
     def set_y_steps(self):
-        y_overstep = self.y_over_count*self.y_calibration_scale_factor
+        y_overstep = float(self.y_over_count.text)*self.y_calibration_scale_factor
         self.m.send_any_gcode_command("$101 = " + str(self.m.s.setting_101 - y_overstep))
         self.m.send_any_gcode_command("$$")
