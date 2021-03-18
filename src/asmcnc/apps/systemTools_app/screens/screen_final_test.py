@@ -76,6 +76,7 @@ Builder.load_string("""
                 padding: 0
                 spacing: 0
                 orientation: "vertical"
+                size_hint_x: 0.3
 
                 GridLayout: 
                     pos: self.parent.pos
@@ -130,7 +131,6 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     BoxLayout:
                         height: self.parent.height
-                        # size_hint_x: 0.6
                         id: move_container
                         canvas:
                             Color:
@@ -141,7 +141,7 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.4
+                size_hint_x: 0.5
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
