@@ -45,7 +45,7 @@ Builder.load_string("""
                 rows: 6
                 cols: 1
                 spacing: 0
-                size_hint_x: 0.2
+                size_hint_x: 0.15
 
                 Button: 
                     text: 'Home'
@@ -55,6 +55,16 @@ Builder.load_string("""
                     text: 'Y-Home, X-mid'
                     on_press: root.y_home_x_mid()
 
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    TextInput:
+                        text: "Y"
+
+                    Button:
+                        text: "Set"
+                        on_press: root.set_y_steps()
+
                 Button:
                     text: "G91 G0 Y1636.6"
                     on_press: root.Y_plus()
@@ -62,10 +72,6 @@ Builder.load_string("""
                 Button:
                     text: "G91 G0 Y-1636.6"
                     on_press: root.Y_minus()
-
-                Button:
-                    text: "Cal Y"
-                    on_press: root.go_back()
 
                 Button:
                     text: "Factory Settings"
@@ -99,8 +105,15 @@ Builder.load_string("""
                         text: "G91 G0 X575.0"
                         on_press: root.X_575()
 
+                BoxLayout:
+                    orientation: 'horizontal'
+
+                    TextInput:
+                        text: "X"
+
                     Button:
-                        text: "Cal X"
+                        text: "Set"
+                        on_press: root.set_x_steps()
 
                 BoxLayout:
                     size_hint_y: 0.67
@@ -117,7 +130,7 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.45
+                size_hint_x: 0.4
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -183,4 +196,14 @@ class FinalTestScreen(Screen):
         self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, self.fast_y_speed)
         self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
         self.m.set_led_colour('BLUE')
+
+    def home(self):
+        normal_homing_sequence = ['$H']
+        self.m.s.start_sequential_stream(normal_homing_sequence)
+
+    def set_x_steps(self):
+        pass
+
+    def set_y_steps(self):
+        pass
 
