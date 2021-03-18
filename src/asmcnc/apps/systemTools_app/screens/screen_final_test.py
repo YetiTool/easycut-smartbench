@@ -62,7 +62,8 @@ Builder.load_string("""
                         text: "Y"
                         valign: 'middle'
                         halign: 'center'
-                        font_size: '20sp'
+                        font_size: '24sp'
+                        text_size: self.size
 
                     Button:
                         text: "Set"
@@ -115,7 +116,8 @@ Builder.load_string("""
                             text: "X"
                             valign: 'middle'
                             halign: 'center'
-                            font_size: '20sp'
+                            font_size: '24sp'
+                            text_size: self.size
 
                         Button:
                             text: "Set"
