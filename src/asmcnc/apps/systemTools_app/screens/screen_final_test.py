@@ -36,15 +36,15 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.92
             padding: 0
-            spacing: 0
+            spacing: 10
             orientation: "vertical"
 
             GridLayout: 
                 pos: self.parent.pos
-                size_hint_y: 0.2
+                size_hint_y: 0.22
                 rows: 2
                 cols: 5
-                spacing: 5
+                spacing: 0
 
                 Button:
                     text: "G91 G0 X1150.3"
@@ -88,7 +88,7 @@ Builder.load_string("""
                     on_press: root.exit_app()
 
             BoxLayout:
-                size_hint_y: 0.57
+                size_hint_y: 0.55
                 orientation: 'horizontal'
                 BoxLayout:
                     height: self.parent.height
