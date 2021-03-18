@@ -37,72 +37,79 @@ Builder.load_string("""
             size_hint_y: 0.92
             padding: 0
             spacing: 2
-            orientation: "vertical"
-
-            GridLayout: 
-                pos: self.parent.pos
-                size_hint_y: 0.22
-                rows: 2
-                cols: 5
-                spacing: 0
-
-                Button:
-                    text: "G91 G0 X1150.3"
-                    on_press: root.X_plus()
-
-                Button:
-                	text: "G91 G0 X-1150.3"
-                    on_press: root.X_minus()
-
-                Button:
-					text: "G91 G0 Y1636.6"
-                    on_press: root.Y_plus()
-
-                Button:
-                	text: "G91 G0 Y-1636.6"
-                    on_press: root.Y_minus()
-
-                Button:
-                    text: "G91 G0 X575.0"
-                    on_press: root.X_575()
-
-## --------------------------------------
-
-                Button: 
-                    text: 'Home'
-                    on_press: root.y_home_x_mid()
-
-                Button: 
-                    text: 'Y-Home, X-mid'
-                    on_press: root.y_home_x_mid()
-
-                Button:
-                    text: "??"
-
-                Button:
-                    text: "Factory Settings"
-                    on_press: root.go_back()
-
-                Button:
-                    text: "Lobby"
-                    on_press: root.exit_app()
+            orientation: "horizontal"
 
             BoxLayout:
-                size_hint_y: 0.55
-                orientation: 'horizontal'
+                height: self.parent.height
+                padding: 0
+                spacing: 0
+                orientation: "vertical"
+
+                GridLayout: 
+                    pos: self.parent.pos
+                    size_hint_y: 0.22
+                    rows: 2
+                    cols: 5
+                    spacing: 0
+
+                    Button:
+                        text: "G91 G0 X1150.3"
+                        on_press: root.X_plus()
+
+                    Button:
+                    	text: "G91 G0 X-1150.3"
+                        on_press: root.X_minus()
+
+                    Button:
+    					text: "G91 G0 Y1636.6"
+                        on_press: root.Y_plus()
+
+                    Button:
+                    	text: "G91 G0 Y-1636.6"
+                        on_press: root.Y_minus()
+
+                    Button:
+                        text: "G91 G0 X575.0"
+                        on_press: root.X_575()
+
+    ## --------------------------------------
+
+                    Button: 
+                        text: 'Home'
+                        on_press: root.y_home_x_mid()
+
+                    Button: 
+                        text: 'Y-Home, X-mid'
+                        on_press: root.y_home_x_mid()
+
+                    Button:
+                        text: "??"
+
+                    Button:
+                        text: "Factory Settings"
+                        on_press: root.go_back()
+
+                    Button:
+                        text: "Lobby"
+                        on_press: root.exit_app()
+
                 BoxLayout:
-                    height: self.parent.height
-                    size_hint_x: 0.6
-                    id: move_container
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
-                BoxLayout:
-                    height: self.parent.height
-                    id: gcode_monitor_container
+                    size_hint_y: 0.55
+                    orientation: 'horizontal'
+                    BoxLayout:
+                        height: self.parent.height
+                        # size_hint_x: 0.6
+                        id: move_container
+                        canvas:
+                            Color:
+                                rgba: 1,1,1,1
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+            BoxLayout:
+                height: self.parent.height
+                id: gcode_monitor_container
+                size_hint_x: 0.3
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
@@ -112,6 +119,14 @@ Builder.load_string("""
 """)
 
 class FinalTestScreen(Screen):
+
+    fast_x_speed = 6000
+    fast_y_speed = 6000
+    fast_z_speed = 750
+
+    feedSpeedJogX = fast_x_speed / 5
+    feedSpeedJogY = fast_y_speed / 5
+    feedSpeedJogZ = fast_z_speed / 5
 
     def __init__(self, **kwargs):
         super(FinalTestScreen, self).__init__(**kwargs)
