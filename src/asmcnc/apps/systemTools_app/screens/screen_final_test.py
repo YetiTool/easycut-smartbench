@@ -80,7 +80,7 @@ Builder.load_string("""
 
                 GridLayout: 
                     pos: self.parent.pos
-                    size_hint_y: 0.22
+                    size_hint_y: 0.33
                     rows: 2
                     cols: 2
                     spacing: 0
@@ -127,7 +127,7 @@ Builder.load_string("""
                         on_press: root.exit_app()
 
                 BoxLayout:
-                    size_hint_y: 0.55
+                    size_hint_y: 0.67
                     orientation: 'horizontal'
                     BoxLayout:
                         height: self.parent.height
