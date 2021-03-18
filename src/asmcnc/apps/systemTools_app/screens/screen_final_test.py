@@ -107,13 +107,13 @@ Builder.load_string("""
 
     ## --------------------------------------
 
-                    Button: 
-                        text: 'Home'
-                        on_press: root.y_home_x_mid()
+                    # Button: 
+                    #     text: 'Home'
+                    #     on_press: root.y_home_x_mid()
 
-                    Button: 
-                        text: 'Y-Home, X-mid'
-                        on_press: root.y_home_x_mid()
+                    # Button: 
+                    #     text: 'Y-Home, X-mid'
+                    #     on_press: root.y_home_x_mid()
 
                     Button:
                         text: "??"
