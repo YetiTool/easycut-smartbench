@@ -59,10 +59,6 @@ Builder.load_string("""
                 padding: 0
                 orientation: 'horizontal'
 
-                Button: 
-                    text: 'Y-Home, X-mid'
-                    on_press: root.y_home_x_mid()
-
         GridLayout:
             cols: 3
             orientation: 'horizontal'
@@ -98,9 +94,7 @@ Builder.load_string("""
             BoxLayout:
                 size: self.parent.size
                 pos: self.parent.pos
-                Button: 
-                    text: 'Home'
-                    on_press: root.y_home_x_mid()
+
                             
             Button:
                 background_color: hex('#F4433600')

@@ -42,8 +42,8 @@ Builder.load_string("""
             GridLayout: 
                 pos: self.parent.pos
                 size_hint_y: 0.13
-                rows: 1
-                cols: 6
+                rows: 2
+                cols: 5
                 spacing: 5
 
                 Button:
@@ -66,13 +66,26 @@ Builder.load_string("""
                     text: "G91 G0 X575.0"
                     on_press: root.X_575()
 
+## --------------------------------------
+
+                Button: 
+                    text: 'Home'
+                    on_press: root.y_home_x_mid()
+
+                Button: 
+                    text: 'Y-Home, X-mid'
+                    on_press: root.y_home_x_mid()
+
+                Button:
+                    text: "??"
+
                 Button:
                     text: "Factory Settings"
                     on_press: root.go_back()
 
-                # Button:
-                #     text: "Lobby"
-                #     on_press: root.exit_app()
+                Button:
+                    text: "Lobby"
+                    on_press: root.exit_app()
 
             BoxLayout:
                 size_hint_y: 0.64
@@ -141,5 +154,10 @@ class FinalTestScreen(Screen):
 
     def X_575(self):
         self.m.send_any_gcode_command("G91 G0 X575.0")
+        self.m.set_led_colour('BLUE')
+
+    def y_home_x_mid(self):
+        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit, self.fast_y_speed)
+        self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
         self.m.set_led_colour('BLUE')
 
