@@ -1135,7 +1135,7 @@ class RouterMachine(object):
         self.s.write_command('G0 G54 Z0')
         
     def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance + self.s.setting_27))
+        self.s.write_command('G0 G53 Z-' + str(self.s.setting_27))
 
     def vac_on(self):
         self.s.write_command('AE')
