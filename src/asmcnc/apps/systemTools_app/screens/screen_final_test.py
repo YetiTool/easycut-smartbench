@@ -23,6 +23,9 @@ Builder.load_string("""
     gcode_monitor_container : gcode_monitor_container
     status_container : status_container
 
+    y_over_count : y_over_count
+    x_over_count : x_over_count
+
     BoxLayout:
         padding: 0
         spacing: 0
@@ -59,11 +62,13 @@ Builder.load_string("""
                     orientation: 'horizontal'
 
                     TextInput:
+                        id: y_over_count
                         text: "Y"
                         valign: 'middle'
                         halign: 'center'
                         font_size: '24sp'
                         text_size: self.size
+                        markup: True
 
                     Button:
                         text: "Set"
@@ -113,11 +118,13 @@ Builder.load_string("""
                         orientation: 'horizontal'
 
                         TextInput:
+                            id: x_over_count
                             text: "X"
                             valign: 'middle'
                             halign: 'center'
                             font_size: '24sp'
                             text_size: self.size
+                            markup: True
 
                         Button:
                             text: "Set"
@@ -156,6 +163,9 @@ class FinalTestScreen(Screen):
     feedSpeedJogX = fast_x_speed / 5
     feedSpeedJogY = fast_y_speed / 5
     feedSpeedJogZ = fast_z_speed / 5
+
+    y_calibration_scale_factor = 0.0036
+    x_calibration_scale_factor = 0.0048
 
     def __init__(self, **kwargs):
         super(FinalTestScreen, self).__init__(**kwargs)
@@ -210,8 +220,9 @@ class FinalTestScreen(Screen):
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
     def set_x_steps(self):
-        pass
+        x_overstep = self.x_over_count*self.x_calibration_scale_factor
+        self.m.send_any_gcode_command("$100 = " + str(self.m.s.setting_101 - x_overstep))
 
     def set_y_steps(self):
-        pass
-
+        y_overstep = self.y_over_count*self.y_calibration_scale_factor
+        self.m.send_any_gcode_command("$101 = " + str(self.m.s.setting_101 - y_overstep))
