@@ -36,7 +36,7 @@ class RouterMachine(object):
     
     # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
-    limit_switch_safety_distance = 1.0 
+    limit_switch_safety_distance = 1.0
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
@@ -1098,7 +1098,7 @@ class RouterMachine(object):
         else:
             cooldown_rpm = self.convert_from_110_to_230(self.spindle_cooldown_rpm)
             self.s.write_command('M3 S' + str(cooldown_rpm))
-        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.zUp()
 
     def laser_on(self):
         if self.is_laser_enabled == True: 
@@ -1135,7 +1135,7 @@ class RouterMachine(object):
         self.s.write_command('G0 G54 Z0')
         
     def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance + self.s.setting_27))
 
     def vac_on(self):
         self.s.write_command('AE')
