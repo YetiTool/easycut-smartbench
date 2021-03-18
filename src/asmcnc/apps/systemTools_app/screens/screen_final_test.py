@@ -49,7 +49,7 @@ Builder.load_string("""
 
                 Button: 
                     text: 'Home'
-                    on_press: root.y_home_x_mid()
+                    on_press: root.home()
 
                 Button: 
                     text: 'Y-Home, X-mid'
