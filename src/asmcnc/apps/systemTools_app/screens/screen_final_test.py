@@ -222,7 +222,9 @@ class FinalTestScreen(Screen):
     def set_x_steps(self):
         x_overstep = self.x_over_count*self.x_calibration_scale_factor
         self.m.send_any_gcode_command("$100 = " + str(self.m.s.setting_101 - x_overstep))
+        self.m.send_any_gcode_command("$$")
 
     def set_y_steps(self):
         y_overstep = self.y_over_count*self.y_calibration_scale_factor
         self.m.send_any_gcode_command("$101 = " + str(self.m.s.setting_101 - y_overstep))
+        self.m.send_any_gcode_command("$$")
