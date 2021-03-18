@@ -60,6 +60,9 @@ Builder.load_string("""
 
                     TextInput:
                         text: "Y"
+                        valign: 'middle'
+                        halign: 'center'
+                        font_size: '20sp'
 
                     Button:
                         text: "Set"
@@ -110,6 +113,9 @@ Builder.load_string("""
 
                         TextInput:
                             text: "X"
+                            valign: 'middle'
+                            halign: 'center'
+                            font_size: '20sp'
 
                         Button:
                             text: "Set"
