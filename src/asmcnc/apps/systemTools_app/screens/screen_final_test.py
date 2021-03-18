@@ -45,7 +45,7 @@ Builder.load_string("""
                 rows: 6
                 cols: 1
                 spacing: 0
-                size_hint_x: 0.15
+                size_hint_x: 0.165
 
                 Button: 
                     text: 'Home'
@@ -83,7 +83,7 @@ Builder.load_string("""
                 padding: 0
                 spacing: 0
                 orientation: "vertical"
-                size_hint_x: 0.35
+                size_hint_x: 0.33
 
                 GridLayout: 
                     pos: self.parent.pos
@@ -105,15 +105,15 @@ Builder.load_string("""
                         text: "G91 G0 X575.0"
                         on_press: root.X_575()
 
-                BoxLayout:
-                    orientation: 'horizontal'
+                    BoxLayout:
+                        orientation: 'horizontal'
 
-                    TextInput:
-                        text: "X"
+                        TextInput:
+                            text: "X"
 
-                    Button:
-                        text: "Set"
-                        on_press: root.set_x_steps()
+                        Button:
+                            text: "Set"
+                            on_press: root.set_x_steps()
 
                 BoxLayout:
                     size_hint_y: 0.67
@@ -130,7 +130,7 @@ Builder.load_string("""
             BoxLayout:
                 height: self.parent.height
                 id: gcode_monitor_container
-                size_hint_x: 0.4
+                size_hint_x: 0.5
         BoxLayout:
             size_hint_y: 0.08
             id: status_container
