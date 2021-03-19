@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_jobstart_warning
+from asmcnc.apps.systemTools_app.screens import screen_final_test
 
 
 class ScreenTest(App):
@@ -22,9 +22,9 @@ class ScreenTest(App):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
-		sm.add_widget(jobstart_warning_screen)
-		sm.current = 'jobstart_warning'
+		final_test_screen = screen_final_test.FinalTestScreen(name='final_test', screen_manager = sm, machine = m)
+		sm.add_widget(final_test_screen)
+		sm.current = 'final_test'
 		return sm
 
 ScreenTest().run()

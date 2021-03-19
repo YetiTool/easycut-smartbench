@@ -288,7 +288,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 3
+                        rows: 4
                         padding: 10
                         spacing: 10
                         ToggleButton:
@@ -302,6 +302,9 @@ Builder.load_string("""
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
+                        Button:
+                            text: 'Final test'
+                            on_press: root.final_test()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -712,6 +715,9 @@ class FactorySettingsScreen(Screen):
 
         return str(serial_number_from_file)
 
+
+    def final_test(self):
+        self.systemtools_sm.open_final_test_screen()
 
 
             
