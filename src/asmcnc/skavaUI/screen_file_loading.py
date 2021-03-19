@@ -327,10 +327,8 @@ class LoadingScreen(Screen):
 
                             if l_block.find ('S') >= 0:
                                 
-                                # RE-ERROR THIS FOR TESTING
                                 # find 'S' prefix and strip out the value associated with it
-                                # rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
-                                rpm = int(l_block[l_block.find("S")+1:].split("M")[0])
+                                rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
 
 
                                 # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
