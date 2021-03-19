@@ -220,7 +220,7 @@ class ShapeCutterSaveJobScreenClass(Screen):
         
     def on_pre_enter(self):
         self.display_profile = self.j.parameters_to_string()
-        self.file_name.text = ''
+        self.file_name.text = str(self.j.profile_filename)
         self.save_image.source = './asmcnc/apps/shapeCutter_app/img/save_file.png'
 
     def next_screen(self):
