@@ -440,10 +440,10 @@ class LoadingScreen(Screen):
         
     def _could_not_load_file(self):
 
-        self.progress_value = '[b]Could not load file[/b]'
-        self.warning_title_label.text = 'Error:'
-        self.warning_body_label.text = 'It was not possible to load your file, please double check for errors before attempting to re-load it.'
-        self.check_button_label.text = ''
+        self.progress_value = '[b]Could not load job[/b]'
+        self.warning_title_label.text = 'ERROR:'
+        self.warning_body_label.text = 'It was not possible to load your job, please double check the file for errors before attempting to re-load it.'
+        self.check_button_label.text = 'Check job'
         self.quit_button_label.text = 'Quit to home'
         self.check_button.disabled = True
         self.home_button.disabled = False
