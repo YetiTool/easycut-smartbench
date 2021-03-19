@@ -358,7 +358,7 @@ class PopupUSBError(Widget):
         
         self.sm = screen_manager
         
-        description = "Problem mounting USB stick.\nPlease check that your USB stick is working properly.\n\nIf this error persists, you may need to reformat your USB stick."
+        description = "Problem mounting USB stick.\nPlease remove your USB stick, and check that it is working properly.\n\nIf this error persists, you may need to reformat your USB stick."
 
         def restart_polling(*args):
           usb.start_polling_for_usb()
