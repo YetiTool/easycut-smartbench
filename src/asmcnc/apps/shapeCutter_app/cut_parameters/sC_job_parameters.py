@@ -534,7 +534,7 @@ class ShapeCutterJobParameters(object):
                 'G94', #Feed units per mm
                 'G17', #XY plane
                 'G21', #In MM
-                'M3 S25000', # Turn on spindle
+                'M3 S' + str(spindle_speed), # Turn on spindle
                 'G4 P1', # Allow time for inrush
                 'G91.1' # relative rad centre definitions. IMPORTANT: "G90.1" (absolute rad centre definitions) DOESN'T WORK IN GRBL
                 ]
