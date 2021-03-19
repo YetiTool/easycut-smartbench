@@ -427,7 +427,7 @@ class LoadingScreen(Screen):
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         
-        self.progress_value = '[b]Job loaded[/b]'
+        self.progress_value = 'Job loaded'
         self.warning_title_label.text = 'WARNING:'
         self.warning_body_label.text = 'We strongly recommend error-checking your job before it goes to the machine. Would you like SmartBench to check your job now?'
         self.check_button_label.text = 'Yes please, check my job for errors'
@@ -440,9 +440,9 @@ class LoadingScreen(Screen):
         
     def _could_not_load_file(self):
 
-        self.progress_value = '[b]Could not load job[/b]'
+        self.progress_value = 'Could not load job'
         self.warning_title_label.text = 'ERROR:'
-        self.warning_body_label.text = 'It was not possible to load your job, please double check the file for errors before attempting to re-load it.'
+        self.warning_body_label.text = 'It was not possible to load your job. Please double check the file for errors before attempting to re-load it.'
         self.check_button_label.text = 'Check job'
         self.quit_button_label.text = 'Quit to home'
         self.check_button.disabled = True
