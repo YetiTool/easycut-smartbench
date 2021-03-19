@@ -390,7 +390,7 @@ Builder.load_string("""
 
 class FactorySettingsScreen(Screen):
 
-    machine_model_values = ['SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
+    machine_model_values = ['SmartBench V1.0 CNC Router', 'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
