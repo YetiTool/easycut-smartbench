@@ -401,7 +401,7 @@ class SWUpdateScreen(Screen):
         self.latest_software_version_label.text = (
             self.l.get_bold('Refreshing') + \
             '...' + '\n\n' + \
-            self.l.get_bold('Please wait.')
+            self.l.get_bold('Please wait')
         )
 
         def do_refresh():
