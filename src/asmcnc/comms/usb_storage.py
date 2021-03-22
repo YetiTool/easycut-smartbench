@@ -208,7 +208,7 @@ class USB_storage(object):
                     Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
             else:
-                popup_USB_error = popup_info.PopupUSBError(self.sm, self)
+                popup_USB_error = popup_info.PopupUSBError(self.sm, self.l, self)
 
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        

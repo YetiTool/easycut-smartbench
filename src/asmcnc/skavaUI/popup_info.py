@@ -369,12 +369,22 @@ class PopupUSBInfo(Widget):
 
         self.popup.open()
 
-class PopupUSBError(Widget):   # LOCALIZE MEEEEEEE
-    def __init__(self, screen_manager, usb):
+class PopupUSBError(Widget):
+
+    def __init__(self, screen_manager, localization, usb):
         
         self.sm = screen_manager
+        self.l = localization
         
-        description = "Problem mounting USB stick. Please remove your USB stick, and check that it is working properly.\n\nIf this error persists, you may need to reformat your USB stick."
+        title_string = self.l.get_str('Error!')
+        ok_string = self.l.get_bold('Ok')
+
+        description = (
+          self.l.get_str("Problem mounting USB stick. Please remove your USB stick, and check that it is working properly.") + \
+          "\n\n" + \
+          self.l.get_str("If this error persists, you may need to reformat your USB stick.")
+        )
+
 
         def restart_polling(*args):
           usb.start_polling_for_usb()
@@ -382,7 +392,7 @@ class PopupUSBError(Widget):   # LOCALIZE MEEEEEEE
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,10], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -394,7 +404,7 @@ class PopupUSBError(Widget):   # LOCALIZE MEEEEEEE
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Error!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -562,6 +572,10 @@ class PopupSoftwareRepair(Widget):
         
         self.sm = screen_manager
         self.set = settings_manager
+
+        title_string = self.l.get_str('There was a problem updating the software') + '...'
+        repair_string = self.l.get_bold('Repair')
+        back_string = self.l.get_bold('Go back')
         
         description = warning_message
 
@@ -572,10 +586,10 @@ class PopupSoftwareRepair(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text='[b]Repair[/b]', markup = True)
+        ok_button = Button(text=repair_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]Go back[/b]', markup = True)
+        back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -590,7 +604,7 @@ class PopupSoftwareRepair(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='There was a problem updating the software...',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -698,14 +712,21 @@ class PopupWarning(Widget):
         popup.open()
 
 class PopupWait(Widget):   
-    def __init__(self, screen_manager, description = 'Please wait...'):
+    def __init__(self, screen_manager, localization, description = False):
         
         self.sm = screen_manager
+        self.l = localization
         
+        if description == False:
+          description = self.l.get_str("Please wait") + "..."
+
+        title_string = self.l.get_str("Please Wait") + "..."
+        ok_string = self.l.get_bold("Ok")
+
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         
@@ -717,7 +738,7 @@ class PopupWait(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        self.popup = Popup(title='Please Wait...',
+        self.popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -734,112 +755,6 @@ class PopupWait(Widget):
         ok_button.bind(on_press=self.popup.dismiss)    
 
         self.popup.open()
-
-class PopupDeveloper(Widget):   
-    def __init__(self, screen_manager):
-        
-        self.sm = screen_manager
-        
-        description = "The developer app is to help our engineers access extra settings " + \
-        "and functions that might not be stable, or change how SmartBench behaves.\n\n" + \
-        "By using the developer app, you may risk causing damage to SmartBench.\n\n" + \
-        "Do you want to continue? "
-        
-        def dev_app(*args):
-            self.sm.current = 'dev'
-        
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
-        
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
-        back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-
-       
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
-        btn_layout.add_widget(back_button)
-        btn_layout.add_widget(ok_button)
-        
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30,20,30,0])
-        layout_plan.add_widget(img)
-        layout_plan.add_widget(label)
-        layout_plan.add_widget(btn_layout)
-        
-        popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
-                      title_size = '20sp',
-                      content=layout_plan,
-                      size_hint=(None, None),
-                      size=(500, 400),
-                      auto_dismiss= False
-                      )
-        
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-        popup.separator_height = '4dp'
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        
-        ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=dev_app)
-        back_button.bind(on_press=popup.dismiss)       
-
-
-        popup.open()
-
-class PopupDevModePassword(Widget):   
-    def __init__(self, screen_manager):
-        
-        self.sm = screen_manager
-        
-        description = "Please enter the password"
-
-        def check_password(*args):
-          if textinput.text == "dev":
-            self.sm.get_screen('dev').dev_mode_toggle.state = "down"
-            self.sm.get_screen('dev').developer_mode = True
-
-          else:
-            self.sm.get_screen('dev').dev_mode_toggle.state = "normal"
-            self.sm.get_screen('dev').developer_mode = False
-        
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
-        textinput = TextInput(size_hint_y=0.7, text = '')
-
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-       
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
-        btn_layout.add_widget(ok_button)
-        
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
-        layout_plan.add_widget(img)
-        layout_plan.add_widget(label)
-        layout_plan.add_widget(textinput)
-        layout_plan.add_widget(btn_layout)
-        
-        popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
-                      title_size = '20sp',
-                      content=layout_plan,
-                      size_hint=(None, None),
-                      size=(500, 400),
-                      auto_dismiss= False
-                      )
-        
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-        popup.separator_height = '4dp'
-        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        
-        ok_button.bind(on_press=check_password)
-        ok_button.bind(on_press=popup.dismiss)    
-
-        popup.open()
 
 
 class PopupDeleteFile(Widget):   

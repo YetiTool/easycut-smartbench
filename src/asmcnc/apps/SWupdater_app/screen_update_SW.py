@@ -19,8 +19,18 @@ Builder.load_string("""
 
 <SWUpdateScreen>:
 
-    sw_version_label: sw_version_label
-    latest_software_version_label: latest_software_version_label
+    current_version_label : current_version_label
+    sw_version_label : sw_version_label
+    latest_software_version_label : latest_software_version_label
+
+    update_using_wifi_label : update_using_wifi_label
+    update_using_wifi_instructions_label : update_using_wifi_instructions_label
+    wifi_update_button : wifi_update_button
+
+    update_using_usb_label : update_using_usb_label
+    update_using_usb_instructions_label : update_using_usb_instructions_label
+    usb_update_button : usb_update_button
+
     wifi_image: wifi_image
     usb_image: usb_image
 
@@ -63,6 +73,7 @@ Builder.load_string("""
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
+
                     # Version labels:
                     BoxLayout: 
                         size_hint: (None, None)
@@ -70,7 +81,9 @@ Builder.load_string("""
                         width: dp(375)
                         orientation: "vertical"
                         padding: [0,0,30,0]
+
                         Label: 
+                            id: current_version_label
                             color: 0,0,0,1
                             font_size: 18
                             markup: True
@@ -79,7 +92,7 @@ Builder.load_string("""
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
-                            text: "[b]Current Version[/b]"                  
+            
                         Label:
                             id: sw_version_label
                             color: 0,0,0,1
@@ -90,7 +103,7 @@ Builder.load_string("""
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
-                            text: "[b]-[/b]"                         
+
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
@@ -133,7 +146,6 @@ Builder.load_string("""
                             text_size: self.size
                             size: self.parent.size
                             pos: self.parent.pos
-                            text: "[b]-[/b]"
 
                                 
             # Exit button
@@ -189,6 +201,7 @@ Builder.load_string("""
                     width: dp(295)
                     padding: [0,5,0,0]
                     Label: 
+                        id: update_using_wifi_label
                         color: 0,0,0,1
                         font_size: 18
                         markup: True
@@ -196,15 +209,15 @@ Builder.load_string("""
                         valign: "top"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
-                        text: "[b]Update using WiFi[/b]"                    
+                        pos: self.parent.pos            
                     
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(90)
                     width: dp(295)
                     padding: [0,5,0,0]
-                    Label: 
+                    Label:
+                        id: update_using_wifi_instructions_label
                         color: 0,0,0,1
                         font_size: 16
                         markup: True
@@ -213,7 +226,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: root.wifi_instructions
 
                 BoxLayout: 
                     size_hint: (None, None)
@@ -230,29 +242,27 @@ Builder.load_string("""
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
-                            allow_stretch: True                    
+                            allow_stretch: True
+
                     BoxLayout:
                         size_hint: (None, None)
                         height: dp(110)
                         width: dp(150)
                         Button:
+                            id: wifi_update_button
+                            background_normal: "./asmcnc/apps/SWupdater_app/img/update_button.png"
+                            background_down: "./asmcnc/apps/SWupdater_app/img/update_button.png"
+                            border: [dp(14.5)]*4
                             size_hint: (None,None)
-                            height: dp(110)
                             width: dp(150)
-                            background_color: hex('#F4433600')
-                            center: self.parent.center
-                            pos: self.parent.pos
+                            height: dp(110)
                             on_press: root.prep_for_sw_update_over_wifi()
-                            BoxLayout:
-                                padding: 0
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                Image:
-                                    source: "./asmcnc/apps/SWupdater_app/img/update_button_with_text.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True                
+                            text: 'Update'
+                            font_size: '30sp'
+                            color: hex('#f9f9f9ff')
+                            markup: True
+                            center: self.parent.center
+                            pos: self.parent.pos           
                         
             BoxLayout: 
                 size_hint: (None, None)
@@ -272,7 +282,8 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(30)
                     width: dp(295)
-                    Label: 
+                    Label:
+                        id: update_using_usb_label
                         color: 0,0,0,1
                         font_size: 18
                         markup: True
@@ -280,14 +291,14 @@ Builder.load_string("""
                         valign: "middle"
                         text_size: self.size
                         size: self.parent.size
-                        pos: self.parent.pos
-                        text: "[b]Update using USB[/b]"                  
+                        pos: self.parent.pos              
                     
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(90)
                     width: dp(295)
-                    Label: 
+                    Label:
+                        id: update_using_usb_instructions_label
                         color: 0,0,0,1
                         font_size: 16
                         markup: True
@@ -296,7 +307,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: root.usb_instructions
 
                 BoxLayout: 
                     size_hint: (None, None)
@@ -314,36 +324,31 @@ Builder.load_string("""
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
-                            allow_stretch: True                    
+                            allow_stretch: True
+
                     BoxLayout:
                         size_hint: (None, None)
                         height: dp(110)
                         width: dp(150)
                         Button:
+                            id: usb_update_button
+                            background_normal: "./asmcnc/apps/SWupdater_app/img/update_button.png"
+                            background_down: "./asmcnc/apps/SWupdater_app/img/update_button.png"
+                            border: [dp(14.5)]*4
                             size_hint: (None,None)
-                            height: dp(110)
                             width: dp(150)
-                            background_color: hex('#F4433600')
+                            height: dp(110)
+                            on_press: root.prep_for_sw_update_over_usb()
+                            text: 'Update'
+                            font_size: '30sp'
+                            color: hex('#f9f9f9ff')
+                            markup: True
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.prep_for_sw_update_over_usb()
-                            BoxLayout:
-                                padding: 0
-                                size: self.parent.size
-                                pos: self.parent.pos
-                                Image:
-                                    source: "./asmcnc/apps/SWupdater_app/img/update_button_with_text.png"
-                                    center_x: self.parent.center_x
-                                    y: self.parent.y
-                                    size: self.parent.width, self.parent.height
-                                    allow_stretch: True
+
 """)
 
 class SWUpdateScreen(Screen):
-
-    wifi_instructions = 'Ensure connection is stable before attempting to update.'
-    usb_instructions = 'Insert a USB stick containing the latest software.\n' + \
-    'Go to www.yetitool.com/support for help on how to do this.'
     
     WIFI_CHECK_INTERVAL = 2
     
@@ -358,15 +363,46 @@ class SWUpdateScreen(Screen):
         self.set=kwargs['settings']
         self.l=kwargs['localization']
         
+        self.update_strings()
+
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
         self.update_screen_with_latest_version()
 
-        
+
+    def on_enter(self):
+
+        self.update_strings()
+
+        # Keep tabs on wifi connection
+        self.check_wifi_connection(1)
+        self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
+
+        # Set up and keep tabs on usb connection
+        self.usb_stick.enable()
+        self.check_USB_status(1)
+        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
+
+
+    def on_leave(self):
+        Clock.unschedule(self.poll_USB)
+        Clock.unschedule(self.poll_wifi)
+        self.usb_stick.disable()
+        self.sm.remove_widget(self.sm.get_screen('update'))
+
+
+    def quit_to_lobby(self):
+        self.sm.current = 'lobby'
+
+
     def refresh_latest_software_version(self):
 
-        self.latest_software_version_label.text = '[b]Refreshing...\n\nPlease wait.[/b]'
+        self.latest_software_version_label.text = (
+            self.l.get_bold('Refreshing') + \
+            '...' + '\n\n' + \
+            self.l.get_bold('Please wait.')
+        )
 
         def do_refresh():
 
@@ -379,11 +415,19 @@ class SWUpdateScreen(Screen):
 
                     else:
                         if self.wifi_image.source != self.wifi_on:
-                            refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                            refresh_error_message = (
+                                self.l.get_str('Could not refresh version!') + \
+                                '\n\n' + \
+                                self.l.get_str('Please check the file on your USB stick.')
+                                )
                             popup_info.PopupError(self.sm, self.l, refresh_error_message)
                 else:
                     if self.wifi_image.source != self.wifi_on:
-                        refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                        refresh_error_message = (
+                            self.l.get_str('Could not refresh version!')
+                            +'\n\n' + \
+                            self.l.get_str('Please check the file on your USB stick.')
+                            )
                         popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
                 self.set.clear_remote_repo(dir_path_name)                 
@@ -392,48 +436,37 @@ class SWUpdateScreen(Screen):
                 self.set.refresh_latest_sw_version()
 
             if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
-                refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
+                refresh_error_message = (
+                    self.l.get_str('Could not refresh version!')
+                    +'\n\n' + \
+                    self.l.get_str('Please check your connection.')
+                    )
                 popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
             self.update_screen_with_latest_version()
 
         Clock.schedule_once(lambda dt: do_refresh(),0.5)
-    
+
+
     def update_screen_with_latest_version(self):
         if self.set.latest_sw_version != '':    
-            self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
+            self.latest_software_version_label.text = (
+                self.l.get_bold('New version available') + \
+                '[b]: ' + self.set.latest_sw_version + '[/b]'
+                )
         elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
+            self.latest_software_version_label.text = self.l.get_str('WiFi connection is needed to check if a new version is available.')
         else:
-            self.latest_software_version_label.text = '[b]You are up to date![/b]'
- 
-    def on_enter(self):
+            self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
 
-        # Keep tabs on wifi connection
-        self.check_wifi_connection(1)
-        self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
-
-        # Set up and keep tabs on usb connection
-        self.usb_stick.enable()
-        self.check_USB_status(1)
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
-
-    def on_leave(self):
-        Clock.unschedule(self.poll_USB)
-        Clock.unschedule(self.poll_wifi)
-        self.usb_stick.disable()
-        self.sm.remove_widget(self.sm.get_screen('update'))
-
-    def quit_to_lobby(self):
-        self.sm.current = 'lobby'
 
     def prep_for_sw_update_over_wifi(self):
 
-        wait_popup = popup_info.PopupWait(self.sm)
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
 
         def check_connection_and_version():
             if self.wifi_image.source != self.wifi_on:
-                description = "No WiFi connection!"
+                description = self.l.get_str("No WiFi connection!")
                 popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
@@ -450,11 +483,11 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_usb(self):
 
-        wait_popup = popup_info.PopupWait(self.sm)
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
 
         def check_connection_and_version():
             if self.usb_image.source != self.usb_on:
-                description = "No USB drive found!"
+                description = self.l.get_str("No USB drive found!")
                 popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
@@ -473,78 +506,119 @@ class SWUpdateScreen(Screen):
 
     def get_sw_update_over_wifi(self):
 
-        popup_info.PopupWait(self.sm)
+        popup_info.PopupWait(self.sm,  self.l)
 
         def do_sw_update():
 
             outcome = self.set.get_sw_update_via_wifi()
             
             if outcome == False: 
-                description = "There was a problem updating your software. \n\n" \
-                "We can try to fix the problem, but you MUST have a stable internet connection and" \
-                " power supply.\n\n" \
-                "Would you like to repair your software now?"
+                description = self.l.get_str("There was a problem updating your software.") + \
+                " \n\n" + \
+                self.l.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
+                "\n\n" + \
+                self.l.get_str("Would you like to repair your software now?")
                 popup_info.PopupSoftwareRepair(self.sm, self, description)
 
-            elif outcome == "Software already up to date!": 
-                popup_info.PopupError(self.sm, self.l, outcome)
+            elif outcome == "Software already up to date!":
+                description = self.l.get_str("Software already up to date!")
+                popup_info.PopupError(self.sm, self.l, description)
                 
             elif outcome == "Could not resolve host: github.com":
-                description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, self.l, outcome)
+                description = self.l.get_str("Could not connect to github. Please check that your connection is stable, or try again later.")
+                popup_info.PopupError(self.sm, self.l, description)
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
 
-                message = 'Please wait...\n\nConsole will reboot to finish update.'
+                message = (
+                    self.l.get_str('Please wait') + \
+                    '...\n\n' + \
+                    self.l.get_str('Console will reboot to finish update.')
+                    )
+
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
     def repair_sw_over_wifi(self):
             
-        description = "DO NOT restart your machine until you see instructions to do so on the screen."
+        description = self.l.get_str("DO NOT restart your machine until you see instructions to do so on the screen.")
         popup_info.PopupWarning(self.sm, self.l, description)
                
         def delay_clone_to_update_screen():
+
             if self.wifi_image.source == self.wifi_on:
+
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
-                    "If this issue persists, please contact Yeti Tool Ltd for support."
+
+                    description = (
+                        self.l.get_str("It was not possible to back up the software safely, please try again later.") + \
+                        "\n\n" + \
+                        self.l.get_str("If this issue persists, please contact Yeti Tool Ltd for support.")
+                        )
+
                     popup_info.PopupError(self.sm, self.l, description)           
-            else: 
-                description = "No WiFi connection!\n\nYou MUST have a stable wifi connection to repair your software.\n\n" + \
-                "Please try again later."
+            else:
+
+                description = (
+                    self.l.get_str("No WiFi connection!") + \
+                    "\n\n" + \
+                    self.l.get_str("You MUST have a stable wifi connection to repair your software.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please try again later.")
+                )
+
                 popup_info.PopupError(self.sm, self.l, description)
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
 
-        popup_info.PopupWait(self.sm)
+        popup_info.PopupWait(self.sm,  self.l)
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
             
             if outcome == 2:
-                description = "More than one folder called [b]easycut-smartbench[/b] was found on the USB drive.\n\n" + \
-                "Please make sure that there is only one instance of [b]easycut-smartbench[/b] on your USB drive, and try again."
+                description = (
+                    self.l.get_str("More than one folder called easycut-smartbench was found on the USB drive.").replace(
+                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                        ) + \
+                    "\n\n" + \
+                    self.l.get_str("Please make sure that there is only one instance of easycut-smartbench on your USB drive, and try again.").replace(
+                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                        )
+                    )
                 popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == 0:
-                description = "There was no folder or zipped folder called [b]easycut-smartbench[/b] found on the USB drive.\n\n" + \
-                "Please make sure that the folder containing the software is called [b]easycut-smartbench[/b], and try again."
+                description = (
+                    self.l.get_str("There was no folder or zipped folder called easycut-smartbench found on the USB drive.").replace(
+                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                        ) + \
+                    "\n\n" + \
+                    self.l.get_str("Please make sure that the folder containing the software is called easycut-smartbench, and try again.").replace(
+                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                        )
+                    )
                 popup_info.PopupError(self.sm, self.l, description)
 
             elif outcome == "update failed":
                 
-                # this may need its own special bigger pop-up
-                
-                description = "It was not possible to update your software from the USB drive.\n\n" + \
-                "Please check your [b]easycut-smartbench[/b] folder or try again later. If this problem persists you may need to connect to the " + \
-                "internet to update your software, and repair it if necessary.\n\n"
+                description = (
+                    self.l.get_str("It was not possible to update your software from the USB drive.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your easycut-smartbench folder or try again later.").replace(
+                        self.l.get_str('easycut-smartbench'), "[b]easycut-smartbench[/b]"
+                        ) + \
+                    " " + \
+                    self.l.get_str("If this problem persists you may need to connect to the internet to update your software, and repair it if necessary.") + \
+                    "\n\n"
+                    )
+
                 popup_info.PopupError(self.sm, self.l, description)              
             
             else:
@@ -552,7 +626,12 @@ class SWUpdateScreen(Screen):
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
 
-                message = 'Please wait...\n\nConsole will reboot to finish update.'
+                message = (
+                    self.l.get_str('Please wait') + \
+                    '...\n\n' + \
+                    self.l.get_str('Console will reboot to finish update.')
+                    )
+
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
@@ -574,3 +653,18 @@ class SWUpdateScreen(Screen):
             self.usb_image.source = self.usb_on
         else:
             self.usb_image.source = self.usb_off
+
+
+    def update_strings(self):
+
+        self.current_version_label.text = self.l.get_bold("Current Version")
+        self.update_using_wifi_label.text = self.l.get_bold("Update using WiFi")
+        self.update_using_wifi_instructions_label.text = self.l.get_str("Ensure connection is stable before attempting to update.")
+        self.wifi_update_button.text = self.l.get_str("Update")
+        self.update_using_usb_label.text = self.l.get_bold("Update using USB")
+        self.update_using_usb_instructions_label.text = (
+            self.l.get_str("Insert a USB stick containing the latest software.") + \
+            "\n" + 
+            self.l.get_str("Go to www.yetitool.com/support for help on how to do this.")
+            )
+        self.usb_update_button.text = self.l.get_str("Update")

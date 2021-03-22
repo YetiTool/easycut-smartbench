@@ -523,7 +523,7 @@ class WifiScreen(Screen):
         return SSID_list
 
     def refresh_available_networks(self):
-        wait_popup = popup_info.PopupWait(self.sm)
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
         Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.5)
 
         def get_networks():

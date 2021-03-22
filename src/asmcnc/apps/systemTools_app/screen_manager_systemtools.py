@@ -32,8 +32,8 @@ class ScreenManagerSystemTools(object):
 
     def download_logs_to_usb(self):
         self.usb_stick.enable()
-        message = 'Downloading logs, please wait...'
-        wait_popup = popup_info.PopupWait(self.sm, description = message)
+        message = self.l.get_str('Downloading logs, please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
         count = 0
 
         def get_logs(count):
@@ -42,11 +42,11 @@ class ScreenManagerSystemTools(object):
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
 
-                message = 'Logs downloaded'
+                message = self.l.get_str('Logs downloaded')
                 popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
             elif count > 30:
-                message = 'No USB found!'
+                message = self.l.get_str('No USB found!')
                 popup_info.PopupMiniInfo(self.sm, self.l, description = message)
                 wait_popup.popup.dismiss()
                 if self.usb_stick.is_available(): self.usb_stick.disable()
@@ -76,8 +76,8 @@ class ScreenManagerSystemTools(object):
         self.m.save_grbl_settings()
 
         self.usb_stick.enable()
-        message = 'Downloading grbl settings, please wait...'
-        wait_popup = popup_info.PopupWait(self.sm, description = message)
+        message = self.l.get_str('Downloading grbl settings, please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
         def get_grbl_settings_onto_usb():
           if self.usb_stick.is_usb_mounted_flag == True:
@@ -87,7 +87,7 @@ class ScreenManagerSystemTools(object):
               wait_popup.popup.dismiss()
               self.usb_stick.disable()
 
-              message = 'GRBL settings downloaded'
+              message = self.l.get_str('GRBL settings downloaded')
               popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
           else:
@@ -97,8 +97,8 @@ class ScreenManagerSystemTools(object):
 
     def restore_grbl_settings_from_usb(self):
         self.usb_stick.enable()
-        message = 'Restoring grbl settings, please wait...'
-        wait_popup = popup_info.PopupWait(self.sm, description = message)
+        message = self.l.get_str('Restoring grbl settings, please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
         def get_grbl_settings_from_usb():
           if self.usb_stick.is_usb_mounted_flag == True:
@@ -107,10 +107,10 @@ class ScreenManagerSystemTools(object):
               wait_popup.popup.dismiss()
               self.usb_stick.disable()
               if success_flag:
-                  message = 'GRBL settings restored!'
+                  message = self.l.get_str('GRBL settings restored!')
                   popup_info.PopupMiniInfo(self.sm, self.l, description = message)
               else:
-                  message = 'Could not restore settings, please check file!'
+                  message = self.l.get_str('Could not restore settings, please check file!')
                   popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
           else:
@@ -122,10 +122,10 @@ class ScreenManagerSystemTools(object):
         filename = '/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'
         success_flag = self.m.restore_grbl_settings_from_file(filename)
         if success_flag:
-            message = 'GRBL settings restored!'
+            message = self.l.get_str('GRBL settings restored!')
             popup_info.PopupMiniInfo(self.sm, self.l, description = message)
         else:
-            message = 'Could not restore settings, please check file!'
+            message = self.l.get_str('Could not restore settings, please check file!')
             popup_info.PopupMiniInfo(self.sm, self.l, description = message)   
 
     def open_factory_settings_screen(self):
