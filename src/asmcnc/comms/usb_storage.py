@@ -11,7 +11,7 @@ WARNINGS:
 '''
 
 from kivy.clock import Clock
-import sys, os
+import sys, os, subprocess
 from asmcnc.skavaUI import popup_info
 
 class USB_storage(object):
@@ -180,23 +180,35 @@ class USB_storage(object):
 
         mount_command = "echo posys | sudo mount /dev/" + device + "1 " + self.linux_usb_path # TODO: NOT SECURE
         try:
-            os.system(mount_command)
+
+            proc = subprocess.Popen(mount_command,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.STDOUT,
+                shell = True
+            )
+
+            stdout, stderr = proc.communicate()
+            exit_code = int(proc.returncode)
             
-            self.is_usb_mounted_flag = True
-            self.start_polling_for_usb() # restart checking for USB
-            if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
+            if exit_code == 0:
+                self.is_usb_mounted_flag = True
+                self.start_polling_for_usb() # restart checking for USB
+                if self.IS_USB_VERBOSE: print 'USB: MOUNTED'
 
-            if (self.sm.current == 'local_filechooser' or 
-                self.sm.current == 'usb_filechooser' or
-                self.sm.current == 'loading'):
+                if (self.sm.current == 'local_filechooser' or 
+                    self.sm.current == 'usb_filechooser' or
+                    self.sm.current == 'loading'):
 
-                self.sm.get_screen('loading').usb_status = 'connected'
-                self.sm.get_screen('loading').update_usb_status()
-                self.sm.get_screen('usb_filechooser').update_usb_status()
+                    self.sm.get_screen('loading').usb_status = 'connected'
+                    self.sm.get_screen('loading').update_usb_status()
+                    self.sm.get_screen('usb_filechooser').update_usb_status()
+
+                else:
+                    popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, 'mounted')
+                    Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
             else:
-                popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, 'mounted')
-                Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
+                popup_USB_error = popup_info.PopupUSBError(self.sm, self)
 
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        

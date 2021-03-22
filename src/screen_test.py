@@ -18,6 +18,7 @@ from asmcnc.skavaUI import screen_file_loading
 from asmcnc.tests import loading_screen_test
 
 
+
 class ScreenTest(App):
 
 
@@ -34,8 +35,8 @@ class ScreenTest(App):
 
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode, localization = l)
         sm.add_widget(loading_screen)
-
         sm.current = 'loading'
         return sm
+
 
 ScreenTest().run()

@@ -131,6 +131,7 @@ class SpindleCooldownScreen(Screen):
 
     return_screen = 'jobdone'
     seconds = '10'
+    update_timer_event = None
 
     def __init__(self, **kwargs):
         
@@ -155,13 +156,14 @@ class SpindleCooldownScreen(Screen):
         self.sm.current = self.return_screen
 
     def update_timer(self, dt):
-        self.seconds = self.seconds - 1
-        self.countdown.text = str(self.seconds)
+        if self.seconds >= 0:
+            self.seconds = self.seconds - 1
+            self.countdown.text = str(self.seconds)
 
     def on_leave(self):
         self.m.spindle_off()
         self.m.vac_off()
-        Clock.unschedule(self.update_timer_event)
+        if self.update_timer_event != None: Clock.unschedule(self.update_timer_event)
         self.seconds = self.m.spindle_cooldown_time_seconds
         self.countdown.text = str(self.seconds)
         
