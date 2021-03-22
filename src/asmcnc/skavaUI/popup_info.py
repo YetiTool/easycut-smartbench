@@ -624,7 +624,7 @@ class PopupSoftwareRepair(Widget):
 
         popup.open()
 
-class PopupError(Widget):   
+class PopupError(Widget):
     def __init__(self, screen_manager, localization, warning_message):
         
         self.sm = screen_manager
