@@ -677,12 +677,10 @@ class SWUpdateScreen(Screen):
         self.usb_update_button.text = self.l.get_str("Update")
 
     def update_font_size(self, value):
-        if len(value.text) < 7:
+        if len(value.text) < 9:
             value.font_size = self.default_font_size
-        # elif len(value.text) > 6: 
-        #     value.font_size = self.default_font_size - 2
-        if len(value.text) > 9: 
+        elif len(value.text) > 8: 
             value.font_size = self.default_font_size - 1
-        if len(value.text) > 11: 
+        if len(value.text) > 12: 
             value.font_size = self.default_font_size - 8
 
