@@ -125,7 +125,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         width: dp(291)
                         height: dp(79)
-                        on_press: root.next_screen(auto=False)
+                        on_press: root.next_screen(auto=True) # EDITED!
                         text: 'Next...'
                         font_size: '30sp'
                         color: hex('#f9f9f9ff')
