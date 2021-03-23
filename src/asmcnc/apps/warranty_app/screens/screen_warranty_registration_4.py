@@ -93,7 +93,7 @@ Builder.load_string("""
                     halign: 'center'
                     markup: 'true'
                     color: hex('#e64a19ff')
-                    opacity: 0
+                    opacity: 1 # EDITED!
                 Label:
                     id: error_message_bottom
                     font_size: '20sp'
@@ -103,7 +103,7 @@ Builder.load_string("""
                     halign: 'center'
                     markup: 'true'
                     color: hex('#e64a19ff')
-                    opacity: 0
+                    opacity: 1 # EDITED!
 
             BoxLayout:
                 orientation: 'vertical'
@@ -217,6 +217,8 @@ class WarrantyScreen4(Screen):
             return False
 
     def next_screen(self, auto = True):
+
+        self.wm.sm.current = 'warranty_5' # TESTING!
 
         if self.check_activation_code():
             if self.check_activation_event != None: Clock.unschedule(self.check_activation_event)
