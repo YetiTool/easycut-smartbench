@@ -585,7 +585,7 @@ class PopupSoftwareRepair(Widget):
             self.sm.get_screen('update').repair_sw_over_wifi()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(560, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
         ok_button = Button(text=repair_string, markup = True)
         ok_button.background_normal = ''
@@ -611,7 +611,7 @@ class PopupSoftwareRepair(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 420),
+                      size=(600, 420),
                       auto_dismiss= False
                       )
         
