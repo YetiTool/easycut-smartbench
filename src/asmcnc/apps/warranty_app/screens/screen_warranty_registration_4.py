@@ -169,6 +169,8 @@ class WarrantyScreen4(Screen):
     activation_code_from_file = 0
     check_activation_event = None
 
+    default_font_size = '20sp'
+
     def __init__(self, **kwargs):
         super(WarrantyScreen4, self).__init__(**kwargs)
         self.wm=kwargs['warranty_manager']
@@ -180,6 +182,7 @@ class WarrantyScreen4(Screen):
         self.status_bar_widget.cheeky_color = '#1976d2'
 
         self.update_strings()
+        self.update_font_size(self.error_message_bottom)
 
     def on_pre_enter(self):
         self.read_in_activation_code()
@@ -271,3 +274,7 @@ class WarrantyScreen4(Screen):
         self.error_message_top.text = self.l.get_str("Please check your activation code.")
         self.error_message_bottom.text = self.l.get_str("Stuck on this screen? Contact us at https://www.yetitool.com/support")
         self.next_button.text = self.l.get_str("Next") + "..."
+
+    def update_font_size(self, value):
+        if len(value.text) < 85: value.font_size = self.default_font_size
+        else: value.font_size = '18sp'
