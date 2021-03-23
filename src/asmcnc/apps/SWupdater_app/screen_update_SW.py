@@ -430,7 +430,8 @@ class SWUpdateScreen(Screen):
                             )
                         popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
-                self.set.clear_remote_repo(dir_path_name)                 
+                try: self.set.clear_remote_repo(dir_path_name)
+                except: pass
 
             if self.wifi_image.source == self.wifi_on:
                 self.set.refresh_latest_sw_version()
