@@ -456,7 +456,7 @@ class SWUpdateScreen(Screen):
                 '[b]: ' + self.set.latest_sw_version + '[/b]'
                 )
         elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = self.l.get_str('WiFi connection is needed to check if a new version is available.')
+            self.latest_software_version_label.text = self.l.get_str('No WiFi or USB!')
         else:
             self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
 

@@ -401,3 +401,4 @@ Could not restore settings, please check file!	Einstellungen kann nicht wiederhe
 Please Wait	Warten Sie mal	S'il vous plaît, attendez	Attendere prego	Odota	Even geduld aub	Proszę czekać
 There was a problem updating the software	Es gab ein Problem der Aktualisierung der Software	Il y avait un problème de mise à jour du logiciel	C'è stato un problema l'aggiornamento del software	Ongelma ohjelmiston päivittämistä	Er is een probleem met het updaten van de software	Wystąpił problem podczas aktualizacji oprogramowania
 Repair	Reparatur	réparation	Riparazione	Korjaus	Reparatie	Naprawic
+No WiFi or USB!	Kein WiFi oder USB!	Pas de WiFi ou USB!	No WiFi o USB!	Ei WiFi tai USB!	Geen WiFi of USB!	No WiFi lub USB!
