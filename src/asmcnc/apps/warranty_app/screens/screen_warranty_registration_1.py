@@ -13,7 +13,12 @@ Builder.load_string("""
 
 <WarrantyScreen1>:
 
-	status_container:status_container 
+	status_container : status_container
+	title_label : title_label
+	thankyou_label : thankyou_label
+	next_steps_label : next_steps_label
+	minutes_label : minutes_label
+	next_button : next_button
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -37,13 +42,15 @@ Builder.load_string("""
 			orientation: 'vertical'
 				
 			Label:
+				id: title_label
 				font_size: '30sp'
-				text: "[color=333333ff]SmartBench Warranty Registration[/color]"
+				# text: "[color=333333ff]SmartBench Warranty Registration[/color]"
 				text_size: self.size
 				valign: 'bottom'
 				halign: 'center'
 				markup: 'true'
 				bold: True
+				color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -52,32 +59,38 @@ Builder.load_string("""
 				padding: 20
 				size_hint: (None,None)
 				Label:
+					id: thankyou_label
 					size_hint_y: 0.25
 					font_size: '20sp'
-					text: "[color=333333ff]Thank you for purchasing SmartBench.[/color]"
+					# text: "[color=333333ff]Thank you for purchasing SmartBench.[/color]"
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
+					color: hex('#333333ff')
 
 				Label:
+					id: next_steps_label
 					size_hint_y: 0.5
 					font_size: '20sp'
-					text: "[color=333333ff]Please follow the next steps to complete your warranty registration process.[/color]"
+					# text: "[color=333333ff]Please follow the next steps to complete your warranty registration process.[/color]"
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
 					markup: 'true'
 					multiline: True
+					color: hex('#333333ff')
 				
 				Label:
+					id: minutes_label
 					size_hint_y: 0.25
 					font_size: '20sp'
-					text: "[color=333333ff]It will only a take a few minutes.[/color]"
+					# text: "[color=333333ff]It will only a take a few minutes.[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
 					markup: 'true'
+					color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -90,6 +103,7 @@ Builder.load_string("""
                     height: dp(79)
                     width: dp(291)
 					Button:
+						id: next_button
 	                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 	                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
 	                    border: [dp(14.5)]*4
@@ -97,7 +111,7 @@ Builder.load_string("""
 						width: dp(291)
 						height: dp(79)
 						on_press: root.next_screen()
-						text: 'Next...'
+						# text: 'Next...'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
@@ -120,16 +134,6 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_console()
-                    # BoxLayout:
-                    #     padding: 0
-                    #     size: self.parent.size
-                    #     pos: self.parent.pos
-                        # Image:
-                        #     source: "./asmcnc/apps/warranty_app/img/quit_to_console.png"
-                        #     center_x: self.parent.center_x
-                        #     y: self.parent.y
-                        #     size: self.parent.width, self.parent.height
-                        #     allow_stretch: True
 
 		
 
@@ -142,16 +146,27 @@ class WarrantyScreen1(Screen):
 		super(WarrantyScreen1, self).__init__(**kwargs)
 		self.wm=kwargs['warranty_manager']
 		self.m=kwargs['machine']
+		self.l=kwargs['localization']
 		
 		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
+
+		self.update_strings()
 
 	def next_screen(self):
 		self.wm.sm.current = 'warranty_2'
 
 	def quit_to_console(self):
 		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
+
+	def update_strings(self):
+		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+		self.thankyou_label.text = self.l.get_str("Thank you for purchasing SmartBench.")
+		self.next_steps_label.text = self.l.get_str("Please follow the next steps to complete your warranty registration process.")
+		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
+		self.next_button.text = self.l.get_str("Next") + "..."
+
 	
 
 

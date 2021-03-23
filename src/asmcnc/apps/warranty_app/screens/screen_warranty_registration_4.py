@@ -19,10 +19,12 @@ Builder.load_string("""
 
 <WarrantyScreen4>:
 
-    status_container:status_container
-    activation_code:activation_code
-    error_message_top:error_message_top
-    error_message_bottom:error_message_bottom
+    status_container : status_container
+    enter_your_activation_code_label : enter_your_activation_code_label
+    activation_code : activation_code
+    error_message_top : error_message_top
+    error_message_bottom : error_message_bottom
+    next_button : next_button
 
     BoxLayout: 
         size_hint: (None,None)
@@ -46,13 +48,15 @@ Builder.load_string("""
             orientation: 'vertical'
                 
             Label:
+                id: enter_your_activation_code_label
                 font_size: '30sp'
-                text: "[color=333333ff]Enter your activation code:[/color]"
+                # text: "[color=333333ff]Enter your activation code:[/color]"
                 text_size: self.size
                 valign: 'bottom'
                 halign: 'center'
                 markup: 'true'
                 bold: True
+                color: hex('#333333ff')
 
             BoxLayout:
                 orientation: 'vertical'
@@ -73,6 +77,7 @@ Builder.load_string("""
                     multiline: False
                     text: ''
                     input_filter: 'int'
+                    color: hex('#333333ff')
             BoxLayout:
                 orientation: 'vertical'
                 width: dp(800)
@@ -113,6 +118,7 @@ Builder.load_string("""
                     width: dp(291)
                     
                     Button:
+                        id: next_button
                         background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                         background_down: "./asmcnc/apps/warranty_app/img/next.png"
                         border: [dp(14.5)]*4
@@ -167,10 +173,13 @@ class WarrantyScreen4(Screen):
         super(WarrantyScreen4, self).__init__(**kwargs)
         self.wm=kwargs['warranty_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         
         self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
+
+        self.update_strings()
 
     def on_pre_enter(self):
         self.read_in_activation_code()
@@ -254,3 +263,9 @@ class WarrantyScreen4(Screen):
         Final_Activation_Code = Activation_Code_1 + Activation_Code_2 + Activation_Code_3 +Activation_Code_4 + Activation_Code_5 + Activation_Code_6 + Activation_Code_7 + Activation_Code_8 + Activation_Code_9 + Activation_Code_10 + Activation_Code_11 + Activation_Code_12 + Activation_Code_13 + Activation_Code_14
         print(str(Final_Activation_Code)+'\n')
         return Final_Activation_Code
+
+    def update_strings(self):
+        self.enter_your_activation_code_label.text = self.l.get_str("Enter your activation code:")
+        self.error_message_top.text = self.l.get_str("Please check your activation code.")
+        self.error_message_bottom.text = self.l.get_str("Stuck on this screen? Contact us at https://www.yetitool.com/support")
+        self.next_button.text = self.l.get_str("Next") + "..."

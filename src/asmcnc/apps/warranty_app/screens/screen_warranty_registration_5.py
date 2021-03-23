@@ -11,7 +11,9 @@ Builder.load_string("""
 
 <WarrantyScreen5>:
 				
-	status_container:status_container 
+	status_container : status_container
+	success_label : success_label
+	next_button : next_button
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -42,6 +44,7 @@ Builder.load_string("""
 				size_hint: (None,None)
 
 				Label:
+					id: success_label
 					font_size: '30sp'
 					text: "[color=333333ff]You have sucessfully completed your warranty registration.[/color]"
 					text_size: self.size
@@ -64,6 +67,7 @@ Builder.load_string("""
                     width: dp(291)
                     
 					Button:
+						id: next_button
 	                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 	                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
 	                    border: [dp(14.5)]*4
@@ -85,25 +89,6 @@ Builder.load_string("""
 				width: dp(70)
 				height: dp(62)
 
-                # Button:
-                #     size_hint: (None,None)
-                #     height: dp(52)
-                #     width: dp(60)
-                #     background_color: hex('#F4433600')
-                #     center: self.parent.center
-                #     pos: self.parent.pos
-                #     on_press: root.go_back()
-                #     BoxLayout:
-                #         padding: 0
-                #         size: self.parent.size
-                #         pos: self.parent.pos
-                #         Image:
-                #             source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True
-
 """)
 
 class WarrantyScreen5(Screen):
@@ -112,10 +97,13 @@ class WarrantyScreen5(Screen):
 		super(WarrantyScreen5, self).__init__(**kwargs)
 		self.wm=kwargs['warranty_manager']
 		self.m=kwargs['machine']
+		self.l=kwargs['localization']
 		
 		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
+
+		self.update_strings()
 
 	def next_screen(self):
 		self.wm.exit_app()
@@ -123,5 +111,6 @@ class WarrantyScreen5(Screen):
 	def go_back(self):
 		self.wm.sm.current = 'warranty_4'
 
-
-
+	def update_strings(self):
+		self.success_label.text = self.l.get_str("You have sucessfully completed your warranty registration.")
+		self.next_button.text = self.l.get_str("Next") + "..."

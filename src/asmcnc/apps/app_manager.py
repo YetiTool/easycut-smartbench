@@ -31,7 +31,7 @@ class AppManagerClass(object):
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
-        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m)
+        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, localization = self.l)
         self.sm.add_widget(wifi_screen)

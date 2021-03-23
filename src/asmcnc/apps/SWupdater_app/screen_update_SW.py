@@ -377,10 +377,6 @@ class SWUpdateScreen(Screen):
 
     def on_enter(self):
 
-        self.update_strings()
-        self.update_font_size(self.usb_update_button)
-        self.update_font_size(self.wifi_update_button)
-
         # Keep tabs on wifi connection
         self.check_wifi_connection(1)
         self.poll_wifi = Clock.schedule_interval(self.check_wifi_connection, self.WIFI_CHECK_INTERVAL)
