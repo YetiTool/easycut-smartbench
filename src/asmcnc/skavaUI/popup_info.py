@@ -568,10 +568,11 @@ class PopupSoftwareUpdateSuccess(Widget):
         Clock.schedule_once(reboot, 6)
     
 class PopupSoftwareRepair(Widget):   
-    def __init__(self, screen_manager, settings_manager, warning_message):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message):
         
         self.sm = screen_manager
         self.set = settings_manager
+        self.l = localization
 
         title_string = self.l.get_str('There was a problem updating the software') + '...'
         repair_string = self.l.get_bold('Repair')

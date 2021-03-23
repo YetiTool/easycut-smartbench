@@ -519,7 +519,7 @@ class SWUpdateScreen(Screen):
                 self.l.get_str("We can try to fix the problem, but you MUST have a stable internet connection and power supply.") + \
                 "\n\n" + \
                 self.l.get_str("Would you like to repair your software now?")
-                popup_info.PopupSoftwareRepair(self.sm, self, description)
+                popup_info.PopupSoftwareRepair(self.sm, self.l, self, description)
 
             elif outcome == "Software already up to date!":
                 description = self.l.get_str("Software already up to date!")
