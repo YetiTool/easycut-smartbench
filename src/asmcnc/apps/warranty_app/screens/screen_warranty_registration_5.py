@@ -52,6 +52,7 @@ Builder.load_string("""
 					halign: 'center'
 					markup: 'true'
 					bold: True
+					color: hex('#333333ff')
 
 
 			BoxLayout:
@@ -75,7 +76,7 @@ Builder.load_string("""
 						width: dp(291)
 						height: dp(79)
 						on_press: root.next_screen()
-						text: 'Get started!'
+						# text: 'Get started!'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
@@ -113,4 +114,4 @@ class WarrantyScreen5(Screen):
 
 	def update_strings(self):
 		self.success_label.text = self.l.get_str("You have sucessfully completed your warranty registration.")
-		self.next_button.text = self.l.get_str("Next") + "..."
+		self.next_button.text = self.l.get_str("Get started!")
