@@ -104,7 +104,8 @@ class Settings(object):
                     description = str(git_output[-1])
                     return description
                 
-                elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
+                # elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
+                elif "Could not resolve host: github.com" in str(git_output[-1]):
                     return "Could not resolve host: github.com"
 
                 else:
