@@ -96,6 +96,8 @@ class Settings(object):
 
                 git_output = str(unformatted_git_output).split('\n')
                 git_output = list(filter(lambda x: x!= '', git_output))
+
+                print(str(git_output[-1]))
                      
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
