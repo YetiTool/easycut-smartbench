@@ -684,5 +684,5 @@ class SWUpdateScreen(Screen):
         if len(value.text) > 10: 
             value.font_size = self.default_font_size - 4
         if len(value.text) > 12: 
-            value.font_size = self.default_font_size - 5
+            value.font_size = self.default_font_size - 6
 
