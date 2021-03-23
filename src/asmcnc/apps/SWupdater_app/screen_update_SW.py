@@ -356,6 +356,8 @@ class SWUpdateScreen(Screen):
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
     usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
+
+    default_font_size = 30
     
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
@@ -364,6 +366,8 @@ class SWUpdateScreen(Screen):
         self.l=kwargs['localization']
         
         self.update_strings()
+        self.update_font_size(self.usb_update_button)
+        self.update_font_size(self.wifi_update_button)
 
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         
@@ -374,6 +378,8 @@ class SWUpdateScreen(Screen):
     def on_enter(self):
 
         self.update_strings()
+        self.update_font_size(self.usb_update_button)
+        self.update_font_size(self.wifi_update_button)
 
         # Keep tabs on wifi connection
         self.check_wifi_connection(1)
@@ -669,3 +675,14 @@ class SWUpdateScreen(Screen):
             self.l.get_str("Go to www.yetitool.com/support for help on how to do this.")
             )
         self.usb_update_button.text = self.l.get_str("Update")
+
+    def update_font_size(self, value):
+        if len(value.text) < 7:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 6: 
+            value.font_size = self.default_font_size - 1
+        if len(value.text) > 10: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 12: 
+            value.font_size = self.default_font_size - 3
+
