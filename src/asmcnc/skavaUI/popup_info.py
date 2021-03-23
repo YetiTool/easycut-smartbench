@@ -532,7 +532,7 @@ class PopupSoftwareUpdateSuccess(Widget):
             self.sm.current = 'rebooting'
                     
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,10], markup = True)
+        label = Label(size_hint_y=1, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,10], markup = True)
    
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
