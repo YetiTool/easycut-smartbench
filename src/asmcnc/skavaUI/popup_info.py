@@ -576,7 +576,7 @@ class PopupSoftwareRepair(Widget):
 
         title_string = self.l.get_str('There was a problem updating the software') + '...'
         repair_string = self.l.get_bold('Repair')
-        back_string = self.l.get_bold('Go back')
+        back_string = self.l.get_bold('Go Back')
         
         description = warning_message
 
