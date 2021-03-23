@@ -679,10 +679,10 @@ class SWUpdateScreen(Screen):
     def update_font_size(self, value):
         if len(value.text) < 7:
             value.font_size = self.default_font_size
-        elif len(value.text) > 6: 
-            value.font_size = self.default_font_size - 2
+        # elif len(value.text) > 6: 
+        #     value.font_size = self.default_font_size - 2
         if len(value.text) > 9: 
-            value.font_size = self.default_font_size - 4
+            value.font_size = self.default_font_size - 2
         if len(value.text) > 11: 
-            value.font_size = self.default_font_size - 6
+            value.font_size = self.default_font_size - 7
 
