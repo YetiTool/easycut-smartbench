@@ -419,5 +419,5 @@ Get started!	Loslegen!	Commencer!	Iniziare!	Aloittaa!	Begin!	Zaczynaj!
 IP address:	IP Adresse:	Adresse IP:	Indirizzo IP:	IP-osoite:	IP adres:	Adres IP:
 Network Name	Netzwerkname	Nom de réseau	Nome della rete	Verkon nimi	Netwerknaam	Nazwa sieci
 Password	Passwort	Mot de passe	Parola d'ordine	Salasana	Wachtwoord	Hasło
-Country	Land	De campagne	Nazione	Maa	land	Kraj
-Connect	Verbinden	Relier	Collegare	Kytkeä	Aansluiten	Połączyć
+Land	Les Pays	Nazione	Maa	Land	Kraj
+Verbinden	Relier	Collegare	Kytkeä	Aansluiten	Połączyć
