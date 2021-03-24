@@ -613,5 +613,8 @@ class MaintenanceScreenClass(Screen):
             value.font_size = 18
         if len(value.text) > 15: 
             value.font_size = 16
-        if len(value.text) > 17: 
+        if len(value.text) > 17:
             value.font_size = 14
+
+        print(len(value.text))
+        print(value.font_size)
