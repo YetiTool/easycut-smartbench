@@ -411,6 +411,8 @@ Builder.load_string("""
 """)
 
 class WifiScreen(Screen):
+
+    default_font_size = 20
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
@@ -430,10 +432,12 @@ class WifiScreen(Screen):
             self.network_name.values = self.get_available_networks()
  
         self.update_strings()
+        self.update_font_size(self.country_label)
 
     def on_enter(self):
 
         self.update_strings()
+        self.update_font_size(self.country_label)
 
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
@@ -578,6 +582,12 @@ class WifiScreen(Screen):
         self.password_label.text = self.l.get_bold("Password")
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
+
+    def update_font_size(self, value):
+        if len(value.text) < 8:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 7: 
+            value.font_size = self.default_font_size - 2
 
 
 
