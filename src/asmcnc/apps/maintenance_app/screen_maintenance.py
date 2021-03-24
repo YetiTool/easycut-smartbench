@@ -114,6 +114,7 @@ Builder.load_string("""
                             width: dp(280)
                             padding: [dp(20),0,dp(20),0]
                             orientation: 'horizontal'
+
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
@@ -498,10 +499,10 @@ class MaintenanceScreenClass(Screen):
 
 
         # BRUSH MONITOR WIDGETS
-        self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_use_widget = widget_maintenance_brush_use.BrushUseWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_use_container.add_widget(self.brush_use_widget)
 
-        self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(machine=self.m, screen_manager=self.sm)
+        self.brush_life_widget = widget_maintenance_brush_life.BrushLifeWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.brush_life_container.add_widget(self.brush_life_widget)
 
         self.brush_save_widget = widget_maintenance_brush_save.BrushSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
@@ -517,7 +518,7 @@ class MaintenanceScreenClass(Screen):
         self.spindle_save_widget = widget_maintenance_spindle_save.SpindleSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_save_container.add_widget(self.spindle_save_widget)       
 
-        self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm)
+        self.spindle_settings_widget = widget_maintenance_spindle_settings.SpindleSettingsWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.spindle_settings_container.add_widget(self.spindle_settings_widget)
 
 
@@ -526,10 +527,10 @@ class MaintenanceScreenClass(Screen):
         self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.sm)
         self.z_misc_save_container.add_widget(self.z_misc_save_widget)
 
-        self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm)
+        self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.touchplate_offset_container.add_widget(self.touchplate_offset_widget)
 
-        self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm)
+        self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
         self.update_strings()
@@ -600,3 +601,15 @@ class MaintenanceScreenClass(Screen):
         self.laser_datum_label.text = self.l.get_bold("LASER DATUM")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
+
+    def update_font_size(self, value):
+        if len(value.text) < 9:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 8: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 9: 
+            value.font_size = self.default_font_size - 4
+        if len(value.text) > 11: 
+            value.font_size = self.default_font_size - 6
+        if len(value.text) > 12: 
+            value.font_size = self.default_font_size - 8

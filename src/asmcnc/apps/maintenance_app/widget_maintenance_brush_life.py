@@ -19,6 +19,9 @@ Builder.load_string("""
     restore_button:restore_button
     reset_120:reset_120
     brush_life:brush_life
+
+    brush_reminder_label : brush_reminder_label
+    hours_label : hours_label
     
     BoxLayout:
         size_hint: (None, None)
@@ -37,7 +40,8 @@ Builder.load_string("""
             height: dp(100)
             width: dp(280)         
 
-            Label: 
+            Label:
+                id: brush_reminder_label
                 color: 0,0,0,1
                 font_size: dp(24)
                 markup: True
@@ -65,6 +69,7 @@ Builder.load_string("""
                     multiline: False
 
                 Label: 
+                    id: hours_label
                     color: 0,0,0,1
                     font_size: dp(28)
                     markup: True
@@ -138,12 +143,19 @@ class BrushLifeWidget(Widget):
         super(BrushLifeWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
     def restore(self):
         self.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
 
     def reset_to_120(self):
         self.brush_life.text = '120'
+
+    def update_strings(self):
+        self.brush_reminder_label.text = self.l.get_bold("BRUSH REMINDER")
+        self.hours_label.text = self.l.get_str("hours")
 
 
 

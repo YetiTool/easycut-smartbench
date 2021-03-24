@@ -18,6 +18,8 @@ Builder.load_string("""
     
     hours_since_lubrication:hours_since_lubrication
 
+    time_since_srew_lubricated_label : time_since_srew_lubricated_label
+
     BoxLayout:
         size_hint: (None, None)
         height: dp(200)
@@ -27,7 +29,8 @@ Builder.load_string("""
         padding: 20
         spacing: 10      
 
-        Label: 
+        Label:
+            id: time_since_srew_lubricated_label
             color: 0,0,0,1
             font_size: dp(24)
             markup: True
@@ -103,31 +106,37 @@ Builder.load_string("""
 class ZLubricationReminderWidget(Widget):
 
     time_in_hours = 0
+    hours_label = "hours"
 
     def __init__(self, **kwargs):
     
         super(ZLubricationReminderWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
     def update_time_left(self):
         self.time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/3600)
 
         if self.time_in_hours < 30: 
-            self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' hrs' + '[/color]'
+            self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
         elif self.time_in_hours < 40:
-            self.hours_since_lubrication.text = '[color=f9ce1dff]' + str(self.time_in_hours) + ' hrs' + '[/color]'
+            self.hours_since_lubrication.text = '[color=f9ce1dff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
         elif self.time_in_hours < 45:
-            self.hours_since_lubrication.text = '[color=ff9903ff]' + str(self.time_in_hours) + ' hrs' + '[/color]'
+            self.hours_since_lubrication.text = '[color=ff9903ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
         else:
-            self.hours_since_lubrication.text = '[color=e64a19ff]' + str(self.time_in_hours) + ' hrs' + '[/color]'
+            self.hours_since_lubrication.text = '[color=e64a19ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
     def reset_to_0(self):
         self.time_in_hours = 0
-        self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' hrs' + '[/color]'
+        self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
-
+    def update_strings(self):
+        self.time_since_srew_lubricated_label.text = self.l.get_bold("TIME SINCE LEAD SCREW LUBRICATED")
+        self.hours_label = self.l.get_str("hours")
 

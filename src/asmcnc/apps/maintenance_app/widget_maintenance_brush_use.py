@@ -19,6 +19,9 @@ Builder.load_string("""
     restore_button:restore_button
     reset_0:reset_0
     brush_use:brush_use
+
+    brush_use_label : brush_use_label
+    hours_label : hours_label
     
     BoxLayout:
         size_hint: (None, None)
@@ -37,7 +40,8 @@ Builder.load_string("""
             height: dp(100)
             width: dp(280)         
 
-            Label: 
+            Label:
+                id: brush_use_label
                 color: 0,0,0,1
                 font_size: dp(24)
                 markup: True
@@ -64,7 +68,8 @@ Builder.load_string("""
                     input_filter: 'int'
                     multiline: False
 
-                Label: 
+                Label:
+                    id: hours_label
                     color: 0,0,0,1
                     font_size: dp(28)
                     markup: True
@@ -138,6 +143,9 @@ class BrushUseWidget(Widget):
         super(BrushUseWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
         
     def restore(self):
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
@@ -145,7 +153,9 @@ class BrushUseWidget(Widget):
     def reset_to_0(self):
         self.brush_use.text = '0'
 
-
+    def update_strings(self):
+        self.brush_use_label.text = self.l.get_bold("BRUSH USE")
+        self.hours_label.text = self.l.get_str("hours")
 
 
 
