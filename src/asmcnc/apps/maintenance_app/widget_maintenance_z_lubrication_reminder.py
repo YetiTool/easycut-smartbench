@@ -147,10 +147,10 @@ class ZLubricationReminderWidget(Widget):
         if len(value.text) < (9 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 100
         elif len(value.text) > (8 + len('[color=4caf50ff]') + len('[/color]')): 
-            value.font_size = 98
-        if len(value.text) > (10 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 96
-        if len(value.text) > (12 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (10 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 94
-        if len(value.text) > (14 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (12 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 92
+        if len(value.text) > (14 + len('[color=4caf50ff]') + len('[/color]')):
+            value.font_size = 90
