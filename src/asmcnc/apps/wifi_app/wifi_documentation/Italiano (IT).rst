@@ -55,7 +55,7 @@ Abbiamo visto i problemi che tentano di connettersi tramite dispositivi Apple. S
 
 
 Dispositivi Apple
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Per connettersi a un dispositivo Apple, provare le seguenti operazioni:
 

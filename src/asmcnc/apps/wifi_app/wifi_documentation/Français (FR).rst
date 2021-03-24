@@ -55,7 +55,7 @@ Nous avons vu des problèmes en essayant de se connecter sur les appareils Apple
 
 
 Appareils Apple
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Pour vous connecter à un appareil Apple, essayez les étapes suivantes:
 

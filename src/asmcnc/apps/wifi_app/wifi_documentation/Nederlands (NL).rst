@@ -55,7 +55,7 @@ We hebben problemen verbinding probeert te maken ten opzichte van Apple-apparate
 
 
 Apple-apparaten
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Om aan te sluiten op een Apple-apparaat, probeer dan de volgende stappen:
 

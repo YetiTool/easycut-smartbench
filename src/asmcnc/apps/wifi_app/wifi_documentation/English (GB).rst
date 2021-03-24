@@ -55,7 +55,7 @@ We have seen issues trying to connect over Apple devices. We advise connecting o
 
 
 Apple devices
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 To connect to an Apple device, try the following steps:
 

@@ -55,7 +55,7 @@ Widzieliśmy problemy próbuje połączyć się przez urządzeniach Apple. Zalec
 
 
 Urządzenia Apple
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Aby połączyć się z urządzeniem firmy Apple, spróbuj wykonać następujące czynności:
 
