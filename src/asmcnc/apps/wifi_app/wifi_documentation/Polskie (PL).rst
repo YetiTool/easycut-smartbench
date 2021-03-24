@@ -1,70 +1,74 @@
 .. _top:
 
-Connection Hints
-================
+Wskazówki przyłączeniowe
+========================
 
-If you are having trouble connecting the console to your wifi network, read these notes:
-
-
-Network name and password
--------------------------
-
-* **Password MUST be between 8 and 63 characters.**
-
-* Both will be case sensitive, make sure they are exact.
-
-* Avoid the need for any special characters.
-
-* Make sure there are no extra spaces.
+Jeśli masz problemy z podłączeniem konsoli do sieci WIFI, czytać te notatki:
 
 
-Country code
+Nazwę sieci i hasło
+--------------------
+
+* **Hasło musi mieć od 8 do 63 znaków.**
+
+* Zarówno będzie wielkość liter, upewnij się, że są one dokładne.
+
+* Uniknąć konieczności jakichkolwiek znaków specjalnych.
+
+* Upewnij się, że nie ma żadnych dodatkowych spacji.
+
+
+Kod pocztowy
 ------------
 
-Make sure the country code matches. Default is GB which is fairly universal, but may not suit some regions. See the Country Codes section below for the correct code for your region.
+Upewnij się, że mecze kod kraju. Domyślnym jest GB, które jest dość powszechne, ale nie może spełnić pewne regiony. Zobacz kraju sekcję kodów poniżej dla prawidłowego kodu dla danego regionu.
 
 
-Pressing the Connect button
+Naciskając przycisk Connect
 ---------------------------
 
-Check all details are exact.
+* Sprawdź, czy wszystkie dane są dokładne.
 
-* On releasing the Connect button, the console will need to reboot before attempting to establish a connection using the network name and password details entered.
-
-* Time to connect
-
-* Some routers can take a several minutes to connect
-
-* Connecting via a wifi router
-
-* If you are having problems, reset and restart the router.
-
-* Make sure the console is in range - you can use a wifi scanner app to check signal.
-
-* Some routers offer a choice between 2.4 GHz and 5 GHz channels. 5 GHz channels can be less reliable, therefore we advise connecting over the 2.4 GHz channel wherever possible.
+* Po zwolnieniu przycisku Connect, konsola będzie konieczne ponowne uruchomienie przed próbą nawiązania połączenia za pomocą nazwy sieci i dane wprowadzone hasło.
 
 
-Connecting via a mobile hotspot
--------------------------------
+Czas, aby połączyć
+------------------
 
-We have seen issues trying to connect over Apple devices. We advise connecting over Android where possible.
+Niektóre routery mogą potrwać kilka minut, aby się połączyć.
 
 
-Apple devices
-~~~~~~~~~~~~~
+Łączenie przez router wifi
+---------------------------
 
-To connect to an Apple device, try the following steps.
+* Jeśli masz problemy, reset i ponownie uruchomić router.
+
+* Upewnij się, że konsola jest w zakresie - można użyć wifi aplikację skanera, aby sprawdzić sygnał.
+
+* Niektóre routery oferują wybór pomiędzy 2,4 GHz i 5 GHz kanałów. 5 kanałów GHz może być mniej niezawodne, dlatego zalecają łączenia w kanale 2,4 GHz jest to możliwe.
+
+
+Podłączanie za pośrednictwem mobilnego hotspotu
+-----------------------------------------------
+
+Widzieliśmy problemy próbuje połączyć się przez urządzeniach Apple. Zalecamy podłączenie na Androida, gdzie to możliwe.
+
+
+Urządzenia Apple
+~~~~~~~~~~~~~~~~
+
+Aby połączyć się z urządzeniem firmy Apple, spróbuj wykonać następujące czynności:
 
 * Power off SmartBench
 
-* Restart iPhone
+* Restart iPhone'a
 
-* When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
+* Po ponownym uruchomieniu iPhone, podłącz kabel USB z iPhone do portu USB w konsoli SmartBench
 
-* Turn on your iPhone hotspot (Settings>personal hotspot)
+* Włącz hotspot iPhone (Ustawienia > osobisty hotspot)
 
-* Power on SmartBench
+* Włącz SmartBench
 
-* Enter your details on the network settings screen
+* Wpisz swoje dane na ekranie ustawień sieciowych
 
 .. _bottom:

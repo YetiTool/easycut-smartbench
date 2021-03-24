@@ -1,70 +1,74 @@
 .. _top:
 
-Connection Hints
-================
+Suggerimenti di collegamento
+============================
 
-If you are having trouble connecting the console to your wifi network, read these notes:
-
-
-Network name and password
--------------------------
-
-* **Password MUST be between 8 and 63 characters.**
-
-* Both will be case sensitive, make sure they are exact.
-
-* Avoid the need for any special characters.
-
-* Make sure there are no extra spaces.
+Se si hanno problemi di connessione della console alla rete WiFi, leggere queste note:
 
 
-Country code
-------------
+Nome di rete e la password
+--------------------------
 
-Make sure the country code matches. Default is GB which is fairly universal, but may not suit some regions. See the Country Codes section below for the correct code for your region.
+* **La password deve essere compresa tra 8 e 63 caratteri.**
 
+* Entrambi saranno maiuscole e minuscole, assicurarsi che siano esatte.
 
-Pressing the Connect button
----------------------------
+* Evitare la necessità di eventuali caratteri speciali.
 
-Check all details are exact.
-
-* On releasing the Connect button, the console will need to reboot before attempting to establish a connection using the network name and password details entered.
-
-* Time to connect
-
-* Some routers can take a several minutes to connect
-
-* Connecting via a wifi router
-
-* If you are having problems, reset and restart the router.
-
-* Make sure the console is in range - you can use a wifi scanner app to check signal.
-
-* Some routers offer a choice between 2.4 GHz and 5 GHz channels. 5 GHz channels can be less reliable, therefore we advise connecting over the 2.4 GHz channel wherever possible.
+* Assicurarsi che non vi siano spazi aggiuntivi.
 
 
-Connecting via a mobile hotspot
--------------------------------
+Prefisso internazionale
+-----------------------
 
-We have seen issues trying to connect over Apple devices. We advise connecting over Android where possible.
+Assicurarsi che le partite codice del paese. Il valore predefinito è GB, che è abbastanza universale, ma non può soddisfare alcune regioni. Vedere la sezione Codici Paese di seguito per il codice corretto per la propria regione.
 
 
-Apple devices
+Premendo il pulsante Connetti
+-----------------------------
+
+* Controllare tutti i dettagli sono esatti.
+
+* Al rilascio del pulsante Connetti, la console sarà necessario riavviare prima di tentare di stabilire una connessione utilizzando il nome di rete e password inserita dettagli.
+
+
+Tempo per connettersi
+---------------------
+
+Alcuni router può richiedere diversi minuti per collegare.
+
+
+Collegamento tramite un router wifi
+-----------------------------------
+
+* Se si hanno problemi, resettare e riavviare il router.
+
+* Assicurarsi che la console è in zona - è possibile utilizzare uno scanner app WiFi per controllare il segnale.
+
+* Alcuni router offrono una scelta tra 2,4 GHz e 5 GHz canali. 5 canali GHz possono essere meno affidabili, quindi vi consigliamo di collegare tramite il canale da 2,4 GHz, ove possibile.
+
+
+Collegamento tramite un hotspot mobile
+---------------------------------------
+
+Abbiamo visto i problemi che tentano di connettersi tramite dispositivi Apple. Si consiglia di collegare su Android, ove possibile.
+
+
+Dispositivi Apple
 ~~~~~~~~~~~~~
 
-To connect to an Apple device, try the following steps.
+Per connettersi a un dispositivo Apple, provare le seguenti operazioni:
 
-* Power off SmartBench
+* Spegnere Smartbench
 
 * Restart iPhone
 
-* When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
+* Al riavvio di iPhone, cavo USB di collegamento da iPhone alla porta USB della console Smartbench
 
-* Turn on your iPhone hotspot (Settings>personal hotspot)
+* Accendere l'iPhone hotspot (Impostazioni > hotspot personale)
 
-* Power on SmartBench
+* Accensione Smartbench
 
-* Enter your details on the network settings screen
+* Inserisci i tuoi dati nella schermata delle impostazioni di rete
 
 .. _bottom:

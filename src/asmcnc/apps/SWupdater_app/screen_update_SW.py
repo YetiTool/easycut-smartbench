@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 March 2020
 Software updater screen

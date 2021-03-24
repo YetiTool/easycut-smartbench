@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 March 2020
 Wifi screen
@@ -325,7 +326,6 @@ Builder.load_string("""
                     scroll_type: ['content']
                     RstDocument:
                         id: connection_instructions_rst
-                        # source: './asmcnc/apps/wifi_app/wifi_documentation.rst'
                         background_color: hex('#FFFFFF')
                         base_font_size: 26
                         underline_color: '000000'

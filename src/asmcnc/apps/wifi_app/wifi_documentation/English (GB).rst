@@ -27,15 +27,19 @@ Make sure the country code matches. Default is GB which is fairly universal, but
 Pressing the Connect button
 ---------------------------
 
-Check all details are exact.
+* Check all details are exact.
 
 * On releasing the Connect button, the console will need to reboot before attempting to establish a connection using the network name and password details entered.
 
-* Time to connect
 
-* Some routers can take a several minutes to connect
+Time to connect
+---------------
 
-* Connecting via a wifi router
+Some routers can take a several minutes to connect.
+
+
+Connecting via a wifi router
+-------------------------------
 
 * If you are having problems, reset and restart the router.
 
@@ -53,7 +57,7 @@ We have seen issues trying to connect over Apple devices. We advise connecting o
 Apple devices
 ~~~~~~~~~~~~~
 
-To connect to an Apple device, try the following steps.
+To connect to an Apple device, try the following steps:
 
 * Power off SmartBench
 
@@ -61,7 +65,7 @@ To connect to an Apple device, try the following steps.
 
 * When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
 
-* Turn on your iPhone hotspot (Settings>personal hotspot)
+* Turn on your iPhone hotspot (Settings > personal hotspot)
 
 * Power on SmartBench
 

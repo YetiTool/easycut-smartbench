@@ -1,70 +1,74 @@
 .. _top:
 
-Connection Hints
+Yhteys Vihjeitä
 ================
 
-If you are having trouble connecting the console to your wifi network, read these notes:
+Jos sinulla on vaikeuksia Konsolin kytkeminen WiFi verkkoon, lue nämä ohjeet:
 
 
-Network name and password
+Verkon nimen ja salasanan
 -------------------------
 
-* **Password MUST be between 8 and 63 characters.**
+* **Salasanan on oltava välillä 8 ja 63 merkkiä.**
 
-* Both will be case sensitive, make sure they are exact.
+* Molemmat ovat isot ja pienet kirjaimet, varmista, että ne ovat tarkkoja.
 
-* Avoid the need for any special characters.
+* Välttää erikoismerkkejä.
 
-* Make sure there are no extra spaces.
-
-
-Country code
-------------
-
-Make sure the country code matches. Default is GB which is fairly universal, but may not suit some regions. See the Country Codes section below for the correct code for your region.
+* Varmista ei ole ylimääräisiä välilyöntejä.
 
 
-Pressing the Connect button
----------------------------
+Maatunnus
+---------
 
-Check all details are exact.
-
-* On releasing the Connect button, the console will need to reboot before attempting to establish a connection using the network name and password details entered.
-
-* Time to connect
-
-* Some routers can take a several minutes to connect
-
-* Connecting via a wifi router
-
-* If you are having problems, reset and restart the router.
-
-* Make sure the console is in range - you can use a wifi scanner app to check signal.
-
-* Some routers offer a choice between 2.4 GHz and 5 GHz channels. 5 GHz channels can be less reliable, therefore we advise connecting over the 2.4 GHz channel wherever possible.
+Varmista maatunnus otteluissa. Oletus on GB, jota on melko yleinen, mutta ei välttämättä sovi alueilla. Katso Maakoodit osiosta oikean koodin oman alueesi.
 
 
-Connecting via a mobile hotspot
--------------------------------
+Painamalla Yhdistä-painike
+--------------------------
 
-We have seen issues trying to connect over Apple devices. We advise connecting over Android where possible.
+* Tarkista, että kaikki yksityiskohdat ovat tarkkoja.
+
+* Vapauttamisesta Yhdistä-painiketta, konsoli on käynnistettävä uudelleen, ennen kuin yrität muodostaa yhteyden avulla verkon nimi ja salasana syötettyjä tietoja.
 
 
-Apple devices
-~~~~~~~~~~~~~
+Aika yhdistää
+-------------
 
-To connect to an Apple device, try the following steps.
+Joissakin reitittimissä voi kestää useita minuutteja yhteyden.
 
-* Power off SmartBench
 
-* Restart iPhone
+Kytkentä WiFi reititin
+----------------------
 
-* When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
+* Jos sinulla on ongelmia, nollaa ja käynnistä reititin.
 
-* Turn on your iPhone hotspot (Settings>personal hotspot)
+* Varmista, että konsoli on alueella - voit käyttää wifi skanneri app tarkistaa signaalin.
 
-* Power on SmartBench
+* Joissakin reitittimissä tarjoavat valita 2,4 GHz ja 5 GHz: n kanavia. 5 GHz: n kanavat voivat olla vähemmän luotettavia, joten suosittelemme yhdistää yli 2,4 GHz: n kanavalla mahdollisuuksien mukaan.
 
-* Enter your details on the network settings screen
+
+Kytkentä mobiili hotspot
+-------------------------
+
+Olemme nähneet asioita yrittää muodostaa yli Applen laitteet. Neuvomme yhdistävät yli Android mahdollisuuksien mukaan.
+
+
+Applen laitteet
+~~~~~~~~~~~~~~~
+
+Yhteyden muodostaminen Apple-laitteen, toimi seuraavasti:
+
+* Virta pois SmartBench
+
+* Uudelleenkäynnistys iPhone
+
+* Kun iPhone käynnistyy uudelleen, USB -kaapelin iPhonesta USB-porttiin SmartBench konsolin
+
+* Kytke iPhonen hotspot (Asetukset > henkilökohtainen hotspot)
+
+* Virta päälle SmartBench
+
+* Anna lisätietoja verkkoasetukset näyttö
 
 .. _bottom:

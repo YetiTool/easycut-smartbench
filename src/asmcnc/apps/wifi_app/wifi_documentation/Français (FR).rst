@@ -1,70 +1,74 @@
 .. _top:
 
-Connection Hints
-================
+Conseils de connexion
+=====================
 
-If you are having trouble connecting the console to your wifi network, read these notes:
-
-
-Network name and password
--------------------------
-
-* **Password MUST be between 8 and 63 characters.**
-
-* Both will be case sensitive, make sure they are exact.
-
-* Avoid the need for any special characters.
-
-* Make sure there are no extra spaces.
+Si vous rencontrez des problèmes pour vous connecter la console à votre réseau wifi, lire ces notes:
 
 
-Country code
-------------
+Le nom du réseau et le mot de passe
+-----------------------------------
 
-Make sure the country code matches. Default is GB which is fairly universal, but may not suit some regions. See the Country Codes section below for the correct code for your region.
+* **Mot de passe doit être comprise entre 8 et 63 caractères.**
 
+* Les deux seront sensibles à la casse, assurez-vous qu'ils sont exacts.
 
-Pressing the Connect button
----------------------------
+* Évitez le besoin de caractères spéciaux.
 
-Check all details are exact.
-
-* On releasing the Connect button, the console will need to reboot before attempting to establish a connection using the network name and password details entered.
-
-* Time to connect
-
-* Some routers can take a several minutes to connect
-
-* Connecting via a wifi router
-
-* If you are having problems, reset and restart the router.
-
-* Make sure the console is in range - you can use a wifi scanner app to check signal.
-
-* Some routers offer a choice between 2.4 GHz and 5 GHz channels. 5 GHz channels can be less reliable, therefore we advise connecting over the 2.4 GHz channel wherever possible.
+* Assurez-vous qu'il n'y a pas d'espaces supplémentaires.
 
 
-Connecting via a mobile hotspot
--------------------------------
+Code postal
+-----------
 
-We have seen issues trying to connect over Apple devices. We advise connecting over Android where possible.
+Assurez-vous que les matchs de code de pays. Par défaut est GB qui est assez universel, mais peut ne pas convenir à certaines régions. Voir la section Codes pays ci-dessous pour le bon code pour votre région.
 
 
-Apple devices
+En appuyant sur le bouton Connecter
+-----------------------------------
+
+* Vérifiez tous les détails sont exacts.
+
+* En relâchant le bouton Connecter, la console devra redémarrer avant de tenter d'établir une connexion en utilisant le nom du réseau et les détails de mot de passe saisi.
+
+
+Il est temps de se connecter
+----------------------------
+
+Certains routeurs peuvent prendre plusieurs minutes pour se connecter.
+
+
+Connexion via un routeur wifi
+-----------------------------
+
+* Si vous rencontrez des problèmes, réinitialiser et redémarrer le routeur.
+
+* Assurez-vous que la console est à portée - vous pouvez utiliser une application du scanner wifi pour vérifier le signal.
+
+* Certains routeurs offrent un choix entre 2,4 GHz et 5 GHz canaux. 5 canaux GHz peuvent être moins fiables, donc nous vous conseillons de connecter sur le canal 2,4 GHz lorsque cela est possible.
+
+
+Connexion via un point d'accès mobile
+-------------------------------------
+
+Nous avons vu des problèmes en essayant de se connecter sur les appareils Apple. Nous vous conseillons connecter sur Android lorsque cela est possible.
+
+
+Appareils Apple
 ~~~~~~~~~~~~~
 
-To connect to an Apple device, try the following steps.
+Pour vous connecter à un appareil Apple, essayez les étapes suivantes:
 
-* Power off SmartBench
+* Mise hors tension SmartBench
 
-* Restart iPhone
+* Redémarrer iPhone
 
-* When iPhone restarts, connect USB cable from iPhone into the USB port on the SmartBench console
+* Au redémarrage de l'iPhone, le câble de connexion USB de l'iPhone dans le port USB de la console SmartBench
 
-* Turn on your iPhone hotspot (Settings>personal hotspot)
+* Allumez votre iPhone hotspot (Paramètres > hotspot personnel)
 
-* Power on SmartBench
+* Puissance sur SmartBench
 
-* Enter your details on the network settings screen
+* Entrez vos informations à l'écran des paramètres du réseau
 
 .. _bottom:
