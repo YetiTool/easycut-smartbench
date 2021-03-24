@@ -605,15 +605,15 @@ class MaintenanceScreenClass(Screen):
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
 
     def update_font_size(self, value):
-        if len(value.text) < 12:
+        if len(value.text) < 19:
             value.font_size = 22
-        elif len(value.text) > 11: 
+        elif len(value.text) > 18: 
             value.font_size = 20
-        if len(value.text) > 13: 
+        if len(value.text) > 21: 
             value.font_size = 18
-        if len(value.text) > 15: 
+        if len(value.text) > 23: 
             value.font_size = 16
-        if len(value.text) > 17:
+        if len(value.text) > 25:
             value.font_size = 14
 
         print(len(value.text))
