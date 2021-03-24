@@ -524,7 +524,7 @@ class MaintenanceScreenClass(Screen):
 
         # Z TOUCHPLATE OFFSET AND LEAD SCREW REMINDER WIDGETS
 
-        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.sm)
+        self.z_misc_save_widget = widget_maintenance_z_misc_save.ZMiscSaveWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.z_misc_save_container.add_widget(self.z_misc_save_widget)
 
         self.touchplate_offset_widget = widget_maintenance_touchplate_offset.TouchplateOffsetWidget(machine=self.m, screen_manager=self.sm, localization=self.l)
