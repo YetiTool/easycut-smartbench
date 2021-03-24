@@ -534,6 +534,7 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
         self.update_strings()
+        self.update_font_size(self.laser_datum_label)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -585,6 +586,7 @@ class MaintenanceScreenClass(Screen):
             self.landing_tab = self.tab_panel.current
 
         self.update_strings()
+        self.update_font_size(self.laser_datum_label)
 
     def on_pre_leave(self):
 
@@ -603,13 +605,13 @@ class MaintenanceScreenClass(Screen):
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
 
     def update_font_size(self, value):
-        if len(value.text) < 9:
-            value.font_size = self.default_font_size
-        elif len(value.text) > 8: 
-            value.font_size = self.default_font_size - 2
-        if len(value.text) > 9: 
-            value.font_size = self.default_font_size - 4
-        if len(value.text) > 11: 
-            value.font_size = self.default_font_size - 6
-        if len(value.text) > 12: 
-            value.font_size = self.default_font_size - 8
+        if len(value.text) < 12:
+            value.font_size = 22
+        elif len(value.text) > 11: 
+            value.font_size = 20
+        if len(value.text) > 13: 
+            value.font_size = 18
+        if len(value.text) > 15: 
+            value.font_size = 16
+        if len(value.text) > 17: 
+            value.font_size = 14
