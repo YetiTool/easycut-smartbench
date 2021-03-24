@@ -144,6 +144,10 @@ class ZLubricationReminderWidget(Widget):
         self.hours_label = self.l.get_str("hours")
 
     def update_font_size(self, value):
+
+        print('text length')
+        print(len(value.text))
+
         if len(value.text) < (9 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 100
         elif len(value.text) > (8 + len('[color=4caf50ff]') + len('[/color]')): 
@@ -154,3 +158,6 @@ class ZLubricationReminderWidget(Widget):
             value.font_size = 70
         if len(value.text) > (14 + len('[color=4caf50ff]') + len('[/color]')):
             value.font_size = 60
+
+        print('font size')
+        print(str(value.font_size))
