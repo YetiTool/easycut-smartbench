@@ -133,7 +133,7 @@ class ZLubricationReminderWidget(Widget):
         else:
             self.hours_since_lubrication.text = '[color=e64a19ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
 
-        self.update_font_size(self.hours_since_lubrication.text)
+        self.update_font_size(self.hours_since_lubrication)
 
     def reset_to_0(self):
         self.time_in_hours = 0
