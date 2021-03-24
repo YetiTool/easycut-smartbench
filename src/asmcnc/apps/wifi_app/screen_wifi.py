@@ -37,6 +37,12 @@ Builder.load_string("""
     country: country
     ip_status_label: ip_status_label
     wifi_image: wifi_image
+
+    ip_address_label : ip_address_label
+    network_name_label : network_name_label
+    password_label : password_label
+    country_label : country_label
+    connect_button : connect_button
     
     BoxLayout:
         size_hint: (None, None)
@@ -90,6 +96,7 @@ Builder.load_string("""
                     width: dp(150)
                     orientation: 'vertical'
                     Label:
+                        id: ip_address_label
                         color: 1,1,1,1
                         font_size: 18
                         markup: True
@@ -98,7 +105,7 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "IP address:"
+
                     Label:
                         id: ip_status_label
                         color: 1,1,1,1
@@ -142,6 +149,7 @@ Builder.load_string("""
                             width: dp(151)
                             height: dp(40)
                             Label:
+                                id: network_name_label
                                 width: dp(151)
                                 color: 0,0,0,1
                                 font_size: 20
@@ -151,7 +159,7 @@ Builder.load_string("""
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]Network Name[/b]"
+
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
@@ -215,6 +223,7 @@ Builder.load_string("""
                     padding: [0,0,0,20]   
                               
                     Label:
+                        id: password_label
                         color: 0,0,0,1
                         font_size: 20
                         markup: True
@@ -223,7 +232,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "[b]Password[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -251,6 +259,7 @@ Builder.load_string("""
                     padding: [0,0,10,20]   
                               
                     Label:
+                        id: country_label
                         color: 0,0,0,1
                         font_size: 20
                         markup: True
@@ -259,7 +268,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "[b]Country[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -335,25 +343,48 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(115)
                     width: dp(160)
-                    padding: [2,0,0,0]                   
+                    padding: [2,0,0,0]
+                    canvas:
+                        Color:
+                            rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                    # Button:
+                    #     size_hint: (None,None)
+                    #     height: dp(115)
+                    #     width: dp(158)
+                    #     background_color: hex('#F4433600')
+                    #     center: self.parent.center
+                    #     pos: self.parent.pos
+                    #     on_press: root.check_credentials()
+                    #     BoxLayout:
+                    #         padding: 0
+                    #         size: self.parent.size
+                    #         pos: self.parent.pos
+                    #         Image:
+                    #             source: "./asmcnc/apps/wifi_app/img/connect.png"
+                    #             center_x: self.parent.center_x
+                    #             y: self.parent.y
+                    #             size: self.parent.width, self.parent.height
+                    #             allow_stretch: True
+
                     Button:
+                        id: connect_button
+                        background_normal: "./asmcnc/apps/wifi_app/img/connect_blank.png"
+                        background_down: "./asmcnc/apps/wifi_app/img/connect_blank.png"
+                        border: [dp(14.5)]*4
                         size_hint: (None,None)
                         height: dp(115)
                         width: dp(158)
-                        background_color: hex('#F4433600')
+                        on_press: root.check_credentials()
+                        # text: 'Connect'
+                        font_size: '30sp'
+                        color: hex('#f9f9f9ff')
+                        markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.check_credentials()
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/apps/wifi_app/img/connect.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
+
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(112)
@@ -398,7 +429,12 @@ class WifiScreen(Screen):
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
  
+        self.update_strings()
+
     def on_enter(self):
+
+        self.update_strings()
+
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
@@ -406,7 +442,6 @@ class WifiScreen(Screen):
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
-
 
     def check_credentials(self):
 
@@ -536,3 +571,13 @@ class WifiScreen(Screen):
         self.network_name.focus = True
 
     values = ['GB' , 'US' , 'AF' , 'AX' , 'AL' , 'DZ' , 'AS' , 'AD' , 'AO' , 'AI' , 'AQ' , 'AG' , 'AR' , 'AM' , 'AW' , 'AU' , 'AT' , 'AZ' , 'BH' , 'BS' , 'BD' , 'BB' , 'BY' , 'BE' , 'BZ' , 'BJ' , 'BM' , 'BT' , 'BO' , 'BQ' , 'BA' , 'BW' , 'BV' , 'BR' , 'IO' , 'BN' , 'BG' , 'BF' , 'BI' , 'KH' , 'CM' , 'CA' , 'CV' , 'KY' , 'CF' , 'TD' , 'CL' , 'CN' , 'CX' , 'CC' , 'CO' , 'KM' , 'CG' , 'CD' , 'CK' , 'CR' , 'CI' , 'HR' , 'CU' , 'CW' , 'CY' , 'CZ' , 'DK' , 'DJ' , 'DM' , 'DO' , 'EC' , 'EG' , 'SV' , 'GQ' , 'ER' , 'EE' , 'ET' , 'FK' , 'FO' , 'FJ' , 'FI' , 'FR' , 'GF' , 'PF' , 'TF' , 'GA' , 'GM' , 'GE' , 'DE' , 'GH' , 'GI' , 'GR' , 'GL' , 'GD' , 'GP' , 'GU' , 'GT' , 'GG' , 'GN' , 'GW' , 'GY' , 'HT' , 'HM' , 'VA' , 'HN' , 'HK' , 'HU' , 'IS' , 'IN' , 'ID' , 'IR' , 'IQ' , 'IE' , 'IM' , 'IL' , 'IT' , 'JM' , 'JP' , 'JE' , 'JO' , 'KZ' , 'KE' , 'KI' , 'KP' , 'KR' , 'KW' , 'KG' , 'LA' , 'LV' , 'LB' , 'LS' , 'LR' , 'LY' , 'LI' , 'LT' , 'LU' , 'MO' , 'MK' , 'MG' , 'MW' , 'MY' , 'MV' , 'ML' , 'MT' , 'MH' , 'MQ' , 'MR' , 'MU' , 'YT' , 'MX' , 'FM' , 'MD' , 'MC' , 'MN' , 'ME' , 'MS' , 'MA' , 'MZ' , 'MM' , 'NA' , 'NR' , 'NP' , 'NL' , 'NC' , 'NZ' , 'NI' , 'NE' , 'NG' , 'NU' , 'NF' , 'MP' , 'NO' , 'OM' , 'PK' , 'PW' , 'PS' , 'PA' , 'PG' , 'PY' , 'PE' , 'PH' , 'PN' , 'PL' , 'PT' , 'PR' , 'QA' , 'RE' , 'RO' , 'RU' , 'RW' , 'BL' , 'SH' , 'KN' , 'LC' , 'MF' , 'PM' , 'VC' , 'WS' , 'SM' , 'ST' , 'SA' , 'SN' , 'RS' , 'SC' , 'SL' , 'SG' , 'SX' , 'SK' , 'SI' , 'SB' , 'SO' , 'ZA' , 'GS' , 'SS' , 'ES' , 'LK' , 'SD' , 'SR' , 'SJ' , 'SZ' , 'SE' , 'CH' , 'SY' , 'TW' , 'TJ' , 'TZ' , 'TH' , 'TL' , 'TG' , 'TK' , 'TO' , 'TT' , 'TN' , 'TR' , 'TM' , 'TC' , 'TV' , 'UG' , 'UA' , 'AE' , 'UM' , 'UY' , 'UZ' , 'VU' , 'VE' , 'VN' , 'VG' , 'VI' , 'WF' , 'EH' , 'YE' , 'ZM' , 'ZW']
+
+    def update_strings(self):
+        self.ip_address_label.text = self.l.get_str("IP address:")
+        self.network_name_label.text = self.l.get_bold("Network Name")
+        self.password_label.text = self.l.get_bold("Password")
+        self.country_label.text = self.l.get_bold("Country")
+        self.connect_button.text = self.l.get_str("Connect")
+
+
+

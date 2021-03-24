@@ -257,8 +257,8 @@ Builder.load_string("""
                             width: dp(150)
                             height: dp(110)
                             on_press: root.prep_for_sw_update_over_wifi()
-                            text: 'Update'
-                            font_size: '28sp'
+                            # text: 'Update'
+                            # font_size: '28sp'
                             color: hex('#f9f9f9ff')
                             markup: True
                             center: self.parent.center
@@ -339,8 +339,8 @@ Builder.load_string("""
                             width: dp(150)
                             height: dp(110)
                             on_press: root.prep_for_sw_update_over_usb()
-                            text: 'Update'
-                            font_size: '28sp'
+                            # text: 'Update'
+                            # font_size: '28sp'
                             color: hex('#f9f9f9ff')
                             markup: True
                             center: self.parent.center

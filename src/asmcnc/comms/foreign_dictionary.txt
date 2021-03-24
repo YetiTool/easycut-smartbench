@@ -416,3 +416,8 @@ Please check your activation code.	Bitte überprüfen Sie Ihren Aktivierungscode
 Stuck on this screen? Contact us at https://www.yetitool.com/support	Fest auf diesem Bildschirm? Kontaktieren Sie uns unter https://www.yetitool.com/support	Coincé sur cet écran? Contactez-nous à https://www.yetitool.com/support	Bloccato in questa schermata? Contattaci al https://www.yetitool.com/support	Jumissa tässä näytössä? Yhteyttä osoitteeseen https://www.yetitool.com/support	Stuck op dit scherm? Neem contact met ons op https://www.yetitool.com/support	Zatrzymany na ekranie? Kontakt pod https://www.yetitool.com/support
 You have sucessfully completed your warranty registration.	Sie haben Ihre Garantieregistrierung erfolgreich abgeschlossen.	Vous avez terminé votre enregistrement avec succès de garantie.	Hai con successo completato la registrazione della garanzia.	Olet onnistuneesti suorittanut takuurekisteröintivarmistuksen.	Je hebt met succes de garantie registratie voltooid.	Pomyślnie zakończone zostały rejestrację gwarancyjną.
 Get started!	Loslegen!	Commencer!	Iniziare!	Aloittaa!	Begin!	Zaczynaj!
+IP address:	IP Adresse:	Adresse IP:	Indirizzo IP:	IP-osoite:	IP adres:	Adres IP:
+Network Name	Netzwerkname	Nom de réseau	Nome della rete	Verkon nimi	Netwerknaam	Nazwa sieci
+Password	Passwort	Mot de passe	Parola d'ordine	Salasana	Wachtwoord	Hasło
+Country	Land	De campagne	Nazione	Maa	land	Kraj
+Connect	Verbinden	Relier	Collegare	Kytkeä	Aansluiten	Połączyć
