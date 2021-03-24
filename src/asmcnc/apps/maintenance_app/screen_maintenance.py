@@ -532,6 +532,8 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_widget = widget_maintenance_z_lubrication_reminder.ZLubricationReminderWidget(machine=self.m, screen_manager=self.sm)
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
+        self.update_strings()
+
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
         
@@ -580,6 +582,8 @@ class MaintenanceScreenClass(Screen):
             self.tab_panel.switch_to(self.spindle_tab)
         else: 
             self.landing_tab = self.tab_panel.current
+
+        self.update_strings()
 
     def on_pre_leave(self):
 
