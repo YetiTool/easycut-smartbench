@@ -187,7 +187,7 @@ class SpindleSettingsWidget(Widget):
         super(SpindleSettingsWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.l=kwargs['update_strings']
+        self.l=kwargs['localization']
 
         self.update_strings()
 
