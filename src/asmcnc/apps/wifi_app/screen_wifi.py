@@ -379,7 +379,7 @@ Builder.load_string("""
                         width: dp(158)
                         on_press: root.check_credentials()
                         # text: 'Connect'
-                        font_size: '30sp'
+                        font_size: '28sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
