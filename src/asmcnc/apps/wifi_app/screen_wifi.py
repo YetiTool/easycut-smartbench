@@ -43,6 +43,8 @@ Builder.load_string("""
     password_label : password_label
     country_label : country_label
     connect_button : connect_button
+
+    connection_instructions_rst : connection_instructions_rst
     
     BoxLayout:
         size_hint: (None, None)
@@ -322,7 +324,8 @@ Builder.load_string("""
                     do_scroll_y: True
                     scroll_type: ['content']
                     RstDocument:
-                        source: './asmcnc/apps/wifi_app/wifi_documentation.rst'
+                        id: connection_instructions_rst
+                        # source: './asmcnc/apps/wifi_app/wifi_documentation.rst'
                         background_color: hex('#FFFFFF')
                         base_font_size: 26
                         underline_color: '000000'
@@ -350,24 +353,6 @@ Builder.load_string("""
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
-                    # Button:
-                    #     size_hint: (None,None)
-                    #     height: dp(115)
-                    #     width: dp(158)
-                    #     background_color: hex('#F4433600')
-                    #     center: self.parent.center
-                    #     pos: self.parent.pos
-                    #     on_press: root.check_credentials()
-                    #     BoxLayout:
-                    #         padding: 0
-                    #         size: self.parent.size
-                    #         pos: self.parent.pos
-                    #         Image:
-                    #             source: "./asmcnc/apps/wifi_app/img/connect.png"
-                    #             center_x: self.parent.center_x
-                    #             y: self.parent.y
-                    #             size: self.parent.width, self.parent.height
-                    #             allow_stretch: True
 
                     Button:
                         id: connect_button
@@ -422,6 +407,8 @@ class WifiScreen(Screen):
     country = ObjectProperty()
     SSID_list = []
 
+    wifi_documentation_path  = './asmcnc/apps/wifi_app/wifi_documentation/'
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -433,11 +420,13 @@ class WifiScreen(Screen):
  
         self.update_strings()
         self.update_font_size(self.country_label)
+        self.get_rst_source()
 
     def on_enter(self):
 
         self.update_strings()
         self.update_font_size(self.country_label)
+        self.get_rst_source()
 
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
@@ -588,6 +577,9 @@ class WifiScreen(Screen):
             value.font_size = self.default_font_size
         elif len(value.text) > 7: 
             value.font_size = self.default_font_size - 2
+
+    def get_rst_source(self):
+        self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
 
 
 
