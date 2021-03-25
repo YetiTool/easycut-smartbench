@@ -101,7 +101,7 @@ Builder.load_string("""
         # Alarm image and text
         BoxLayout: 
             padding: [0,40,0,0]
-            spacing: 10
+            spacing: 20
             size_hint: (None, None)
             height: dp(295)
             width: dp(800)
@@ -122,11 +122,12 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(130)
                     width: dp(130)
+
             BoxLayout: 
                 padding: [30,0,30,0]
                 spacing: 0
                 size_hint: (None, None)
-                height: dp(115)
+                height: dp(105)
                 width: dp(800)
                 Label:
                     id: alarm_description_label
