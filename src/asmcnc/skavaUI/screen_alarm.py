@@ -99,7 +99,7 @@ Builder.load_string("""
         
         # Alarm image and text
         BoxLayout: 
-            padding: [30,35,30,0]
+            padding: [30,20,30,0]
             spacing: 20
             size_hint: (None, None)
             height: dp(295)
@@ -132,7 +132,7 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
-                height: dp(90)
+                height: dp(105)
                 width: dp(700)
 
         BoxLayout: 
@@ -271,8 +271,15 @@ class AlarmScreenClass(Screen):
         if self.m.s.limit_z: 
             limit_list.append('Z top')
 
-        self.alarm_description_label.text = limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description
+        if self.limit_list == []:
+            limit_list.append('Unknown')
 
+        self.alarm_description_label.text = (
+            limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description +  '\n' + \
+            "If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support."
+            )
+
+# If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support.
 
 
             
