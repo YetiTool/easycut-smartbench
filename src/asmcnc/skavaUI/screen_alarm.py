@@ -137,7 +137,7 @@ Builder.load_string("""
             Label:
                 id: possible_fault_label
                 size_hint: (None, None)
-                font_size: '14sp'
+                font_size: '12sp'
                 text: root.alarm_description
                 color: [0,0,0,1]
                 markup: True
