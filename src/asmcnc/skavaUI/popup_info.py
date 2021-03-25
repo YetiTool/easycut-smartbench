@@ -1121,23 +1121,23 @@ class PopupLimitSwitchInfo(Widget):
         label_width = popup_width - 20
 
         description = (
-          "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support." + \
+          "If the Z head is far from a limit, there may be a fault. You can contact support at https://www.yetitool.com/support." + \
           "\n\n" + \
           alarm_details
           )
 
         img = Image(source="./asmcnc/apps/warranty_app/img/registration-qr-code.png", allow_stretch=False)
-        label = Label(size_hint_y=1.8, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        label = Label(size_hint_y=1.6, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0])
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,5,150,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,5,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,5,10,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
