@@ -1127,7 +1127,7 @@ class PopupLimitSwitchInfo(Widget):
           )
 
         img = Image(source="./asmcnc/apps/warranty_app/img/registration-qr-code.png", allow_stretch=False)
-        label = Label(size_hint_y=1.6, text_size=(label_width, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,0])
+        label = Label(size_hint_y=1.6, text_size=(label_width, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -1142,7 +1142,7 @@ class PopupLimitSwitchInfo(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Information',
+        popup = Popup(title='Alarm Details',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
