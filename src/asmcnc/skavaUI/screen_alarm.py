@@ -34,6 +34,9 @@ Builder.load_string("""
 
 <AlarmScreenClass>:
 
+    alarm_description_label : alarm_description_label
+    trigger_description_label : trigger_description_label
+
     canvas:
         Color: 
             rgba: [1, 1, 1, 1]
@@ -56,6 +59,7 @@ Builder.load_string("""
             size_hint: (None, None)
             height: dp(50)
             width: dp(800)
+            orientation: 'horizontal'
             Label:
                 size_hint: (None, None)
                 font_size: '30sp'
@@ -64,7 +68,20 @@ Builder.load_string("""
                 markup: True
                 halign: 'left'
                 height: dp(50)
-                width: dp(790)
+                width: dp(85)
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Label:
+                id: trigger_description_label
+                size_hint: (None, None)
+                font_size: '20sp'
+                color: [0,0,0,1]
+                markup: True
+                halign: 'right'
+                height: dp(50)
+                width: dp(700)
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
@@ -107,6 +124,7 @@ Builder.load_string("""
                     height: dp(130)
                     width: dp(130)
             Label:
+                id: alarm_description_label
                 size_hint: (None, None)
                 font_size: '20sp'
                 text: root.alarm_description
@@ -181,10 +199,13 @@ Builder.load_string("""
 
 class AlarmScreenClass(Screen):
 
-    # define alarm description to make kivy happy
-    alarm_description = StringProperty()
+    # these variables are set externally where the alarm screen is called
     message = StringProperty()
     return_to_screen = 'home'
+
+    # this is the screen's description
+    alarm_description = StringProperty()
+
     
     def __init__(self, **kwargs):
         super(AlarmScreenClass, self).__init__(**kwargs)
@@ -196,9 +217,12 @@ class AlarmScreenClass(Screen):
         self.alarm_description = ALARM_CODES.get(self.message, "")
         self.m.set_state('Alarm')
         self.m.led_restore()
+        # self.m.reset_from_alarm()
+
+        if self.message == "ALARM:1":
+            self.get_suspected_trigger()
 
     def show_details(self):
-        self.m.reset_from_alarm()
 
         def trigger_popup():
             details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
@@ -221,4 +245,35 @@ class AlarmScreenClass(Screen):
         else: 
             self.sm.current = 'lobby'
 
+
+    def get_suspected_trigger(self):
+        if self.m.s.limit_x: 
+            self.trigger_description_label.text = (
+                "Home X limit triggered at " + \
+                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                )
+
+        if self.m.s.limit_X: 
+            self.trigger_description_label.text = (
+                "Far X limit triggered at " + \
+                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                )
+
+        if self.m.s.limit_y: 
+            self.trigger_description_label.text = (
+                "Home y limit triggered at " + \
+                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                )
+
+        if self.m.s.limit_Y: 
+            self.trigger_description_label.text = (
+                "Far Y limit triggered at " + \
+                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                )
+
+        if self.m.s.limit_Z: 
+            self.trigger_description_label.text = (
+                "Z limit triggered at " + \
+                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                )
             
