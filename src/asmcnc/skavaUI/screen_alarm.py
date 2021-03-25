@@ -219,8 +219,8 @@ class AlarmScreenClass(Screen):
         self.m.led_restore()
         self.m.reset_from_alarm()
 
-        if self.message == "ALARM:1":
-            Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
+        # if self.message == "ALARM:1":
+        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
             
 
     def show_details(self):
