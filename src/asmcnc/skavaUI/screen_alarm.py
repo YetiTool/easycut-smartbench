@@ -215,7 +215,8 @@ class AlarmScreenClass(Screen):
         self.alarm_description = ALARM_CODES.get(self.message, "")
         self.m.set_state('Alarm')
         self.m.led_restore()
-        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.6)
+        if (self.message).endswith('1'):
+            Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.6)
 
     def on_leave(self):
         self.alarm_description = ''
@@ -252,7 +253,7 @@ class AlarmScreenClass(Screen):
 
         print(self.message)
 
-        limit_code = "Triggered limit switch: "
+        limit_code = "Alarm trigger: "
 
         if self.m.s.limit_x: 
             self.trigger_description_label.text = (
@@ -289,7 +290,7 @@ class AlarmScreenClass(Screen):
                 )
             limit_code  = limit_code  + "z"
 
-        if limit_code == "Limit code: ":
+        if limit_code == "Alarm trigger: ":
             limit_code = limit_code + "Unknown"
 
         self.alarm_description_label.text = limit_code + '.\n' + self.alarm_description
