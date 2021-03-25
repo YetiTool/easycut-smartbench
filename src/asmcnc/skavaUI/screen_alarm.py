@@ -133,7 +133,7 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
-                height: dp(90)
+                height: dp(75)
                 width: dp(700)
 
             Label:
@@ -148,7 +148,7 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
-                height: dp(15)
+                height: dp(30)
                 width: dp(700)
 
         BoxLayout: 
