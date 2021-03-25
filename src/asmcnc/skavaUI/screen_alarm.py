@@ -36,7 +36,7 @@ Builder.load_string("""
 
     alarm_description_label : alarm_description_label
     trigger_description_label : trigger_description_label
-    possible_fault_label : possible_fault_label
+    # possible_fault_label : possible_fault_label
 
     canvas:
         Color: 
@@ -126,7 +126,7 @@ Builder.load_string("""
                 padding: [30,0,30,0]
                 spacing: 0
                 size_hint: (None, None)
-                height: dp(87)
+                height: dp(115)
                 width: dp(800)
                 Label:
                     id: alarm_description_label
@@ -139,18 +139,18 @@ Builder.load_string("""
                     text_size: self.size
                     size: self.parent.size
 
-            Label:
-                id: possible_fault_label
-                size_hint: (None, None)
-                font_size: '16sp'
-                text: ""
-                color: [0,0,0,1]
-                markup: True
-                halign: 'center'
-                valign: 'middle'
-                text_size: self.size
-                height: dp(18)
-                width: dp(800)
+            # Label:
+            #     id: possible_fault_label
+            #     size_hint: (None, None)
+            #     font_size: '16sp'
+            #     text: ""
+            #     color: [0,0,0,1]
+            #     markup: True
+            #     halign: 'center'
+            #     valign: 'middle'
+            #     text_size: self.size
+            #     height: dp(18)
+            #     width: dp(800)
 
         BoxLayout: 
             padding: [0,0,0,0]
@@ -244,7 +244,7 @@ class AlarmScreenClass(Screen):
 
         def trigger_popup():
             details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
-            popup_info.PopupInfo(self.sm, 600, details)
+            popup_info.PopupLimitSwitchInfo(self.sm, details)
 
         Clock.schedule_once(lambda dt: trigger_popup(), 0.45)
 
@@ -296,7 +296,7 @@ class AlarmScreenClass(Screen):
             limit_code + (', ').join(limit_list) + '. ' + self.alarm_description
             )
 
-        self.possible_fault_label.text = "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support."
+        # self.possible_fault_label.text = "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support."
 
 # If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support.
 
