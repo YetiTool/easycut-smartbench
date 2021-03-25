@@ -215,10 +215,10 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
         self.m.led_restore()
 
-        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
+        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.3)
 
         # if self.message == "ALARM:1":
-        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.6)
+        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
             
 
     def show_details(self):
@@ -263,31 +263,31 @@ class AlarmScreenClass(Screen):
         if self.m.s.limit_x: 
             self.trigger_description_label.text = (
                 "[b]Home X limit triggered at " + \
-                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_X: 
             self.trigger_description_label.text = (
                 "[b]Far X limit triggered at " + \
-                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_y: 
             self.trigger_description_label.text = (
                 "[b]Home Y limit triggered at " + \
-                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_Y: 
             self.trigger_description_label.text = (
                 "[b]Far Y limit triggered at " + \
-                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_z: 
             self.trigger_description_label.text = (
                 "[b]Z limit triggered at " + \
-                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
                 )
 
         print(self.trigger_description_label.text)
