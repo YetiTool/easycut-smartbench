@@ -1126,10 +1126,10 @@ class PopupLimitSwitchInfo(Widget):
           alarm_details
           )
 
-        img = Image(size_hint_y=1, source="./asmcnc/apps/warranty_app/img/registration-qr-code.png", allow_stretch=False)
+        img = Image(size_hint_y=1.1, source="./asmcnc/apps/warranty_app/img/registration-qr-code.png", allow_stretch=False)
         label = Label(size_hint_y=1.2, text_size=(label_width, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
         
-        ok_button = Button(size_hint_y=0.8, text='[b]Ok[/b]', markup = True)
+        ok_button = Button(size_hint_y=0.7, text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
