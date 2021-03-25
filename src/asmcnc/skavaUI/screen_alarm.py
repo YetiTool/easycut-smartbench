@@ -251,30 +251,30 @@ class AlarmScreenClass(Screen):
         if self.m.s.limit_x: 
             self.trigger_description_label.text = (
                 "Home X limit triggered at " + \
-                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
 
         if self.m.s.limit_X: 
             self.trigger_description_label.text = (
                 "Far X limit triggered at " + \
-                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
 
         if self.m.s.limit_y: 
             self.trigger_description_label.text = (
                 "Home y limit triggered at " + \
-                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
 
         if self.m.s.limit_Y: 
             self.trigger_description_label.text = (
                 "Far Y limit triggered at " + \
-                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
 
         if self.m.s.limit_z: 
             self.trigger_description_label.text = (
                 "Z limit triggered at " + \
-                self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
+                self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
             
