@@ -111,7 +111,7 @@ Builder.load_string("""
                 padding: [335,0,30,0]
                 size_hint: (None, None)
                 height: dp(130)
-                width: dp(740)       
+                width: dp(800)       
                 Image:
                     id: alarm_icon
                     source: "./asmcnc/skavaUI/img/alarm_icon.png"
@@ -127,7 +127,7 @@ Builder.load_string("""
                 spacing: 0
                 size_hint: (None, None)
                 height: dp(85)
-                width: dp(700)
+                width: dp(800)
                 Label:
                     id: alarm_description_label
                     font_size: '20sp'
@@ -150,7 +150,7 @@ Builder.load_string("""
                 valign: 'middle'
                 text_size: self.size
                 height: dp(20)
-                width: dp(700)
+                width: dp(800)
 
         BoxLayout: 
             padding: [0,0,0,0]
