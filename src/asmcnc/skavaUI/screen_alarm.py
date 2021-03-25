@@ -271,7 +271,7 @@ class AlarmScreenClass(Screen):
         if self.m.s.limit_z: 
             limit_list.append('Z top')
 
-        if self.limit_list == []:
+        if limit_list == []:
             limit_list.append('Unknown')
 
         self.alarm_description_label.text = (
