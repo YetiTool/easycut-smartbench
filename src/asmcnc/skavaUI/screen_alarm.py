@@ -217,10 +217,11 @@ class AlarmScreenClass(Screen):
         self.alarm_description = ALARM_CODES.get(self.message, "")
         self.m.set_state('Alarm')
         self.m.led_restore()
-        # self.m.reset_from_alarm()
+        self.m.reset_from_alarm()
 
         if self.message == "ALARM:1":
-            self.get_suspected_trigger()
+            Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
+            
 
     def show_details(self):
 
