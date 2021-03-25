@@ -17,7 +17,7 @@ import sys, os
 
 ALARM_CODES = {
 
-    "ALARM:1" : "End-of-axis limit switch triggered during a move. The machine's position was likely lost. Re-homing is highly recommended.",
+    "ALARM:1" : "The machine's position was likely lost. Re-homing is highly recommended.",
     "ALARM:2" : "The requested motion target exceeds the machine's travel.",
     "ALARM:3" : "Machine was reset while in motion and cannot guarantee position. Lost steps are likely. Re-homing is recommended.",
     "ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
@@ -293,7 +293,7 @@ class AlarmScreenClass(Screen):
             limit_list.append('Unknown')
 
         self.alarm_description_label.text = (
-            limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description
+            limit_code + (', ').join(limit_list) + '. ' + self.alarm_description
             )
 
         self.possible_fault_label.text = "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support."
