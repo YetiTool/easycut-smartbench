@@ -242,6 +242,8 @@ class AlarmScreenClass(Screen):
 
     def show_details(self):
 
+        # will still want other popup for non alarm 1 situations
+
         def trigger_popup():
             details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
             popup_info.PopupLimitSwitchInfo(self.sm, details)

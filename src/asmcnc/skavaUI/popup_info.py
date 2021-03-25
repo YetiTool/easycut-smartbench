@@ -1117,12 +1117,12 @@ class PopupLimitSwitchInfo(Widget):
     def __init__(self, screen_manager, alarm_details):
         
         self.sm = screen_manager
-        popup_width = 700
+        popup_width = 720
         label_width = popup_width - 40
 
         description = (
           "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support." + \
-          "\n" + \
+          "\n\n" + \
           alarm_details
           )
 
@@ -1137,7 +1137,7 @@ class PopupLimitSwitchInfo(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[10,5,10,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
@@ -1148,7 +1148,7 @@ class PopupLimitSwitchInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(popup_width, 400),
+                      size=(popup_width, 420),
                       auto_dismiss= False
                       )
 
