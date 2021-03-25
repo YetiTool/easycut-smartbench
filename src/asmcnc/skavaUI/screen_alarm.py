@@ -246,7 +246,11 @@ class AlarmScreenClass(Screen):
 
         def trigger_popup():
             details = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer)
-            popup_info.PopupLimitSwitchInfo(self.sm, details)
+
+            if (self.message).endswith('1'):
+                popup_info.PopupLimitSwitchInfo(self.sm, details)
+            else:
+                popup_info.PopupInfo(self.sm, 600, details)
 
         Clock.schedule_once(lambda dt: trigger_popup(), 0.45)
 
