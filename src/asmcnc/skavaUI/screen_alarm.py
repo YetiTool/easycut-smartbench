@@ -106,6 +106,7 @@ Builder.load_string("""
             height: dp(295)
             width: dp(800)
             orientation: 'vertical'
+
             BoxLayout: 
                 padding: [305,0,0,0]
                 size_hint: (None, None)
@@ -131,7 +132,7 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
-                height: dp(80)
+                height: dp(100)
                 width: dp(700)
 
             Label:
@@ -144,7 +145,7 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
-                height: dp(35)
+                height: dp(15)
                 width: dp(700)
 
         BoxLayout: 
