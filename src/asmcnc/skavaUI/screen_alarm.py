@@ -250,6 +250,8 @@ class AlarmScreenClass(Screen):
         # End-of-axis limit switch triggered during a move. The machine's position was likely lost. Re-homing is highly recommended. 
         # Limit code: xXyYz 
 
+        print(self.message)
+
         limit_code = "Triggered limit switch: "
 
         if self.m.s.limit_x: 
@@ -287,7 +289,7 @@ class AlarmScreenClass(Screen):
                 )
             limit_code  = limit_code  + "z"
 
-        if limit_code == "Limit code: " and self.message == "ALARM:1":
+        if limit_code == "Limit code: ":
             limit_code = limit_code + "Unknown"
 
         self.alarm_description_label.text = limit_code + '.\n' + self.alarm_description
