@@ -75,10 +75,10 @@ Builder.load_string("""
             Label:
                 id: trigger_description_label
                 size_hint: (None, None)
-                font_size: '24sp'
+                font_size: '20sp'
                 color: [0,0,0,1]
                 markup: True
-                halign: 'left'
+                halign: 'right'
                 height: dp(50)
                 width: dp(600)
                 text_size: self.size
