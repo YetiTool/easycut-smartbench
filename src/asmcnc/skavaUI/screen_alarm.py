@@ -122,19 +122,22 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(130)
                     width: dp(130)
-            Label:
-                id: alarm_description_label
+            BoxLayout: 
                 padding: [30,0,30,0]
+                spacing: 0
                 size_hint: (None, None)
-                font_size: '20sp'
-                text: root.alarm_description
-                color: [0,0,0,1]
-                markup: True
-                halign: 'center'
-                valign: 'middle'
-                text_size: self.size
                 height: dp(85)
                 width: dp(700)
+                Label:
+                    id: alarm_description_label
+                    font_size: '20sp'
+                    text: root.alarm_description
+                    color: [0,0,0,1]
+                    markup: True
+                    halign: 'center'
+                    valign: 'middle'
+                    text_size: self.size
+                    size: self.parent.size
 
             Label:
                 id: possible_fault_label
