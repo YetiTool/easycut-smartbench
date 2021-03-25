@@ -238,7 +238,7 @@ class AlarmScreenClass(Screen):
     def on_leave(self):
         self.alarm_description = ''
         self.trigger_description_label.text = ''
-        self.possible_fault_label.text = ""
+        # self.possible_fault_label.text = ""
 
     def show_details(self):
 
