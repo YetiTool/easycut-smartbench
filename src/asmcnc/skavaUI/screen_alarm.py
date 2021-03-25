@@ -250,15 +250,15 @@ class AlarmScreenClass(Screen):
     def get_suspected_trigger(self):
 
         print("limit x")
-        print(self.m.limit_x)
+        print(self.m.s.limit_x)
         print("limit X")
-        print(self.m.limit_X)
+        print(self.m.s.limit_X)
         print("limit y")
-        print(self.m.limit_y)
+        print(self.m.s.limit_y)
         print("limit Y")
-        print(self.m.limit_Y)
+        print(self.m.s.limit_Y)
         print("limit z")
-        print(self.m.limit_z)
+        print(self.m.s.limit_z)
 
 
 
