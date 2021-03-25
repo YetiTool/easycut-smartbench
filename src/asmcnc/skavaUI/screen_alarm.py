@@ -292,6 +292,10 @@ class AlarmScreenClass(Screen):
 
         if limit_code == "Alarm trigger: ":
             limit_code = limit_code + "Unknown"
+            self.trigger_description_label.text = (
+                "[b]Unknown limit triggered at " + \
+                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
+                )
 
         self.alarm_description_label.text = limit_code + '.\n' + self.alarm_description
 
