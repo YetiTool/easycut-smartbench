@@ -1137,7 +1137,7 @@ class PopupLimitSwitchInfo(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=15, padding=[10,5,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=20, padding=[10,5,10,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
