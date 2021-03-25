@@ -210,15 +210,12 @@ class AlarmScreenClass(Screen):
         self.m=kwargs['machine']
     
     def on_enter(self):
-        
+
+        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)        
         self.alarm_description = ALARM_CODES.get(self.message, "")
         self.m.set_state('Alarm')
         self.m.led_restore()
-
-        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.3)
-
-        # if self.message == "ALARM:1":
-        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
+        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.6)
 
     def on_leave(self):
         self.alarm_description = ''
