@@ -131,7 +131,7 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
-                height: dp(85)
+                height: dp(80)
                 width: dp(700)
 
             Label:
@@ -144,7 +144,7 @@ Builder.load_string("""
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
-                height: dp(30)
+                height: dp(35)
                 width: dp(700)
 
         BoxLayout: 
