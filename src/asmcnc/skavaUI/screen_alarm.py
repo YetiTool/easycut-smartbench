@@ -36,6 +36,7 @@ Builder.load_string("""
 
     alarm_description_label : alarm_description_label
     trigger_description_label : trigger_description_label
+    possible_fault_label : possible_fault_label
 
     canvas:
         Color: 
@@ -132,7 +133,22 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
-                height: dp(105)
+                height: dp(90)
+                width: dp(700)
+
+            Label:
+                id: possible_fault_label
+                size_hint: (None, None)
+                font_size: '14sp'
+                text: root.alarm_description
+                color: [0,0,0,1]
+                markup: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                height: dp(15)
                 width: dp(700)
 
         BoxLayout: 
@@ -275,9 +291,10 @@ class AlarmScreenClass(Screen):
             limit_list.append('Unknown')
 
         self.alarm_description_label.text = (
-            limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description +  '\n' + \
-            "If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support."
+            limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description
             )
+
+        self.possible_fault_label.text = "If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support."
 
 # If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support.
 
