@@ -271,7 +271,7 @@ class AlarmScreenClass(Screen):
                 self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
                 )
 
-        if self.m.s.limit_Z: 
+        if self.m.s.limit_z: 
             self.trigger_description_label.text = (
                 "Z limit triggered at " + \
                 self.m.x_pos_str + ', ' + self.m.y_pos_str + ', ' + self.m.z_pos_str
