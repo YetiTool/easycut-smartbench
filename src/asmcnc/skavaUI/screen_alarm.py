@@ -71,8 +71,8 @@ Builder.load_string("""
                 height: dp(50)
                 width: dp(85)
                 text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
+                # size: self.parent.size
+                # pos: self.parent.pos
 
             Label:
                 id: trigger_description_label
@@ -85,8 +85,9 @@ Builder.load_string("""
                 width: dp(600)
                 text: "124376"
                 text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
+                # size: self.parent.size
+                # pos: self.parent.pos
+                # background_color: [0,0,0,1]
 
         BoxLayout: 
             padding: [10,0,10,0]
