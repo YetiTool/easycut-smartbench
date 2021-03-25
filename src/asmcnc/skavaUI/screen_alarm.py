@@ -248,6 +248,20 @@ class AlarmScreenClass(Screen):
 
 
     def get_suspected_trigger(self):
+
+        print("limit x")
+        print(self.m.limit_x)
+        print("limit X")
+        print(self.m.limit_X)
+        print("limit y")
+        print(self.m.limit_y)
+        print("limit Y")
+        print(self.m.limit_Y)
+        print("limit z")
+        print(self.m.limit_z)
+
+
+
         if self.m.s.limit_x: 
             self.trigger_description_label.text = (
                 "Home X limit triggered at " + \
