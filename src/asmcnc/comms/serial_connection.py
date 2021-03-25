@@ -671,6 +671,8 @@ class SerialConnection(object):
                     
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
+
+                    
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):

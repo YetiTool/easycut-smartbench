@@ -79,7 +79,7 @@ Builder.load_string("""
                 font_size: '10sp'
                 color: [0,0,0,1]
                 markup: True
-                halign: 'right'
+                halign: 'left'
                 height: dp(50)
                 width: dp(700)
                 text_size: self.size
@@ -217,6 +217,9 @@ class AlarmScreenClass(Screen):
         self.alarm_description = ALARM_CODES.get(self.message, "")
         self.m.set_state('Alarm')
         self.m.led_restore()
+
+        self.trigger_description_label.text = "yo"
+
         Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1)
 
         # if self.message == "ALARM:1":
