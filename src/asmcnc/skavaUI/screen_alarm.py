@@ -248,56 +248,30 @@ class AlarmScreenClass(Screen):
 
     def get_suspected_trigger(self):
 
-        # End-of-axis limit switch triggered during a move. The machine's position was likely lost. Re-homing is highly recommended. 
-        # Limit code: xXyYz 
+        self.trigger_description_label.text = (
+            "[b]Limit triggered at " + \
+            'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
+            )
 
-        print(self.message)
+        limit_code = "Unexpected limit reached: "
+        limit_list = []
 
-        limit_code = "Alarm trigger: "
-
-        if self.m.s.limit_x: 
-            self.trigger_description_label.text = (
-                "[b]Home X limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-            limit_code  = limit_code  + "x"
+        if self.m.s.limit_x:
+            limit_list.append('X home')
 
         if self.m.s.limit_X: 
-            self.trigger_description_label.text = (
-                "[b]Far X limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-            limit_code  = limit_code  + "X"
+            limit_list.append('X far')
 
         if self.m.s.limit_y: 
-            self.trigger_description_label.text = (
-                "[b]Home Y limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-            limit_code  = limit_code  + "y"
+            limit_list.append('Y home')
 
         if self.m.s.limit_Y: 
-            self.trigger_description_label.text = (
-                "[b]Far Y limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-            limit_code  = limit_code  + "Y"
+            limit_list.append('Y far')
 
         if self.m.s.limit_z: 
-            self.trigger_description_label.text = (
-                "[b]Z limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-            limit_code  = limit_code  + "z"
+            limit_list.append('Z top')
 
-        if limit_code == "Alarm trigger: ":
-            limit_code = limit_code + "Unknown"
-            self.trigger_description_label.text = (
-                "[b]Unknown limit triggered at " + \
-                'X: ' + self.m.x_pos_str() + ', Y: ' + self.m.y_pos_str() + ', Z: ' + self.m.z_pos_str() + '[/b]'
-                )
-
-        self.alarm_description_label.text = limit_code + '.\n' + self.alarm_description
+        self.alarm_description_label.text = limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description
 
 
 
