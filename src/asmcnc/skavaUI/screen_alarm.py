@@ -292,5 +292,5 @@ class AlarmScreenClass(Screen):
                 self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str()
                 )
 
-            print(self.trigger_description_label.text)
+        print(self.trigger_description_label.text)
             
