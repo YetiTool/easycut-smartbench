@@ -137,7 +137,7 @@ Builder.load_string("""
             Label:
                 id: possible_fault_label
                 size_hint: (None, None)
-                font_size: '12sp'
+                font_size: '14sp'
                 text: root.alarm_description
                 color: [0,0,0,1]
                 markup: True
@@ -290,7 +290,7 @@ class AlarmScreenClass(Screen):
             limit_code + (', ').join(limit_list) + '.\n' + self.alarm_description
             )
 
-        self.possible_fault_label.text = "If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support."
+        self.possible_fault_label.text = "If the Z head is far from a limit, there may be a fault. Contact us at https://www.yetitool.com/support."
 
 # If the machine is far from the triggered limit, it may indicate a fault. Contact us at https://www.yetitool.com/support.
 
