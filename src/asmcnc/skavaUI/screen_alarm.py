@@ -100,7 +100,7 @@ Builder.load_string("""
         
         # Alarm image and text
         BoxLayout: 
-            padding: [30,30,30,0]
+            padding: [0,30,0,0]
             spacing: 15
             size_hint: (None, None)
             height: dp(295)
@@ -108,7 +108,7 @@ Builder.load_string("""
             orientation: 'vertical'
 
             BoxLayout: 
-                padding: [305,0,0,0]
+                padding: [335,0,30,0]
                 size_hint: (None, None)
                 height: dp(130)
                 width: dp(740)       
@@ -124,6 +124,7 @@ Builder.load_string("""
                     width: dp(130)
             Label:
                 id: alarm_description_label
+                padding: [30,0,30,0]
                 size_hint: (None, None)
                 font_size: '20sp'
                 text: root.alarm_description
