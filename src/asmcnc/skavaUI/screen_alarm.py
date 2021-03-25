@@ -78,7 +78,7 @@ Builder.load_string("""
                 font_size: '24sp'
                 color: [0,0,0,1]
                 markup: True
-                halign: 'right'
+                halign: 'left'
                 height: dp(50)
                 width: dp(600)
                 text_size: self.size
@@ -215,10 +215,10 @@ class AlarmScreenClass(Screen):
         self.m.set_state('Alarm')
         self.m.led_restore()
 
-        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1)
+        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
 
         # if self.message == "ALARM:1":
-        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1.2)
+        Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.6)
             
 
     def show_details(self):
@@ -268,25 +268,25 @@ class AlarmScreenClass(Screen):
 
         if self.m.s.limit_X: 
             self.trigger_description_label.text = (
-                "Far X limit triggered at " + \
+                "[b]Far X limit triggered at " + \
                 self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_y: 
             self.trigger_description_label.text = (
-                "Home y limit triggered at " + \
+                "[b]Home Y limit triggered at " + \
                 self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_Y: 
             self.trigger_description_label.text = (
-                "Far Y limit triggered at " + \
+                "[b]Far Y limit triggered at " + \
                 self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
                 )
 
         if self.m.s.limit_z: 
             self.trigger_description_label.text = (
-                "Z limit triggered at " + \
+                "[b]Z limit triggered at " + \
                 self.m.x_pos_str() + ', ' + self.m.y_pos_str() + ', ' + self.m.z_pos_str() + '[/b]'
                 )
 
