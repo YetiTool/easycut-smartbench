@@ -60,6 +60,7 @@ Builder.load_string("""
             height: dp(50)
             width: dp(800)
             orientation: 'horizontal'
+
             Label:
                 size_hint: (None, None)
                 font_size: '30sp'
@@ -76,12 +77,13 @@ Builder.load_string("""
             Label:
                 id: trigger_description_label
                 size_hint: (None, None)
-                font_size: '10sp'
+                font_size: '20sp'
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
                 height: dp(50)
-                width: dp(700)
+                width: dp(600)
+                text: "124376"
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
