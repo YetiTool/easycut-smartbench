@@ -219,7 +219,10 @@ class AlarmScreenClass(Screen):
 
         # if self.message == "ALARM:1":
         Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 0.4)
-            
+
+    def on_leave(self):
+        self.alarm_description = ''
+        self.trigger_description_label.text = ''
 
     def show_details(self):
 
