@@ -196,13 +196,13 @@ class SpindleSaveWidget(Widget):
 
         if voltage == '110': # localize me!
             spindle_voltage_info = (
-                    self.l.get_str("When using a 110V spindle as part of your SmartBench, please be aware of the following:")
+                    self.l.get_str("When using a 110V spindle as part of your SmartBench, please be aware of the following:") + \
                     "\n\n" + \
-                    self.l.get_str("110V spindles have a minimum speed of ~10,000 RPM.")
+                    self.l.get_str("110V spindles have a minimum speed of ~10,000 RPM.") + \
                     "\n\n" + \
-                    self.l.get_str("SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure the machine code we send is adjusted to control a 110V spindle.")
+                    self.l.get_str("SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure the machine code we send is adjusted to control a 110V spindle.") + \
                     "\n\n" + \
-                    self.l.get_str("The 5% spindle speed adjustments in the Job Screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%.")
+                    self.l.get_str("The 5% spindle speed adjustments in the Job Screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%.") + \
                     " " + \
                     self.l.get_str("You will still be able to use the real time spindle speed feedback feature to assist your adjustment.")
                 )
