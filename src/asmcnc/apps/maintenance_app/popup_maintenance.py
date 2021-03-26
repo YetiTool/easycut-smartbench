@@ -13,11 +13,20 @@ from kivy.uix.image import Image
 
 class PopupResetOffset(Widget):
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.sm = screen_manager
+        self.l = localization
         
-        description = "You are resetting the laser datum offset.\n\nPlease confirm that this is where you have made a reference mark with the spindle."
+        description = (
+                self.l.get_str("You are resetting the laser datum offset.") + \
+                "\n\n" + \
+                self.l.get_str("Please confirm that this is where you have made a reference mark with the spindle.")
+            )
+
+        reset_laser_datum_offset_string = self.l.get_str('Reset laser datum offset')
+        yes_string = self.l.get_bold("Yes, set reference")
+        no_string = self.l.get_bold("No, go back")
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
@@ -25,10 +34,10 @@ class PopupResetOffset(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text='[b]Yes, set reference[/b]', markup = True)
+        ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No, go back[/b]', markup = True)
+        back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -43,7 +52,7 @@ class PopupResetOffset(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='Reset laser datum offset',
+        popup = Popup(title=reset_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -65,11 +74,20 @@ class PopupResetOffset(Widget):
 
 class PopupSaveOffset(Widget):
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.sm = screen_manager
+        self.l = localization
         
-        description = "You are saving the laser datum offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your refernce mark."
+        description = (
+                self.l.get_str("You are saving the laser datum offset.") + \
+                "\n\n" + \
+                self.l.get_str("Please confirm that the laser crosshair lines up with the centre of your refernce mark.")
+            )
+
+        save_laser_datum_offset_string = self.l.get_str('Save laser datum offset')
+        yes_string = self.l.get_bold("Yes, set offset")
+        no_string = self.l.get_bold("No, go back")
 
         def save_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
@@ -77,10 +95,10 @@ class PopupSaveOffset(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text='[b]Yes, set offset[/b]', markup = True)
+        ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No, go back[/b]', markup = True)
+        back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -95,7 +113,7 @@ class PopupSaveOffset(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='Save laser datum offset',
+        popup = Popup(title=save_laser_datum_offset_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

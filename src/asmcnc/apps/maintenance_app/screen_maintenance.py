@@ -602,18 +602,3 @@ class MaintenanceScreenClass(Screen):
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
-
-    def update_font_size(self, value):
-        if len(value.text) < 19:
-            value.font_size = 22
-        elif len(value.text) > 18: 
-            value.font_size = 20
-        if len(value.text) > 21: 
-            value.font_size = 18
-        if len(value.text) > 23: 
-            value.font_size = 16
-        if len(value.text) > 25:
-            value.font_size = 14
-
-        print(len(value.text))
-        print(value.font_size)

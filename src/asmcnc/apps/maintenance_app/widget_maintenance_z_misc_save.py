@@ -79,7 +79,7 @@ class ZMiscSaveWidget(Widget):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
-    def get_info(self): # Rewrite me!
+    def get_info(self): # Localize me!
 
         z_misc_settings_info = (
         "[b]Touchplate offset[/b]\n" + \
@@ -98,11 +98,17 @@ class ZMiscSaveWidget(Widget):
     def save(self):
 
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
-            popup_info.PopupMiniInfo(self.sm, self.l, "Settings saved!")
+
+            saved_success = self.l.get_str("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
         
         else:
-            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-            " please contact the YetiTool support team."
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                )
+
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def save_touchplate_offset(self):
@@ -110,8 +116,12 @@ class ZMiscSaveWidget(Widget):
         try: 
             touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset_widget.touchplate_offset.text)
             if (touchplate_offset < 1) or (touchplate_offset > 2):
-                warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
-                " please contact the YetiTool support team."
+
+                warning_message = (
+                        self.l.get_str("Your touchplate offset should be inbetween 1 and 2 mm.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                    )
                 popup_info.PopupError(self.sm, self.l, warning_message)
                 return False
             else:

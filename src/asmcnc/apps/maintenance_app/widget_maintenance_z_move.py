@@ -170,7 +170,7 @@ class MaintenanceZMove(Widget):
         if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free': self.m.quit_jog()
         elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job': self.m.quit_jog()
 
-    def get_info(self):
+    def get_info(self): # localize me!
         info = "[b]To set, if laser hardware is fitted:[/b]\n\n" + \
                 "1. Enable laser datum (switch to [b]on[/b]).\n\n" + \
                 "2. On a test piece, cut a mark using manual moves.\n\n" + \

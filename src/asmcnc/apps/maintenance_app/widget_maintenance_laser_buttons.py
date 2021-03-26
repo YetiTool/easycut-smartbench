@@ -146,14 +146,20 @@ class LaserDatumButtons(Widget):
         self.l=kwargs['localization']
 
     def reset_button_press(self):
-        popup_maintenance.PopupResetOffset(self.sm)
+        popup_maintenance.PopupResetOffset(self.sm, self.l) # localize us :)
 
     def save_button_press(self):
         if self.m.is_laser_enabled == True:
-            popup_maintenance.PopupSaveOffset(self.sm)
+            popup_maintenance.PopupSaveOffset(self.sm, self.l)  # localize us :)
+
         else:
-            warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
-            ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
+            warning_message = (
+                    self.l.get_str("Could not save laser datum offset!") + \
+                    "\n\n" + \
+                    self.l.get_str("You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help).").replace('(i)', '[b](i)[/b]') + \
+                    "\n\n" + \
+                    self.l.get_str("Please enable laser to set offset.")
+                )
             popup_info.PopupError(self.sm, self.l, warning_message)
 
     def reset_laser_offset(self):
@@ -166,10 +172,18 @@ class LaserDatumButtons(Widget):
         self.m.laser_offset_y_value = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.mpos_y()
 
         if self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value):
-            popup_info.PopupMiniInfo(self.sm, self.l, "Settings saved!")
+
+            saved_success = self.l.get_str("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+
         else:
-            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-            " please contact the YetiTool support team."
+
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                )
+
             popup_info.PopupError(self.sm, self.l, warning_message)
         
     def set_vacuum(self):
