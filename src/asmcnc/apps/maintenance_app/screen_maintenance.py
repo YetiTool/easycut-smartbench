@@ -585,7 +585,7 @@ class MaintenanceScreenClass(Screen):
             self.landing_tab = self.tab_panel.current
 
         self.update_strings()
-        self.update_font_size(self.laser_datum_label)
+
 
     def on_pre_leave(self):
 
