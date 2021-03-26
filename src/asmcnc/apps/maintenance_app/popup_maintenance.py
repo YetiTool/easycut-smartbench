@@ -82,7 +82,7 @@ class PopupSaveOffset(Widget):
         description = (
                 self.l.get_str("You are saving the laser datum offset.") + \
                 "\n\n" + \
-                self.l.get_str("Please confirm that the laser crosshair lines up with the centre of your refernce mark.")
+                self.l.get_str("Please confirm that the laser crosshair lines up with the centre of your reference mark.")
             )
 
         save_laser_datum_offset_string = self.l.get_str('Save laser datum offset')
