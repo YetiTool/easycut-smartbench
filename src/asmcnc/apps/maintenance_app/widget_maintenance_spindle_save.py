@@ -207,7 +207,7 @@ class SpindleSaveWidget(Widget):
                     self.l.get_str("You will still be able to use the real time spindle speed feedback feature to assist your adjustment.")
                 )
             
-            popup_info.PopupInfo(self.sm, self.l, 700, spindle_voltage_info)
+            popup_info.PopupInfo(self.sm, self.l, 780, spindle_voltage_info)
 
         # brands = ['YETI digital 230V', 'YETI digital 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
 
