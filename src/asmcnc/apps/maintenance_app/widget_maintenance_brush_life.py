@@ -162,7 +162,7 @@ class BrushLifeWidget(Widget):
         if len(value.text) < 18:
             value.font_size = 24
         if len(value.text) > 17:
-            value.font_size = 22
+            value.font_size = 20
 
 
 
