@@ -118,7 +118,7 @@ Builder.load_string("""
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-                                font_size: dp(34)
+                                font_size: dp(26)
                                 markup: True
                                 halign: "center"
                                 valign: "middle"
@@ -534,7 +534,6 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_container.add_widget(self.z_lubrication_reminder_widget)
 
         self.update_strings()
-        self.update_font_size(self.laser_datum_label)
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
