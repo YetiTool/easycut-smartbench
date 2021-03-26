@@ -32,7 +32,7 @@ class PopupResetOffset(Widget):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
@@ -58,7 +58,7 @@ class PopupResetOffset(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(400, 360),
+                      size=(500, 360),
                       auto_dismiss= False
                       )
         
@@ -93,7 +93,7 @@ class PopupSaveOffset(Widget):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
@@ -119,7 +119,7 @@ class PopupSaveOffset(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(400, 360),
+                      size=(500, 360),
                       auto_dismiss= False
                       )
         

@@ -146,11 +146,11 @@ class LaserDatumButtons(Widget):
         self.l=kwargs['localization']
 
     def reset_button_press(self):
-        popup_maintenance.PopupResetOffset(self.sm, self.l) # localize us :)
+        popup_maintenance.PopupResetOffset(self.sm, self.l)
 
     def save_button_press(self):
         if self.m.is_laser_enabled == True:
-            popup_maintenance.PopupSaveOffset(self.sm, self.l)  # localize us :)
+            popup_maintenance.PopupSaveOffset(self.sm, self.l)
 
         else:
             warning_message = (
