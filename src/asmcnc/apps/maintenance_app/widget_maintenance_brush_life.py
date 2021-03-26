@@ -146,6 +146,7 @@ class BrushLifeWidget(Widget):
         self.l=kwargs['localization']
 
         self.update_strings()
+        self.update_font_size(self.brush_reminder_label)
 
     def restore(self):
         self.brush_life.text = str(int(self.m.spindle_brush_lifetime_seconds/3600))
@@ -157,8 +158,11 @@ class BrushLifeWidget(Widget):
         self.brush_reminder_label.text = self.l.get_bold("BRUSH REMINDER")
         self.hours_label.text = self.l.get_str("hours")
 
-
-
+    def update_font_size(self, value):
+        if len(value.text) < 18:
+            value.font_size = 24
+        if len(value.text) > 17:
+            value.font_size = 22
 
 
 
