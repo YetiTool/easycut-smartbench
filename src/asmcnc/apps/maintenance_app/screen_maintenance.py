@@ -118,7 +118,7 @@ Builder.load_string("""
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-                                font_size: dp(22)
+                                font_size: dp(26)
                                 markup: True
                                 halign: "center"
                                 valign: "middle"
@@ -600,7 +600,7 @@ class MaintenanceScreenClass(Screen):
 
     def update_strings(self):
 
-        self.laser_datum_label.text = self.l.get_bold("LASER DATUM")
+        self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
 
