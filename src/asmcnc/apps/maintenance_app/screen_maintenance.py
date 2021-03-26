@@ -118,7 +118,7 @@ Builder.load_string("""
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-                                font_size: dp(30)
+                                font_size: dp(34)
                                 markup: True
                                 halign: "center"
                                 valign: "middle"
