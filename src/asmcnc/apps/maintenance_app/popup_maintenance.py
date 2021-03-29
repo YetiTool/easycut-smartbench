@@ -166,9 +166,9 @@ class PopupBrushInfo(Widget):
         # description_examples_tolerances = '[b]        (+/-0.2mm)      (+/-0.2mm)         (+/-0.2mm)[/b]         '
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label_top = Label(size_hint_y=2.1, text_size=(456, self.height), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
+        label_top = Label(size_hint_y=2, text_size=(456, self.height), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
         label_blank = Label(size_hint_y=0.01, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=456)
-        label_bottom = Label(size_hint_y=1.5, text_size=(740, self.height), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=740)
+        label_bottom = Label(size_hint_y=2, text_size=(740, self.height), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=740)
         # examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
         # examples_label_bottom = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
         # examples_label_tolerances = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_tolerances, color=[0,0,0,1], padding=[0,0])
@@ -231,7 +231,7 @@ class PopupBrushInfo(Widget):
         print(float(examples_layout.width))
         print(float(label_cheat.width))
 
-        btn_layout = BoxLayout(orientation='horizontal', padding=[150,10,150,0], size_hint_y = 0.8)
+        btn_layout = BoxLayout(orientation='horizontal', padding=[150,10,150,0], size_hint_y = 1)
         btn_layout.add_widget(ok_button)
 
         use_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.2, size_hint_x = None, width=740)
@@ -241,7 +241,7 @@ class PopupBrushInfo(Widget):
         print(float(use_layout.width))
 
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[20,10,20,10], width=780)
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[20,0,20,0], width=780)
         layout_plan.add_widget(img)
         layout_plan.add_widget(use_layout)
         layout_plan.add_widget(label_bottom)
