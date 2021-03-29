@@ -81,15 +81,25 @@ class SpindleSaveWidget(Widget):
 
     def get_info(self):
 
-        # localize me!
-
-        spindle_settings_info = "[b]Spindle cooldown[/b]\nThe spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
-        "We recommend the following cooldown settings:\n\n" + \
-        "       Yeti: 20,000 RPM; 10 seconds\n" + \
-        "       AMB: 10,000 RPM; 30 seconds\n\n" + \
-        "[b]Spindle brand[/b]\n" + \
-        "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
-        "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle."
+        spindle_settings_info = (
+                self.l.get_bold("Spindle cooldown")
+                "\n"
+                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
+                " " + \
+                self.l.get_str("We recommend the following cooldown settings:")
+                "\n\n" + \
+                "       "
+                self.l.get_str("Yeti: 20,000 RPM; 10 seconds")
+                "\n" + \
+                "       "
+                self.l.get_str("AMB: 10,000 RPM; 30 seconds")
+                "\n\n" + \
+                self.l.get_bold("Spindle brand")
+                "\n" + \
+                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
+                " " + \
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.")
+            )
 
         popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
 
