@@ -148,9 +148,9 @@ class PopupBrushInfo(Widget):
         # do this as a grid layout instead
         description_top = (
             self.l.get_bold("Brush use:") + "\n" + \
-            "   " + self.l.get_bold("Value:") + " " + self.l.get_str("The running hours of the brushes.") + "\n" + \
-            "   " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return to the hours previously logged.") + "\n" + \
-            "   " + self.l.get_bold("Reset:") + " " + self.l.get_str("Set the running hours to zero.")
+            "  " + self.l.get_bold("Value:") + " " + self.l.get_str("The running hours of the brushes.") + "\n" + \
+            "  " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return to the hours previously logged.") + "\n" + \
+            "  " + self.l.get_bold("Reset:") + " " + self.l.get_str("Set the running hours to zero.")
             )
         
 
@@ -163,11 +163,11 @@ class PopupBrushInfo(Widget):
 
         description_bottom = (
                 self.l.get_bold("Brush reminder:") + "\n" + \
-                "   " + self.l.get_bold("Value:") + " " + self.l.get_str("Set to the hours the brushes are expected to last.") + "\n" + \
-                "   " + self.l.get_str("This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500 hours).") + "\n" + \
-                "   " + self.l.get_str("It is best to set to worst case, inspect the brushes, and update as necessary.") + "\n" + \
-                "   " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return the brush reminder to the hours previously set.") + "\n" + \
-                "   " + self.l.get_bold("Reset:") + " " + self.l.get_str("Sets the brush reminder to 120 hours.")
+                "  " + self.l.get_bold("Value:") + " " + self.l.get_str("Set to the hours the brushes are expected to last.") + "\n" + \
+                "  " + self.l.get_str("This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500 hours).") + "\n" + \
+                "  " + self.l.get_str("It is best to set to worst case, inspect the brushes, and update as necessary.") + "\n" + \
+                "  " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return the brush reminder to the hours previously set.") + "\n" + \
+                "  " + self.l.get_bold("Reset:") + " " + self.l.get_str("Sets the brush reminder to 120 hours.")
             )
 
         
