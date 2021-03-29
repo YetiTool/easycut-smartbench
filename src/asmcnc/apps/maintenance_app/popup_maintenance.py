@@ -159,14 +159,14 @@ class PopupBrushInfo(Widget):
         "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
         " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
         "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
-        "   [b]Reset:[/b] Sets to the brush reminder to 120 hours.\n"
+        "   [b]Reset:[/b] Sets to the brush reminder to 120 hours."
 
         # description_examples_top = '[b]     NEW                    LOW                  SHUT-OFF[/b]'
         # description_examples_bottom = '[b]16mm               10mm                  9.5mm[/b]         '
         # description_examples_tolerances = '[b]        (+/-0.2mm)      (+/-0.2mm)         (+/-0.2mm)[/b]         '
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label_top = Label(size_hint_y=1.6, text_size=(456, self.height), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
+        label_top = Label(size_hint_y=1.1, text_size=(456, self.height), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
         label_blank = Label(size_hint_y=0.01, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=456)
         label_bottom = Label(text_size=(740, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=740)
         # examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
@@ -240,7 +240,7 @@ class PopupBrushInfo(Widget):
 
         print(float(use_layout.width))
 
-        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 4, size_hint_x = None, width=740)
+        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 3, size_hint_x = None, width=740)
         reminder_layout.add_widget(label_bottom)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[20,0,20,0], width=780)
