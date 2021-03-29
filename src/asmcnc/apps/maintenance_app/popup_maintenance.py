@@ -231,7 +231,7 @@ class PopupBrushInfo(Widget):
         print(float(examples_layout.width))
         print(float(label_cheat.width))
 
-        btn_layout = BoxLayout(orientation='horizontal', padding=[150,0,150,0], size_hint_y = 0.8)
+        btn_layout = BoxLayout(orientation='horizontal', padding=[150,0,150,0], size_hint_y = 0.9)
         btn_layout.add_widget(ok_button)
 
         use_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2, size_hint_x = None, width=740)
@@ -240,7 +240,7 @@ class PopupBrushInfo(Widget):
 
         print(float(use_layout.width))
 
-        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.4, size_hint_x = None, width=740)
+        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.1, size_hint_x = None, width=740)
         reminder_layout.add_widget(label_bottom)
 
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[20,0,20,0], width=780)
