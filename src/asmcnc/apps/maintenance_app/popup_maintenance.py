@@ -138,9 +138,11 @@ class PopupBrushInfo(Widget):
 
 # This is not elegant.
 
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.sm = screen_manager
+        self.l = localization
+
         label_width = 660
 
         description_top = "[b]Brush use:[/b]\n" + \
@@ -164,21 +166,60 @@ class PopupBrushInfo(Widget):
         label_top = Label(size_hint_y=2.1, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0])
         label_blank = Label(size_hint_y=0.01, text_size=(None, None), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0])
         label_bottom = Label(size_hint_y=1.5, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
-        examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
-        examples_label_bottom = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
-        examples_label_tolerances = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_tolerances, color=[0,0,0,1], padding=[0,0])
+        # examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
+        # examples_label_bottom = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
+        # examples_label_tolerances = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_tolerances, color=[0,0,0,1], padding=[0,0])
 
-        img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
+        # img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
+
+
+        img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False)
+        label_full_brush_top = "NEW"
+        label_full_brush_length = "16mm"
+        label_full_brush_tolerance = "(+/-0.2mm)"
+
+        example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_full_length.add_widget(label_full_brush_top)
+        example_full_length.add_widget(img_full_brush)
+        example_full_length.add_widget(label_full_brush_length)
+        example_full_length.add_widget(label_full_brush_tolerance)
+
+        img_med_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_med_img.png", allow_stretch=False)
+        label_med_brush_top = "LOW"
+        label_med_brush_length = "10mm"
+        label_med_brush_tolerance = "(+/-0.2mm)"
+
+        example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_med_length.add_widget(label_med_brush_top)
+        example_med_length.add_widget(img_med_brush)
+        example_med_length.add_widget(label_med_brush_length)
+        example_med_length.add_widget(label_med_brush_tolerance)
+
+        img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False)
+        label_short_brush_top = "SHUT-OFF"
+        label_short_brush_length = "9.5mm"
+        label_short_brush_tolerance = "(+/-0.2mm)"
+
+        example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_short_length.add_widget(label_short_brush_top)
+        example_short_length.add_widget(img_short_brush)
+        example_short_length.add_widget(label_short_brush_length)
+        example_short_length.add_widget(label_short_brush_tolerance)
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        examples_layout = BoxLayout(orientation='vertical', padding=0, spacing=5)
-        examples_layout.add_widget(examples_label_top)  
-        examples_layout.add_widget(img_brushes)
-        examples_layout.add_widget(examples_label_bottom)
-        examples_layout.add_widget(examples_label_tolerances)
+        # examples_layout = BoxLayout(orientation='vertical', padding=0, spacing=5)
+        # examples_layout.add_widget(examples_label_top)  
+        # examples_layout.add_widget(img_brushes)
+        # examples_layout.add_widget(examples_label_bottom)
+        # examples_layout.add_widget(examples_label_tolerances)
+
+        examples_layout = BoxLayout(orientation='horizontal', padding=0, spacing=0)
+        examples_layout.add_widget(example_full_length)
+        examples_layout.add_widget(example_med_length)
+        examples_layout.add_widget(example_short_length)
 
         label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5)
         label_cheat.add_widget(label_blank)

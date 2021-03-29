@@ -81,7 +81,7 @@ class BrushSaveWidget(Widget):
 
     def get_info(self):
 
-        popup_maintenance.PopupBrushInfo(self.sm)
+        popup_maintenance.PopupBrushInfo(self.sm, self.l)
 
     def save(self):
 
