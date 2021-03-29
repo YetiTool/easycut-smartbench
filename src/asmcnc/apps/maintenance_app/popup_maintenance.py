@@ -152,14 +152,6 @@ class PopupBrushInfo(Widget):
             "  " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return to the hours previously logged.") + "\n" + \
             "  " + self.l.get_bold("Reset:") + " " + self.l.get_str("Set the running hours to zero.")
             )
-        
-
-        # description_bottom = "[b]Brush reminder:[/b]\n" + \
-        # "   [b]Value:[/b] Set to the hours the brushes are expected to last.\n" + \
-        # "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
-        # " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
-        # "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
-        # "   [b]Reset:[/b] Sets to the brush reminder to 120 hours."
 
         description_bottom = (
                 self.l.get_bold("Brush reminder:") + "\n" + \
