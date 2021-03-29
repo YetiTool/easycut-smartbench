@@ -241,7 +241,7 @@ class PopupBrushInfo(Widget):
         print(float(use_layout.width))
 
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[20,10,20,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[20,10,20,10], width=780)
         layout_plan.add_widget(img)
         layout_plan.add_widget(use_layout)
         layout_plan.add_widget(label_bottom)
