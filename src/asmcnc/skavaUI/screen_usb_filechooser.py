@@ -182,7 +182,7 @@ class USBFileChooser(Screen):
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
         self.filename_selected_label_text = (
-            self.l.get_str("Only .nc and .gcode files will be shown. Press the icon to display the full filename here.")
+            self.l.get_str("Press the icon to display the full filename here.")
         )
         self.update_usb_status()
         
