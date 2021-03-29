@@ -174,9 +174,9 @@ class PopupBrushInfo(Widget):
 
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=(68,99))
-        label_full_brush_top = Label(text="NEW", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_length = Label(text="16mm", text_size=self.size,  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_top = Label(text="NEW", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_length = Label(text="16mm", text_size=self.texture_size,  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
 
         print(float(img_full_brush.width))
 
@@ -187,9 +187,9 @@ class PopupBrushInfo(Widget):
         example_full_length.add_widget(label_full_brush_tolerance)
 
         img_med_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_med_img.png", allow_stretch=False, width=68)
-        label_med_brush_top = Label(text="LOW", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_length = Label(text="10mm", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_top = Label(text="LOW", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_length = Label(text="10mm", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_med_length.add_widget(label_med_brush_top)
@@ -198,9 +198,9 @@ class PopupBrushInfo(Widget):
         example_med_length.add_widget(label_med_brush_tolerance)
 
         img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False, width=68)
-        label_short_brush_top = Label(text="SHUT-OFF", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_short_brush_length = Label(text="9.5mm", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_short_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_top = Label(text="SHUT-OFF", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_length = Label(text="9.5mm", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.texture_size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_short_length.add_widget(label_short_brush_top)
