@@ -173,10 +173,10 @@ class PopupBrushInfo(Widget):
         # img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
 
 
-        img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, width=68)
-        label_full_brush_top = Label(text="NEW", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_full_brush_length = Label(text="16mm", text_size=self.size,  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False)
+        label_full_brush_top = Label(text="NEW", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_length = Label(text="16mm", text_size=self.size,  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
 
         example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_full_length.add_widget(label_full_brush_top)
