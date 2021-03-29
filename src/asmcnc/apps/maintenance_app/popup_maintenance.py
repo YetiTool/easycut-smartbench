@@ -154,27 +154,27 @@ class PopupBrushInfo(Widget):
             )
         
 
-        description_bottom = "[b]Brush reminder:[/b]\n" + \
-        "   [b]Value:[/b] Set to the hours the brushes are expected to last.\n" + \
-        "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
-        " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
-        "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
-        "   [b]Reset:[/b] Sets to the brush reminder to 120 hours."
+        # description_bottom = "[b]Brush reminder:[/b]\n" + \
+        # "   [b]Value:[/b] Set to the hours the brushes are expected to last.\n" + \
+        # "               This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500\n               hours)." + \
+        # " It is best to set to worst case, inspect the brushes, and update as necessary.\n" + \
+        # "   [b]Restore:[/b] Return the brush reminder to the hours previously set.\n" + \
+        # "   [b]Reset:[/b] Sets to the brush reminder to 120 hours."
 
-        # description_examples_top = '[b]     NEW                    LOW                  SHUT-OFF[/b]'
-        # description_examples_bottom = '[b]16mm               10mm                  9.5mm[/b]         '
-        # description_examples_tolerances = '[b]        (+/-0.2mm)      (+/-0.2mm)         (+/-0.2mm)[/b]         '
+        description_bottom = (
+                self.l.get_bold("Brush reminder:") + "\n" + \
+                "   " + self.l.get_bold("Value:") + " " + self.l.get_str("Set to the hours the brushes are expected to last.") + "\n" + \
+                "   " + self.l.get_str("This will vary depending on heavy use (~approx 120 hours) or light use (~approx 500 hours).") + "\n" + \
+                "   " + self.l.get_str("It is best to set to worst case, inspect the brushes, and update as necessary.") + "\n" + \
+                "   " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return the brush reminder to the hours previously set.") + "\n" + \
+                "   " + self.l.get_bold("Reset:") + " " + self.l.get_str("Sets the brush reminder to 120 hours.")
+            )
+
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label_top = Label(size_hint_y=1, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
         label_blank = Label(size_hint_y=0.1, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=456)
         label_bottom = Label(text_size=(740, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=740)
-        # examples_label_top = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='top', text=description_examples_top, color=[0,0,0,1], padding=[0,0])
-        # examples_label_bottom = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_bottom, color=[0,0,0,1], padding=[0,0])        
-        # examples_label_tolerances = Label(size_hint_y=0.1, text_size=(None, None), markup=True, font_size='12sp', halign='left', valign='bottom', text=description_examples_tolerances, color=[0,0,0,1], padding=[0,0])
-
-        # img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
-
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=(68,99))
         label_full_brush_top = Label(text=self.l.get_bold("NEW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
@@ -212,12 +212,6 @@ class PopupBrushInfo(Widget):
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-
-        # examples_layout = BoxLayout(orientation='vertical', padding=0, spacing=5)
-        # examples_layout.add_widget(examples_label_top)  
-        # examples_layout.add_widget(img_brushes)
-        # examples_layout.add_widget(examples_label_bottom)
-        # examples_layout.add_widget(examples_label_tolerances)
 
         examples_layout = BoxLayout(orientation='horizontal', padding=[0, 0, 40, 0], spacing=20, size_hint_x = None, width=284)
         examples_layout.add_widget(example_full_length)
