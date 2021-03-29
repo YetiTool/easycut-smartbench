@@ -181,7 +181,7 @@ class PopupBrushInfo(Widget):
         label_full_brush_length = Label(text="[b]16mm[/b]", text_size=(68, self.height),  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
         label_full_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
 
-        example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_full_length.add_widget(label_full_brush_top)
         example_full_length.add_widget(img_full_brush)
         example_full_length.add_widget(label_full_brush_length)
@@ -192,7 +192,7 @@ class PopupBrushInfo(Widget):
         label_med_brush_length = Label(text="[b]10mm[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
         label_med_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
-        example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_med_length.add_widget(label_med_brush_top)
         example_med_length.add_widget(img_med_brush)
         example_med_length.add_widget(label_med_brush_length)
@@ -203,7 +203,7 @@ class PopupBrushInfo(Widget):
         label_short_brush_length = Label(text="[b]9.5mm[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
         label_short_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
-        example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
+        example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_short_length.add_widget(label_short_brush_top)
         example_short_length.add_widget(img_short_brush)
         example_short_length.add_widget(label_short_brush_length)
@@ -219,12 +219,12 @@ class PopupBrushInfo(Widget):
         # examples_layout.add_widget(examples_label_bottom)
         # examples_layout.add_widget(examples_label_tolerances)
 
-        examples_layout = BoxLayout(orientation='horizontal', padding=0, spacing=0)
+        examples_layout = BoxLayout(orientation='horizontal', padding=0, spacing=0, size_hint_x = None, width=204)
         examples_layout.add_widget(example_full_length)
         examples_layout.add_widget(example_med_length)
         examples_layout.add_widget(example_short_length)
 
-        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5, width=536)
+        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5, size_hint_x = None, width=536)
         label_cheat.add_widget(label_blank)
         label_cheat.add_widget(label_top)
 
