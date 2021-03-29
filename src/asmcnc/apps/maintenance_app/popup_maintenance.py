@@ -162,7 +162,7 @@ class PopupBrushInfo(Widget):
         description_examples_bottom = '[b]16mm               10mm                  9.5mm[/b]         '
         description_examples_tolerances = '[b]        (+/-0.2mm)      (+/-0.2mm)         (+/-0.2mm)[/b]         '
         
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False, size= dp(68), dp(99))
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label_top = Label(size_hint_y=2.1, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0])
         label_blank = Label(size_hint_y=0.01, text_size=(None, None), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0])
         label_bottom = Label(size_hint_y=1.5, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
@@ -173,7 +173,7 @@ class PopupBrushInfo(Widget):
         # img_brushes = Image(source="./asmcnc/apps/maintenance_app/img/brush_examples.png", allow_stretch=False)
 
 
-        img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False)
+        img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=68,99)
         label_full_brush_top = Label(text="NEW", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
         label_full_brush_length = Label(text="16mm", text_size=self.size,  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
         label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=self.size, size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
