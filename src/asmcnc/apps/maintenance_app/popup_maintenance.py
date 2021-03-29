@@ -148,9 +148,9 @@ class PopupBrushInfo(Widget):
         # do this as a grid layout instead
         description_top = (
             self.l.get_bold("Brush use:") + "\n" + \
-            "   " + self.l.get_bold("Value:") +  self.l.get_str("The running hours of the brushes.") + "\n" + \
-            "   " + self.l.get_bold("Restore:") +  self.l.get_str("Return to the hours previously logged.") + "\n" + \
-            "   " + self.l.get_bold("Reset:") +  self.l.get_str("Set the running hours to zero.")
+            "   " + self.l.get_bold("Value:") + " " + self.l.get_str("The running hours of the brushes.") + "\n" + \
+            "   " + self.l.get_bold("Restore:") + " " + self.l.get_str("Return to the hours previously logged.") + "\n" + \
+            "   " + self.l.get_bold("Reset:") + " " + self.l.get_str("Set the running hours to zero.")
             )
         
 
@@ -235,11 +235,13 @@ class PopupBrushInfo(Widget):
         use_layout.add_widget(label_cheat)
         use_layout.add_widget(examples_layout)
 
-        label_bottom = Label(size_hint_y=1.5, text_size=(use_layout.width, self.height), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
         
         layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[40,10,40,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(use_layout)
+
+        label_bottom = Label(size_hint_y=1.5, text_size=(use_layout.width, self.height), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
+
         layout_plan.add_widget(label_bottom)
         layout_plan.add_widget(btn_layout)
         
