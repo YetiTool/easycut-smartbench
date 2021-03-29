@@ -229,7 +229,7 @@ class PopupBrushInfo(Widget):
         label_cheat.add_widget(label_top)
 
         print(float(examples_layout.width))
-        print(float(label_cheat))
+        print(float(label_cheat.width))
 
         btn_layout = BoxLayout(orientation='horizontal', padding=[150,10,150,0], size_hint_y = 0.8)
         btn_layout.add_widget(ok_button)
@@ -238,7 +238,7 @@ class PopupBrushInfo(Widget):
         use_layout.add_widget(label_cheat)
         use_layout.add_widget(examples_layout)
 
-        print(float(use_layout))
+        print(float(use_layout.width))
 
         
         layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[20,10,20,10])
