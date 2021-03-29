@@ -224,7 +224,7 @@ class PopupBrushInfo(Widget):
         examples_layout.add_widget(example_med_length)
         examples_layout.add_widget(example_short_length)
 
-        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5)
+        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5, width=536)
         label_cheat.add_widget(label_blank)
         label_cheat.add_widget(label_top)
 
