@@ -174,9 +174,9 @@ class PopupBrushInfo(Widget):
 
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False)
-        label_full_brush_top = "NEW"
-        label_full_brush_length = "16mm"
-        label_full_brush_tolerance = "(+/-0.2mm)"
+        label_full_brush_top = Label(text="NEW", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_full_brush_length = Label(text="16mm", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_full_brush_tolerance = Label(text="(+/-0.2mm)", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
 
         example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_full_length.add_widget(label_full_brush_top)
@@ -185,9 +185,9 @@ class PopupBrushInfo(Widget):
         example_full_length.add_widget(label_full_brush_tolerance)
 
         img_med_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_med_img.png", allow_stretch=False)
-        label_med_brush_top = "LOW"
-        label_med_brush_length = "10mm"
-        label_med_brush_tolerance = "(+/-0.2mm)"
+        label_med_brush_top = Label(text="LOW", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_med_brush_length = Label(text="10mm", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_med_brush_tolerance = Label(text="(+/-0.2mm)", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
 
         example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_med_length.add_widget(label_med_brush_top)
@@ -196,9 +196,9 @@ class PopupBrushInfo(Widget):
         example_med_length.add_widget(label_med_brush_tolerance)
 
         img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False)
-        label_short_brush_top = "SHUT-OFF"
-        label_short_brush_length = "9.5mm"
-        label_short_brush_tolerance = "(+/-0.2mm)"
+        label_short_brush_top = Label(text="SHUT-OFF", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_short_brush_length = Label(text="9.5mm", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
+        label_short_brush_tolerance = Label(text="(+/-0.2mm)", text_size=(None, None), markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0])
 
         example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5)
         example_short_length.add_widget(label_short_brush_top)
