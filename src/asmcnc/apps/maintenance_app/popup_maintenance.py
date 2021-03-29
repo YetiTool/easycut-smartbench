@@ -216,7 +216,7 @@ class PopupBrushInfo(Widget):
         # examples_layout.add_widget(examples_label_bottom)
         # examples_layout.add_widget(examples_label_tolerances)
 
-        examples_layout = BoxLayout(orientation='horizontal', padding=0, spacing=0)
+        examples_layout = BoxLayout(orientation='horizontal', padding=0, spacing=-3)
         examples_layout.add_widget(example_full_length)
         examples_layout.add_widget(example_med_length)
         examples_layout.add_widget(example_short_length)
