@@ -222,9 +222,6 @@ class PopupBrushInfo(Widget):
         label_cheat.add_widget(label_blank)
         label_cheat.add_widget(label_top)
 
-        print(float(examples_layout.width))
-        print(float(label_cheat.width))
-
         btn_layout = BoxLayout(orientation='horizontal', padding=[150,0,150,0], size_hint_y = 0.9)
         btn_layout.add_widget(ok_button)
 
@@ -232,12 +229,10 @@ class PopupBrushInfo(Widget):
         use_layout.add_widget(label_cheat)
         use_layout.add_widget(examples_layout)
 
-        print(float(use_layout.width))
-
         reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.1, size_hint_x = None, width=760)
         reminder_layout.add_widget(label_bottom)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,0,10,0], width=780)
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[0,0,0,0], width=780)
         layout_plan.add_widget(img)
         layout_plan.add_widget(use_layout)
         layout_plan.add_widget(reminder_layout)
