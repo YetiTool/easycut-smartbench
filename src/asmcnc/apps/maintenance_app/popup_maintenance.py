@@ -162,7 +162,7 @@ class PopupBrushInfo(Widget):
         description_examples_bottom = '[b]16mm               10mm                  9.5mm[/b]         '
         description_examples_tolerances = '[b]        (+/-0.2mm)      (+/-0.2mm)         (+/-0.2mm)[/b]         '
         
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False, size= dp(68), dp(99))
         label_top = Label(size_hint_y=2.1, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_top, color=[0,0,0,1], padding=[0,0])
         label_blank = Label(size_hint_y=0.01, text_size=(None, None), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0])
         label_bottom = Label(size_hint_y=1.5, text_size=(None, None), markup=True, halign='left', valign='middle', text=description_bottom, color=[0,0,0,1], padding=[0,0])
