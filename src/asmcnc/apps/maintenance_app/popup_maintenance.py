@@ -172,9 +172,9 @@ class PopupBrushInfo(Widget):
 
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label_top = Label(size_hint_y=1, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=456)
-        label_blank = Label(size_hint_y=0.1, text_size=(456, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=456)
-        label_bottom = Label(text_size=(740, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=740)
+        label_top = Label(size_hint_y=1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=476)
+        label_blank = Label(size_hint_y=0.1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=476)
+        label_bottom = Label(text_size=(760, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=760)
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=(68,99))
         label_full_brush_top = Label(text=self.l.get_bold("NEW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
@@ -218,7 +218,7 @@ class PopupBrushInfo(Widget):
         examples_layout.add_widget(example_med_length)
         examples_layout.add_widget(example_short_length)
 
-        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5, size_hint_x = None, width=456)
+        label_cheat = BoxLayout(orientation='vertical', padding=0, spacing=5, size_hint_x = None, width=476)
         label_cheat.add_widget(label_blank)
         label_cheat.add_widget(label_top)
 
@@ -228,16 +228,16 @@ class PopupBrushInfo(Widget):
         btn_layout = BoxLayout(orientation='horizontal', padding=[150,0,150,0], size_hint_y = 0.9)
         btn_layout.add_widget(ok_button)
 
-        use_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2, size_hint_x = None, width=740)
+        use_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2, size_hint_x = None, width=760)
         use_layout.add_widget(label_cheat)
         use_layout.add_widget(examples_layout)
 
         print(float(use_layout.width))
 
-        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.1, size_hint_x = None, width=740)
+        reminder_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0, size_hint_y = 2.1, size_hint_x = None, width=760)
         reminder_layout.add_widget(label_bottom)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[20,0,20,0], width=780)
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,0,10,0], width=780)
         layout_plan.add_widget(img)
         layout_plan.add_widget(use_layout)
         layout_plan.add_widget(reminder_layout)
