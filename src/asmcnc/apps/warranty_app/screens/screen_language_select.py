@@ -21,7 +21,7 @@ Builder.load_string("""
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 30
+    font_size: 20
 
 <LanguageSelectScreen>:
 
@@ -70,14 +70,14 @@ Builder.load_string("""
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(200)
-				padding: 20
+				padding: [dp(254.5),dp(20),dp(254.5),dp(101)]
 				size_hint: (None,None)
+
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(79)
 					width: dp(291)
-					center: self.parent.center
-					pos: self.parent.pos
+
 					Spinner:
 						id: language_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
@@ -88,7 +88,7 @@ Builder.load_string("""
 						height: dp(79)
 						center: self.parent.center
 						pos: self.parent.pos
-						text: 'Choose language...'
+						text: 'Choose language'
 						color: hex('#f9f9f9ff')
 						markup: True
 						option_cls: Factory.get("LanguageSpinner")
