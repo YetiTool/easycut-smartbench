@@ -57,7 +57,8 @@ Builder.load_string("""
 				width: dp(800)
 				# height: dp(200)
 				height: dp(299.6)
-				padding: [dp(254.5),dp(0),dp(254.5),dp(160.6)]
+				padding: [dp(254.5),dp(0),dp(254.5),0] # dp(160.6)
+				spacing: 100
 				size_hint: (None,None)
 
 				BoxLayout: 
@@ -81,6 +82,17 @@ Builder.load_string("""
 						option_cls: Factory.get("LanguageSpinner")
 						on_text: root.choose_language()
 						font_size: '30sp'
+
+				Label:
+					id: loading_label
+					height: dp(60)
+					font_size: '20sp'
+					text: "[color=333333ff]Loading...[/color]"
+					text_size: self.size
+					valign: 'bottom'
+					halign: 'center'
+					markup: 'true'
+					color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
