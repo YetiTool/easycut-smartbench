@@ -3,9 +3,13 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 
-from asmcnc.apps.warranty_app.screens import screen_warranty_registration_1, \
-screen_warranty_registration_2, screen_warranty_registration_3, \
-screen_warranty_registration_4, screen_warranty_registration_5
+from asmcnc.apps.warranty_app.screens import \
+screen_language_select
+screen_warranty_registration_1, \
+screen_warranty_registration_2, \
+screen_warranty_registration_3, \
+screen_warranty_registration_4, \
+screen_warranty_registration_5
 
 class ScreenManagerWarranty(object):
 
@@ -15,6 +19,13 @@ class ScreenManagerWarranty(object):
         self.sm = screen_manager
         self.m = machine
         self.l = localization
+
+    def open_language_select_screen(self):
+        if not self.sm.has_screen('language_select'):
+            language_select_screen = screen_language_select.LanguageSelectScreen(name = 'language_select', warranty_manager = self, machine = self.m, localization = self.l)
+            self.sm.add_widget(language_select_screen)
+
+        self.sm.current = 'language_select'
 
     def open_warranty_app(self):
 
@@ -38,6 +49,7 @@ class ScreenManagerWarranty(object):
 
     def exit_app(self):
         self.sm.current = 'safety'
+        self.destroy_screen('language_select')
         self.destroy_screen('warranty_1')
         self.destroy_screen('warranty_2')
         self.destroy_screen('warranty_3')
