@@ -118,13 +118,55 @@ Builder.load_string("""
 	                    center: self.parent.center
 	                    pos: self.parent.pos
 								
+			# BoxLayout:
+			# 	orientation: 'vertical'
+			# 	padding: [dp(738), 0, dp(10), dp(10)]
+			# 	size_hint: (None,None)
+			# 	width: dp(800)
+			# 	height: dp(62)
+
+   #              Button:
+   #                  size_hint: (None,None)
+   #                  height: dp(52)
+   #                  width: dp(52)
+   #                  background_color: hex('##e5e5e5')
+   #                  background_normal: ''
+   #                  center: self.parent.center
+   #                  pos: self.parent.pos
+   #                  on_press: root.quit_to_console()
+
 			BoxLayout:
-				orientation: 'vertical'
-				padding: [dp(738), 0, dp(10), dp(10)]
+				orientation: 'horizontal
+				padding: [10, 0, 10, 10]
 				size_hint: (None,None)
 				width: dp(800)
 				height: dp(62)
 
+                Button:
+                    size_hint: (None,None)
+                    height: dp(52)
+                    width: dp(60)
+                    background_color: hex('#F4433600')
+                    center: self.parent.center
+                    pos: self.parent.pos
+                    on_press: root.go_back()
+                    BoxLayout:
+                        padding: 0
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+				BoxLayout:
+					orientation: 'vertical'
+					size_hint: (None,None)
+					width: dp(668)
+					height: dp(52)
+				
                 Button:
                     size_hint: (None,None)
                     height: dp(52)
@@ -134,7 +176,6 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_console()
-
 		
 
 
@@ -156,6 +197,9 @@ class WarrantyScreen1(Screen):
 
 	def next_screen(self):
 		self.wm.sm.current = 'warranty_2'
+
+	def go_back(self):
+		self.wm.sm.current = 'language_select'
 
 	def quit_to_console(self):
 		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
