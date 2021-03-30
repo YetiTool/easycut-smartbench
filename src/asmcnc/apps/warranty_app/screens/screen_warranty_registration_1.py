@@ -136,7 +136,7 @@ Builder.load_string("""
    #                  on_press: root.quit_to_console()
 
 			BoxLayout:
-				orientation: 'horizontal
+				orientation: 'horizontal'
 				padding: [10, 0, 10, 10]
 				size_hint: (None,None)
 				width: dp(800)
