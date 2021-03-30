@@ -58,7 +58,7 @@ Builder.load_string("""
 				# height: dp(200)
 				height: dp(299.6)
 				padding: [dp(254.5),dp(0),dp(254.5),0] # dp(160.6)
-				spacing: 100
+				spacing: 80
 				size_hint: (None,None)
 
 				BoxLayout: 
@@ -89,7 +89,7 @@ Builder.load_string("""
 					font_size: '20sp'
 					text: "[color=333333ff]Loading...[/color]"
 					text_size: self.size
-					valign: 'bottom'
+					valign: 'top'
 					halign: 'center'
 					markup: 'true'
 					color: hex('#333333ff')
