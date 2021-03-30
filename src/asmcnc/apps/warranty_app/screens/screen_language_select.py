@@ -17,7 +17,7 @@ Builder.load_string("""
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(79)
+    height: dp(30)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
@@ -93,7 +93,7 @@ Builder.load_string("""
 						markup: True
 						option_cls: Factory.get("LanguageSpinner")
 						on_text: root.choose_language()
-						font_size: '20sp'
+						font_size: '30sp'
 
 				# Label:
 				# 	id: thankyou_label
