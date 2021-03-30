@@ -11,6 +11,8 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 
+#:import Factory kivy.factory.Factory
+
 <LanguageSpinner@SpinnerOption>
 
     background_normal: ''
@@ -24,11 +26,11 @@ Builder.load_string("""
 <LanguageSelectScreen>:
 
 	status_container : status_container
-	title_label : title_label
-	thankyou_label : thankyou_label
-	next_steps_label : next_steps_label
-	minutes_label : minutes_label
-	next_button : next_button
+	# title_label : title_label
+	# thankyou_label : thankyou_label
+	# next_steps_label : next_steps_label
+	# minutes_label : minutes_label
+	# next_button : next_button
 
 	BoxLayout: 
 		size_hint: (None,None)
