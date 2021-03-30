@@ -46,12 +46,17 @@ Builder.load_string("""
 				size: self.size
 				pos: self.pos
 
-		BoxLayout:
+		BoxLayout: 
 			id: status_container 
 			size_hint_y: 0.08
+			# 11.04 pixels
 
 		BoxLayout:
-			size_hint_y: 0.72
+			# size_hint_y: 0.92
+			# orientation: 'vertical'
+			# 126.96 pixels
+			size_hint_y: None
+			height: 100.96
 			orientation: 'vertical'
 				
 			Label:
@@ -69,7 +74,8 @@ Builder.load_string("""
 			BoxLayout:
 				orientation: 'vertical'
 				width: dp(800)
-				height: dp(200)
+				# height: dp(200)
+				height: dp(226)
 				padding: [dp(254.5),dp(0),dp(254.5),dp(121)]
 				size_hint: (None,None)
 
