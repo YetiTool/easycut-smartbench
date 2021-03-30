@@ -51,7 +51,10 @@ class ScreenManagerWarranty(object):
             warranty_registration_5_screen = screen_warranty_registration_5.WarrantyScreen5(name = 'warranty_5', warranty_manager = self, machine = self.m, localization = self.l)
             self.sm.add_widget(warranty_registration_5_screen)
 
-        self.sm.current = 'warranty_1'
+        def first_screen():
+            self.sm.current = 'warranty_1'
+
+        Clock.schedule_once(lambda dt: first_screen(), 0.5)
 
     def exit_app(self):
         self.sm.current = 'safety'

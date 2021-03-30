@@ -140,5 +140,5 @@ class LanguageSelectScreen(Screen):
 	def choose_language(self):
 		chosen_lang = self.language_button.text
 		self.l.load_in_new_language(chosen_lang)
-		Clock.schedule_once(lambda dt: self.next_screen(), 0.5)
 		self.loading_label.text = self.l.get_str("Loading...")
+		self.next_screen()
