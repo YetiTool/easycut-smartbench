@@ -59,7 +59,7 @@ Builder.load_string("""
 				width: dp(800)
 				# height: dp(200)
 				height: dp(299.6)
-				padding: [dp(254.5),dp(0),dp(254.5),dp(121)]
+				padding: [dp(254.5),dp(0),dp(254.5),dp(200.6)]
 				size_hint: (None,None)
 
 				BoxLayout: 
