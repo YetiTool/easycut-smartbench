@@ -27,6 +27,12 @@ class ScreenManagerWarranty(object):
 
         self.sm.current = 'language_select'
 
+        self.destroy_screen('warranty_1')
+        self.destroy_screen('warranty_2')
+        self.destroy_screen('warranty_3')
+        self.destroy_screen('warranty_4')
+        self.destroy_screen('warranty_5')
+
     def open_warranty_app(self):
 
         if not self.sm.has_screen('warranty_1'):
