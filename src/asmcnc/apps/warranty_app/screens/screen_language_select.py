@@ -49,33 +49,16 @@ Builder.load_string("""
 		BoxLayout: 
 			id: status_container 
 			size_hint_y: 0.08
-			# 11.04 pixels
 
 		BoxLayout:
-			# size_hint_y: 0.92
-			# orientation: 'vertical'
-			# 126.96 pixels
-			size_hint_y: None
-			height: 100.96
+			size_hint_y: 0.92
 			orientation: 'vertical'
-				
-			Label:
-				text: ''
-				# id: title_label
-				# font_size: '30sp'
-				# # text: "[color=333333ff]SmartBench Warranty Registration[/color]"
-				# text_size: self.size
-				# valign: 'bottom'
-				# halign: 'center'
-				# markup: 'true'
-				# bold: True
-				# color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
 				width: dp(800)
 				# height: dp(200)
-				height: dp(226)
+				height: dp(299.6)
 				padding: [dp(254.5),dp(0),dp(254.5),dp(121)]
 				size_hint: (None,None)
 
