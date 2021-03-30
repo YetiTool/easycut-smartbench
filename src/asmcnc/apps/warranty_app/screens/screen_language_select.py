@@ -19,11 +19,12 @@ Builder.load_string("""
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(50)
+    height: dp(45)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
     font_size: 25
+    bar_inactive_color: [0,0,0,1]
 
 <LanguageSelectScreen>:
 
