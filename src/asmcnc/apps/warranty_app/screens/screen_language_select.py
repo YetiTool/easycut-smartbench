@@ -17,11 +17,11 @@ Builder.load_string("""
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(30)
+    height: dp(40)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 20
+    font_size: 30
 
 <LanguageSelectScreen>:
 
