@@ -17,11 +17,11 @@ Builder.load_string("""
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(40)
+    height: dp(50)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 30
+    font_size: 25
 
 <LanguageSelectScreen>:
 
@@ -51,7 +51,7 @@ Builder.load_string("""
 			size_hint_y: 0.08
 
 		BoxLayout:
-			size_hint_y: 0.92
+			size_hint_y: 0.72
 			orientation: 'vertical'
 				
 			Label:
