@@ -54,7 +54,7 @@ class ScreenManagerWarranty(object):
         def first_screen():
             self.sm.current = 'warranty_1'
 
-        Clock.schedule_once(lambda dt: first_screen(), 1)
+        Clock.schedule_once(lambda dt: first_screen(), 0.5)
 
     def exit_app(self):
         self.sm.current = 'safety'
