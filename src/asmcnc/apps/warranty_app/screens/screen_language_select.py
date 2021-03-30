@@ -70,7 +70,7 @@ Builder.load_string("""
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(200)
-				padding: [dp(254.5),dp(20),dp(254.5),dp(101)]
+				padding: [dp(254.5),dp(0),dp(254.5),dp(121)]
 				size_hint: (None,None)
 
 				BoxLayout: 
@@ -93,7 +93,7 @@ Builder.load_string("""
 						markup: True
 						option_cls: Factory.get("LanguageSpinner")
 						on_text: root.choose_language()
-						font_size: '30sp'
+						font_size: '20sp'
 
 				# Label:
 				# 	id: thankyou_label
