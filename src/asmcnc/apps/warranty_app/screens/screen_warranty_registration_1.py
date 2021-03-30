@@ -117,23 +117,6 @@ Builder.load_string("""
 						markup: True
 	                    center: self.parent.center
 	                    pos: self.parent.pos
-								
-			# BoxLayout:
-			# 	orientation: 'vertical'
-			# 	padding: [dp(738), 0, dp(10), dp(10)]
-			# 	size_hint: (None,None)
-			# 	width: dp(800)
-			# 	height: dp(62)
-
-   #              Button:
-   #                  size_hint: (None,None)
-   #                  height: dp(52)
-   #                  width: dp(52)
-   #                  background_color: hex('##e5e5e5')
-   #                  background_normal: ''
-   #                  center: self.parent.center
-   #                  pos: self.parent.pos
-   #                  on_press: root.quit_to_console()
 
 			BoxLayout:
 				orientation: 'horizontal'
@@ -200,7 +183,7 @@ class WarrantyScreen1(Screen):
 
 	def go_back(self):
 		self.wm.open_language_select_screen()
-		
+
 	def quit_to_console(self):
 		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
 
