@@ -30,7 +30,7 @@ Builder.load_string("""
 
 	status_container : status_container
 	language_button : language_button
-	loading_label " loading_label
+	loading_label : loading_label
 
 	BoxLayout: 
 		size_hint: (None,None)
