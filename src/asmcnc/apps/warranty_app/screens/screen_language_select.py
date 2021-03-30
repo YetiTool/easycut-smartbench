@@ -4,7 +4,9 @@ Created on nov 2020
 '''
 
 from kivy.lang import Builder
+from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.spinner import Spinner, SpinnerOption
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
@@ -59,7 +61,7 @@ Builder.load_string("""
 				width: dp(800)
 				# height: dp(200)
 				height: dp(299.6)
-				padding: [dp(254.5),dp(0),dp(254.5),dp(200.6)]
+				padding: [dp(254.5),dp(0),dp(254.5),dp(160.6)]
 				size_hint: (None,None)
 
 				BoxLayout: 
