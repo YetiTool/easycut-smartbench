@@ -4,7 +4,7 @@ import sys, os
 from asmcnc.skavaUI import popup_info
 
 from asmcnc.apps.warranty_app.screens import \
-screen_language_select
+screen_language_select \
 screen_warranty_registration_1, \
 screen_warranty_registration_2, \
 screen_warranty_registration_3, \
