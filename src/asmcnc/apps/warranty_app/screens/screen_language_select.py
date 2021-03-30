@@ -85,7 +85,9 @@ Builder.load_string("""
 
 				Label:
 					id: loading_label
+					size_hint: (None, None)
 					height: dp(60)
+					width: dp(291)
 					font_size: '20sp'
 					text: "[color=333333ff]Loading...[/color]"
 					text_size: self.size
