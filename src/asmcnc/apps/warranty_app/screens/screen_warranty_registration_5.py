@@ -107,7 +107,7 @@ class WarrantyScreen5(Screen):
 
 	def next_screen(self):
 		# self.wm.exit_app()
-		self.sm.current = 'rebooting'
+		self.wm.sm.current = 'rebooting'
 
 	def go_back(self):
 		self.wm.sm.current = 'warranty_4'
