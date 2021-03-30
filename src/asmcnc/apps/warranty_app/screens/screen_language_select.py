@@ -30,11 +30,6 @@ Builder.load_string("""
 
 	status_container : status_container
 	language_button : language_button
-	# title_label : title_label
-	# thankyou_label : thankyou_label
-	# next_steps_label : next_steps_label
-	# minutes_label : minutes_label
-	# next_button : next_button
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -87,40 +82,6 @@ Builder.load_string("""
 						on_text: root.choose_language()
 						font_size: '30sp'
 
-				# Label:
-				# 	id: thankyou_label
-				# 	size_hint_y: 0.25
-				# 	font_size: '20sp'
-				# 	# text: "[color=333333ff]Thank you for purchasing SmartBench.[/color]"
-				# 	text_size: self.size
-				# 	valign: 'bottom'
-				# 	halign: 'center'
-				# 	markup: 'true'
-				# 	color: hex('#333333ff')
-
-				# Label:
-				# 	id: next_steps_label
-				# 	size_hint_y: 0.5
-				# 	font_size: '20sp'
-				# 	# text: "[color=333333ff]Please follow the next steps to complete your warranty registration process.[/color]"
-				# 	text_size: self.size
-				# 	valign: 'middle'
-				# 	halign: 'center'
-				# 	markup: 'true'
-				# 	multiline: True
-				# 	color: hex('#333333ff')
-				
-				# Label:
-				# 	id: minutes_label
-				# 	size_hint_y: 0.25
-				# 	font_size: '20sp'
-				# 	# text: "[color=333333ff]It will only a take a few minutes.[/color]"
-				# 	text_size: self.size
-				# 	valign: 'top'
-				# 	halign: 'center'
-				# 	markup: 'true'
-				# 	color: hex('#333333ff')
-
 			BoxLayout:
 				orientation: 'vertical'
 				width: dp(800)
@@ -131,21 +92,6 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(79)
 					width: dp(291)
-					# Button:
-					# 	id: next_button
-					# 	background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-					# 	background_down: "./asmcnc/apps/warranty_app/img/next.png"
-					# 	border: [dp(14.5)]*4
-					# 	size_hint: (None,None)
-					# 	width: dp(291)
-					# 	height: dp(79)
-					# 	on_press: root.next_screen()
-					# 	# text: 'Next...'
-					# 	font_size: '30sp'
-					# 	color: hex('#f9f9f9ff')
-					# 	markup: True
-					# 	center: self.parent.center
-					# 	pos: self.parent.pos
 								
 			BoxLayout:
 				orientation: 'vertical'
@@ -153,19 +99,6 @@ Builder.load_string("""
 				size_hint: (None,None)
 				width: dp(800)
 				height: dp(62)
-
-				# Button:
-				# 	size_hint: (None,None)
-				# 	height: dp(52)
-				# 	width: dp(52)
-				# 	background_color: hex('##e5e5e5')
-				# 	background_normal: ''
-				# 	center: self.parent.center
-				# 	pos: self.parent.pos
-				# 	on_press: root.quit_to_console()
-
-		
-
 
 """)
 
@@ -190,5 +123,4 @@ class LanguageSelectScreen(Screen):
 		chosen_lang = self.language_button.text
 		self.l.load_in_new_language(chosen_lang)
 		Clock.schedule_once(lambda dt: self.next_screen(), 0.3)
-
 

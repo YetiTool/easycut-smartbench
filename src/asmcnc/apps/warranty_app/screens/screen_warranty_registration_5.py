@@ -46,7 +46,6 @@ Builder.load_string("""
 				Label:
 					id: success_label
 					font_size: '30sp'
-					text: "[color=333333ff]You have sucessfully completed your warranty registration.[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
@@ -113,5 +112,9 @@ class WarrantyScreen5(Screen):
 		self.wm.sm.current = 'warranty_4'
 
 	def update_strings(self):
-		self.success_label.text = self.l.get_str("You have sucessfully completed your warranty registration.")
+		self.success_label.text = (
+			self.l.get_str("You have sucessfully completed your warranty registration.") + "\n\n" + \
+			self.l.get_str("Reboot to apply your settings.")
+			)
+
 		self.next_button.text = self.l.get_str("Get started!")
