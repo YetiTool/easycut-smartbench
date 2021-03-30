@@ -199,8 +199,8 @@ class WarrantyScreen1(Screen):
 		self.wm.sm.current = 'warranty_2'
 
 	def go_back(self):
-		self.wm.sm.current = 'language_select'
-
+		self.wm.open_language_select_screen()
+		
 	def quit_to_console(self):
 		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
 
