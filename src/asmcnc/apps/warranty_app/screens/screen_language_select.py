@@ -26,6 +26,7 @@ Builder.load_string("""
 <LanguageSelectScreen>:
 
 	status_container : status_container
+	language_button : language_button
 	# title_label : title_label
 	# thankyou_label : thankyou_label
 	# next_steps_label : next_steps_label
@@ -75,6 +76,8 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(79)
 					width: dp(291)
+					center: self.parent.center
+					pos: self.parent.pos
 					Spinner:
 						id: language_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
@@ -90,6 +93,7 @@ Builder.load_string("""
 						markup: True
 						option_cls: Factory.get("LanguageSpinner")
 						on_text: root.choose_language()
+						font_size: '30sp'
 
 				# Label:
 				# 	id: thankyou_label
@@ -184,6 +188,8 @@ class LanguageSelectScreen(Screen):
 		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
+
+		self.language_button.values = self.l.supported_languages
 
 	def next_screen(self):
 		self.wm.open_warranty_app()
