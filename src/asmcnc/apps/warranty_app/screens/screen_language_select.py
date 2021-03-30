@@ -30,6 +30,7 @@ Builder.load_string("""
 
 	status_container : status_container
 	language_button : language_button
+	loading_label " loading_label
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -89,12 +90,12 @@ Builder.load_string("""
 					height: dp(60)
 					width: dp(291)
 					font_size: '20sp'
-					text: "[color=333333ff]Loading...[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
 					markup: 'true'
 					color: hex('#333333ff')
+					text: ""
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -130,11 +131,14 @@ class LanguageSelectScreen(Screen):
 
 		self.language_button.values = self.l.supported_languages
 
+	def on_pre_enter(self):
+		self.loading_label.text = ""
+
 	def next_screen(self):
 		self.wm.open_warranty_app()
 
 	def choose_language(self):
 		chosen_lang = self.language_button.text
 		self.l.load_in_new_language(chosen_lang)
-		Clock.schedule_once(lambda dt: self.next_screen(), 0.2)
-
+		Clock.schedule_once(lambda dt: self.next_screen(), 0.5)
+		self.loading_label.text = self.l.get_string("Loading...")

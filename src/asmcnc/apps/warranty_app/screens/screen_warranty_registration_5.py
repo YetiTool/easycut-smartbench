@@ -117,4 +117,4 @@ class WarrantyScreen5(Screen):
 			self.l.get_str("Reboot to apply your settings.")
 			)
 
-		self.next_button.text = self.l.get_str("Reboot")
+		self.next_button.text = self.l.get_str("Reboot!")
