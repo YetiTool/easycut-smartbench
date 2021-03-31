@@ -14,15 +14,15 @@ screen_alarm_4, screen_alarm_5
 
 ALARM_CODES = {
 
-    "ALARM:1" : "Unexpected limit reached. The machine's position was likely lost. Re-homing is highly recommended.",
-    "ALARM:2" : "The requested motion target exceeds the machine's travel.",
-    "ALARM:3" : "Machine was reset while in motion and cannot guarantee position. Lost steps are likely. Re-homing is recommended.",
-    "ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
-    "ALARM:5" : "Probe fail. Probe did not contact the workpiece within the programmed travel.",
-    "ALARM:6" : "Homing fail. Reset during active homing cycle.",
-    "ALARM:7" : "Homing fail. Safety switch was activated during the homing cycle.",
-    "ALARM:8" : "Homing fail. Cycle failed to clear limit switch when pulling off.",
-    "ALARM:9" : "Homing fail. Could not find limit switch within search distance.",
+	"ALARM:1" : "Unexpected limit reached. The machine's position was likely lost. Re-homing is highly recommended.",
+	"ALARM:2" : "The requested motion target exceeds the machine's travel.",
+	"ALARM:3" : "Machine was reset while in motion and cannot guarantee position. Lost steps are likely. Re-homing is recommended.",
+	"ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
+	"ALARM:5" : "Probe fail. Probe did not contact the workpiece within the programmed travel.",
+	"ALARM:6" : "Homing fail. Reset during active homing cycle.",
+	"ALARM:7" : "Homing fail. Safety switch was activated during the homing cycle.",
+	"ALARM:8" : "Homing fail. Cycle failed to clear limit switch when pulling off.",
+	"ALARM:9" : "Homing fail. Could not find limit switch within search distance.",
 
 }
 
@@ -37,13 +37,13 @@ class AlarmSequenceManager(object):
 	trigger_description = ''
 	status_cache = ''
 
-    def __init__(self, screen_manager, settings_manager, machine):
+	def __init__(self, screen_manager, settings_manager, machine):
 
-        self.sm = screen_manager
-        self.set = settings_manager
-        self.m = machine
+		self.sm = screen_manager
+		self.set = settings_manager
+		self.m = machine
 
-        self.set_up_alarm_screens()
+		self.set_up_alarm_screens()
 
 
 	def set_up_alarm_screens(self):
@@ -101,14 +101,13 @@ class AlarmSequenceManager(object):
 		pass
 
 
-    def get_version_data(self):
-    	self.sw_version = self.set.sw_version
-        self.fw_version = str((str(self.m.s.fw_version)).split('; HW')[0])
-        self.hw_version = self.m.s.hw_version
-        try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
-        except: self.machine_serial_number_label.text = '-'
+	def get_version_data(self):
+		self.sw_version = self.set.sw_version
+		self.fw_version = str((str(self.m.s.fw_version)).split('; HW')[0])
+		self.hw_version = self.m.s.hw_version
+		try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
+		except: self.machine_serial_number_label.text = '-'
 
 
 	def get_status_info(self):
 		pass
-
