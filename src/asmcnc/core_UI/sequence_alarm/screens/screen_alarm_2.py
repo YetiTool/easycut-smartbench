@@ -14,7 +14,8 @@ Builder.load_string("""
 
 	alarm_title : alarm_title
 	icon_container : icon_container
-	icon : icon
+	icon_left : icon_left
+	icon_right : icon_right
 	description_label : description_label
 
 	canvas:
@@ -80,12 +81,25 @@ Builder.load_string("""
 
 			BoxLayout: 
 				id: icon_container
-				padding: [335,0,0,0]
+				padding: [190,30,218.5,0]
+				spacing: 208.5
 				size_hint: (None, None)
 				height: dp(130)
-				width: dp(800)       
+				width: dp(800)
+				orientation: 'horizontal'    
 				Image:
-					id: icon
+					id: icon_left
+					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+					center_x: self.parent.center_x
+					y: self.parent.y
+					size: self.parent.width, self.parent.height
+					allow_stretch: True
+					size_hint: (None, None)
+					height: dp(130)
+					width: dp(130)
+
+				Image:
+					id: icon_right
 					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 					center_x: self.parent.center_x
 					y: self.parent.y
@@ -197,7 +211,8 @@ class AlarmScreen2(Screen):
 		self.a=kwargs['alarm_manager']
 
 		self.alarm_title.text = "[b]" + "Alarm: Record details" + "[/b]"
-		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
+		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
 		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick to download it."
 
 	def next_screen(self):
