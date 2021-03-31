@@ -13,7 +13,7 @@ Builder.load_string("""
 
 <AlarmScreen3>:
 
-	status_container:status_container 
+	status_container:status_container
 
 	BoxLayout: 
 		size_hint: (None,None)

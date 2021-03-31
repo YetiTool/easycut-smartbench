@@ -14,6 +14,7 @@ Builder.load_string("""
 
 	alarm_title : alarm_title
 	icon_container : icon_container
+	icon : icon
 	description_label : description_label
 
 	canvas:
