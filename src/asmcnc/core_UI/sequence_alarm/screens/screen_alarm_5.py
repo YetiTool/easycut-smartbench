@@ -45,7 +45,6 @@ Builder.load_string("""
 				id: alarm_title
 				size_hint: (None, None)
 				font_size: '30sp'
-				text: '[b]Alarm![/b]'
 				color: [0,0,0,1]
 				markup: True
 				halign: 'left'

@@ -194,7 +194,7 @@ class AlarmScreen1(Screen):
 		super(AlarmScreen1, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = "" + "Alarm: Unexpected event!" + ""
+		self.alarm_title.text = "[b]" + "Alarm: Unexpected event!" + "[/b]"
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 
 	def next_screen(self):
