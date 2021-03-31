@@ -96,9 +96,9 @@ class AlarmSequenceManager(object):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		if (self.message).endswith('1'):
+		if (self.alarm_code).endswith('1'):
 			Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1)
-			Clock.schedule_once(lambda dt: self.get_status_info(), 1)
+		Clock.schedule_once(lambda dt: self.get_status_info(), 1)
 
 
 	def is_alarm_sequence_already_running(self):
