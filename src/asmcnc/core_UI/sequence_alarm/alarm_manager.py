@@ -163,8 +163,8 @@ class AlarmSequenceManager(object):
 		self.sw_version = self.set.sw_version
 		self.fw_version = str((str(self.m.s.fw_version)).split('; HW')[0])
 		self.hw_version = self.m.s.hw_version
-		try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
-		except: self.machine_serial_number_label.text = '-'
+		try: self.machine_serial_number = 'YS6' + str(self.m.serial_number())[0:4]
+		except: self.machine_serial_number = '-'
 
 
 	def update_screens(self):
