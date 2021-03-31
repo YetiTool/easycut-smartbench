@@ -28,11 +28,14 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
+
+# COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 
+# SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
@@ -62,7 +65,9 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
-from asmcnc.apps.maintenance_app import screen_maintenance
+# CORE UI IMPORTS
+from asmcnc.core_UI.sequence_alarm import screen_alarm_1
+
 
 # developer testing
 Cmport = 'COM3'
@@ -142,7 +147,7 @@ class SkavaUI(App):
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett)
             
-            # initialise the screens
+            # initialise the screens (legacy)
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
@@ -170,6 +175,10 @@ class SkavaUI(App):
             spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
             stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
             lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
+
+
+            # core UI
+            alarm_1_screen = screen_alarm_1.AlarmScreen1(name='alarm_1', screen_manager = sm, machine = m)
 
 
         if start_screen == 'pc_alert': 
@@ -204,10 +213,14 @@ class SkavaUI(App):
             sm.add_widget(stop_or_resume_decision_screen)
             sm.add_widget(lift_z_on_pause_decision_screen)
 
+            sm.add_widget(alarm_1_screen)
+
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-        sm.current = start_screen
+        # start_screen = 'alarm_1'
+
+        sm.current = 'alarm_1'
 
         log('Screen manager activated: ' + str(sm.current))
 
