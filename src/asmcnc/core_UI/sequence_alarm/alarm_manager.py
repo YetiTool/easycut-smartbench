@@ -153,7 +153,7 @@ class AlarmSequenceManager(object):
 
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
-		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-1:n])
+		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 
 
 	def get_version_data(self):
@@ -190,9 +190,9 @@ class AlarmSequenceManager(object):
 
 		self.report_string = (
 
-			"Alarm report" + \
+			"[b]" + "Alarm report" + "[/b]" + \
 			"\n\n" + \
-			"Software version" + "		" + "Firmware version" + "		" + "Hardware version" + "		" + "Serial number" + \
+			"Software version" + "\t" + "Firmware version" + "\t" + "Hardware version" + "		" + "Serial number" + \
 			"\n" + \
 			self.sw_version + "		" + self.fw_version + "		" + self.hw_version + "		" + self.machine_serial_number + \
 			"\n\n" + \
@@ -203,5 +203,6 @@ class AlarmSequenceManager(object):
 			self.trigger_description + \
 			"\n\n" + \
 			"Status cache:" + " " + \
+			"\n" + \
 			self.status_cache
 			)

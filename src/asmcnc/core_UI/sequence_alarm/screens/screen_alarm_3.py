@@ -39,9 +39,10 @@ Builder.load_string("""
 
 			BoxLayout: 
 				orientation: 'vertical'
+				padding: 20
 				Label:
 					id: description_label
-					font_size: '14sp'
+					font_size: '16sp'
 					color: [0,0,0,1]
 					markup: True
 					halign: 'left'
