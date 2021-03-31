@@ -48,11 +48,11 @@ class AlarmSequenceManager(object):
 
 	def set_up_alarm_screens(self):
 
-		alarm_1_screen = screen_alarm_1.AlarmScreen3(name='alarm_1', alarm_manager = self)
-		alarm_2_screen = screen_alarm_2.AlarmScreen3(name='alarm_2', alarm_manager = self)
+		alarm_1_screen = screen_alarm_1.AlarmScreen1(name='alarm_1', alarm_manager = self)
+		alarm_2_screen = screen_alarm_2.AlarmScreen2(name='alarm_2', alarm_manager = self)
 		alarm_3_screen = screen_alarm_3.AlarmScreen3(name='alarm_3', alarm_manager = self)
-		alarm_4_screen = screen_alarm_4.AlarmScreen3(name='alarm_4', alarm_manager = self)
-		alarm_5_screen = screen_alarm_5.AlarmScreen3(name='alarm_5', alarm_manager = self)
+		alarm_4_screen = screen_alarm_4.AlarmScreen4(name='alarm_4', alarm_manager = self)
+		alarm_5_screen = screen_alarm_5.AlarmScreen5(name='alarm_5', alarm_manager = self)
 
 		sm.add_widget(alarm_1_screen)
 		sm.add_widget(alarm_2_screen)
