@@ -158,7 +158,7 @@ Builder.load_string("""
 					size_hint: (None,None)
 					height: dp(52)
 					width: dp(60)
-					# background_color: hex('#F4433600')
+					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.go_back()
@@ -188,7 +188,7 @@ Builder.load_string("""
 					on_press: root.next_screen()
 					text: 'Next...'
 					font_size: '30sp'
-					# color: hex('#f9f9f9ff')
+					color: hex('#f9f9f9ff')
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
@@ -202,7 +202,7 @@ Builder.load_string("""
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(51)
-					# background_color: hex('#F4433600')
+					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.exit_app()
