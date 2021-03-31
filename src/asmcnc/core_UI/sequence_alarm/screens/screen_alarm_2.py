@@ -89,25 +89,17 @@ Builder.load_string("""
 				orientation: 'horizontal'    
 				Image:
 					id: icon_left
-					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-					center_x: self.parent.center_x
-					y: self.parent.y
-					size: self.parent.width, self.parent.height
-					allow_stretch: True
+					allow_stretch: False
 					size_hint: (None, None)
-					height: dp(130)
-					width: dp(130)
+					height: dp(100)
+					width: dp(120)
 
 				Image:
 					id: icon_right
-					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-					center_x: self.parent.center_x
-					y: self.parent.y
-					size: self.parent.width, self.parent.height
-					allow_stretch: True
+					allow_stretch: False
 					size_hint: (None, None)
-					height: dp(130)
-					width: dp(130)
+					height: dp(100)
+					width: dp(63)
 
 
 			BoxLayout:
