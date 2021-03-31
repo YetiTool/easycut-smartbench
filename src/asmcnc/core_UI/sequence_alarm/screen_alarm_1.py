@@ -152,8 +152,8 @@ Builder.load_string("""
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
-				width: dp(84.5)
-				padding: [0, 0, 24.5, 0]
+				width: dp(244.5)
+				padding: [0, 0, 184.5, 0]
 				Button:
 					size_hint: (None,None)
 					height: dp(52)
@@ -196,8 +196,8 @@ Builder.load_string("""
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
-				width: dp(84.5)
-				padding: [33.5, 0, 0, 0]
+				width: dp(244.5)
+				padding: [193.5, 0, 0, 0]
 				Button:
 					size_hint: (None,None)
 					height: dp(60)
