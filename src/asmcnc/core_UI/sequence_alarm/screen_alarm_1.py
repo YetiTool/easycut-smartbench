@@ -62,20 +62,8 @@ Builder.load_string("""
 				markup: True
 				halign: 'left'
 				height: dp(50)
-				width: dp(170)
+				width: dp(770)
 				text_size: self.size
-
-			Label:
-				id: trigger_description_label
-				size_hint: (None, None)
-				font_size: '20sp'
-				color: [0,0,0,1]
-				markup: True
-				halign: 'right'
-				height: dp(50)
-				width: dp(600)
-				text_size: self.size
-
 
 		# Red underline
 		BoxLayout: 

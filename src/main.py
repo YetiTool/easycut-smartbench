@@ -66,7 +66,7 @@ from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 # CORE UI IMPORTS
-from asmcnc.core_UI.sequence_alarm import screen_alarm_1
+from asmcnc.core_UI.sequence_alarm import screen_alarm_3
 
 
 # developer testing
@@ -178,7 +178,7 @@ class SkavaUI(App):
 
 
             # core UI
-            alarm_1_screen = screen_alarm_1.AlarmScreen1(name='alarm_1', screen_manager = sm, machine = m)
+            alarm_1_screen = screen_alarm_3.AlarmScreen3(name='alarm_1', screen_manager = sm, machine = m)
 
 
         if start_screen == 'pc_alert': 
