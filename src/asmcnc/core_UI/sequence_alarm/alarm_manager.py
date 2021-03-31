@@ -45,7 +45,7 @@ class AlarmSequenceManager(object):
 		self.set = settings_manager
 		self.m = machine
 
-		Clock.schedule_once(lambda dt: self.get_version_data(), 9)
+		Clock.schedule_once(lambda dt: self.get_version_data(), 15)
 		self.set_up_alarm_screens()
 
 
@@ -188,15 +188,17 @@ class AlarmSequenceManager(object):
 
 	def setup_report(self):
 
+		tab_distance = "      "
+
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
 			"\n\n" + \
-			"Software version" + "\t" + "Firmware version" + "\t" + "Hardware version" + "		" + "Serial number" + \
+			"Software version" + tab_distance + "Firmware version" + tab_distance + "Hardware version" + tab_distance + "Serial number" + \
 			"\n" + \
-			self.sw_version + "		" + self.fw_version + "		" + self.hw_version + "		" + self.machine_serial_number + \
+			self.sw_version + tab_distance + self.fw_version + tab_distance + self.hw_version + tab_distance + self.machine_serial_number + \
 			"\n\n" + \
-			"Alarm code:" + " " + self.alarm_code + \
+			"Alarm code:" + " " + self.alarm_code[-1] + \
 			"\n" + \
 			"Alarm description: " + " " + self.alarm_description + \
 			"\n" + \
