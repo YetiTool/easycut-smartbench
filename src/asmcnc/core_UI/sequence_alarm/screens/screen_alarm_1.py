@@ -14,6 +14,7 @@ Builder.load_string("""
 
 	alarm_title : alarm_title
 	icon_container : icon_container
+	icon : icon
 	description_label : description_label
 
 	canvas:
@@ -85,7 +86,6 @@ Builder.load_string("""
 				width: dp(800)       
 				Image:
 					id: icon
-					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 					center_x: self.parent.center_x
 					y: self.parent.y
 					size: self.parent.width, self.parent.height
@@ -194,6 +194,9 @@ class AlarmScreen1(Screen):
 	def __init__(self, **kwargs):
 		super(AlarmScreen1, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
+
+		self.alarm_title = "Alarm: Unexpected event!"
+		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_2'

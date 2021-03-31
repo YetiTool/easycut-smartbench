@@ -197,7 +197,7 @@ class AlarmScreen5(Screen):
 		self.a=kwargs['alarm_manager']
 
 	def next_screen(self):
-		self.a.sm.current = self.a.return_to_screen
+		self.a.exit_sequence()
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_4'

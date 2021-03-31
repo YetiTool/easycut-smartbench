@@ -12,7 +12,7 @@ screen_alarm_4, screen_alarm_5
 # not going to use it as a "screen manager" as alarm screens want to be instantly available at all times
 # instead just use it to access messages/alarm info across screens
 
-ALARM_CODES = {
+ALARM_CODES_DICT = {
 
 	"ALARM:1" : "Unexpected limit reached. The machine's position was likely lost. Re-homing is highly recommended.",
 	"ALARM:2" : "The requested motion target exceeds the machine's travel.",
@@ -43,6 +43,7 @@ class AlarmSequenceManager(object):
 		self.set = settings_manager
 		self.m = machine
 
+		Clock.schedule_once(lambda dt: self.get_version_data(), 9)
 		self.set_up_alarm_screens()
 
 
@@ -70,7 +71,34 @@ class AlarmSequenceManager(object):
 				self.return_to_screen = self.sm.current
 
 			self.alarm_code = message
+			self.alarm_description = ALARM_CODES_DICT.get(self.alarm_code, "")
+			self.update_screens()
 			self.sm.current = 'alarm_1'
+
+			self.handle_alarm_state()
+
+    def exit_sequence(self):
+        
+        self.m.resume_from_alarm()
+
+        if self.return_to_screen == 'go':
+            self.sm.get_screen('go').is_job_started_already = False
+            self.sm.get_screen('go').temp_suppress_prompts = True
+        
+        if self.sm.has_screen(self.return_to_screen):
+            self.sm.current = self.return_to_screen
+
+        else: 
+            self.sm.current = 'lobby'
+
+
+	def handle_alarm_state(self):
+        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
+        self.m.set_state('Alarm')
+        self.m.led_restore()
+        if (self.message).endswith('1'):
+            Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1)
+            Clock.schedule_once(lambda dt: self.get_status_info(), 1)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -98,10 +126,40 @@ class AlarmSequenceManager(object):
 
 
 	def get_suspected_trigger(self):
-		pass
+        limit_code = "Unexpected limit reached: "
+        limit_list = []
+
+        if self.m.s.limit_x:
+            limit_list.append('X home')
+
+        if self.m.s.limit_X: 
+            limit_list.append('X far')
+
+        if self.m.s.limit_y: 
+            limit_list.append('Y home')
+
+        if self.m.s.limit_Y: 
+            limit_list.append('Y far')
+
+        if self.m.s.limit_z: 
+            limit_list.append('Z top')
+
+        if limit_list == []:
+            limit_list.append('Unknown')
+
+        self.trigger_description = limit_code + (', ').join(limit_list)
+        self.update_screens()
+
+
+	def get_status_info(self):
+
+		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
+		n = len(status_list)
+		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-1:n])
 
 
 	def get_version_data(self):
+
 		self.sw_version = self.set.sw_version
 		self.fw_version = str((str(self.m.s.fw_version)).split('; HW')[0])
 		self.hw_version = self.m.s.hw_version
@@ -109,5 +167,12 @@ class AlarmSequenceManager(object):
 		except: self.machine_serial_number_label.text = '-'
 
 
-	def get_status_info(self):
+	def update_screens(self):
+		self.sm.get_screen('alarm_1')..description_label.text = (
+				self.alarm_description + \
+				"\n" +
+				self.trigger_description
+			)
+
+	def reset_variables(self):
 		pass
