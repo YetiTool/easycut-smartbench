@@ -168,7 +168,7 @@ class AlarmSequenceManager(object):
 
 
 	def update_screens(self):
-		self.sm.get_screen('alarm_1')..description_label.text = (
+		self.sm.get_screen('alarm_1').description_label.text = (
 				self.alarm_description + \
 				"\n" +
 				self.trigger_description
