@@ -64,7 +64,7 @@ class AlarmSequenceManager(object):
 	def alert_user(self, message):
 
 		if not self.is_alarm_sequence_already_running():
-			if is_error_screen_already_up():
+			if self.is_error_screen_already_up():
 				self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
 			else:
 				self.return_to_screen = self.sm.current
