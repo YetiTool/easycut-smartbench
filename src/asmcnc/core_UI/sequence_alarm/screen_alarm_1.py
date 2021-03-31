@@ -4,8 +4,6 @@ Created on 31 March 2021
 '''
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty # @UnresolvedImport
-from kivy.factory import Factory
 from kivy.clock import Clock
 
 # ALARM_CODES = {
@@ -28,9 +26,8 @@ Builder.load_string("""
 <AlarmScreen1>:
 
 	alarm_title : alarm_title
-
-	alarm_description_label : alarm_description_label
-	trigger_description_label : trigger_description_label
+	icon_container : icon_container
+	description_label : description_label
 
 	canvas:
 		Color: 
@@ -131,9 +128,8 @@ Builder.load_string("""
 				height: dp(118)
 				width: dp(800)
 				Label:
-					id: alarm_description_label
+					id: description_label
 					font_size: '20sp'
-					# text: root.alarm_description
 					color: [0,0,0,1]
 					markup: True
 					halign: 'center'
