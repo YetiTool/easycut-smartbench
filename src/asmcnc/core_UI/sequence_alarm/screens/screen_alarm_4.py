@@ -197,7 +197,7 @@ class AlarmScreen4(Screen):
 		super(AlarmScreen4, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title = "Alarm: Learn more..."
+		self.alarm_title.text = "[b]" +  "Alarm: Learn more..." + "[/b]"
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = (
 			"Learn more about the cause of the alarm by visiting our knowledge base at" + \

@@ -45,7 +45,6 @@ Builder.load_string("""
 				id: alarm_title
 				size_hint: (None, None)
 				font_size: '30sp'
-				text: '[b]Alarm![/b]'
 				color: [0,0,0,1]
 				markup: True
 				halign: 'left'
@@ -195,7 +194,7 @@ class AlarmScreen1(Screen):
 		super(AlarmScreen1, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title = "Alarm: Unexpected event!"
+		self.alarm_title.text = "" + "Alarm: Unexpected event!" + ""
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 
 	def next_screen(self):

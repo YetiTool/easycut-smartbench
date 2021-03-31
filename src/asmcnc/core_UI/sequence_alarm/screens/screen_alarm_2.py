@@ -197,7 +197,7 @@ class AlarmScreen2(Screen):
 		super(AlarmScreen2, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title = "Alarm: Record details"
+		self.alarm_title.text = "[b]" + "Alarm: Record details" + "[/b]"
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick to download it."
 
