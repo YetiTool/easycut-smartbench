@@ -65,9 +65,6 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
-# CORE UI IMPORTS
-from asmcnc.core_UI.sequence_alarm import screen_alarm_3
-
 
 # developer testing
 Cmport = 'COM3'
@@ -178,10 +175,6 @@ class SkavaUI(App):
             lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
 
 
-            # core UI
-            alarm_1_screen = screen_alarm_3.AlarmScreen3(name='alarm_1', screen_manager = sm, machine = m)
-
-
         if start_screen == 'pc_alert': 
             sm.add_widget(powercycle_screen)
         else:
@@ -219,9 +212,8 @@ class SkavaUI(App):
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-        # start_screen = 'alarm_1'
 
-        sm.current = 'alarm_1'
+        sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
 
