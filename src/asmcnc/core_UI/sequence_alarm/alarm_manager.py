@@ -45,7 +45,6 @@ class AlarmSequenceManager(object):
 		self.set = settings_manager
 		self.m = machine
 
-		Clock.schedule_once(lambda dt: self.get_version_data(), 15)
 		self.set_up_alarm_screens()
 
 
@@ -167,6 +166,7 @@ class AlarmSequenceManager(object):
 
 	def update_screens(self):
 
+		self.get_version_data()
 		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 			self.get_suspected_trigger()
 		self.get_status_info()
