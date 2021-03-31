@@ -37,6 +37,8 @@ class AlarmSequenceManager(object):
 	trigger_description = ''
 	status_cache = ''
 
+	report_string= ''
+
 	def __init__(self, screen_manager, settings_manager, machine):
 
 		self.sm = screen_manager
@@ -96,9 +98,7 @@ class AlarmSequenceManager(object):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		if (self.alarm_code).endswith('1'):
-			Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1)
-		Clock.schedule_once(lambda dt: self.get_status_info(), 1)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -148,8 +148,6 @@ class AlarmSequenceManager(object):
 			limit_list.append('Unknown')
 
 		self.trigger_description = limit_code + (', ').join(limit_list)
-		self.update_screens()
-
 
 	def get_status_info(self):
 
@@ -168,11 +166,42 @@ class AlarmSequenceManager(object):
 
 
 	def update_screens(self):
+
+		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+			self.get_suspected_trigger()
+		self.get_status_info()
+		self.setup_report()
+
 		self.sm.get_screen('alarm_1').description_label.text = (
 				self.alarm_description + \
 				"\n" +
 				self.trigger_description
 			)
 
+		self.sm.get_screen('alarm_3').description_label.text = self.report_string
+
 	def reset_variables(self):
 		pass
+
+	def download_alarm_report(self):
+		pass
+
+	def setup_report(self):
+
+		self.report_string = (
+
+			"Alarm report" + \
+			"\n\n" + \
+			"Software version" + "		" + "Firmware version" + "		" + "Hardware version" + "		" + "Serial number" + \
+			"\n" + \
+			self.sw_version + "		" + self.fw_version + "		" + self.hw_version + "		" + self.machine_serial_number + \
+			"\n\n" + \
+			"Alarm code:" + " " + self.alarm_code + \
+			"\n" + \
+			"Alarm description: " + " " + self.alarm_description + \
+			"\n" + \
+			self.trigger_description + \
+			"\n\n" + \
+			"Status cache:" + " " + \
+			self.status_cache
+			)

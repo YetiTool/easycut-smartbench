@@ -13,7 +13,8 @@ Builder.load_string("""
 
 <AlarmScreen3>:
 
-	status_container:status_container
+	status_container : status_container
+	description_label : description_label
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -38,6 +39,15 @@ Builder.load_string("""
 
 			BoxLayout: 
 				orientation: 'vertical'
+				Label:
+					id: description_label
+					font_size: '14sp'
+					color: [0,0,0,1]
+					markup: True
+					halign: 'left'
+					valign: 'middle'
+					text_size: self.size
+					size: self.parent.size
 
 			# Buttons
 			BoxLayout: 
@@ -124,7 +134,7 @@ class AlarmScreen3(Screen):
 
 		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.a.sm, machine=self.a.m)
 		self.status_container.add_widget(self.status_bar_widget)
-		self.status_bar_widget.cheeky_color = '#1976d2'
+		self.status_bar_widget.cheeky_color = '#1976d2'\
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_4'
