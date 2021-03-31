@@ -127,6 +127,6 @@ class AlarmScreen3(Screen):
 		self.sm=kwargs['screen_manager']
 		self.m=kwargs['machine']
 
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
+		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
