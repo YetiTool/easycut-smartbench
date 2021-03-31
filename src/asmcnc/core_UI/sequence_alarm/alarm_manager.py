@@ -54,11 +54,11 @@ class AlarmSequenceManager(object):
 		alarm_4_screen = screen_alarm_4.AlarmScreen4(name='alarm_4', alarm_manager = self)
 		alarm_5_screen = screen_alarm_5.AlarmScreen5(name='alarm_5', alarm_manager = self)
 
-		sm.add_widget(alarm_1_screen)
-		sm.add_widget(alarm_2_screen)
-		sm.add_widget(alarm_3_screen)
-		sm.add_widget(alarm_4_screen)
-		sm.add_widget(alarm_5_screen)
+		self.sm.add_widget(alarm_1_screen)
+		self.sm.add_widget(alarm_2_screen)
+		self.sm.add_widget(alarm_3_screen)
+		self.sm.add_widget(alarm_4_screen)
+		self.sm.add_widget(alarm_5_screen)
 
 
 	def alert_user(message):
