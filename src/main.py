@@ -207,8 +207,6 @@ class SkavaUI(App):
             sm.add_widget(stop_or_resume_decision_screen)
             sm.add_widget(lift_z_on_pause_decision_screen)
 
-            sm.add_widget(alarm_1_screen)
-
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
