@@ -133,7 +133,7 @@ Builder.load_string("""
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
-					on_press: root.go_back()
+					on_press: root.prev_screen()
 					BoxLayout:
 						padding: 0
 						size: self.parent.size
@@ -170,33 +170,34 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-				Button:
-					size_hint: (None,None)
-					height: dp(60)
-					width: dp(51)
-					background_color: hex('#F4433600')
-					center: self.parent.center
-					pos: self.parent.pos
-					on_press: root.exit_app()
-					BoxLayout:
-						padding: 0
-						size: self.parent.size
-						pos: self.parent.pos
-						Image:
-							source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
-							center_x: self.parent.center_x
-							y: self.parent.y
-							size: self.parent.width, self.parent.height
-							allow_stretch: True 
+				# Button:
+				# 	size_hint: (None,None)
+				# 	height: dp(60)
+				# 	width: dp(51)
+				# 	background_color: hex('#F4433600')
+				# 	center: self.parent.center
+				# 	pos: self.parent.pos
+				# 	on_press: root.exit_app()
+				# 	BoxLayout:
+				# 		padding: 0
+				# 		size: self.parent.size
+				# 		pos: self.parent.pos
+				# 		Image:
+				# 			source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
+				# 			center_x: self.parent.center_x
+				# 			y: self.parent.y
+				# 			size: self.parent.width, self.parent.height
+				# 			allow_stretch: True 
 """)
 
 class AlarmScreen2(Screen):
-
-	# this is the screen's description
-	# alarm_description = StringProperty()
-
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen2, self).__init__(**kwargs)
-		self.sm=kwargs['screen_manager']
-		self.m=kwargs['machine']
+		self.a=kwargs['alarm_manager']
+
+	def next_screen(self):
+		self.a.sm.current = 'alarm_3'
+
+	def prev_screen(self):
+		self.a.sm.current = 'alarm_1'

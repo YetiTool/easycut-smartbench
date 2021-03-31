@@ -133,7 +133,7 @@ Builder.load_string("""
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
-					on_press: root.go_back()
+					on_press: root.prev_screen()
 					BoxLayout:
 						padding: 0
 						size: self.parent.size
@@ -150,20 +150,20 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(291)
 				padding: [0,0,0,52]
-				Button:
-					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-					background_down: "./asmcnc/apps/warranty_app/img/next.png"
-					border: [dp(14.5)]*4
-					size_hint: (None,None)
-					width: dp(291)
-					height: dp(79)
-					on_press: root.next_screen()
-					text: 'Next...'
-					font_size: '30sp'
-					color: hex('#f9f9f9ff')
-					markup: True
-					center: self.parent.center
-					pos: self.parent.pos
+				# Button:
+				# 	background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+				# 	background_down: "./asmcnc/apps/warranty_app/img/next.png"
+				# 	border: [dp(14.5)]*4
+				# 	size_hint: (None,None)
+				# 	width: dp(291)
+				# 	height: dp(79)
+				# 	on_press: root.next_screen()
+				# 	text: 'Next...'
+				# 	font_size: '30sp'
+				# 	color: hex('#f9f9f9ff')
+				# 	markup: True
+				# 	center: self.parent.center
+				# 	pos: self.parent.pos
 
 			BoxLayout: 
 				size_hint: (None, None)
@@ -177,7 +177,7 @@ Builder.load_string("""
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
-					on_press: root.exit_app()
+					on_press: root.next_screen()
 					BoxLayout:
 						padding: 0
 						size: self.parent.size
@@ -191,12 +191,13 @@ Builder.load_string("""
 """)
 
 class AlarmScreen5(Screen):
-
-	# this is the screen's description
-	# alarm_description = StringProperty()
-
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
-		self.sm=kwargs['screen_manager']
-		self.m=kwargs['machine']
+		self.a=kwargs['alarm_manager']
+
+	def next_screen(self):
+		self.a.sm.current = self.a.return_to_screen
+
+	def prev_screen(self):
+		self.a.sm.current = 'alarm_4'

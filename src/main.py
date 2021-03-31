@@ -136,13 +136,14 @@ class SkavaUI(App):
             powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
 
         else: 
-            # Initialise 'm'achine object
-            m = router_machine.RouterMachine(Cmport, sm)
-            
-            job_gcode = []  # declare g-code object
-            
+
             # Initialise settings object
             sett = settings_manager.Settings(sm)
+
+            # Initialise 'm'achine object
+            m = router_machine.RouterMachine(Cmport, sm, sett)
+            
+            job_gcode = []  # declare g-code object
             
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett)
