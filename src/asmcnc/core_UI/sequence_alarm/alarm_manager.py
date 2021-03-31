@@ -61,7 +61,7 @@ class AlarmSequenceManager(object):
 		self.sm.add_widget(alarm_5_screen)
 
 
-	def alert_user(message):
+	def alert_user(self, message):
 
 		if not self.alarm.is_alarm_sequence_already_running():
 			if is_error_screen_already_up():
