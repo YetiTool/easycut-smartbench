@@ -196,6 +196,14 @@ class AlarmScreen4(Screen):
 		super(AlarmScreen4, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
+		self.alarm_title = "Alarm: Learn more..."
+		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+		self.description_label.text = (
+			"Learn more about the cause of the alarm by visiting our knowledge base at" + \
+			"\n" +
+			"https://www.yetitool.com/support/knowledge-base/alarm-screens"
+			)
+
 	def next_screen(self):
 		self.a.sm.current = 'alarm_5'
 

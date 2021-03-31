@@ -14,7 +14,7 @@ screen_alarm_4, screen_alarm_5
 
 ALARM_CODES_DICT = {
 
-	"ALARM:1" : "Unexpected limit reached. The machine's position was likely lost. Re-homing is highly recommended.",
+	"ALARM:1" : "The machine's position was likely lost. Re-homing is highly recommended.",
 	"ALARM:2" : "The requested motion target exceeds the machine's travel.",
 	"ALARM:3" : "Machine was reset while in motion and cannot guarantee position. Lost steps are likely. Re-homing is recommended.",
 	"ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",

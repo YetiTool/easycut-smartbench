@@ -196,6 +196,10 @@ class AlarmScreen5(Screen):
 		super(AlarmScreen5, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
+		self.alarm_title = "Alarm: Job cancelled."
+		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
+
 	def next_screen(self):
 		self.a.exit_sequence()
 
