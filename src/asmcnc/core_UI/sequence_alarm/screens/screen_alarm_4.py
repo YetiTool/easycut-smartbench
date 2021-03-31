@@ -86,7 +86,6 @@ Builder.load_string("""
 				width: dp(800)       
 				Image:
 					id: icon
-					source: "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 					center_x: self.parent.center_x
 					y: self.parent.y
 					size: self.parent.width, self.parent.height
@@ -197,7 +196,7 @@ class AlarmScreen4(Screen):
 		self.a=kwargs['alarm_manager']
 
 		self.alarm_title.text = "[b]" +  "Alarm: Learn more..." + "[/b]"
-		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/qr_code.png"
+		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/qr-code.png"
 		self.description_label.text = (
 			"Learn more about the cause of the alarm by visiting our knowledge base at" + \
 			"\n" +
