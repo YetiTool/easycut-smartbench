@@ -77,28 +77,28 @@ class AlarmSequenceManager(object):
 
 			self.handle_alarm_state()
 
-    def exit_sequence(self):
-        
-        self.m.resume_from_alarm()
+	def exit_sequence(self):
+		
+		self.m.resume_from_alarm()
 
-        if self.return_to_screen == 'go':
-            self.sm.get_screen('go').is_job_started_already = False
-            self.sm.get_screen('go').temp_suppress_prompts = True
-        
-        if self.sm.has_screen(self.return_to_screen):
-            self.sm.current = self.return_to_screen
+		if self.return_to_screen == 'go':
+			self.sm.get_screen('go').is_job_started_already = False
+			self.sm.get_screen('go').temp_suppress_prompts = True
+		
+		if self.sm.has_screen(self.return_to_screen):
+			self.sm.current = self.return_to_screen
 
-        else: 
-            self.sm.current = 'lobby'
+		else: 
+			self.sm.current = 'lobby'
 
 
 	def handle_alarm_state(self):
-        Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
-        self.m.set_state('Alarm')
-        self.m.led_restore()
-        if (self.message).endswith('1'):
-            Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1)
-            Clock.schedule_once(lambda dt: self.get_status_info(), 1)
+		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
+		self.m.set_state('Alarm')
+		self.m.led_restore()
+		if (self.message).endswith('1'):
+			Clock.schedule_once(lambda dt: self.get_suspected_trigger(), 1)
+			Clock.schedule_once(lambda dt: self.get_status_info(), 1)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -126,29 +126,29 @@ class AlarmSequenceManager(object):
 
 
 	def get_suspected_trigger(self):
-        limit_code = "Unexpected limit reached: "
-        limit_list = []
+		limit_code = "Unexpected limit reached: "
+		limit_list = []
 
-        if self.m.s.limit_x:
-            limit_list.append('X home')
+		if self.m.s.limit_x:
+			limit_list.append('X home')
 
-        if self.m.s.limit_X: 
-            limit_list.append('X far')
+		if self.m.s.limit_X: 
+			limit_list.append('X far')
 
-        if self.m.s.limit_y: 
-            limit_list.append('Y home')
+		if self.m.s.limit_y: 
+			limit_list.append('Y home')
 
-        if self.m.s.limit_Y: 
-            limit_list.append('Y far')
+		if self.m.s.limit_Y: 
+			limit_list.append('Y far')
 
-        if self.m.s.limit_z: 
-            limit_list.append('Z top')
+		if self.m.s.limit_z: 
+			limit_list.append('Z top')
 
-        if limit_list == []:
-            limit_list.append('Unknown')
+		if limit_list == []:
+			limit_list.append('Unknown')
 
-        self.trigger_description = limit_code + (', ').join(limit_list)
-        self.update_screens()
+		self.trigger_description = limit_code + (', ').join(limit_list)
+		self.update_screens()
 
 
 	def get_status_info(self):
