@@ -127,17 +127,13 @@ Builder.load_string("""
 					# 			allow_stretch: True
 
 	FloatLayout:
-        Label:
+        Image:
             x: 660
             y: 321.60
             size_hint: None, None            
-            height: 30
-            width: 30
-            text: 'CAMERA POS'
-            markup: True
-            bold: True
-            color: 0,0,0,1
-            font_size: 30
+            height: 100
+            width: 120
+            source: "./asmcnc/apps/systemTools_app/img/camera_light.png"
 """)
 
 class AlarmScreen3(Screen):
