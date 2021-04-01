@@ -139,15 +139,15 @@ Builder.load_string("""
             width: 120
             allow_stretch: True
 
-	FloatLayout:
-        Image:
-        	id: usb_img
-            x: 680
-            y: 238.6
-            size_hint: None, None
-            height: 63
-            width: 100
-            allow_stretch: True
+	# FloatLayout:
+ #        Image:
+ #        	id: usb_img
+ #            x: 680
+ #            y: 238.6
+ #            size_hint: None, None
+ #            height: 63
+ #            width: 100
+ #            allow_stretch: True
 """)
 
 class AlarmScreen3(Screen):
@@ -161,7 +161,7 @@ class AlarmScreen3(Screen):
 		self.status_bar_widget.cheeky_color = '#1976d2'\
 
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
-		self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
+		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
 	def on_enter(self):
 		self.a.download_alarm_report()
