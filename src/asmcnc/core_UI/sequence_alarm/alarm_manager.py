@@ -180,7 +180,7 @@ class AlarmSequenceManager(object):
 
 		if self.trigger_description != '':
 			self.sm.get_screen('alarm_1').description_label.text = (
-					self.alarm_description + \
+					self.l.get_str(self.alarm_description) + \
 					"\n" +
 					self.trigger_description
 				)
