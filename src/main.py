@@ -44,7 +44,6 @@ from asmcnc.skavaUI import screen_jobstart_warning
 from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
 from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
-from asmcnc.skavaUI import screen_alarm # @UnresolvedImport
 from asmcnc.skavaUI import screen_error # @UnresolvedImport
 from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing # @UnresolvedImport
@@ -156,7 +155,6 @@ class SkavaUI(App):
             loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
             checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
-            alarm_screen = screen_alarm.AlarmScreenClass(name='alarmScreen', screen_manager = sm, machine = m)
             serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
             homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
             safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
@@ -188,7 +186,6 @@ class SkavaUI(App):
             sm.add_widget(loading_screen)
             sm.add_widget(checking_screen)
             sm.add_widget(error_screen)
-            sm.add_widget(alarm_screen)
             sm.add_widget(serial_screen)
             sm.add_widget(homing_screen)
             sm.add_widget(safety_screen)
