@@ -37,7 +37,7 @@ class AlarmSequenceManager(object):
 	trigger_description = ''
 	status_cache = ''
 
-	report_string= ''
+	report_string= 'Loading report...'
 
 	def __init__(self, screen_manager, settings_manager, machine):
 
@@ -72,7 +72,7 @@ class AlarmSequenceManager(object):
 				self.return_to_screen = self.sm.current
 
 			self.alarm_code = message
-			self.alarm_description = ALARM_CODES_DICT.get(self.alarm_code, "")
+			self.alarm_description = ALARM_CODES_DICT.get(message, "")
 			self.update_screens()
 			self.sm.current = 'alarm_1'
 
@@ -92,10 +92,12 @@ class AlarmSequenceManager(object):
 		else: 
 			self.sm.current = 'lobby'
 
+		self.reset_variables()
+
 
 	def handle_alarm_state(self):
-		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.5)
 		self.m.set_state('Alarm')
+		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.4)
 		self.m.led_restore()
 		Clock.schedule_once(lambda dt: self.update_screens(), 1)
 
@@ -187,7 +189,7 @@ class AlarmSequenceManager(object):
 		self.alarm_description = ''
 		self.trigger_description = ''
 		self.status_cache = ''
-		self.report_string= ''
+		self.report_string= 'Loading report...'
 
 	def download_alarm_report(self):
 		pass
