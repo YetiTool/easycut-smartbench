@@ -73,6 +73,7 @@ class AlarmSequenceManager(object):
 
 			self.alarm_code = message
 			self.alarm_description = ALARM_CODES_DICT.get(message, "")
+			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 			self.sm.current = 'alarm_1'
 
 			self.handle_alarm_state()
@@ -98,7 +99,7 @@ class AlarmSequenceManager(object):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.4)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1.2)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1.5)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -170,14 +171,14 @@ class AlarmSequenceManager(object):
 		self.get_version_data()
 		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 			self.get_suspected_trigger()
-		self.get_status_info()
-		self.setup_report()
 
 		self.sm.get_screen('alarm_1').description_label.text = (
 				self.alarm_description + \
 				"\n" +
 				self.trigger_description
 			)
+		self.get_status_info()
+		self.setup_report()
 
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
