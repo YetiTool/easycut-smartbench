@@ -44,7 +44,7 @@ class AlarmSequenceManager(object):
 		self.set = settings_manager
 		self.m = machine
 		self.l = localization
-		self.usb_stick = usb_storage.USB_storage(self.sm)
+		self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
 
 
 		self.report_string = self.l.get_str('Loading report...')
