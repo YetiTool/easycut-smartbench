@@ -17,7 +17,7 @@ Builder.load_string("""
 	description_label : description_label
 
 	camera_img : camera_img
-	usb_img : usb_img
+	# usb_img : usb_img
 
 	BoxLayout: 
 		size_hint: (None,None)
