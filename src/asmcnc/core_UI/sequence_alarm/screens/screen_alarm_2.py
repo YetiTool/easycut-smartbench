@@ -205,7 +205,7 @@ class AlarmScreen2(Screen):
 		self.alarm_title.text = "[b]" + "Alarm: Record details" + "[/b]"
 		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
 		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
-		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick to download it."
+		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it."
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_3'

@@ -133,7 +133,7 @@ Builder.load_string("""
             size_hint: None, None            
             height: 100
             width: 120
-            source: "./asmcnc/apps/systemTools_app/img/camera_light.png"
+            source: "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
 """)
 
 class AlarmScreen3(Screen):
@@ -145,6 +145,8 @@ class AlarmScreen3(Screen):
 		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.a.sm, machine=self.a.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'\
+
+		# self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
 
 	def on_enter(self):
 		self.a.download_alarm_report()
