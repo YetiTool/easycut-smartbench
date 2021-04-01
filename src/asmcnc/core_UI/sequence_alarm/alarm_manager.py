@@ -6,7 +6,7 @@ import datetime
 from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
 screen_alarm_4, screen_alarm_5
-
+from asmcnc.comms import usb_storage
 
 # this class is set up in serial comms, so that alarm screens are available at any time
 # not going to use it as a "screen manager" as alarm screens want to be instantly available at all times
@@ -44,6 +44,7 @@ class AlarmSequenceManager(object):
 		self.sm = screen_manager
 		self.set = settings_manager
 		self.m = machine
+		self.usb_stick = usb_storage.USB_storage(self.sm)
 
 		self.set_up_alarm_screens()
 
@@ -203,9 +204,7 @@ class AlarmSequenceManager(object):
 
         def get_report(count):
             if self.usb_stick.is_usb_mounted_flag == True:
-
-
-                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                self.write_report_to_file()
                 self.usb_stick.disable()
 
             elif count > 30:
