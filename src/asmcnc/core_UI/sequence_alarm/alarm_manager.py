@@ -228,12 +228,12 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			self.l.get_str("Software version:") + " " + self.sw_version + "\n" + \
 			self.l.get_str("Firmware version:") + " " + self.fw_version + "\n" + \
-			self.l.get_str("Hardware version:" )+ " " + self.hw_version + "\n" + \
+			self.l.get_str("Hardware version:") + " " + self.hw_version + "\n" + \
 			self.l.get_str("Serial number:") + " " + self.machine_serial_number + \
 			"\n\n" + \
 			self.l.get_str("Alarm code:") + " " + str((self.alarm_code.split(':'))[1]) + \
 			"\n" + \
-			self.l.get_str("Alarm description:") + " " self.l.get_str(self.alarm_description) + \
+			self.l.get_str("Alarm description:") + " " + self.l.get_str(self.alarm_description) + \
 			"\n" + \
 			self.trigger_description + \
 			"\n\n" + \
