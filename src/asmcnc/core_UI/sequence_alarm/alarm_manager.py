@@ -73,7 +73,6 @@ class AlarmSequenceManager(object):
 
 			self.alarm_code = message
 			self.alarm_description = ALARM_CODES_DICT.get(message, "")
-			self.update_screens()
 			self.sm.current = 'alarm_1'
 
 			self.handle_alarm_state()
@@ -96,8 +95,8 @@ class AlarmSequenceManager(object):
 
 
 	def handle_alarm_state(self):
-		self.m.set_state('Alarm')
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.4)
+		self.m.set_state('Alarm')
 		self.m.led_restore()
 		Clock.schedule_once(lambda dt: self.update_screens(), 1.2)
 
