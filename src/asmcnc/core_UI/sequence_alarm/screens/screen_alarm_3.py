@@ -137,10 +137,11 @@ class AlarmScreen3(Screen):
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'\
 
+	def on_enter(self):
+		self.a.download_alarm_report()
+
 	def next_screen(self):
 		self.a.sm.current = 'alarm_4'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_2'
-
-# git force
