@@ -29,6 +29,19 @@ Builder.load_string("""
 				size: self.size
 				pos: self.pos
 
+		FloatLayout:
+	        Label:
+	            x: 660
+	            y: 321.60
+	            size_hint: None, None            
+	            height: 30
+	            width: 30
+	            text: 'CAMERA POS'
+	            markup: True
+	            bold: True
+	            color: 0,0,0,0.2
+	            font_size: 30     
+
 		BoxLayout:
 			id: status_container 
 			size_hint_y: 0.08
@@ -47,8 +60,8 @@ Builder.load_string("""
 					markup: True
 					halign: 'left'
 					valign: 'top'
-					text_size: self.parent.size
-					size: self.parent.size
+					text_size: self.size
+					size: self.size
 
 			# Buttons
 			BoxLayout: 
