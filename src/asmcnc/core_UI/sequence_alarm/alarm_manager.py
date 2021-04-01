@@ -1,7 +1,7 @@
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
-from asmcnc.skavaUI import popup_info
+import datetime
 
 from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
@@ -150,12 +150,14 @@ class AlarmSequenceManager(object):
 
 		self.trigger_description = limit_code + (', ').join(limit_list)
 
+
 	def get_status_info(self):
 
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
 		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 		print(status_list)
+
 
 	def get_version_data(self):
 
@@ -172,15 +174,17 @@ class AlarmSequenceManager(object):
 		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 			self.get_suspected_trigger()
 
-		self.sm.get_screen('alarm_1').description_label.text = (
-				self.alarm_description + \
-				"\n" +
-				self.trigger_description
-			)
+		if self.trigger_description != '':
+			self.sm.get_screen('alarm_1').description_label.text = (
+					self.alarm_description + \
+					"\n" +
+					self.trigger_description
+				)
 		self.get_status_info()
 		self.setup_report()
 
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
+
 
 	def reset_variables(self):
 
@@ -191,8 +195,30 @@ class AlarmSequenceManager(object):
 		self.status_cache = ''
 		self.report_string= 'Loading report...'
 
+
 	def download_alarm_report(self):
-		pass
+
+        self.usb_stick.enable()
+        count = 0
+
+        def get_report(count):
+            if self.usb_stick.is_usb_mounted_flag == True:
+
+
+                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                self.usb_stick.disable()
+
+            elif count > 30:
+                if self.usb_stick.is_available(): self.usb_stick.disable()
+
+            else:
+                count +=1
+                Clock.schedule_once(lambda dt: get_report(count), 0.2)
+                print count
+
+
+        Clock.schedule_once(lambda dt: get_report(count), 0.2)
+
 
 	def setup_report(self):
 
@@ -215,3 +241,20 @@ class AlarmSequenceManager(object):
 			"\n" + \
 			self.status_cache
 			)
+
+
+	def write_report_to_file(self):
+
+		report_file_path = "/media/usb/alarm_report_" + str(datetime.datetime.now()) + ".txt"
+
+        try:
+            file = open(report_file_path, 'w+')
+            file.write(self.report_string)
+            file.close()
+
+            log("Alarm report written to file")
+            return True
+
+        except:
+            log("Unable to write alarm report to file")
+            return False
