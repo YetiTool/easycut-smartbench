@@ -29,19 +29,6 @@ Builder.load_string("""
 				size: self.size
 				pos: self.pos
 
-		FloatLayout:
-	        Label:
-	            x: 660
-	            y: 321.60
-	            size_hint: None, None            
-	            height: 30
-	            width: 30
-	            text: 'CAMERA POS'
-	            markup: True
-	            bold: True
-	            color: 0,0,0,1
-	            font_size: 30     
-
 		BoxLayout:
 			id: status_container 
 			size_hint_y: 0.08
@@ -137,7 +124,20 @@ Builder.load_string("""
 					# 			center_x: self.parent.center_x
 					# 			y: self.parent.y
 					# 			size: self.parent.width, self.parent.height
-					# 			allow_stretch: True 
+					# 			allow_stretch: True
+
+	FloatLayout:
+        Label:
+            x: 660
+            y: 321.60
+            size_hint: None, None            
+            height: 30
+            width: 30
+            text: 'CAMERA POS'
+            markup: True
+            bold: True
+            color: 0,0,0,1
+            font_size: 30
 """)
 
 class AlarmScreen3(Screen):
