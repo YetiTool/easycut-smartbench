@@ -130,14 +130,13 @@ Builder.load_string("""
 					# 			allow_stretch: True
 
 	FloatLayout:
-		BoxLayout:
+        Image:
+        	id: camera_img
             x: 660
             y: 321.60
             size_hint: None, None
             height: 100
             width: 120
-        Image:
-        	id: camera_img
             allow_stretch: True
 
 	FloatLayout:
