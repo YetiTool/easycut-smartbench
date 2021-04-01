@@ -251,9 +251,9 @@ class AlarmSequenceManager(object):
 			file.write(self.report_string)
 			file.close()
 
-			log("Alarm report written to file")
+			print("Alarm report written to file")
 			return True
 
 		except:
-			log("Unable to write alarm report to file")
+			print("Unable to write alarm report to file")
 			return False
