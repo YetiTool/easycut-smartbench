@@ -20,7 +20,7 @@ Builder.load_string("""
 #:import Factory kivy.factory.Factory
 
 
-<LanguageSpinner@SpinnerOption>
+<SystemToolsLanguageSpinner@SpinnerOption>
 
     background_normal: ''
     background_color: [1,1,1,1]
@@ -331,7 +331,7 @@ Builder.load_string("""
                             text: 'Choose language...'
                             color: hex('#f9f9f9ff')
                             markup: True
-                            option_cls: Factory.get("LanguageSpinner")
+                            option_cls: Factory.get("SystemToolsLanguageSpinner")
                             on_text: root.choose_language()
 
                     BoxLayout: 

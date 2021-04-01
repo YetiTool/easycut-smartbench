@@ -17,26 +17,18 @@ from asmcnc.comms import localization
 from asmcnc.skavaUI import screen_file_loading
 from asmcnc.tests import loading_screen_test
 
+from asmcnc.core_UI.sequence_alarm import screen_alarm_1
 
 
 class ScreenTest(App):
 
+	def build(self):
 
-    def build(self):
-
-        sm = ScreenManager(transition=NoTransition())
-        # Localization/language object
-        l = localization.Localization()
-        m = None
-        am = None
-        job_gcode = ['G1']
-        # go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am, localization = l)
-        # sm.add_widget(go_screen)
-
-        loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode, localization = l)
-        sm.add_widget(loading_screen)
-        sm.current = 'loading'
-        return sm
-
+		sm = ScreenManager(transition=NoTransition())
+		m = None
+		alarm_1_screen = screen_alarm_1.AlarmScreen1(name='final_test', screen_manager = sm, machine = m)
+		sm.add_widget(alarm_1_screen)
+		sm.current = 'final_test'
+		return sm
 
 ScreenTest().run()
