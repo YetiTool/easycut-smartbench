@@ -246,14 +246,14 @@ class AlarmSequenceManager(object):
 
 		report_file_path = "/media/usb/alarm_report_" + str(datetime.datetime.now()) + ".txt"
 
-		try:
-			file = open(report_file_path, 'w+')
-			file.write(self.report_string)
-			file.close()
+		# try:
+		file = open(report_file_path, 'w+')
+		file.write(self.report_string)
+		file.close()
 
-			print("Alarm report written to file")
-			return True
+		print("Alarm report written to file")
+		return True
 
-		except:
-			print("Unable to write alarm report to file")
-			return False
+		# except:
+		# 	print("Unable to write alarm report to file")
+		# 	return False
