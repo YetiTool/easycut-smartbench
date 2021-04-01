@@ -199,24 +199,24 @@ class AlarmSequenceManager(object):
 
 	def download_alarm_report(self):
 
-        self.usb_stick.enable()
-        count = 0
+		self.usb_stick.enable()
+		count = 0
 
-        def get_report(count):
-            if self.usb_stick.is_usb_mounted_flag == True:
-                self.write_report_to_file()
-                self.usb_stick.disable()
+		def get_report(count):
+			if self.usb_stick.is_usb_mounted_flag == True:
+				self.write_report_to_file()
+				self.usb_stick.disable()
 
-            elif count > 30:
-                if self.usb_stick.is_available(): self.usb_stick.disable()
+			elif count > 30:
+				if self.usb_stick.is_available(): self.usb_stick.disable()
 
-            else:
-                count +=1
-                Clock.schedule_once(lambda dt: get_report(count), 0.2)
-                print count
+			else:
+				count +=1
+				Clock.schedule_once(lambda dt: get_report(count), 0.2)
+				print count
 
 
-        Clock.schedule_once(lambda dt: get_report(count), 0.2)
+		Clock.schedule_once(lambda dt: get_report(count), 0.2)
 
 
 	def setup_report(self):
@@ -246,14 +246,14 @@ class AlarmSequenceManager(object):
 
 		report_file_path = "/media/usb/alarm_report_" + str(datetime.datetime.now()) + ".txt"
 
-        try:
-            file = open(report_file_path, 'w+')
-            file.write(self.report_string)
-            file.close()
+		try:
+			file = open(report_file_path, 'w+')
+			file.write(self.report_string)
+			file.close()
 
-            log("Alarm report written to file")
-            return True
+			log("Alarm report written to file")
+			return True
 
-        except:
-            log("Unable to write alarm report to file")
-            return False
+		except:
+			log("Unable to write alarm report to file")
+			return False
