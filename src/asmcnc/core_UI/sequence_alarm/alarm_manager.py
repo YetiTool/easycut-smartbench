@@ -181,22 +181,27 @@ class AlarmSequenceManager(object):
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 	def reset_variables(self):
-		pass
+
+		self.return_to_screen = ''
+		self.alarm_code = ''
+		self.alarm_description = ''
+		self.trigger_description = ''
+		self.status_cache = ''
+		self.report_string= ''
 
 	def download_alarm_report(self):
 		pass
 
 	def setup_report(self):
 
-		tab_distance = "      "
-
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
 			"\n\n" + \
-			"Software version" + tab_distance + "Firmware version" + tab_distance + "Hardware version" + tab_distance + "Serial number" + \
-			"\n" + \
-			self.sw_version + tab_distance + self.fw_version + tab_distance + self.hw_version + tab_distance + self.machine_serial_number + \
+			"Software version:" + " " + self.sw_version + "\n" + \
+			"Firmware version:" + " " + self.fw_version + "\n" + \
+			"Hardware version" + " " + self.hw_version + "\n" + \
+			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
 			"Alarm code:" + " " + self.alarm_code[-1] + \
 			"\n" + \
