@@ -47,7 +47,7 @@ Builder.load_string("""
 					markup: True
 					halign: 'left'
 					valign: 'top'
-					text_size: self.parent.parent.size
+					text_size: self.parent.size
 					size: self.parent.size
 
 			# Buttons
