@@ -191,13 +191,10 @@ class AlarmScreen2(Screen):
 		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
 		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
 		self.description_label.text = self.a.l.get_str("Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.")
-		self.next_button.text = self.a.l.get_str("Next...")
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_3'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_1'
-
-
-# git force	

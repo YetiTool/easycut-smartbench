@@ -163,7 +163,7 @@ class AlarmScreen1(Screen):
 
 		self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.next_button.text = self.a.l.get_str("Next...")
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_2'

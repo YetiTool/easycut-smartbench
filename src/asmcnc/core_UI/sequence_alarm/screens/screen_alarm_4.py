@@ -186,12 +186,10 @@ class AlarmScreen4(Screen):
 			"\n" +
 			"https://www.yetitool.com/support/knowledge-base/alarm-screens"
 			)
-		self.next_button.text = self.a.l.get_str("Next...")
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_5'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_3'
-
-# git force

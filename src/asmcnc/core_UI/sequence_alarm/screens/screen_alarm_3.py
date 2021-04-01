@@ -145,7 +145,7 @@ class AlarmScreen3(Screen):
 		self.status_bar_widget.cheeky_color = '#1976d2'\
 
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
-		self.next_button.text = self.a.l.get_str("Next...")
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
 	def on_enter(self):
