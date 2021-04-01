@@ -151,7 +151,7 @@ class AlarmSequenceManager(object):
 			limit_list.append(self.l.get_str('Z home'))
 
 		if limit_list == []:
-			limit_list.append('Unknown')
+			limit_list.append(self.l.get_str('Unknown'))
 
 		self.trigger_description = limit_code + (', ').join(limit_list)
 
