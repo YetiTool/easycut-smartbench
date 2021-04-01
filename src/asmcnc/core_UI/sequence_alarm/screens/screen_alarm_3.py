@@ -46,8 +46,8 @@ Builder.load_string("""
 					color: [0,0,0,1]
 					markup: True
 					halign: 'left'
-					valign: 'middle'
-					text_size: self.size
+					valign: 'top'
+					text_size: self.parent.parent.size
 					size: self.parent.size
 
 			# Buttons

@@ -246,14 +246,14 @@ class AlarmSequenceManager(object):
 
 		report_file_path = "/home/pi/alarm_report_" + str(datetime.date.today()) + ".txt"
 
-		# try:
-		with open(report_file_path, 'w+') as file:
-			file.write(self.report_string)
+		try:
+			with open(report_file_path, 'w+') as file:
+				file.write(self.report_string)
 
-		os.system("sudo cp --no-preserve=mode,ownership " + report_file_path + " /media/usb/ && rm " + report_file_path)
-		print("Alarm report written to file")
-		return True
+			os.system("sudo cp --no-preserve=mode,ownership " + report_file_path + " /media/usb/ && rm " + report_file_path)
+			print("Alarm report written to file")
+			return True
 
-		# except:
-		# 	print("Unable to write alarm report to file")
-		# 	return False
+		except:
+			print("Unable to write alarm report to file")
+			return False
