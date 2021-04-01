@@ -16,6 +16,7 @@ Builder.load_string("""
 	icon_container : icon_container
 	icon : icon
 	description_label : description_label
+	next_button : next_button
 
 	canvas:
 		Color: 
@@ -150,6 +151,7 @@ Builder.load_string("""
 				width: dp(291)
 				padding: [0,0,0,52]
 				Button:
+					id: next_button
 					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 					background_down: "./asmcnc/apps/warranty_app/img/next.png"
 					border: [dp(14.5)]*4
@@ -184,6 +186,7 @@ class AlarmScreen4(Screen):
 			"\n" +
 			"https://www.yetitool.com/support/knowledge-base/alarm-screens"
 			)
+		self.next_button.text = self.a.l.get_str("Next...")
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_5'
