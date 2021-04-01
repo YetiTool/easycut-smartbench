@@ -39,7 +39,7 @@ Builder.load_string("""
 	            text: 'CAMERA POS'
 	            markup: True
 	            bold: True
-	            color: 0,0,0,0.2
+	            color: 0,0,0,1
 	            font_size: 30     
 
 		BoxLayout:
