@@ -99,7 +99,7 @@ class AlarmSequenceManager(object):
 		self.m.set_state('Alarm')
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.4)
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1.2)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -155,7 +155,7 @@ class AlarmSequenceManager(object):
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
 		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
-
+		print(status_list)
 
 	def get_version_data(self):
 
