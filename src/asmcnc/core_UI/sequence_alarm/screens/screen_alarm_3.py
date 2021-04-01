@@ -130,13 +130,15 @@ Builder.load_string("""
 					# 			allow_stretch: True
 
 	FloatLayout:
-        Image:
-        	id: camera_img
+		BoxLayout:
             x: 660
             y: 321.60
             size_hint: None, None
             height: 100
             width: 120
+        Image:
+        	id: camera_img
+            allow_stretch: True
 
 	FloatLayout:
         Image:
@@ -146,6 +148,7 @@ Builder.load_string("""
             size_hint: None, None
             height: 63
             width: 100
+            allow_stretch: True
 """)
 
 class AlarmScreen3(Screen):
