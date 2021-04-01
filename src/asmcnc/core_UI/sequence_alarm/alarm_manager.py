@@ -157,7 +157,6 @@ class AlarmSequenceManager(object):
 		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 		n = len(status_list)
 		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
-		print(status_list)
 
 
 	def get_version_data(self):
@@ -213,8 +212,6 @@ class AlarmSequenceManager(object):
 			else:
 				count +=1
 				Clock.schedule_once(lambda dt: get_report(count), 0.2)
-				print count
-
 
 		Clock.schedule_once(lambda dt: get_report(count), 0.2)
 
