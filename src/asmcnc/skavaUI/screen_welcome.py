@@ -73,8 +73,6 @@ class WelcomeScreenClass(Screen):
 
         if self.m.s.is_connected():
 
-            Clock.schedule_once(self.db._start_status_ping_schedule, 2)
-
             # PC boot timings
             if sys.platform == 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
