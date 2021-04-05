@@ -1,7 +1,15 @@
 '''
 Created on 31 Jan 2018
 @author: Ed
-Reporting to Flurry server
+Main Flurry module.
+
+Notes: 
+Since old platforms may no have the `pika` lib, we have to check it is present so we don't cause a fail.
+We use a buffer for messages to hold the messages, before uploading the buffer. This better handles simultaneous events which could occur.
+We collect a general machine status every time the buffer is uploaded.
+Status messages are low priority and should not be stored when off-line. 
+All other events (e.g. alarms, end-of-jobs), however, should be stored when off-line.
+Off-line data should be uploaded when machine next comes on-line.
 '''
 
 from kivy.clock import Clock
@@ -29,20 +37,11 @@ except:
 
 class DatabaseStorage(object):
 
-    
+    _message_buffer = []
+
     rabbitMQ_connection = None
     remote_hostname = "flurry.yetitool.com"
-    STATUS_POLL_INTERVAL = 10
-
-    # REMOTE CONNECTION CREDS
-    # TODO: Work to be done with security:
-    # - Password needs to be a github secret
-    # - User serverside needs to be securely setup, was granted excessive admin rights
-    credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
-    rabbitMQ_parameters = pika.ConnectionParameters(remote_hostname, 5672, '/', credentials)
-
-    #TODO this is just an example of how we could track what SW we're running which is sending the data   
-    sw_branch = "flurry_poc1" 
+    BUFFER_SEND_INTERVAL = 10
 
 
     def __init__(self, screen_manager, router_machine):
@@ -54,22 +53,59 @@ class DatabaseStorage(object):
         if pika_lib_import_ok: 
             
             self._test_remote_connection()
-            Clock.schedule_interval(self._send_status_update_to_remote_db, self.STATUS_POLL_INTERVAL)
+            Clock.schedule_interval(self._send_the_message_buffer, self.BUFFER_SEND_INTERVAL)
 
 
     def _test_remote_connection(self):
                       
         try:
+            # REMOTE CONNECTION CREDS
+            # TODO: Work to be done with security:
+            # - Password needs to be a github secret
+            # - User serverside needs to be securely setup, was granted excessive admin rights
+            self.credentials = pika.PlainCredentials('tempAdmin', 'jtdBWr3G7Bc7qUyN')
+            self.rabbitMQ_parameters = pika.ConnectionParameters(self.remote_hostname, 5672, '/', self.credentials)
+
             self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
-            log("Flurry connection test: OK.")
+            log("Flurry basic connection test: OK.")
             # OK, now we know it works, close it to prevent timeouts
             self.rabbitMQ_connection.close()
         except:
-            log("Flurry connection test: failed.")
+            log("Flurry basic connection test: failed.")
 
+    
+    def _send_the_message_buffer(self, dt):
         
+        # Scrape machine status every time we send the buffer
+        self._add_status_to_send_buffer()
+        
+        # Copy live buffer to local list, to reduce risk of live buffer getting locked while we take time to send the messages
+        buffer_copy = self._message_buffer
+        self._message_buffer = []
 
-    def _send_status_update_to_remote_db(self, dt):
+        try:
+            self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
+            channel = self.rabbitMQ_connection.channel()
+            channel.queue_declare(queue='machine_status_1')
+        except:
+            log("Flurry basic connection fail, after channel declaration.")
+        
+        # REVERSED list is necessary coz we're removing buffer items as we go. Reversing just dodges the inherent indicies problem that creates.
+        for data in buffer_copy:
+
+            message = json.dumps(data)
+            
+            try:    
+                channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
+                log("Flurry msg sent: " + message)
+            except:
+                log("Flurry msg FAIL: " + message)
+                
+        buffer_copy = []
+        self.rabbitMQ_connection.close()        
+
+
+    def _add_status_to_send_buffer(self):
 
         try:        
             measurement_type = "sb1_status"
@@ -95,9 +131,9 @@ class DatabaseStorage(object):
             calibration_hrs_left = round(calibration_limit_hrs - calibration_used_hrs, 2)
             calibration_percent_used = round((calibration_hrs_left/calibration_limit_hrs)*100, 2)
         except:
-            log("Unable to scrape date for Flurry msg.")
+            log("Unable to scrape data for Flurry status.")
         
-        # TODO: Warning - this won't handle simulateneous calls!!!! Needs a locking mechanism.
+        # TODO: Add UTC timestamp, for offline record
         try:    
             data = [
                 {
@@ -127,18 +163,8 @@ class DatabaseStorage(object):
                     }
                 }
             ]
-
-            message = json.dumps(data)
-    
-            self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
-            channel = self.rabbitMQ_connection.channel()
-            channel.queue_declare(queue='machine_status_1')
-    
-            log("Status ping: " + message)
-            channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
-            self.rabbitMQ_connection.close()
-
         except:
-            log("Problem pinging status to Flurry." )
-                
+            log("Unable to package data for Flurry status." )
+                        
+        self._message_buffer.append(data)
 
