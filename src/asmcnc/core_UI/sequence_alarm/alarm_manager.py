@@ -81,7 +81,15 @@ class AlarmSequenceManager(object):
 			self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
 			self.sm.current = 'alarm_1'
 
+			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+				self.sm.get_screen('alarm_1').description_label.text = (
+					self.alarm_description + \
+					"\n" + \
+					self.l.get_str("Getting details...")
+					)
+
 			self.handle_alarm_state()
+
 
 	def exit_sequence(self):
 		
@@ -101,10 +109,10 @@ class AlarmSequenceManager(object):
 
 
 	def handle_alarm_state(self):
-		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1)
+		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.8)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1.2)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -138,7 +146,7 @@ class AlarmSequenceManager(object):
 		if self.m.s.limit_x:
 			limit_list.append(self.l.get_str('X home'))
 
-		if self.m.s.limit_X: 
+		if self.m.s.limit_X:
 			limit_list.append(self.l.get_str('X max'))
 
 		if self.m.s.limit_y: 
@@ -184,10 +192,8 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		self.get_status_info()
-		self.setup_report()
+		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
 
-		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 
 	def reset_variables(self):
@@ -198,6 +204,7 @@ class AlarmSequenceManager(object):
 		self.trigger_description = ''
 		self.status_cache = ''
 		self.report_string= self.l.get_str('Loading report...')
+		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 
 	def download_alarm_report(self):
@@ -222,6 +229,8 @@ class AlarmSequenceManager(object):
 
 	def setup_report(self):
 
+		self.get_status_info()
+
 		self.report_string = (
 
 			self.l.get_bold("Alarm report") + \
@@ -241,6 +250,8 @@ class AlarmSequenceManager(object):
 			"\n" + \
 			self.status_cache
 			)
+
+		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 
 	def write_report_to_file(self):

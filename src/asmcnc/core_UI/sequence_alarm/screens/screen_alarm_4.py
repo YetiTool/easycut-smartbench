@@ -171,6 +171,7 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
+
 """)
 
 class AlarmScreen4(Screen):
