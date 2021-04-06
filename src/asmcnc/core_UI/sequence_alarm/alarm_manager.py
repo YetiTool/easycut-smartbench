@@ -135,16 +135,16 @@ class AlarmSequenceManager(object):
 			limit_list.append('X home')
 
 		if self.m.s.limit_X: 
-			limit_list.append('X far')
+			limit_list.append('X max')
 
 		if self.m.s.limit_y: 
 			limit_list.append('Y home')
 
 		if self.m.s.limit_Y: 
-			limit_list.append('Y far')
+			limit_list.append('Y max')
 
 		if self.m.s.limit_z: 
-			limit_list.append('Z top')
+			limit_list.append('Z home')
 
 		if limit_list == []:
 			limit_list.append('Unknown')
@@ -224,7 +224,7 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			"Software version:" + " " + self.sw_version + "\n" + \
 			"Firmware version:" + " " + self.fw_version + "\n" + \
-			"Hardware version" + " " + self.hw_version + "\n" + \
+			"Hardware version:" + " " + self.hw_version + "\n" + \
 			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
 			"Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \

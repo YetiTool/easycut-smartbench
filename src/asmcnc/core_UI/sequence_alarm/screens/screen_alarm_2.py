@@ -176,24 +176,7 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-				# Button:
-				# 	size_hint: (None,None)
-				# 	height: dp(60)
-				# 	width: dp(51)
-				# 	background_color: hex('#F4433600')
-				# 	center: self.parent.center
-				# 	pos: self.parent.pos
-				# 	on_press: root.exit_app()
-				# 	BoxLayout:
-				# 		padding: 0
-				# 		size: self.parent.size
-				# 		pos: self.parent.pos
-				# 		Image:
-				# 			source: "./asmcnc/apps/systemTools_app/img/back_to_lobby.png"
-				# 			center_x: self.parent.center_x
-				# 			y: self.parent.y
-				# 			size: self.parent.width, self.parent.height
-				# 			allow_stretch: True 
+
 """)
 
 class AlarmScreen2(Screen):

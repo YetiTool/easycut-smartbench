@@ -150,20 +150,7 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(291)
 				padding: [0,0,0,52]
-				# Button:
-				# 	background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-				# 	background_down: "./asmcnc/apps/warranty_app/img/next.png"
-				# 	border: [dp(14.5)]*4
-				# 	size_hint: (None,None)
-				# 	width: dp(291)
-				# 	height: dp(79)
-				# 	on_press: root.next_screen()
-				# 	text: 'Next...'
-				# 	font_size: '30sp'
-				# 	color: hex('#f9f9f9ff')
-				# 	markup: True
-				# 	center: self.parent.center
-				# 	pos: self.parent.pos
+
 
 			BoxLayout: 
 				size_hint: (None, None)
