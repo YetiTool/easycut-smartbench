@@ -77,7 +77,15 @@ class AlarmSequenceManager(object):
 			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 			self.sm.current = 'alarm_1'
 
+			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+				self.sm.get_screen('alarm_1').description_label.text = (
+					self.alarm_description + \
+					"\n" + \
+					"Getting details..."
+					)
+
 			self.handle_alarm_state()
+
 
 	def exit_sequence(self):
 		
@@ -100,7 +108,7 @@ class AlarmSequenceManager(object):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.8)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1)
+		Clock.schedule_once(lambda dt: self.update_screens(), 0.8)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -180,7 +188,7 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
+		Clock.schedule_once(lambda dt: self.setup_report(), 0.4)
 
 
 
@@ -192,7 +200,7 @@ class AlarmSequenceManager(object):
 		self.trigger_description = ''
 		self.status_cache = ''
 		self.report_string= 'Loading report...'
-
+		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 	def download_alarm_report(self):
 
@@ -211,7 +219,7 @@ class AlarmSequenceManager(object):
 				count +=1
 				Clock.schedule_once(lambda dt: get_report(count), 0.2)
 
-		Clock.schedule_once(lambda dt: get_report(count), 0.3)
+		Clock.schedule_once(lambda dt: get_report(count), 0.2)
 
 
 	def setup_report(self):
