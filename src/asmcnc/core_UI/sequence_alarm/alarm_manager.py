@@ -97,10 +97,10 @@ class AlarmSequenceManager(object):
 
 
 	def handle_alarm_state(self):
-		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1.1)
+		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1.3)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1.1)
 
 
 	def is_alarm_sequence_already_running(self):
@@ -180,10 +180,8 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		self.get_status_info()
-		self.setup_report()
+		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
 
-		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 
 	def reset_variables(self):
@@ -218,6 +216,8 @@ class AlarmSequenceManager(object):
 
 	def setup_report(self):
 
+		self.get_status_info()
+
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
@@ -237,6 +237,8 @@ class AlarmSequenceManager(object):
 			"\n" + \
 			self.status_cache
 			)
+
+		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
 
 	def write_report_to_file(self):
