@@ -12,18 +12,17 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.apps.systemTools_app.screens import screen_final_test
+from asmcnc.core_UI.sequence_alarm import screen_alarm_1
 
 
 class ScreenTest(App):
-
 
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		final_test_screen = screen_final_test.FinalTestScreen(name='final_test', screen_manager = sm, machine = m)
-		sm.add_widget(final_test_screen)
+		alarm_1_screen = screen_alarm_1.AlarmScreen1(name='final_test', screen_manager = sm, machine = m)
+		sm.add_widget(alarm_1_screen)
 		sm.current = 'final_test'
 		return sm
 
