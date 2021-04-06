@@ -100,7 +100,7 @@ class AlarmSequenceManager(object):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 1.1)
 		self.m.set_state('Alarm')
 		self.m.led_restore()
-		Clock.schedule_once(lambda dt: self.update_screens(), 1.2)
+		Clock.schedule_once(lambda dt: self.update_screens(), 1.3)
 
 
 	def is_alarm_sequence_already_running(self):
