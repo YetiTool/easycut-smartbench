@@ -137,6 +137,8 @@ class WarningMState(Screen):
                     "Please wait for SmartBench to finish before attempting to start a job."
                 )
             
+        self.l.update_strings()
+
     
     def button_press(self):
         self.getout_button.background_color = get_color_from_hex('#c43c00')
