@@ -116,7 +116,7 @@ class WarningMState(Screen):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
-        self.l.update_strings()
+        self.update_strings()
 
 
     def on_enter(self):
