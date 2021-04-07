@@ -424,10 +424,6 @@ class WifiScreen(Screen):
 
     def on_enter(self):
 
-        self.update_strings()
-        self.update_font_size(self.country_label)
-        self.get_rst_source()
-
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')

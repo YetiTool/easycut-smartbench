@@ -56,8 +56,10 @@ class RebootingScreen(Screen):
         self.l=kwargs['localization']
         self.reboot_label.text = self.l.get_str('Rebooting') + '...'
     
-    def on_enter(self): 
+    def on_pre_enter(self):
         self.reboot_label.text = self.l.get_str('Rebooting') + '...'
+
+    def on_enter(self):
         Clock.schedule_once(self.reboot, 1)
         
     def reboot(self, dt):

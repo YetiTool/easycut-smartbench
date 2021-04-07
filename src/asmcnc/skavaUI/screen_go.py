@@ -513,8 +513,6 @@ class GoScreen(Screen):
         if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
 
-        self.update_strings()
-
 ### COMMON SCREEN PREP METHOD
 
     def reset_go_screen_prior_to_job_start(self):

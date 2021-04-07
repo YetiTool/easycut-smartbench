@@ -185,19 +185,10 @@ Builder.load_string("""
                 Button:
                     id: confirm_button
                     size_hint: (None,None)
-                    # height: dp(60)
-                    # width: dp(300)
-                    # center: self.parent.center
-                    # pos: self.parent.pos
                     on_press: root.continue_to_go_screen()
-                    # color: hex('#f9f9f9ff')
-                    # markup: True
-                    # font_size: '28sp'
-
                     background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                     background_down: "./asmcnc/apps/warranty_app/img/next.png"
                     border: [dp(14.5)]*4
-                    # size_hint: (None,None)
                     width: dp(291)
                     height: dp(79)
                     font_size: '28sp'
@@ -220,10 +211,9 @@ class JobstartWarningScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
+
         self.update_strings()
 
-    def on_enter(self):
-        self.update_strings()
 
     def continue_to_go_screen(self):
         self.sm.current = 'go'

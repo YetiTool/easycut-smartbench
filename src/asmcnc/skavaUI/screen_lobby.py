@@ -428,9 +428,7 @@ class LobbyScreen(Screen):
         self.m=kwargs['machine']
         self.am=kwargs['app_manager']
         self.l=kwargs['localization']
-# FLAG
-    def on_pre_enter(self):
-        # if self.update_app_label.text != self.l.dictionary['Update']:
+
         self.update_strings()
 
     def on_enter(self):

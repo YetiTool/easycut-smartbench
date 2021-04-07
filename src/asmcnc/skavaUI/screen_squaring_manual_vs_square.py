@@ -166,8 +166,6 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     
         self.update_strings()
 
-    def on_enter(self):
-        self.update_strings()
     
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False

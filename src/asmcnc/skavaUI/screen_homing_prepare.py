@@ -121,7 +121,8 @@ class HomingScreenPrepare(Screen):
         self.l=kwargs['localization']
 
         self.update_strings()
-    
+
+
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
         if self.m.is_squaring_XY_needed_after_homing == True:
@@ -129,7 +130,6 @@ class HomingScreenPrepare(Screen):
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear')
 
-        self.update_strings()
     
     def begin_homing(self):
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen

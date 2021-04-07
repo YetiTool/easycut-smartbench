@@ -142,8 +142,6 @@ class BoundaryWarningScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-
-    def on_pre_enter(self):
         self.update_strings()
 
     def on_enter(self):

@@ -128,7 +128,6 @@ class SquaringScreenActive(Screen):
             self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
             print "Polling for completion"
 
-        self.update_strings()
 
     def start_auto_squaring(self):
 

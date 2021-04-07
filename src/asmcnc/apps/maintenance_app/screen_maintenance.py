@@ -584,8 +584,6 @@ class MaintenanceScreenClass(Screen):
         else: 
             self.landing_tab = self.tab_panel.current
 
-        self.update_strings()
-
 
     def on_pre_leave(self):
 
