@@ -145,7 +145,6 @@ class SerialFailureClass(Screen):
                 self.l.get_str("There is a problem communicating with SmartBench.")
             )
 
-        self.user_instruction = (
-                self.l.get_str("Please check that Z head is connected, and then reboot the console.")
+        self.user_instruction = self.l.get_str("Please check that Z head is connected, and then reboot the console.")
 
         self.reboot_string.text = self.l.get_str("Reboot")
