@@ -523,7 +523,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC27_screen)
         elif self.sm.current == 'sC26':
             if not self.sm.has_screen('sC28'):
-                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC28_screen)
             if not self.sm.has_screen('sC27'):
                 sC27_screen = screen_shapeCutter_27.ShapeCutter27ScreenClass(name = 'sC27', machine = self.m, job_parameters = self.j, shapecutter = self)
@@ -769,7 +769,7 @@ class ScreenManagerShapeCutter(object):
                         
         elif self.sm.current == 'sC29':
             if not self.sm.has_screen('sC28'):
-                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC28_screen)           
             self.sm.current = 'sC28'
                         
@@ -939,7 +939,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC27_screen)
         elif self.sm.current == 'sC30':
             if not self.sm.has_screen('sC28'):
-                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC28_screen = screen_shapeCutter_28.ShapeCutter28ScreenClass(name = 'sC28', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC28_screen)
         elif self.sm.current == 'sC31':
             if not self.sm.has_screen('sC29'):
