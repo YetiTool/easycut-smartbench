@@ -46,31 +46,33 @@ Builder.load_string("""
              
             Label:
                 id: title_string
-                size_hint_y: 0.8
+                size_hint_y: 1.2
                 text_size: self.size
-                font_size: '24sp'
+                font_size: '26sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
  
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 30
+                padding: [20,0,0,0]
+                size_hint_y: 1
                 Label:
-                    size_hint_y: 1.1
                     text_size: self.size
-                    font_size: '18sp'
+                    font_size: '24sp'
                     halign: 'left'
                     valign: 'middle'
                     text: root.error_description 
-                
+                    markup: True
+
             Label:
                 size_hint_y: 1
-                font_size: '19sp'
+                font_size: '24sp'
                 text_size: self.size
                 halign: 'left'
                 valign: 'top'
                 text: root.user_instruction
+                markup: True
                     
             BoxLayout:
                 orientation: 'horizontal'
@@ -98,7 +100,7 @@ Builder.load_string("""
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
-                            font_size: '25sp'
+                            font_size: '30sp'
 """)
 
 class SerialFailureClass(Screen):
