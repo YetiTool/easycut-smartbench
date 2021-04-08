@@ -132,9 +132,9 @@ class WarningMState(Screen):
             
         else:
             self.user_instruction = (
-                    "SmartBench is still carrying out a command." + \
+                    self.l.get_str("SmartBench is still carrying out a command.") + \
                     " " + \
-                    "Please wait for SmartBench to finish before attempting to start a job."
+                    self.l.get_str("Please wait for SmartBench to finish before attempting to start a job.")
                 )
             
         self.update_strings()
@@ -154,6 +154,6 @@ class WarningMState(Screen):
                 "\n" + \
                 self.l.get_str("SmartBench is not in an idle state.")
             )
-        self.cannot_start_job.text = "Cannot start job."
+        self.cannot_start_job.text = self.l.get_str("Cannot start job.")
         
  
