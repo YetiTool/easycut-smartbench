@@ -732,6 +732,7 @@ class SerialConnection(object):
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             # self.alarm.alert_user(message) # DEBUG DISABLE ALARM SCREENS
+            self.m.set_state('Alarm') # DEBUG
 
         elif message.startswith('$'):
             log(message)
