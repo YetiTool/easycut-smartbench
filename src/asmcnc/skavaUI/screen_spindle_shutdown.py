@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -18,6 +19,9 @@ Builder.load_string("""
 
 <SpindleShutdownScreen>:
 
+    pausing_label : pausing_label
+    label_wait : label_wait
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -34,6 +38,7 @@ Builder.load_string("""
             size_hint_y: 1 
             
         Label:
+            id: pausing_label
             size_hint_y: 1
             text: '[color=333333]SmartBench is pausing the spindle motor.[/color]'
             markup: True
@@ -42,8 +47,10 @@ Builder.load_string("""
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
+            id: label_wait
             size_hint_y: 1
             text: '[color=333333]Please wait.[/color]'
             markup: True
@@ -52,6 +59,7 @@ Builder.load_string("""
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
             size_hint_y: 1                        
@@ -97,7 +105,10 @@ class SpindleShutdownScreen(Screen):
         super(SpindleShutdownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
     
+        self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
+        self.label_wait.text = self.l.get_str('Please wait') + '.'
     
     def on_enter(self):
 

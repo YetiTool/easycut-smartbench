@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 25 Feb 2019
 
@@ -29,10 +30,6 @@ import re
 from asmcnc.skavaUI import screen_check_job, widget_gcode_view, popup_info
 from asmcnc.geometry import job_envelope
 
-# from asmcnc.comms import usb_storage
-
-
-# Kivy UI builder:
 Builder.load_string("""
 
 <LoadingScreen>:
@@ -40,15 +37,13 @@ Builder.load_string("""
     check_button:check_button
     home_button:home_button
     filename_label:filename_label
-    warning_title_label:warning_title_label
+    # warning_title_label:warning_title_label
     warning_body_label:warning_body_label
-    quit_button_label:quit_button_label
-    check_button_label:check_button_label
     usb_status_label:usb_status_label
     
     canvas:
         Color: 
-            rgba: hex('#0d47a1')
+            rgba: hex('#E5E5E5FF')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -75,95 +70,82 @@ Builder.load_string("""
             text_size: self.size
             padding: [10, 0]
 
-        BoxLayout:
+        BoxLayout: 
+            spacing: 0
+            padding: [20, 0, 20, 20]
             orientation: 'vertical'
-            size_hint_x: 1
             size_hint_y: 7.81
-            spacing: 10
-            padding: [70, 31.3, 70, 70]
              
             Label:
-                size_hint_y: 1
+                id: header_label
+                size_hint_y: 0.8
+                markup: True
+                valign: 'bottom'
+                halign: 'center'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
                 font_size: '40sp'
-                text: root.progress_value
-                markup: True             
+                text: root.progress_value          
 
             Label:
                 id: filename_label
-                text_size: self.size
                 font_size: '20sp'
+                size_hint_y: 0.5
+                markup: True
+                valign: 'top'
                 halign: 'center'
-                valign: 'bottom'
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
                 text: 'Filename here'
                 
             Label:
-                id: warning_title_label
-                text_size: self.size
-                font_size: '20sp'
-                halign: 'center'
-                valign: 'bottom'
-                text: ''
-                
-            Label:
                 id: warning_body_label
-                text_size: self.size
-                font_size: '20sp'
+                font_size: '22sp'
                 halign: 'center'
-                valign: 'top'
-                text: ''
-            
+                valign: 'center'
+                size_hint_y: 1.7
+                markup: True
+                size: self.texture_size
+                text_size: self.size
+                color: hex('#333333ff')
+
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 10, 0
-                spacing: 10
-            
+                padding: [20,10,20,10]
+                spacing: 60
+                size_hint_y: 3
+
                 Button:
-                    size_hint_y:0.9
-                    id: check_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: True
-                    background_color: hex('#0d47a1')
-                    on_press: 
-                        root.go_to_check_job()
-                        
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            id: check_button_label
-                            #size_hint_y: 1
-                            font_size: '18sp'
-                            text: ''
-                        
-                Button:
-                    size_hint_y:0.9
                     id: home_button
-                    size: self.texture_size
-                    valign: 'top'
-                    halign: 'center'
-                    disabled: True
-                    background_color: hex('#0d47a1')
-                    on_press: 
-                        root.quit_to_home()
+                    size_hint_x: 1
+                    valign: "middle"
+                    halign: "center"
+                    markup: True
+                    font_size: root.default_font_size
+                    text_size: self.size
+                    background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    border: [dp(30)]*4
+                    padding: [30, 30]
+                    on_press: root.quit_to_home()
 
-                    BoxLayout:
-                        padding: 5
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        
-                        Label:
-                            id: quit_button_label
-                            #size_hint_y: 1
-                            font_size: '18sp'
-                            text: ''
-
-
-
-                            
+                Button:
+                    id: check_button
+                    size_hint_x: 1
+                    on_press: root.go_to_check_job()
+                    valign: "middle"
+                    halign: "center"
+                    markup: True
+                    font_size: root.default_font_size
+                    text_size: self.size
+                    background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
+                    border: [dp(30)]*4
+                    padding: [30, 30]                            
 """)
 
 
@@ -194,11 +176,13 @@ class LoadingScreen(Screen):
 
     usb_status = None
 
+    default_font_size = '30sp'
     
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         self.job_gcode=kwargs['job']
 
     def on_enter(self):    
@@ -210,20 +194,10 @@ class LoadingScreen(Screen):
             self.filename_label.text = self.loading_file_name.split("/")[-1]
 
         self.update_usb_status()
-
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False
-
         self.load_value = 0
+        self.update_screen('Getting ready')
 
-        self.check_button.disabled = True
-        self.home_button.disabled = True
-        self.progress_value = 'Getting ready...'
-        self.warning_title_label.text = ''
-        self.warning_body_label.text = ''
-        self.check_button_label.text = ''
-        self.quit_button_label.text = ''
-
-#         Clock.usleep(1)
         # CAD file processing sequence
         self.job_gcode = []
         self.sm.get_screen('home').job_gcode = []
@@ -231,21 +205,20 @@ class LoadingScreen(Screen):
 
     def update_usb_status(self):
         if self.usb_status == 'connected':
-            self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+            self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejecting':
-            self.usb_status_label.text = "Ejecting USB: please wait..."
+            self.usb_status_label.text = self.l.get_str("Ejecting USB: please wait") + "..."
             self.usb_status_label.opacity = 1
             self.usb_status_label.canvas.before.clear()
             with self.usb_status_label.canvas.before:
                 Color(51 / 255., 51 / 255., 51 / 255. , 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
         elif self.usb_status == 'ejected':
-            self.usb_status_label.text = "Safe to remove USB."
-            # self.usb_status_label.canvas.before.clear()
+            self.usb_status_label.text = self.l.get_str("Safe to remove USB.")
             with self.usb_status_label.canvas.before:
                 Color(76 / 255., 175 / 255., 80 / 255., 1.)
                 Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
@@ -278,8 +251,10 @@ class LoadingScreen(Screen):
             self.job_file_as_list = f.readlines()
 
         if len(self.job_file_as_list) == 0:
-            file_empty_warning = 'File is empty!\n\nPlease load a different file.'
-            popup_info.PopupError(self.sm, file_empty_warning)
+            file_empty_warning = (self.l.get_str('File is empty!') + '\n\n' + \
+            self.l.get_str('Please load a different file.'))
+
+            popup_info.PopupError(self.sm, self.l, file_empty_warning)
             self.sm.current = 'local_filechooser'
             return
 
@@ -381,7 +356,7 @@ class LoadingScreen(Screen):
                 # take a breather and update progress report
                 self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
                 percentage_progress = int((self.lines_scrubbed * 1.0 / self.total_lines_in_job_file_pre_scrubbed * 1.0) * 100.0)
-                self.progress_value = 'Preparing file: ' + str(percentage_progress) + ' %' # update progress label
+                self.update_screen('Preparing', percentage_progress)
                 Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
 
             else: 
@@ -391,7 +366,7 @@ class LoadingScreen(Screen):
                 self._get_gcode_preview_and_ranges()
 
         except:
-            self._could_not_load_file()
+            self.update_screen('Could not load')
 
 
     def _get_gcode_preview_and_ranges(self):
@@ -405,6 +380,54 @@ class LoadingScreen(Screen):
     
         log('> get_non_modal_gcode')
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.job_gcode, False, self.sm, 0)
+
+
+    def update_screen(self, stage, percentage_progress=0):
+
+        if stage == 'Getting ready':
+            self.check_button.disabled = True
+            self.home_button.disabled = True
+            self.progress_value = self.l.get_str('Getting ready') + '...'
+            # self.warning_title_label.text = ''
+            self.warning_body_label.text = ''
+            self.check_button.text = ''
+            self.home_button.text = ''
+
+        if stage == 'Preparing':
+            self.progress_value = self.l.get_str('Preparing file') + ': ' + str(percentage_progress) + ' %'
+
+        if stage == 'Analysing':
+            self.progress_value = self.l.get_str('Analysing file') + ': ' + str(percentage_progress) + ' %'
+
+        if stage == 'Loaded':
+            self.progress_value = self.l.get_bold('Job loaded')
+            self.warning_body_label.text = (
+                self.l.get_bold('WARNING') + '[b]:[/b]\n' + \
+                self.l.get_str('We strongly recommend error-checking your job before it goes to the machine.') + \
+                "\n" + \
+                self.l.get_str('Would you like SmartBench to check your job now?')
+                )
+            self.check_button.text = self.l.get_str('Yes, check my job for errors')
+            self.home_button.text = self.l.get_str('No, quit to home')
+            
+            self.check_button.disabled = False
+            self.home_button.disabled = False
+
+        if stage == 'Could not load':
+            self.progress_value = self.l.get_str('Could not load job')
+            self.warning_body_label.text = (
+                self.l.get_bold('ERROR') + '[b]:[/b]\n' + \
+                self.l.get_str('It was not possible to load your job.') + \
+                "\n" + \
+                self.l.get_str('Please double check the file for errors before attempting to re-load it.')
+                )
+            self.job_gcode = []
+            self.loading_file_name = ''
+            self.check_button_label.text = self.l.get_str('Check job')
+            self.quit_button_label.text = self.l.get_str('Quit to home')
+
+            self.check_button.disabled = True
+            self.home_button.disabled = False
 
 
     def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
@@ -424,29 +447,8 @@ class LoadingScreen(Screen):
 
         # non_modal_gcode also used for file preview in home screen
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
-        
-        self.progress_value = 'Job loaded'
-        self.warning_title_label.text = 'WARNING:'
-        self.warning_body_label.text = 'We strongly recommend error-checking your job before it goes to the machine. Would you like SmartBench to check your job now?'
-        self.check_button_label.text = 'Yes please, check my job for errors'
-        self.quit_button_label.text = 'No thanks, quit to home'
-        
-        self.check_button.disabled = False
-        self.home_button.disabled = False
-
+        self.update_screen('Loaded')
         log('> END LOAD')
-        
-    def _could_not_load_file(self):
-
-        self.progress_value = 'Could not load job'
-        self.warning_title_label.text = 'ERROR:'
-        self.warning_body_label.text = 'It was not possible to load your job.\nPlease double check the file for errors before attempting to re-load it.'
-        self.job_gcode = []
-        self.loading_file_name = ''
-        self.check_button_label.text = 'Check job'
-        self.quit_button_label.text = 'Quit to home'
-        self.check_button.disabled = True
-        self.home_button.disabled = False
 
 
 

@@ -402,6 +402,7 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
+        self.l = kwargs['localization']
 
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -465,12 +466,12 @@ class FactorySettingsScreen(Screen):
 
         except: 
             warning_message = 'Touchplate offset should be between 1.00 and 2.00 mm'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False        
 
         if (float(self.z_touch_plate_entry.text) < 1) or (float(self.z_touch_plate_entry.text) > 2):
             warning_message = 'Touchplate offset should be between 1.00 and 2.00 mm'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         else: 
@@ -487,28 +488,28 @@ class FactorySettingsScreen(Screen):
         if ((str(self.serial_number_input.text) == '') or (str(self.product_number_input.text) == '') or
             (str(self.serial_prefix.text) == '')):
             warning_message = 'Serial number format should be: YS6-0000-.00'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         elif len(str(self.serial_number_input.text)) != 4:
             warning_message = 'Second part of the serial number should be 4 digits long.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         elif not ((str(self.product_number_input.text) == '01') or (str(self.product_number_input.text) == '02') or 
             (str(self.product_number_input.text) == '03')):
             warning_message = 'Product code should 01, 02, or 03.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         elif len(str(self.serial_prefix.text)) != 3: 
             warning_message = 'First part of the serial number should be 3 characters long.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         elif len(str(self.serial_prefix.text) + str(self.serial_number_input.text) + "." + str(self.product_number_input.text)) != 10:
             warning_message = 'Serial number format should be: YS6-0000-.00'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
         else: 
@@ -546,19 +547,19 @@ class FactorySettingsScreen(Screen):
 
         if self.smartbench_model.text == 'Choose model':
             warning_message = 'Please ensure machine model is set before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
         elif not self.check_serial_number_for_factory_reset():
             warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
         elif self.software_version_label.text != self.latest_software_version.text:
             warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
         elif self.platform_version_label.text != self.latest_platform_version.text:
             warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
         else:
 
@@ -580,13 +581,13 @@ class FactorySettingsScreen(Screen):
                 "Maintenance reminders set and enabled.\n\n" + \
                 "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n" + \
                 "Not doing this may corrupt the warranty registration start up sequence."
-                popup_info.PopupInfo(self.systemtools_sm.sm, 700, reset_warning)
+                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
 
                 Clock.schedule_once(self.shutdown_console, 5)
 
             else: 
                 warning_message = 'There was an issue doing the factory reset! Get Letty for help.'
-                popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
 
 
@@ -604,7 +605,7 @@ class FactorySettingsScreen(Screen):
                 self.set.update_platform()
             else: 
                 message = "Could not get software update, please check connection."
-                popup_info.PopupWarning(self.sm, message)
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
 
         Clock.schedule_once(nested_full_console_update, 1)
 
@@ -686,7 +687,7 @@ class FactorySettingsScreen(Screen):
             return True
         except: 
             warning_message = 'Problem saving serial number!!'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
     def write_activation_code_to_file(self):
@@ -699,7 +700,7 @@ class FactorySettingsScreen(Screen):
 
         except: 
             warning_message = 'Problem saving activation code!!'
-            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
     def get_serial_number(self):

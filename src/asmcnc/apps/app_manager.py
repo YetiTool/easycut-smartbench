@@ -21,20 +21,20 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings):
+    def __init__(self, screen_manager, machine, settings, localization):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
+        self.l = localization
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m)
-        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set)
-        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l)
+        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
+        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm)
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, localization = self.l)
         self.sm.add_widget(wifi_screen)
-        
 
     # here are all the functions that might be called in the lobby e.g. 
     
@@ -62,7 +62,7 @@ class AppManagerClass(object):
         self.sm.current = 'wifi'
         
     def start_update_app(self):
-        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = self.sm, settings = self.set)
+        update_screen = screen_update_SW.SWUpdateScreen(name = 'update', screen_manager = self.sm, settings = self.set, localization = self.l)
         self.sm.add_widget(update_screen)
         
         self.current_app = 'update'
@@ -70,12 +70,11 @@ class AppManagerClass(object):
 
     def start_maintenance_app(self, landing_tab):
         if not self.sm.has_screen('maintenance'):
-            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m)
+            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l)
             self.sm.add_widget(maintenance_screen)
 
         self.sm.get_screen('maintenance').landing_tab = landing_tab
         self.sm.current = 'maintenance'
-
 
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
@@ -87,12 +86,10 @@ class AppManagerClass(object):
 
         if os.path.isfile(activation_code_filepath):
             self.current_app = 'warranty'
-            self.warranty_sm.open_warranty_app()
+            self.warranty_sm.open_language_select_screen()
 
         else:
             self.sm.current = 'safety'
-
-
 
 
 

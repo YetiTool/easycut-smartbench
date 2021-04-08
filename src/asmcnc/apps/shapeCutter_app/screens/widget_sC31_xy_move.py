@@ -235,21 +235,7 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
-                        opacity: 0
-#     FloatLayout:
-#         
-#         Label:
-#             x: 120
-#             y: 420
-#             size_hint: None, None            
-#             height: 30
-#             width: 30
-#             text: 'XY'
-#             markup: True
-#             bold: True
-#             color: 0,0,0,0.2
-#             font_size: 20
-        
+                        opacity: 0        
 """)
     
 
@@ -262,6 +248,7 @@ class SC31XYMove(Widget):
         self.m=kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.j=kwargs['job_parameters']
+        self.l=kwargs['localization']
    
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -349,24 +336,24 @@ class SC31XYMove(Widget):
     
     def set_standby_to_pos(self):
         warning = 'Is this where you want to set your\nstandby position?'
-        popup_info.PopupPark(self.sm, self.m, warning)
+        popup_info.PopupPark(self.sm, self.m, self.l, warning)
         
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'sC31', 'sC31')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC31', 'sC31')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'sC31', 'sC31')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'sC31', 'sC31')
         else:
             self.m.go_y_datum()
 
     def set_x_datum(self):
         warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, 'X', warning)
+        popup_input_error.PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
         warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_input_error.PopupDatum(self.sm, self.m, 'Y', warning)
+        popup_input_error.PopupDatum(self.sm, self.m, self.l, 'Y', warning)

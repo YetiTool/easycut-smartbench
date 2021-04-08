@@ -16,6 +16,7 @@ Builder.load_string("""
 	icon_container : icon_container
 	icon : icon
 	description_label : description_label
+	next_button : next_button
 
 	canvas:
 		Color: 
@@ -125,13 +126,13 @@ Builder.load_string("""
 				width: dp(244.5)
 				padding: [0, 0, 184.5, 0]
 
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
 				width: dp(291)
 				padding: [0,0,0,52]
 				Button:
+					id: next_button
 					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 					background_down: "./asmcnc/apps/warranty_app/img/next.png"
 					border: [dp(14.5)]*4
@@ -160,13 +161,12 @@ class AlarmScreen1(Screen):
 		super(AlarmScreen1, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = "[b]" + "Alarm: Unexpected event!" + "[/b]"
+		self.alarm_title.text = self.a.l.get_bold("Alarm: Unexpected event!")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
 		self.a.sm.current = 'alarm_2'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_1'
-
-# git force

@@ -15,6 +15,7 @@ Builder.load_string("""
 
 	status_container : status_container
 	description_label : description_label
+	next_button : next_button
 
 	camera_img : camera_img
 	# usb_img : usb_img
@@ -91,6 +92,7 @@ Builder.load_string("""
 					width: dp(291)
 					padding: [0,0,0,52]
 					Button:
+						id: next_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
 						border: [dp(14.5)]*4
@@ -110,7 +112,6 @@ Builder.load_string("""
 					height: dp(132)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
-
 
 	FloatLayout:
         Image:
@@ -144,6 +145,7 @@ class AlarmScreen3(Screen):
 		self.status_bar_widget.cheeky_color = '#1976d2'\
 
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
 	def on_enter(self):

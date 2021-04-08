@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 author: @Letty
 module handles the system app popups
@@ -20,11 +21,15 @@ from kivy.graphics import Color, Rectangle
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
-        description = "Would you like to download the system logs onto a USB stick?"
+        description = self.l.get_str("Would you like to download the system logs onto a USB stick?")
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Yes')
+        back_string = self.l.get_bold('No')
 
         def download_logs(*args):
             self.systemtools_sm.download_logs_to_usb()
@@ -32,10 +37,10 @@ class PopupDownloadLogs(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -49,7 +54,7 @@ class PopupDownloadLogs(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -72,11 +77,15 @@ class PopupDownloadLogs(Widget):
 
 ### Reboot Console
 class RebootConsole(Widget):
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
-        description = "Would you like to reboot the console now?"
+        description = self.l.get_str("Would you like to reboot the console now?")
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Yes')
+        back_string = self.l.get_bold('No')
 
         def reboot_console(*args):
             self.systemtools_sm.sm.current = 'rebooting'
@@ -84,10 +93,10 @@ class RebootConsole(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -101,7 +110,7 @@ class RebootConsole(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -123,11 +132,15 @@ class RebootConsole(Widget):
 
 ### Quit To Console
 class QuitToConsole(Widget):
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
-        description = "Would you like to exit the software now?"
+        description = self.l.get_str("Would you like to exit the software now?")
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Yes')
+        back_string = self.l.get_bold('No')
 
         def quit_console(*args):
             sys.exit()
@@ -135,10 +148,10 @@ class QuitToConsole(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -152,7 +165,7 @@ class QuitToConsole(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -175,25 +188,36 @@ class QuitToConsole(Widget):
 
 ### Beta testing
 class PopupBetaTesting(Widget):
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
-        
-        description = "Beta testing allows our engineers and beta testers to try out software updates " + \
-        "that might not be stable, or change how SmartBench behaves.\n\n" + \
-        "By updating to a beta version or developer branch you may risk causing damage to SmartBench.\n\n" + \
-        "Do you want to continue?"
+        self.l = localization
+
+        description = (
+            self.l.get_str(
+                "Beta testing allows our engineers and beta testers to try out software updates " + \
+                "that might not be stable, or change how SmartBench behaves."
+                ) + \
+            "\n\n" + \
+            self.l.get_str("By updating to a beta version or developer branch you may risk causing damage to SmartBench.") + \
+            "\n\n" + \
+            self.l.get_str("Do you want to continue?")
+        )
+
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Yes')
+        back_string = self.l.get_bold('No')
 
         def dev_app(*args):
             self.systemtools_sm.open_beta_testing_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=2, text_size=(410, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Yes[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]No[/b]', markup = True)
+        back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -207,13 +231,13 @@ class PopupBetaTesting(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(550, 400),
                       auto_dismiss= False
                       )
         
@@ -230,13 +254,21 @@ class PopupBetaTesting(Widget):
 
 ## GRBL settings and password
 class PopupGRBLSettingsPassword(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
-        
-        description = "Changing the GRBL settings will change how SmartBench behaves. " + \
-        "By changing the settings you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        self.l = localization
+
+        description = (
+            self.l.get_str("Changing the GRBL settings will change how SmartBench behaves.") + \
+            " " + \
+            self.l.get_str("By changing the settings you may risk causing damage to SmartBench.") + \
+            "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
+
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
           if textinput.text == "grbl":
@@ -246,7 +278,7 @@ class PopupGRBLSettingsPassword(Widget):
         label = Label(size_hint_y=1, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=0.7, text = '')
 
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -259,7 +291,7 @@ class PopupGRBLSettingsPassword(Widget):
         layout_plan.add_widget(textinput)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -281,11 +313,14 @@ class PopupGRBLSettingsPassword(Widget):
 
 ### Factory settings and password
 class PopupFactorySettingsPassword(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
-        description = "Please enter the password to use the factory settings." 
+        description = self.l.get_str("Please enter the password to use the factory settings.")
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
           if textinput.text == "fac":
@@ -295,7 +330,7 @@ class PopupFactorySettingsPassword(Widget):
         label = Label(size_hint_y=0.7, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=1, text = '')
 
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -308,7 +343,7 @@ class PopupFactorySettingsPassword(Widget):
         layout_plan.add_widget(textinput)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -331,24 +366,32 @@ class PopupFactorySettingsPassword(Widget):
 
 ### Update testing and password
 class PopupUpdateTestingPassword(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
-        
-        description = "Update testing allows our engineers to try out full system updates updates " + \
-        "that might not be stable, or change how SmartBench behaves. " + \
-        "By carrying out any development updates you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        self.l = localization
+
+        description = (
+            self.l.get_str("Update testing allows our engineers to try out full system updates " + \
+                "that might not be stable, or change how SmartBench behaves.") + \
+            " " + \
+            self.l.get_str("By carrying out development updates you may risk causing damage to SmartBench.") + \
+            "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
+
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
           if textinput.text == "up":
             self.systemtools_sm.open_update_testing_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1, text_size=(550, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=0.7, text = '')
 
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -361,13 +404,13 @@ class PopupUpdateTestingPassword(Widget):
         layout_plan.add_widget(textinput)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(600, 400),
                       auto_dismiss= False
                       )
         
@@ -383,24 +426,32 @@ class PopupUpdateTestingPassword(Widget):
 
 ### Developer and password
 class PopupDeveloperPassword(Widget):   
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
-        
-        description = "The developer app is to help our engineers access extra settings " + \
-        "and functions that might not be stable, or change how SmartBench behaves. " + \
-        "By using the developer app, you may risk causing damage to SmartBench.\n" + \
-        "Please enter the password if you want to continue."
+        self.l = localization
+
+        description = (
+            self.l.get_str("The developer app is to help our engineers access extra settings and " + \
+                "functions that might not be stable, or change how SmartBench behaves.") + \
+            " " + \
+            self.l.get_str("By using the developer app, you may risk causing damage to SmartBench.") + \
+            "\n" + \
+            self.l.get_str("Please enter the password if you want to continue.")
+            )
+
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Ok')
 
         def check_password(*args):
           if textinput.text == "dev":
             self.systemtools_sm.open_developer_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1, text_size=(550, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=0.7, text = '')
 
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        
@@ -413,13 +464,13 @@ class PopupDeveloperPassword(Widget):
         layout_plan.add_widget(textinput)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(600, 400),
                       auto_dismiss= False
                       )
         
@@ -429,5 +480,60 @@ class PopupDeveloperPassword(Widget):
         
         ok_button.bind(on_press=check_password)
         ok_button.bind(on_press=popup.dismiss)    
+
+        popup.open()
+
+### Reboot Console
+class RebootAfterLanguageChange(Widget):
+    def __init__(self, screen_manager, localization):
+        
+        self.systemtools_sm = screen_manager
+        self.l = localization
+        
+        description = self.l.get_str('Console needs to reboot to update language settings.')
+        title_string = self.l.get_str('Information')
+        ok_string = self.l.get_bold('Ok')
+        cancel_string = self.l.get_bold('Cancel')
+
+        def reboot_console(*args):
+            self.systemtools_sm.sm.current = 'rebooting'
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=1.7, text_size=(260, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        
+        ok_button = Button(text=ok_string, markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text=cancel_string, markup = True)
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,0,0,0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[30,20,30,0])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(300, 300),
+                      auto_dismiss= False
+                      )
+
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_height = '4dp'
+        
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=reboot_console)
+        back_button.bind(on_press=popup.dismiss)
 
         popup.open()

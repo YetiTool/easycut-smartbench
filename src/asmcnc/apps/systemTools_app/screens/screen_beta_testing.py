@@ -259,11 +259,12 @@ class BetaTestingScreen(Screen):
         super(BetaTestingScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.set = kwargs['settings']
+        self.l = kwargs['localization']
 
         self.user_branch.text = (self.set.sw_branch).strip('*')
         self.beta_version.text = self.set.latest_sw_beta
 
-        self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm)
+        self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()

@@ -96,13 +96,17 @@ class Settings(object):
 
                 git_output = str(unformatted_git_output).split('\n')
                 git_output = list(filter(lambda x: x!= '', git_output))
+
+                # print('output:')
+                # print(git_output)
                      
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
                     description = str(git_output[-1])
                     return description
                 
-                elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
+                # elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
+                elif "Could not resolve host: github.com" in str(git_output[-1]):
                     return "Could not resolve host: github.com"
 
                 else:

@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 Feb 2018
 @author: Ed
 '''
 
-import kivy
+import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -273,12 +274,14 @@ Builder.load_string("""
 
 class XYMove(Widget):
 
+    # localize meee
 
     def __init__(self, **kwargs):
     
         super(XYMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
     
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -362,35 +365,50 @@ class XYMove(Widget):
     def cancelXYJog(self):
         if self.jogMode == 'free': 
             self.m.quit_jog()
-        
-#             if self.m.quit_jog() == True:
-# #                 self.m.quit_jog()
-#                 Clock.schedule_interval(lambda dt: self.m.quit_jog(), 0.5) 
 
     def set_workzone_to_pos_xy(self):
-        warning = 'Is this where you want to set your\n[b]X-Y[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
     
     def set_standby_to_pos(self):
-        warning = 'Is this where you want to set your\nstandby position?'
-        popup_info.PopupPark(self.sm, self.m, warning)
+        warning = self.format_command(
+            self.l.get_str('Is this where you want to set your standby position?')
+            )
+        popup_info.PopupPark(self.sm, self.m, self.l, warning)
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'home', 'home')
         else:
             self.m.go_y_datum()
 
     def set_x_datum(self):
-        warning = 'Is this where you want to set your\n[b]X[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'X', warning)
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]X[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
+        
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
-        warning = 'Is this where you want to set your\n[b]Y[/b] datum?'
-        popup_info.PopupDatum(self.sm, self.m, 'Y', warning)
+        warning = self.format_command(
+            (self.l.get_str('Is this where you want to set your X-Y datum?'
+                ).replace('X-Y', '[b]Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+            )
+
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd

@@ -77,41 +77,58 @@ class ZMiscSaveWidget(Widget):
         super(ZMiscSaveWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
-    def get_info(self): # Rewrite me!
+    def get_info(self): # Localize me!
 
         z_misc_settings_info = (
-        "[b]Touchplate offset[/b]\n" + \
-        "Update the offset to make setting the Z datum even more precise.\n" + \
-        "Make sure you press the save button to save your settings.\n\n" + \
 
-        "[b]Time since lead screw lubricated[/b]\n" + \
-        "If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated.\n" + \
-        "This will reset the time until SmartBench gives you the next reminder.\n" + \
-        "Make sure you press the save button to save your settings."
-        )
+            self.l.get_bold("Touchplate offset") + \
+            "\n" + \
+            self.l.get_str("Update the offset to make setting the Z datum even more precise.") + \
+            "\n" + \
+            self.l.get_str("Make sure you press the save button to save your settings.") + \
+            "\n\n" + \
+            self.l.get_bold("Time since lead screw lubricated") + \
+            "\n" + \
+            self.l.get_str("If you have just lubricated the Z head lead screw, reset the hours since it was last lubricated.") + \
+            "\n" + \
+            self.l.get_str("This will reset the time until SmartBench gives you the next reminder.") + \
+            "\n" + \
+            self.l.get_str("Make sure you press the save button to save your settings.")
+            )
 
-        popup_info.PopupInfo(self.sm, 750, z_misc_settings_info)
+        popup_info.PopupInfo(self.sm, self.l, 750, z_misc_settings_info)
 
 
     def save(self):
 
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
-            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+
+            saved_success = self.l.get_str("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
         
         else:
-            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-            " please contact the YetiTool support team."
-            popup_info.PopupError(self.sm, warning_message)
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                )
+
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
     def save_touchplate_offset(self):
         # Set offset
         try: 
             touchplate_offset = float(self.sm.get_screen('maintenance').touchplate_offset_widget.touchplate_offset.text)
             if (touchplate_offset < 1) or (touchplate_offset > 2):
-                warning_message = "Your touchplate offset should be inbetween 1 and 2 mm.\n\nPlease check your settings and try again, or if the probem persists" + \
-                " please contact the YetiTool support team."
-                popup_info.PopupError(self.sm, warning_message)
+
+                warning_message = (
+                        self.l.get_str("Your touchplate offset should be inbetween 1 and 2 mm.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                    )
+                popup_info.PopupError(self.sm, self.l, warning_message)
                 return False
             else:
                 if self.m.write_z_touch_plate_thickness(touchplate_offset): return True

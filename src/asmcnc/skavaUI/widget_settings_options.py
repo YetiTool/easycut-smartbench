@@ -1,6 +1,10 @@
 '''
 Created on 1 Feb 2018
 @author: Ed
+
+Think this is now an obsolete widget
+
+
 '''
 
 import sys, os

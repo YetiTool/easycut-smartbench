@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -17,6 +18,7 @@ Builder.load_string("""
 <HomingScreenPrepare>:
 
     instruction_label:instruction_label
+    press_to_home_label: press_to_home_label
 
     canvas:
         Color: 
@@ -70,8 +72,10 @@ Builder.load_string("""
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
+            id: press_to_home_label
             size_hint_y: 1
             text: '[color=333333]Then, [b]press button[/b] to home.[/color]'
             markup: True
@@ -80,6 +84,7 @@ Builder.load_string("""
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
             size_hint_y: 0.1                       
@@ -106,31 +111,34 @@ class HomingScreenPrepare(Screen):
 
 
     cancel_to_screen = 'lobby'   
-    return_to_screen = 'lobby'   
-    
+    return_to_screen = 'lobby'
     
     def __init__(self, **kwargs):
         
         super(HomingScreenPrepare, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
+        self.l=kwargs['localization']
+
+        self.update_strings()
+
+
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
         if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = '[color=333333]Ensure SmartBench is clear\n& remove extraction hose from Z head.[/color]'
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear') + '\n' + self.l.get_str('and remove extraction hose from Z head.')
         else:
-            self.instruction_label.text = '[color=333333]Ensure SmartBench is clear.[/color]'
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear')
+
     
     def begin_homing(self):
-
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
     
     
     def cancel(self):
-        
         self.sm.current = self.cancel_to_screen
         
-        
+    def update_strings(self):
+        self.press_to_home_label.text = self.l.get_str('Then, press button to home.').replace(self.l.get_str('press button'), self.l.get_bold('press button'))

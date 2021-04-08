@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 March 2020
 Wifi screen
@@ -37,6 +38,14 @@ Builder.load_string("""
     country: country
     ip_status_label: ip_status_label
     wifi_image: wifi_image
+
+    ip_address_label : ip_address_label
+    network_name_label : network_name_label
+    password_label : password_label
+    country_label : country_label
+    connect_button : connect_button
+
+    connection_instructions_rst : connection_instructions_rst
     
     BoxLayout:
         size_hint: (None, None)
@@ -90,6 +99,7 @@ Builder.load_string("""
                     width: dp(150)
                     orientation: 'vertical'
                     Label:
+                        id: ip_address_label
                         color: 1,1,1,1
                         font_size: 18
                         markup: True
@@ -98,7 +108,7 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "IP address:"
+
                     Label:
                         id: ip_status_label
                         color: 1,1,1,1
@@ -142,6 +152,7 @@ Builder.load_string("""
                             width: dp(151)
                             height: dp(40)
                             Label:
+                                id: network_name_label
                                 width: dp(151)
                                 color: 0,0,0,1
                                 font_size: 20
@@ -151,7 +162,7 @@ Builder.load_string("""
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]Network Name[/b]"
+
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
@@ -215,6 +226,7 @@ Builder.load_string("""
                     padding: [0,0,0,20]   
                               
                     Label:
+                        id: password_label
                         color: 0,0,0,1
                         font_size: 20
                         markup: True
@@ -223,7 +235,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "[b]Password[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -251,6 +262,7 @@ Builder.load_string("""
                     padding: [0,0,10,20]   
                               
                     Label:
+                        id: country_label
                         color: 0,0,0,1
                         font_size: 20
                         markup: True
@@ -259,7 +271,6 @@ Builder.load_string("""
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
-                        text: "[b]Country[/b]"
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -314,7 +325,7 @@ Builder.load_string("""
                     do_scroll_y: True
                     scroll_type: ['content']
                     RstDocument:
-                        source: './asmcnc/apps/wifi_app/wifi_documentation.rst'
+                        id: connection_instructions_rst
                         background_color: hex('#FFFFFF')
                         base_font_size: 26
                         underline_color: '000000'
@@ -335,25 +346,30 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(115)
                     width: dp(160)
-                    padding: [2,0,0,0]                   
+                    padding: [2,0,0,0]
+                    canvas:
+                        Color:
+                            rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+
                     Button:
+                        id: connect_button
+                        background_normal: "./asmcnc/apps/wifi_app/img/connect_blank.png"
+                        background_down: "./asmcnc/apps/wifi_app/img/connect_blank.png"
+                        border: [dp(14.5)]*4
                         size_hint: (None,None)
                         height: dp(115)
                         width: dp(158)
-                        background_color: hex('#F4433600')
+                        on_press: root.check_credentials()
+                        # text: 'Connect'
+                        font_size: '28sp'
+                        color: hex('#f9f9f9ff')
+                        markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.check_credentials()
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/apps/wifi_app/img/connect.png"
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
+
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(112)
@@ -380,6 +396,8 @@ Builder.load_string("""
 """)
 
 class WifiScreen(Screen):
+
+    default_font_size = 20
     
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
@@ -389,15 +407,23 @@ class WifiScreen(Screen):
     country = ObjectProperty()
     SSID_list = []
 
+    wifi_documentation_path  = './asmcnc/apps/wifi_app/wifi_documentation/'
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
  
+        self.update_strings()
+        self.update_font_size(self.country_label)
+        self.get_rst_source()
+
     def on_enter(self):
+
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
             try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
@@ -405,7 +431,6 @@ class WifiScreen(Screen):
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
-
 
     def check_credentials(self):
 
@@ -416,19 +441,19 @@ class WifiScreen(Screen):
         if len(self.netname) < 1: 
 
             message = "Please enter a valid network name."
-            popup_info.PopupWarning(self.sm, message)
+            popup_info.PopupWarning(self.sm, self.l, message)
 
         elif (len(self.password) < 8 or len(self.password) > 63): 
 
             message = "Please enter a password between 8 and 63 characters."
-            popup_info.PopupWarning(self.sm, message)
+            popup_info.PopupWarning(self.sm, self.l, message)
 
         else: 
             self.connect_wifi()
 
     def connect_wifi(self):
         message = 'Please wait...\n\nConsole will reboot to connect to network'
-        popup_info.PopupMiniInfo(self.sm, message)
+        popup_info.PopupMiniInfo(self.sm, self.l, message)
 
         # pass credentials to wpa_supplicant file
         self.wpanetpass = 'wpa_passphrase "' + self.netname + '" "' + self.password + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf'
@@ -522,7 +547,7 @@ class WifiScreen(Screen):
         return SSID_list
 
     def refresh_available_networks(self):
-        wait_popup = popup_info.PopupWait(self.sm)
+        wait_popup = popup_info.PopupWait(self.sm, self.l)
         Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.5)
 
         def get_networks():
@@ -535,3 +560,22 @@ class WifiScreen(Screen):
         self.network_name.focus = True
 
     values = ['GB' , 'US' , 'AF' , 'AX' , 'AL' , 'DZ' , 'AS' , 'AD' , 'AO' , 'AI' , 'AQ' , 'AG' , 'AR' , 'AM' , 'AW' , 'AU' , 'AT' , 'AZ' , 'BH' , 'BS' , 'BD' , 'BB' , 'BY' , 'BE' , 'BZ' , 'BJ' , 'BM' , 'BT' , 'BO' , 'BQ' , 'BA' , 'BW' , 'BV' , 'BR' , 'IO' , 'BN' , 'BG' , 'BF' , 'BI' , 'KH' , 'CM' , 'CA' , 'CV' , 'KY' , 'CF' , 'TD' , 'CL' , 'CN' , 'CX' , 'CC' , 'CO' , 'KM' , 'CG' , 'CD' , 'CK' , 'CR' , 'CI' , 'HR' , 'CU' , 'CW' , 'CY' , 'CZ' , 'DK' , 'DJ' , 'DM' , 'DO' , 'EC' , 'EG' , 'SV' , 'GQ' , 'ER' , 'EE' , 'ET' , 'FK' , 'FO' , 'FJ' , 'FI' , 'FR' , 'GF' , 'PF' , 'TF' , 'GA' , 'GM' , 'GE' , 'DE' , 'GH' , 'GI' , 'GR' , 'GL' , 'GD' , 'GP' , 'GU' , 'GT' , 'GG' , 'GN' , 'GW' , 'GY' , 'HT' , 'HM' , 'VA' , 'HN' , 'HK' , 'HU' , 'IS' , 'IN' , 'ID' , 'IR' , 'IQ' , 'IE' , 'IM' , 'IL' , 'IT' , 'JM' , 'JP' , 'JE' , 'JO' , 'KZ' , 'KE' , 'KI' , 'KP' , 'KR' , 'KW' , 'KG' , 'LA' , 'LV' , 'LB' , 'LS' , 'LR' , 'LY' , 'LI' , 'LT' , 'LU' , 'MO' , 'MK' , 'MG' , 'MW' , 'MY' , 'MV' , 'ML' , 'MT' , 'MH' , 'MQ' , 'MR' , 'MU' , 'YT' , 'MX' , 'FM' , 'MD' , 'MC' , 'MN' , 'ME' , 'MS' , 'MA' , 'MZ' , 'MM' , 'NA' , 'NR' , 'NP' , 'NL' , 'NC' , 'NZ' , 'NI' , 'NE' , 'NG' , 'NU' , 'NF' , 'MP' , 'NO' , 'OM' , 'PK' , 'PW' , 'PS' , 'PA' , 'PG' , 'PY' , 'PE' , 'PH' , 'PN' , 'PL' , 'PT' , 'PR' , 'QA' , 'RE' , 'RO' , 'RU' , 'RW' , 'BL' , 'SH' , 'KN' , 'LC' , 'MF' , 'PM' , 'VC' , 'WS' , 'SM' , 'ST' , 'SA' , 'SN' , 'RS' , 'SC' , 'SL' , 'SG' , 'SX' , 'SK' , 'SI' , 'SB' , 'SO' , 'ZA' , 'GS' , 'SS' , 'ES' , 'LK' , 'SD' , 'SR' , 'SJ' , 'SZ' , 'SE' , 'CH' , 'SY' , 'TW' , 'TJ' , 'TZ' , 'TH' , 'TL' , 'TG' , 'TK' , 'TO' , 'TT' , 'TN' , 'TR' , 'TM' , 'TC' , 'TV' , 'UG' , 'UA' , 'AE' , 'UM' , 'UY' , 'UZ' , 'VU' , 'VE' , 'VN' , 'VG' , 'VI' , 'WF' , 'EH' , 'YE' , 'ZM' , 'ZW']
+
+    def update_strings(self):
+        self.ip_address_label.text = self.l.get_str("IP address:")
+        self.network_name_label.text = self.l.get_bold("Network Name")
+        self.password_label.text = self.l.get_bold("Password")
+        self.country_label.text = self.l.get_bold("Country")
+        self.connect_button.text = self.l.get_str("Connect")
+
+    def update_font_size(self, value):
+        if len(value.text) < 8:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 7: 
+            value.font_size = self.default_font_size - 2
+
+    def get_rst_source(self):
+        self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
+
+
+

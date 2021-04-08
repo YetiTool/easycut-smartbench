@@ -56,14 +56,15 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
-    def __init__(self, machine, screen_manager, settings_manager):
+    def __init__(self, machine, screen_manager, settings_manager, localization):
 
         self.sm = screen_manager
         self.sett =settings_manager     
         self.m = machine
+        self.l = localization
 
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
-        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l)
 
     def __del__(self):
         print 'Destructor'
@@ -71,7 +72,7 @@ class SerialConnection(object):
     def get_serial_screen(self, serial_error):
 
         if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = serial_error
+            self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
             self.sm.current = 'serialScreen'
 
     def establish_connection(self, win_port):

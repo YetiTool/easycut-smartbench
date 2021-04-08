@@ -22,7 +22,10 @@ Builder.load_string("""
 
 <WarningMState>:
 
-    getout_button:getout_button
+    title_label : title_label
+    cannot_start_job : cannot_start_job
+    getout_button : getout_button
+    return_label : return_label
 
     canvas:
         Color: 
@@ -43,15 +46,16 @@ Builder.load_string("""
             spacing: 20
              
             Label:
+                id: title_label
                 size_hint_y: 0.8
                 text_size: self.size
                 font_size: '29sp'
-                text: '[b]WARNING[/b]\\nSmartBench is not in an idle state.'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
  
             Label:
+                id: cannot_start_job
                 size_hint_y: 1.2
                 text_size: self.size
                 font_size: '22sp'
@@ -92,7 +96,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            #size_hint_y: 1
+                            id: return_label
                             font_size: '20sp'
                             text: 'Return'
                         
@@ -109,23 +113,32 @@ class WarningMState(Screen):
     def __init__(self, **kwargs):
         super(WarningMState, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']  
+        self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
+
 
     def on_enter(self):
         
         if self.m.state().startswith('Alarm'):
-            self.user_instruction = 'SmartBench is in an Alarm state. Please clear the machine, and then reset and unlock it.'
+            self.user_instruction = self.l.get_str("SmartBench is in an Alarm state. Please clear the machine, and then reset it.")
         
         elif self.m.state().startswith('Check'):
-            self.user_instruction = 'SmartBench is in Check state. Please disable by typing \'$C\' into the G-code console.'
+            self.user_instruction = ((self.l.get_str("SmartBench is in Check state. Please disable by pressing the Check $C button in the G-code console.")).replace(self.l.get_str("Check"), self.l.get_bold("Check"))).replace("$C", "[b]$C[/b]")
             
         elif self.m.state().startswith('Door') or self.m.state().startswith('Hold'):
-            self.user_instruction = 'SmartBench is paused. Please resume by typing \'$~\' into the G-code console.'
+            self.user_instruction = self.l.get_str("SmartBench is paused. Please resume by entering ~ into the G-code console.").replace("~", "[b]~[/b]")
             
         else:
-            self.user_instruction = 'SmartBench is still carrying out a command. Please wait for SmartBench to finish' + \
-            ' before attempting to start a job.'
+            self.user_instruction = (
+                    "SmartBench is still carrying out a command." + \
+                    " " + \
+                    "Please wait for SmartBench to finish before attempting to start a job."
+                )
             
+        self.l.update_strings()
+
     
     def button_press(self):
         self.getout_button.background_color = get_color_from_hex('#c43c00')
@@ -134,6 +147,13 @@ class WarningMState(Screen):
     def button_release(self):
         self.sm.current = 'home' 
                       
+    def update_strings(self):
 
+        self.title_label.text = (
+                self.l.get_bold("WARNING") + \
+                "\n" + \
+                self.l.get_str("SmartBench is not in an idle state.")
+            )
+        self.cannot_start_job.text = "Cannot start job."
         
  

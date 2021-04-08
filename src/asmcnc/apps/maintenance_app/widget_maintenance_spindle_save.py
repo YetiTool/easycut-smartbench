@@ -77,18 +77,31 @@ class SpindleSaveWidget(Widget):
         super(SpindleSaveWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
     def get_info(self):
 
-        spindle_settings_info = "[b]Spindle cooldown[/b]\nThe spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
-        "We recommend the following cooldown settings:\n\n" + \
-        "       Yeti: 20,000 RPM; 10 seconds\n" + \
-        "       AMB: 10,000 RPM; 30 seconds\n\n" + \
-        "[b]Spindle brand[/b]\n" + \
-        "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
-        "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle."
+        spindle_settings_info = (
+                self.l.get_bold("Spindle cooldown") + \
+                "\n" + \
+                self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
+                " " + \
+                self.l.get_str("We recommend the following cooldown settings:") + \
+                "\n\n" + \
+                "       " + \
+                self.l.get_str("Yeti: 20,000 RPM; 10 seconds") + \
+                "\n" + \
+                "       " + \
+                self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
+                "\n\n" + \
+                self.l.get_bold("Spindle brand") + \
+                "\n" + \
+                self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
+                " " + \
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.")
+            )
 
-        popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
+        popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
 
     def save(self):
 
@@ -97,23 +110,26 @@ class SpindleSaveWidget(Widget):
     
             voltage = voltage.strip('V')
 
-            print brand
-
             if 'digital' in digital: digital = True
             elif 'manual' in digital: digital = False
             else:
-                brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
-                "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
+                brand_validation_error = (
+                        self.l.get_str("Please select a valid spindle brand from the drop down.") + \
+                        "\n\n" + \
+                        self.l.get_str("If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have.")
+                    )
 
-                popup_info.PopupError(self.sm, brand_validation_error)
+                popup_info.PopupError(self.sm, self.l, brand_validation_error)
                 return
 
         except:
+            brand_validation_error = (
+                    self.l.get_str("Please select a valid spindle brand from the drop down.") + \
+                    "\n\n" + \
+                    self.l.get_str("If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have.")
+                )
 
-            brand_validation_error = "Please select a valid spindle brand from the drop down.\n\n" + \
-            "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
-
-            popup_info.PopupError(self.sm, brand_validation_error)
+            popup_info.PopupError(self.sm, self.l, brand_validation_error)
             return               
 
 
@@ -126,17 +142,23 @@ class SpindleSaveWidget(Widget):
             if (time >= 10 and time <= 60):
                 pass
             else:
-                time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
-                "Please enter a new value."
+                time_validation_error = (
+                        self.l.get_str("The spindle cooldown time should be between 10 and 20 seconds.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please enter a new value.")
+                    )
 
-                popup_info.PopupError(self.sm, time_validation_error)
+                popup_info.PopupError(self.sm, self.l, time_validation_error)
                 return
 
         except: 
-            time_validation_error = "The spindle cooldown time should be a number between 10 and 20 seconds.\n\n" + \
-            "Please enter a new value."
+            time_validation_error = (
+                    self.l.get_str("The spindle cooldown time should be a number between 10 and 20 seconds.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please enter a new value.")
+                )
 
-            popup_info.PopupError(self.sm, time_validation_error)
+            popup_info.PopupError(self.sm, self.l, time_validation_error)
             return
 
 
@@ -149,38 +171,53 @@ class SpindleSaveWidget(Widget):
                 pass
 
             else:
-                speed_validation_error = "The spindle cooldown speed should be between 10,000 and 20,000 RPM.\n\n" + \
-                "Please enter a new value."
+                speed_validation_error = (
+                        self.l.get_str("The spindle cooldown speed should be between 10,000 and 20,000 RPM.") + \
+                        "\n\n" + \
+                        self.l.get_str("Please enter a new value.")
+                    )
 
-                popup_info.PopupError(self.sm, speed_validation_error)
+                popup_info.PopupError(self.sm, self.l, speed_validation_error)
                 return
 
         except:
-            speed_validation_error = "The spindle cooldown speed should be a number between 10,000 and 20,000 RPM.\n\n" + \
-            "Please enter a new value."
+            speed_validation_error = (
+                    self.l.get_str("The spindle cooldown speed should be a number between 10,000 and 20,000 RPM.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please enter a new value.")
+                )
 
-            popup_info.PopupError(self.sm, speed_validation_error)
+            popup_info.PopupError(self.sm, self.l, speed_validation_error)
             return
 
 
         if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed):
-            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+            saved_success = self.l.get_str("Settings saved!")
+            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
 
         else:
-            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
-            " please contact the YetiTool support team."
+            warning_message = (
+                    self.l.get_str("There was a problem saving your settings.") + \
+                    "\n\n" + \
+                    self.l.get_str("Please check your settings and try again, or if the probem persists please contact the YetiTool support team.")
+                )
 
-            popup_info.PopupError(self.sm, warning_message)
+            popup_info.PopupError(self.sm, self.l, warning_message)
 
-        if voltage == '110':
-            spindle_voltage_info = "When using a 110V spindle as part of your SmartBench, please be aware of the following:\n\n" + \
-            "110V spindles have a minimum speed of ~10,000 RPM.\n\n" + \
-            "SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure " + \
-            "the machine code we send is adjusted to control a 110V spindle.\n\n" + \
-            "The 5% spindle speed adjustments in the go screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%. " + \
-            "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
+        if voltage == '110': # localize me!
+            spindle_voltage_info = (
+                    self.l.get_str("When using a 110V spindle as part of your SmartBench, please be aware of the following:") + \
+                    "\n\n" + \
+                    self.l.get_str("110V spindles have a minimum speed of ~10,000 RPM.") + \
+                    "\n\n" + \
+                    self.l.get_str("SmartBench electronics are set up to work with a 230V spindle, so our software does a smart conversion to make sure the machine code we send is adjusted to control a 110V spindle.") + \
+                    "\n\n" + \
+                    self.l.get_str("The 5% spindle speed adjustments in the Job Screen cannot be converted for a 110V spindle, so they will not be able to adjust the speed by exactly 5%.") + \
+                    " " + \
+                    self.l.get_str("You will still be able to use the real time spindle speed feedback feature to assist your adjustment.")
+                )
             
-            popup_info.PopupInfo(self.sm, 700, spindle_voltage_info)
+            popup_info.PopupInfo(self.sm, self.l, 780, spindle_voltage_info)
 
         # brands = ['YETI digital 230V', 'YETI digital 110V', 'AMB digital 230V', 'AMB manual 230V', 'AMB manual 110V']
 

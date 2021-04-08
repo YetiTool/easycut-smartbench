@@ -22,8 +22,9 @@ Builder.load_string("""
 
 <SerialFailureClass>:
 
-    reboot_button:reboot_button
-    #reestablish_button:reestablish_button 
+    title_string : title_string
+    reboot_button : reboot_button
+    reboot_string : reboot_string
 
     canvas:
         Color: 
@@ -44,10 +45,10 @@ Builder.load_string("""
             spacing: 20
              
             Label:
+                id: title_string
                 size_hint_y: 0.8
                 text_size: self.size
                 font_size: '24sp'
-                text: '[b]SERIAL CONNECTION ERROR[/b]\\nThere\\'s a problem communicating with Smartbench'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -70,39 +71,11 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'top'
                 text: root.user_instruction
-                
-#             BoxLayout:
-#                 orientation: 'vertical'
-#                 size_hint_x: 1
-#                 spacing: 5
                     
             BoxLayout:
                 orientation: 'horizontal'
                 padding: 200, 0
                 spacing: 40
-            
-#                     Button:
-#                         size_hint_y:0.9
-#                         id: reestablish_button
-#                         size: self.texture_size
-#                         valign: 'top'
-#                         halign: 'center'
-#                         disabled: False
-#                         on_press:
-#                             root.reestablish_button_press()
-#                             
-#                         BoxLayout:
-#                             padding: 5
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             
-#                             Label:
-#                                 #size_hint_y: 1
-#                                 text_size: self.size
-#                                 valign: 'middle'
-#                                 halign: 'center'
-#                                 font_size: '16sp'
-#                                 text: 'Try to re-establish serial connection'
                         
                 Button:
                     size_hint_y: 0.9
@@ -121,76 +94,18 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            #size_hint_y: 1
+                            id: reboot_string
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
                             font_size: '25sp'
-                            text: 'Reboot'
-#                 BoxLayout:
-#                     orientation: 'horizontal'
-#                     padding: 50, 0
-#                     spacing: 40
-#                 
-#                     Button:
-#                         size_hint_y:0.9
-#                         id: home_button
-#                         size: self.texture_size
-#                         valign: 'top'
-#                         halign: 'center'
-#                         disabled: False
-#                         on_press:
-#                             root.quit_to_home()
-#                             
-#                         BoxLayout:
-#                             padding: 5
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             
-#                             Label:
-#                                 #size_hint_y: 1
-#                                 text_size: self.size
-#                                 valign: 'middle'
-#                                 halign: 'center'
-#                                 font_size: '20sp'
-#                                 text: 'Return to home'
-#                             
-#                     Button:
-#                         size_hint_y:0.9
-#                         id: go_screen_button
-#                         size: self.texture_size
-#                         valign: 'top'
-#                         halign: 'center'
-#                         disabled: False
-#                         on_press:
-#                             root.return_to_go_screen()
-#                             
-#                         BoxLayout:
-#                             padding: 5
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-#                             
-#                             Label:
-#                                 #size_hint_y: 1
-#                                 valign: 'middle'
-#                                 halign: 'center'
-#                                 text_size: self.size
-#                                 font_size: '20sp'
-#                                 text: 'Return to Go Screen'
- 
-            
 """)
 
 class SerialFailureClass(Screen):
 
-
-    # define error description to make kivy happy
     error_description = StringProperty()
-    message = StringProperty()
-    button_text = StringProperty()
     reboot_button = ObjectProperty()
     user_instruction = StringProperty()
-    button_function = StringProperty()
 
     
     def __init__(self, **kwargs):
@@ -198,12 +113,14 @@ class SerialFailureClass(Screen):
         super(SerialFailureClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']  
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
 
     def on_enter(self):
 
-        self.user_instruction = 'Please check that Z head is connected.\n' \
-        'If connection with SmartBench has been interrupted, the machine may also need to be restarted.'
+        self.update_strings()
 
     
     def reboot_button_press(self):
@@ -218,5 +135,16 @@ class SerialFailureClass(Screen):
         
     def quit_to_home(self):
 
-        self.sm.current = 'home' 
-        
+        self.sm.current = 'home'
+
+    def update_strings(self):
+
+        self.title_string.text = (
+                self.l.get_bold('SERIAL CONNECTION ERROR') + \
+                "\n" + \
+                self.l.get_str("There is a problem communicating with SmartBench.")
+            )
+
+        self.user_instruction = self.l.get_str("Please check that Z head is connected, and then reboot the console.")
+
+        self.reboot_string.text = self.l.get_str("Reboot")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -15,6 +16,9 @@ from kivy.clock import Clock
 Builder.load_string("""
 
 <SquaringScreenActive>:
+
+    overdrive_label: overdrive_label
+    squaring_label: squaring_label
 
     canvas:
         Color: 
@@ -50,14 +54,16 @@ Builder.load_string("""
                         allow_stretch: True 
                         
             Label:
-                size_hint_x: .6
-                text: '[color=333333][b]Squaring...[/b][/color]'
+                id: squaring_label
+                size_hint_x: 1
+                # text: '[color=333333][b]Squaring...[/b][/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
                         
             Button:
                 size_hint_x: 1
@@ -75,14 +81,16 @@ Builder.load_string("""
             size_hint_y: .5
             
         Label:
+            id: overdrive_label
             size_hint_y: 1
-            text: '[color=333333]This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.[/color]'
+            # text: '[color=333333]This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
-            text_size: self.size             
+            text_size: self.size
+            color: hex('#333333ff')           
 
         Label:
             size_hint_y: .5
@@ -102,7 +110,9 @@ class SquaringScreenActive(Screen):
         super(SquaringScreenActive, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
+        self.l=kwargs['localization']
+
+        self.update_strings()
     
     def windows_cheat_to_procede(self):
 
@@ -117,6 +127,7 @@ class SquaringScreenActive(Screen):
             self.start_auto_squaring()
             self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)
             print "Polling for completion"
+
 
     def start_auto_squaring(self):
 
@@ -191,7 +202,8 @@ class SquaringScreenActive(Screen):
     def cancel_squaring(self):
 
         print('Cancelling squaring...')
-        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel() # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        # necessary so that when sequential stream is cancelled, clock doesn't think it was because of successful completion
+        if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
         # ... will trigger an alarm screen
         self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
@@ -202,3 +214,8 @@ class SquaringScreenActive(Screen):
     def on_leave(self):
         
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+
+    def update_strings(self):
+
+        self.overdrive_label.text = self.l.get_str("This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.")
+        self.squaring_label.text = self.l.get_bold("Squaring") + "..."

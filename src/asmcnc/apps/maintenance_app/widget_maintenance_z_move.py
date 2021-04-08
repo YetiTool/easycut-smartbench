@@ -125,6 +125,7 @@ class MaintenanceZMove(Widget):
         super(MaintenanceZMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
         self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
 
     def jog_z(self, case):
@@ -169,11 +170,20 @@ class MaintenanceZMove(Widget):
         if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free': self.m.quit_jog()
         elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job': self.m.quit_jog()
 
-    def get_info(self):
-        info = "[b]To set, if laser hardware is fitted:[/b]\n\n" + \
-                "1. Enable laser datum (switch to [b]on[/b]).\n\n" + \
-                "2. On a test piece, cut a mark using manual moves.\n\n" + \
-                "3. Lift head and press the [b]reset[/b] button in the bottom left.\n\n" + \
-                "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" + \
-                "5. Press [b]save[/b]."
-        popup_info.PopupInfo(self.sm, 700, info)   
+    def get_info(self): # localize me!
+
+        info = (
+                self.l.get_bold("To set, if laser hardware is fitted:") + \
+                "\n\n" + \
+                self.l.get_str("1. Enable laser datum (switch to on).").replace(self.l.get_str("on"), self.l.get_bold("on")) + \
+                "\n\n" + \
+                self.l.get_str("2. On a test piece, cut a mark using manual moves.") + \
+                "\n\n" + \
+                self.l.get_str("3. Lift head and press the reset button in the bottom left.").replace(self.l.get_str("reset"), self.l.get_bold("reset")) + \
+                "\n\n" + \
+                self.l.get_str("4. Move the Z head so that the cross hair lines up with the mark centre.") + \
+                "\n\n" + \
+                self.l.get_str("5. Press save.").replace(self.l.get_str("save"), self.l.get_bold("save"))
+                )
+
+        popup_info.PopupInfo(self.sm, self.l, 700, info)   

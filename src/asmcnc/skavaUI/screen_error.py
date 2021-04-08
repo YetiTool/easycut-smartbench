@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Feb 2019
 
@@ -21,20 +22,20 @@ import sys, os
 ERROR_CODES = {
 
     "error:1"  : "G-code words consist of a letter and a value. Letter was not found.",
-    "error:2"  : "Numeric value format is not valid or is missing an expected value.",
+    "error:2"  : "Numeric value format is not valid or missing an expected value.",
     "error:3"  : "Grbl '$' system command was not recognized or supported.",
     "error:4"  : "Negative value received for an expected positive value.",
     "error:5"  : "Homing cycle is not enabled via settings.",
-    "error:6"  : "Minimum step pulse time must be greater than 3usec",
+    "error:6"  : "Minimum step pulse time must be greater than 3 microseconds.",
     "error:7"  : "EEPROM read failed. Reset and restored to default values.",
-    "error:8"  : "Grbl '$' command cannot be used unless Grbl is IDLE. This ensures smooth operation during a job.",
-    "error:9"  : "G-code locked out during alarm or jog grbl_state",
+    "error:8"  : "Grbl '$' command cannot be used unless Grbl is IDLE. Ensures smooth operation during a job.",
+    "error:9"  : "G-code locked out during alarm or jog state.",
     "error:10" : "Soft limits cannot be enabled without homing also enabled.",
     "error:11" : "Max characters per line exceeded. Line was not processed and executed.",
-    "error:12" : "(Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
+    "error:12" : "Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
     "error:13" : "Stop bar detected as pressed. Check all four contacts at the stop bar ends are not pressed. Pressing each switch a few times may clear the contact.",
-    "error:14" : "(Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
-    "error:15" : "Have you homed the machine yet? If not, please do so now.\nJog target exceeds machine travel. Command ignored.",
+    "error:14" : "Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
+    "error:15" : "Have you homed the machine yet? If not, please do so now. Jog target exceeds machine travel. Command ignored.",
     "error:16" : "Jog command with no '=' or contains prohibited g-code.",
     "error:17" : "Laser mode requires PWM output.",
     "error:20" : "Unsupported or invalid g-code command found in block.",
@@ -63,7 +64,10 @@ Builder.load_string("""
 
 <ErrorScreenClass>:
 
-    getout_button:getout_button
+    getout_button: getout_button
+    error_header: error_header
+    user_instruction: user_instruction
+    return_label: return_label
 
     canvas:
         Color: 
@@ -84,10 +88,10 @@ Builder.load_string("""
             spacing: 20
              
             Label:
+                id: error_header
                 size_hint_y: 0.8
                 text_size: self.size
                 font_size: '24sp'
-                text: '[b]ERROR[/b]\\nSmartBench could not process a command:'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -101,12 +105,12 @@ Builder.load_string("""
                 text: root.error_description 
                 
             Label:
+                id: user_instruction
                 size_hint_y: 0.6
                 font_size: '22sp'
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
-                text: 'The job will now be cancelled. Check the gcode file before re-running it.'
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -129,7 +133,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         
                         Label:
-                            #size_hint_y: 1
+                            id: return_label
                             font_size: '20sp'
                             text: 'Return'
                         
@@ -144,7 +148,6 @@ class ErrorScreenClass(Screen):
     message = StringProperty()
     button_text = StringProperty()
     getout_button = ObjectProperty()
-    user_instruction = StringProperty()
     button_function = StringProperty()
     
     return_to_screen = 'home'
@@ -152,14 +155,17 @@ class ErrorScreenClass(Screen):
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']  
+        self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
     def on_enter(self):
 
         self.getout_button.disabled = True
         
-        # use the message to get the error description        
-        self.error_description = ERROR_CODES.get(self.message, "")
+        # use the message to get the error description
+        self.error_description = self.l.get_str(ERROR_CODES.get(self.message, ""))
         self.m.stop_from_gcode_error()
 
         self.button_function = self.return_to_screen
@@ -182,6 +188,10 @@ class ErrorScreenClass(Screen):
 
         else: 
             self.sm.current = 'lobby'
+
+    def update_strings(self):
+        self.error_header.text = self.l.get_bold('ERROR') + '\n' + self.l.get_str('SmartBench could not process a command') + ':'
+        self.user_instruction.text = self.l.get_str('The job will now be cancelled.') + ' ' + self.l.get_str('Check the gcode file before re-running it.')
         
          
   

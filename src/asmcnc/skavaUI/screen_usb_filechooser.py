@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
 
@@ -16,7 +17,6 @@ from kivy.graphics import Color, Rectangle
 import sys, os
 from os.path import expanduser
 from shutil import copy
-from asmcnc.comms import usb_storage
 from os import path
 
 
@@ -168,6 +168,7 @@ class USBFileChooser(Screen):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
 
     def set_USB_path(self, usb_path):
@@ -180,7 +181,9 @@ class USBFileChooser(Screen):
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
-        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+        self.filename_selected_label_text = (
+            self.l.get_str("Press the icon to display the full filename here.")
+        )
         self.update_usb_status()
         
     def on_pre_leave(self):
@@ -199,14 +202,14 @@ class USBFileChooser(Screen):
         try: 
             if self.usb_stick.is_available():
                 self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255., 175 / 255., 80 / 255., 1.)
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
             else:
-                self.usb_status_label.text = "USB removed! Files will not load properly."
+                self.usb_status_label.text = self.l.get_str("USB removed! Files will not load properly.")
                 self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:

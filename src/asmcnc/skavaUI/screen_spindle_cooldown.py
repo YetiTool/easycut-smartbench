@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created July 2020
 
@@ -19,6 +20,7 @@ Builder.load_string("""
 <SpindleCooldownScreen>:
 
     countdown: countdown
+    cool_down_label : cool_down_label
 
     BoxLayout: 
         spacing: 0
@@ -46,8 +48,9 @@ Builder.load_string("""
                     pos: self.pos    
             
             Label:
+                id: cool_down_label
                 size_hint_y: 1
-                text: 'Cooling down spindle...'
+                # text: 'Cooling down spindle...'
                 color: [0,0,0,1]
                 markup: True
                 font_size: '30px' 
@@ -135,7 +138,10 @@ class SpindleCooldownScreen(Screen):
         super(SpindleCooldownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         self.seconds = self.m.spindle_cooldown_time_seconds
+
+        self.cool_down_label.text = self.l.get_str('Cooling down spindle') + '...'
 
     def on_pre_enter(self):
         self.m.cooldown_zUp_and_spindle_on()

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2020
 
@@ -23,18 +24,13 @@ Builder.load_string("""
 
 <DoorScreen>:
 
-    # door_label:door_label
-    # status_container:status_container
-    # right_button:right_button
-    # left_button:left_button
-    # right_button_label:right_button_label
-    # left_button_label:left_button_label
     countdown_image: countdown_image
     spindle_raise_label: spindle_raise_label
     x_beam: x_beam
     stop_img: stop_img
     resume_button: resume_button
     cancel_button: cancel_button
+    header_label: header_label
 
 
     canvas:
@@ -85,9 +81,9 @@ Builder.load_string("""
             height: dp(50)
             width: dp(800)
             Label:
+                id: header_label
                 size_hint: (None, None)
                 font_size: '30sp'
-                text: '[b]Stop bar pushed![/b]'
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
@@ -178,13 +174,7 @@ Builder.load_string("""
             height: dp(130)
             width: dp(800)
             padding: [0,0,0,10]
-
-            # canvas:
-            #     Color: 
-            #         rgba: [1, 1, 1, 1]
-            #     Rectangle: 
-            #         size: self.size
-            #         pos: self.pos           
+   
 
             Button:
                 id: cancel_button
@@ -235,12 +225,9 @@ class DoorScreen(Screen):
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
 
-        # # Text
-        # self.door_label.font_size =  '19sp'
-        # self.door_text = '[color=000000]Pressing [b]Resume[/b] will cause the machine to continue it\'s normal operation. ' \
-        #                 +'Pressing [b]Cancel[/b] will cancel the current operation completely. [/color]'
-
+        self.header_label.text = self.l.get_bold('Stop bar pushed!')
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
@@ -273,7 +260,7 @@ class DoorScreen(Screen):
         self.anim_stop_img.repeat = False 
 
     def on_leave(self):
-        self.spindle_raise_label.text = 'Preparing to resume, please wait...'
+        self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
 
     def start_x_beam_animation(self,dt):
         self.anim_stop_bar.start(self.x_beam)
@@ -285,8 +272,6 @@ class DoorScreen(Screen):
             self.anim_countdown_img.start(self.countdown_image)
 
     def check_spindle_has_raised(self):
-
-        print(str(self.m.state()))
 
         if (str(self.m.state()).startswith('Door:0') or not (str(self.m.state()).startswith('Door'))):
 
@@ -306,7 +291,7 @@ class DoorScreen(Screen):
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
         self.anim_stop_img.repeat = True
-        self.spindle_raise_label.text = '...ready to resume'
+        self.spindle_raise_label.text = '...' + self.l.get_str('ready to resume')
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):

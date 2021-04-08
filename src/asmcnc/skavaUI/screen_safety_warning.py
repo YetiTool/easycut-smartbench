@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 30 March 2019
 
@@ -12,20 +13,41 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.uix.button import Button
 
 import sys, os
 from datetime import datetime
 
 from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 
-
-
 # Kivy UI builder:
 Builder.load_string("""
+
+# <RoundedButton@Button>:
+#     background_color: 0,0,0,0
+#     canvas.before:
+#         Color:
+#             rgba: hex('#1976d2ff')
+#         RoundedRectangle:
+#             pos: self.pos
+#             size: self.size
+#             radius: [dp(30), dp(30)]
 
 <SafetyScreen>:
 
     status_container:status_container
+
+    header_label : header_label
+    confirm_button : confirm_button
+
+    label_r1_c1 : label_r1_c1
+    label_r2_c1 : label_r2_c1
+    label_r3_c1 : label_r3_c1
+    label_r4_c1 : label_r4_c1 
+    label_r1_c2 : label_r1_c2
+    label_r2_c2 : label_r2_c2
+    label_r3_c2 : label_r3_c2
+    label_r4_c2 : label_r4_c2 
 
 
     canvas:
@@ -49,9 +71,7 @@ Builder.load_string("""
             padding: 40
             size: self.parent.size
             pos: self.parent.pos
-    
       
-            
             BoxLayout:
                 size_hint_y: .7
     
@@ -60,6 +80,7 @@ Builder.load_string("""
                 pos: self.parent.pos
             
                 Label:
+                    id: header_label
                     text: '[color=333333][b]Safety Warning[/b][/color]'
                     markup: True
                     font_size: '29sp' 
@@ -67,6 +88,7 @@ Builder.load_string("""
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size
+                    color: hex('#333333ff')
                 
             BoxLayout:
                 size_hint_y: 3.9
@@ -84,6 +106,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r1_c1
                             size_hint_x: 6
                             halign: 'left'
                             text: '[color=333333]Improper use of SmartBench can cause serious injury[/color]'
@@ -92,6 +115,7 @@ Builder.load_string("""
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
+                            color: hex('#333333ff')
                             
                     BoxLayout:
                         orientation: 'horizontal'
@@ -102,13 +126,15 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r1_c2
                             size_hint_x: 6
                             text: '[color=333333]Always wear ear defenders, eye protection and a dust mask[/color]'
                             markup: True    
                             halign: 'left' 
                             valign: 'middle'
                             size:self.texture_size
-                            text_size: self.size    
+                            text_size: self.size
+                            color: hex('#333333ff')
         
                 BoxLayout:
                     orientation: 'horizontal'
@@ -121,6 +147,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r2_c1
                             size_hint_x: 6
                             text: '[color=333333]Risk of injury from rotating tools and axis motion[/color]'
                             markup: True
@@ -128,6 +155,7 @@ Builder.load_string("""
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
+                            color: hex('#333333ff')
     
                     BoxLayout:
                         orientation: 'horizontal'
@@ -138,6 +166,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r2_c2
                             size_hint_x: 6
                             text: '[color=333333]Never put hands into moving machinery[/color]'
                             markup: True
@@ -145,6 +174,7 @@ Builder.load_string("""
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
+                            color: hex('#333333ff')
     
                             
                 BoxLayout:
@@ -158,6 +188,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r3_c1
                             size_hint_x: 6
                             text: '[color=333333]Danger to life by magnetic fields - do not use near a pacemaker[/color]'
                             markup: True
@@ -165,6 +196,7 @@ Builder.load_string("""
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
+                            color: hex('#333333ff')
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:20
@@ -174,6 +206,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r3_c2
                             size_hint_x: 6
                             text: '[color=333333]Ensure the machine is powered from an earthed supply[/color]'
                             markup: True
@@ -181,6 +214,7 @@ Builder.load_string("""
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
+                            color: hex('#333333ff')
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -193,6 +227,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r4_c1
                             size_hint_x: 6
                             text: '[color=333333]Never leave the machine unattended while power is on[/color]'
                             markup: True
@@ -200,6 +235,7 @@ Builder.load_string("""
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
+                            color: hex('#333333ff')
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:20
@@ -209,6 +245,7 @@ Builder.load_string("""
                             allow_stretch: True                           
                             source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         Label:
+                            id: label_r4_c2
                             size_hint_x: 6
                             text: '[color=333333]Ensure all plugs are fully inserted and secured[/color]'
                             markup: True
@@ -216,19 +253,26 @@ Builder.load_string("""
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
+                            color: hex('#333333ff')
   
 
-            Button:
-                size_hint_y: 1.5
-                background_color: hex('#FFFFFF00')
-                on_press: root.go_to_next_screen()
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/safety_acceptance_button.png"
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+            BoxLayout:
+                size_hint_y: 1.4
+                orientation: 'horizontal'
+
+                Button:
+                    id: confirm_button
+                    width: dp(700)
+                    height: dp(90)
+                    on_press: root.go_to_next_screen()
+                    markup: True
+                    font_size: '24sp'
+                    text_size: self.size
+                    valign: "middle"
+                    halign: "center"
+                    background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
+                    border: [dp(30)]*4
               
 
 """)
@@ -240,6 +284,9 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
+# class RoundedButton(Button):
+#     pass
+
 class SafetyScreen(Screen):
 
 
@@ -248,11 +295,14 @@ class SafetyScreen(Screen):
         super(SafetyScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         
         # Status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
+
+        self.update_strings()
 
 
     def on_enter(self):
@@ -269,6 +319,21 @@ class SafetyScreen(Screen):
         
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
             self.sm.remove_widget(self.sm.get_screen('safety'))
+
+    def update_strings(self):
+
+        self.header_label.text = self.l.get_str("Safety Warning")
+
+        self.label_r1_c1.text = self.l.get_str("Improper use of SmartBench can cause serious injury")
+        self.label_r2_c1.text = self.l.get_str("Always wear ear defenders, eye protection and a dust mask")
+        self.label_r3_c1.text = self.l.get_str("Risk of injury from rotating tools and axis motion")
+        self.label_r4_c1.text = self.l.get_str("Never put hands into moving machinery")
+        self.label_r1_c2.text = self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker")
+        self.label_r2_c2.text = self.l.get_str("Ensure the machine is powered from an earthed supply")
+        self.label_r3_c2.text = self.l.get_str("Never leave the machine unattended while power is on")
+        self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
+
+        self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
             
 
             

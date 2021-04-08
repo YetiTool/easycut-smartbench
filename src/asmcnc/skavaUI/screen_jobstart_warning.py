@@ -27,6 +27,13 @@ Builder.load_string("""
 
 <JobstartWarningScreen>:
 
+    header_label : header_label
+    risk_of_fire : risk_of_fire
+    causes_of_fire : causes_of_fire
+    never_unattended : never_unattended
+    scan_label : scan_label
+    confirm_button : confirm_button
+
     BoxLayout:
         height: dp(800)
         width: dp(480)
@@ -52,12 +59,12 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                    id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
@@ -67,18 +74,18 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(300)
-                padding: [20,20,20,0]
+                height: dp(320)
+                padding: [20,10,20,0]
                 spacing: 0
                 orientation: 'vertical'
              
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:20
-                    size_hint_y: 1.1
+                    spacing:10
+                    size_hint_y: 1.22
                     BoxLayout:
-                        padding: 22
-                        size_hint_x: 0.25
+                        padding: 20
+                        size_hint_x: 0.2
                         Image:
                             keep_ratio: True
                             allow_stretch: True                           
@@ -86,28 +93,27 @@ Builder.load_string("""
 
                     BoxLayout:
                         orientation: 'vertical'
-                        size_hint_x: 0.75
+                        size_hint_x: 0.8
+                        padding: [0,0,20,0]
                         Label:
+                            id: risk_of_fire
                             size_hint_y: 0.2
-                            text: '[color=333333][b]Risk of fire[/b][/color]'
                             markup: True
                             halign: 'left'
                             font_size: '32sp' 
                             markup: True
-                            size:self.size
                             valign: 'top'
                             size:self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
 
                         Label:
+                            id: causes_of_fire
                             size_hint_y: 0.8
                             halign: 'left'
-                            text: root.causes_of_fire
                             markup: True
-                            size:self.size
-                            valign: 'bottom'
-                            size:self.texture_size
+                            valign: 'middle'
+                            size: self.texture_size
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
@@ -116,25 +122,25 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_x: 1
-                    size_hint_y: 0.9
+                    size_hint_y: 0.78
 
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:20
+                        spacing:10
                         size_hint_x: 0.75
 
                         BoxLayout:
                             padding: 0
-                            size_hint_x: 0.34
+                            size_hint_x: 0.27
                             Image:
                                 keep_ratio: True
                                 allow_stretch: True                           
                                 source: "./asmcnc/skavaUI/img/never_unattended.png"
 
                         BoxLayout:
-                            size_hint_x: 0.66
+                            size_hint_x: 0.73
                             Label:
-                                text: '[color=333333][b]Never leave CNC machines unattended[/b][/color]'
+                                id: never_unattended
                                 markup: True
                                 halign: 'left'
                                 font_size: '32sp' 
@@ -156,10 +162,8 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
                         Label:
-                            # size_hint_x: None
-                            # width: dp(150)
+                            id: scan_label
                             size_hint_y: 0.18
-                            text: '[color=333333][b]SCAN ME[/b][/color]'
                             markup: True
                             halign: 'center'
                             font_size: '22sp' 
@@ -174,21 +178,24 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(100)
+                height: dp(80)
                 padding: [dp(250),dp(0), dp(250), dp(20)]
                 orientation: 'horizontal'
 
-                RoundedButton:
+                Button:
+                    id: confirm_button
                     size_hint: (None,None)
-                    height: dp(80)
-                    width: dp(300)
-                    center: self.parent.center
-                    pos: self.parent.pos
                     on_press: root.continue_to_go_screen()
-                    text: 'I understand'
+                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                    border: [dp(14.5)]*4
+                    width: dp(291)
+                    height: dp(79)
+                    font_size: '28sp'
                     color: hex('#f9f9f9ff')
                     markup: True
-                    font_size: '28sp'
+                    center: self.parent.center
+                    pos: self.parent.pos
                   
 
 """)
@@ -198,21 +205,30 @@ class RoundedButton(Button):
 
 class JobstartWarningScreen(Screen):
 
-    causes_of_fire = (
-        "Common causes of fire:\n"
-        "- Processing combustible materials, e.g. woods\n"
-        "- Using dull cutters which produce heat through friction\n"
-        "- Variation in extraction\n"
-        )
-
-
     def __init__(self, **kwargs):
 
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.sm=kwargs['machine']
+        self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
 
     def continue_to_go_screen(self):
         self.sm.current = 'go'
+
+    def update_strings(self):
+
+        self.header_label.text = self.l.get_str("Safety Warning")
+        self.risk_of_fire.text = self.l.get_str("Risk of fire")
+        self.causes_of_fire.text = (
+                self.l.get_str("Common causes of fire") + ":\n"
+                "- " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
+                "- " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
+                "- " + self.l.get_str("Variation in extraction") + "\n"
+            )
+        self.never_unattended.text = self.l.get_bold("Never leave CNC machines unattended")
+        self.scan_label.text = self.l.get_bold("SCAN ME")
+        self.confirm_button.text = self.l.get_str("I understand")
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
@@ -11,6 +13,9 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+from asmcnc.comms import localization
+from asmcnc.skavaUI import screen_file_loading
+from asmcnc.tests import loading_screen_test
 
 from asmcnc.core_UI.sequence_alarm import screen_alarm_1
 

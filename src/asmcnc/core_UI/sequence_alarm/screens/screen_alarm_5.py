@@ -151,7 +151,6 @@ Builder.load_string("""
 				width: dp(291)
 				padding: [0,0,0,52]
 
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -183,14 +182,12 @@ class AlarmScreen5(Screen):
 		super(AlarmScreen5, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = "[b]" + "Alarm: Job cancelled." + "[/b]"
+		self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
+		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
 
 	def next_screen(self):
 		self.a.exit_sequence()
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_4'
-
-# git force

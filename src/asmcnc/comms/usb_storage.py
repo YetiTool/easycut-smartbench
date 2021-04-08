@@ -29,9 +29,10 @@ class USB_storage(object):
  
     alphabet_string = 'abcdefghijklmnopqrstuvwxyz'
  
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.sm = screen_manager
+        self.l = localization
 
         if sys.platform == "win32":
             self.usb_path = self.windows_usb_path
@@ -124,7 +125,7 @@ class USB_storage(object):
             self.sm.get_screen('usb_filechooser').update_usb_status()
 
         else:
-            popup_USB = popup_info.PopupUSBInfo(self.sm, False)
+            popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, False)
             dismiss_event = Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
 
@@ -163,7 +164,7 @@ class USB_storage(object):
                             self.sm.get_screen('usb_filechooser').update_usb_status()
 
                         else:
-                            new_popup_USB = popup_info.PopupUSBInfo(self.sm, True)
+                            new_popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, True)
                             Clock.schedule_once(lambda dt: new_popup_USB.popup.dismiss(), 1.8)
 
 
@@ -203,12 +204,11 @@ class USB_storage(object):
                     self.sm.get_screen('usb_filechooser').update_usb_status()
 
                 else:
-                    popup_USB = popup_info.PopupUSBInfo(self.sm, 'mounted')
+                    popup_USB = popup_info.PopupUSBInfo(self.sm, self.l, 'mounted')
                     Clock.schedule_once(lambda dt: popup_USB.popup.dismiss(), 1.8)
 
             else:
-                popup_USB_error = popup_info.PopupUSBError(self.sm, self)
-
+                popup_USB_error = popup_info.PopupUSBError(self.sm, self.l, self)
 
         except:
             if self.IS_USB_VERBOSE: print 'FAILED: Could not mount USB'        
