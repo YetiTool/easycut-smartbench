@@ -538,7 +538,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC30_screen)
         elif self.sm.current == 'sC29':
             if not self.sm.has_screen('sC31'):
-                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC31_screen)
         elif self.sm.current == 'sC30':
             if not self.sm.has_screen('sC32'):
@@ -787,7 +787,7 @@ class ScreenManagerShapeCutter(object):
                         
         elif self.sm.current == 'sC32':
             if not self.sm.has_screen('sC31'):
-                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC31_screen)            
             self.sm.current = 'sC31'
                         
@@ -951,7 +951,7 @@ class ScreenManagerShapeCutter(object):
                 self.sm.add_widget(sC30_screen)  
         elif self.sm.current == 'sC33':
             if not self.sm.has_screen('sC31'):
-                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, job_parameters = self.j, shapecutter = self)
+                sC31_screen = screen_shapeCutter_31.ShapeCutter31ScreenClass(name = 'sC31', machine = self.m, localization = self.l, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC31_screen)
         elif self.sm.current == 'sC34':
             if not self.sm.has_screen('sC32'):
