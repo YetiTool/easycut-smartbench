@@ -46,9 +46,9 @@ Builder.load_string("""
              
             Label:
                 id: title_string
-                size_hint_y: 0.8
+                size_hint_y: 1.2
                 text_size: self.size
-                font_size: '24sp'
+                font_size: '30sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -57,7 +57,7 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 padding: 30
                 Label:
-                    size_hint_y: 1.1
+                    size_hint_y: 1
                     text_size: self.size
                     font_size: '24sp'
                     halign: 'left'
