@@ -689,7 +689,7 @@ class SerialConnection(object):
                         if self.sm.current != 'door':
                             log("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current 
-                            # self.sm.current = 'door' # DEBUG DISABLE DOOR SCREENS
+                            self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
                     self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
@@ -731,8 +731,7 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
-            # self.alarm.alert_user(message) # DEBUG DISABLE ALARM SCREENS
-            self.m.set_state('Alarm') # DEBUG
+            self.alarm.alert_user(message)
 
         elif message.startswith('$'):
             log(message)
