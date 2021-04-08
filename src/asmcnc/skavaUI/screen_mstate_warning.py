@@ -43,11 +43,11 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            spacing: 20
+            spacing: 10
              
             Label:
                 id: title_label
-                size_hint_y: 0.8
+                size_hint_y: 1
                 text_size: self.size
                 font_size: '29sp'
                 markup: True
