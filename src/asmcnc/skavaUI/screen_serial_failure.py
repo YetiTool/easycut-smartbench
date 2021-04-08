@@ -48,22 +48,23 @@ Builder.load_string("""
                 id: title_string
                 size_hint_y: 1.2
                 text_size: self.size
-                font_size: '30sp'
+                font_size: '26sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
  
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: 30
-                Label:
-                    size_hint_y: 1
-                    text_size: self.size
-                    font_size: '24sp'
-                    halign: 'left'
-                    valign: 'middle'
-                    text: root.error_description 
-                
+            # BoxLayout:
+            #     orientation: 'horizontal'
+            #     padding: 30
+            Label:
+                size_hint_y: 1
+                text_size: self.size
+                font_size: '24sp'
+                halign: 'left'
+                valign: 'middle'
+                text: root.error_description 
+                markup: True
+
             Label:
                 size_hint_y: 1
                 font_size: '24sp'
@@ -71,6 +72,7 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'top'
                 text: root.user_instruction
+                markup: True
                     
             BoxLayout:
                 orientation: 'horizontal'
