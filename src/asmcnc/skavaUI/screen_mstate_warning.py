@@ -62,6 +62,7 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'middle'
                 text: 'Cannot start job.'
+                markup: True
                 
             Label:
                 size_hint_y: 0.6
@@ -70,6 +71,7 @@ Builder.load_string("""
                 halign: 'left'
                 valign: 'middle'
                 text: root.user_instruction
+                markup: True
                 
             BoxLayout:
                 orientation: 'horizontal'
@@ -98,7 +100,6 @@ Builder.load_string("""
                         Label:
                             id: return_label
                             font_size: '20sp'
-                            text: 'Return'
                         
   
             
@@ -155,5 +156,7 @@ class WarningMState(Screen):
                 self.l.get_str("SmartBench is not in an idle state.")
             )
         self.cannot_start_job.text = self.l.get_str("Cannot start job.")
+
+        self.return_label.text = self.l.get_str("Return")
         
  
