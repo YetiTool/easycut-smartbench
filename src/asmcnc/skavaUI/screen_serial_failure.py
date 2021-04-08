@@ -55,15 +55,15 @@ Builder.load_string("""
  
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [5,0,0,0]
-            Label:
+                padding: 5
                 size_hint_y: 1
-                text_size: self.size
-                font_size: '24sp'
-                halign: 'left'
-                valign: 'middle'
-                text: root.error_description 
-                markup: True
+                Label:
+                    text_size: self.size
+                    font_size: '24sp'
+                    halign: 'left'
+                    valign: 'middle'
+                    text: root.error_description 
+                    markup: True
 
             Label:
                 size_hint_y: 1
