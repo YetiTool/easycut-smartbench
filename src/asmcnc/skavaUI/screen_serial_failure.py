@@ -48,7 +48,7 @@ Builder.load_string("""
                 id: title_string
                 size_hint_y: 0.8
                 text_size: self.size
-                font_size: '28sp'
+                font_size: '24sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
