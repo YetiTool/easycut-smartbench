@@ -440,19 +440,19 @@ class WifiScreen(Screen):
 
         if len(self.netname) < 1: 
 
-            message = "Please enter a valid network name."
+            message = self.l.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
 
         elif (len(self.password) < 8 or len(self.password) > 63): 
 
-            message = "Please enter a password between 8 and 63 characters."
+            message = self.l.get_str("Please enter a password between 8 and 63 characters.")
             popup_info.PopupWarning(self.sm, self.l, message)
 
         else: 
             self.connect_wifi()
 
     def connect_wifi(self):
-        message = 'Please wait...\n\nConsole will reboot to connect to network'
+        message = self.l.get_str("Please wait") + "...\n\n" + self.l.get_str("Console will reboot to connect to network.")
         popup_info.PopupMiniInfo(self.sm, self.l, message)
 
         # pass credentials to wpa_supplicant file
