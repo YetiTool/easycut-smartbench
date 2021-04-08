@@ -137,7 +137,7 @@ class WarningMState(Screen):
                     "Please wait for SmartBench to finish before attempting to start a job."
                 )
             
-        self.l.update_strings()
+        self.update_strings()
 
     
     def button_press(self):
