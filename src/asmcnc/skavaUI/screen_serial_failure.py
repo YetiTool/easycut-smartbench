@@ -55,7 +55,7 @@ Builder.load_string("""
  
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 5
+                padding: [20,0,0,0]
                 size_hint_y: 1
                 Label:
                     text_size: self.size
