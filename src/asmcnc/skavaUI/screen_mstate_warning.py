@@ -56,7 +56,7 @@ Builder.load_string("""
  
             Label:
                 id: cannot_start_job
-                size_hint_y: 1.2
+                size_hint_y: 1
                 text_size: self.size
                 font_size: '22sp'
                 halign: 'left'
@@ -65,7 +65,7 @@ Builder.load_string("""
                 markup: True
                 
             Label:
-                size_hint_y: 0.6
+                size_hint_y: 1
                 font_size: '22sp'
                 text_size: self.size
                 halign: 'left'
