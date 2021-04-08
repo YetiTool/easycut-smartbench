@@ -421,6 +421,8 @@ class LoadingScreen(Screen):
                 "\n" + \
                 self.l.get_str('Please double check the file for errors before attempting to re-load it.')
                 )
+            self.job_gcode = []
+            self.loading_file_name = ''
             self.check_button_label.text = self.l.get_str('Check job')
             self.quit_button_label.text = self.l.get_str('Quit to home')
 
