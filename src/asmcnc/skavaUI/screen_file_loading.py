@@ -441,6 +441,8 @@ class LoadingScreen(Screen):
         self.progress_value = 'Could not load job'
         self.warning_title_label.text = 'ERROR:'
         self.warning_body_label.text = 'It was not possible to load your job.\nPlease double check the file for errors before attempting to re-load it.'
+        self.job_gcode = []
+        self.loading_file_name = ''
         self.check_button_label.text = 'Check job'
         self.quit_button_label.text = 'Quit to home'
         self.check_button.disabled = True
