@@ -77,7 +77,7 @@ class SerialConnection(object):
 
     def establish_connection(self, win_port):
 
-        # Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # DEBUG TEST
+        Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # DEBUG TEST
 
         log('Start to establish connection...')
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
