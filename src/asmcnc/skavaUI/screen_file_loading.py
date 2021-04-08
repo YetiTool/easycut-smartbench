@@ -423,8 +423,8 @@ class LoadingScreen(Screen):
                 )
             self.job_gcode = []
             self.loading_file_name = ''
-            self.check_button_label.text = self.l.get_str('Check job')
-            self.quit_button_label.text = self.l.get_str('Quit to home')
+            self.check_button.text = self.l.get_str('Check job')
+            self.home_button.text = self.l.get_str('Quit to home')
 
             self.check_button.disabled = True
             self.home_button.disabled = False
