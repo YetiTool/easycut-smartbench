@@ -9,6 +9,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import pprint
 from datetime import datetime, date
+import pytz
+from pytz import timezone
 import numpy as np
 
 import requests.auth
@@ -31,6 +33,8 @@ USB0 = '/dev/ttyUSB0'
 
 # far side
 USB1 = '/dev/ttyUSB1'
+
+utc = pytz.utc
 
 def log(message):
     timestamp = datetime.now()
@@ -902,7 +906,11 @@ class ProcessMicrometerScreen(Screen):
 
         # Get time and date
         current_utc = datetime.utcnow()
-        current_time = current_utc.strftime("%H:%M:%S")
+        utc_dt = utc.localize(current_utc)
+        bst_tz = timezone('Europe/London')
+        current_gmt = utc_dt.astimezone(bst_tz)
+
+        current_time = current_gmt.strftime("%H:%M:%S")
         current_date = date.today()
 
         # Date
@@ -967,25 +975,3 @@ class ProcessMicrometerScreen(Screen):
         self.data_status_label.text = self.data_status
         self.h_read_label.text = str(self.DTI_H.read_mm())
         self.f_read_label.text = str(self.DTI_F.read_mm())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
