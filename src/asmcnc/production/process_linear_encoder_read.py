@@ -427,7 +427,9 @@ class ProcessLinearEncoderScreen(Screen):
 
             ## START THE TEST
             log('Starting test...')
+            self.data_status = 'Starting'
             self.test_completed = False
+            self.generate_test_id()
             self.data_status = 'Collecting'
             self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
 
@@ -742,6 +744,7 @@ class ProcessLinearEncoderScreen(Screen):
         log('Clear local test data')
         self.clear_data()
         self.test_id.text = str(int(self.test_id.text) + 1)
+        self.generate_test_id()
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'

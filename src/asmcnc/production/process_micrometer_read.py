@@ -542,7 +542,9 @@ class ProcessMicrometerScreen(Screen):
             ## START THE TEST
             log('Starting test...')
             self.calibration_run = False
+            self.data_status = 'Starting'
             self.test_completed = False
+            self.generate_test_id()
             self.data_status = 'Collecting'
             run_command = 'G0 G91 X' + str(self.max_pos)
             self.m.send_any_gcode_command(run_command)
@@ -925,6 +927,7 @@ class ProcessMicrometerScreen(Screen):
         log('Clear local test data')
         self.clear_data()
         self.test_id.text = str(int(self.test_id.text) + 1)
+        self.generate_test_id()
 
         self.go_stop.state = 'normal'
         self.go_stop.text = 'MEASURE'
