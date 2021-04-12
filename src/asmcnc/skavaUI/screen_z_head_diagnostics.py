@@ -572,19 +572,19 @@ class ZHeadDiagnosticsScreen(Screen):
 
         # series of if statements and then return if if fails (and do checkbox)
 
-        if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 50):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            Clock.unschedule(self.poll_for_temps_power)
-            return
-
-        # if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
+        # if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 50):
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         # else:
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
         #     Clock.unschedule(self.poll_for_temps_power)
         #     return
+
+        if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
 
         # if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
