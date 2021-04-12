@@ -743,7 +743,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 ") + " RPM"
 
-        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV), 0.5)
+        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV, 100), 0.5)
 
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 1.8)
         
