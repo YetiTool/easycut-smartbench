@@ -424,7 +424,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.sm=kwargs['screen_manager']
 
         self.z_limit_set = False
-        self.spindle_pass_fail_list = []
+        self.spindle_pass_fail = True
         self.string_overload_summary = ''
 
     def on_enter(self, *args):
@@ -696,17 +696,17 @@ class ZHeadDiagnosticsScreen(Screen):
 
         def show_outcome():
 
-            if 'False' in self.spindle_pass_fail_list:
+            if self.spindle_pass_fail == 0:
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-                test = self.string_overload_summary.split('Spindle ')
+                test = self.string_overload_summary.split("**")
                 popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3])
 
             else: 
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-            print self.spindle_pass_fail_list
+            print self.spindle_pass_fail
 
-            self.spindle_pass_fail_list = []
+            self.spindle_pass_fail = True
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 8)
@@ -714,37 +714,43 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def spindle_check(self, M3_command, expected_mV):
 
+        test_counter = 1
 
-        def overload_check(mid_range_mV):
-
-            self.string_overload_summary = self.string_overload_summary + '\n' + 'Voltage out: ' + str(self.m.s.overload_pin_mV)
-
+        def overload_check(ld_mid_range_mV, speed_mid_range_mV):
 
             # 5000 RPM = 1.7V - 2.3V
             # 10000 RPM = 3.3V - 4.5V
             # 15000 RPM = 5.0V - 6.5V
 
-            if mid_range_mV == 2000: tolerance = 300
-            elif mid_range_mV == 3900: tolerance = 600
-            elif mid_range_mV == 5750: tolerance = 750
+            if ld_mid_range_mV == 2000: ld_tolerance = 300
+            elif ld_mid_range_mV == 3900: ld_tolerance = 600
+            elif ld_mid_range_mV == 5750: ld_tolerance = 750
 
-            self.string_overload_summary = self.string_overload_summary + '\n' + 'Min: ' + str(mid_range_mV - tolerance)
-            self.string_overload_summary = self.string_overload_summary + '\n'+ 'Max: ' + str(mid_range_mV + tolerance)
+            speed_V_tolerance = 0.2*speed_mid_range_mV
 
-            if (self.m.s.overload_pin_mV >= mid_range_mV - tolerance) and (self.m.s.overload_pin_mV <= mid_range_mV + tolerance):
-                self.spindle_pass_fail_list.append('True')
+            if test_counter == 1:
+                self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + str(ld_mid_range_mV - ld_tolerance) + "-" + str(ld_mid_range_mV + ld_tolerance)
+                self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + str(speed_mid_range_mV - speed_V_tolerance) + "-" + str(speed_mid_range_mV + speed_V_tolerance)
 
-            else: self.spindle_pass_fail_list.append('False')
+            self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(test_counter) + ": Ld: " + str(self.m.s.overload_pin_mV) + "|" + " V: " + str(self.m.s.spindle_speed_mV)
 
+            self.is_it_within_tolerance(self.m.s.overload_pin_mV, ld_mid_range_mV, ld_tolerance)
+            self.is_it_within_tolerance(self.m.s.spindle_speed_mV, speed_mid_range_mV, speed_V_tolerance)
+
+            # end of inner function
 
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
 
-        self.string_overload_summary = self.string_overload_summary + '\n' + 'Spindle speed: ' + str(M3_command)
+        self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 ") + " RPM"
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV), 0.5)
 
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 1.8)
         
+    def is_it_within_tolerance(value, expected, tolerance):
+        if (value >= expected - tolerance) and (value <= expected + tolerance): self.spindle_pass_fail = self.spindle_pass_fail*(True)
+        else: self.spindle_pass_fail = self.spindle_pass_fail*(False)
+
     def test_fw_update(self):
         pass
 
