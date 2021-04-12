@@ -434,7 +434,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.write_command('$21 = 0')
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for limit switches being triggered
-        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check(), STATUS_UPDATE_DELAY)      # Poll for status
+        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, STATUS_UPDATE_DELAY)      # Poll for status
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
