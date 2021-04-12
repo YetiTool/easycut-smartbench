@@ -628,7 +628,7 @@ class ZHeadDiagnosticsScreen(Screen):
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("AC Loss: " + str(self.m.s.ac_loss))
-            fail_report.append("AC should be reported as lost on Z Head diagnostics jig.")
+            fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
 
         if pass_fail == 0:
             Clock.unschedule(self.poll_for_temps_power)
