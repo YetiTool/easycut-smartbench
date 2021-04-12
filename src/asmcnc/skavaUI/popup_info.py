@@ -323,14 +323,16 @@ class PopupInfo(Widget):
 
 class PopupSpindleDiagnosticsInfo(Widget):
 
-    def __init__(self, screen_manager, test1, test2, test3):
+    def __init__(self, screen_manager, test1, test2, test3, test4, test5):
         
         self.sm = screen_manager
         
         # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=[0,0,0,1], padding=[10,10])
-        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=[0,0,0,1], padding=[10,10])
-        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=[10,10])
+        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=[0,0,0,1], padding=5)
+        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=[0,0,0,1], padding=5)
+        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=5)
+        label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=[0,0,0,1], padding=5)
+        label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=[0,0,0,1], padding=5)
         
 
 
@@ -342,8 +344,10 @@ class PopupSpindleDiagnosticsInfo(Widget):
         text_layout.add_widget(label1)
         text_layout.add_widget(label2)
         text_layout.add_widget(label3)
+        text_layout.add_widget(label4)
+        text_layout.add_widget(label5)
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0], size_hint_y = 0.5)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0], size_hint_y = 0.4)
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
@@ -357,7 +361,7 @@ class PopupSpindleDiagnosticsInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(700, 400),
+                      size=(780, 460),
                       auto_dismiss= False
                       )
 
