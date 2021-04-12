@@ -677,22 +677,22 @@ class ZHeadDiagnosticsScreen(Screen):
         
         # Send command:
         # 5000 RPM = 1.2 V
-        self.spindle_check('M3 S5000', 2000)
+        self.spindle_check('M3 S5000', 2000, 2000)
 
         # 10000 RPM = 3.4 - 3.6 V 
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3900), 2.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3900, 4000), 2.5)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5750), 5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5750, 6000), 5)
 
         # 20000 RPM = 7.8 V
-        # Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8400), 7.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 5750, 8000), 7.5)
 
         # # 250000 RPM = 10 V
-        # Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10600), 10)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 5750, 10000), 10)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 7.5)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 12.5)
 
 
         def show_outcome():
@@ -712,10 +712,10 @@ class ZHeadDiagnosticsScreen(Screen):
             self.spindle_pass_fail = True
 
 
-        Clock.schedule_once(lambda dt: show_outcome(), 8)
+        Clock.schedule_once(lambda dt: show_outcome(), 13)
 
 
-    def spindle_check(self, M3_command, expected_mV):
+    def spindle_check(self, M3_command, ld_expected_mV, speed_expected_mV):
 
         self.spindle_test_counter = 1
 
@@ -733,7 +733,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
             if self.spindle_test_counter == 1:
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + str(ld_mid_range_mV - ld_tolerance) + "-" + str(ld_mid_range_mV + ld_tolerance)
-                self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + str(speed_mid_range_mV - speed_V_tolerance) + "-" + str(speed_mid_range_mV + speed_V_tolerance)
+                self.string_overload_summary = self.string_overload_summary + '\n' + 'V range: ' + str(speed_mid_range_mV - speed_V_tolerance) + "-" + str(speed_mid_range_mV + speed_V_tolerance)
 
             self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ": Ld: " + str(self.m.s.overload_pin_mV) + "|" + " V: " + str(self.m.s.spindle_speed_mV)
 
@@ -748,7 +748,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 S") + " RPM"
 
-        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV, 100), 0.5)
+        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV, speed_expected_mV), 0.5)
 
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 1.8)
         
