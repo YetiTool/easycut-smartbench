@@ -673,6 +673,8 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.write_command('G53 G0 Z-1')
 
 
+    # SPINDLE OVERLOAD VOLTAGE AND SPEED VOLTAGE CHECKING FUNCTIONS
+
     def run_spindle_check(self):
         
         # Send command:
@@ -735,7 +737,8 @@ class ZHeadDiagnosticsScreen(Screen):
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + '\n' + str(ld_mid_range_mV - ld_tolerance) + " - " + str(ld_mid_range_mV + ld_tolerance)
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + '\n' + str(speed_mid_range_mV - speed_V_tolerance) + " - " + str(speed_mid_range_mV + speed_V_tolerance)
 
-            self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ": Ld: " + str(self.m.s.overload_pin_mV) + "|" + " V: " + str(self.m.s.spindle_speed_mV)
+            # self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ":\nLd: " + str(self.m.s.overload_pin_mV) + "|" + "\nV: " + str(self.m.s.spindle_speed_mV)
+            self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ":\nLd: " + str(6000) + "|" + "\nV: " + str(10000)
 
             self.is_it_within_tolerance(self.m.s.overload_pin_mV, ld_mid_range_mV, ld_tolerance)
             self.is_it_within_tolerance(self.m.s.spindle_speed_mV, speed_mid_range_mV, speed_V_tolerance)
@@ -756,6 +759,8 @@ class ZHeadDiagnosticsScreen(Screen):
         if (value >= expected - tolerance) and (value <= expected + tolerance): self.spindle_pass_fail = self.spindle_pass_fail*(True)
         else: self.spindle_pass_fail = self.spindle_pass_fail*(False)
 
+
+    # TEST FIRMWARE UPDATE
     def test_fw_update(self):
         pass
 
