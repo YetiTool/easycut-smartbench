@@ -17,6 +17,8 @@ Builder.load_string("""
 
 <PowerCycleScreen>:
 
+    only_label: only_label
+
     canvas:
         Color: 
             rgba: hex('#000000')
@@ -35,13 +37,14 @@ Builder.load_string("""
             size_hint_x: 1
                 
             Label:
+                id: only_label
                 text_size: self.size
                 size_hint_y: 0.5
-                text: "Please power cycle SmartBench now"
+                text: "Please wait..."
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
-                halign: 'center'            
+                halign: 'center'
 
 """)
 
@@ -50,4 +53,11 @@ class PowerCycleScreen(Screen):
     def __init__(self, **kwargs):
         super(PowerCycleScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+
+    def on_enter(self):
+        self.only_label.text = "Please wait..."
+        Clock.schedule_once(self.update_label, 25)
+
+    def update_label(self, dt):
+        self.only_label.text = "Please restart SmartBench now"
     

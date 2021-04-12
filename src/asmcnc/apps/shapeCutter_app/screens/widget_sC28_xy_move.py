@@ -13,6 +13,7 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.skavaUI import popup_info
 
 
 Builder.load_string("""
@@ -404,22 +405,18 @@ class SC28XYMove(Widget):
         popup_input_error.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
-
+        warning = 'Is this where you want to set your\nstandby position?'
+        popup_info.PopupPark(self.sm, self.m, warning)
+        
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'sC28', 'sC28')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'sC28', 'sC28')
         else:
             self.m.go_y_datum()
 

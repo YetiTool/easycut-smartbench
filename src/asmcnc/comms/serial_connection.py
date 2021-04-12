@@ -23,6 +23,9 @@ import re
 from functools import partial
 from serial.serialutil import SerialException
 
+# Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
+from asmcnc.core_UI.sequence_alarm import alarm_manager
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -55,11 +58,15 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
-    def __init__(self, machine, screen_manager):
+    def __init__(self, machine, screen_manager, settings_manager):
 
-        self.sm = screen_manager   
+        self.sm = screen_manager
+        self.sett =settings_manager
         self.m = machine
-        
+
+        # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m)
+
     def __del__(self):
         print 'Destructor'
 
@@ -186,16 +193,15 @@ class SerialConnection(object):
                 self.write_direct(*command)
                 command_counter += 1
                 
-            del self.write_command_buffer[0:(command_counter+1)]
-            
+            del self.write_command_buffer[0:(command_counter)]
+
             realtime_counter = 0
             for realtime_command in self.write_realtime_buffer:
                 self.write_direct(realtime_command[0], altDisplayText = realtime_command[1], realtime = True)
                 realtime_counter += 1
-                
-            del self.write_realtime_buffer[0:(realtime_counter+1)]
 
-            
+            del self.write_realtime_buffer[0:(realtime_counter)]
+
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
                 # Read line in from serial buffer
@@ -245,7 +251,7 @@ class SerialConnection(object):
                         # - need to send instructions to the GUI (prior to raise?) 
     
                 # Job streaming: stuff butter
-                if self.is_job_streaming:
+                if (self.is_job_streaming and not self.m.is_machine_paused):
                     if self.is_stream_lines_remaining:
                         self.stuff_buffer()
                     else: 
@@ -267,7 +273,6 @@ class SerialConnection(object):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
-    is_job_finished = False
 
     g_count = 0 # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0 # lines sent to grbl
@@ -276,35 +281,48 @@ class SerialConnection(object):
     stream_start_time = 0
     stream_end_time = 0
     buffer_monitor_file = None
+
+    stream_pause_start_time = 0
+    stream_paused_accumulated_time = 0
+
+    check_streaming_started = False
     
     def check_job(self, job_object):
         
         log('Checking job...')
 
         self.m.enable_check_mode()
-        
-        # Sleep to ensure check mode ok isn't included in log
-        time.sleep(0.1)
-        
-        # Set up error logging
-        self.suppress_error_screens = True
-        self.response_log = []
-        
-        # run job as per normal, if_check_enabled has been set to true
-        self.run_job(job_object)
 
-        # get error log back to the checking screen when it's ready
-        Clock.schedule_interval(partial(self.return_check_outcome, job_object),0.1)
+        def check_job_inner_function():
+            # Check that check mode has been enabled before running:
+            if self.m_state == "Check":
 
-    def return_check_outcome(self, job_object,dt):
-        if len(self.response_log) >= len(job_object): # + 2
+                # check has now started:
+                self.check_streaming_started = True
+
+                # Set up error logging
+                self.suppress_error_screens = True
+                self.response_log = []
+                
+                # run job as per normal
+                self.run_job(job_object)
+
+                # get error log back to the checking screen when it's ready
+                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
+
+            else:
+                Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+
+        # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
+        Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
+
+    def return_check_outcome(self, job_object, dt):
+        if len(self.response_log) >= len(job_object):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
         
     def run_job(self, job_object):
-        
-        self.is_job_finished = False
         
         # TAKE IN THE FILE
         self.job_gcode = job_object
@@ -313,6 +331,7 @@ class SerialConnection(object):
         ### (if not initialised - come back to this one later w/ pausing functionality)
 
         def set_streaming_flags_to_true():
+            # self.m.set_pause(False) # moved to go screen for timing reasons
             self.is_stream_lines_remaining = True
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
@@ -323,26 +342,17 @@ class SerialConnection(object):
         elif not self.job_gcode:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
-            self.is_job_finished = True
-        return
 
     def initialise_job(self):
             
-        if not self.m.is_check_mode_enabled:
-            # Move head out of the way before moving to the job datum in XY.
-# >>>>>>> revert-196-vac_fix
-            # self.m.prepare_machine() #PROBLEM
+        if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
             self.m.zUp()
   
         self.FLUSH_FLAG = True
-        
         time.sleep(0.1)
-        
         self._reset_counters()
-
         return True
-
 
     def _reset_counters(self):
         
@@ -350,7 +360,9 @@ class SerialConnection(object):
         self.l_count = 0
         self.g_count = 0
         self.c_line = []
-        self.stream_start_time = time.time();
+        self.stream_pause_start_time = 0
+        self.stream_paused_accumulated_time = 0
+        self.stream_start_time = time.time()
 
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
@@ -396,33 +408,28 @@ class SerialConnection(object):
             if self.c_line != []:
                 del self.c_line[0] # Delete the block character count corresponding to the last 'ok'
 
-
-
     # After streaming is completed
     def end_stream(self):
 
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
-        self.is_job_finished = True
+        self.m.set_pause(False)
 
-        if not self.m.is_check_mode_enabled:
-
-# >>>>>>> revert-196-vac_fix           
-            # move head up and turn vac off
-            # self.m.post_cut_sequence() #PROBLEM
+        if self.m_state != "Check":
 
             if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
             else:
-                self.send_stream_time_to_job_done_screen()
+                self.update_machine_runtime()
                 self.sm.current = 'jobdone'
 
             self._reset_counters()
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             self._reset_counters()
@@ -431,7 +438,7 @@ class SerialConnection(object):
             self.buffer_monitor_file.close()
             self.buffer_monitor_file = None 
 
-    def send_stream_time_to_job_done_screen(self):
+    def update_machine_runtime(self):
 
             # Tell user the job has finished
             log("G-code streaming finished!")
@@ -443,40 +450,50 @@ class SerialConnection(object):
             seconds = int(seconds_remainder % 60)
             log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
 
+            only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
+
+            # Add time taken in seconds to brush use: 
+            self.m.spindle_brush_use_seconds += only_running_time_seconds
+            self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+
+            # Add time taken in seconds to calibration tracking
+            self.m.time_since_calibration_seconds += only_running_time_seconds
+            self.m.write_calibration_settings(self.m.time_since_calibration_seconds, self.m.time_to_remind_user_to_calibrate_seconds)
+
+            # Add time taken in seconds since Z head last lubricated
+            self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
+            self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
+
             # send info to the job done screen
             self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
             self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
              " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
 
     def cancel_stream(self):
+
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
         self._reset_counters()
 
-        if not self.m.is_check_mode_enabled:
-            # self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
+        if self.m_state != "Check":
             
             # Flush
             self.FLUSH_FLAG = True
-
-# >>>>>>> revert-196-vac_fix        
-#             # Move head up and turn vac off after a delay
-#             Clock.schedule_once(lambda dt: self.m.post_cut_sequence(), 0.5) #PROBLEM
-#             
+     
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.self.m.vac_off(), 1)
-            # self.sm.get_screen('spindle_cooldown').return_screen = self.sm.get_screen('stop_or_resume_job_decision').return_screen
-            # self.sm.current = 'spindle_cooldown'
-            
+            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+
+            # Update time for maintenance reminders
+            self.update_machine_runtime()    
 
         else:
+            self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             
             # Flush
             self.FLUSH_FLAG = True
-        
         
         if self.buffer_monitor_file != None:
             self.buffer_monitor_file.close()
@@ -510,6 +527,11 @@ class SerialConnection(object):
     g28_y = '0.0'
     g28_z = '0.0'
 
+    # Feeds and speeds
+    spindle_speed = '0.0'
+    feed_rate = '0.0'
+    spindle_load_voltage = 0.0
+
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
     limit_X = False # convention: MAX is UPPER_CASE
@@ -539,6 +561,7 @@ class SerialConnection(object):
     expecting_probe_result = False
     
     fw_version = ''
+    hw_version = ''
 
 
     def process_grbl_push(self, message):
@@ -684,18 +707,18 @@ class SerialConnection(object):
                                 self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
-                    overload_raw_mV = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
-                    if overload_raw_mV < 750 : overload_mV_equivalent_state = 0
-                    elif overload_raw_mV < 1750 : overload_mV_equivalent_state = 20
-                    elif overload_raw_mV < 3000 : overload_mV_equivalent_state = 40
-                    elif overload_raw_mV < 3750 : overload_mV_equivalent_state = 60
-                    elif overload_raw_mV < 4250 : overload_mV_equivalent_state = 80
-                    elif overload_raw_mV < 4750 : overload_mV_equivalent_state = 90
-                    elif overload_raw_mV >= 4750 : overload_mV_equivalent_state = 100
-                    else: log("Overload value not recognised")
-                   
+                    self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
 
-                    self.overload_pin_mV = overload_raw_mV
+                    if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
+                    elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
+                    elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
+                    elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
+                    elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
+                    elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
+                    else: log("Overload value not recognised")
+
+                    self.overload_pin_mV = self.spindle_load_voltage
+
                     # # update stuff if there's a change
                     # if overload_mV_equivalent_state != self.overload_state:  
                     #     self.overload_state = overload_mV_equivalent_state
@@ -704,12 +727,12 @@ class SerialConnection(object):
                     #     try:
                     #         self.sm.get_screen('go').update_overload_label(self.overload_state)
                     #     except:
-                    #         log('Unable to update_overlaod_state on go screen')
+                    #         log('Unable to update overload state on go screen')
                     
                     # # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     # if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
                     #     self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                    #     Clock.schedule_once(self.check_for_sustained_max_overload, 1)
+                    #     Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
 
                 # add temp/voltage/power sense stats here
@@ -742,6 +765,11 @@ class SerialConnection(object):
                     self.PSU_mV = voltages[2]
                     self.spindle_speed_mV = voltages[3]
 
+                elif part.startswith('FS:'):
+                    feed_speed = part[3:].split(',')
+                    self.feed_rate = feed_speed[0]
+                    self.spindle_speed = feed_speed[1]
+
                 else:
                     continue
 
@@ -752,14 +780,10 @@ class SerialConnection(object):
  
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
+
             if self.suppress_alarm_screens == False:
-                if self.sm.current != 'alarmScreen':
-                    self.sm.get_screen('alarmScreen').message = message
-                    if self.sm.current == 'errorScreen':
-                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-                    else:
-                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-                    self.sm.current = 'alarmScreen'
+                self.alarm.alert_user(message)
+
 
         elif message.startswith('$'):
             log(message)
@@ -828,6 +852,7 @@ class SerialConnection(object):
 
         # [G54:], [G55:], [G56:], [G57:], [G58:], [G59:], [G28:], [G30:], [G92:],
         # [TLO:], and [PRB:] messages indicate the parameter data printout from a $# user query.
+
         elif message.startswith('['):
                       
             stripped_message = message.translate(string.maketrans("", "", ), '[]') # fastest strip method
@@ -863,8 +888,11 @@ class SerialConnection(object):
                 self.expecting_probe_result = False # clear flag
                 
             elif stripped_message.startswith('ASM CNC'):
-                self.fw_version = stripped_message.split(':')[1]
+                fw_hw_versions = stripped_message.split(';')
+                self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                self.hw_version = (fw_hw_versions[2]).split(':')[1]
                 log('FW version: ' + str(self.fw_version))
+                log('HW version: ' + str(self.hw_version))
 
 
     def check_for_sustained_max_overload(self, dt):
@@ -949,7 +977,7 @@ class SerialConnection(object):
         # Finally issue the command        
         if self.s:
             try:
-                
+
                 if realtime == False:
                     # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
                     self.s.write(serialCommand + '\n')
@@ -968,6 +996,9 @@ class SerialConnection(object):
                 self.get_serial_screen('Could not write last command to serial buffer.')
     #                 log('Serial Error: ' + str(serialError))
         
+        else: 
+
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):

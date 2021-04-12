@@ -179,21 +179,17 @@ class VirtualBedControl(Widget):
         popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
+        warning = 'Is this where you want to set your\nstandby position?'
+        popup_info.PopupPark(self.sm, self.m, warning)
         
     def go_to_jobstart_xy(self):
         if self.m.is_machine_homed == False:
-            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-            self.sm.get_screen('homingWarning').error_msg = ''
-            self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
         else:
             self.m.go_to_jobstart_xy()
 
     def go_to_standby(self):
         if self.m.is_machine_homed == False:
-            self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-            self.sm.get_screen('homingWarning').error_msg = ''
-            self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
         else:
             self.m.go_to_standby()

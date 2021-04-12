@@ -77,7 +77,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-#                         source: "./asmcnc/skavaUI/img/z_jog_up.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -212,10 +211,16 @@ class ZMove(Widget):
 
     def probe_z(self):
         self.m.probe_z()
+        self.disable_z_datum_reminder()
      
     def set_jobstart_z(self):
         self.m.set_jobstart_z()
+        self.disable_z_datum_reminder()
      
     def go_to_jobstart_z(self):
         self.m.go_to_jobstart_z()
+
+    def disable_z_datum_reminder(self):
+        self.sm.get_screen('home').has_datum_been_reset = True
+
     

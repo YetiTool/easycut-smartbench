@@ -14,6 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from datetime import datetime
 
+from asmcnc.skavaUI import popup_info
 # from asmcnc.calibration_app import screen_prep_calibration
 
 Builder.load_string("""
@@ -62,10 +63,13 @@ class WelcomeScreenClass(Screen):
         super(WelcomeScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
+        self.set=kwargs['settings']
+        self.am = kwargs['app_manager']
 
     def on_enter(self):
-        
+
+        self.set.refresh_all()
+
         if self.m.s.is_connected():
 
             # PC boot timings
@@ -79,18 +83,27 @@ class WelcomeScreenClass(Screen):
             if sys.platform != 'win32':
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
-                # Get grbl FW version
-                Clock.schedule_once(lambda dt: self.m.send_any_gcode_command('$I'), 5)
                 # Allow time for machine reset sequence
-                Clock.schedule_once(self.go_to_next_screen, 5.5)
-                # Get grbl settings
-                Clock.schedule_once(lambda dt: self.m.get_grbl_settings(), 5.6)
+                Clock.schedule_once(self.go_to_next_screen, 6)
+                # Set settings that are relevant to the GUI, but which depend on getting machine settings first                
+                Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
 
-    
-    
+        elif sys.platform == 'win32' or sys.platform == 'darwin':
+            Clock.schedule_once(self.go_to_next_screen, 1)
+
+
     def go_to_next_screen(self, dt):
-
         self.sm.current = 'z_head_diagnostics'
         
+    def set_machine_value_driven_user_settings(self, dt):
 
- 
+        # Laser settings
+        if self.m.is_laser_enabled == True: self.sm.get_screen('home').default_datum_choice = 'laser'
+        else: self.sm.get_screen('home').default_datum_choice = 'spindle'
+
+
+        # SW Update available?
+        if (self.set.sw_version) != self.set.latest_sw_version and not self.set.latest_sw_version.endswith('beta') and not self.set.sw_branch == 'master':
+            self.sm.get_screen('lobby').trigger_update_popup = True
+
+
