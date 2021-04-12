@@ -307,4 +307,4 @@ class DeveloperTempScreen(Screen):
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
 
     def z_head_diagnostics(self):
-        self.sm.current = 'z_head_diagnostics'
+        self.systemtools_sm.sm.current = 'z_head_diagnostics'
