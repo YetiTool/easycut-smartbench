@@ -731,7 +731,7 @@ class ZHeadDiagnosticsScreen(Screen):
             elif ld_mid_range_mV == 3900: ld_tolerance = 600
             elif ld_mid_range_mV == 5750: ld_tolerance = 750
 
-            if speed_V_tolerance < 10000:
+            if speed_mid_range_mV < 10000:
                 speed_V_tolerance = int(0.2*speed_mid_range_mV)
             else: 
                 speed_V_tolerance = int(0.1*speed_mid_range_mV)
