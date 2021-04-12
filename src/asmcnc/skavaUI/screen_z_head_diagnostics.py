@@ -737,11 +737,13 @@ class ZHeadDiagnosticsScreen(Screen):
             self.is_it_within_tolerance(self.m.s.overload_pin_mV, ld_mid_range_mV, ld_tolerance)
             self.is_it_within_tolerance(self.m.s.spindle_speed_mV, speed_mid_range_mV, speed_V_tolerance)
 
+            test_counter+=1
+
             # end of inner function
 
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
 
-        self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 ") + " RPM"
+        self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 S") + " RPM"
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(expected_mV, 100), 0.5)
 
