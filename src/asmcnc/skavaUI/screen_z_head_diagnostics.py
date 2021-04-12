@@ -239,7 +239,7 @@ Builder.load_string("""
             cols: 3
 
             Label: 
-                text: '  4. X motors'
+                text: ' 4. X motors'
                 color: 1,1,1,1
 
             Button: 
@@ -295,7 +295,7 @@ Builder.load_string("""
             cols: 3
 
             Label: 
-                text: '  4. Z motors'
+                text: ' 5. Z motors'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -384,7 +384,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  13. FW Status info'
+                text: '  13. FW power/         voltage/temp'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
