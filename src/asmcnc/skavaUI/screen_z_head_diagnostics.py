@@ -731,7 +731,10 @@ class ZHeadDiagnosticsScreen(Screen):
             elif ld_mid_range_mV == 3900: ld_tolerance = 600
             elif ld_mid_range_mV == 5750: ld_tolerance = 750
 
-            speed_V_tolerance = int(0.2*speed_mid_range_mV)
+            if speed_V_tolerance < 10000:
+                speed_V_tolerance = int(0.2*speed_mid_range_mV)
+            else: 
+                speed_V_tolerance = int(0.1*speed_mid_range_mV)
 
             if self.spindle_test_counter == 1:
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + '\n' + str(ld_mid_range_mV - ld_tolerance) + " - " + str(ld_mid_range_mV + ld_tolerance) + " mV"
