@@ -212,7 +212,7 @@ Builder.load_string("""
             cols: 2
 
             Button: 
-                text: '15. Spindle Speed Check (wait 8 seconds)'
+                text: '15. Spindle Speed Check (wait 13 seconds)'
                 color: 1,1,1,1
                 on_press: root.run_spindle_check()
                 text_size: self.size
@@ -729,11 +729,11 @@ class ZHeadDiagnosticsScreen(Screen):
             elif ld_mid_range_mV == 3900: ld_tolerance = 600
             elif ld_mid_range_mV == 5750: ld_tolerance = 750
 
-            speed_V_tolerance = 0.2*speed_mid_range_mV
+            speed_V_tolerance = int(0.2*speed_mid_range_mV)
 
             if self.spindle_test_counter == 1:
-                self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + '\n' + str(ld_mid_range_mV - ld_tolerance) + "-" + str(ld_mid_range_mV + ld_tolerance)
-                self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + '\n' + str(speed_mid_range_mV - speed_V_tolerance) + "-" + str(speed_mid_range_mV + speed_V_tolerance)
+                self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + '\n' + str(ld_mid_range_mV - ld_tolerance) + " - " + str(ld_mid_range_mV + ld_tolerance)
+                self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + '\n' + str(speed_mid_range_mV - speed_V_tolerance) + " - " + str(speed_mid_range_mV + speed_V_tolerance)
 
             self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ": Ld: " + str(self.m.s.overload_pin_mV) + "|" + " V: " + str(self.m.s.spindle_speed_mV)
 
@@ -746,7 +746,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         Clock.schedule_once(lambda dt: self.m.s.write_command(M3_command), 0.1)
 
-        self.string_overload_summary = self.string_overload_summary + "**" + str(M3_command).strip("M3 S") + " RPM"
+        self.string_overload_summary = self.string_overload_summary + "**" + "[b]" + str(M3_command).strip("M3 S") + " RPM[/b]"
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(ld_expected_mV, speed_expected_mV), 0.5)
 
