@@ -430,7 +430,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def on_enter(self, *args):
         self.string_overload_summary = ''
-        self.scrape_fw_version()
+        Clock.schedule_interval(self.scrape_fw_version, 1)
         self.m.is_laser_enabled = True
         self.m.s.write_command('$21 = 0')
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
@@ -443,7 +443,7 @@ class ZHeadDiagnosticsScreen(Screen):
         Clock.unschedule(self.poll_for_temps_power)
         self.m.s.write_command('$21 = 1')
 
-    def scrape_fw_version(self):
+    def scrape_fw_version(self, dt):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def bake_grbl_settings(self):
