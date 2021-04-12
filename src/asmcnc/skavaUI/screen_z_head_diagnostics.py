@@ -63,7 +63,7 @@ Builder.load_string("""
             cols: 4
 
             Label: 
-                text: '  6. Dust Shoe'
+                text: '  8. Dust Shoe'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -112,16 +112,28 @@ Builder.load_string("""
             valign: 'middle'
             on_press: root.bake_grbl_settings()
 
-        Label: 
-            text: 'Limit switches:'
-            color: 1,1,1,1
-            text_size: self.size
+        GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            markup: 'True'
-            halign: 'center'
-            valign: 'middle' 
+            cols: 2
 
+            Label: 
+                text: '  9. X Home'
+                color: 1,1,1,1
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'        
+
+            Image:
+                id: x_home_check
+                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
 
         # GridLayout:
         #     size: self.parent.size
@@ -146,22 +158,22 @@ Builder.load_string("""
         #         size: self.parent.width, self.parent.height
         #         allow_stretch: True
 
-        ToggleButton: 
-            id: laser_toggle
-            text: '  11. Laser'
+        Button: 
+            id: do_cycle
+            text: '  14. Cycle'
+            on_press: root.do_cycle()
             text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
             markup: 'True'
             halign: 'left'
             valign: 'middle'
-            on_press: root.set_laser()
 
 
 # Row 3
 
         Button:
-            text: '  2b. HOME'
+            text: '  3. HOME'
             text_size: self.size
             size: self.parent.size
             pos: self.parent.pos
@@ -176,63 +188,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  7. X Home'
-                color: 1,1,1,1
-                text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'        
-
-            Image:
-                id: x_home_check
-                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
-
-        Button: 
-            id: do_cycle
-            text: '  12. Cycle'
-            on_press: root.do_cycle()
-            text_size: self.size
-            size: self.parent.size
-            pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-
-
-# Row 4
-
-        GridLayout:
-            size: self.parent.size
-            pos: self.parent.pos
-            cols: 3
-
-            Label: 
-                text: '  3. X motors'
-                color: 1,1,1,1
-
-            Button: 
-                text: 'Up'
-                on_press: root.x_motor_up()
-                on_release: root.quit_jog()
-            Button: 
-                text: 'Down'
-                on_press: root.x_motor_down()
-                on_release: root.quit_jog()
-
-
-        GridLayout:
-            size: self.parent.size
-            pos: self.parent.pos
-            cols: 2
-
-            Label: 
-                text: '  8. X Max'
+                text: '  10. X Max'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -249,14 +205,13 @@ Builder.load_string("""
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
 
-	
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
             cols: 2
 
             Button: 
-                text: '13. Spindle Speed Check (wait 8 seconds)'
+                text: '15. Spindle Speed Check (wait 8 seconds)'
                 color: 1,1,1,1
                 on_press: root.run_spindle_check()
                 text_size: self.size
@@ -273,6 +228,63 @@ Builder.load_string("""
                 y: self.parent.y
                 size: self.parent.width, self.parent.height
                 allow_stretch: True
+
+
+
+# Row 4
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 3
+
+            Label: 
+                text: '  4. X motors'
+                color: 1,1,1,1
+
+            Button: 
+                text: 'Up'
+                on_press: root.x_motor_up()
+                on_release: root.quit_jog()
+            Button: 
+                text: 'Down'
+                on_press: root.x_motor_down()
+                on_release: root.quit_jog()
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 2
+
+            Label: 
+                text: '  11. Z Home'
+                color: 1,1,1,1
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'      
+
+            Image:
+                id: z_home_check
+                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
+
+        Button: 
+            id: test_fw_update
+            text: '  16. Test FW Update'
+            on_press: root.test_fw_update()
+            text_size: self.size
+            size: self.parent.size
+            pos: self.parent.pos
+            markup: 'True'
+            halign: 'left'
+            valign: 'middle'
+
 
 
 # Row 5
@@ -308,56 +320,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  9. Z Home'
-                color: 1,1,1,1
-                text_size: self.size
-                size: self.parent.size
-                pos: self.parent.pos
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'      
-
-            Image:
-                id: z_home_check
-                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                center_x: self.parent.center_x
-                y: self.parent.y
-                size: self.parent.width, self.parent.height
-                allow_stretch: True
-
-
-        Button:
-            text: '  14. EXIT'
-            text_size: self.size
-            size: self.parent.size
-            pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            on_press: root.exit()
-
-
-
-# Row 6
-
-        ToggleButton: 
-            id: spindle_toggle
-            text: '  5. Spindle'
-            text_size: self.size
-            size: self.parent.size
-            pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            on_press: root.set_spindle()
-
-        GridLayout:
-            size: self.parent.size
-            pos: self.parent.pos
-            cols: 2
-
-            Label: 
-                text: '  10. Probe'
+                text: '  12. Probe'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -372,7 +335,71 @@ Builder.load_string("""
                 center_x: self.parent.center_x
                 y: self.parent.y
                 size: self.parent.width, self.parent.height
-                allow_stretch: True               
+                allow_stretch: True
+
+        Button:
+            text: '  17. EXIT'
+            text_size: self.size
+            size: self.parent.size
+            pos: self.parent.pos
+            markup: 'True'
+            halign: 'left'
+            valign: 'middle'
+            on_press: root.exit()
+
+
+
+# Row 6
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 2
+
+            ToggleButton: 
+                id: spindle_toggle
+                text: '  6. Spindle'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.set_spindle()
+
+            ToggleButton: 
+                id: laser_toggle
+                text: '  7. Laser'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.set_laser()
+
+        GridLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+            cols: 2
+
+            Label: 
+                text: '  13. FW Status info'
+                color: 1,1,1,1
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+
+            Image:
+                id: temp_voltage_check
+                source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
 
 	    ScrollableLabelStatus:
 	        size_hint_y: 0.2        
@@ -642,6 +669,8 @@ class ZHeadDiagnosticsScreen(Screen):
 
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 1.8)
         
+    def test_fw_update(self):
+        pass
 
     def exit(self):
         self.sm.current = 'lobby'
