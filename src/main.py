@@ -67,8 +67,6 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.production import screen_z_head_diagnostics
 
 
-from asmcnc.skavaUI import screen_z_head_diagnostics
-
 # developer testing
 Cmport = 'COM3'
 
