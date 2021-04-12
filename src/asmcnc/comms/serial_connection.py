@@ -55,9 +55,6 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
-    # For Z Head Diagnostics only:
-    overload_pin_mV = 0
-
     def __init__(self, machine, screen_manager):
 
         self.sm = screen_manager   
@@ -522,6 +519,17 @@ class SerialConnection(object):
     probe = False
     dust_shoe_cover = False
     spare_door = False
+    ac_loss = False
+
+    # For Z Head Diagnostics, with intention to extend to main sw
+    overload_pin_mV = 0
+
+    pcb_temp = 0
+    motor_driver_temp = 0
+    microcontroller_mV = 0 
+    LED_mV = 0 
+    PSU_mV = 0 
+    spindle_speed_mV = 0 
 
     serial_blocks_available = GRBL_BLOCK_SIZE
     serial_chars_available = RX_BUFFER_SIZE
@@ -659,6 +667,9 @@ class SerialConnection(object):
                     
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
+
+                    if 'r' in pins_info: self.ac_loss = True
+                    else: self.ac_loss = False
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -700,8 +711,40 @@ class SerialConnection(object):
                     #     self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
                     #     Clock.schedule_once(self.check_for_sustained_max_overload, 1)
 
+
+                # add temp/voltage/power sense stats here
+                elif part.startswith('TC:'):
+                    temps = part[3:].split(',')
+                    try: 
+                        float(temps[0])
+                        float(temps[1])
+                    except:
+                        log("ERROR status parse: Temperature invalid: " + message)
+                        return
+
+                    self.pcb_temp = temps[0]
+                    self.motor_driver_temp = temps[1]
+
+                elif part.startswith('V:'):
+                    voltages = part[3:].split(',')
+                    try: 
+                        float(voltages[0])
+                        float(voltages[1])
+                        float(voltages[2])
+                        float(voltages[3])
+
+                    except:
+                        log("ERROR status parse: Voltage invalid: " + message)
+                        return
+
+                    self.microcontroller_mV = voltages[0]
+                    self.LED_mV = voltages[1]
+                    self.PSU_mV = voltages[2]
+                    self.spindle_speed_mV = voltages[3]
+
                 else:
                     continue
+
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)

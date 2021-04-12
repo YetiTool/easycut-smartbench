@@ -18,16 +18,17 @@ Builder.load_string("""
 
 <ZHeadDiagnosticsScreen>:
 
-    fw_version_label: fw_version_label
-    consoleStatusText: consoleStatusText
-    # dust_shoe_check: dust_shoe_check
-    x_home_check: x_home_check
-    x_max_check: x_max_check
-    z_home_check: z_home_check
-    probe_check: probe_check
-    spindle_toggle: spindle_toggle
-    laser_toggle: laser_toggle
-    spindle_speed_check: spindle_speed_check
+    fw_version_label : fw_version_label
+    consoleStatusText : consoleStatusText
+    # dust_shoe_check : dust_shoe_check
+    x_home_check : x_home_check
+    x_max_check : x_max_check
+    z_home_check : z_home_check
+    probe_check : probe_check
+    temp_voltage_power_check : temp_voltage_power_check
+    spindle_toggle : spindle_toggle
+    laser_toggle : laser_toggle
+    spindle_speed_check : spindle_speed_check
 
     GridLayout:
         size: self.parent.size
@@ -384,7 +385,7 @@ Builder.load_string("""
             cols: 2
 
             Label: 
-                text: '  13. FW power/         voltage/temp'
+                text: '  13. Temp/Power'
                 color: 1,1,1,1
                 text_size: self.size
                 size: self.parent.size
@@ -394,7 +395,7 @@ Builder.load_string("""
                 valign: 'middle'
 
             Image:
-                id: temp_voltage_check
+                id: temp_voltage_power_check
                 source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                 center_x: self.parent.center_x
                 y: self.parent.y
@@ -432,12 +433,13 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.is_laser_enabled = True
         self.m.s.write_command('$21 = 0')
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
-        self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for status
-
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for limit switches being triggered
+        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check(), STATUS_UPDATE_DELAY)      # Poll for status
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
-        Clock.unschedule(self.poll_for_checks)
+        Clock.unschedule(self.poll_for_limits)
+        Clock.unschedule(self.poll_for_temps_power)
         self.m.s.write_command('$21 = 1')
 
     def scrape_fw_version(self):
@@ -507,6 +509,12 @@ class ZHeadDiagnosticsScreen(Screen):
         else: 
             self.m.spindle_on()
 
+    def set_laser(self):
+        if self.laser_toggle.state == 'normal': 
+            self.m.laser_off()
+        else: 
+            self.m.laser_on()
+
     def dust_shoe_red(self):
         self.m.set_led_colour('RED')
 
@@ -553,11 +561,58 @@ class ZHeadDiagnosticsScreen(Screen):
         else:
             self.probe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
-    def set_laser(self):
-        if self.laser_toggle.state == 'normal': 
-            self.m.laser_off()
-        else: 
-            self.m.laser_on()
+
+    def temp_power_check(self, dt):
+        # pcb_temp
+        # motor_driver_temp
+        # microcontroller_mV 
+        # LED_mV 
+        # PSU_mV
+        # ac_loss
+
+        # series of if statements and then return if if fails (and do checkbox)
+
+        if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 50):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
+
+        if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
+
+        if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
+
+        if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
+
+        if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
+
+        if self.ac_loss == True:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
 
     def cycle_limit_switch(self):
         if self.m.s.limit_z:
