@@ -739,6 +739,8 @@ class ZHeadDiagnosticsScreen(Screen):
             if self.spindle_test_counter == 1:
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Ld range: ' + '\n' + str(ld_mid_range_mV - ld_tolerance) + " - " + str(ld_mid_range_mV + ld_tolerance) + " mV"
                 self.string_overload_summary = self.string_overload_summary + '\n' + 'Speed V range: ' + '\n' + str(speed_mid_range_mV - speed_V_tolerance) + " - " + str(speed_mid_range_mV + speed_V_tolerance) + " mV"
+            elif self.spindle_test_counter > 3:
+                return
 
             self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ":\n  V_Ld: " + str(self.m.s.overload_pin_mV) + " mV" + "\n  V_s: " + str(self.m.s.spindle_speed_mV) + " mV"
 
