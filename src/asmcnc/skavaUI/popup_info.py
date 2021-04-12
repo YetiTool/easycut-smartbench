@@ -333,8 +333,6 @@ class PopupSpindleDiagnosticsInfo(Widget):
         label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=[5,5])
         label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=[0,0,0,1], padding=[5,5])
         label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=[0,0,0,1], padding=[5,5])
-        
-
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
