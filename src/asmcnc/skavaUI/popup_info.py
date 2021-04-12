@@ -328,11 +328,11 @@ class PopupSpindleDiagnosticsInfo(Widget):
         self.sm = screen_manager
         
         # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=[0,0,0,1], padding=5)
-        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=[0,0,0,1], padding=5)
-        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=5)
-        label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=[0,0,0,1], padding=5)
-        label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=[0,0,0,1], padding=5)
+        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=[0,0,0,1], padding=[5,5])
+        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=[0,0,0,1], padding=[5,5])
+        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=[5,5])
+        label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=[0,0,0,1], padding=[5,5])
+        label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=[0,0,0,1], padding=[5,5])
         
 
 
