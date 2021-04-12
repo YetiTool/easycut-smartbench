@@ -593,19 +593,19 @@ class ZHeadDiagnosticsScreen(Screen):
         #     Clock.unschedule(self.poll_for_temps_power)
         #     return
 
-        if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-        else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-            Clock.unschedule(self.poll_for_temps_power)
-            return
-
-        # if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
+        # if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         # else:
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
         #     Clock.unschedule(self.poll_for_temps_power)
         #     return
+
+        if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+            Clock.unschedule(self.poll_for_temps_power)
+            return
 
         # if self.ac_loss == True:
         #     self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
