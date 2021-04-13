@@ -783,7 +783,7 @@ class ZHeadDiagnosticsScreen(Screen):
             pi.stop()
             os.system("sudo service pigpiod stop")    
             os.system("./update_fw.sh")
-            sys.exit()
+            # sys.exit()
 
         Clock.schedule_once(nested_do_fw_update, 1)
 
