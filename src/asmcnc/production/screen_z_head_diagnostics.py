@@ -5,7 +5,7 @@ Created on 03 August 2020
 @author: Letty
 '''
 
-import pigpio
+import pigpio, os, sys
 
 import kivy
 from kivy.lang import Builder
