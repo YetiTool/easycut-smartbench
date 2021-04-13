@@ -5,6 +5,8 @@ Created on 03 August 2020
 @author: Letty
 '''
 
+import pigpio
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,6 +14,7 @@ from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 
+from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -428,6 +431,9 @@ class ZHeadDiagnosticsScreen(Screen):
         self.string_overload_summary = ''
         self.spindle_test_counter = 0
 
+        self.usb_stick = usb_storage.USB_storage(self.sm)
+        self.usb_stick.enable()
+
     def on_enter(self, *args):
         self.string_overload_summary = ''
         Clock.schedule_interval(self.scrape_fw_version, 1)
@@ -766,7 +772,13 @@ class ZHeadDiagnosticsScreen(Screen):
 
     # TEST FIRMWARE UPDATE
     def test_fw_update(self):
-        pass
+        pi = pigpio.pi()
+        pi.set_mode(17, pigpio.ALT3)
+        print(pi.get_mode(17))
+        pi.stop()
+        os.system("sudo service pigpiod stop")    
+        os.system("./update_fw.sh")
+        sys.exit()
 
     def exit(self):
         self.sm.current = 'lobby'
