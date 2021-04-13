@@ -7,3 +7,4 @@ sleep 5
 # might need to rewrite this script each time for new hex file. 
 grbl_file=(/media/usb/GRBL*.hex)
 avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$grbl_file:i
+sudo reboot

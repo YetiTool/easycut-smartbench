@@ -772,13 +772,19 @@ class ZHeadDiagnosticsScreen(Screen):
 
     # TEST FIRMWARE UPDATE
     def test_fw_update(self):
-        pi = pigpio.pi()
-        pi.set_mode(17, pigpio.ALT3)
-        print(pi.get_mode(17))
-        pi.stop()
-        os.system("sudo service pigpiod stop")    
-        os.system("./update_fw.sh")
-        sys.exit()
+
+        self.test_fw_update.text = "  Updating..."
+
+        def nested_do_fw_update(dt):
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            print(pi.get_mode(17))
+            pi.stop()
+            os.system("sudo service pigpiod stop")    
+            os.system("./update_fw.sh")
+            sys.exit()
+
+        Clock.schedule_once(nested_do_fw_update, 1)
 
     def exit(self):
         self.sm.current = 'lobby'
