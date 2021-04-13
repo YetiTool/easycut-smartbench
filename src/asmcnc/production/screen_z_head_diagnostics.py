@@ -32,6 +32,7 @@ Builder.load_string("""
     spindle_toggle : spindle_toggle
     laser_toggle : laser_toggle
     spindle_speed_check : spindle_speed_check
+    test_fw_update_button : test_fw_update_button
 
     GridLayout:
         size: self.parent.size
@@ -279,7 +280,7 @@ Builder.load_string("""
                 allow_stretch: True
 
         Button: 
-            id: test_fw_update
+            id: test_fw_update_button
             text: '  16. Test FW Update'
             on_press: root.test_fw_update()
             text_size: self.size
@@ -773,7 +774,7 @@ class ZHeadDiagnosticsScreen(Screen):
     # TEST FIRMWARE UPDATE
     def test_fw_update(self):
 
-        self.test_fw_update.text = "  Updating..."
+        self.test_fw_update_button.text = "  Updating..."
 
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
