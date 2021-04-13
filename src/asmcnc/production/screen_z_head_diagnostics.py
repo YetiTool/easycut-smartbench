@@ -782,7 +782,7 @@ class ZHeadDiagnosticsScreen(Screen):
             print(pi.get_mode(17))
             pi.stop()
             os.system("sudo service pigpiod stop")    
-            os.system("/home/pi/easycut-smartbench/src/update_fw.sh")
+            os.system("/home/pi/easycut-smartbench/src/update_fw.sh &> /home/pi/easycut-smartbench/src/update_fw_debug.txt")
             # sys.exit()
 
         Clock.schedule_once(nested_do_fw_update, 1)
