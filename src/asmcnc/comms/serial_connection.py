@@ -760,6 +760,8 @@ class SerialConnection(object):
                         log("ERROR status parse: Voltage invalid: " + message)
                         return
 
+                    print(str(part))
+
                     self.microcontroller_mV = voltages[0]
                     self.LED_mV = voltages[1]
                     self.PSU_mV = voltages[2]
