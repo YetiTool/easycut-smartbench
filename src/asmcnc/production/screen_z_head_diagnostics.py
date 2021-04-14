@@ -804,7 +804,7 @@ class ZHeadDiagnosticsScreen(Screen):
             else:
                 did_fw_update_succeed = did_fw_update_succeed + "\n" + "Reboot to restore serial connection"
 
-            popup_info.PopupInfo(780, did_fw_update_succeed)
+            popup_info.PopupInfo(self.sm, 780, did_fw_update_succeed)
             self.test_fw_update_button.text = "  16. Test FW Update"
 
         Clock.schedule_once(nested_do_fw_update, 1)
