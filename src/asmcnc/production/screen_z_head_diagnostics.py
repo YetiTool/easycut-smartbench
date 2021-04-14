@@ -787,6 +787,7 @@ class ZHeadDiagnosticsScreen(Screen):
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
 
+        print("SUBPROCESS OUTPUT HERE BABY")
         print(str(stdout))
         print(str(stderr))
         print(str(exit_code))
