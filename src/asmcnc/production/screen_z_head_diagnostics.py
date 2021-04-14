@@ -796,7 +796,7 @@ class ZHeadDiagnosticsScreen(Screen):
             else: 
                 did_fw_update_succeed = "Update failed" + "\n" + str(stdout) + "\n" + str(stderr)
 
-            self.m.s.establish_connection()
+            self.m.s.establish_connection('COM3')
             if self.m.s.is_connected():
                 self.m.s.start_services()
                 did_fw_update_succeed = did_fw_update_succeed + "\n" + "Serial connection restored"
