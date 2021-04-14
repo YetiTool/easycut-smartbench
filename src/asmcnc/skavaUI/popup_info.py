@@ -539,7 +539,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
           os.system("sudo reboot")
 
         self.sm = screen_manager
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=message, font_size = '10sp', color=[0,0,0,1], padding=[5,5])
+        label1 = Label(size_hint_y=2, text_size=(None, None), markup=True, halign='left', valign='middle', text=message, font_size = '10sp', color=[0,0,0,1])
 
         ok_button = Button(text='[b]Reboot[/b]', markup = True)
         ok_button.background_normal = ''
@@ -548,10 +548,10 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0], size_hint_y = 0.4)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0], size_hint_y = 0.2)
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,10,10,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=2, padding=[10,10,10,10])
         # layout_plan.add_widget(img)
         layout_plan.add_widget(text_layout)
         layout_plan.add_widget(btn_layout)
@@ -562,7 +562,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(780, 460),
+                      size=(780, 480),
                       auto_dismiss= False
                       )
 
