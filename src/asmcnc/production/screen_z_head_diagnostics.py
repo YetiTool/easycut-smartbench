@@ -5,7 +5,7 @@ Created on 03 August 2020
 @author: Letty
 '''
 
-import pigpio, os, sys
+import pigpio, os, sys, subprocess
 
 import kivy
 from kivy.lang import Builder
@@ -776,6 +776,21 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.test_fw_update_button.text = "  Updating..."
 
+        full_cmd = "ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt"
+
+        proc = subprocess.Popen(full_cmd,
+            stdout = subprocess.PIPE,
+            stderr = subprocess.STDOUT,
+            shell = True
+        )
+
+        stdout, stderr = proc.communicate()
+        exit_code = int(proc.returncode)
+
+        print(str(stdout))
+        print(str(stderr))
+        print(str(exit_code))
+
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
@@ -785,7 +800,7 @@ class ZHeadDiagnosticsScreen(Screen):
             os.system("bash -x /home/pi/easycut-smartbench/src/update_fw.sh")
             # sys.exit()
 
-        Clock.schedule_once(nested_do_fw_update, 1)
+        # Clock.schedule_once(nested_do_fw_update, 1)
 
     def exit(self):
         self.sm.current = 'lobby'
