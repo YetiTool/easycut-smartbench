@@ -791,10 +791,10 @@ class ZHeadDiagnosticsScreen(Screen):
             exit_code = int(proc.returncode)
 
             if exit_code == 0: 
-                did_fw_update_succeed = "Success" + "\n" + str(stdout)
+                did_fw_update_succeed = "Success!"
 
             else: 
-                did_fw_update_succeed = "Update failed" + "\n" + str(stdout)
+                did_fw_update_succeed = "Update failed :("
 
             self.m.s.establish_connection('COM3')
             if self.m.s.is_connected():
