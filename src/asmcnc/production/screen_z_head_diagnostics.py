@@ -775,22 +775,21 @@ class ZHeadDiagnosticsScreen(Screen):
     def test_fw_update(self):
 
         self.test_fw_update_button.text = "  Updating..."
-
         full_cmd = "ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt"
 
-        proc = subprocess.Popen(full_cmd,
-            stdout = subprocess.PIPE,
-            stderr = subprocess.STDOUT,
-            shell = True
-        )
+        # proc = subprocess.Popen(full_cmd,
+        #     stdout = subprocess.PIPE,
+        #     stderr = subprocess.STDOUT,
+        #     shell = True
+        # )
 
-        stdout, stderr = proc.communicate()
-        exit_code = int(proc.returncode)
+        # stdout, stderr = proc.communicate()
+        # exit_code = int(proc.returncode)
 
-        print("SUBPROCESS OUTPUT HERE BABY")
-        print(str(stdout))
-        print(str(stderr))
-        print(str(exit_code))
+        # print("SUBPROCESS OUTPUT HERE BABY")
+        # print(str(stdout))
+        # print(str(stderr))
+        # print(str(exit_code))
 
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
@@ -798,7 +797,12 @@ class ZHeadDiagnosticsScreen(Screen):
             print(pi.get_mode(17))
             pi.stop()
             os.system("sudo service pigpiod stop")    
-            os.system("bash -x /home/pi/easycut-smartbench/src/update_fw.sh")
+            self.m.s.s.close()
+            # os.system("bash -x /home/pi/easycut-smartbench/src/update_fw.sh")
+
+            # os.system("ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt")
+            os.system("grbl_file=(/media/usb/GRBL*.hex)")
+            os.system("avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$grbl_file:i &> avrdude_debug.txt")
             # sys.exit()
 
         # Clock.schedule_once(nested_do_fw_update, 1)
