@@ -416,24 +416,32 @@ class ProcessLinearEncoderScreen(Screen):
         # TEST GETS STARTED
         if self.go_stop.state == 'down':
 
+            # IN CASE USER IMMEDIATELY CANCELS THE TEST
+            self.test_completed = False
+
             ## CHANGE BUTTON
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
 
-            ## SET VARIABLES
-            self.clear_data()
-            self.starting_H = self.e0.H_side + self.e1.H_side
-            self.starting_F = self.e0.F_side + self.e1.F_side
-            self.starting_pos = float(self.m.mpos_y())
-            self.max_pos = self.set_max_pos()
+            # ## SET VARIABLES
+            # self.clear_data()
+            # self.starting_H = self.e0.H_side + self.e1.H_side
+            # self.starting_F = self.e0.F_side + self.e1.F_side
+            # self.starting_pos = float(self.m.mpos_y())
+            # self.max_pos = self.set_max_pos()
 
-            ## START THE TEST
+            # UPDATE DATA INFO ON SCREEN
             log('Starting test...')
             self.data_status = 'Starting'
-            self.test_completed = False
-            self.generate_test_id()
-            self.data_status = 'Collecting'
-            self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
+            # allow screen to update before doing any heavy lifting...
+
+
+            ## START THE TEST
+            Clock.schedule_once(self.initialise_test, 1)
+
+            # self.generate_test_id()
+            # self.data_status = 'Collecting'
+            # self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
 
         # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
@@ -460,6 +468,18 @@ class ProcessLinearEncoderScreen(Screen):
     def set_max_pos(self):
         return self.starting_pos + float(self.travel.text)
 
+    def initialise_test(self, dt):
+        ## SET VARIABLES
+        self.clear_data()
+        self.starting_H = self.e0.H_side + self.e1.H_side
+        self.starting_F = self.e0.F_side + self.e1.F_side
+        self.starting_pos = float(self.m.mpos_y())
+        self.max_pos = self.set_max_pos()
+        self.generate_test_id()
+
+        ## START THE TEST
+        self.data_status = 'Collecting'
+        self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
 
     def do_test_step(self, dt):
 
