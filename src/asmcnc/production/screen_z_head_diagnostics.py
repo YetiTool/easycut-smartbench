@@ -792,7 +792,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
             if exit_code == 0: 
                 did_fw_update_succeed = "Success!"
-                Clock.schedule_once(lambda dt: self.do_reboot(), 5)
+                Clock.schedule_once(lambda dt: self.do_reboot(), 10)
 
             else: 
                 did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head." + "\n" + str(stdout)
