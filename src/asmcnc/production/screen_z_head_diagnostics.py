@@ -790,7 +790,7 @@ class ZHeadDiagnosticsScreen(Screen):
             exit_code = int(proc.returncode)
 
             if exit_code == 0: 
-                did_fw_update_succeed = "Success!"
+                did_fw_update_succeed = "Success! Reboot to reconnect to Z head."
 
             else: 
                 did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
