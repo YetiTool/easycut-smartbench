@@ -783,7 +783,7 @@ class ZHeadDiagnosticsScreen(Screen):
             pi.stop()
             os.system("sudo service pigpiod stop")    
             self.m.s.s.close()
-            os.system("grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
+            os.system("grbl_file=/media/usb/nonsense*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
 
         Clock.schedule_once(nested_do_fw_update, 1)
 
