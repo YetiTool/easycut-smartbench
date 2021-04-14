@@ -692,13 +692,13 @@ class ZHeadDiagnosticsScreen(Screen):
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 3900, 4000), 2.5)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 5750, 6000), 5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6000, 6000), 5)
 
         # 20000 RPM = 7.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 5750, 8000), 7.5)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 6000, 8000), 7.5)
 
         # # 250000 RPM = 10 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 5750, 10000), 10)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 6000, 10000), 10)
 
         # Spindle off
         Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 12.5)
@@ -736,7 +736,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
             if ld_mid_range_mV == 2000: ld_tolerance = 300
             elif ld_mid_range_mV == 3900: ld_tolerance = 600
-            elif ld_mid_range_mV == 5750: ld_tolerance = 750
+            elif ld_mid_range_mV == 6000: ld_tolerance = 1000
 
             if speed_mid_range_mV < 10000:
                 speed_V_tolerance = int(0.2*speed_mid_range_mV)
@@ -775,21 +775,6 @@ class ZHeadDiagnosticsScreen(Screen):
     def test_fw_update(self):
 
         self.test_fw_update_button.text = "  Updating..."
-        # full_cmd = "ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt"
-
-        # proc = subprocess.Popen(full_cmd,
-        #     stdout = subprocess.PIPE,
-        #     stderr = subprocess.STDOUT,
-        #     shell = True
-        # )
-
-        # stdout, stderr = proc.communicate()
-        # exit_code = int(proc.returncode)
-
-        # print("SUBPROCESS OUTPUT HERE BABY")
-        # print(str(stdout))
-        # print(str(stderr))
-        # print(str(exit_code))
 
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
