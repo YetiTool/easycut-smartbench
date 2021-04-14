@@ -775,7 +775,7 @@ class ZHeadDiagnosticsScreen(Screen):
     def test_fw_update(self):
 
         self.test_fw_update_button.text = "  Updating..."
-        full_cmd = "ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt"
+        # full_cmd = "ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt"
 
         # proc = subprocess.Popen(full_cmd,
         #     stdout = subprocess.PIPE,
@@ -805,7 +805,7 @@ class ZHeadDiagnosticsScreen(Screen):
             os.system("avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$grbl_file:i &> avrdude_debug.txt")
             # sys.exit()
 
-        # Clock.schedule_once(nested_do_fw_update, 1)
+        Clock.schedule_once(nested_do_fw_update, 1)
 
     def exit(self):
         self.sm.current = 'lobby'
