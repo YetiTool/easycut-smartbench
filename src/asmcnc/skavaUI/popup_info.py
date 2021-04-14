@@ -533,13 +533,13 @@ class PopupTempPowerDiagnosticsInfo(Widget):
 
 class PopupFWUpdateDiagnosticsInfo(Widget):
 
-    def __init__(self, screen_manager, message):
+    def __init__(self, screen_manager, outcome, message):
         
         def do_reboot(*args):
           os.system("sudo reboot")
 
         self.sm = screen_manager
-        label1 = Label(size_hint_y=0.92, text_size=(None, None), markup=True, halign='left', valign='top', text=message, font_size = '12sp', color=[0,0,0,1])
+        label1 = Label(size_hint_y=0.92, text_size=(None, None), markup=True, halign='left', valign='top', text=message, font_size = '11sp', color=[0,0,0,1])
 
         ok_button = Button(text='[b]Reboot[/b]', markup = True)
         ok_button.background_normal = ''
@@ -560,7 +560,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         layout_plan.add_widget(text_layout)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Output',
+        popup = Popup(title=outcome,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

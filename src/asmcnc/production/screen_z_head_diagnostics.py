@@ -790,12 +790,12 @@ class ZHeadDiagnosticsScreen(Screen):
             exit_code = int(proc.returncode)
 
             if exit_code == 0: 
-                did_fw_update_succeed = "Success!" + "\n" + str(stdout)
+                did_fw_update_succeed = "Success!"
 
             else: 
-                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head." + "\n" + str(stdout)
+                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
 
-            popup_info.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed)
+            popup_info.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
             self.test_fw_update_button.text = "  16. Test FW Update"
 
         Clock.schedule_once(nested_do_fw_update, 1)
