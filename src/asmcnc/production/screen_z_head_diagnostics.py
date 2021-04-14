@@ -783,9 +783,35 @@ class ZHeadDiagnosticsScreen(Screen):
             pi.stop()
             os.system("sudo service pigpiod stop")    
             self.m.s.s.close()
-            os.system("grbl_file=/media/usb/nonsense*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
+            # os.system("grbl_file=/media/usb/nonsense*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
+
+            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            stdout, stderr = proc.communicate()
+            exit_code = int(proc.returncode)
+
+            if exit_code == 0: 
+                did_fw_update_succeed = "Success" + "\n" + str(stdout) + "\n" + str(stderr)
+
+            else: 
+                did_fw_update_succeed = "Update failed" + "\n" + str(stdout) + "\n" + str(stderr)
+
+            self.m.s.establish_connection()
+            if self.m.s.is_connected():
+                self.m.s.start_services()
+                did_fw_update_succeed = did_fw_update_succeed + "\n" + "Serial connection restored"
+
+            else:
+                did_fw_update_succeed = did_fw_update_succeed + "\n" + "Reboot to restore serial connection"
+
+            popup_info.PopupInfo(780, did_fw_update_succeed)
+            self.test_fw_update_button.text = "  16. Test FW Update"
+
+        def update_screen_with_failure():
+            self.test_fw_update_button.text = "Update failed"
 
         Clock.schedule_once(nested_do_fw_update, 1)
+        Clock.schedule_once()
 
     def exit(self):
         self.sm.current = 'lobby'
