@@ -807,11 +807,7 @@ class ZHeadDiagnosticsScreen(Screen):
             popup_info.PopupInfo(780, did_fw_update_succeed)
             self.test_fw_update_button.text = "  16. Test FW Update"
 
-        def update_screen_with_failure():
-            self.test_fw_update_button.text = "Update failed"
-
         Clock.schedule_once(nested_do_fw_update, 1)
-        Clock.schedule_once()
 
     def exit(self):
         self.sm.current = 'lobby'
