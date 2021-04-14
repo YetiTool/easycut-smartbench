@@ -532,28 +532,22 @@ class ProcessMicrometerScreen(Screen):
         # TEST GETS STARTED
         if self.go_stop.state == 'down':
 
+            # IN CASE USER IMMEDIATELY CANCELS THE TEST
+            self.calibration_run = False
+            self.test_completed = False
+
             ## CHANGE BUTTON
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
 
-            ## SET VARIABLES
-            self.clear_data()
-            self.starting_jig_pos = float(self.m.mpos_x())
-            self.DTI_initial_value_home = float(self.DTI_H.read_mm())
-            self.DTI_initial_value_far = float(self.DTI_F.read_mm())
-            self.max_pos = self.set_max_pos()
+            # UPDATE DATA INFO ON SCREEN
+            log('Starting test...')
+            self.data_status = 'Starting'
+            # allow screen to update before doing any heavy lifting...
 
             ## START THE TEST
-            log('Starting test...')
-            self.calibration_run = False
-            self.data_status = 'Starting'
-            self.test_completed = False
-            self.generate_test_id()
-            self.data_status = 'Collecting'
-            run_command = 'G0 G91 X' + str(self.max_pos)
-            self.m.send_any_gcode_command(run_command)
-            # Clock.schedule_once(self.start_recording_data, 0.1)
-            self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
+            Clock.schedule_once(self.initialise_test, 1)
+
 
         # TEST GETS STOPPED PREMATURELY
         elif self.go_stop.state == 'normal':
@@ -565,6 +559,24 @@ class ProcessMicrometerScreen(Screen):
             if self.m.state() == 'Run':
                 self.m.soft_stop()
                 self.m.stop_from_soft_stop_cancel()
+
+
+    def initialise_test(self, dt):
+
+        ## SET VARIABLES
+        self.clear_data()
+        self.starting_jig_pos = float(self.m.mpos_x())
+        self.DTI_initial_value_home = float(self.DTI_H.read_mm())
+        self.DTI_initial_value_far = float(self.DTI_F.read_mm())
+        self.max_pos = self.set_max_pos()
+        self.generate_test_id()
+
+        ## START THE TEST
+        self.data_status = 'Collecting'
+        run_command = 'G0 G91 X' + str(self.max_pos)
+        self.m.send_any_gcode_command(run_command)
+        # Clock.schedule_once(self.start_recording_data, 0.1)
+        self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
 
 
     def do_threshold_step(self, dt):
