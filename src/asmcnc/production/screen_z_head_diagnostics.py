@@ -792,17 +792,10 @@ class ZHeadDiagnosticsScreen(Screen):
 
             if exit_code == 0: 
                 did_fw_update_succeed = "Success!"
+                Clock.schedule_once(lambda dt: self.do_reboot(), 2)
 
             else: 
-                did_fw_update_succeed = "Update failed :("
-
-            self.m.s.establish_connection('COM3')
-            if self.m.s.is_connected():
-                self.m.s.start_services(1)
-                did_fw_update_succeed = did_fw_update_succeed + "\n" + "Serial connection restored"
-
-            else:
-                did_fw_update_succeed = did_fw_update_succeed + "\n" + "Reboot to restore serial connection"
+                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head." + "\n" + str(stdout)
 
             popup_info.PopupInfo(self.sm, 780, did_fw_update_succeed)
             self.test_fw_update_button.text = "  16. Test FW Update"
@@ -814,6 +807,9 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+
+    def do_reboot(self):
+        os.system("sudo reboot")
         
         
         
