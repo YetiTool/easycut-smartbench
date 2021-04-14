@@ -802,7 +802,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
             # os.system("ls /media/usb/ &> /home/pi/easycut-smartbench/src/update_fw_debug.txt")
             # os.system("grbl_file=(/media/usb/GRBL*.hex)")
-            os.system("grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$grbl_file:i &> avrdude_debug.txt")
+            os.system("grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i &> avrdude_debug.txt")
             # sys.exit()
 
         Clock.schedule_once(nested_do_fw_update, 1)
