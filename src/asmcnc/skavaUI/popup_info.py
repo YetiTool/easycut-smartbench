@@ -548,7 +548,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], size_hint_y = 0.8)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], size_hint_y = 0.08)
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,0,10,0])
