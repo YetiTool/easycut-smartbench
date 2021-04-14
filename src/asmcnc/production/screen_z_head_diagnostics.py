@@ -781,7 +781,6 @@ class ZHeadDiagnosticsScreen(Screen):
             pi.set_mode(17, pigpio.ALT3)
             print(pi.get_mode(17))
             pi.stop()
-            # os.system("sudo service pigpiod stop")
             self.m.s.s.close()
             # os.system("grbl_file=/media/usb/nonsense*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i && sudo reboot")
 

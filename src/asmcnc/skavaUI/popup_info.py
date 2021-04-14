@@ -544,11 +544,15 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         ok_button = Button(text='[b]Reboot[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text='[b]Go back[/b]', markup = True)
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,0,150,0], size_hint_y = 0.08)
+        btn_layout = BoxLayout(orientation='horizontal', spacing=20, padding=[100,0,100,0], size_hint_y = 0.08)
+        btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[10,0,10,0])
@@ -572,6 +576,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=do_reboot)
+        back_button.bind(on_press=popup.dismiss)
 
         popup.open()
 
