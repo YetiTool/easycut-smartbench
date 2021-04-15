@@ -759,7 +759,7 @@ class ZHeadDiagnosticsScreen(Screen):
             self.spindle_pass_fail = True
 
 
-        Clock.schedule_once(lambda dt: show_outcome(), 13)
+        Clock.schedule_once(lambda dt: show_outcome(), 35)
 
 
     def spindle_check(self, M3_command, ld_expected_mV, speed_expected_mV):
