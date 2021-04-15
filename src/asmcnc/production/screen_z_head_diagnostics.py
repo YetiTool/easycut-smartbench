@@ -447,6 +447,7 @@ Builder.load_string("""
 """)
 
 STATUS_UPDATE_DELAY = 0.4
+TEMP_POWER_POLL = 5
 
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
@@ -479,7 +480,7 @@ class ZHeadDiagnosticsScreen(Screen):
         self.m.s.write_command('$21 = 0')
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for limit switches being triggered
-        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, STATUS_UPDATE_DELAY)      # Poll for status
+        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, TEMP_POWER_POLL)      # Poll for status
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
@@ -806,18 +807,10 @@ class ZHeadDiagnosticsScreen(Screen):
         
     def is_it_within_tolerance(self, value, expected, tolerance):
 
-        print("value " + str(value))
-        print("lower " + str(expected - tolerance))
-        print("upper " + str(expected + tolerance))
-
-        if (value >= (expected - tolerance)) and (value <= (expected + tolerance)): 
-            print("passed")
+        if (value >= (expected - tolerance)) and (value <= (expected + tolerance)):
             self.spindle_pass_fail = self.spindle_pass_fail*(True)
         else: 
             self.spindle_pass_fail = self.spindle_pass_fail*(False)
-            print("failed")
-
-        print(self.spindle_pass_fail)
 
 
     # TEST FIRMWARE UPDATE
