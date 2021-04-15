@@ -346,6 +346,7 @@ class ProcessLinearEncoderScreen(Screen):
             else: 
                 self.go_stop.state = 'normal'
                 self.run_stop_test()
+                self.data_status = "Check connection"
 
 
     def look_for_existing_folder(self):
