@@ -48,7 +48,7 @@ class SerialConnection(object):
     response_log = []
     suppress_error_screens = False
     suppress_alarm_screens = True
-    suppress_door_screens = False
+    suppress_door_screens = True
     FLUSH_FLAG = False
     
     write_command_buffer = []
