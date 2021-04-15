@@ -745,8 +745,8 @@ class SerialConnection(object):
                         log("ERROR status parse: Temperature invalid: " + message)
                         return
 
-                    self.pcb_temp = temps[0]
-                    self.motor_driver_temp = temps[1]
+                    self.pcb_temp = float(temps[0])
+                    self.motor_driver_temp = float(temps[1])
 
                 elif part.startswith('V:'):
                     voltages = part[3:].split(',')
