@@ -760,10 +760,10 @@ class SerialConnection(object):
                         log("ERROR status parse: Voltage invalid: " + message)
                         return
 
-                    self.microcontroller_mV = voltages[0]
-                    self.LED_mV = voltages[1]
-                    self.PSU_mV = voltages[2]
-                    self.spindle_speed_mV = voltages[3]
+                    self.microcontroller_mV = float(voltages[0])
+                    self.LED_mV = float(voltages[1])
+                    self.PSU_mV = float(voltages[2])
+                    self.spindle_speed_mV = float(voltages[3])
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
