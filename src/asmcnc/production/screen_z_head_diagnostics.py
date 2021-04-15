@@ -534,6 +534,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
+        self.m.is_squaring_XY_needed_after_homing = False
         self.m.request_homing_procedure('z_head_diagnostics','z_head_diagnostics', False)
 
     def resume_from_alarm(self):
