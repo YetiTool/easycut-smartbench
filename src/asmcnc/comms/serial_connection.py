@@ -47,7 +47,7 @@ class SerialConnection(object):
     job_gcode = []
     response_log = []
     suppress_error_screens = False
-    suppress_alarm_screens = False
+    suppress_alarm_screens = True
     suppress_door_screens = False
     FLUSH_FLAG = False
     

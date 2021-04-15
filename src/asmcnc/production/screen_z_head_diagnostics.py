@@ -585,55 +585,49 @@ class ZHeadDiagnosticsScreen(Screen):
         # If one of them fails, polling will stop and report will be triggered.
 
         if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 50):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 50 deg C.")
 
         if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
             fail_report.append("Should be greater than 10 and less than 50 deg C.")
 
         if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
         if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
         if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
             fail_report.append("Should be greater than 22000 and less than 26000 mV.")
 
         if self.m.s.ac_loss == True:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             pass_fail = pass_fail*(True)
+
         else:
-            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             pass_fail = pass_fail*(False)
             fail_report.append("AC Loss: " + str(self.m.s.ac_loss))
             fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
@@ -642,6 +636,10 @@ class ZHeadDiagnosticsScreen(Screen):
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = "\n".join(fail_report)
             popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def cycle_limit_switch(self):
         if self.m.s.limit_z:
