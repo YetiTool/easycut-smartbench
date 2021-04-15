@@ -729,19 +729,19 @@ class ZHeadDiagnosticsScreen(Screen):
         self.spindle_check('M3 S5000', 2000, 2000)
 
         # 10000 RPM = 3.4 - 3.6 V 
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4000, 4000), 7)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S10000', 4000, 4000), 9)
 
         # 15000 RPM = 5.6 - 5.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6000, 6000), 14)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S15000', 6000, 6000), 18)
 
         # 20000 RPM = 7.8 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8000, 8000), 21)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S20000', 8000, 8000), 27)
 
         # # 250000 RPM = 10 V
-        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10000, 10000), 28)
+        Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 10000, 10000), 36)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 35)
+        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 45)
 
 
         def show_outcome():
@@ -801,7 +801,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         self.string_overload_summary = self.string_overload_summary + "**" + "[b]" + str(M3_command).strip("M3 S") + " RPM[/b]"
 
-        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(ld_expected_mV, speed_expected_mV), 2)
+        overload_check_event = Clock.schedule_interval(lambda dt: overload_check(ld_expected_mV, speed_expected_mV), 2.5)
 
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 6.5)
         
