@@ -322,11 +322,25 @@ class ProcessLinearEncoderScreen(Screen):
 
     # TEST SET UP
     def generate_test_id(self):
-        if self.look_for_existing_folder():
-            self.look_for_existing_file()
-        else:
-            self.test_id.text = "1"
-        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+
+        try_generating_event = None
+
+        def try_finding_id_nested_function(dt):
+
+            try: 
+                if self.look_for_existing_folder():
+                    self.look_for_existing_file()
+                else:
+                    self.test_id.text = "1"
+                self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+
+                Clock.unschedule(try_generating_event)
+
+            except:
+                log('Failed to get sheet ID and open it, trying again in 30 seconds.')
+
+        try_generating_event = Clock.schedule_interval(try_finding_id_nested_function, 30)
+
 
     def look_for_existing_folder(self):
 
