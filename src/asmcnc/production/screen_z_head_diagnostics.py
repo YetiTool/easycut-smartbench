@@ -244,7 +244,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button: 
-                        text: '15. Spindle Speed Check (wait 35 seconds)'
+                        text: '15. Spindle Speed Check (wait 45 seconds)'
                         color: 1,1,1,1
                         on_press: root.run_spindle_check()
                         text_size: self.size
