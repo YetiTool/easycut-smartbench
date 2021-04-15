@@ -36,6 +36,8 @@ Builder.load_string("""
     spindle_speed_check : spindle_speed_check
     test_fw_update_button : test_fw_update_button
 
+    status_container : status_container
+
     BoxLayout:
         orientation: 'vertical'
                 
