@@ -327,6 +327,8 @@ class ProcessLinearEncoderScreen(Screen):
 
         def try_finding_id_nested_function(dt):
 
+            log("doing nested fuction to find id")
+
             try: 
                 if self.look_for_existing_folder():
                     self.look_for_existing_file()
@@ -345,7 +347,7 @@ class ProcessLinearEncoderScreen(Screen):
     def look_for_existing_folder(self):
 
         # FOLDER SEARCH
-
+        log("Start folder search...")
         # this is the query that gets passed to the files.list function, and looks for files in the straigtness measurements folder
         # and with a name that contains the current bench id
         folder_q_str = "'" + self.live_measurements_id + "'" + " in parents and name = " + "'" + self.bench_id.text + "'" + \
@@ -683,7 +685,7 @@ class ProcessLinearEncoderScreen(Screen):
         folder = self.drive_service.files().create(body=folder_metadata,
                                             fields='id').execute()
         self.active_folder_id = folder.get('id')
-        log('Found folder: ' + str(folder.get('id')))
+        log('Created new folder: ' + str(folder.get('id')))
 
         # Remove the API service bot's default parents, which will hopefully enable access
         folder = self.drive_service.files().get(fileId=self.active_folder_id,
