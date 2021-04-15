@@ -177,15 +177,29 @@ Builder.load_string("""
 
 # Row 3
 
-        Button:
-            text: '  3. HOME'
-            text_size: self.size
+        GridLayout:
             size: self.parent.size
             pos: self.parent.pos
-            markup: 'True'
-            halign: 'left'
-            valign: 'middle'
-            on_press: root.home()
+            cols: 2
+            Button:
+                text: '  3a. HOME'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.home()
+
+            Button:
+                text: '  3b. RESET'
+                text_size: self.size
+                size: self.parent.size
+                pos: self.parent.pos
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                on_press: root.resume_from_alarm()
 
         GridLayout:
             size: self.parent.size
@@ -498,6 +512,9 @@ class ZHeadDiagnosticsScreen(Screen):
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.request_homing_procedure('z_head_diagnostics','z_head_diagnostics', False)
+
+    def resume_from_alarm(self):
+        self.m.resume_from_alarm()
 
     def x_motor_up(self):
         self.m.jog_relative('X', 50, 6000)
