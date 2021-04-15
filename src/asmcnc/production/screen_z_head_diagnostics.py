@@ -755,8 +755,6 @@ class ZHeadDiagnosticsScreen(Screen):
             else: 
                 self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-            print self.spindle_pass_fail
-
             self.spindle_pass_fail = True
 
 
@@ -773,10 +771,6 @@ class ZHeadDiagnosticsScreen(Screen):
             # 10000 RPM = 3.3V - 4.5V
             # 15000 RPM = 5.0V - 6.5V
 
-            if ld_mid_range_mV == 2000: ld_tolerance = 300
-            elif ld_mid_range_mV == 3900: ld_tolerance = 600
-            elif ld_mid_range_mV == 6000: ld_tolerance = 1000
-
             if speed_mid_range_mV < 10000:
                 ld_tolerance = int(0.2*ld_mid_range_mV)
                 speed_V_tolerance = int(0.2*speed_mid_range_mV)
@@ -790,10 +784,13 @@ class ZHeadDiagnosticsScreen(Screen):
             elif self.spindle_test_counter > 3:
                 return
 
-            self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ":\n  V_Ld: " + str(self.m.s.overload_pin_mV) + " mV" + "\n  V_s: " + str(self.m.s.spindle_speed_mV) + " mV"
+            overload_value = self.m.s.overload_pin_mV
+            spindle_speed_value = self.m.s.spindle_speed_mV
 
-            self.is_it_within_tolerance(self.m.s.overload_pin_mV, ld_mid_range_mV, ld_tolerance)
-            self.is_it_within_tolerance(self.m.s.spindle_speed_mV, speed_mid_range_mV, speed_V_tolerance)
+            self.string_overload_summary = self.string_overload_summary + '\n' + "Test " + str(self.spindle_test_counter) + ":\n  V_Ld: " + str(overload_value) + " mV" + "\n  V_s: " + str(spindle_speed_value) + " mV"
+
+            self.is_it_within_tolerance(overload_value, ld_mid_range_mV, ld_tolerance)
+            self.is_it_within_tolerance(spindle_speed_value, speed_mid_range_mV, speed_V_tolerance)
 
             self.spindle_test_counter+=1
 
@@ -808,8 +805,10 @@ class ZHeadDiagnosticsScreen(Screen):
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 6.5)
         
     def is_it_within_tolerance(self, value, expected, tolerance):
-        if (value >= expected - tolerance) and (value <= expected + tolerance): self.spindle_pass_fail = self.spindle_pass_fail*(True)
+        if (value >= (expected - tolerance)) and (value <= (expected + tolerance)): self.spindle_pass_fail = self.spindle_pass_fail*(True)
         else: self.spindle_pass_fail = self.spindle_pass_fail*(False)
+
+        print(self.spindle_pass_fail)
 
 
     # TEST FIRMWARE UPDATE
