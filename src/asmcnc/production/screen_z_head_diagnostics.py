@@ -805,11 +805,13 @@ class ZHeadDiagnosticsScreen(Screen):
         Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 6.5)
         
     def is_it_within_tolerance(self, value, expected, tolerance):
+
+        print("value " + str(value))
+        print("lower " + str(expected - tolerance))
+        print("upper " + str(expected + tolerance))
+
         if (value >= (expected - tolerance)) and (value <= (expected + tolerance)): 
             print("passed")
-            print("value " + str(value))
-            print("lower " + str(expected - tolerance))
-            print("upper " + str(expected + tolerance))
             self.spindle_pass_fail = self.spindle_pass_fail*(True)
         else: 
             self.spindle_pass_fail = self.spindle_pass_fail*(False)
