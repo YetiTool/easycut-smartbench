@@ -81,30 +81,32 @@ class DatabaseStorage(object):
         
         # Copy live buffer to local list, to reduce risk of live buffer getting locked while we take time to send the messages
         buffer_copy = self._message_buffer
-        self._message_buffer = []
+        self._message_buffer = []  # buffer now free to write to
 
         try:
             self.rabbitMQ_connection = pika.BlockingConnection(self.rabbitMQ_parameters)
             channel = self.rabbitMQ_connection.channel()
             channel.queue_declare(queue='machine_status_1')
+
+        
+            # REVERSED list is necessary coz we're removing buffer items as we go. Reversing just dodges the inherent indicies problem that creates.
+            for data in buffer_copy:
+    
+                message = json.dumps(data)
+                
+                try:    
+                    channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
+                    log("Flurry msg sent: " + message)
+                except:
+                    log("Flurry msg FAIL: " + message)
+                    
+                buffer_copy = []
+                self.rabbitMQ_connection.close()        
+
         except:
             log("Flurry basic connection fail, after channel declaration.")
-        
-        # REVERSED list is necessary coz we're removing buffer items as we go. Reversing just dodges the inherent indicies problem that creates.
-        for data in buffer_copy:
 
-            message = json.dumps(data)
             
-            try:    
-                channel.basic_publish(exchange='', routing_key='machine_status_1', body=message)
-                log("Flurry msg sent: " + message)
-            except:
-                log("Flurry msg FAIL: " + message)
-                
-        buffer_copy = []
-        self.rabbitMQ_connection.close()        
-
-
     def _add_status_to_send_buffer(self):
 
         try:        
