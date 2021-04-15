@@ -747,6 +747,7 @@ class SerialConnection(object):
 
                     self.pcb_temp = float(temps[0])
                     self.motor_driver_temp = float(temps[1])
+                    print(str(self.motor_driver_temp))
 
                 elif part.startswith('V:'):
                     voltages = part[3:].split(',')
