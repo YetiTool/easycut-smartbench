@@ -149,7 +149,7 @@ class SkavaUI(App):
             # initialise the screens (legacy)
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             # lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
-            # home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
+            home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
             # local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
             # usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
             # go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am)
@@ -182,7 +182,7 @@ class SkavaUI(App):
         else:
             # add the screens to screen manager
             # sm.add_widget(lobby_screen)
-            # sm.add_widget(home_screen)
+            sm.add_widget(home_screen)
             # sm.add_widget(local_filechooser)
             # sm.add_widget(usb_filechooser)
             # sm.add_widget(go_screen)
