@@ -23,6 +23,9 @@ import re
 from functools import partial
 from serial.serialutil import SerialException
 
+# Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
+from asmcnc.core_UI.sequence_alarm import alarm_manager
+
 
 BAUD_RATE = 115200
 ENABLE_STATUS_REPORTS = True
@@ -60,11 +63,15 @@ class SerialConnection(object):
     # For Z Head Diagnostics only:
     overload_pin_mV = 0
 
-    def __init__(self, machine, screen_manager):
+    def __init__(self, machine, screen_manager, settings_manager):
 
-        self.sm = screen_manager   
+        self.sm = screen_manager
+        self.sett =settings_manager
         self.m = machine
-        
+
+        # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m)
+
     def __del__(self):
         print 'Destructor'
 
@@ -675,6 +682,8 @@ class SerialConnection(object):
                     
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
+
+                    
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -731,13 +740,16 @@ class SerialConnection(object):
         elif message.startswith('ALARM:'):
             log('ALARM from GRBL: ' + message)
             if self.suppress_alarm_screens == False:
-                if self.sm.current != 'alarmScreen':
-                    self.sm.get_screen('alarmScreen').message = message
-                    if self.sm.current == 'errorScreen':
-                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-                    else:
-                        self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
-                    self.sm.current = 'alarmScreen'
+                self.alarm.alert_user(message)
+# <<<<<<< HEAD
+#             if self.suppress_alarm_screens == False:
+#                 if self.sm.current != 'alarmScreen':
+#                     self.sm.get_screen('alarmScreen').message = message
+#                     if self.sm.current == 'errorScreen':
+#                         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+#                     else:
+#                         self.sm.get_screen('alarmScreen').return_to_screen = self.sm.current
+#                     self.sm.current = 'alarmScreen'
 
         elif message.startswith('$'):
             log(message)

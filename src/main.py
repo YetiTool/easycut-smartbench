@@ -28,11 +28,14 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
+
+# COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 
+# SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
 from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
@@ -41,7 +44,6 @@ from asmcnc.skavaUI import screen_jobstart_warning
 from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
 from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
-from asmcnc.skavaUI import screen_alarm # @UnresolvedImport
 from asmcnc.skavaUI import screen_error # @UnresolvedImport
 from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing # @UnresolvedImport
@@ -67,7 +69,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.5.4'
+initial_version = 'v1.6.0'
 
 # default starting screen
 start_screen = 'welcome'
@@ -130,18 +132,19 @@ class SkavaUI(App):
             powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
 
         else: 
-            # Initialise 'm'achine object
-            m = router_machine.RouterMachine(Cmport, sm)
-            
-            job_gcode = []  # declare g-code object
-            
+
             # Initialise settings object
             sett = settings_manager.Settings(sm)
+
+            # Initialise 'm'achine object
+            m = router_machine.RouterMachine(Cmport, sm, sett)
+            
+            job_gcode = []  # declare g-code object
             
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett)
             
-            # initialise the screens
+            # initialise the screens (legacy)
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
@@ -152,7 +155,6 @@ class SkavaUI(App):
             loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
             checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
-            alarm_screen = screen_alarm.AlarmScreenClass(name='alarmScreen', screen_manager = sm, machine = m)
             serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
             homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
             safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
@@ -184,7 +186,6 @@ class SkavaUI(App):
             sm.add_widget(loading_screen)
             sm.add_widget(checking_screen)
             sm.add_widget(error_screen)
-            sm.add_widget(alarm_screen)
             sm.add_widget(serial_screen)
             sm.add_widget(homing_screen)
             sm.add_widget(safety_screen)
@@ -206,6 +207,7 @@ class SkavaUI(App):
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
+
         sm.current = start_screen
   
 

@@ -77,7 +77,6 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-#                         source: "./asmcnc/skavaUI/img/z_jog_up.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
                         center_x: self.parent.center_x
                         y: self.parent.y

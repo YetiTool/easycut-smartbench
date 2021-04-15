@@ -288,7 +288,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 1
-                        rows: 3
+                        rows: 4
                         padding: 10
                         spacing: 10
                         ToggleButton:
@@ -302,6 +302,9 @@ Builder.load_string("""
                         Button:
                             text: 'Diagnostics'
                             on_press: root.diagnostics()
+                        Button:
+                            text: 'Final test'
+                            on_press: root.final_test()
 
             BoxLayout:
                 size_hint: (None,None)
@@ -390,7 +393,7 @@ Builder.load_string("""
 
 class FactorySettingsScreen(Screen):
 
-    machine_model_values = ['SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
+    machine_model_values = ['SmartBench V1.0 CNC Router', 'SmartBench V1.1 CNC Router', 'SmartBench V1.2 Standard CNC Router', 'SmartBench V1.2 Precision CNC Router', 'SmartBench V1.2 PrecisionPro CNC Router']
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
@@ -712,6 +715,9 @@ class FactorySettingsScreen(Screen):
 
         return str(serial_number_from_file)
 
+
+    def final_test(self):
+        self.systemtools_sm.open_final_test_screen()
 
 
             

@@ -12,20 +12,19 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.skavaUI import screen_jobstart_warning
+from asmcnc.core_UI.sequence_alarm import screen_alarm_1
 
 Cmport = 'COM3'
 
 class ScreenTest(App):
 
-
 	def build(self):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
-		sm.add_widget(jobstart_warning_screen)
-		sm.current = 'jobstart_warning'
+		alarm_1_screen = screen_alarm_1.AlarmScreen1(name='final_test', screen_manager = sm, machine = m)
+		sm.add_widget(alarm_1_screen)
+		sm.current = 'final_test'
 		return sm
 
 ScreenTest().run()
