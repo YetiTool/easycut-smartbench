@@ -759,7 +759,7 @@ class ZHeadDiagnosticsScreen(Screen):
             self.spindle_pass_fail = True
 
 
-        Clock.schedule_once(lambda dt: show_outcome(), 35)
+        Clock.schedule_once(lambda dt: show_outcome(), 45)
 
 
     def spindle_check(self, M3_command, ld_expected_mV, speed_expected_mV):
@@ -803,7 +803,7 @@ class ZHeadDiagnosticsScreen(Screen):
 
         overload_check_event = Clock.schedule_interval(lambda dt: overload_check(ld_expected_mV, speed_expected_mV), 2.5)
 
-        Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 6.5)
+        Clock.schedule_once(lambda dt: Clock.unschedule(overload_check_event), 8)
         
     def is_it_within_tolerance(self, value, expected, tolerance):
 
