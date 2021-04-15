@@ -11,6 +11,7 @@ import pprint
 from datetime import datetime, date
 import pytz
 from pytz import timezone
+from time import sleep
 
 import requests.auth
 import binascii
@@ -266,6 +267,9 @@ class ProcessLinearEncoderScreen(Screen):
     # SET UP KIVY CLOCK EVENT OBJECTS
     poll_for_screen = None
 
+    # FUNCTION COUNTERS
+    generate_test_id_counter = 0
+
     def __init__(self, **kwargs):
 
         super(ProcessLinearEncoderScreen, self).__init__(**kwargs)
@@ -323,25 +327,25 @@ class ProcessLinearEncoderScreen(Screen):
     # TEST SET UP
     def generate_test_id(self):
 
-        try_generating_event = None
+        self.generate_test_id_counter =+ 1
 
-        def try_finding_id_nested_function(dt):
+        try: 
+            if self.look_for_existing_folder():
+                self.look_for_existing_file()
+            else:
+                self.test_id.text = "1"
+            self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
-            log("doing nested fuction to find id")
+        except:
+            log('Failed to get sheet ID and open it, trying again in 30 seconds.')
+            
+            if self.generate_test_id_counter > 3:
+                sleep(15)
+                self.generate_test_id()
 
-            try: 
-                if self.look_for_existing_folder():
-                    self.look_for_existing_file()
-                else:
-                    self.test_id.text = "1"
-                self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
-
-                Clock.unschedule(try_generating_event)
-
-            except:
-                log('Failed to get sheet ID and open it, trying again in 30 seconds.')
-
-        try_generating_event = Clock.schedule_interval(try_finding_id_nested_function, 30)
+            else: 
+                self.go_stop.state = 'normal'
+                self.run_stop_test()
 
 
     def look_for_existing_folder(self):
