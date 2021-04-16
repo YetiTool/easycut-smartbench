@@ -746,17 +746,21 @@ class ZHeadDiagnosticsScreen(Screen):
 
         def show_outcome():
 
-            self.spindle_test_counter = 0
+            try: 
+                self.spindle_test_counter = 0
 
-            if self.spindle_pass_fail == 0:
-                self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-                test = self.string_overload_summary.split("**")
-                popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
+                if self.spindle_pass_fail == 0:
+                    self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+                    test = self.string_overload_summary.split("**")
+                    popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
 
-            else: 
-                self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+                else: 
+                    self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-            self.spindle_pass_fail = True
+                self.spindle_pass_fail = True
+
+            except:
+                log("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)
