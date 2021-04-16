@@ -142,7 +142,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: bench_width
-                    text: "460"
+                    text: "1201"
                     multiline: False
                     font_size: '20sp'
 
