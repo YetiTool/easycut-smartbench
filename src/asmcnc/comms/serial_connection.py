@@ -165,7 +165,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = False
+    VERBOSE_ALL_RESPONSE = True
     VERBOSE_STATUS = False
 
 
@@ -749,7 +749,7 @@ class SerialConnection(object):
                     self.motor_driver_temp = float(temps[1])
 
                 elif part.startswith('V:'):
-                    voltages = part[3:].split(',')
+                    voltages = part[2:].split(',')
                     try: 
                         float(voltages[0])
                         float(voltages[1])
