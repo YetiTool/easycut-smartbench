@@ -10,7 +10,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
+from kivy.clock import Clock
 
 Builder.load_string("""
 
@@ -18,6 +18,9 @@ Builder.load_string("""
 <FeedOverride>
 
     feed_rate_label:feed_rate_label
+    feed_absolute:feed_absolute
+    up_5: up_5
+    down_5: down_5
 
     BoxLayout:
         size: self.parent.size
@@ -28,6 +31,7 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
+            id: up_5
             on_press: root.feed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -62,6 +66,7 @@ Builder.load_string("""
                 text: "100%"           
         
         Button:
+            id: down_5
             on_press: root.feed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
@@ -76,9 +81,25 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
             
-        
-         
-        
+        Label:
+            id: feed_absolute
+            size_hint_y: 0.22
+            text: '0'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]
+        Label:
+            size_hint_y: 0.15
+            text: 'mm/min'
+            font_size: '12px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]      
 """)
     
 
@@ -87,24 +108,58 @@ class FeedOverride(Widget):
     feed_override_percentage = NumericProperty()
     feed_rate_label = ObjectProperty()
 
+    enable_button_time = 0.3
+    push = 0
+
     def __init__(self, **kwargs):
         super(FeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']     
+        self.sm=kwargs['screen_manager']
+
+    def update_feed_rate_label(self):
+        self.feed_absolute.text = str(self.m.feed_rate())
 
     def feed_up(self):
-        if self.feed_override_percentage < 200: self.feed_override_percentage += 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.feed_override_up_10(final_percentage=self.feed_override_percentage)
-        
+        self.push =+ 1
+        if self.feed_override_percentage < 200 and self.push < 2:
+            if self.disable_buttons():
+                self.feed_override_percentage += 5
+                self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(self.enable_buttons, self.enable_button_time)
+                
     def feed_norm(self):
         self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+        self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
                 
     def feed_down(self):
-        if self.feed_override_percentage > 10: self.feed_override_percentage -= 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.feed_override_down_10(final_percentage=self.feed_override_percentage)        
+        self.push =+ 1 
+        if self.feed_override_percentage > 10 and self.push < 2:
+            if self.disable_buttons():
+                self.feed_override_percentage -= 5
+                self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
+    def disable_buttons(self):
+        self.down_5.disabled = True
+        self.up_5.disabled = True
+        self.sm.get_screen('go').speedOverride.down_5.disabled = True
+        self.sm.get_screen('go').speedOverride.up_5.disabled = True
+        return True
 
+    def enable_buttons(self, dt):
+        self.down_5.disabled = False
+        self.up_5.disabled = False
+        self.sm.get_screen('go').speedOverride.down_5.disabled = False
+        self.sm.get_screen('go').speedOverride.up_5.disabled = False
+        self.push = 0

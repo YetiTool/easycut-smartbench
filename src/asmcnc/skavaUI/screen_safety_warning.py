@@ -53,7 +53,7 @@ Builder.load_string("""
       
             
             BoxLayout:
-                size_hint_y: .5
+                size_hint_y: .7
     
                 orientation: 'vertical'
                 size: self.parent.size
@@ -69,9 +69,9 @@ Builder.load_string("""
                     text_size: self.size
                 
             BoxLayout:
-                size_hint_y: 4
+                size_hint_y: 3.9
     
-                padding: 40
+                padding: 15
                 orientation: 'vertical'
                 BoxLayout:
                     orientation: 'horizontal'    
@@ -182,6 +182,40 @@ Builder.load_string("""
                             text_size: self.size
                             halign: 'left'
 
+                BoxLayout:
+                    orientation: 'horizontal'
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:20
+                        Image:
+                            size_hint_x: 1
+                            keep_ratio: True
+                            allow_stretch: True                           
+                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                        Label:
+                            size_hint_x: 6
+                            text: '[color=333333]Never leave the machine unattended while power is on[/color]'
+                            markup: True
+                            halign: 'left'
+                            valign: 'middle'
+                            size:self.texture_size
+                            text_size: self.size
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing:20
+                        Image:
+                            size_hint_x: 1
+                            keep_ratio: True
+                            allow_stretch: True                           
+                            source: "./asmcnc/skavaUI/img/popup_error_visual.png"
+                        Label:
+                            size_hint_x: 6
+                            text: '[color=333333]Ensure all plugs are fully inserted and secured[/color]'
+                            markup: True
+                            valign: 'middle'
+                            size:self.texture_size
+                            text_size: self.size
+                            halign: 'left'
   
 
             Button:

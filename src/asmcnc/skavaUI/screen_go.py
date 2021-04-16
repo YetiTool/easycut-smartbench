@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -49,14 +49,16 @@ Builder.load_string("""
     btn_back_img:btn_back_img
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
+    # spindle_voltage: spindle_voltage
+    spindle_widgets: spindle_widgets
     
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: 0
         orientation: "vertical"
 
         BoxLayout:
-            size_hint_y: 0.9
+            size_hint_y: 0.92
             padding: 0
             spacing: 10
             orientation: "horizontal"
@@ -125,11 +127,10 @@ Builder.load_string("""
                                 size_hint_x: 1
                                 disabled: False
                                 background_color: hex('#F4433600')
-                                on_release:
-                                    self.background_color = hex('#F4433600')
+
                                 on_press:
                                     root.start_or_pause_button_press()
-                                    self.background_color = hex('#F44336FF')
+
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -306,6 +307,7 @@ Builder.load_string("""
                                 text_size: self.size 
 
                 BoxLayout:
+                    id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
                     padding: 20
@@ -327,7 +329,7 @@ Builder.load_string("""
                         id: spindle_overload_container
                         orientation: 'vertical'
                         size_hint_y: 0.25
-                        padding: 00
+                        padding: [0, 0, 0, -10]
                         spacing: 10
  
                         Label:
@@ -342,6 +344,18 @@ Builder.load_string("""
                             halign: 'center'
                             text: '[color=333333]0 %[/color]'
                             markup: True
+
+                        # Label:
+                        #     id: spindle_voltage
+                        #     size_hint_y: 0.6
+                        #     opacity: 0
+                        #     text: '0'
+                        #     font_size: '16px' 
+                        #     valign: 'middle'
+                        #     halign: 'center'
+                        #     size:self.texture_size
+                        #     text_size: self.size
+                        #     color: [0,0,0,0.5]
 
         BoxLayout:
             size_hint_y: 0.08
@@ -364,12 +378,15 @@ class GoScreen(Screen):
     btn_back_img = ObjectProperty()
     start_or_pause_button_image = ObjectProperty()
 
+    show_spindle_overload = False
 
     is_job_started_already = False
+    temp_suppress_prompts = False
        
     return_to_screen = 'home' # screen to go to after job runs
     cancel_to_screen = 'home' # screen to go back to before job runs, or set to return to after job started
     loop_for_job_progress = None
+    loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
 
 
@@ -380,6 +397,7 @@ class GoScreen(Screen):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.job_gcode=kwargs['job']
+        self.am=kwargs['app_manager']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
@@ -403,22 +421,59 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if ((str(self.m.serial_number())).endswith('03') or self.sm.get_screen('dev').developer_mode == True):
+        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True):
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
+            self.spindle_overload_container.padding = [0,0,0,-10]
+            self.spindle_overload_container.spacing = 10
+            self.spindle_widgets.spacing = 20
 
         else: 
             self.spindle_overload_container.height = 0
             self.spindle_overload_container.size_hint_y = 0
             self.spindle_overload_container.opacity = 0
+            self.spindle_overload_container.padding = 0
+            self.spindle_overload_container.spacing = 0
+            self.spindle_widgets.spacing = 0
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
+        self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
 
         if self.is_job_started_already: 
             pass
         else: 
             self.reset_go_screen_prior_to_job_start()
+
+    def on_enter(self):
+
+        if not self.is_job_started_already and not self.temp_suppress_prompts and self.m.reminders_enabled == True:
+            # Check brush use and lifetime: 
+            if self.m.spindle_brush_use_seconds >= 0.9*self.m.spindle_brush_lifetime_seconds:
+                brush_warning = "[b]Check your spindle brushes before starting your job![/b]\n\n" + \
+                "You have used SmartBench for [b]" + str(int(self.m.spindle_brush_use_seconds/3600)) + " hours[/b] " + \
+                "since you updated your spindle brush settings, and you told us that they only have lifetime of [b]" + \
+                str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours[/b]!"
+                brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, brush_warning, 'brushes')
+
+            if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
+                lubrication_warning = "[b]Lubricate the z head before starting your job![/b]\n\n" + \
+                "You have used SmartBench for [b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + " hours[/b] " + \
+                "since you last told us that you lubricated the Z head\n\n" + \
+                "Will you lubricate the Z head now?\n\n" + \
+                "Saying 'OK' will reset this reminder."
+                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, lubrication_warning, 'lubrication')
+
+            if self.m.time_since_calibration_seconds >= self.m.time_to_remind_user_to_calibrate_seconds:
+                calibration_warning = "You have used SmartBench for [b]" + str(int(self.m.time_since_calibration_seconds/3600)) + " hours[/b] " + \
+                "since its last calibration\n\n" + \
+                "A calibration procedure may improve the accuracy of SmartBench in the X and Y axis.\n\n" + \
+                "A calibration procedure can take approximately 10 minutes with basic tools.\n\n" + \
+                "Calibration is not compulsory.\n\n" + \
+                "Will you calibrate SmartBench now?"
+                lubrication_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, calibration_warning, 'calibration')
+
+        if self.temp_suppress_prompts: self.temp_suppress_prompts = False
 
 
 ### COMMON SCREEN PREP METHOD
@@ -446,7 +501,11 @@ class GoScreen(Screen):
         self.m.set_led_colour('GREEN')
         
         self.feedOverride.feed_norm()
-        self.speedOverride.feed_norm()
+        self.speedOverride.speed_norm()
+
+        # Reset job tracking flags
+        self.sm.get_screen('home').has_datum_been_reset = False
+        self.sm.get_screen('home').z_datum_reminder_flag = False
 
 
 ### GENERAL ACTIONS
@@ -469,6 +528,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
+        self.m.set_pause(False)
         self.is_job_started_already = True
         log('Starting job...')
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/pause.png"
@@ -485,7 +545,8 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
-        if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+        # Turn vac on if spindle gets turned on during job
+        if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0):
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)
@@ -498,8 +559,19 @@ class GoScreen(Screen):
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
         
-        # # Remove end of file command for spindle cooldown to operate smoothly
-        if "M30" in modified_job_gcode: modified_job_gcode.remove("M30")
+        # Remove end of file command for spindle cooldown to operate smoothly
+        def mapGcodes(line):
+            culprits = ['M30', 'M2']
+
+            if 'S0' in line:
+                line = line.replace('S0','')
+            if line in culprits:
+                line = ''
+
+            return line
+
+        modified_job_gcode = map(mapGcodes, modified_job_gcode)
+
 
         try:
             self.m.s.run_job(modified_job_gcode)
@@ -521,6 +593,7 @@ class GoScreen(Screen):
     def on_leave(self, *args):
 
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
+        if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
             
 ### SCREEN UPDATES
@@ -552,7 +625,14 @@ class GoScreen(Screen):
         
         else:
             self.run_time_label.text = "[color=333333]" + "Waiting for job to be started" + "[/color]"
-            
+    
+    def poll_for_feeds_and_speeds(self, dt):
+        # Spindle speed and feed rate
+
+        self.speedOverride.update_spindle_speed_label()
+        self.feedOverride.update_feed_rate_label()
+        # self.update_voltage_label()
+
 
     # Called from serial_connection if change in state seen
     def update_overload_label(self, state):
@@ -565,6 +645,9 @@ class GoScreen(Screen):
         elif state == 90: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         elif state == 100: self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         else: log('Overload state not recognised: ' + str(state))
+
+    def update_voltage_label(self):
+        self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
 
 

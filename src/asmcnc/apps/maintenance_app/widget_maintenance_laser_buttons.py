@@ -165,7 +165,12 @@ class LaserDatumButtons(Widget):
         self.m.laser_offset_x_value = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x - self.m.mpos_x()
         self.m.laser_offset_y_value = self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y - self.m.mpos_y()
 
-        self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value)
+        if self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value):
+            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+        else:
+            warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
+            " please contact the YetiTool support team."
+            popup_info.PopupError(self.sm, warning_message)
         
     def set_vacuum(self):
         if self.vacuum_toggle.state == 'normal': 
@@ -182,15 +187,3 @@ class LaserDatumButtons(Widget):
         else: 
             self.spindle_image.source = "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
             self.m.spindle_on()
-
-    # def disable_buttons(self):
-    #     self.save_button.disabled = True
-    #     self.reset_button.disabled = True
-    #     self.spindle_toggle.disabled = True
-    #     self.vacuum_toggle.disabled = True
-
-    # def enable_buttons(self):
-    #     self.save_button.disabled = False
-    #     self.reset_button.disabled = False
-    #     self.spindle_toggle.disabled = False
-    #     self.vacuum_toggle.disabled = False

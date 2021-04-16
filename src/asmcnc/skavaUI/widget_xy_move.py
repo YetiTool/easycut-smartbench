@@ -11,7 +11,6 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @Unr
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
-from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.skavaUI import popup_info
 
 
@@ -22,7 +21,6 @@ Builder.load_string("""
 <XYMove>
 
     jogModeButtonImage:jogModeButtonImage
-    virtual_bed_container:virtual_bed_container
     
     BoxLayout:
     
@@ -242,7 +240,7 @@ Builder.load_string("""
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding: [0, 20, 40, 20]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -251,9 +249,7 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True            
-            BoxLayout:
-                size_hint_x: 2
-                id: virtual_bed_container
+
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
@@ -262,7 +258,7 @@ Builder.load_string("""
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding: [40, 20, 0, 20]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -270,20 +266,7 @@ Builder.load_string("""
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
-                        allow_stretch: True  
-#     FloatLayout:
-#         
-#         Label:
-#             x: 120
-#             y: 420
-#             size_hint: None, None            
-#             height: 30
-#             width: 30
-#             text: 'XY'
-#             markup: True
-#             bold: True
-#             color: 0,0,0,0.2
-#             font_size: 20
+                        allow_stretch: True
         
 """)
     
@@ -296,7 +279,6 @@ class XYMove(Widget):
         super(XYMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.virtual_bed_container.add_widget(widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm))
     
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -390,22 +372,18 @@ class XYMove(Widget):
         popup_info.PopupDatum(self.sm, self.m, 'XY', warning)
     
     def set_standby_to_pos(self):
-        self.m.set_standby_to_pos()
-        self.m.get_grbl_status()
+        warning = 'Is this where you want to set your\nstandby position?'
+        popup_info.PopupPark(self.sm, self.m, warning)
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
         else:
             self.m.go_x_datum()
 
     def go_y_datum(self):
         if self.m.is_machine_homed == False:
-                self.sm.get_screen('homingWarning').user_instruction = 'Please home SmartBench first!'
-                self.sm.get_screen('homingWarning').error_msg = ''
-                self.sm.current = 'homingWarning'
+            popup_info.PopupHomingWarning(self.sm, self.m, 'home', 'home')
         else:
             self.m.go_y_datum()
 

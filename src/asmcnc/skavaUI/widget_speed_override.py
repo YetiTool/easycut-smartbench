@@ -10,6 +10,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
+from kivy.clock import Clock
 
 
 Builder.load_string("""
@@ -17,7 +18,10 @@ Builder.load_string("""
 
 <SpeedOverride>
 
-    feed_rate_label:feed_rate_label
+    speed_rate_label:speed_rate_label
+    spindle_rpm:spindle_rpm
+    up_5: up_5
+    down_5: down_5
 
     BoxLayout:
         size: self.parent.size
@@ -28,7 +32,8 @@ Builder.load_string("""
         orientation: "vertical"
         
         Button:
-            on_press: root.feed_up()
+            id: up_5
+            on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 2
@@ -46,7 +51,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos  
             Button:
-                on_press: root.feed_norm()
+                on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
@@ -56,13 +61,14 @@ Builder.load_string("""
                 size: self.parent.size
                 allow_stretch: True  
             Label:
-                id: feed_rate_label
+                id: speed_rate_label
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
                 text: "100%"           
         
         Button:
-            on_press: root.feed_down()
+            id: down_5
+            on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
                 padding: 2
@@ -75,43 +81,85 @@ Builder.load_string("""
                     y: self.parent.y
                     size: self.parent.width, self.parent.height
                     allow_stretch: True  
-        # Label:
-        #     id: spindle_rpm
-        #     text: 'speed'
-        #     font_size: '16px' 
-        #     valign: 'middle'
-        #     halign: 'center'
-        #     size:self.texture_size
-        #     text_size: self.size            
-        
-         
-        
+        Label:
+            id: spindle_rpm
+            size_hint_y: 0.22
+            text: '0'
+            font_size: '16px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]
+        Label:
+            size_hint_y: 0.15
+            text: 'RPM'
+            font_size: '12px' 
+            valign: 'middle'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            color: [0,0,0,0.5]  
 """)
     
 
 class SpeedOverride(Widget):
 
-    feed_override_percentage = NumericProperty()
-    feed_rate_label = ObjectProperty()
+    speed_override_percentage = NumericProperty()
+    speed_rate_label = ObjectProperty()
+
+    enable_button_time = 0.3
+    push = 0
 
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']     
 
-    def feed_up(self):
-        if self.feed_override_percentage < 200: self.feed_override_percentage += 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_up_10(final_percentage=self.feed_override_percentage)
+    def update_spindle_speed_label(self):
+        self.spindle_rpm.text = str(self.m.spindle_speed())
+
+    def speed_up(self):
+        self.push =+ 1 
+        if self.speed_override_percentage < 200 and self.push < 2:
+            if self.disable_buttons():
+                self.speed_override_percentage += 5
+                self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
-    def feed_norm(self):
-        self.feed_override_percentage = 100
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
+    def speed_norm(self):
+        self.speed_override_percentage = 100
+        self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
                 
-    def feed_down(self):
-        if self.feed_override_percentage > 10: self.feed_override_percentage -= 10
-        self.feed_rate_label.text = str(self.feed_override_percentage) + "%"
-        self.m.speed_override_down_10(final_percentage=self.feed_override_percentage)        
+    def speed_down(self):
+        self.push =+ 1 
+        if self.speed_override_percentage > 10 and self.push < 2:          
+            if self.disable_buttons():
+                self.speed_override_percentage -= 5
+                self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.05) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.1) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.15) 
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.2)
+                Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
+    def disable_buttons(self):
+        self.down_5.disabled = True
+        self.up_5.disabled = True
+        self.sm.get_screen('go').feedOverride.down_5.disabled = True
+        self.sm.get_screen('go').feedOverride.up_5.disabled = True
+        return True
 
+    def enable_buttons(self, dt):
+        self.down_5.disabled = False
+        self.up_5.disabled = False
+        self.sm.get_screen('go').feedOverride.down_5.disabled = False
+        self.sm.get_screen('go').feedOverride.up_5.disabled = False      
+        self.push = 0

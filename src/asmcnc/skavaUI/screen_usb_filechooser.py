@@ -11,11 +11,13 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.graphics import Color, Rectangle
 
 import sys, os
 from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
+from os import path
 
 
 Builder.load_string("""
@@ -27,15 +29,31 @@ Builder.load_string("""
     filechooser_usb:filechooser_usb
     load_button:load_button
     image_select:image_select
+    usb_status_label:usb_status_label
 
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: 0
         size: root.size
         pos: root.pos
         orientation: "vertical"
 
+        Label:
+            canvas.before:
+                Color:
+                    rgba: hex('#333333FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: usb_status_label
+            size_hint_y: 0.7
+            markup: True
+            font_size: '18sp'   
+            valign: 'middle'
+            halign: 'left'
+            text_size: self.size
+            padding: [10, 0]
 
         Label:
             canvas.before:
@@ -54,6 +72,7 @@ Builder.load_string("""
 
 
         FileChooserIconView:
+            padding: [0,10]
             size_hint_y: 5
             id: filechooser_usb
             show_hidden: False
@@ -157,17 +176,45 @@ class USBFileChooser(Screen):
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
-    
     def on_enter(self):
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
-
+        self.update_usb_status()
         
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
+    def check_for_job_cache_dir(self):
+        if not path.exists(job_cache_dir):
+            os.mkdir(job_cache_dir)
+
+            if not path.exists(job_cache_dir + '.gitignore'):
+                file = open(job_cache_dir + '.gitignore', "w+")
+                file.write('*.nc')
+                file.close()
+
+    def update_usb_status(self):
+        try: 
+            if self.usb_stick.is_available():
+                self.usb_status_label.size_hint_y = 0.7
+                self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.usb_status_label.canvas.before.clear()
+                with self.usb_status_label.canvas.before:
+                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+
+            else:
+                self.usb_status_label.text = "USB removed! Files will not load properly."
+                self.usb_status_label.size_hint_y = 0.7
+                self.usb_status_label.canvas.before.clear()
+                with self.usb_status_label.canvas.before:
+                    Color(230 / 255., 74 / 255., 25 / 255., 1.)
+                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+
+        except: 
+            pass
 
     def refresh_filechooser(self):
 
@@ -197,6 +244,8 @@ class USBFileChooser(Screen):
 
      
     def import_usb_file(self, file_selection):
+
+        self.check_for_job_cache_dir()
         
         # Move over the nc file
         if os.path.isfile(file_selection):

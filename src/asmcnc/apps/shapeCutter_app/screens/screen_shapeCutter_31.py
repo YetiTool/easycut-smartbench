@@ -12,7 +12,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
 from asmcnc.apps.shapeCutter_app.screens import widget_sC31_xy_move, widget_sC31_z_setgo, widget_sC31_z_move, widget_sC_work_coordinates
-from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.apps.shapeCutter_app.screens import popup_input_error, popup_info
 
 Builder.load_string("""
 
@@ -331,7 +331,8 @@ class ShapeCutter31ScreenClass(Screen):
 
 # Action buttons
     def get_info(self):
-        pass
+        info = "Move the machine by using the arrow buttons.\n\nUse the Z0 button to set the datum using the touchplate.\n\nUse the SET button to manually set the datum.\n\nUse the GO button to move the machine to the datum. "
+        popup_info.PopupInfo(self.shapecutter_sm, info)
     
     def go_back(self):
         if not self.m.state().startswith('Jog'):
