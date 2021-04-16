@@ -899,16 +899,16 @@ class ProcessMicrometerScreen(Screen):
 
         log("Writing straightness measurements to Gsheet")
 
-        worksheet.update('A7:A', self.jig_position_converted)
-        worksheet.update('B7:B', self.y_pos_converted)
-        worksheet.update('C7:C', self.home_calibration_list_converted)
-        worksheet.update('D7:D', self.far_calibration_list_converted)
-        worksheet.update('E7:E', self.home_raw_converted)
-        worksheet.update('F7:F', self.far_raw_converted)
-        worksheet.update('G7:G', self.home_measurement_converted)
-        worksheet.update('H7:H', self.far_measurement_converted)
-        worksheet.update('I7:I', self.home_with_offset_converted)
-        worksheet.update('J7:J', self.far_with_offset_converted)
+        worksheet.update('A21:A', self.jig_position_converted)
+        worksheet.update('B21:B', self.y_pos_converted)
+        worksheet.update('C21:C', self.home_calibration_list_converted)
+        worksheet.update('D21:D', self.far_calibration_list_converted)
+        worksheet.update('E21:E', self.home_raw_converted)
+        worksheet.update('F21:F', self.far_raw_converted)
+        worksheet.update('G21:G', self.home_measurement_converted)
+        worksheet.update('H21:H', self.far_measurement_converted)
+        worksheet.update('I21:I', self.home_with_offset_converted)
+        worksheet.update('J21:J', self.far_with_offset_converted)
 
         log('Straightness test data sent')
         log("Recording test metadata")
@@ -956,16 +956,16 @@ class ProcessMicrometerScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A7:A"
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B7:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C7:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D7:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E7:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F7:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G7:G"
-        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H7:H"
-        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I7:I"
-        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J7:J"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A21:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B21:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C21:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D21:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E21:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F21:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G21:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H21:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I21:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J21:J"
 
         self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)

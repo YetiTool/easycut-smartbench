@@ -741,21 +741,21 @@ class ProcessLinearEncoderScreen(Screen):
 
         log("Writing calibration measurements to Gsheet")
 
-        worksheet.update('A9:A', self.machine_Y_coordinate)
-        worksheet.update('B9:B', self.HOME_raw_converted)
-        worksheet.update('C9:C', self.FAR_raw_converted)
-        worksheet.update('D9:D', self.HOME_distance_abs)
-        worksheet.update('E9:E', self.FAR_distance_abs)
-        worksheet.update('F9:F', self.Y_true)
-        worksheet.update('G9:G', self.angle_off_square)
-        worksheet.update('H9:H', self.delta_y_grbl_home)
-        worksheet.update('I9:I', self.delta_y_grbl_far)
-        worksheet.update('J9:J', self.Y_axis_linear_drift)
-        worksheet.update('K9:K', self.Y_axis_angular_offset)
-        worksheet.update('L9:L', self.delta_y_home)
-        worksheet.update('M9:M', self.delta_y_far)
-        worksheet.update('N9:N', self.DELTA_Y_X_BEAM)
-        worksheet.update('O9:O', self.DELTA_Y_PER_METER)
+        worksheet.update('A23:A', self.machine_Y_coordinate)
+        worksheet.update('B23:B', self.HOME_raw_converted)
+        worksheet.update('C23:C', self.FAR_raw_converted)
+        worksheet.update('D23:D', self.HOME_distance_abs)
+        worksheet.update('E23:E', self.FAR_distance_abs)
+        worksheet.update('F23:F', self.Y_true)
+        worksheet.update('G23:G', self.angle_off_square)
+        worksheet.update('H23:H', self.delta_y_grbl_home)
+        worksheet.update('I23:I', self.delta_y_grbl_far)
+        worksheet.update('J23:J', self.Y_axis_linear_drift)
+        worksheet.update('K23:K', self.Y_axis_angular_offset)
+        worksheet.update('L23:L', self.delta_y_home)
+        worksheet.update('M23:M', self.delta_y_far)
+        worksheet.update('N23:N', self.DELTA_Y_X_BEAM)
+        worksheet.update('O23:O', self.DELTA_Y_PER_METER)
 
         log('Calibration test data sent')
         log("Recording test metadata")
@@ -800,21 +800,21 @@ class ProcessLinearEncoderScreen(Screen):
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
 
-        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A9:A"
-        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B9:B"
-        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C9:C"
-        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D9:D"
-        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E9:E"
-        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F9:F"
-        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G9:G"
-        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H9:H"
-        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I9:I"
-        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J9:J"
-        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K9:K"
-        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L9:L"
-        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M9:M"
-        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N9:N"
-        O_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "O9:O"
+        A_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "A23:A"
+        B_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "B23:B"
+        C_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "C23:C"
+        D_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "D23:D"
+        E_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "E23:E"
+        F_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "F23:F"
+        G_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "G23:G"
+        H_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "H23:H"
+        I_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "I23:I"
+        J_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "J23:J"
+        K_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "K23:K"
+        L_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "L23:L"
+        M_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "M23:M"
+        N_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "N23:N"
+        O_str_to_clear = "'" + str(worksheet_name) + "'" + "!" + "O23:O"
 
         self.active_spreadsheet_object.values_clear(A_str_to_clear)
         self.active_spreadsheet_object.values_clear(B_str_to_clear)
