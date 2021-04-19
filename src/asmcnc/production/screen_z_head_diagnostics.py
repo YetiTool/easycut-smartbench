@@ -109,7 +109,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '  14. ENABLE       ALARMS'
+                        text: '  14. ENABLE               ALARMS'
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
