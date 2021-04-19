@@ -144,8 +144,6 @@ Builder.load_string("""
                     valign: 'middle'
                     on_press: root.bake_grbl_settings()
 
-
-                ## TURN OFF LIMITS HERE
                 Button:
                     text: '  9. DISABLE ALARMS'
                     text_size: self.size
