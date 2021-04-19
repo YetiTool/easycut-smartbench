@@ -661,7 +661,7 @@ class ZHeadDiagnosticsScreen(Screen):
         # Poll for all the temperatures, voltages, and power loss pin reported from the FW 
         # If one of them fails, polling will stop and report will be triggered.
 
-        if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 50):
+        if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 70):
             pass_fail = pass_fail*(True)
 
         else:
