@@ -109,7 +109,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '  9. ENABLE ALARMS'
+                        text: '  14. ENABLE ALARMS'
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
@@ -183,7 +183,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label: 
-                        text: '  13. Temp/Power'
+                        text: '  15. Temp/Power'
                         color: 1,1,1,1
                         text_size: self.size
                         size: self.parent.size
@@ -235,7 +235,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label: 
-                        text: '  9. X Home'
+                        text: '  10. X Home'
                         color: 1,1,1,1
                         text_size: self.size
                         size: self.parent.size
@@ -255,7 +255,7 @@ Builder.load_string("""
 
                 Button: 
                     id: do_cycle
-                    text: '  14. Cycle'
+                    text: '  16. Cycle'
                     on_press: root.do_cycle()
                     text_size: self.size
                     size: self.parent.size
@@ -291,7 +291,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label: 
-                        text: '  10. X Max'
+                        text: '  11. X Max'
                         color: 1,1,1,1
                         text_size: self.size
                         size: self.parent.size
@@ -314,7 +314,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button: 
-                        text: '15. Spindle Speed Check (wait 45 seconds)'
+                        text: '17. Spindle Speed Check (wait 45 seconds)'
                         color: 1,1,1,1
                         on_press: root.run_spindle_check()
                         text_size: self.size
@@ -368,7 +368,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label: 
-                        text: '  11. Z Home'
+                        text: '  12. Z Home'
                         color: 1,1,1,1
                         text_size: self.size
                         size: self.parent.size
@@ -388,7 +388,7 @@ Builder.load_string("""
 
                 Button: 
                     id: test_fw_update_button
-                    text: '  16. Test FW Update'
+                    text: '  18. Test FW Update'
                     on_press: root.test_fw_update()
                     text_size: self.size
                     size: self.parent.size
@@ -444,7 +444,7 @@ Builder.load_string("""
                     cols: 2
 
                     Label: 
-                        text: '  12. Probe'
+                        text: '  13. Probe'
                         color: 1,1,1,1
                         text_size: self.size
                         size: self.parent.size
