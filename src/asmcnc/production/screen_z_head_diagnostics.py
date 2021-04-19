@@ -109,7 +109,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '  14. ENABLE ALARMS'
+                        text: '  14. ENABLE       ALARMS'
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
@@ -871,7 +871,7 @@ class ZHeadDiagnosticsScreen(Screen):
             exit_code = int(proc.returncode)
 
             if exit_code == 0: 
-                did_fw_update_succeed = "Success! Reboot to reconnect to Z head."
+                did_fw_update_succeed = "Success! Disconnect or reboot to reconnect to Z head."
 
             else: 
                 did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
