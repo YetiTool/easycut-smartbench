@@ -152,7 +152,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    on_press: root.disable_ala()
+                    on_press: root.disable_alarms()
 
                 # GridLayout:
                 #     size: self.parent.size
