@@ -242,7 +242,8 @@ class CheckingScreen(Screen):
         
     def on_enter(self):
  
-        self.job_checking_checked = 'Getting ready...'  
+        self.job_checking_checked = 'Getting ready...'
+        self.m.set_pause(False)
         # display file selected in the filename display label
         if sys.platform == 'win32':
             self.filename_label.text = self.checking_file_name.split("\\")[-1]
