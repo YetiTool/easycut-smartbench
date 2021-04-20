@@ -694,12 +694,12 @@ class ProcessLinearEncoderScreen(Screen):
 
         perm_id = "08371608215019286311"
 
-        self.drive_service.permissions().update(fileId=self.active_folder_id,
-                             permissionId=perm_id,
-                             body=param_perm,
-                             supportsAllDrives =True,
-                             useDomainAdminAccess=True,
-                             transferOwnership=True).execute()
+        # self.drive_service.permissions().update(fileId=self.active_folder_id,
+        #                      permissionId=perm_id,
+        #                      body=param_perm,
+        #                      supportsAllDrives =True,
+        #                      useDomainAdminAccess=True,
+        #                      transferOwnership=True).execute()
 
 
         # Remove the API service bot's default parents, which will hopefully enable access
