@@ -693,7 +693,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         perm_id = "08371608215019286311"
 
-        return self.drive_service.permissions().update(fileId=self.active_folder_id,
+        self.drive_service.permissions().update(fileId=self.active_folder_id,
                              permissionId=perm_id,
                              body=param_perm,
                              supportsAllDrives =True,
@@ -721,7 +721,7 @@ class ProcessLinearEncoderScreen(Screen):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-        self.change_ownership_of_doc()
+        # self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
 
