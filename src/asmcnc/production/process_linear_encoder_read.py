@@ -690,7 +690,7 @@ class ProcessLinearEncoderScreen(Screen):
         # param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
-        perm_id = "17401741986074306750"
+        perm_id = "08371608215019286311"
 
         self.drive_service.permissions().update(fileId=self.active_folder_id,
                              permissionId=perm_id,
@@ -743,7 +743,7 @@ class ProcessLinearEncoderScreen(Screen):
         param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
-        perm_id = "17401741986074306750"
+        perm_id = "08371608215019286311"
 
         self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
                              permissionId=perm_id,
