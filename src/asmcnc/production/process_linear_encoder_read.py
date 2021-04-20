@@ -687,7 +687,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         param_perm = {}
         param_perm['value'] = 'lettie.adkins@yetitool.com'
-        param_perm['type'] = 'user'
+        # param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
         perm_id = "17401741986074306750"
