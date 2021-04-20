@@ -701,7 +701,7 @@ class ProcessLinearEncoderScreen(Screen):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='owner')
-        # self.change_ownership_of_doc()
+        self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
 
