@@ -685,6 +685,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
+        param_perm = {}
         param_perm['value'] = 'engineering.service.accounts.group@yetitool.com'
         param_perm['type'] = 'group'
         param_perm['role'] = 'owner'
