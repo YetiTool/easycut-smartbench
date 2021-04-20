@@ -686,18 +686,18 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
-        # CHANGE FOLDER OWVER
-        param_perm = {}
-        param_perm['value'] = 'ed.sells@yetitool.com'
-        # param_perm['type'] = 'user'
-        param_perm['role'] = 'owner'
+        # # CHANGE FOLDER OWVER
+        # param_perm = {}
+        # param_perm['value'] = 'ed.sells@yetitool.com'
+        # # param_perm['type'] = 'user'
+        # param_perm['role'] = 'owner'
 
-        perm_id = "08371608215019286311"
+        # perm_id = "08371608215019286311"
 
-        return self.drive_service.permissions().update(fileId=self.active_folder_id,
-                             permissionId=perm_id,
-                             body=param_perm,
-                             transferOwnership=True).execute()
+        # return self.drive_service.permissions().update(fileId=self.active_folder_id,
+        #                      permissionId=perm_id,
+        #                      body=param_perm,
+        #                      transferOwnership=True).execute()
 
 
         # # Remove the API service bot's default parents, which will hopefully enable access
@@ -716,7 +716,7 @@ class ProcessLinearEncoderScreen(Screen):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='owner')
-        self.change_ownership_of_doc()
+        # self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
 
