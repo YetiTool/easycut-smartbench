@@ -678,6 +678,7 @@ class ProcessLinearEncoderScreen(Screen):
         folder_metadata = {
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
+            'parents': '1iu4L5_adjGJYEIxscjEvlEZYNpYRgDo_'
         }
 
         folder = self.drive_service.files().create(body=folder_metadata,
@@ -693,22 +694,22 @@ class ProcessLinearEncoderScreen(Screen):
 
         perm_id = "08371608215019286311"
 
-        self.drive_service.permissions().update(fileId=self.active_folder_id,
+        return self.drive_service.permissions().update(fileId=self.active_folder_id,
                              permissionId=perm_id,
                              body=param_perm,
                              transferOwnership=True).execute()
 
 
-        # Remove the API service bot's default parents, which will hopefully enable access
-        folder = self.drive_service.files().get(fileId=self.active_folder_id,
-                                            fields='parents').execute()
+        # # Remove the API service bot's default parents, which will hopefully enable access
+        # folder = self.drive_service.files().get(fileId=self.active_folder_id,
+        #                                     fields='parents').execute()
 
-        previous_parents = ",".join(folder.get('parents'))
-        # Move the file to the new folder
-        folder = self.drive_service.files().update(fileId=self.active_folder_id,
-                                            addParents=self.live_measurements_id,
-                                            removeParents=previous_parents,
-                                            fields='id, parents').execute()
+        # previous_parents = ",".join(folder.get('parents'))
+        # # Move the file to the new folder
+        # folder = self.drive_service.files().update(fileId=self.active_folder_id,
+        #                                     addParents=self.live_measurements_id,
+        #                                     removeParents=previous_parents,
+        #                                     fields='id, parents').execute()
 
 
     def create_new_document(self):
