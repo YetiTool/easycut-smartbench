@@ -246,7 +246,7 @@ class ProcessLinearEncoderScreen(Screen):
     master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
     # FOLDER ID TO COLLATE RESULTS
-    live_measurements_id = '15iBk8f-_VqnOwfOuWBJQBgTFznjY_TQu'
+    live_measurements_id = '1iu4L5_adjGJYEIxscjEvlEZYNpYRgDo_'
 
     # GOOGLE API OBJECTS
     gsheet_client = None
