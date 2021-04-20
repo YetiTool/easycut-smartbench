@@ -685,8 +685,9 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
+        # CHANGE FOLDER OWVER
         param_perm = {}
-        param_perm['value'] = 'lettie.adkins@yetitool.com'
+        param_perm['value'] = 'ed.sells@yetitool.com'
         # param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
@@ -739,8 +740,8 @@ class ProcessLinearEncoderScreen(Screen):
 
     def change_ownership_of_doc(self):
         param_perm = {}
-        param_perm['value'] = 'lettie.adkins@yetitool.com'
-        param_perm['type'] = 'user'
+        param_perm['value'] = 'ed.sells@yetitool.com'
+        # param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
         perm_id = "08371608215019286311"
