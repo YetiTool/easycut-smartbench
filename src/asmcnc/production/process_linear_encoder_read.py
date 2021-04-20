@@ -685,20 +685,20 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
-        # # CHANGE FOLDER OWVER
-        # param_perm = {}
-        # param_perm['value'] = 'engineering.service.accounts.group@yetitool.com'
-        # # param_perm['type'] = 'user'
-        # param_perm['role'] = 'owner'
+        # CHANGE FOLDER OWVER
+        param_perm = {}
+        param_perm['value'] = 'lettie.adkins@yetitool.com'
+        # param_perm['type'] = 'user'
+        param_perm['role'] = 'owner'
 
-        # perm_id = "08371608215019286311"
+        perm_id = "08371608215019286311"
 
-        # return self.drive_service.permissions().update(fileId=self.active_folder_id,
-        #                      permissionId=perm_id,
-        #                      body=param_perm,
-        #                      supportsAllDrives =True,
-        #                      useDomainAdminAccess=True,
-        #                      transferOwnership=True).execute()
+        return self.drive_service.permissions().update(fileId=self.active_folder_id,
+                             permissionId=perm_id,
+                             body=param_perm,
+                             supportsAllDrives =True,
+                             # useDomainAdminAccess=True,
+                             transferOwnership=True).execute()
 
 
         # Remove the API service bot's default parents, which will hopefully enable access
