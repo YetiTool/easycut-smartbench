@@ -712,6 +712,8 @@ class ProcessLinearEncoderScreen(Screen):
 
         self.active_folder_id = folder.get('id')
 
+        print(self.active_folder_id)
+
         # Move the file to the new folder
         folder = self.drive_service.files().update(fileId=self.active_folder_id,
                                             addParents=self.live_measurements_id,
