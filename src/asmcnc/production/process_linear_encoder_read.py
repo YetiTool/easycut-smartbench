@@ -686,11 +686,11 @@ class ProcessLinearEncoderScreen(Screen):
         log('Created new folder: ' + str(folder.get('id')))
 
         param_perm = {}
-        param_perm['value'] = 'engineering.service.accounts.group@yetitool.com'
-        param_perm['type'] = 'group'
+        param_perm['value'] = 'lettie.adkins@yetitool.com'
+        param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
-        perm_id = "09726676331034448745"
+        perm_id = "17401741986074306750"
 
         self.drive_service.permissions().update(fileId=self.active_folder_id,
                              permissionId=perm_id,
@@ -738,11 +738,12 @@ class ProcessLinearEncoderScreen(Screen):
                                             fields='id, parents').execute()
 
     def change_ownership_of_doc(self):
-        param_perm['value'] = new_owner
+        param_perm = {}
+        param_perm['value'] = 'lettie.adkins@yetitool.com'
         param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
-        perm_id = "09726676331034448745"
+        perm_id = "17401741986074306750"
 
         self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
                              permissionId=perm_id,
