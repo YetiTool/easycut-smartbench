@@ -714,12 +714,14 @@ class ProcessLinearEncoderScreen(Screen):
 
         print(",".join(folder.get('parents')))
 
+        self.active_folder_id = folder.get('id')
+        log('ID IS STILL: ' + str(folder.get('id')))
 
     def create_new_document(self):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-        # self.change_ownership_of_doc()
+        self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
 
@@ -743,16 +745,19 @@ class ProcessLinearEncoderScreen(Screen):
                                             fields='id, parents').execute()
 
     def change_ownership_of_doc(self):
+        # CHANGE FOLDER OWVER
         param_perm = {}
-        param_perm['value'] = 'ed.sells@yetitool.com'
+        param_perm['value'] = 'lettie.adkins@yetitool.com'
         # param_perm['type'] = 'user'
         param_perm['role'] = 'owner'
 
         perm_id = "08371608215019286311"
 
-        self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
+        return self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
                              permissionId=perm_id,
                              body=param_perm,
+                             supportsAllDrives =True,
+                             # useDomainAdminAccess=True,
                              transferOwnership=True).execute()
 
 
