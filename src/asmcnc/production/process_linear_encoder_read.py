@@ -685,8 +685,8 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
-        param_perm['value'] = new_owner
-        param_perm['type'] = 'user'
+        param_perm['value'] = 'engineering.service.accounts.group@yetitool.com'
+        param_perm['type'] = 'group'
         param_perm['role'] = 'owner'
 
         perm_id = "09726676331034448745"
@@ -695,7 +695,7 @@ class ProcessLinearEncoderScreen(Screen):
                              permissionId=perm_id,
                              body=param_perm,
                              transferOwnership=True).execute()
-        
+
 
         # Remove the API service bot's default parents, which will hopefully enable access
         folder = self.drive_service.files().get(fileId=self.active_folder_id,
