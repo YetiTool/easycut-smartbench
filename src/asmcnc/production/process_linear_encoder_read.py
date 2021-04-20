@@ -678,6 +678,7 @@ class ProcessLinearEncoderScreen(Screen):
         folder_metadata = {
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder'
+            'parents': self.live_measurements_id
         }
 
         folder = self.drive_service.files().create(body=folder_metadata,
@@ -697,7 +698,7 @@ class ProcessLinearEncoderScreen(Screen):
                              permissionId=perm_id,
                              body=param_perm,
                              supportsAllDrives =True,
-                             # useDomainAdminAccess=True,
+                             useDomainAdminAccess=True,
                              transferOwnership=True).execute()
 
 
@@ -706,8 +707,11 @@ class ProcessLinearEncoderScreen(Screen):
                                             fields='parents').execute()
 
         previous_parents = ",".join(folder.get('parents'))
+
+        print(previous_parents)
+
         # Move the file to the new folder
-        folder = self.drive_service.files().update(fileId=self.active_folder_id,
+        folder = self.drive_service.files().update(fileId=folder.get('id'),
                                             addParents=self.live_measurements_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
