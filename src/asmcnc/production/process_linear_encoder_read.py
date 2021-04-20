@@ -444,13 +444,6 @@ class ProcessLinearEncoderScreen(Screen):
             self.go_stop.background_color = [1,0,0,1]
             self.go_stop.text = 'STOP'
 
-            # ## SET VARIABLES
-            # self.clear_data()
-            # self.starting_H = self.e0.H_side + self.e1.H_side
-            # self.starting_F = self.e0.F_side + self.e1.F_side
-            # self.starting_pos = float(self.m.mpos_y())
-            # self.max_pos = self.set_max_pos()
-
             # UPDATE DATA INFO ON SCREEN
             log('Starting test...')
             self.data_status = 'Starting'
@@ -707,7 +700,8 @@ class ProcessLinearEncoderScreen(Screen):
     def create_new_document(self):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='owner')
+        # self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
 
@@ -721,12 +715,27 @@ class ProcessLinearEncoderScreen(Screen):
         file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
                                          fields='parents').execute()
 
+
+
         previous_parents = ",".join(file.get('parents'))
         # Move the file to the new folder
         file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
                                             addParents=self.active_folder_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
+
+    def change_ownership_of_doc(self):
+        param_perm['value'] = new_owner
+        param_perm['type'] = 'user'
+        param_perm['role'] = 'owner'
+
+        perm_id = "09726676331034448745"
+
+        self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
+                             permissionId=perm_id,
+                             body=param_perm,
+                             transferOwnership=True).execute()
+
 
 
     # FUNCTION TO WRITE DATA TO WORKSHEET
