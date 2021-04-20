@@ -677,7 +677,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         folder_metadata = {
             'name': self.bench_id.text,
-            'mimeType': 'application/vnd.google-apps.folder'
+            'mimeType': 'application/vnd.google-apps.folder',
             'parents': self.live_measurements_id
         }
 
