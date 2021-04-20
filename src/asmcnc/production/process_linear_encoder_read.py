@@ -697,6 +697,8 @@ class ProcessLinearEncoderScreen(Screen):
         return self.drive_service.permissions().update(fileId=self.active_folder_id,
                              permissionId=perm_id,
                              body=param_perm,
+                             supportsAllDrives =True,
+                             useDomainAdminAccess=True
                              transferOwnership=True).execute()
 
 
@@ -711,11 +713,13 @@ class ProcessLinearEncoderScreen(Screen):
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
 
+        print(",".join(folder.get('parents')))
+
 
     def create_new_document(self):
         log('Creating new document')
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain')
+        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='owner')
         # self.change_ownership_of_doc()
         self.move_document_to_bench_folder()
 
