@@ -753,7 +753,7 @@ class ProcessLinearEncoderScreen(Screen):
         file_metadata = {
             'name': self.active_spreadsheet_name,
             'driveId': '0AP4p-jUUwBBrUk9PVA',
-            'parents': [{'id': self.active_folder_id}]
+            'parents': [self.active_folder_id]
         }
 
         new_file = self.drive_service.files().copy(fileId=self.master_sheet_key, body=file_metadata, supportsAllDrives=True, fields='id').execute()
