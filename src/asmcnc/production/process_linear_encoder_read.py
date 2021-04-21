@@ -678,7 +678,8 @@ class ProcessLinearEncoderScreen(Screen):
         folder_metadata = {
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
-            'parents': self.live_measurements_id
+            'driveId': '0AP4p-jUUwBBrUk9PVA',
+            'parents': [self.live_measurements_id]
         }
 
         folder = self.drive_service.files().create(body=folder_metadata,
@@ -686,13 +687,13 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
-        # CHANGE FOLDER OWVER
-        param_perm = {}
-        param_perm['value'] = 'lettie.adkins@yetitool.com'
-        # param_perm['type'] = 'user'
-        param_perm['role'] = 'owner'
+        # # CHANGE FOLDER OWVER (IMPOSSILBLE)
+        # param_perm = {}
+        # param_perm['value'] = 'lettie.adkins@yetitool.com'
+        # # param_perm['type'] = 'user'
+        # param_perm['role'] = 'owner'
 
-        perm_id = "08371608215019286311"
+        # perm_id = "08371608215019286311"
 
         # self.drive_service.permissions().update(fileId=self.active_folder_id,
         #                      permissionId=perm_id,
@@ -702,22 +703,29 @@ class ProcessLinearEncoderScreen(Screen):
         #                      transferOwnership=True).execute()
 
 
+        permissions = service.permissions().list(fileId=self.active_folder_id).execute()
+        print(permissions.get('items', []))
+
+        self.active_folder_id = folder.get('id')
+
+        print("Folder ID before gettings parents: " + st(self.active_folder_id))
+
         # Remove the API service bot's default parents, which will hopefully enable access
         folder = self.drive_service.files().get(fileId=self.active_folder_id,
                                             fields='parents').execute()
 
         previous_parents = ",".join(folder.get('parents'))
 
-        print(previous_parents)
+        print("Parents: " + previous_parents)
 
         self.active_folder_id = folder.get('id')
 
-        print(self.active_folder_id)
+        print("ID after parents: " + self.active_folder_id)
 
         # Move the file to the new folder
         folder = self.drive_service.files().update(fileId=self.active_folder_id,
-                                            addParents=self.live_measurements_id,
                                             removeParents=previous_parents,
+                                            addParents=self.live_measurements_id,
                                             fields='id, parents').execute()
 
         print(",".join(folder.get('parents')))
