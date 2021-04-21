@@ -451,16 +451,12 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                # height: self.parent.height
                 size_hint: (None, None)
-                width: 80
-                height: 80
+                size: (80,80)
                 orientation: 'horizontal'
                 padding: [29,29,10,10]
                 Button:
-                    # size_hint: (None, None)
-                    # size: (56, 56)
-                    size_hint: (1, 1)
+                    # size_hint: (1, 1)
                     disabled: False
                     background_color: hex('#FFFFFF00')
                     on_press: root.help_popup()
