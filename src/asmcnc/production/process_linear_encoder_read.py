@@ -473,12 +473,12 @@ class ProcessLinearEncoderScreen(Screen):
         elif self.go_stop.state == 'normal':
             log('Test cancelled')
             self.test_completed = False
-            if self.test_start_event != None: Clock.unschedule(self.test_start_event)
             self.end_of_test_sequence()
 
 
     def end_of_test_sequence(self):
 
+        if self.test_start_event != None: Clock.unschedule(self.test_start_event)
         if self.test_run != None: Clock.unschedule(self.test_run)
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'GO'
@@ -506,7 +506,8 @@ class ProcessLinearEncoderScreen(Screen):
 
         ## START THE TEST
         self.data_status = 'Collecting'
-        self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
+        if self.go_stop.text != 'GO':
+            self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
 
     def do_test_step(self, dt):
 
