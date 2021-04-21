@@ -251,6 +251,9 @@ class ProcessMicrometerScreen(Screen):
     DTI_initial_value_home = 0
     DTI_initial_value_far = 0
 
+    # SHARED DRIVE ID: CRITICAL TO DOING LITERALLY ANYTHING WITH THE DRIVE API
+    production_operator_drive_id = '0AP4p-jUUwBBrUk9PVA'
+
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
     master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
@@ -272,6 +275,7 @@ class ProcessMicrometerScreen(Screen):
     # STATUS FLAGS
     data_status = 'Ready'
     test_completed = False
+    test_start_event = False
 
     # READ IN VALUE
     home_dti_read = ''
@@ -279,6 +283,7 @@ class ProcessMicrometerScreen(Screen):
 
     # SET UP KIVY CLOCK EVENT OBJECTS
     poll_for_screen = None
+    test_run = None
 
     def __init__(self, **kwargs):
 
@@ -354,6 +359,10 @@ class ProcessMicrometerScreen(Screen):
             log('Looking for existing folder to send data to...')
             lookup_folder = self.drive_service.files().list(q=folder_q_str,
                                                         spaces='drive',
+                                                        includeItemsFromAllDrives=True,
+                                                        supportsAllDrives=True,
+                                                        driveId=self.production_operator_drive_id,
+                                                        corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=folder_page_token).execute()
 
@@ -379,6 +388,10 @@ class ProcessMicrometerScreen(Screen):
             log('Looking for existing file to send data to...')
             lookup_file = self.drive_service.files().list(q=file_q_str,
                                                         spaces='drive',
+                                                        includeItemsFromAllDrives=True,
+                                                        supportsAllDrives=True,
+                                                        driveId=self.production_operator_drive_id,
+                                                        corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=document_page_token).execute()
 
@@ -546,7 +559,7 @@ class ProcessMicrometerScreen(Screen):
             # allow screen to update before doing any heavy lifting...
 
             ## START THE TEST
-            Clock.schedule_once(self.initialise_test, 1)
+            self.test_start_event = Clock.schedule_once(self.initialise_test, 1)
 
 
         # TEST GETS STOPPED PREMATURELY
@@ -573,10 +586,13 @@ class ProcessMicrometerScreen(Screen):
 
         ## START THE TEST
         self.data_status = 'Collecting'
-        run_command = 'G0 G91 X' + str(self.max_pos)
-        self.m.send_any_gcode_command(run_command)
-        # Clock.schedule_once(self.start_recording_data, 0.1)
-        self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
+        if self.go_stop.text != 'GO':
+            run_command = 'G0 G91 X' + str(self.max_pos)
+            self.m.send_any_gcode_command(run_command)
+            # Clock.schedule_once(self.start_recording_data, 0.1)
+            self.test_run = Clock.schedule_interval(self.do_threshold_step, 0.02)
+        else:
+            self.end_of_test_sequence()
 
 
     def do_threshold_step(self, dt):
@@ -598,7 +614,8 @@ class ProcessMicrometerScreen(Screen):
 
     def end_of_test_sequence(self):
 
-        Clock.unschedule(self.test_run)
+        if self.test_start_event != None: Clock.unschedule(self.test_start_event)
+        if self.test_run != None: Clock.unschedule(self.test_run)
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'MEASURE'
         self.go_stop.state = 'normal'
@@ -843,48 +860,46 @@ class ProcessMicrometerScreen(Screen):
         folder_metadata = {
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
+            'driveId': self.production_operator_drive_id,
+            'parents': [self.live_measurements_id]
         }
 
-        folder = self.drive_service.files().create(body=folder_metadata,
+        folder = self.drive_service.files().create(body=folder_metadata, supportsAllDrives=True,
                                             fields='id').execute()
         self.active_folder_id = folder.get('id')
-        log('Found folder: ' + str(folder.get('id')))
-
-        # Remove the API service bot's default parents, which will hopefully enable access
-        folder = self.drive_service.files().get(fileId=self.active_folder_id,
-                                            fields='parents').execute()
-
-        previous_parents = ",".join(folder.get('parents'))
-        # Move the file to the new folder
-        folder = self.drive_service.files().update(fileId=self.active_folder_id,
-                                            addParents=self.live_measurements_id,
-                                            removeParents=previous_parents,
-                                            fields='id, parents').execute()
-
+        log('Created new folder: ' + str(folder.get('id')))
 
     def create_new_document(self):
-        log('Creating new document')
-        self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True)
-        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-        self.move_document_to_bench_folder()
 
+        log('Creating new document: ')
 
-    def move_document_to_bench_folder(self):
+        file_metadata = {
+            'name': self.active_spreadsheet_name,
+            'driveId': self.production_operator_drive_id,
+            'parents': [self.active_folder_id]
+        }
 
-        log("Moving document to production > operator resources > live measurements > [serial_number]")
+        new_file = self.drive_service.files().copy(fileId=self.master_sheet_key, body=file_metadata, supportsAllDrives=True, fields='id').execute()
+        self.active_spreadsheet_id = str(new_file.get('id'))
+        log("Created: " + self.active_spreadsheet_id)
+        self.active_spreadsheet_object = self.gsheet_client.open_by_key(self.active_spreadsheet_id)
 
-        # Take the file ID and move it into the folder for the bench (named by serial number)
+    # def move_document_to_bench_folder(self):
 
-        # Retrieve the existing parents to remove
-        file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
-                                         fields='parents').execute()
+    #     log("Moving document to production > operator resources > live measurements > [serial_number]")
 
-        previous_parents = ",".join(file.get('parents'))
-        # Move the file to the new folder
-        file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.active_folder_id,
-                                            removeParents=previous_parents,
-                                            fields='id, parents').execute()
+    #     # Take the file ID and move it into the folder for the bench (named by serial number)
+
+    #     # Retrieve the existing parents to remove
+    #     file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
+    #                                      fields='parents').execute()
+
+    #     previous_parents = ",".join(file.get('parents'))
+    #     # Move the file to the new folder
+    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
+    #                                         addParents=self.active_folder_id,
+    #                                         removeParents=previous_parents,
+    #                                         fields='id, parents').execute()
 
     # FUNCTION TO WRITE DATA TO WORKSHEET
     def write_to_worksheet(self):
