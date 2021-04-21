@@ -332,9 +332,11 @@ class LocalFileChooser(Screen):
         except:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+            self.filename_selected_label_text = ""
             
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
+            self.filename_selected_label_text = ""
 
         self.filechooser._update_files()
 
