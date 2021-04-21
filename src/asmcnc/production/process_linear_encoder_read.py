@@ -255,7 +255,7 @@ class ProcessLinearEncoderScreen(Screen):
     active_folder_id = ''
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
-    active_spreadsheet_id  ''
+    active_spreadsheet_id = ''
 
     # STATUS FLAGS
     data_status = 'Ready'
