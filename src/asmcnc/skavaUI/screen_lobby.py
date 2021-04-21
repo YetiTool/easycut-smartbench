@@ -451,19 +451,29 @@ Builder.load_string("""
                             allow_stretch: True
 
             BoxLayout:
-                height: self.parent.height
-                size_hint_x: None
+                # height: self.parent.height
+                size_hint: (None, None)
                 width: 80
+                height: 80
                 orientation: 'horizontal'
-                padding: [14,0,10,10]
+                padding: [29,29,10,10]
                 Button:
-                    size_hint: (None, None)
-                    size: (56, 56)
+                    # size_hint: (None, None)
+                    # size: (56, 56)
+                    size_hint: (1, 1)
                     disabled: False
-                    background_normal: "./asmcnc/skavaUI/img/lobby_help.png"
-                    background_down: "./asmcnc/skavaUI/img/lobby_help.png"
-                    border: [dp(10)]*4
+                    background_color: hex('#FFFFFF00')
                     on_press: root.help_popup()
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_select
+                            source: "./asmcnc/skavaUI/img/lobby_help.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
                 
 """)
 
