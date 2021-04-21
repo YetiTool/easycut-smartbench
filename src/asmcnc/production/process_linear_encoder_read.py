@@ -708,7 +708,7 @@ class ProcessLinearEncoderScreen(Screen):
 
         self.active_folder_id = folder.get('id')
 
-        print("Folder ID before gettings parents: " + st(self.active_folder_id))
+        print("Folder ID before gettings parents: " + str(self.active_folder_id))
 
         # Remove the API service bot's default parents, which will hopefully enable access
         folder = self.drive_service.files().get(fileId=self.active_folder_id,
