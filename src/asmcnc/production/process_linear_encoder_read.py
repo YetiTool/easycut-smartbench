@@ -242,6 +242,9 @@ class ProcessLinearEncoderScreen(Screen):
     starting_pos = 0
     max_pos = 0
 
+    # SHARED DRIVE ID: CRITICAL TO DOING LITERALLY ANYTHING WITH THE DRIVE API
+    production_operator_drive_id = '0AP4p-jUUwBBrUk9PVA'
+
     # TEMPLATE SHEET THAT SHEET FORMAT IS COPIED FROM
     master_sheet_key = '1y1Rq29icpISFIGvaygeI-jye40V_g5lE2NIVgMf_cI8'
 
@@ -364,6 +367,9 @@ class ProcessLinearEncoderScreen(Screen):
             log('Looking for existing folder to send data to...')
             lookup_folder = self.drive_service.files().list(q=folder_q_str,
                                                         spaces='drive',
+                                                        driveId=self.production_operator_drive_id,
+                                                        supportsAllDrives=True,
+                                                        corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=folder_page_token).execute()
 
@@ -389,6 +395,9 @@ class ProcessLinearEncoderScreen(Screen):
             log('Looking for existing file to send data to...')
             lookup_file = self.drive_service.files().list(q=file_q_str,
                                                         spaces='drive',
+                                                        driveId=self.production_operator_drive_id,
+                                                        supportsAllDrives=True,
+                                                        corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=document_page_token).execute()
 
@@ -679,7 +688,7 @@ class ProcessLinearEncoderScreen(Screen):
         folder_metadata = {
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
-            'driveId': '0AP4p-jUUwBBrUk9PVA',
+            'driveId': self.production_operator_drive_id,
             'parents': [self.live_measurements_id]
         }
 
@@ -688,77 +697,18 @@ class ProcessLinearEncoderScreen(Screen):
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
 
-        # # CHANGE FOLDER OWVER (IMPOSSILBLE)
-        # param_perm = {}
-        # param_perm['value'] = 'lettie.adkins@yetitool.com'
-        # # param_perm['type'] = 'user'
-        # param_perm['role'] = 'owner'
-
-        # perm_id = "08371608215019286311"
-
-        # self.drive_service.permissions().update(fileId=self.active_folder_id,
-        #                      permissionId=perm_id,
-        #                      body=param_perm,
-        #                      supportsAllDrives =True,
-        #                      useDomainAdminAccess=True,
-        #                      transferOwnership=True).execute()
-
-
-        # permissions = service.permissions().list(fileId=self.active_folder_id).execute()
-        # print(permissions.get('items', []))
-
-        # self.active_folder_id = folder.get('id')
-
-        # print("Folder ID before gettings parents: " + str(self.active_folder_id))
-
-        # # Remove the API service bot's default parents, which will hopefully enable access
-        # folder = self.drive_service.files().get(fileId=self.active_folder_id,
-        #                                     fields='parents').execute()
-
-        # previous_parents = ",".join(folder.get('parents'))
-
-        # print("Parents: " + previous_parents)
-
-        # self.active_folder_id = folder.get('id')
-
-        # print("ID after parents: " + self.active_folder_id)
-
-        # # Move the file to the new folder
-        # folder = self.drive_service.files().update(fileId=self.active_folder_id,
-        #                                     removeParents=previous_parents,
-        #                                     addParents=self.live_measurements_id,
-        #                                     fields='id, parents').execute()
-
-        # print(",".join(folder.get('parents')))
-
-        # self.active_folder_id = folder.get('id')
-        # log('ID IS STILL: ' + str(folder.get('id')))
-
     def create_new_document(self):
-        log('Creating new document')
-
-
-        # test_object = self.gsheet_client.create(title="Test", folder_id=self.active_folder_id)
-        # print(test_object.id)
-
-
-        # # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True) # change permissions I think
-        # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions=False, folder_id=self.active_folder_id)
-        # self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-        # print("New file: " + str(self.active_spreadsheet_object.id))
-        # # self.change_ownership_of_doc()
-        # # self.move_document_to_bench_folder()
-
+        log('Creating new document: ')
 
         file_metadata = {
             'name': self.active_spreadsheet_name,
-            'driveId': '0AP4p-jUUwBBrUk9PVA',
+            'driveId': self.production_operator_drive_id,
             'parents': [self.active_folder_id]
         }
 
         new_file = self.drive_service.files().copy(fileId=self.master_sheet_key, body=file_metadata, supportsAllDrives=True, fields='id').execute()
         self.active_spreadsheet_id = str(new_file.get('id'))
-        print(self.active_spreadsheet_id)
+        log("Created: " self.active_spreadsheet_id)
         self.active_spreadsheet_object = self.gsheet_client.open_by_key(self.active_spreadsheet_id)
 
     def move_document_to_bench_folder(self):
@@ -779,22 +729,6 @@ class ProcessLinearEncoderScreen(Screen):
                                             addParents=self.active_folder_id,
                                             removeParents=previous_parents,
                                             fields='id, parents').execute()
-
-    def change_ownership_of_doc(self):
-        # CHANGE FOLDER OWVER
-        param_perm = {}
-        param_perm['value'] = 'lettie.adkins@yetitool.com'
-        # param_perm['type'] = 'user'
-        param_perm['role'] = 'owner'
-
-        perm_id = "08371608215019286311"
-
-        return self.drive_service.permissions().update(fileId=self.active_spreadsheet_object.id,
-                             permissionId=perm_id,
-                             body=param_perm,
-                             supportsAllDrives =True,
-                             # useDomainAdminAccess=True,
-                             transferOwnership=True).execute()
 
 
 
