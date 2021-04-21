@@ -682,7 +682,7 @@ class ProcessLinearEncoderScreen(Screen):
             'parents': [self.live_measurements_id]
         }
 
-        folder = self.drive_service.files().create(body=folder_metadata, supportsAllDrives=True
+        folder = self.drive_service.files().create(body=folder_metadata, supportsAllDrives=True,
                                             fields='id').execute()
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
