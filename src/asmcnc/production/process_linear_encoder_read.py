@@ -679,10 +679,10 @@ class ProcessLinearEncoderScreen(Screen):
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
             'driveId': '0AP4p-jUUwBBrUk9PVA',
-            # 'parents': [self.live_measurements_id]
+            'parents': [self.live_measurements_id]
         }
 
-        folder = self.drive_service.files().create(body=folder_metadata,
+        folder = self.drive_service.files().create(body=folder_metadata, supportsAllDrives=True
                                             fields='id').execute()
         self.active_folder_id = folder.get('id')
         log('Created new folder: ' + str(folder.get('id')))
