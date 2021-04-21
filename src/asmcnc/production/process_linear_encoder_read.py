@@ -255,6 +255,7 @@ class ProcessLinearEncoderScreen(Screen):
     active_folder_id = ''
     active_spreadsheet_object = None
     active_spreadsheet_name = ''
+    active_spreadsheet_id  ''
 
     # STATUS FLAGS
     data_status = 'Ready'
@@ -737,17 +738,28 @@ class ProcessLinearEncoderScreen(Screen):
         log('Creating new document')
 
 
-        test_object = self.gsheet_client.create(title="Test", folder_id=self.active_folder_id)
-        print(test_object.id)
+        # test_object = self.gsheet_client.create(title="Test", folder_id=self.active_folder_id)
+        # print(test_object.id)
 
 
-        # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True) # change permissions I think
-        self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions=False, folder_id=self.active_folder_id)
-        self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
-        print("New file: " + str(self.active_spreadsheet_object.id))
-        # self.change_ownership_of_doc()
-        # self.move_document_to_bench_folder()
+        # # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True) # change permissions I think
+        # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions=False, folder_id=self.active_folder_id)
+        # self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
+        # print("New file: " + str(self.active_spreadsheet_object.id))
+        # # self.change_ownership_of_doc()
+        # # self.move_document_to_bench_folder()
 
+
+        file_metadata = {
+            'name': self.active_spreadsheet_name,
+            'driveId': '0AP4p-jUUwBBrUk9PVA',
+            'parents': [{'id': self.active_folder_id}]
+        }
+
+        new_file = self.drive_service.files().copy(fileId=self.master_sheet_key, body=file_metadata, supportsAllDrives=True, fields='id').execute()
+        self.active_spreadsheet_id = str(new_file.get('id'))
+        print(self.active_spreadsheet_id)
+        self.active_spreadsheet_object = self.gsheet_client.open_by_key(self.active_spreadsheet_id)
 
     def move_document_to_bench_folder(self):
 
