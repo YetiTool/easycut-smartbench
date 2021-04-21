@@ -703,8 +703,8 @@ class ProcessLinearEncoderScreen(Screen):
         #                      transferOwnership=True).execute()
 
 
-        permissions = service.permissions().list(fileId=self.active_folder_id).execute()
-        print(permissions.get('items', []))
+        # permissions = service.permissions().list(fileId=self.active_folder_id).execute()
+        # print(permissions.get('items', []))
 
         self.active_folder_id = folder.get('id')
 
