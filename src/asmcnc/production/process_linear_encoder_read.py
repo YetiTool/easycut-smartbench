@@ -575,6 +575,7 @@ class ProcessLinearEncoderScreen(Screen):
         # screen needs to be updated before sending data
         # as data sending is an intensive process and locks up kivy
         self.data_status = 'Sending'
+        self.go_stop.disabled = True
         self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
         # start main data sending processes after 2 seconds
@@ -807,6 +808,7 @@ class ProcessLinearEncoderScreen(Screen):
         self.go_stop.state = 'normal'
         self.go_stop.text = 'GO'
         self.go_stop.background_color = [0,0.502,0,1]
+        self.go_stop.disabled = False
 
 
     def delete_existing_spreadsheet_data(self, worksheet_name):
