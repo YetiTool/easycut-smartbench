@@ -456,7 +456,6 @@ Builder.load_string("""
                 orientation: 'horizontal'
                 padding: [29,29,10,10]
                 Button:
-                    # size_hint: (1, 1)
                     disabled: False
                     background_color: hex('#FFFFFF00')
                     on_press: root.help_popup()
