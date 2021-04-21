@@ -735,6 +735,12 @@ class ProcessLinearEncoderScreen(Screen):
 
     def create_new_document(self):
         log('Creating new document')
+
+
+        test_object = self.gsheet_client.create(title="Test", folder_id=self.active_folder_id)
+        print(test_object.id)
+
+
         # self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions = True) # change permissions I think
         self.active_spreadsheet_object = self.gsheet_client.copy(self.master_sheet_key, title = self.active_spreadsheet_name, copy_permissions=False, folder_id=self.active_folder_id)
         self.active_spreadsheet_object.share('yetitool.com', perm_type='domain', role='writer')
