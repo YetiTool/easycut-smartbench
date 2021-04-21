@@ -368,6 +368,7 @@ class LocalFileChooser(Screen):
         if os.path.isfile(filename):
             try: 
                 os.remove(filename)
+                self.filename_selected_label_text = ""
                 
             except: 
                 print "attempt to delete folder, or undeletable file"
@@ -380,6 +381,7 @@ class LocalFileChooser(Screen):
             for file in files_in_cache:
                 try: 
                     os.remove(job_cache_dir+file)
+                    self.filename_selected_label_text = ""
 
                 except: 
                     print "attempt to delete folder, or undeletable file"
