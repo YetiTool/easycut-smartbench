@@ -679,7 +679,7 @@ class ProcessLinearEncoderScreen(Screen):
             'name': self.bench_id.text,
             'mimeType': 'application/vnd.google-apps.folder',
             'driveId': '0AP4p-jUUwBBrUk9PVA',
-            'parents': [self.live_measurements_id]
+            # 'parents': [self.live_measurements_id]
         }
 
         folder = self.drive_service.files().create(body=folder_metadata,
