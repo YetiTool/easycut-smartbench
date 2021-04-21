@@ -375,8 +375,9 @@ class ProcessLinearEncoderScreen(Screen):
             log('Looking for existing folder to send data to...')
             lookup_folder = self.drive_service.files().list(q=folder_q_str,
                                                         spaces='drive',
-                                                        driveId=self.production_operator_drive_id,
+                                                        includeItemsFromAllDrives=True,
                                                         supportsAllDrives=True,
+                                                        driveId=self.production_operator_drive_id,
                                                         corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=folder_page_token).execute()
@@ -403,8 +404,9 @@ class ProcessLinearEncoderScreen(Screen):
             log('Looking for existing file to send data to...')
             lookup_file = self.drive_service.files().list(q=file_q_str,
                                                         spaces='drive',
-                                                        driveId=self.production_operator_drive_id,
+                                                        includeItemsFromAllDrives=True,
                                                         supportsAllDrives=True,
+                                                        driveId=self.production_operator_drive_id,
                                                         corpora='drive',
                                                         fields='nextPageToken, files(id, name)',
                                                         pageToken=document_page_token).execute()
