@@ -47,22 +47,22 @@ Builder.load_string("""
             padding: [10, 10, 734, 0]
             orientation: 'horizontal'
 
-            Button:
-                id: shutdown_button
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_press: root.shutdown_console()
+            # Button:
+            #     id: shutdown_button
+            #     size_hint_y: 1
+            #     background_color: hex('#FFFFFF00')
+            #     on_press: root.shutdown_console()
 
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_select
-                        source: "./asmcnc/skavaUI/img/shutdown.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+            #     BoxLayout:
+            #         size: self.parent.size
+            #         pos: self.parent.pos
+            #         Image:
+            #             id: image_select
+            #             source: "./asmcnc/skavaUI/img/shutdown.png"
+            #             center_x: self.parent.center_x
+            #             y: self.parent.y
+            #             size: self.parent.width, self.parent.height
+            #             allow_stretch: True 
 
         Carousel:
             size_hint_y: 270
@@ -354,80 +354,116 @@ Builder.load_string("""
             Image:
                 source: "./asmcnc/skavaUI/img/lobby_separator.png"
 
-
         BoxLayout:
             size_hint_y: 134
-            size: self.parent.size
-            pos: self.parent.pos
-            padding: 40
             orientation: 'horizontal'
-            
-            Button:
-                disabled: False
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    carousel.load_previous()
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFF00')
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_cancel
-                        source: "./asmcnc/skavaUI/img/lobby_scrollleft.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
-            Label:
-                size_hint_y: 1
 
-            Button:
-                disabled: False
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    root.help_popup()
-                    self.background_color = hex('#FFFFFF00')
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_cancel
-                        source: "./asmcnc/skavaUI/img/lobby_help.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+            BoxLayout:
+                size_hint_x: None
+                width: 720
+                height: self.parent.height
+                # size: self.parent.size
+                # pos: self.parent.pos
+                padding: [80, 40, 0, 40]
+                orientation: 'horizontal'
+                
+                Button:
+                    disabled: False
+                    size_hint_y: 1
+                    background_color: hex('#FFFFFF00')
+                    on_release: 
+                        carousel.load_previous()
+                        self.background_color = hex('#FFFFFF00')
+                    on_press:
+                        self.background_color = hex('#FFFFFF00')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_cancel
+                            source: "./asmcnc/skavaUI/img/lobby_scrollleft.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True 
+                Label:
+                    size_hint_y: 0.8
 
-            Label:
-                size_hint_y: 1
+                # Button:
+                #     disabled: False
+                #     size_hint_y: 1
+                #     background_color: hex('#FFFFFF00')
+                #     on_release: 
+                #         self.background_color = hex('#FFFFFF00')
+                #     on_press:
+                #         root.help_popup()
+                #         self.background_color = hex('#FFFFFF00')
+                #     BoxLayout:
+                #         size: self.parent.size
+                #         pos: self.parent.pos
+                #         Image:
+                #             id: image_cancel
+                #             source: "./asmcnc/skavaUI/img/lobby_help.png"
+                #             center_x: self.parent.center_x
+                #             y: self.parent.y
+                #             size: self.parent.width, self.parent.height
+                #             allow_stretch: True 
 
-            Button:
-                id: load_button
-                disabled: False
-                size_hint_y: 1
-                background_color: hex('#FFFFFF00')
-                on_release: 
-                    carousel.load_next(mode='next')
-                    self.background_color = hex('#FFFFFF00')
-                on_press:
-                    self.background_color = hex('#FFFFFF00')
-                BoxLayout:
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        id: image_select
-                        source: "./asmcnc/skavaUI/img/lobby_scrollright.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True 
+                Button:
+                    id: shutdown_button
+                    size_hint_y: 1
+                    background_color: hex('#FFFFFF00')
+                    on_press: root.shutdown_console()
 
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_select
+                            source: "./asmcnc/skavaUI/img/shutdown.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+                Label:
+                    size_hint_y: 0.8
+
+                Button:
+                    id: load_button
+                    disabled: False
+                    size_hint_y: 1
+                    background_color: hex('#FFFFFF00')
+                    on_release: 
+                        carousel.load_next(mode='next')
+                        self.background_color = hex('#FFFFFF00')
+                    on_press:
+                        self.background_color = hex('#FFFFFF00')
+                    BoxLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            id: image_select
+                            source: "./asmcnc/skavaUI/img/lobby_scrollright.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+            BoxLayout:
+                height: self.parent.height
+                size_hint_x: None
+                width: 80
+                orientation: 'horizontal'
+                padding: [14,0,10,10]
+                Button:
+                    size_hint: (None, None)
+                    size: (56, 56)
+                    disabled: False
+                    background_normal: "./asmcnc/skavaUI/img/lobby_help.png"
+                    background_down: "./asmcnc/skavaUI/img/lobby_help.png"
+                    border: [dp(10)]*4
+                    on_press: root.help_popup()
                 
 """)
 
