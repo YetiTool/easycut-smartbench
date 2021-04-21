@@ -263,6 +263,7 @@ class ProcessLinearEncoderScreen(Screen):
     # STATUS FLAGS
     data_status = 'Ready'
     test_completed = False
+    test_start_event = False
 
     # READ IN VALUES
     H_read = ''
@@ -462,7 +463,7 @@ class ProcessLinearEncoderScreen(Screen):
 
 
             ## START THE TEST
-            Clock.schedule_once(self.initialise_test, 1)
+            self.test_start_event = Clock.schedule_once(self.initialise_test, 1)
 
             # self.generate_test_id()
             # self.data_status = 'Collecting'
@@ -472,6 +473,7 @@ class ProcessLinearEncoderScreen(Screen):
         elif self.go_stop.state == 'normal':
             log('Test cancelled')
             self.test_completed = False
+            if self.test_start_event != None: Clock.unschedule(self.test_start_event)
             self.end_of_test_sequence()
 
 
