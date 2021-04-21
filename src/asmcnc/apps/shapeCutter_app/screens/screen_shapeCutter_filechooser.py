@@ -179,7 +179,7 @@ class SCFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        self.filechooser._update_item_selection()
+        self.filechooser_sc_params._update_item_selection()
 
         try:
             if self.filechooser_sc_params.selection[0] != 'C':
@@ -226,7 +226,7 @@ class SCFileChooser(Screen):
     def delete_selected(self, filename):
         if os.path.isfile(filename):
             os.remove(filename)
-            self.filechooser.selection = []
+            self.filechooser_sc_params.selection = []
             Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
           
     def delete_all(self):
@@ -235,7 +235,7 @@ class SCFileChooser(Screen):
         if files_in_cache:
             for file in files_in_cache:
                 os.remove(parameter_file_dir+file)
-                self.filechooser.selection = []
+                self.filechooser_sc_params.selection = []
         self.refresh_filechooser()       
 
 
