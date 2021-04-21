@@ -706,32 +706,32 @@ class ProcessLinearEncoderScreen(Screen):
         # permissions = service.permissions().list(fileId=self.active_folder_id).execute()
         # print(permissions.get('items', []))
 
-        self.active_folder_id = folder.get('id')
+        # self.active_folder_id = folder.get('id')
 
-        print("Folder ID before gettings parents: " + str(self.active_folder_id))
+        # print("Folder ID before gettings parents: " + str(self.active_folder_id))
 
-        # Remove the API service bot's default parents, which will hopefully enable access
-        folder = self.drive_service.files().get(fileId=self.active_folder_id,
-                                            fields='parents').execute()
+        # # Remove the API service bot's default parents, which will hopefully enable access
+        # folder = self.drive_service.files().get(fileId=self.active_folder_id,
+        #                                     fields='parents').execute()
 
-        previous_parents = ",".join(folder.get('parents'))
+        # previous_parents = ",".join(folder.get('parents'))
 
-        print("Parents: " + previous_parents)
+        # print("Parents: " + previous_parents)
 
-        self.active_folder_id = folder.get('id')
+        # self.active_folder_id = folder.get('id')
 
-        print("ID after parents: " + self.active_folder_id)
+        # print("ID after parents: " + self.active_folder_id)
 
-        # Move the file to the new folder
-        folder = self.drive_service.files().update(fileId=self.active_folder_id,
-                                            removeParents=previous_parents,
-                                            addParents=self.live_measurements_id,
-                                            fields='id, parents').execute()
+        # # Move the file to the new folder
+        # folder = self.drive_service.files().update(fileId=self.active_folder_id,
+        #                                     removeParents=previous_parents,
+        #                                     addParents=self.live_measurements_id,
+        #                                     fields='id, parents').execute()
 
-        print(",".join(folder.get('parents')))
+        # print(",".join(folder.get('parents')))
 
-        self.active_folder_id = folder.get('id')
-        log('ID IS STILL: ' + str(folder.get('id')))
+        # self.active_folder_id = folder.get('id')
+        # log('ID IS STILL: ' + str(folder.get('id')))
 
     def create_new_document(self):
         log('Creating new document')
