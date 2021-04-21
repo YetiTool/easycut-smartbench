@@ -270,6 +270,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     # SET UP KIVY CLOCK EVENT OBJECTS
     poll_for_screen = None
+    test_run = None
 
     # FUNCTION COUNTERS
     generate_test_id_counter = 0
@@ -476,7 +477,7 @@ class ProcessLinearEncoderScreen(Screen):
 
     def end_of_test_sequence(self):
 
-        Clock.unschedule(self.test_run)
+        if self.test_run != None: Clock.unschedule(self.test_run)
         self.go_stop.background_color = [0,0.502,0,1]
         self.go_stop.text = 'GO'
         self.go_stop.state = 'normal'
