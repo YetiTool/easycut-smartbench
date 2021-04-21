@@ -335,24 +335,30 @@ class ProcessLinearEncoderScreen(Screen):
 
         self.generate_test_id_counter =+ 1
 
-        try: 
-            if self.look_for_existing_folder():
-                self.look_for_existing_file()
-            else:
-                self.test_id.text = "1"
-            self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+        if self.look_for_existing_folder():
+            self.look_for_existing_file()
+        else:
+            self.test_id.text = "1"
+        self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
 
-        except:
-            log('Failed to get sheet ID and open it, trying again in 30 seconds.')
+        # try: 
+            # if self.look_for_existing_folder():
+            #     self.look_for_existing_file()
+            # else:
+            #     self.test_id.text = "1"
+            # self.active_spreadsheet_name = self.bench_id.text + ' - ' + str(self.test_id.text)
+
+        # except:
+        #     log('Failed to get sheet ID and open it, trying again in 30 seconds.')
             
-            if self.generate_test_id_counter > 3:
-                sleep(15)
-                self.generate_test_id()
+        #     if self.generate_test_id_counter > 3:
+        #         sleep(15)
+        #         self.generate_test_id()
 
-            else: 
-                self.go_stop.state = 'normal'
-                self.run_stop_test()
-                self.data_status = "Check connection"
+        #     else: 
+        #         self.go_stop.state = 'normal'
+        #         self.run_stop_test()
+        #         self.data_status = "Check connection"
 
 
     def look_for_existing_folder(self):
