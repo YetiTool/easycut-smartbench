@@ -508,6 +508,8 @@ class ProcessLinearEncoderScreen(Screen):
         self.data_status = 'Collecting'
         if self.go_stop.text != 'GO':
             self.test_run = Clock.schedule_interval(self.do_test_step, self.POLL_TIME)
+        else:
+            self.end_of_test_sequence()
 
     def do_test_step(self, dt):
 
