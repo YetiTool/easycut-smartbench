@@ -708,27 +708,27 @@ class ProcessLinearEncoderScreen(Screen):
 
         new_file = self.drive_service.files().copy(fileId=self.master_sheet_key, body=file_metadata, supportsAllDrives=True, fields='id').execute()
         self.active_spreadsheet_id = str(new_file.get('id'))
-        log("Created: " self.active_spreadsheet_id)
+        log("Created: " + self.active_spreadsheet_id)
         self.active_spreadsheet_object = self.gsheet_client.open_by_key(self.active_spreadsheet_id)
 
-    def move_document_to_bench_folder(self):
+    # def move_document_to_bench_folder(self):
 
-        log("Moving document to production > operator resources > live measurements > [serial_number]")
+    #     log("Moving document to production > operator resources > live measurements > [serial_number]")
 
-        # Take the file ID and move it into the folder for the bench (named by serial number)
+    #     # Take the file ID and move it into the folder for the bench (named by serial number)
 
-        # Retrieve the existing parents to remove
-        file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
-                                         fields='parents').execute()
+    #     # Retrieve the existing parents to remove
+    #     file = self.drive_service.files().get(fileId=self.active_spreadsheet_object.id,
+    #                                      fields='parents').execute()
 
 
 
-        previous_parents = ",".join(file.get('parents'))
-        # Move the file to the new folder
-        file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
-                                            addParents=self.active_folder_id,
-                                            removeParents=previous_parents,
-                                            fields='id, parents').execute()
+    #     previous_parents = ",".join(file.get('parents'))
+    #     # Move the file to the new folder
+    #     file = self.drive_service.files().update(fileId=self.active_spreadsheet_object.id,
+    #                                         addParents=self.active_folder_id,
+    #                                         removeParents=previous_parents,
+    #                                         fields='id, parents').execute()
 
 
 
