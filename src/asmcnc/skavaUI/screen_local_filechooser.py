@@ -304,12 +304,6 @@ class LocalFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        print(str(self.filechooser.selection))
-
-        self.filechooser._update_item_selection()
-
-        print(str(self.filechooser.selection))
-
         try:
             if self.filechooser.selection[0] != 'C':
 
