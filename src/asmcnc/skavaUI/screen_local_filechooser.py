@@ -304,6 +304,8 @@ class LocalFileChooser(Screen):
 
     def refresh_filechooser(self):
 
+        self.filechooser._update_item_selection()
+
         try:
             if self.filechooser.selection[0] != 'C':
 
@@ -330,9 +332,11 @@ class LocalFileChooser(Screen):
         except:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+            self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
             
             self.delete_selected_button.disabled = True
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
+            self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
 
         self.filechooser._update_files()
 
@@ -368,6 +372,7 @@ class LocalFileChooser(Screen):
         if os.path.isfile(filename):
             try: 
                 os.remove(filename)
+                self.filechooser.selection = []
                 
             except: 
                 print "attempt to delete folder, or undeletable file"
@@ -380,6 +385,7 @@ class LocalFileChooser(Screen):
             for file in files_in_cache:
                 try: 
                     os.remove(job_cache_dir+file)
+                    self.filechooser.selection = []
 
                 except: 
                     print "attempt to delete folder, or undeletable file"
