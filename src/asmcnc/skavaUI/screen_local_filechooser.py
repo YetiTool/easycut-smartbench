@@ -41,6 +41,7 @@ Builder.load_string("""
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
+    image_view : image_view
     image_usb:image_usb
     image_delete:image_delete
     image_delete_all:image_delete_all
@@ -110,22 +111,15 @@ Builder.load_string("""
 
             ToggleButton:
                 id: toggle_view_button
-                # disabled: True
                 size_hint_x: 1
                 on_press: root.switch_view()
-                # background_color: hex('#FFFFFF00')
-                # on_release: 
-                #     self.background_color = hex('#FFFFFF00')
-                # on_press:
-                #     root.open_USB()
-                #     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        id: image_usb
-                        source: "./asmcnc/skavaUI/img/file_select_usb_disabled.png"
+                        id: image_view
+                        source: ".asmcnc/skavaUI/img/file_select_icon_view.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -324,9 +318,11 @@ class LocalFileChooser(Screen):
 
         if self.toggle_view_button.state == "normal":
             self.filechooser.view_mode = 'icon'
+            self.image_view.source = ".asmcnc/skavaUI/img/file_select_icon_view.png"
 
         elif self.toggle_view_button.state == "down":
             self.filechooser.view_mode = 'list'
+            self.image_view.source = ".asmcnc/skavaUI/img/file_select_list_view.png"
 
     def open_USB(self):
 
