@@ -101,6 +101,8 @@ Builder.load_string("""
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: 
                     root.refresh_filechooser()
+                FileChooserIconLayout
+                FileChooserListLayout
                
 
         BoxLayout:
@@ -322,10 +324,10 @@ class LocalFileChooser(Screen):
     def switch_view(self):
 
         if self.toggle_view_button.state == "normal":
-            self.filechooser.view_mode = "icon"
+            self.filechooser.view_mode = 'icon'
 
         elif self.toggle_view_button.state == "down":
-            self.filechooser.view_mode = "list"
+            self.filechooser.view_mode = 'list'
 
     def open_USB(self):
 
