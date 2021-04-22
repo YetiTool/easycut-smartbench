@@ -107,24 +107,14 @@ class SerialConnection(object):
         else:
             try:
                 filesForDevice = listdir('/dev/') # put all device files into list[]
-                for line in filesForDevice: # run through all files
 
-                    # FLAG: This if statement is only relevant in linux environment. 
-                    # FORCE USB CONNECTION
-                    if (line[:4] == 'ttyS'): # look for... or line[:6] == 'ttyACM')
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                straightness_port = "ttyACM0"
+                machine_port = "ttyS0"
 
-                    # elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
-                    
-                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                    #     return True
-                        
-                    elif (line[:12] == 'tty.usbmodem'): # look for...   
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                if straightness_port in filesForDevice: devicePort = straightness_port
+                else: devicePort = machine_port
+
+                self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
