@@ -33,9 +33,10 @@ Builder.load_string("""
 
     on_enter: root.refresh_filechooser()
 
-    # filechooser:filechooser
-    filechooser_list : filechooser_list
-    filechooser_icon : filechooser_icon
+    filechooser:filechooser
+    # filechooser_list : filechooser_list
+    # filechooser_icon : filechooser_icon
+    toggle_view_button : toggle_view_button
     button_usb:button_usb
     load_button:load_button
     delete_selected_button:delete_selected_button
@@ -92,32 +93,42 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'
 
-            BoxLayout:
-                orientation: 'horizontal'
+            FileChooser:
+                id: filechooser
                 size_hint_y: 5
-                            
-                FileChooserListView:
-                    padding: [0,10]
-                    id: filechooser_list
-                    rootpath: './jobCache/'
-                    show_hidden: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                    on_selection: 
-                        root.use_filechooser_list()
-
-                FileChooserIconView:
-                    padding: [0,10]
-                    id: filechooser_icon
-                    rootpath: './jobCache/'
-                    show_hidden: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                    on_selection: 
-                        root.use_filechooser_icon()
+                rootpath: './jobCache/'
+                show_hidden: False
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                on_selection: 
+                    root.refresh_filechooser()
                
 
         BoxLayout:
             size_hint_y: None
             height: 100
+
+            ToggleButton:
+                id: toggle_view_button
+                # disabled: True
+                size_hint_x: 1
+                on_press: root.switch_view()
+                # background_color: hex('#FFFFFF00')
+                # on_release: 
+                #     self.background_color = hex('#FFFFFF00')
+                # on_press:
+                #     root.open_USB()
+                #     self.background_color = hex('#FFFFFFFF')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_usb
+                        source: "./asmcnc/skavaUI/img/file_select_usb_disabled.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True 
 
             Button:
                 id: button_usb
@@ -148,7 +159,7 @@ Builder.load_string("""
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     root.get_FTP_files()
-                    root.refresh_filechooser() 
+                    root.refresh_filechooser([]) 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -308,32 +319,33 @@ class LocalFileChooser(Screen):
             self.sm.get_screen('loading').usb_status = None
             self.sm.get_screen('loading').usb_status_label.opacity = 0
 
+    def switch_view(self):
+
+        if self.toggle_view_button.state == "normal":
+            self.filechooser.view_mode = "icon"
+
+        elif self.toggle_view_button.state == "down":
+            self.filechooser.view_mode = "list"
+
     def open_USB(self):
 
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
         self.manager.current = 'usb_filechooser'
-        
 
-    def use_filechooser_icon(self):
-        self.refresh_filechooser(self.filechooser_icon.selection[0])
+    def refresh_filechooser(self):
 
-    def use_filechooser_list(self):
-        self.refresh_filechooser(self.filechooser_list.selection[0])
-
-    def refresh_filechooser(self, selection):
-
-        self.filechooser_list._update_item_selection()
-        self.filechooser_icon._update_item_selection()
+        self.filechooser._update_item_selection()
+        self.filechooser._update_item_selection()
 
         try:
             if selection != 'C':
 
                 # display file selected in the filename display label
                 if sys.platform == 'win32':
-                    self.filename_selected_label_text = selection.split("\\")[-1]
+                    self.filename_selected_label_text = self.filechooser.selection[0].split("\\")[-1]
                 else:
-                    self.filename_selected_label_text = selection.split("/")[-1]
+                    self.filename_selected_label_text = self.filechooser.selection[0].split("/")[-1]
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -358,8 +370,8 @@ class LocalFileChooser(Screen):
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
             self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
 
-        self.filechooser_list._update_files()
-        self.filechooser_icon._update_files()
+        self.filechooser._update_files()
+        self.filechooser._update_files()
 
     
     def get_FTP_files(self):
