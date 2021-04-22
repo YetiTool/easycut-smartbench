@@ -73,7 +73,7 @@ Builder.load_string("""
             halign: 'center'                
 
 
-        FileChooserIconView:
+        FileChooser:
             padding: [0,10]
             size_hint_y: 5
             id: filechooser_usb
