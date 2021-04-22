@@ -199,6 +199,7 @@ class USBFileChooser(Screen):
         self.refresh_filechooser()
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.update_usb_status()
+        self.switch_view()
         
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
