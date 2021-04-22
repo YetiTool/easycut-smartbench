@@ -33,7 +33,9 @@ Builder.load_string("""
 
     on_enter: root.refresh_filechooser()
 
-    filechooser:filechooser
+    # filechooser:filechooser
+    filechooser_list : filechooser_list
+    filechooser_icon : filechooser_icon
     button_usb:button_usb
     load_button:load_button
     delete_selected_button:delete_selected_button
@@ -96,23 +98,21 @@ Builder.load_string("""
                             
                 FileChooserListView:
                     padding: [0,10]
-
-                    id: filechooser
+                    id: filechooser_list
                     rootpath: './jobCache/'
                     show_hidden: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: 
-                        root.refresh_filechooser()
+                        root.use_filechooser_list()
 
                 FileChooserIconView:
                     padding: [0,10]
-                    # size_hint_y: 5
                     id: filechooser_icon
                     rootpath: './jobCache/'
                     show_hidden: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: 
-                        root.refresh_filechooser()
+                        root.use_filechooser_icon()
                
 
         BoxLayout:
@@ -315,18 +315,25 @@ class LocalFileChooser(Screen):
         self.manager.current = 'usb_filechooser'
         
 
-    def refresh_filechooser(self):
+    def use_filechooser_icon(self):
+        self.refresh_filechooser(self.filechooser_icon.selection[0])
 
-        self.filechooser._update_item_selection()
+    def use_filechooser_list(self):
+        self.refresh_filechooser(self.filechooser_list.selection[0])
+
+    def refresh_filechooser(self, selection):
+
+        self.filechooser_list._update_item_selection()
+        self.filechooser_icon._update_item_selection()
 
         try:
-            if self.filechooser.selection[0] != 'C':
+            if selection != 'C':
 
                 # display file selected in the filename display label
                 if sys.platform == 'win32':
-                    self.filename_selected_label_text = self.filechooser.selection[0].split("\\")[-1]
+                    self.filename_selected_label_text = selection.split("\\")[-1]
                 else:
-                    self.filename_selected_label_text = self.filechooser.selection[0].split("/")[-1]
+                    self.filename_selected_label_text = selection.split("/")[-1]
 
                 self.load_button.disabled = False
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -351,7 +358,8 @@ class LocalFileChooser(Screen):
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
             self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
 
-        self.filechooser._update_files()
+        self.filechooser_list._update_files()
+        self.filechooser_icon._update_files()
 
     
     def get_FTP_files(self):
