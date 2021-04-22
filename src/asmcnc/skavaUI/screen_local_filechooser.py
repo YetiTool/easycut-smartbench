@@ -113,6 +113,7 @@ Builder.load_string("""
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
+                background_color: hex('#FFFFFF00')
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -318,11 +319,11 @@ class LocalFileChooser(Screen):
 
         if self.toggle_view_button.state == "normal":
             self.filechooser.view_mode = 'icon'
-            self.image_view.source = ".asmcnc/skavaUI/img/file_select_icon_view.png"
+            self.image_view.source = ".asmcnc/skavaUI/img/file_select_icon.png"
 
         elif self.toggle_view_button.state == "down":
             self.filechooser.view_mode = 'list'
-            self.image_view.source = ".asmcnc/skavaUI/img/file_select_list_view.png"
+            self.image_view.source = ".asmcnc/skavaUI/img/file_select_list.png"
 
     def open_USB(self):
 
