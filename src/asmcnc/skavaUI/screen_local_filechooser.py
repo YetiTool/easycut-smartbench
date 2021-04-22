@@ -88,18 +88,31 @@ Builder.load_string("""
                 markup: True
                 font_size: '20sp'   
                 valign: 'middle'
-                halign: 'center' 
-                            
-            FileChooserIconView:
-                padding: [0,10]
-                size_hint_y: 5
-                id: filechooser
-                rootpath: './jobCache/'
-                show_hidden: False
-                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                on_selection: 
-                    root.refresh_filechooser()
+                halign: 'center'
 
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: 5
+                            
+                FileChooserListView:
+                    padding: [0,10]
+
+                    id: filechooser
+                    rootpath: './jobCache/'
+                    show_hidden: False
+                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                    on_selection: 
+                        root.refresh_filechooser()
+
+                FileChooserIconView:
+                    padding: [0,10]
+                    # size_hint_y: 5
+                    id: filechooser_icon
+                    rootpath: './jobCache/'
+                    show_hidden: False
+                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                    on_selection: 
+                        root.refresh_filechooser()
                
 
         BoxLayout:
