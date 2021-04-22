@@ -126,7 +126,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: travel
-                    text: "2489"
+                    text: root.y_length
                     input_filter: 'float'
                     multiline: False
                     font_size: '20sp'
@@ -217,8 +217,8 @@ class ProcessMicrometerScreen(Screen):
 
     # HARDWARE PARAMETERS
     ## will need final jig to measure these
-    X_start_coordinate = -15
-    translation_from_jig_to_Y_pos = 0
+    X_start_coordinate = -10
+    translation_from_jig_to_Y_pos = 2500
     y_length = float(2645 - 20)
 
     # CALIBRATORS AND CONSTANTS
