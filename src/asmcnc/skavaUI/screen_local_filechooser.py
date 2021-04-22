@@ -160,7 +160,7 @@ Builder.load_string("""
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     root.get_FTP_files()
-                    root.refresh_filechooser([]) 
+                    root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -337,6 +337,8 @@ class LocalFileChooser(Screen):
     def refresh_filechooser(self):
 
         self.filechooser._update_item_selection()
+
+        print(self.filechooser.selection[0])
 
         try:
             if selection != 'C':
