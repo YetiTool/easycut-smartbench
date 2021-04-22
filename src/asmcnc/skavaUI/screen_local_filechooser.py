@@ -341,7 +341,7 @@ class LocalFileChooser(Screen):
         print(str(self.filechooser.selection))
 
         try:
-            if selection != 'C':
+            if self.filechooser.selection[0] != 'C':
 
                 # display file selected in the filename display label
                 if sys.platform == 'win32':
