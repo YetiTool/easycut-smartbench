@@ -109,9 +109,10 @@ class SerialConnection(object):
                 filesForDevice = listdir('/dev/') # put all device files into list[]
 
                 straightness_port = "ttyACM0"
+                encoder_port = "ttyACM1"
                 machine_port = "ttyS0"
 
-                if straightness_port in filesForDevice: devicePort = straightness_port
+                if ((straightness_port in filesForDevice) and (encoder_port not in filesForDevice)): devicePort = straightness_port
                 else: devicePort = machine_port
 
                 self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
