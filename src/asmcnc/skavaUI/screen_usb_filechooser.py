@@ -29,6 +29,7 @@ Builder.load_string("""
     filechooser_usb:filechooser_usb
     toggle_view_button : toggle_view_button
     load_button:load_button
+    image_view : image_view
     image_select:image_select
     usb_status_label:usb_status_label
 
