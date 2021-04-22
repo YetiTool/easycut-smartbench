@@ -334,8 +334,6 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_item_selection()
 
-        print(str(self.filechooser.selection))
-
         try:
             if self.filechooser.selection[0] != 'C':
 
