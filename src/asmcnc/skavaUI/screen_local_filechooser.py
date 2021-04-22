@@ -319,11 +319,11 @@ class LocalFileChooser(Screen):
 
         if self.toggle_view_button.state == "normal":
             self.filechooser.view_mode = 'icon'
-            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
 
         elif self.toggle_view_button.state == "down":
             self.filechooser.view_mode = 'list'
-            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
     def open_USB(self):
 
