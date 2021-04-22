@@ -82,14 +82,7 @@ Builder.load_string("""
             on_selection: root.refresh_filechooser()
             FileChooserIconLayout
             FileChooserListLayout
-
-
-
                
-        BoxLayout:
-            size_hint_y: None
-            height: 100
-
         BoxLayout:
             size_hint_y: None
             height: 100
