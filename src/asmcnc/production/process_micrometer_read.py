@@ -707,6 +707,7 @@ class ProcessMicrometerScreen(Screen):
                 self.data_status = 'Failed, retrying...'
 
         try_writing_event = Clock.schedule_interval(try_writing_nested_function, 30)
+        self.data_status = 'Sending'
 
 
     # CLEAR (RESET) LOCAL DATA (DOES NOT AFFECT ANYTHING ALREADY SENT TO SHEETS)
