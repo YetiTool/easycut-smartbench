@@ -126,7 +126,7 @@ Builder.load_string("""
 
                 TextInput: 
                     id: travel
-                    text: root.y_length
+                    text: "2500"
                     input_filter: 'float'
                     multiline: False
                     font_size: '20sp'
