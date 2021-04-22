@@ -217,7 +217,7 @@ class ProcessMicrometerScreen(Screen):
 
     # HARDWARE PARAMETERS
     ## will need final jig to measure these
-    X_start_coordinate = 1260
+    X_start_coordinate = -15
     translation_from_jig_to_Y_pos = 0
     y_length = float(2645 - 20)
 
