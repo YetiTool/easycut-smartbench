@@ -335,8 +335,7 @@ class LocalFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        self.filechooser._update_item_selection()
-        self.filechooser._update_item_selection()
+        # self.filechooser._update_item_selection()
 
         try:
             if selection != 'C':
@@ -370,7 +369,6 @@ class LocalFileChooser(Screen):
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
             self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
 
-        self.filechooser._update_files()
         self.filechooser._update_files()
 
     
