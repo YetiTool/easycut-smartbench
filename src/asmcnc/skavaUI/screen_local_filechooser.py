@@ -34,8 +34,6 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser:filechooser
-    # filechooser_list : filechooser_list
-    # filechooser_icon : filechooser_icon
     toggle_view_button : toggle_view_button
     button_usb:button_usb
     load_button:load_button
