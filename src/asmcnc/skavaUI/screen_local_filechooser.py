@@ -99,8 +99,7 @@ Builder.load_string("""
                 rootpath: './jobCache/'
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                on_selection: 
-                    root.refresh_filechooser()
+                on_selection: root.refresh_filechooser()
                 FileChooserIconLayout
                 FileChooserListLayout
                
@@ -337,7 +336,7 @@ class LocalFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        # self.filechooser._update_item_selection()
+        self.filechooser._update_item_selection()
 
         try:
             if selection != 'C':
