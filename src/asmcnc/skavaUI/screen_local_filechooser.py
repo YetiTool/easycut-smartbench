@@ -120,7 +120,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_view
-                        source: ".asmcnc/skavaUI/img/file_select_icon_view.png"
+                        source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -319,11 +319,11 @@ class LocalFileChooser(Screen):
 
         if self.toggle_view_button.state == "normal":
             self.filechooser.view_mode = 'icon'
-            self.image_view.source = ".asmcnc/skavaUI/img/file_select_icon.png"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
         elif self.toggle_view_button.state == "down":
             self.filechooser.view_mode = 'list'
-            self.image_view.source = ".asmcnc/skavaUI/img/file_select_list.png"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
 
     def open_USB(self):
 
