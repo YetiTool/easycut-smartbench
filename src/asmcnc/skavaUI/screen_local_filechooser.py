@@ -34,10 +34,12 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser:filechooser
+    toggle_view_button : toggle_view_button
     button_usb:button_usb
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
+    image_view : image_view
     image_usb:image_usb
     image_delete:image_delete
     image_delete_all:image_delete_all
@@ -88,23 +90,39 @@ Builder.load_string("""
                 markup: True
                 font_size: '20sp'   
                 valign: 'middle'
-                halign: 'center' 
-                            
-            FileChooserIconView:
-                padding: [0,10]
-                size_hint_y: 5
+                halign: 'center'
+
+            FileChooser:
                 id: filechooser
+                size_hint_y: 5
                 rootpath: './jobCache/'
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-                on_selection: 
-                    root.refresh_filechooser()
-
+                on_selection: root.refresh_filechooser()
+                FileChooserIconLayout
+                FileChooserListLayout
                
 
         BoxLayout:
             size_hint_y: None
             height: 100
+
+            ToggleButton:
+                id: toggle_view_button
+                size_hint_x: 1
+                on_press: root.switch_view()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_view
+                        source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True 
 
             Button:
                 id: button_usb
@@ -267,6 +285,7 @@ class LocalFileChooser(Screen):
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+        self.switch_view()
     
     
     def on_pre_leave(self):
@@ -295,12 +314,21 @@ class LocalFileChooser(Screen):
             self.sm.get_screen('loading').usb_status = None
             self.sm.get_screen('loading').usb_status_label.opacity = 0
 
+    def switch_view(self):
+
+        if self.toggle_view_button.state == "normal":
+            self.filechooser.view_mode = 'icon'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+
+        elif self.toggle_view_button.state == "down":
+            self.filechooser.view_mode = 'list'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
+
     def open_USB(self):
 
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
         self.manager.current = 'usb_filechooser'
-        
 
     def refresh_filechooser(self):
 
