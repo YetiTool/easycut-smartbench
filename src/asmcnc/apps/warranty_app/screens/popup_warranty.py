@@ -75,7 +75,8 @@ class PopupFactorySettingsPassword(Widget):
         
         self.am = app_manager
         
-        description = "Please enter the password to use the factory settings." 
+        description = "You should only access the factory settings if you have been instructed to do so by YetiTool support.\n\n" + \
+        "Please enter the password to proceed." 
 
         def check_password(*args):
           if textinput.text == "Work Smart":
