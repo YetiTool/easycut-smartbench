@@ -420,7 +420,7 @@ class SerialConnection(object):
                 self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
             else:
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(True), 0.4)
+                Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
 
 
         else:
@@ -490,7 +490,7 @@ class SerialConnection(object):
         self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
         self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
          " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
-        if self.go_to_jobdone: self.sm.current = 'jobdone'
+        if go_to_jobdone: self.sm.current = 'jobdone'
 
         self._reset_counters()
         
