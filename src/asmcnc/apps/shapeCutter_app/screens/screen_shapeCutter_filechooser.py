@@ -44,7 +44,7 @@ Builder.load_string("""
             size: self.parent.size
             pos: self.parent.pos
             spacing: 10
-            FileChooserListView:
+            FileChooser:
                 size_hint_x: 5
                 id: filechooser_sc_params
                 rootpath: './asmcnc/apps/shapeCutter_app/parameter_cache/'
