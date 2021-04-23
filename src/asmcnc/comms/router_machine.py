@@ -823,7 +823,7 @@ class RouterMachine(object):
             if prev_state == False and pauseBool == True:
                 self.s.stream_pause_start_time = time.time()
 
-            if prev_state == True and pauseBool == False:
+            if prev_state == True and pauseBool == False and self.s.stream_pause_start_time != 0:
                 self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
                 self.s.stream_pause_start_time = 0
 
