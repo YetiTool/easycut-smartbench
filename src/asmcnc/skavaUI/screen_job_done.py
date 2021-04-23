@@ -68,7 +68,9 @@ Builder.load_string("""
             Label: 
                 size_hint_y: 0.2
                 text: root.jobdone_text
+                text_size: self.size
                 markup: True
+                halign: "center"
                 font_size: '20sp' 
                 valign: 'top'
                 
