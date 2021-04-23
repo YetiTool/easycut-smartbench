@@ -474,6 +474,11 @@ class SerialConnection(object):
 
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
 
+        running_hours = int(only_running_time_seconds / (60 * 60))
+        running_seconds_remainder = only_running_time_seconds % (60 * 60)
+        running_minutes = int(running_seconds_remainder / 60)
+        running_seconds = int(running_seconds_remainder % 60)
+
         # Add time taken in seconds to brush use: 
         self.m.spindle_brush_use_seconds += only_running_time_seconds
         self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
@@ -489,7 +494,11 @@ class SerialConnection(object):
         # send info to the job done screen
         self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
         self.sm.get_screen('jobdone').jobdone_text = "The job has finished. It took " + str(hours) + \
-         " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+        " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds." + \
+        "\n" + \
+        "The actual running time was " + str(running_hours) + \
+        " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds."
+
         if go_to_jobdone: self.sm.current = 'jobdone'
 
         self._reset_counters()

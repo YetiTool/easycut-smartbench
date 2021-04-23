@@ -69,7 +69,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.6.0'
+initial_version = 'v1.6.1-beta'
 
 # default starting screen
 start_screen = 'welcome'
