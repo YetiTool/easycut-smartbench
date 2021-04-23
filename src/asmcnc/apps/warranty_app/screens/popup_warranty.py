@@ -14,6 +14,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 from kivy.graphics import Color, Rectangle
+from kivy.uix.textinput import TextInput
 
 ### Quit To Console
 class QuitToConsoleWarranty(Widget):
