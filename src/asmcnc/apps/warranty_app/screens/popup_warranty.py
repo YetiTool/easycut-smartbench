@@ -84,7 +84,7 @@ class PopupFactorySettingsPassword(Widget):
             self.am.systemtools_sm.open_factory_settings_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=0.7, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.2, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=1, text = '')
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
@@ -94,7 +94,7 @@ class PopupFactorySettingsPassword(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[10,0,10,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[40,10,40,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[40,10,40,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(textinput)
@@ -106,7 +106,7 @@ class PopupFactorySettingsPassword(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 280),
+                      size=(500, 320),
                       auto_dismiss= False,
                       pos_hint={'x': 150.0 / 800.0, 
                                 'y':200.0 /  480.0},
