@@ -94,11 +94,11 @@ class WelcomeScreenClass(Screen):
 
     def go_to_next_screen(self, dt):
 
-        if self.m.trigger_setup == False: 
-            self.sm.current = 'safety'
+        # if self.m.trigger_setup == False: 
+        #     self.sm.current = 'safety'
 
-        else:
-            self.am.start_warranty_app()
+        # else:
+        #     self.am.start_warranty_app()
 
         self.am.start_warranty_app()
             
