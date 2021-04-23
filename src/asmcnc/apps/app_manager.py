@@ -93,6 +93,7 @@ class AppManagerClass(object):
             self.sm.current = 'safety'
 
 
+        self.warranty_sm.open_warranty_app()
 
 
 

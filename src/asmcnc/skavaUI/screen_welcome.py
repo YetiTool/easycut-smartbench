@@ -99,6 +99,8 @@ class WelcomeScreenClass(Screen):
 
         else:
             self.am.start_warranty_app()
+
+        self.am.start_warranty_app()
             
         
     def set_machine_value_driven_user_settings(self, dt):
