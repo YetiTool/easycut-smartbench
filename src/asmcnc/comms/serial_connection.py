@@ -493,10 +493,10 @@ class SerialConnection(object):
 
         # send info to the job done screen
         self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-        self.sm.get_screen('jobdone').jobdone_text = "The job has finished.\n" + \
+        self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
         "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
         "\n" + \
-        "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds."
+        "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
 
         if go_to_jobdone: self.sm.current = 'jobdone'
 
