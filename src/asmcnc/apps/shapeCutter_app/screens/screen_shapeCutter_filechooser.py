@@ -24,12 +24,14 @@ Builder.load_string("""
 <SCFileChooser>:
     on_enter: root.refresh_filechooser()
     filechooser_sc_params:filechooser_sc_params
+    toggle_view_button : toggle_view_button
     load_button:load_button
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
     image_delete:image_delete
     image_delete_all:image_delete_all
     image_select:image_select
+
     BoxLayout:
         padding: 0
         spacing: 10
@@ -47,13 +49,32 @@ Builder.load_string("""
                 rootpath: './asmcnc/apps/shapeCutter_app/parameter_cache/'
                 filter_dirs: True
                 filters: ['*.csv', '*.CSV']
-                on_selection: 
-                    root.refresh_filechooser()
+                on_selection: root.refresh_filechooser()
+                FileChooserIconLayout
+                FileChooserListLayout
        
                 
         BoxLayout:
             size_hint_y: None
             height: 100
+
+            ToggleButton:
+                id: toggle_view_button
+                size_hint_x: 1
+                on_press: root.switch_view()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_view
+                        source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
             Button:
                 disabled: False
                 size_hint_x: 1
@@ -176,6 +197,17 @@ class SCFileChooser(Screen):
         
     def on_enter(self):
         self.refresh_filechooser()
+        self.switch_view()
+
+    def switch_view(self):
+
+        if self.toggle_view_button.state == "normal":
+            self.filechooser_sc_params.view_mode = 'icon'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+
+        elif self.toggle_view_button.state == "down":
+            self.filechooser_sc_params.view_mode = 'list'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
     def refresh_filechooser(self):
 
