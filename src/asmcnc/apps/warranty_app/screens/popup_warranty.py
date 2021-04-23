@@ -78,7 +78,7 @@ class PopupFactorySettingsPassword(Widget):
         description = "Please enter the password to use the factory settings." 
 
         def check_password(*args):
-          if textinput.text == "fac":
+          if textinput.text == "Work Smart":
             self.am.systemtools_sm.open_system_tools()
             self.am.systemtools_sm.open_factory_settings_screen()
         
