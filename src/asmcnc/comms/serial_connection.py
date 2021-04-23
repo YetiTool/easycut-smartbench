@@ -420,7 +420,7 @@ class SerialConnection(object):
                 self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
             else:
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
+                Clock.schedule_once(lambda dt: self.update_machine_runtime(True), 0.4)
 
 
         else:
