@@ -31,6 +31,7 @@ Builder.load_string("""
     image_delete:image_delete
     image_delete_all:image_delete_all
     image_select:image_select
+    image_view : image_view
 
     BoxLayout:
         padding: 0
