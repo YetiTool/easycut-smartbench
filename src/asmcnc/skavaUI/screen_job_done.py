@@ -66,7 +66,7 @@ Builder.load_string("""
                             allow_stretch: True
                     
             Label: 
-                size_hint_y: 0.2
+                size_hint_y: 0.4
                 text: root.jobdone_text
                 text_size: self.size
                 markup: True
