@@ -94,7 +94,7 @@ class PopupFactorySettingsPassword(Widget):
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[10,0,10,0])
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[40,10,40,10])
+        layout_plan = BoxLayout(orientation='vertical', spacing=0, padding=[40,10,40,10])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(textinput)
@@ -106,7 +106,7 @@ class PopupFactorySettingsPassword(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 260),
+                      size=(500, 280),
                       auto_dismiss= False,
                       pos_hint={'x': 150.0 / 800.0, 
                                 'y':200.0 /  480.0},
