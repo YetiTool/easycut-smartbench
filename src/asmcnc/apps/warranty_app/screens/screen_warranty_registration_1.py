@@ -116,8 +116,8 @@ Builder.load_string("""
 				    size_hint: (None,None)
 				    height: dp(52)
 				    width: dp(52)
-				    background_color: hex('##e5e5e5')
-				    background_normal: ''
+				    # background_color: hex('##e5e5e5')
+				    # background_normal: ''
 				    # center: self.parent.center
 				    # pos: self.parent.pos
 				    on_press: root.go_to_factory_settings()
@@ -126,8 +126,8 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(52)
                     width: dp(52)
-                    background_color: hex('##e5e5e5')
-                    background_normal: ''
+                    # background_color: hex('##e5e5e5')
+                    # background_normal: ''
                     # center: self.parent.center
                     # pos: self.parent.pos
                     on_press: root.quit_to_console()
