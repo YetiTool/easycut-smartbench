@@ -67,3 +67,54 @@ class QuitToConsoleWarranty(Widget):
         back_button.bind(on_press=popup.dismiss)
 
         popup.open()
+
+### Factory settings and password
+class PopupFactorySettingsPassword(Widget):   
+    def __init__(self, app_manager):
+        
+        self.am = app_manager
+        
+        description = "Please enter the password to use the factory settings." 
+
+        def check_password(*args):
+          if textinput.text == "fac":
+            self.am.systemtools_sm.open_system_tools()
+            self.am.systemtools_sm.open_factory_settings_screen()
+        
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=0.7, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        textinput = TextInput(size_hint_y=1, text = '')
+
+        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button.background_normal = ''
+        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+       
+        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[10,0,10,0])
+        btn_layout.add_widget(ok_button)
+        
+        layout_plan = BoxLayout(orientation='vertical', spacing=5, padding=[40,10,40,10])
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(textinput)
+        layout_plan.add_widget(btn_layout)
+        
+        popup = Popup(title='Warning!',
+                      title_color=[0, 0, 0, 1],
+                      title_font= 'Roboto-Bold',
+                      title_size = '20sp',
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=(500, 260),
+                      auto_dismiss= False,
+                      pos_hint={'x': 150.0 / 800.0, 
+                                'y':200.0 /  480.0},
+                      )
+        
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = '4dp'
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+        
+        ok_button.bind(on_press=check_password)
+        ok_button.bind(on_press=popup.dismiss)    
+
+        popup.open()
