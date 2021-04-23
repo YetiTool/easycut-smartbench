@@ -105,7 +105,7 @@ Builder.load_string("""
 	                    pos: self.parent.pos
 								
 			BoxLayout:
-				orientation: 'vertical'
+				orientation: 'horizontal'
 				padding: [dp(10), 0, dp(10), dp(10)]
 				size_hint: (None,None)
 				width: dp(800)
