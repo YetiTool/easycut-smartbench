@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
 from datetime import datetime
 
