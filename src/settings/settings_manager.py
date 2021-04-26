@@ -49,8 +49,6 @@ class Settings(object):
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
     def refresh_latest_sw_version(self):
-        # try: 
-            # os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
 
         delay = 1.0
         timeout = int(10.0 / delay)
@@ -63,12 +61,13 @@ class Settings(object):
             timeout -= delay
 
         if proc.poll() is not None:
-            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
-            self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
-            self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
 
-        # except: 
-        #     print "Could not fetch software version tags"
+            try:
+                sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
+                self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
+                self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
+            except: 
+                print "Could not fetch software version tags"
 
     def fetch_platform_tags(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")

@@ -404,12 +404,13 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: do_refresh(),0.5)
     
     def update_screen_with_latest_version(self):
-        if self.set.latest_sw_version != '':    
-            self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
-        elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
+        if self.set.latest_sw_version != '':
+            if self.set.latest_sw_version != self.set.sw_version:
+                self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
+            else: 
+                self.latest_software_version_label.text = '[b]You are up to date![/b]'
         else:
-            self.latest_software_version_label.text = '[b]You are up to date![/b]'
+            self.latest_software_version_label.text = '[b]Could not fetch version! Connection issue.[/b]'
  
     def on_enter(self):
 
