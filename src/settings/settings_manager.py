@@ -52,7 +52,8 @@ class Settings(object):
         # try: 
             # os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
 
-        delay = 10.0
+        delay = 1.0
+        timeout = int(10.0 / delay)
         fetch_command = "cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet"
 
         proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
