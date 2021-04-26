@@ -184,7 +184,7 @@ class Settings(object):
                     dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip('\n')
 
             except:
-                dir_path_name = ''
+                dir_path_name = 0
 
         
         log('directory name: ' + dir_path_name)
