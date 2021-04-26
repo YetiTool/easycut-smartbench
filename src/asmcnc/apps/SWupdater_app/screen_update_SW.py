@@ -369,28 +369,32 @@ class SWUpdateScreen(Screen):
 
         def do_refresh():
 
-            if self.usb_stick.is_available():
-                dir_path_name = self.set.find_usb_directory()
-        
-                if dir_path_name != 2 and dir_path_name != 0:
-                    if self.set.set_up_remote_repo(dir_path_name):
-                        self.set.refresh_latest_sw_version()
+            try:
+                if self.usb_stick.is_available():
+                    dir_path_name = self.set.find_usb_directory()
+            
+                    if dir_path_name != 2 and dir_path_name != 0:
+                        if self.set.set_up_remote_repo(dir_path_name):
+                            self.set.refresh_latest_sw_version()
 
+                        else:
+                            if self.wifi_image.source != self.wifi_on:
+                                refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                                popup_info.PopupError(self.sm, refresh_error_message)
                     else:
                         if self.wifi_image.source != self.wifi_on:
                             refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
                             popup_info.PopupError(self.sm, refresh_error_message)
-                else:
-                    if self.wifi_image.source != self.wifi_on:
-                        refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
-                        popup_info.PopupError(self.sm, refresh_error_message)
 
-                self.set.clear_remote_repo(dir_path_name)                 
+                    self.set.clear_remote_repo(dir_path_name)                 
 
-            if self.wifi_image.source == self.wifi_on:
-                self.set.refresh_latest_sw_version()
+                if self.wifi_image.source == self.wifi_on:
+                    self.set.refresh_latest_sw_version()
 
-            if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
+                if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
+                    refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
+                    popup_info.PopupError(self.sm, refresh_error_message)
+            except:
                 refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
                 popup_info.PopupError(self.sm, refresh_error_message)
 
