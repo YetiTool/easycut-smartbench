@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time #, pigpio ## until production machines are running latest img
 from __builtin__ import True, False
 from datetime import datetime
 
@@ -48,15 +48,35 @@ class Settings(object):
         self.sw_hash = str(os.popen("git rev-parse --short HEAD").read()).strip('\n')
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
-    def refresh_latest_sw_version(self):
-        try: 
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet")
-            sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
-            self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
-            self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
+        if self.sw_version == "" or self.sw_version == None:
+            self.sw_version = "Unknown"        
 
-        except: 
-            print "Could not fetch software version tags"
+    def refresh_latest_sw_version(self):
+
+        delay = 1.0
+        timeout = int(10.0 / delay)
+        fetch_command = "cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet"
+
+        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+
+        while proc.poll() is None and timeout > 0:
+            time.sleep(delay)
+            timeout -= delay
+
+        if proc.poll() is not None:
+
+            try:
+                sw_version_list = (str(os.popen("git tag --sort=-refname |head -n 10").read()).split('\n'))
+                self.latest_sw_version = str([tag for tag in sw_version_list if "beta" not in tag][0])
+                self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
+
+            except: 
+                print("Could not sort software version tags")
+                self.latest_sw_version = ""
+
+        else:
+            print("Could not fetch software version tags")
+            self.latest_sw_version = ""
 
     def fetch_platform_tags(self):
         os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
@@ -75,6 +95,8 @@ class Settings(object):
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
+            self.refresh_latest_sw_version()
+        self.refresh_sw_version()
         checkout_success = self.checkout_latest_version(beta)
         return checkout_success
     
@@ -96,6 +118,9 @@ class Settings(object):
 
                 git_output = str(unformatted_git_output).split('\n')
                 git_output = list(filter(lambda x: x!= '', git_output))
+
+                print(git_output)
+                print(git_output[-1])
                      
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
@@ -184,7 +209,7 @@ class Settings(object):
                     dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip('\n')
 
             except:
-                dir_path_name = ''
+                dir_path_name = 0
 
         
         log('directory name: ' + dir_path_name)
@@ -229,6 +254,7 @@ class Settings(object):
 
         if self.set_up_remote_repo(dir_path_name):
             log('Updating software from: ' + dir_path_name)
+            self.refresh_sw_version()
             self.refresh_latest_sw_version()
             checkout_success = self.checkout_latest_version(beta)   
 
