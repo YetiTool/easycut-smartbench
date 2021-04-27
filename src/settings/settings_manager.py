@@ -88,26 +88,36 @@ class Settings(object):
 
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
-
-            
+    
 ## GET SOFTWARE UPDATES
+
+
+    def do_fetch_from_github_check(self):
+
+        # do a fetch to check that we have access to git
+        fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
+        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        stdout, stderr = proc.communicate()
+
+        print("stdout: " + str(stdout))
+        print("stderr: " + str(stderr))
+
+        print("stdout: " + str(stdout))
+        print("stderr: " + str(stderr))
+
+        # if it fails, return an error message for the user
+        if ("Could not resolve" in str(stdout)) or ("unable to resolve" in str(stdout)):
+            return False
+
+        else: 
+            return True
+
+
 
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
-            # do a fetch to check that we have access to git
-            fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
-            proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            stdout, stderr = proc.communicate()
-
-            print("stdout: " + str(stdout))
-            print("stderr: " + str(stderr))
-
-            # if it fails, return an error message for the user
-            if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
-
-                print("investigated fail condition")
-
+            if not self.do_fetch_from_github_check():
                 return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
@@ -159,13 +169,7 @@ class Settings(object):
 
     def reclone_EC(self):
 
-        # do a fetch to check that we have access to git
-        fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
-        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-        stdout, stderr = proc.communicate()
-
-        # if it fails, return an error message for the user
-        if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
+        if not self.do_fetch_from_github_check():
             return False
     
         def backup_EC():
@@ -191,13 +195,7 @@ class Settings(object):
               
         def clone_new_EC_and_restart():
 
-            # do a fetch to check that we have access to git
-            fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
-            proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            stdout, stderr = proc.communicate()
-
-            # if it fails, return an error message for the user
-            if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
+            if not self.do_fetch_from_github_check():
                 return False
 
             else: 
