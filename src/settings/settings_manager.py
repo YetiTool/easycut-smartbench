@@ -100,6 +100,9 @@ class Settings(object):
             proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
 
+            print("stdout: " + stdout)
+            print("stderr: " + stderr)
+
             # if it fails, return an error message for the user
             if ("Could not resolve" or "unable to resolve" in stdout):
                 return "Could not resolve host: github.com"
