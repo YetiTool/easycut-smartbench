@@ -494,9 +494,9 @@ class SWUpdateScreen(Screen):
             elif outcome == "Software already up to date!": 
                 popup_info.PopupError(self.sm, outcome)
                 
-            elif outcome == "Could not resolve host: github.com":
+            elif "Could not resolve host: github.com" in outcome:
                 description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, outcome)
+                popup_info.PopupError(self.sm, description)
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
