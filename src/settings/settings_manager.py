@@ -100,9 +100,9 @@ class Settings(object):
             proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
 
-            # # if it fails, return an error message for the user
-            # if ("Could not resolve" or "unable to resolve" in stdout):
-            #     return "Could not resolve host: github.com"
+            # if it fails, return an error message for the user
+            if ("Could not resolve" or "unable to resolve" in stdout):
+                return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
         self.refresh_sw_version()
