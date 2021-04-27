@@ -143,6 +143,12 @@ class Settings(object):
         os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
     def reclone_EC(self):
+
+        # do a fetch to check that we have access to git
+        fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
+
+        if fetch_outcome.startswith("fatal: unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'"):
+            return False
     
         def backup_EC():
             # check if backup directory exists, and delete it if it does
@@ -167,9 +173,16 @@ class Settings(object):
               
         def clone_new_EC_and_restart():
 
-            # Repair a git repo
-            os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-            '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
+            # do a fetch to check that we have access to git
+            fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
+
+            if fetch_outcome.startswith("fatal: unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'"):
+                return False
+
+            else: 
+                # Repair git repo by re-cloning from origin
+                os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
+                '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
         
         if backup_EC() == True:
             clone_new_EC_and_restart()

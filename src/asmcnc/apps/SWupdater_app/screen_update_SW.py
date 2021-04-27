@@ -516,7 +516,7 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
+                    description = "It was not possible to backup the software safely, please check your connection and try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
                     popup_info.PopupError(self.sm, description)           
             else: 
