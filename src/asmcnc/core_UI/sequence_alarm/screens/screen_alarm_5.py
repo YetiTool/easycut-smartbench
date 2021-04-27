@@ -16,6 +16,7 @@ Builder.load_string("""
 	icon_container : icon_container
 	icon : icon
 	description_label : description_label
+	next_button : next_button
 
 	canvas:
 		Color: 
@@ -150,6 +151,22 @@ Builder.load_string("""
 				height: dp(132)
 				width: dp(291)
 				padding: [0,0,0,52]
+				Button:
+					id: next_button
+					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+					background_down: "./asmcnc/apps/warranty_app/img/next.png"
+					border: [dp(14.5)]*4
+					size_hint: (None,None)
+					width: dp(291)
+					height: dp(79)
+					# on_press: root.next_screen()
+					text: 'More info'
+					font_size: '30sp'
+					color: hex('#f9f9f9ff')
+					markup: True
+					center: self.parent.center
+					pos: self.parent.pos
+					opacity: 0
 
 
 			BoxLayout: 
@@ -187,10 +204,21 @@ class AlarmScreen5(Screen):
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
 
+	def on_enter(self):
+
+		if self.a.support_sequence:
+			self.next_button.opacity = 0
+		else:
+			self.next_button.opacity = 1
+
 	def next_screen(self):
 		self.a.exit_sequence()
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_4'
+
+	def more_info(self):
+		self.sm.get_screen('alarm_3').for_support = False
+		self.s.sm.current = 'alarm_3'
 
 # git force

@@ -164,7 +164,10 @@ class AlarmScreen1(Screen):
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 
 	def next_screen(self):
-		self.a.sm.current = 'alarm_2'
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_2'
+		else:
+			self.a.sm.current = 'alarm_5'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_1'
