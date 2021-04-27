@@ -48,6 +48,9 @@ class Settings(object):
         self.sw_hash = str(os.popen("git rev-parse --short HEAD").read()).strip('\n')
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
+        if self.sw_version == "" or self.sw_version == None:
+            self.sw_version = "Unknown"        
+
     def refresh_latest_sw_version(self):
 
         delay = 1.0
