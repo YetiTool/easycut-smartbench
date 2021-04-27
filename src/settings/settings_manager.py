@@ -68,10 +68,11 @@ class Settings(object):
                 self.latest_sw_beta = str([tag for tag in sw_version_list if "beta" in tag][0])
 
             except: 
-                print("Could not fetch software version tags")
+                print("Could not sort software version tags")
                 self.latest_sw_version = ""
 
-        else: 
+        else:
+            print("Could not fetch software version tags")
             self.latest_sw_version = ""
 
     def fetch_platform_tags(self):
