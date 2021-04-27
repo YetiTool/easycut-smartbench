@@ -94,7 +94,10 @@ class Settings(object):
 
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
+            fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
+            if fetch_outcome.startswith("fatal: unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'"):
+                return "Could not resolve host: github.com"
+
             self.refresh_latest_sw_version()
         self.refresh_sw_version()
         checkout_success = self.checkout_latest_version(beta)
