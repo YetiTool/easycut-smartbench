@@ -88,13 +88,32 @@ class Settings(object):
 
     def refresh_latest_platform_version(self):
         self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
-
-            
+    
 ## GET SOFTWARE UPDATES
 
+
+    def do_fetch_from_github_check(self):
+
+        # do a fetch to check that we have access to git
+        fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
+        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        stdout, stderr = proc.communicate()
+
+        # if it fails, return an error message for the user
+        if ("Could not resolve" in str(stdout)) or ("unable to resolve" in str(stdout)):
+            return False
+
+        else: 
+            return True
+
+
+
     def get_sw_update_via_wifi(self, beta = False):
-        if sys.platform != 'win32' and sys.platform != 'darwin':       
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            if not self.do_fetch_from_github_check():
+                return "Could not resolve host: github.com"
+
             self.refresh_latest_sw_version()
         self.refresh_sw_version()
         checkout_success = self.checkout_latest_version(beta)
@@ -143,6 +162,9 @@ class Settings(object):
         os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
     def reclone_EC(self):
+
+        if not self.do_fetch_from_github_check():
+            return False
     
         def backup_EC():
             # check if backup directory exists, and delete it if it does
@@ -167,9 +189,13 @@ class Settings(object):
               
         def clone_new_EC_and_restart():
 
-            # Repair a git repo
-            os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-            '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
+            if not self.do_fetch_from_github_check():
+                return False
+
+            else: 
+                # Repair git repo by re-cloning from origin
+                os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
+                '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
         
         if backup_EC() == True:
             clone_new_EC_and_restart()

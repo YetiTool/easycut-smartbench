@@ -494,9 +494,9 @@ class SWUpdateScreen(Screen):
             elif outcome == "Software already up to date!": 
                 popup_info.PopupError(self.sm, outcome)
                 
-            elif outcome == "Could not resolve host: github.com":
+            elif "Could not resolve host: github.com" in outcome:
                 description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, outcome)
+                popup_info.PopupError(self.sm, description)
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
@@ -516,7 +516,7 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
+                    description = "It was not possible to backup the software safely, please check your connection and try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
                     popup_info.PopupError(self.sm, description)           
             else: 
