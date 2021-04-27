@@ -104,7 +104,14 @@ class Settings(object):
             print("stderr: " + str(stderr))
 
             # if it fails, return an error message for the user
-            if ("Could not resolve" or "unable to resolve" in str(stdout)):
+            test_bool = ("Could not resolve" or "unable to resolve" in str(stdout))
+
+            print(test_bool)
+            # if ("Could not resolve" or "unable to resolve" in str(stdout)):
+            if test_bool:
+
+                print("investigated fail condition")
+
                 return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
