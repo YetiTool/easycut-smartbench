@@ -104,8 +104,7 @@ class Settings(object):
             print("stderr: " + str(stderr))
 
             # if it fails, return an error message for the user
-
-            if "Could not resolve" or "unable to resolve" in str(stdout):
+            if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
 
                 print("investigated fail condition")
 
@@ -166,7 +165,7 @@ class Settings(object):
         stdout, stderr = proc.communicate()
 
         # if it fails, return an error message for the user
-        if "Could not resolve" or "unable to resolve" in str(stdout):
+        if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
             return False
     
         def backup_EC():
@@ -198,7 +197,7 @@ class Settings(object):
             stdout, stderr = proc.communicate()
 
             # if it fails, return an error message for the user
-            if "Could not resolve" or "unable to resolve" in str(stdout):
+            if "Could not resolve" in str(stdout) or "unable to resolve" in str(stdout):
                 return False
 
             else: 
