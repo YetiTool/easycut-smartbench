@@ -93,9 +93,15 @@ class Settings(object):
 ## GET SOFTWARE UPDATES
 
     def get_sw_update_via_wifi(self, beta = False):
-        if sys.platform != 'win32' and sys.platform != 'darwin':       
-            fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
-            # if ("unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome):
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            # do a fetch to check that we have access to git
+            fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
+            proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            stdout, stderr = proc.communicate()
+
+            # # if it fails, return an error message for the user
+            # if ("Could not resolve" or "unable to resolve" in stdout):
             #     return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
@@ -148,11 +154,12 @@ class Settings(object):
     def reclone_EC(self):
 
         # do a fetch to check that we have access to git
-        fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
+        fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
+        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        stdout, stderr = proc.communicate()
 
-        print("fetch outcome: " + fetch_outcome)
-
-        if ("Could not resolve host: github.com" in fetch_outcome):
+        # if it fails, return an error message for the user
+        if ("Could not resolve" or "unable to resolve" in stdout):
             return False
     
         def backup_EC():
@@ -179,9 +186,12 @@ class Settings(object):
         def clone_new_EC_and_restart():
 
             # do a fetch to check that we have access to git
-            fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
+            fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
+            proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            stdout, stderr = proc.communicate()
 
-            if ("Could not resolve host: github.com" in fetch_outcome):
+            # if it fails, return an error message for the user
+            if ("Could not resolve" or "unable to resolve" in stdout):
                 return False
 
             else: 
