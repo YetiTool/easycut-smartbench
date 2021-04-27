@@ -95,6 +95,8 @@ class Settings(object):
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin")
+            self.refresh_latest_sw_version()
+        self.refresh_sw_version()
         checkout_success = self.checkout_latest_version(beta)
         return checkout_success
     
@@ -252,6 +254,7 @@ class Settings(object):
 
         if self.set_up_remote_repo(dir_path_name):
             log('Updating software from: ' + dir_path_name)
+            self.refresh_sw_version()
             self.refresh_latest_sw_version()
             checkout_success = self.checkout_latest_version(beta)   
 
