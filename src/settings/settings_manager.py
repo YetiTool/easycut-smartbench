@@ -95,7 +95,7 @@ class Settings(object):
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
             fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
-            # if "unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome:
+            # if ("unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome):
             #     return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
@@ -152,7 +152,7 @@ class Settings(object):
 
         print("fetch outcome: " + fetch_outcome)
 
-        if "unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome:
+        if ("unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome):
             return False
     
         def backup_EC():
@@ -181,7 +181,7 @@ class Settings(object):
             # do a fetch to check that we have access to git
             fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
 
-            if "unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome:
+            if ("unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'" in fetch_outcome):
                 return False
 
             else: 
