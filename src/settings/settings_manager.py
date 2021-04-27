@@ -99,12 +99,6 @@ class Settings(object):
         proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
         stdout, stderr = proc.communicate()
 
-        print("stdout: " + str(stdout))
-        print("stderr: " + str(stderr))
-
-        print("stdout: " + str(stdout))
-        print("stderr: " + str(stderr))
-
         # if it fails, return an error message for the user
         if ("Could not resolve" in str(stdout)) or ("unable to resolve" in str(stdout)):
             return False
@@ -117,8 +111,8 @@ class Settings(object):
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
-            # if not self.do_fetch_from_github_check():
-            #     return "Could not resolve host: github.com"
+            if not self.do_fetch_from_github_check():
+                return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
         self.refresh_sw_version()
