@@ -150,6 +150,8 @@ class Settings(object):
         # do a fetch to check that we have access to git
         fetch_outcome = str(os.popen("cd /home/pi/easycut-smartbench && git fetch origin").read()).strip('\n')
 
+        print("fetch outcome: " + fetch_outcome)
+
         if fetch_outcome.startswith("fatal: unable to access 'https://github.com/YetiTool/easycut-smartbench.git/'"):
             return False
     
