@@ -117,8 +117,8 @@ class Settings(object):
     def get_sw_update_via_wifi(self, beta = False):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
-            if not self.do_fetch_from_github_check():
-                return "Could not resolve host: github.com"
+            # if not self.do_fetch_from_github_check():
+            #     return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
         self.refresh_sw_version()
