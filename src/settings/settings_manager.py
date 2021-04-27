@@ -100,11 +100,11 @@ class Settings(object):
             proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
             stdout, stderr = proc.communicate()
 
-            print("stdout: " + stdout)
-            print("stderr: " + stderr)
+            print("stdout: " + str(stdout))
+            print("stderr: " + str(stderr))
 
             # if it fails, return an error message for the user
-            if ("Could not resolve" or "unable to resolve" in stdout):
+            if ("Could not resolve" or "unable to resolve" in str(stdout)):
                 return "Could not resolve host: github.com"
 
             self.refresh_latest_sw_version()
@@ -162,7 +162,7 @@ class Settings(object):
         stdout, stderr = proc.communicate()
 
         # if it fails, return an error message for the user
-        if ("Could not resolve" or "unable to resolve" in stdout):
+        if ("Could not resolve" or "unable to resolve" in str(stdout)):
             return False
     
         def backup_EC():
@@ -194,7 +194,7 @@ class Settings(object):
             stdout, stderr = proc.communicate()
 
             # if it fails, return an error message for the user
-            if ("Could not resolve" or "unable to resolve" in stdout):
+            if ("Could not resolve" or "unable to resolve" in str(stdout)):
                 return False
 
             else: 
