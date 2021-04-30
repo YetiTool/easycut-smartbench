@@ -278,3 +278,4 @@ class AlarmSequenceManager(object):
 
 	def go_to_alarn_3a(self):
 		self.sm.get_screen('alarm_3').next_button.text = "Next..."
+		self.sm.
