@@ -362,6 +362,13 @@ class SWUpdateScreen(Screen):
         self.sw_version_label.text = '[b]' + self.set.sw_version + '[/b]'
         self.update_screen_with_latest_version()
 
+    def on_enter:
+        description = "There was a problem updating your software. \n\n" \
+        "We can try to fix the problem, but you MUST have a stable internet connection and" \
+        " power supply.\n\n" \
+        "Would you like to repair your software now?"
+        popup_info.PopupSoftwareRepair(self.sm, self, description)
+
         
     def refresh_latest_software_version(self):
 
