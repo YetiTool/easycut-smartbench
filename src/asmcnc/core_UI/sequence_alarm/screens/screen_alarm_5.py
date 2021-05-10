@@ -159,7 +159,7 @@ Builder.load_string("""
 					size_hint: (None,None)
 					width: dp(291)
 					height: dp(79)
-					# on_press: root.next_screen()
+					on_press: root.more_info()
 					text: 'More info'
 					font_size: '30sp'
 					color: hex('#f9f9f9ff')
