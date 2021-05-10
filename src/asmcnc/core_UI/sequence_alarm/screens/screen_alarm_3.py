@@ -174,4 +174,5 @@ class AlarmScreen3(Screen):
 		if self.for_support:
 			self.a.sm.current = 'alarm_2'
 		else:
+			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
 			self.a.sm.current = 'alarm_5'
