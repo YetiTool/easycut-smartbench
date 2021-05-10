@@ -76,9 +76,9 @@ class AlarmSequenceManager(object):
 				self.return_to_screen = self.sm.current
 
 			self.alarm_code = message
-			self.determine_screen_sequence()
 			self.alarm_description = ALARM_CODES_DICT.get(message, "")
 			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
+			self.determine_screen_sequence()
 			self.sm.current = 'alarm_1'
 
 			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
