@@ -191,10 +191,12 @@ class AlarmScreen2(Screen):
 		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it."
 
 	def next_screen(self):
+		self.sm.get_screen('alarm_3').for_support = True
 		self.a.sm.current = 'alarm_3'
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_1'
-
-
-# git force	
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_1'
+		else:
+			self.sm.get_screen('alarm_3').for_support = False
+			self.a.sm.current = 'alarm_3'

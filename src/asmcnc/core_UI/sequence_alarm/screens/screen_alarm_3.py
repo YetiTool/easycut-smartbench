@@ -162,7 +162,11 @@ class AlarmScreen3(Screen):
 			self.camera_img.opacity = 0
 
 	def next_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.for_support:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = 'alarm_2'
+
 
 	def prev_screen(self):
 		if self.for_support:

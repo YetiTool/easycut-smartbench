@@ -208,17 +208,20 @@ class AlarmScreen5(Screen):
 
 		if self.a.support_sequence:
 			self.next_button.opacity = 0
+			self.next_button.disabled = True
 		else:
 			self.next_button.opacity = 1
+			self.next_button.disabled = False
 
 	def next_screen(self):
 		self.a.exit_sequence()
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = 'alarm_1'
 
 	def more_info(self):
 		self.sm.get_screen('alarm_3').for_support = False
 		self.s.sm.current = 'alarm_3'
-
-# git force
