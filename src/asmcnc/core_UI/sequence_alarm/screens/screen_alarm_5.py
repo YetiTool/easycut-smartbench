@@ -206,7 +206,7 @@ class AlarmScreen5(Screen):
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
 
-	def on_enter(self):
+	def on_pre_enter(self):
 
 		if self.a.support_sequence:
 			self.next_button.opacity = 0
