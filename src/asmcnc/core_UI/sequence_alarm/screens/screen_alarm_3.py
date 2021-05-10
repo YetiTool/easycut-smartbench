@@ -17,7 +17,6 @@ Builder.load_string("""
 	description_label : description_label
 
 	camera_img : camera_img
-	next_button : next_button
 	# usb_img : usb_img
 
 	BoxLayout: 
@@ -92,7 +91,6 @@ Builder.load_string("""
 					width: dp(291)
 					padding: [0,0,0,52]
 					Button:
-						id: next_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
 						border: [dp(14.5)]*4
@@ -123,7 +121,6 @@ Builder.load_string("""
             height: 100
             width: 120
             allow_stretch: True
-            opacity: 1
 
 	# FloatLayout:
  #        Image:
@@ -138,8 +135,6 @@ Builder.load_string("""
 
 class AlarmScreen3(Screen):
 
-	for_support = True
-
 	def __init__(self, **kwargs):
 		super(AlarmScreen3, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
@@ -151,28 +146,11 @@ class AlarmScreen3(Screen):
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
-	def on_pre_enter(self):
-
-		if self.for_support:
-			self.next_button.text = "Next..."
-			self.camera_img.opacity = 1
-			self.a.download_alarm_report()
-
-		else:
-			self.next_button.text = "Get support"
-			self.camera_img.opacity = 0
-
+	def on_enter(self):
+		self.a.download_alarm_report()
 
 	def next_screen(self):
-		if self.for_support:
-			self.a.sm.current = 'alarm_4'
-		else:
-			self.a.sm.current = 'alarm_2'
-
+		self.a.sm.current = 'alarm_4'
 
 	def prev_screen(self):
-		if self.for_support:
-			self.a.sm.current = 'alarm_2'
-		else:
-			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-			self.a.sm.current = 'alarm_5'
+		self.a.sm.current = 'alarm_2'
