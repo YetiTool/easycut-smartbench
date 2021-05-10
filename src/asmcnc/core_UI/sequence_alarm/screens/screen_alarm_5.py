@@ -212,8 +212,12 @@ class AlarmScreen5(Screen):
 			self.next_button.opacity = 0
 			self.next_button.disabled = True
 		else:
-			self.next_button.opacity = 1
-			self.next_button.disabled = False
+			if self.return_to_screen == 'alarm_1':
+				self.next_button.opacity = 1
+				self.next_button.disabled = False
+			else: 
+				self.next_button.opacity = 0
+				self.next_button.disabled = True	
 
 	def next_screen(self):
 		self.a.exit_sequence()
