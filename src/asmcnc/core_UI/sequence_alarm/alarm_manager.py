@@ -265,7 +265,8 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			"Status cache:" + " " + \
 			"\n" + \
-			self.status_cache
+			""
+			# self.status_cache
 			)
 
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
