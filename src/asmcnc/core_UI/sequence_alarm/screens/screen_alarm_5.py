@@ -222,6 +222,7 @@ class AlarmScreen5(Screen):
 		if self.a.support_sequence:
 			self.a.sm.current = 'alarm_4'
 		else:
+			print(self.prev_screen)
 			self.a.sm.current = self.prev_screen
 
 	def more_info(self):
