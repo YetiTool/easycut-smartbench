@@ -42,6 +42,8 @@ class AlarmSequenceManager(object):
 
 	report_string= 'Loading report...'
 
+	report_setup_event = None
+
 	def __init__(self, screen_manager, settings_manager, machine):
 
 		self.sm = screen_manager
@@ -173,10 +175,17 @@ class AlarmSequenceManager(object):
 
 	def get_status_info(self):
 
-		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
-		n = len(status_list)
-		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
+		try:
+			status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
+			n = len(status_list)
+			self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 
+		except:
+			try:
+				self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
+
+			except:
+				self.status_cache = "Could not retrieve status"
 
 	def get_version_data(self):
 
@@ -199,17 +208,19 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
+		self.report_setup_event = Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
 
 
 
 	def reset_variables(self):
 
-		self.return_to_screen = ''
-		self.alarm_code = ''
-		self.alarm_description = ''
-		self.trigger_description = ''
-		self.status_cache = ''
+		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
+
+		self.return_to_screen = ""
+		self.alarm_code = ""
+		self.alarm_description = ""
+		self.trigger_description = ""
+		self.status_cache = ""
 		self.report_string= 'Loading report...'
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
