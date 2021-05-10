@@ -223,7 +223,7 @@ class AlarmScreen5(Screen):
 			self.a.sm.current = 'alarm_4'
 		else:
 			print(self.prev_screen)
-			self.a.sm.current = self.prev_screen
+			# self.a.sm.current = self.prev_screen
 
 	def more_info(self):
 		self.a.sm.get_screen('alarm_3').for_support = False
