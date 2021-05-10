@@ -187,9 +187,8 @@ class AlarmScreen4(Screen):
 			)
 
 	def next_screen(self):
+		self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_4'
 		self.a.sm.current = 'alarm_5'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_3'
-
-# git force
