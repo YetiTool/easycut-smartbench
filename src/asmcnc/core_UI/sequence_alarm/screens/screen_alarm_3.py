@@ -151,7 +151,8 @@ class AlarmScreen3(Screen):
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
-	def on_enter(self):
+	def on_pre_enter(self):
+
 		self.a.download_alarm_report()
 
 		if self.for_support:
@@ -160,6 +161,7 @@ class AlarmScreen3(Screen):
 		else:
 			self.next_button.text = "Get support"
 			self.camera_img.opacity = 0
+
 
 	def next_screen(self):
 		if self.for_support:
@@ -172,4 +174,5 @@ class AlarmScreen3(Screen):
 		if self.for_support:
 			self.a.sm.current = 'alarm_2'
 		else:
+			self.a.sm.get_screen('alarm_5').prev_screen = 'alarm_3'
 			self.a.sm.current = 'alarm_5'

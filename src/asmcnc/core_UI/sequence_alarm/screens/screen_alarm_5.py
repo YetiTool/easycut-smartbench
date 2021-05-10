@@ -195,6 +195,8 @@ Builder.load_string("""
 """)
 
 class AlarmScreen5(Screen):
+
+	prev_screen = 'alarm_1'
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
@@ -220,7 +222,7 @@ class AlarmScreen5(Screen):
 		if self.a.support_sequence:
 			self.a.sm.current = 'alarm_4'
 		else:
-			self.a.sm.current = 'alarm_1'
+			self.a.sm.current = self.prev_screen
 
 	def more_info(self):
 		self.a.sm.get_screen('alarm_3').for_support = False
