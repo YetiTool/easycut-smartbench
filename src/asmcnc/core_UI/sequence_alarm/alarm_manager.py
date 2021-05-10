@@ -214,6 +214,8 @@ class AlarmSequenceManager(object):
 
 	def reset_variables(self):
 
+		print("Resetting variables")
+
 		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
 
 		self.return_to_screen = ""
@@ -265,8 +267,7 @@ class AlarmSequenceManager(object):
 			"\n\n" + \
 			"Status cache:" + " " + \
 			"\n" + \
-			""
-			# self.status_cache
+			self.status_cache
 			)
 
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
