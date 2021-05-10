@@ -275,7 +275,3 @@ class AlarmSequenceManager(object):
 		except:
 			print("Unable to write alarm report to file")
 			return False
-
-	def go_to_alarn_3a(self):
-		self.sm.get_screen('alarm_3').next_button.text = "Next..."
-		self.sm.
