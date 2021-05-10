@@ -223,5 +223,5 @@ class AlarmScreen5(Screen):
 			self.a.sm.current = 'alarm_1'
 
 	def more_info(self):
-		self.sm.get_screen('alarm_3').for_support = False
-		self.s.sm.current = 'alarm_3'
+		self.a.sm.get_screen('alarm_3').for_support = False
+		self.a.sm.current = 'alarm_3'
