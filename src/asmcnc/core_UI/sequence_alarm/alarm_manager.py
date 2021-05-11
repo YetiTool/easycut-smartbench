@@ -87,7 +87,7 @@ class AlarmSequenceManager(object):
 
 			except:
 				print("Kivy fail caught")
-				Clock.schedule_once(lambda dt: self.get_first_screen(), 0.3)
+				Clock.schedule_once(lambda dt: self.get_first_screen(), 2)
 
 			self.handle_alarm_state()
 
