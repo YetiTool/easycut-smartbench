@@ -83,25 +83,24 @@ class AlarmSequenceManager(object):
 			self.determine_screen_sequence()
 
 			try: 
-				self.sm.current = 'alarm_1'
-				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-					self.sm.get_screen('alarm_1').description_label.text = (
-						self.alarm_description + \
-						"\n" + \
-						"Getting details..."
-						)
+				self.get_first_screen()
 
 			except:
 				print("Kivy fail caught")
-				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-					self.sm.get_screen('alarm_1').description_label.text = (
-						self.alarm_description + \
-						"\n" + \
-						"Getting details..."
-						)
-				Clock.schedule_once(lambda dt: self.sm.current = 'alarm_1', 0.1)
+				Clock.schedule_once(lambda dt: self.get_first_screen(), 0.1)
 
 			self.handle_alarm_state()
+
+	def get_first_screen(self):
+		self.sm.current = 'alarm_1'
+
+		if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+
+			self.sm.get_screen('alarm_1').description_label.text = (
+				self.alarm_description + \
+				"\n" + \
+				"Getting details..."
+				)
 
 
 	def determine_screen_sequence(self):
