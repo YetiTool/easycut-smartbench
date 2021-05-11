@@ -88,6 +88,7 @@ class AlarmSequenceManager(object):
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
 				self.handle_alarm_state()
+				print("Screen refired")
 
 		except:
 			print("Kivy fail happened, try everything again")
