@@ -71,21 +71,27 @@ class AlarmSequenceManager(object):
 
 	def alert_user(self, message):
 
-		if not self.is_alarm_sequence_already_running():
-			if self.is_error_screen_already_up():
-				self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-			else:
-				self.return_to_screen = self.sm.current
+		try:
 
-			self.alarm_code = message
-			self.alarm_description = ALARM_CODES_DICT.get(message, "")
-			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-				self.sm.get_screen('alarm_1').description_label.text = self.alarm_description + "\n" + "Getting details..."
-			else:
-				self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
-			self.determine_screen_sequence()
-			self.sm.current = 'alarm_1'
-			self.handle_alarm_state()
+			if not self.is_alarm_sequence_already_running():
+				if self.is_error_screen_already_up():
+					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+				else:
+					self.return_to_screen = self.sm.current
+
+				self.alarm_code = message
+				self.alarm_description = ALARM_CODES_DICT.get(message, "")
+				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description + "\n" + "Getting details..."
+				else:
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
+				self.determine_screen_sequence()
+				self.sm.current = 'alarm_1'
+				self.handle_alarm_state()
+
+		except:
+			print("Kivy fail happened, try everything again")
+			self.alert_user()
 
 
 	def determine_screen_sequence(self):
