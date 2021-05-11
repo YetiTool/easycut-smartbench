@@ -33,9 +33,6 @@ class AlarmSequenceManager(object):
 	alarm_code = ''
 	alarm_description = ''
 
-	# is full support sequence needed?
-	support_sequence = False
-
 	# retrieve these for the alarm report
 	trigger_description = ''
 	status_cache = ''
@@ -100,13 +97,6 @@ class AlarmSequenceManager(object):
 		self.sm.current = 'alarm_1'
 		print("alarm 1")
 		# this is a massive hack to get past random kivy fails
-
-
-	def determine_screen_sequence(self):
-		if ((self.alarm_code).endswith('4') or (self.alarm_code).endswith('5') or (self.alarm_code).endswith('6') or (self.alarm_code).endswith('7')):
-			self.support_sequence = False
-		else:
-			self.support_sequence = True
 
 
 	def exit_sequence(self):
