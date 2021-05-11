@@ -91,7 +91,7 @@ class AlarmSequenceManager(object):
 
 		except:
 			print("Kivy fail happened, try everything again")
-			self.alert_user()
+			self.alert_user(message)
 
 
 	def determine_screen_sequence(self):
