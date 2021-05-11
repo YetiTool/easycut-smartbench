@@ -82,8 +82,11 @@ class AlarmSequenceManager(object):
 			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 			self.determine_screen_sequence()
 
-			try: self.sm.current = 'alarm_1'
-			except: self.sm.current = 'alarm_1'
+			try: 
+				self.sm.current = 'alarm_1'
+			except:
+				print("Kivy fail caught")
+				self.sm.current = 'alarm_1'
 
 			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 				self.sm.get_screen('alarm_1').description_label.text = (
@@ -178,18 +181,10 @@ class AlarmSequenceManager(object):
 	def get_status_info(self):
 
 		print("Get status cache")
+		status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
+		n = len(status_list)
+		self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
 
-		try:
-			status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
-			n = len(status_list)
-			self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
-
-		except:
-			try:
-				self.status_cache = ('\n').join(self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer[n-2:n])
-
-			except:
-				self.status_cache = "Could not retrieve status"
 
 	def get_version_data(self):
 
@@ -217,8 +212,6 @@ class AlarmSequenceManager(object):
 
 
 	def reset_variables(self):
-
-		print("Resetting variables")
 
 		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
 
