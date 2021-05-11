@@ -10,36 +10,29 @@ from asmcnc.skavaUI import widget_status_bar
 
 # Kivy UI builder:
 Builder.load_string("""
-
 <AlarmScreen3>:
-
 	status_container : status_container
 	description_label : description_label
-
 	camera_img : camera_img
+	next_button : next_button
 	# usb_img : usb_img
-
 	BoxLayout: 
 		size_hint: (None,None)
 		width: dp(800)
 		height: dp(480)
 		orientation: 'vertical'
-
 		canvas:
 			Color:
 				rgba: [1,1,1,1]
 			Rectangle:
 				size: self.size
 				pos: self.pos
-
 		BoxLayout:
 			id: status_container 
 			size_hint_y: 0.08
-
 		BoxLayout:
 			size_hint_y: 0.92
 			orientation: 'vertical'
-
 			BoxLayout: 
 				orientation: 'vertical'
 				padding: [20,10]
@@ -52,7 +45,6 @@ Builder.load_string("""
 					valign: 'top'
 					text_size: self.size
 					size: self.size
-
 			# Buttons
 			BoxLayout: 
 				padding: [10,0,10,10]
@@ -60,7 +52,6 @@ Builder.load_string("""
 				height: dp(142)
 				width: dp(800)
 				orientation: 'horizontal'
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
@@ -84,13 +75,13 @@ Builder.load_string("""
 								y: self.parent.y
 								size: self.parent.width, self.parent.height
 								allow_stretch: True
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
 					width: dp(291)
 					padding: [0,0,0,52]
 					Button:
+						id: next_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
 						border: [dp(14.5)]*4
@@ -104,14 +95,11 @@ Builder.load_string("""
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
-
-
 	FloatLayout:
         Image:
         	id: camera_img
@@ -121,7 +109,7 @@ Builder.load_string("""
             height: 100
             width: 120
             allow_stretch: True
-
+            opacity: 1
 	# FloatLayout:
  #        Image:
  #        	id: usb_img
