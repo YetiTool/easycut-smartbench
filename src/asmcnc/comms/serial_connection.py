@@ -245,8 +245,7 @@ class SerialConnection(object):
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
-                        # - this bit grinds to a halt presumably
-                        # - need to send instructions to the GUI (prior to raise?) 
+                        # - this bit grinds to a halt
     
                 # Job streaming: stuff butter
                 if (self.is_job_streaming and not self.m.is_machine_paused):
