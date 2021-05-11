@@ -94,7 +94,10 @@ class AlarmSequenceManager(object):
 
 	def refire_screen(self):
 		print("Screen refired")
+		self.sm.current = 'alarm_2'
+		print("alarm 2")
 		self.sm.current = 'alarm_1'
+		print("alarm 1")
 
 
 	def determine_screen_sequence(self):
