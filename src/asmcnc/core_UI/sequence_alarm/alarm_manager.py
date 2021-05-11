@@ -87,6 +87,7 @@ class AlarmSequenceManager(object):
 
 			except:
 				print("Kivy fail caught")
+				self.sm.get_screen('alarm_2')
 			
 			self.get_first_screen()
 			self.handle_alarm_state()
