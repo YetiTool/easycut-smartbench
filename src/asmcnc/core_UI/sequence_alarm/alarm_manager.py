@@ -39,6 +39,8 @@ class AlarmSequenceManager(object):
 
 	report_string= 'Loading report...'
 
+	report_setup_event = None
+
 	def __init__(self, screen_manager, settings_manager, machine):
 
 		self.sm = screen_manager
@@ -66,25 +68,35 @@ class AlarmSequenceManager(object):
 
 	def alert_user(self, message):
 
-		if not self.is_alarm_sequence_already_running():
-			if self.is_error_screen_already_up():
-				self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-			else:
-				self.return_to_screen = self.sm.current
+		try:
+			if not self.is_alarm_sequence_already_running():
+				if self.is_error_screen_already_up():
+					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+				else:
+					self.return_to_screen = self.sm.current
 
-			self.alarm_code = message
-			self.alarm_description = ALARM_CODES_DICT.get(message, "")
-			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
-			self.sm.current = 'alarm_1'
+				self.alarm_code = message
+				self.alarm_description = ALARM_CODES_DICT.get(message, "")
+				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description + "\n" + "Getting details..."
+				else:
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
+				self.determine_screen_sequence()
+				self.sm.current = 'alarm_1'
 
-			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-				self.sm.get_screen('alarm_1').description_label.text = (
-					self.alarm_description + \
-					"\n" + \
-					"Getting details..."
-					)
+		except:
+			print("Kivy fail happened, try everything again")
+			self.refire_screen()
 
-			self.handle_alarm_state()
+		self.handle_alarm_state()
+
+	def refire_screen(self):
+		print("Screen refired")
+		self.sm.current = 'alarm_2'
+		print("alarm 2")
+		self.sm.current = 'alarm_1'
+		print("alarm 1")
+		# this is a massive hack to get past random kivy fails
 
 
 	def exit_sequence(self):
@@ -188,17 +200,19 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
+		self.report_setup_event = Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
 
 
 
 	def reset_variables(self):
 
-		self.return_to_screen = ''
-		self.alarm_code = ''
-		self.alarm_description = ''
-		self.trigger_description = ''
-		self.status_cache = ''
+		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
+
+		self.return_to_screen = ""
+		self.alarm_code = ""
+		self.alarm_description = ""
+		self.trigger_description = ""
+		self.status_cache = ""
 		self.report_string= 'Loading report...'
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
@@ -226,6 +240,13 @@ class AlarmSequenceManager(object):
 
 		self.get_status_info()
 
+		try: 
+			# If variables get reset then this will fail
+			alarm_number = str((self.alarm_code.split(':'))[1])
+		except:
+			alarm_number = ""
+
+
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
@@ -235,7 +256,7 @@ class AlarmSequenceManager(object):
 			"Hardware version:" + " " + self.hw_version + "\n" + \
 			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
-			"Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \
+			"Alarm code:" + " " + alarm_number + \
 			"\n" + \
 			"Alarm description: " + " " + self.alarm_description + \
 			"\n" + \
