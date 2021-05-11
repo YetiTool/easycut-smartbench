@@ -175,6 +175,8 @@ class AlarmSequenceManager(object):
 
 	def get_status_info(self):
 
+		print("Get status cache")
+
 		try:
 			status_list = self.sm.get_screen('home').gcode_monitor_widget.status_report_buffer
 			n = len(status_list)
@@ -247,6 +249,8 @@ class AlarmSequenceManager(object):
 
 
 	def setup_report(self):
+
+		print("Set up report")
 
 		self.get_status_info()
 
