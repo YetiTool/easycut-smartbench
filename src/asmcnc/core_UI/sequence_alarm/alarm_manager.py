@@ -254,6 +254,8 @@ class AlarmSequenceManager(object):
 
 		self.get_status_info()
 
+		print(self.status_cache)
+
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
