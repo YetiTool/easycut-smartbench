@@ -81,14 +81,6 @@ class AlarmSequenceManager(object):
 			self.alarm_description = ALARM_CODES_DICT.get(message, "")
 			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 			self.determine_screen_sequence()
-
-			try: 
-				self.get_first_screen()
-
-			except:
-				print("Kivy fail caught")
-				self.sm.get_screen('alarm_2')
-			
 			self.get_first_screen()
 			self.handle_alarm_state()
 
