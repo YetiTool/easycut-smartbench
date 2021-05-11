@@ -178,6 +178,8 @@ Builder.load_string("""
 """)
 
 class AlarmScreen5(Screen):
+
+	return_to_screen = 'alarm_1'
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
@@ -187,10 +189,28 @@ class AlarmScreen5(Screen):
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
 
+	def on_pre_enter(self):
+
+		if self.a.support_sequence:
+			self.next_button.opacity = 0
+			self.next_button.disabled = True
+		else:
+			if self.return_to_screen == 'alarm_1':
+				self.next_button.opacity = 1
+				self.next_button.disabled = False
+			else: 
+				self.next_button.opacity = 0
+				self.next_button.disabled = True	
+
 	def next_screen(self):
 		self.a.exit_sequence()
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = self.return_to_screen
 
-# git force
+	def more_info(self):
+		self.a.sm.get_screen('alarm_3').for_support = False
+		self.a.sm.current = 'alarm_3'
