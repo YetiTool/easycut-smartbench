@@ -81,7 +81,9 @@ class AlarmSequenceManager(object):
 			self.alarm_description = ALARM_CODES_DICT.get(message, "")
 			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 			self.determine_screen_sequence()
-			self.sm.current = 'alarm_1'
+
+			try: self.sm.current = 'alarm_1'
+			except: self.sm.current = 'alarm_1'
 
 			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
 				self.sm.get_screen('alarm_1').description_label.text = (
@@ -254,7 +256,12 @@ class AlarmSequenceManager(object):
 
 		self.get_status_info()
 
-		print(self.status_cache)
+		try: 
+			# If variables get reset then this will fail
+			alarm_number = str((self.alarm_code.split(':'))[1])
+		except:
+			alarm_number = ""
+
 
 		self.report_string = (
 
@@ -265,7 +272,7 @@ class AlarmSequenceManager(object):
 			"Hardware version:" + " " + self.hw_version + "\n" + \
 			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
-			# "Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \
+			"Alarm code:" + " " + alarm_number + \
 			"\n" + \
 			"Alarm description: " + " " + self.alarm_description + \
 			"\n" + \
