@@ -72,7 +72,6 @@ class AlarmSequenceManager(object):
 	def alert_user(self, message):
 
 		try:
-
 			if not self.is_alarm_sequence_already_running():
 				if self.is_error_screen_already_up():
 					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
@@ -88,11 +87,14 @@ class AlarmSequenceManager(object):
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
 				self.handle_alarm_state()
-				print("Screen refired")
 
 		except:
 			print("Kivy fail happened, try everything again")
-			self.alert_user(message)
+			self.refire_screen()
+
+	def refire_screen(self):
+		print("Screen refired")
+		self.sm.current = 'alarm_1'
 
 
 	def determine_screen_sequence(self):
