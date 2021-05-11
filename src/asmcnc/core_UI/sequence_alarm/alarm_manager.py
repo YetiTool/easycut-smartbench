@@ -86,11 +86,12 @@ class AlarmSequenceManager(object):
 					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
-				self.handle_alarm_state()
 
 		except:
 			print("Kivy fail happened, try everything again")
 			self.refire_screen()
+
+		self.handle_alarm_state()
 
 	def refire_screen(self):
 		print("Screen refired")
@@ -98,7 +99,6 @@ class AlarmSequenceManager(object):
 		print("alarm 2")
 		self.sm.current = 'alarm_1'
 		print("alarm 1")
-
 		# this is a massive hack to get past random kivy fails
 
 
