@@ -265,7 +265,7 @@ class AlarmSequenceManager(object):
 			"Hardware version:" + " " + self.hw_version + "\n" + \
 			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
-			"Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \
+			# "Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \
 			"\n" + \
 			"Alarm description: " + " " + self.alarm_description + \
 			"\n" + \
