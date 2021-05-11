@@ -135,6 +135,8 @@ Builder.load_string("""
 
 class AlarmScreen3(Screen):
 
+	for_support = True
+
 	def __init__(self, **kwargs):
 		super(AlarmScreen3, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
@@ -146,11 +148,28 @@ class AlarmScreen3(Screen):
 		self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
-	def on_enter(self):
-		self.a.download_alarm_report()
+	def on_pre_enter(self):
+
+		if self.for_support:
+			self.next_button.text = "Next..."
+			self.camera_img.opacity = 1
+			self.a.download_alarm_report()
+
+		else:
+			self.next_button.text = "Get support"
+			self.camera_img.opacity = 0
+
 
 	def next_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.for_support:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = 'alarm_2'
+
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_2'
+		if self.for_support:
+			self.a.sm.current = 'alarm_2'
+		else:
+			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
+			self.a.sm.current = 'alarm_5'
