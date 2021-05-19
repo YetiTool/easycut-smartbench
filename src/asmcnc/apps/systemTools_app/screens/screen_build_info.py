@@ -108,8 +108,9 @@ Builder.load_string("""
                         size_hint_y: None
                         height: dp(0)
                         opacity: 0
-                        on_text: root.save_new_name()
+                        on_text_validate: root.save_new_name()
                         disabled: True
+                        multiline: False
 
                     Label:
                         id: smartbench_model
