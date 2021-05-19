@@ -21,6 +21,7 @@ Builder.load_string("""
     fw_version_label: fw_version_label
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
+    smartbench_name : smartbench_name
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -74,8 +75,18 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (None, None)
-                    height: dp(280)
+                    height: dp(300)
                     width: dp(550)
+
+                    Label:
+                        id: smartbench_name
+                        text: '[b]My SmartBench[/b]'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 24
 
                     Label:
                         id: smartbench_model
@@ -93,7 +104,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 8
                         size_hint: (None, None)
-                        height: dp(240)
+                        height: dp(220)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
@@ -124,7 +135,7 @@ Builder.load_string("""
                             font_size: 20
 
                         Label:
-                            text: '[b]Console serial number[/b]'
+                            text: '[b]Console hostname[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
@@ -351,6 +362,7 @@ Builder.load_string("""
 class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
+    smartbench_name_filepath = '/home/pi/smartbench_name.txt'
 
 
     def __init__(self, **kwargs):
@@ -434,3 +446,25 @@ class BuildInfoScreen(Screen):
                 ip_address = ''
 
         return ip_address
+
+    def get_smartbench_name(self):
+        try:
+            file = open(self.smartbench_name_filepath, 'r')
+            self.smartbench_name.text = '[b]' + str(file.read()) + '[/b]'
+            file.close()
+
+        except: 
+            self.smartbench_name.text = '[b]SmartBench CNC Router[/b]'
+
+    def write_name_to_file(self):
+
+        try:
+            file_sb_name = open(self.smartbench_name_filepath, "w+")
+            file_sb_name.write(str("") + str(""))
+            file_sb_name.close()
+            return True
+
+        except: 
+            warning_message = 'Problem saving nickname!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
