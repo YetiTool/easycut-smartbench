@@ -34,7 +34,7 @@ class ServerConnection(object):
 			conn, addr = self.sock.accept()
 			print("Connected to Archie's app")
 			print(self.HOST)
-			conn.send("HAI I AM SMARTBENCH","utf-8")
+			conn.send("HAI I AM SMARTBENCH")
 			# except: print("could not send")
 			sleep(10)
 			conn.close()
