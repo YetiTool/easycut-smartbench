@@ -6,6 +6,8 @@ PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 class ServerConnection(object):
 
+	sock = None
+
 	def __init__(self):
 
 		if sys.platform != "win32" and sys.platform != "darwin":
