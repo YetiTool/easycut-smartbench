@@ -12,7 +12,7 @@ class ServerConnection(object):
 
 		if sys.platform != "win32" and sys.platform != "darwin":
 
-			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.sock:
+			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
 				self.sock.bind((HOST, PORT))
 				self.sock.listen()
 				self.do_connection_loop()
