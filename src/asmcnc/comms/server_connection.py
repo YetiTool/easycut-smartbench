@@ -3,7 +3,7 @@ import sys
 import threading
 from time import sleep
 
-HOST = '192.168.200.107'  # Standard loopback interface address (localhost)
+HOST = ""  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 class ServerConnection(object):
@@ -30,7 +30,7 @@ class ServerConnection(object):
 			print("loop running")
 			conn, addr = self.sock.accept()
 			print("Connected to Archie's app")
-			try: conn.send('HAI I AM SMARTBENCH')
+			try: conn.send("HAI I AM SMARTBENCH","utf-8")
 			except: print("could not send")
 			sleep(10)
 			conn.close()
