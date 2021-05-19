@@ -503,7 +503,7 @@ class BuildInfoScreen(Screen):
             self.smartbench_name_unformatted = 'My SmartBench'
 
         self.smartbench_name.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
-        self.smartbench_name_input = '[b]' + self.smartbench_name_unformatted + '[/b]'
+        self.smartbench_name_input.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
 
     def write_name_to_file(self):
 
