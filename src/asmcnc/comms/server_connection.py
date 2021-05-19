@@ -1,6 +1,7 @@
 import socket
 import sys
 import threading
+from time import sleep
 
 HOST = '1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
@@ -25,9 +26,10 @@ class ServerConnection(object):
 
 		print("loop starting")
 
-		# while True:
-		print("loop running")
-		conn, addr = self.sock.accept()
-		print("Connected to Archie's app")
-		conn.send('HAI I AM SMARTBENCH')
-			# conn.close() 
+		while True:
+			print("loop running")
+			conn, addr = self.sock.accept()
+			print("Connected to Archie's app")
+			conn.send('HAI I AM SMARTBENCH')
+			sleep(10)
+			conn.close() 
