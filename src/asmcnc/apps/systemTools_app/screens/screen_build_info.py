@@ -87,6 +87,7 @@ Builder.load_string("""
                         valign: "middle"
                         markup: True
                         font_size: 28
+                        height: dp(40)
 
                     Label:
                         id: smartbench_model
