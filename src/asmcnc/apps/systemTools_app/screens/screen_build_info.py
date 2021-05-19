@@ -22,6 +22,7 @@ Builder.load_string("""
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
     smartbench_name : smartbench_name
+    smartbench_name_input : smartbench_name_input
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -78,9 +79,11 @@ Builder.load_string("""
                     height: dp(300)
                     width: dp(550)
 
-                    Label:
+                    Button:
                         id: smartbench_name
                         text: '[b]My SmartBench[/b]'
+                        background_normal: ""
+                        background_down: ""
                         color: hex('#333333ff')
                         text_size: self.size
                         halign: "left"
@@ -88,6 +91,17 @@ Builder.load_string("""
                         markup: True
                         font_size: 28
                         height: dp(40)
+
+                    TextInput:
+                        id: smartbench_name_input
+                        text: '[b]My SmartBench[/b]'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 28
+                        height: dp(0)
 
                     Label:
                         id: smartbench_model
