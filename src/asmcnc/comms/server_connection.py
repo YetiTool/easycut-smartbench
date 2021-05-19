@@ -39,29 +39,29 @@ class ServerConnection(object):
 			conn.close()
 
 
-    def get_ip_address(self):
+	def get_ip_address(self):
 
-        ip_address = ''
+		ip_address = ''
 
-        if sys.platform == "win32":
-            try:
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
-                ip_address = str(IPAddr)
+		if sys.platform == "win32":
+			try:
+				hostname=socket.gethostname()
+				IPAddr=socket.gethostbyname(hostname)
+				ip_address = str(IPAddr)
 
-            except:
-                ip_address = ''
-        else:
-            try:
-                f = os.popen('hostname -I')
-                first_info = f.read().strip().split(' ')[0]
-                if len(first_info.split('.')) == 4:
-                    ip_address = first_info
+			except:
+				ip_address = ''
+		else:
+			try:
+				f = os.popen('hostname -I')
+				first_info = f.read().strip().split(' ')[0]
+				if len(first_info.split('.')) == 4:
+					ip_address = first_info
 
-                else:
-                    ip_address = ''
+				else:
+					ip_address = ''
 
-            except:
-                ip_address = ''
+			except:
+				ip_address = ''
 
-        return ip_address
+		return ip_address
