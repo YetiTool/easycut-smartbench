@@ -387,7 +387,7 @@ class BuildInfoScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     smartbench_name_filepath = '/home/pi/smartbench_name.txt'
 
-    smartbench_name_unformatted
+    smartbench_name_unformatted = 'My SmartBench'
 
 
     def __init__(self, **kwargs):
