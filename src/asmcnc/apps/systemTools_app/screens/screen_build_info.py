@@ -86,7 +86,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 24
+                        font_size: 28
 
                     Label:
                         id: smartbench_model
@@ -96,7 +96,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 24
+                        font_size: 22
 
                     GridLayout:
                         size: self.parent.size
