@@ -30,6 +30,7 @@ class ServerConnection(object):
 			print("loop running")
 			conn, addr = self.sock.accept()
 			print("Connected to Archie's app")
-			conn.send('HAI I AM SMARTBENCH')
+			try: conn.send('HAI I AM SMARTBENCH')
+			except: print("could not send")
 			sleep(10)
 			conn.close()
