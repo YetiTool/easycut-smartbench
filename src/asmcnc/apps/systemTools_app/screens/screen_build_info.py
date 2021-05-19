@@ -403,6 +403,8 @@ class BuildInfoScreen(Screen):
     def on_enter(self, *args):
         self.scrape_fw_version()
 
+        print(str(self.smartbench_name.size))
+
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
