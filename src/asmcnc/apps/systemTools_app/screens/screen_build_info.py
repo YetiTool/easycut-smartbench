@@ -82,6 +82,7 @@ Builder.load_string("""
                     Button:
                         id: smartbench_name
                         text: '[b]My SmartBench[/b]'
+                        background_color: hex('#f9f9f9ff')
                         background_normal: ""
                         background_down: ""
                         color: hex('#333333ff')
@@ -90,18 +91,22 @@ Builder.load_string("""
                         valign: "middle"
                         markup: True
                         font_size: 28
+                        size_hint_y: None
                         height: dp(40)
+                        opacity: 1
 
                     TextInput:
                         id: smartbench_name_input
-                        text: '[b]My SmartBench[/b]'
+                        text: 'My SmartBench'
                         color: hex('#333333ff')
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
                         markup: True
                         font_size: 28
+                        size_hint_y: None
                         height: dp(0)
+                        opacity: 0
 
                     Label:
                         id: smartbench_model
