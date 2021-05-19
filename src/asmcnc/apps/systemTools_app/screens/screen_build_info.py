@@ -487,7 +487,6 @@ class BuildInfoScreen(Screen):
 
     def save_new_name(self):
         self.write_name_to_file()
-        self.get_smartbench_name()
         self.smartbench_name_input.disabled = True
         self.smartbench_name.disabled = False
         self.smartbench_name.height = 40
@@ -506,7 +505,7 @@ class BuildInfoScreen(Screen):
             self.smartbench_name_unformatted = 'My SmartBench'
 
         self.smartbench_name.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
-        self.smartbench_name_input.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
+        self.smartbench_name_input.text = self.smartbench_name_unformatted
 
     def write_name_to_file(self):
 
