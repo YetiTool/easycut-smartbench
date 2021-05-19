@@ -94,6 +94,7 @@ Builder.load_string("""
                         size_hint_y: None
                         height: dp(40)
                         opacity: 1
+                        on_press: root.open_rename()
 
                     TextInput:
                         id: smartbench_name_input
@@ -107,6 +108,8 @@ Builder.load_string("""
                         size_hint_y: None
                         height: dp(0)
                         opacity: 0
+                        on_text: root.save_new_name()
+                        disabled: True
 
                     Label:
                         id: smartbench_model
@@ -384,6 +387,8 @@ class BuildInfoScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     smartbench_name_filepath = '/home/pi/smartbench_name.txt'
 
+    smartbench_name_unformatted
+
 
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
@@ -408,6 +413,8 @@ class BuildInfoScreen(Screen):
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
         self.get_smartbench_model()
+        self.get_smartbench_name()
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -422,8 +429,6 @@ class BuildInfoScreen(Screen):
 
     def on_enter(self, *args):
         self.scrape_fw_version()
-
-        print(str(self.smartbench_name.size))
 
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
@@ -469,14 +474,36 @@ class BuildInfoScreen(Screen):
 
         return ip_address
 
+
+    ## SMARTBENCH NAMING
+
+    def open_rename(self):
+        self.smartbench_name.disabled = True
+        self.smartbench_name.height = 0
+        self.smartbench_name_input.height = 40
+        self.smartbench_name.opacity = 0
+        self.smartbench_name_input.opacity = 1
+
+    def save_new_name(self):
+        self.write_name_to_file()
+        self.smartbench_name_input.disabled = True
+        self.smartbench_name.disabled = False
+        self.smartbench_name.height = 40
+        self.smartbench_name_input.height = 0
+        self.smartbench_name.opacity = 1
+        self.smartbench_name_input.opacity = 0
+
     def get_smartbench_name(self):
         try:
             file = open(self.smartbench_name_filepath, 'r')
-            self.smartbench_name.text = '[b]' + str(file.read()) + '[/b]'
+            self.smartbench_name_unformatted = str(file.read())
             file.close()
 
         except: 
-            self.smartbench_name.text = '[b]SmartBench CNC Router[/b]'
+            self.smartbench_name_unformatted = 'My SmartBench'
+
+        self.smartbench_name.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
+        self.smartbench_name_input = '[b]' + self.smartbench_name_unformatted + '[/b]'
 
     def write_name_to_file(self):
 

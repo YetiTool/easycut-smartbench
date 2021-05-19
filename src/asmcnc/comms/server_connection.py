@@ -33,6 +33,7 @@ class ServerConnection(object):
 			print("loop running")
 			conn, addr = self.sock.accept()
 			print("Connected to Archie's app")
+			print(self.HOST)
 			try: conn.send("HAI I AM SMARTBENCH","utf-8")
 			except: print("could not send")
 			sleep(10)
