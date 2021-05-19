@@ -479,6 +479,7 @@ class BuildInfoScreen(Screen):
 
     def open_rename(self):
         self.smartbench_name.disabled = True
+        self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
         self.smartbench_name_input.height = 40
         self.smartbench_name.opacity = 0
@@ -486,12 +487,14 @@ class BuildInfoScreen(Screen):
 
     def save_new_name(self):
         self.write_name_to_file()
+        self.get_smartbench_name()
         self.smartbench_name_input.disabled = True
         self.smartbench_name.disabled = False
         self.smartbench_name.height = 40
         self.smartbench_name_input.height = 0
         self.smartbench_name.opacity = 1
         self.smartbench_name_input.opacity = 0
+        self.get_smartbench_name()
 
     def get_smartbench_name(self):
         try:
