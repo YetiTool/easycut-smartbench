@@ -1,5 +1,6 @@
 import socket
 import sys
+import threading
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
@@ -15,11 +16,17 @@ class ServerConnection(object):
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.sock.bind((HOST, PORT))
 			self.sock.listen(5)
-			self.do_connection_loop()
+
+			t = threading.Thread(target=self.do_connection_loop)
+        	t.daemon = True
+        	t.start()
 
 	def do_connection_loop(self):
 
+		print("loop starting")
+
 		while True:
+			print("loop running")
 			conn, addr = self.sock.accept()
 			print("Connected to Archie's app")
 			conn.send('HAI I AM SMARTBENCH')
