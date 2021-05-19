@@ -14,7 +14,7 @@ class ServerConnection(object):
 
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.sock.bind((HOST, PORT))
-			self.sock.listen()
+			self.sock.listen(5)
 			self.do_connection_loop()
 
 	def do_connection_loop(self):
