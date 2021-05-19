@@ -32,4 +32,4 @@ class ServerConnection(object):
 			print("Connected to Archie's app")
 			conn.send('HAI I AM SMARTBENCH')
 			sleep(10)
-			# conn.close() 
+			conn.close()
