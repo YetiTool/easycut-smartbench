@@ -511,7 +511,7 @@ class BuildInfoScreen(Screen):
 
         try:
             file_sb_name = open(self.smartbench_name_filepath, "w+")
-            file_sb_name.write(str("") + str(""))
+            file_sb_name.write(str(self.smartbench_name_unformatted))
             file_sb_name.close()
             return True
 
