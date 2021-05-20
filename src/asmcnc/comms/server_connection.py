@@ -86,6 +86,7 @@ class ServerConnection(object):
 					log("Accepted connection with IP address " + str(self.HOST))
 
 					try: 
+						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
 					except: 
 						print("Message not sent")
