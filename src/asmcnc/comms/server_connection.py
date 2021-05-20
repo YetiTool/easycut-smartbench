@@ -81,6 +81,7 @@ class ServerConnection(object):
 
 		while self.run_connection_loop:
 				try: 
+					"Waiting for connection..."
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 
@@ -88,7 +89,7 @@ class ServerConnection(object):
 						conn.send(self.smartbench_name)
 					except: 
 						print("Message not sent")
-					# sleep(10)
+						
 					conn.close()
 
 				except socket.timeout as e:
