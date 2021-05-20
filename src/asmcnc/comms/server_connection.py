@@ -17,7 +17,7 @@ PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 def log(message):
 	timestamp = datetime.now()
-	print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+	print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' Server connection: ' + str(message))
 
 
 class ServerConnection(object):
@@ -102,13 +102,15 @@ class ServerConnection(object):
 	def close_and_reconnect_socket(self):
 
 		try: 
+			log("Closing socket before attempting to reconnect...")
 			self.run_connection_loop = False
-			self.sock.shutdown()
+			self.sock.shutdown(SHUT_RDWR)
 			self.sock.close()
 
 		except Exception as e: 
 			log("Attempted to close socket, but raised exception: " + str(e))
 
+		log("Try to reconnect...")
 		Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
 
 
@@ -146,8 +148,6 @@ class ServerConnection(object):
 
 			except:
 				ip_address = ''
-
-		log("getting IP address returns: " + str(ip_address))
 
 		return ip_address
 
