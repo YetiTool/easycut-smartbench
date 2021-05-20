@@ -11,6 +11,7 @@ PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 ## protection against garbage colleciton (timeout might be enough)
 ## better logging
 ## reinstate connection if it is dropped / connection polling
+### maybe have this if there is a change in the IP address...
 
 def log(message):
     timestamp = datetime.now()
@@ -24,17 +25,22 @@ class ServerConnection(object):
 
 	def __init__(self):
 
+		self.set_up_socket()
+
+
+	def set_up_socket(self):
 		if sys.platform != 'win32' and sys.platform != 'darwin':
 
 			self.HOST = self.get_ip_address()
 
-			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			self.sock.bind((self.HOST, PORT))
-			self.sock.listen(5)
+			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.sock:
+				self.sock.bind((self.HOST, PORT))
+				self.sock.listen(5)
 
-			t = threading.Thread(target=self.do_connection_loop)
-			t.daemon = True
-			t.start()
+				t = threading.Thread(target=self.do_connection_loop)
+				t.daemon = True
+				t.start()
+
 
 	def do_connection_loop(self):
 
