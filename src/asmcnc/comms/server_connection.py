@@ -35,13 +35,17 @@ class ServerConnection(object):
 
 	def __init__(self):
 
+		Clock.schedule_once(self.initialise_server_connection, 10)
+
+
+
+	def initialise_server_connection(self, dt):
 		self.HOST = self.get_ip_address()
 		self.prev_host = self.HOST
 
 		self.set_up_socket()
 
 		self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
-
 
 	def set_up_socket(self):
 
