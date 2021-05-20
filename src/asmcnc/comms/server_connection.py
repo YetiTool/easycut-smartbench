@@ -34,11 +34,11 @@ class ServerConnection(object):
 	poll_connection = None
 
 	def __init__(self):
-		Clock.schedule_once(self.initialise_server_connection, 10)
 
+		self.get_smartbench_name()
+		self.initialise_server_connection()
 
-
-	def initialise_server_connection(self, dt):
+	def initialise_server_connection(self):
 
 		log("Initialising server connection...")
 
