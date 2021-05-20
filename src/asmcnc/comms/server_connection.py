@@ -93,7 +93,6 @@ class ServerConnection(object):
 
 				except socket.timeout as e:
 					log("Timeout: " + str(e))
-					conn.close()
 
 				except Exception as E:
 					# socket object isn't available for some reason but has not timed out, so kill loop
@@ -101,9 +100,6 @@ class ServerConnection(object):
 					log("Exception when trying to accept: " + str(E))
 					self.close_and_reconnect_socket()
 					break  
-				
-
-
 
 
 	def close_and_reconnect_socket(self):
