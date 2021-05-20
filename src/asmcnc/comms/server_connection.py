@@ -3,8 +3,19 @@ import sys
 import threading
 from time import sleep
 
-# HOST = ''  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
+
+
+# THINGS THIS MODULE NEEDS:
+## timeout
+## protection against garbage colleciton (timeout might be enough)
+## better logging
+## reinstate connection if it is dropped / connection polling
+
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 
 class ServerConnection(object):
 

@@ -487,6 +487,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.opacity = 1
 
     def save_new_name(self):
+        self.smartbench_name_unformatted = self.smartbench_name_input.text
         self.write_name_to_file()
         self.smartbench_name_input.disabled = True
         self.smartbench_name.disabled = False
