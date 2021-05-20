@@ -1,5 +1,5 @@
 import socket
-import sys
+import sys, os
 import threading
 from time import sleep
 from kivy.clock import Clock
@@ -146,6 +146,8 @@ class ServerConnection(object):
 
 			except:
 				ip_address = ''
+
+		log("getting IP address returns: " + str(ip_address))
 
 		return ip_address
 
