@@ -80,23 +80,29 @@ class ServerConnection(object):
 		log("Starting server connection loop...")
 
 		while self.run_connection_loop:
-			try:
 				try: 
 					conn, addr = self.sock.accept()
-				except:
-					# socket object isn't available for some reason, so kill loop
+					log("Accepted connection with IP address " + str(self.HOST))
+
+					try: 
+						conn.send(self.smartbench_name)
+					except: 
+						print("Message not sent")
+					# sleep(10)
+					conn.close()
+
+				except socket.timeout as e:
+					log("Timeout: " + str(e))
+					conn.close()
+
+				except as e:
+					# socket object isn't available for some reason but has not timed out, so kill loop
 					# does this also need a close?? 
 					self.close_and_reconnect_socket()
 					break  
-				log("Accepted connection with IP address " + str(self.HOST))
-				try: 
-					conn.send(self.smartbench_name)
-				except: 
-					print("Message not sent")
-				# sleep(10)
-				conn.close()
-			except socket.timeout as e:
-				log("Timeout: " + str(e))
+				
+
+
 
 
 	def close_and_reconnect_socket(self):
@@ -104,7 +110,7 @@ class ServerConnection(object):
 		try: 
 			log("Closing socket before attempting to reconnect...")
 			self.run_connection_loop = False
-			self.sock.shutdown(SHUT_RDWR)
+			self.sock.shutdown(socket.SHUT_RDWR)
 			self.sock.close()
 
 		except Exception as e: 
