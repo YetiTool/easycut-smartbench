@@ -105,7 +105,7 @@ Builder.load_string("""
                         height: dp(0)
                         width: dp(550)
                         opacity: 0
-                        spacing: dp(25)
+                        spacing: dp(100)
 
                         TextInput:
                             padding: [2, 2]
@@ -120,9 +120,10 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(0)
                             size_hint_x: None
-                            width: dp(250)
+                            width: dp(300)
                             opacity: 0
                             on_text_validate: root.save_new_name()
+                            unfocus_on_touch: True
                             disabled: True
                             multiline: False
 
@@ -130,13 +131,13 @@ Builder.load_string("""
                             id: validation_button
                             size_hint: (None,None)
                             height: dp(35)
-                            width: dp(150)
+                            width: dp(100)
                             background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                             border: [dp(7.5)]*4
                             center: self.parent.center
                             pos: self.parent.pos
-                            on_press: root.rename_smartbench()
+                            on_press: root.save_new_name()
                             text: 'Rename'
                             color: hex('#f9f9f9ff')
                             markup: True
@@ -523,6 +524,8 @@ class BuildInfoScreen(Screen):
     def save_new_name(self):
         self.smartbench_name_unformatted = self.smartbench_name_input.text
         self.write_name_to_file()
+
+        self.smartbench_name_input.focus = False
 
         self.smartbench_name_input.disabled = True
         self.smartbench_name.disabled = False
