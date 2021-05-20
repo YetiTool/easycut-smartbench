@@ -9,6 +9,7 @@ import os, sys
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
@@ -22,9 +23,7 @@ Builder.load_string("""
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
     smartbench_name : smartbench_name
-    # rename_container : rename_container
     smartbench_name_input : smartbench_name_input
-    # validation_button : validation_button
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -97,15 +96,7 @@ Builder.load_string("""
                         height: dp(40)
                         opacity: 1
                         on_press: root.open_rename()
-
-                    # BoxLayout:
-                    #     id: rename_container
-                    #     orientation: 'horizontal'
-                    #     size_hint: (None, None)
-                    #     height: dp(0)
-                    #     width: dp(550)
-                    #     opacity: 0
-                    #     spacing: dp(50)
+                        focus_next: smartbench_name_input
 
                     TextInput:
                         padding: [4, 2]
@@ -126,21 +117,6 @@ Builder.load_string("""
                         # unfocus_on_touch: True
                         disabled: True
                         multiline: False
-
-                        # Button:
-                        #     id: validation_button
-                        #     size_hint: (None,None)
-                        #     height: dp(35)
-                        #     width: dp(100)
-                        #     background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                        #     background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                        #     border: [dp(7.5)]*4
-                        #     center: self.parent.center
-                        #     pos: self.parent.pos
-                        #     on_press: root.save_new_name()
-                        #     text: 'Rename'
-                        #     color: hex('#f9f9f9ff')
-                        #     markup: True
 
                     Label:
                         id: smartbench_model
@@ -515,18 +491,21 @@ class BuildInfoScreen(Screen):
         if not value:
             self.save_new_name()
 
+    def set_focus_on_text_input(self, dt):
+        self.smartbench_name_input.focus = True
+
     def open_rename(self):
-        self.smartbench_name.focus = False
+        
         self.smartbench_name.disabled = True
         self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
         self.smartbench_name.opacity = 0
-        # self.rename_container.height = 40
-        # self.rename_container.opacity = 1
         self.smartbench_name_input.height = 40
         self.smartbench_name_input.opacity = 1
+        self.smartbench_name.focus = False
 
-        self.smartbench_name_input.focus = True
+        Clock.schedule_once(self.set_focus_on_text_input, 0.3)
+        
 
     def save_new_name(self):
         self.smartbench_name_unformatted = self.smartbench_name_input.text
@@ -538,8 +517,6 @@ class BuildInfoScreen(Screen):
         self.smartbench_name.disabled = False
         self.smartbench_name_input.height = 0
         self.smartbench_name_input.opacity = 0
-        # self.rename_container.height = 0
-        # self.rename_container.opacity = 0
         self.smartbench_name.height = 40
         self.smartbench_name.opacity = 1
 
