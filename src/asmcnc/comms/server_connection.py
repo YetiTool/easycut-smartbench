@@ -43,6 +43,7 @@ class ServerConnection(object):
 		log("Initialising server connection...")
 
 		self.HOST = self.get_ip_address()
+		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
 		self.set_up_socket()
 		self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
@@ -72,7 +73,6 @@ class ServerConnection(object):
 			
 			else:
 				log("No network available to open socket.")
-				pass
 
 
 	def do_connection_loop(self):
@@ -120,9 +120,6 @@ class ServerConnection(object):
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
-
-		else:
-			pass
 
 
 	def get_ip_address(self):
