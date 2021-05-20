@@ -516,6 +516,7 @@ class BuildInfoScreen(Screen):
             self.save_new_name()
 
     def open_rename(self):
+        self.smartbench_name.focus = False
         self.smartbench_name.disabled = True
         self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
