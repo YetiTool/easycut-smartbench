@@ -97,6 +97,7 @@ Builder.load_string("""
                         on_press: root.open_rename()
 
                     TextInput:
+                        padding: [0, 2, 20, 2]
                         id: smartbench_name_input
                         text: 'My SmartBench'
                         color: hex('#333333ff')
@@ -104,7 +105,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 28
+                        font_size: 24
                         size_hint_y: None
                         height: dp(0)
                         opacity: 0
