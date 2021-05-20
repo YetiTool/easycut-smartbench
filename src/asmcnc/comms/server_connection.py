@@ -141,7 +141,7 @@ class ServerConnection(object):
 
 			except:
 				ip_address = ''
-		else:
+		elif sys.platform != "darwin":
 			try:
 				f = os.popen('hostname -I')
 				first_info = f.read().strip().split(' ')[0]
