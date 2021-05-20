@@ -105,10 +105,10 @@ Builder.load_string("""
                         height: dp(0)
                         width: dp(550)
                         opacity: 0
-                        spacing: dp(100)
+                        spacing: dp(50)
 
                         TextInput:
-                            padding: [2, 2]
+                            padding: [4, 2]
                             id: smartbench_name_input
                             text: 'My SmartBench'
                             color: hex('#333333ff')
@@ -120,7 +120,7 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(0)
                             size_hint_x: None
-                            width: dp(300)
+                            width: dp(350)
                             opacity: 0
                             on_text_validate: root.save_new_name()
                             unfocus_on_touch: True
