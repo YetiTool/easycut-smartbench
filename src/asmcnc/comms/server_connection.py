@@ -50,7 +50,7 @@ class ServerConnection(object):
 
 	def set_up_socket(self):
 
-		log("Attempting to set up socket...")
+		log("Attempting to set up socket with IP address: " + str(self.HOST))
 
 		if sys.platform != 'win32' and sys.platform != 'darwin':
 
@@ -89,7 +89,7 @@ class ServerConnection(object):
 						conn.send(self.smartbench_name)
 					except: 
 						print("Message not sent")
-						
+
 					conn.close()
 
 				except socket.timeout as e:
