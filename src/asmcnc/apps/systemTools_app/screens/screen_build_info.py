@@ -22,9 +22,9 @@ Builder.load_string("""
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
     smartbench_name : smartbench_name
-    rename_container : rename_container
+    # rename_container : rename_container
     smartbench_name_input : smartbench_name_input
-    validation_button : validation_button
+    # validation_button : validation_button
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -98,49 +98,49 @@ Builder.load_string("""
                         opacity: 1
                         on_press: root.open_rename()
 
-                    BoxLayout:
-                        id: rename_container
-                        orientation: 'horizontal'
-                        size_hint: (None, None)
+                    # BoxLayout:
+                    #     id: rename_container
+                    #     orientation: 'horizontal'
+                    #     size_hint: (None, None)
+                    #     height: dp(0)
+                    #     width: dp(550)
+                    #     opacity: 0
+                    #     spacing: dp(50)
+
+                    TextInput:
+                        padding: [4, 2]
+                        id: smartbench_name_input
+                        text: 'My SmartBench'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 24
+                        size_hint_y: None
                         height: dp(0)
-                        width: dp(550)
+                        size_hint_x: None
+                        width: dp(400)
                         opacity: 0
-                        spacing: dp(50)
+                        on_text_validate: root.save_new_name()
+                        unfocus_on_touch: True
+                        disabled: True
+                        multiline: False
 
-                        TextInput:
-                            padding: [4, 2]
-                            id: smartbench_name_input
-                            text: 'My SmartBench'
-                            color: hex('#333333ff')
-                            text_size: self.size
-                            halign: "left"
-                            valign: "middle"
-                            markup: True
-                            font_size: 24
-                            size_hint_y: None
-                            height: dp(0)
-                            size_hint_x: None
-                            width: dp(350)
-                            opacity: 0
-                            on_text_validate: root.save_new_name()
-                            unfocus_on_touch: True
-                            disabled: True
-                            multiline: False
-
-                        Button:
-                            id: validation_button
-                            size_hint: (None,None)
-                            height: dp(35)
-                            width: dp(100)
-                            background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            border: [dp(7.5)]*4
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            on_press: root.save_new_name()
-                            text: 'Rename'
-                            color: hex('#f9f9f9ff')
-                            markup: True
+                        # Button:
+                        #     id: validation_button
+                        #     size_hint: (None,None)
+                        #     height: dp(35)
+                        #     width: dp(100)
+                        #     background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        #     background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        #     border: [dp(7.5)]*4
+                        #     center: self.parent.center
+                        #     pos: self.parent.pos
+                        #     on_press: root.save_new_name()
+                        #     text: 'Rename'
+                        #     color: hex('#f9f9f9ff')
+                        #     markup: True
 
                     Label:
                         id: smartbench_model
@@ -427,6 +427,8 @@ class BuildInfoScreen(Screen):
         self.m = kwargs['machine']
         self.set = kwargs['settings']
 
+        self.smartbench_name_input.bind(focus=self.on_focus)
+
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
         self.latest_sw_version = self.set.latest_sw_version
@@ -508,18 +510,22 @@ class BuildInfoScreen(Screen):
 
     ## SMARTBENCH NAMING
 
-    def rename_smartbench(self):
-        self.smartbench_name_input.on_text_validate()
+    def on_focus(self, instance, value):
+        print(value)
+        if not value:
+            self.save_new_name()
 
     def open_rename(self):
         self.smartbench_name.disabled = True
         self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
         self.smartbench_name.opacity = 0
-        self.rename_container.height = 40
-        self.rename_container.opacity = 1
+        # self.rename_container.height = 40
+        # self.rename_container.opacity = 1
         self.smartbench_name_input.height = 40
         self.smartbench_name_input.opacity = 1
+
+        # self.smartbench_name_input.focus = True
 
     def save_new_name(self):
         self.smartbench_name_unformatted = self.smartbench_name_input.text
@@ -531,8 +537,8 @@ class BuildInfoScreen(Screen):
         self.smartbench_name.disabled = False
         self.smartbench_name_input.height = 0
         self.smartbench_name_input.opacity = 0
-        self.rename_container.height = 0
-        self.rename_container.opacity = 0
+        # self.rename_container.height = 0
+        # self.rename_container.opacity = 0
         self.smartbench_name.height = 40
         self.smartbench_name.opacity = 1
 
