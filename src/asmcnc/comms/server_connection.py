@@ -4,6 +4,7 @@ import threading
 from time import sleep
 from kivy.clock import Clock
 from datetime import datetime
+import traceback
 
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
@@ -95,11 +96,13 @@ class ServerConnection(object):
 					conn.close()
 
 				except socket.timeout as e:
+					traceback.print_exc()
 					log("Timeout: " + str(e))
 
 				except Exception as E:
 					# socket object isn't available for some reason but has not timed out, so kill loop
 					# does this also need a close?? 
+					traceback.print_exc()
 					log("Exception when trying to accept: " + str(E))
 					self.close_and_reconnect_socket()
 					break  
@@ -114,6 +117,7 @@ class ServerConnection(object):
 			self.sock.close()
 
 		except Exception as e: 
+			traceback.print_exc()
 			log("Attempted to close socket, but raised exception: " + str(e))
 
 		log("Try to reconnect...")
