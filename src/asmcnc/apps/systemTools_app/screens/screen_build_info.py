@@ -123,7 +123,7 @@ Builder.load_string("""
                         width: dp(400)
                         opacity: 0
                         on_text_validate: root.save_new_name()
-                        unfocus_on_touch: True
+                        # unfocus_on_touch: True
                         disabled: True
                         multiline: False
 
@@ -525,7 +525,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.height = 40
         self.smartbench_name_input.opacity = 1
 
-        # self.smartbench_name_input.focus = True
+        self.smartbench_name_input.focus = True
 
     def save_new_name(self):
         self.smartbench_name_unformatted = self.smartbench_name_input.text
