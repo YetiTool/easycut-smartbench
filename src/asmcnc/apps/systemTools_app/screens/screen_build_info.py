@@ -111,6 +111,7 @@ Builder.load_string("""
                         width: dp(500)
                         opacity: 0
                         on_text: root.save_new_name()
+                        text_validate_unfocus: False
                         disabled: True
                         multiline: False
 
