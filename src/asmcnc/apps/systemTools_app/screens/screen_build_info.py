@@ -91,7 +91,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 28
+                        font_size: 30
                         size_hint_y: None
                         height: dp(40)
                         opacity: 1
@@ -111,7 +111,7 @@ Builder.load_string("""
                         size_hint_y: None
                         height: dp(0)
                         size_hint_x: None
-                        width: dp(400)
+                        width: dp(500)
                         opacity: 0
                         on_text_validate: root.save_new_name()
                         # unfocus_on_touch: True
