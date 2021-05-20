@@ -487,7 +487,6 @@ class BuildInfoScreen(Screen):
     ## SMARTBENCH NAMING
 
     def on_focus(self, instance, value):
-        print(value)
         if not value:
             self.save_new_name()
 
