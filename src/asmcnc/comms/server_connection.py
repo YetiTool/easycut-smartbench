@@ -34,7 +34,7 @@ class ServerConnection(object):
 
 	def __init__(self):
 
-		self.HOST = get_ip_address()
+		self.HOST = self.get_ip_address()
 		self.prev_host = self.HOST
 
 		self.set_up_socket()
