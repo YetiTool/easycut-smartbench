@@ -95,9 +95,10 @@ class ServerConnection(object):
 					log("Timeout: " + str(e))
 					conn.close()
 
-				except as e:
+				except Exception as E:
 					# socket object isn't available for some reason but has not timed out, so kill loop
 					# does this also need a close?? 
+					log("Exception when trying to accept: " + str(E))
 					self.close_and_reconnect_socket()
 					break  
 				
