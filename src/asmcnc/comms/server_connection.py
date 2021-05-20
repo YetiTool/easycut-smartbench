@@ -3,6 +3,7 @@ import sys
 import threading
 from time import sleep
 from kivy.clock import Clock
+from datetime import datetime
 
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
