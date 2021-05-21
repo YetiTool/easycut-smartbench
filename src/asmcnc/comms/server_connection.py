@@ -123,10 +123,10 @@ class ServerConnection(object):
 			log("Attempted to close socket, but raised exception: " + str(e))
 
 		log("Try to reconnect...")
-		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+		# new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
 
-		log("Clock event poll_connection: " + str(self.poll_connection))
-		log("Clock event new_event: " + str(new_event))
+		# log("Clock event poll_connection: " + str(self.poll_connection))
+		# log("Clock event new_event: " + str(new_event))
 
 
 	def check_connection(self, dt):
