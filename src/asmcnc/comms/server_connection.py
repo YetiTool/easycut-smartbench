@@ -76,8 +76,8 @@ class ServerConnection(object):
 			else:
 				log("No network available to open socket.")
 
-		log("Thread is alive? " + str(t.is_alive()))
-
+		try: log("Thread is alive? " + str(t.is_alive()))
+		except: log("Thread does not exist")
 
 	def do_connection_loop(self):
 
