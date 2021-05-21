@@ -162,7 +162,7 @@ class ServerConnection(object):
 				else:
 					ip_address = ''
 
-			except as e:
+			except Exception as e:
 				log("Could not get IP: " + str(e))
 				ip_address = ''
 
