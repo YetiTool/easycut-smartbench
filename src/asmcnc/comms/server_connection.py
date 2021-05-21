@@ -65,7 +65,7 @@ class ServerConnection(object):
 					self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 					self.sock.bind((self.HOST, PORT))
 					self.sock.listen(5)
-					self.sock.settimeout(60)
+					self.sock.settimeout(20)
 
 					self.is_socket_available = True
 
@@ -114,7 +114,7 @@ class ServerConnection(object):
 				log("Exception when trying to accept: " + str(E))
 				if self.is_socket_available:
 					self.close_and_reconnect_socket()
-				sleep(20)
+					sleep(20)
 
 
 	def close_and_reconnect_socket(self):
@@ -134,20 +134,13 @@ class ServerConnection(object):
 
 	def check_connection(self, dt):
 
-		print("current IP: " + str(self.HOST))
-		print("previous IP: " + str(self.prev_host))
-
 		self.HOST = self.get_ip_address()
 
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
-		log("I am at end of check connection function")
-
 	def get_ip_address(self):
-
-		log("Getting IP address...")
 
 		ip_address = ''
 
@@ -161,10 +154,8 @@ class ServerConnection(object):
 				ip_address = ''
 		elif sys.platform != "darwin":
 			try:
-				log("getting hostname")
 				f = os.popen('hostname -I')
 				first_info = f.read().strip().split(' ')[0]
-				log("IP read: " + str(first_info))
 
 				if len(first_info.split('.')) == 4:
 					ip_address = first_info
@@ -173,10 +164,8 @@ class ServerConnection(object):
 					ip_address = ''
 
 			except Exception as e:
-				log("Could not get IP: " + str(e))
 				ip_address = ''
 
-		log("I am at end of get IP address function")
 		return ip_address
 
 
