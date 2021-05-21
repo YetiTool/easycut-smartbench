@@ -141,6 +141,8 @@ class ServerConnection(object):
 
 	def get_ip_address(self):
 
+		log("Getting IP address...")
+
 		ip_address = ''
 
 		if sys.platform == "win32":
