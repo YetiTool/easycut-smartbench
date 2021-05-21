@@ -155,8 +155,11 @@ class ServerConnection(object):
 				ip_address = ''
 		elif sys.platform != "darwin":
 			try:
+				log("getting hostname")
 				f = os.popen('hostname -I')
 				first_info = f.read().strip().split(' ')[0]
+				log("IP read: " + str(first_info))
+
 				if len(first_info.split('.')) == 4:
 					ip_address = first_info
 
