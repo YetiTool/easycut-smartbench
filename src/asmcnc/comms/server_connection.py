@@ -119,7 +119,6 @@ class ServerConnection(object):
 			self.sock.close()
 
 		except Exception as e: 
-			traceback.print_exc()
 			log("Attempted to close socket, but raised exception: " + str(e))
 
 		log("Try to reconnect...")
@@ -143,7 +142,8 @@ class ServerConnection(object):
 			log("I am inside if statement")
 
 			self.prev_host = self.HOST
-			self.close_and_reconnect_socket()
+			# self.close_and_reconnect_socket()
+			new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
 
 		log("I am at end of function")
 
