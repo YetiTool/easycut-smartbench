@@ -98,15 +98,15 @@ class ServerConnection(object):
 				conn.close()
 
 			except socket.timeout as e:
-				traceback.print_exc()
 				log("Timeout: " + str(e))
+				traceback.print_exc()
 
 			except Exception as E:
 				# socket object isn't available for some reason but has not timed out, so kill loop
-				# does this also need a close?? 
 				traceback.print_exc()
 				log("Exception when trying to accept: " + str(E))
-				self.close_and_reconnect_socket()
+				if self.run_connection_loop:
+					self.close_and_reconnect_socket()
 				break
 
 
@@ -136,8 +136,7 @@ class ServerConnection(object):
 
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
-			# test whether get exception if IP changes
-			# self.close_and_reconnect_socket()
+			self.close_and_reconnect_socket()
 
 
 	def get_ip_address(self):
