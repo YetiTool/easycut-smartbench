@@ -123,7 +123,9 @@ class ServerConnection(object):
 			log("Attempted to close socket, but raised exception: " + str(e))
 
 		log("Try to reconnect...")
-		Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+
+		print(str(self.poll_connection))
 
 
 
