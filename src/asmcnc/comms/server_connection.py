@@ -90,7 +90,7 @@ class ServerConnection(object):
 		while True:
 			try: 
 				"Waiting for connection..."
-				if self.is_socket_available
+				if self.is_socket_available:
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 
