@@ -102,9 +102,6 @@ class ServerConnection(object):
 
 					conn.close()
 
-				else: 
-					log("Socket unavailable, waiting for it to come back online...")
-
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
 
