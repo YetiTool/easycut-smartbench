@@ -134,12 +134,16 @@ class ServerConnection(object):
 
 		self.HOST = self.get_ip_address()
 
-		log("I have IP address")
+		log("I have IP address, new host: " + str(self.HOST))
 
 		if self.HOST != self.prev_host:
+
+			log("I am inside if statement")
+
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
+		log("I am at end of function")
 
 	def get_ip_address(self):
 
