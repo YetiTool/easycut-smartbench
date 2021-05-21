@@ -30,7 +30,7 @@ class ServerConnection(object):
 	HOST = ''
 	prev_host = ''
 
-	run_connection_loop = True
+	is_socket_available = True
 
 	poll_connection = None
 
@@ -67,57 +67,61 @@ class ServerConnection(object):
 					self.sock.listen(5)
 					self.sock.settimeout(60)
 
-					self.run_connection_loop = True
+					self.is_socket_available = True
 
-					t = threading.Thread(target=self.do_connection_loop)
-					t.daemon = True
-					t.start()
+					try: 
+						log("Thread is alive? " + str(t.is_alive()))
+					except:
+						t = threading.Thread(target=self.do_connection_loop)
+						t.daemon = True
+						t.start()
 
 				except Exception as e: 
 					log("Unable to set up socket, exception: " + str(e))
 			
 			else:
-				log("No network available to open socket.")
+				log("No IP address available to open socket with.")
 
-		try: log("Thread is alive? " + str(t.is_alive()))
-		except: log("Thread does not exist")
-		log("Clock event poll_connection: " + str(self.poll_connection))
 
 	def do_connection_loop(self):
 
 		log("Starting server connection loop...")
 
-		while self.run_connection_loop:
+		while True:
 			try: 
 				"Waiting for connection..."
-				conn, addr = self.sock.accept()
-				log("Accepted connection with IP address " + str(self.HOST))
+				if self.is_socket_available
+					conn, addr = self.sock.accept()
+					log("Accepted connection with IP address " + str(self.HOST))
 
-				try: 
-					self.get_smartbench_name()
-					conn.send(self.smartbench_name)
-				except: 
-					print("Message not sent")
+					try: 
+						self.get_smartbench_name()
+						conn.send(self.smartbench_name)
+					except: 
+						print("Message not sent")
 
-				conn.close()
+					conn.close()
+
+				else: 
+					log("Socket unavailable, waiting for it to come back online...")
 
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
 
 			except Exception as E:
-				# socket object isn't available for some reason but has not timed out, so kill loop
-				# traceback.print_exc()
+				# socket object isn't available but has not timed out
+				# reestablish socket if needs be
 				log("Exception when trying to accept: " + str(E))
-				if self.run_connection_loop:
+				if self.is_socket_available:
 					self.close_and_reconnect_socket()
-				break
+				sleep(20)
 
 
 	def close_and_reconnect_socket(self):
 
 		try: 
 			log("Closing socket before attempting to reconnect...")
-			self.run_connection_loop = False
+			self.is_socket_available = False
 			self.sock.shutdown(socket.SHUT_RDWR)
 			self.sock.close()
 
@@ -125,10 +129,7 @@ class ServerConnection(object):
 			log("Attempted to close socket, but raised exception: " + str(e))
 
 		log("Try to reconnect...")
-		# new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
-
-		# log("Clock event poll_connection: " + str(self.poll_connection))
-		# log("Clock event new_event: " + str(new_event))
+		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
 
 
 	def check_connection(self, dt):
@@ -138,17 +139,11 @@ class ServerConnection(object):
 
 		self.HOST = self.get_ip_address()
 
-		log("I have IP address, new host: " + str(self.HOST))
-
 		if self.HOST != self.prev_host:
-
-			log("I am inside if statement")
-
 			self.prev_host = self.HOST
-			# self.close_and_reconnect_socket()
-			new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+			self.close_and_reconnect_socket()
 
-		log("I am at end of function")
+		log("I am at end of check connection function")
 
 	def get_ip_address(self):
 
