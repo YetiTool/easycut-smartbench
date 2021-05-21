@@ -78,6 +78,7 @@ class ServerConnection(object):
 
 		try: log("Thread is alive? " + str(t.is_alive()))
 		except: log("Thread does not exist")
+		log("Clock event poll_connection: " + str(self.poll_connection))
 
 	def do_connection_loop(self):
 
@@ -103,7 +104,7 @@ class ServerConnection(object):
 
 			except Exception as E:
 				# socket object isn't available for some reason but has not timed out, so kill loop
-				traceback.print_exc()
+				# traceback.print_exc()
 				log("Exception when trying to accept: " + str(E))
 				if self.run_connection_loop:
 					self.close_and_reconnect_socket()
