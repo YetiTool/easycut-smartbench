@@ -76,36 +76,38 @@ class ServerConnection(object):
 			else:
 				log("No network available to open socket.")
 
+		log("Thread is alive? " + str(t.is_alive()))
+
 
 	def do_connection_loop(self):
 
 		log("Starting server connection loop...")
 
 		while self.run_connection_loop:
+			try: 
+				"Waiting for connection..."
+				conn, addr = self.sock.accept()
+				log("Accepted connection with IP address " + str(self.HOST))
+
 				try: 
-					"Waiting for connection..."
-					conn, addr = self.sock.accept()
-					log("Accepted connection with IP address " + str(self.HOST))
+					self.get_smartbench_name()
+					conn.send(self.smartbench_name)
+				except: 
+					print("Message not sent")
 
-					try: 
-						self.get_smartbench_name()
-						conn.send(self.smartbench_name)
-					except: 
-						print("Message not sent")
+				conn.close()
 
-					conn.close()
+			except socket.timeout as e:
+				traceback.print_exc()
+				log("Timeout: " + str(e))
 
-				except socket.timeout as e:
-					traceback.print_exc()
-					log("Timeout: " + str(e))
-
-				except Exception as E:
-					# socket object isn't available for some reason but has not timed out, so kill loop
-					# does this also need a close?? 
-					traceback.print_exc()
-					log("Exception when trying to accept: " + str(E))
-					self.close_and_reconnect_socket()
-					break  
+			except Exception as E:
+				# socket object isn't available for some reason but has not timed out, so kill loop
+				# does this also need a close?? 
+				traceback.print_exc()
+				log("Exception when trying to accept: " + str(E))
+				self.close_and_reconnect_socket()
+				break
 
 
 	def close_and_reconnect_socket(self):
@@ -127,11 +129,15 @@ class ServerConnection(object):
 
 	def check_connection(self, dt):
 
+		print("current IP: " + str(self.HOST))
+		print("previous IP: " + str(self.prev_host))
+
 		self.HOST = self.get_ip_address()
 
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
-			self.close_and_reconnect_socket()
+			# test whether get exception if IP changes
+			# self.close_and_reconnect_socket()
 
 
 	def get_ip_address(self):
@@ -156,10 +162,12 @@ class ServerConnection(object):
 				else:
 					ip_address = ''
 
-			except:
+			except as e:
+				log("Could not get IP: " + str(e))
 				ip_address = ''
 
 		return ip_address
+
 
 	def get_smartbench_name(self):
 		try:
