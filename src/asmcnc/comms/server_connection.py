@@ -134,6 +134,8 @@ class ServerConnection(object):
 
 		self.HOST = self.get_ip_address()
 
+		log("I have IP address")
+
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
@@ -170,6 +172,7 @@ class ServerConnection(object):
 				log("Could not get IP: " + str(e))
 				ip_address = ''
 
+		log("I am at end of get IP address function")
 		return ip_address
 
 
