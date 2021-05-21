@@ -125,8 +125,8 @@ class ServerConnection(object):
 		log("Try to reconnect...")
 		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
 
-		print(str(self.poll_connection))
-
+		log("Clock event poll_connection: " + str(self.poll_connection))
+		log("Clock event new_event: " + str(new_event))
 
 
 	def check_connection(self, dt):
