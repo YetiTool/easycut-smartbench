@@ -39,6 +39,9 @@ class ServerConnection(object):
 		self.get_smartbench_name()
 		self.initialise_server_connection()
 
+	def __del__(self):
+  		log("Server connection class has been deleted")
+
 	def initialise_server_connection(self):
 
 		log("Initialising server connection...")
