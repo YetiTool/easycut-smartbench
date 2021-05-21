@@ -46,8 +46,8 @@ class ServerConnection(object):
 		self.HOST = self.get_ip_address()
 		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
-		self.set_up_socket()
 		self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
+		self.set_up_socket()
 
 	def set_up_socket(self):
 
@@ -100,7 +100,6 @@ class ServerConnection(object):
 
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
-				traceback.print_exc()
 
 			except Exception as E:
 				# socket object isn't available for some reason but has not timed out, so kill loop
