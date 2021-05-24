@@ -73,7 +73,7 @@ Builder.load_string("""
 				Label:
 					size_hint_y: 0.25
 					font_size: '20sp'
-					text: "[color=333333ff]It will only a take a few minutes.[/color]"
+					text: "[color=333333ff]It will only take a few minutes.[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
