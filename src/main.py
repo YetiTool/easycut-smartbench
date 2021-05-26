@@ -31,6 +31,7 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import server_connection
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
@@ -143,6 +144,9 @@ class SkavaUI(App):
             
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett)
+
+            # Server connection object
+            sc = server_connection.ServerConnection()
             
             # initialise the screens (legacy)
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
