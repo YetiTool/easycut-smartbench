@@ -37,9 +37,11 @@ class ServerConnection(object):
 	def __init__(self):
 
 		self.get_smartbench_name()
-		server_thread = threading.Thread(target=self.initialise_server_connection())
-		server_thread.daemon = True
-		server_thread.start()
+		# server_thread = threading.Thread(target=self.initialise_server_connection())
+		# server_thread.daemon = True
+		# server_thread.start()
+
+		self.initialise_server_connection()
 
 	def __del__(self):
   		log("Server connection class has been deleted")
@@ -137,7 +139,9 @@ class ServerConnection(object):
 
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
-			self.close_and_reconnect_socket()
+			reconnect_thread = threading.Thread(target=self.close_and_reconnect_socket())
+			reconnect_thread.daemon = True
+			reconnect_thread.start()
 
 	def get_ip_address(self):
 
