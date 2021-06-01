@@ -152,7 +152,7 @@ class ServerConnection(object):
 			sleep(2)
 			self.set_up_socket()
 
-	def check_connection(self):
+	def check_connection(self, dt):
 
 		self.HOST = self.get_ip_address()
 
