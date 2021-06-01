@@ -113,6 +113,7 @@ class ServerConnection(object):
 
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
+				sleep(2)
 
 			except Exception as E:
 				# socket object isn't available but has not timed out
