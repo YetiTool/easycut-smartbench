@@ -57,7 +57,7 @@ class ServerConnection(object):
 		self.doing_reconnect = True
 		self.set_up_socket()
 
-		checking_thread = threading.Thread(target=self.do_check_connection_loop())
+		checking_thread = threading.Thread(target=self.do_check_connection_loop)
 		checking_thread.daemon = True
 		checking_thread.start()
 
