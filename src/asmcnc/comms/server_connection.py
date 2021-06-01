@@ -124,7 +124,10 @@ class ServerConnection(object):
 
 	def do_check_connection_loop(self):
 
+		log("Starting connection checking loop...")
+
 		while True:
+			log("loop connection check")
 			if not self.doing_reconnect:
 				self.check_connection()
 			sleep(2)
