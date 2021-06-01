@@ -2,7 +2,6 @@ import socket
 import sys, os
 import threading
 from time import sleep
-from kivy.clock import Clock
 from datetime import datetime
 import traceback
 
@@ -153,7 +152,7 @@ class ServerConnection(object):
 
 		self.HOST = self.get_ip_address()
 
-		if self.HOST != self.prev_host:
+		if self.HOST != self.prev_host and not self.doing_reconnect:
 			log("finds connection needs fixing...")
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
