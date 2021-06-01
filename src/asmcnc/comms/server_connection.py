@@ -108,6 +108,8 @@ class ServerConnection(object):
 						print("Message not sent")
 
 					conn.close()
+				else:
+					sleep(20)
 
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
