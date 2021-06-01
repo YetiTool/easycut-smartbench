@@ -37,11 +37,9 @@ class ServerConnection(object):
 	def __init__(self):
 
 		self.get_smartbench_name()
-		# server_thread = threading.Thread(target=self.initialise_server_connection())
-		# server_thread.daemon = True
-		# server_thread.start()
-
-		self.initialise_server_connection()
+		server_thread = threading.Thread(target=self.initialise_server_connection())
+		server_thread.daemon = True
+		server_thread.start()
 
 	def __del__(self):
   		log("Server connection class has been deleted")
