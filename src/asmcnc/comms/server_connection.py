@@ -31,6 +31,7 @@ class ServerConnection(object):
 	prev_host = ''
 
 	is_socket_available = True
+	doing_reconnect = False
 
 	poll_connection = None
 
@@ -51,8 +52,12 @@ class ServerConnection(object):
 		self.HOST = self.get_ip_address()
 		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
-		self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
+		# self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
 		self.set_up_socket()
+
+		checking_thread = threading.Thread(target=self.do_check_connection_loop())
+		checking_thread.daemon = True
+		checking_thread.start()
 
 	def set_up_socket(self):
 
@@ -84,6 +89,7 @@ class ServerConnection(object):
 			else:
 				log("No IP address available to open socket with.")
 
+		self.doing_reconnect = False
 
 	def do_connection_loop(self):
 
@@ -115,31 +121,39 @@ class ServerConnection(object):
 					self.close_and_reconnect_socket()
 					sleep(20)
 
+	def do_check_connection_loop(self):
+
+		while True:
+			if not self.doing_reconnect:
+				self.check_connection()
+			sleep(2)
 
 	def close_and_reconnect_socket(self):
 
-		try: 
-			log("Closing socket before attempting to reconnect...")
-			self.is_socket_available = False
-			self.sock.shutdown(socket.SHUT_RDWR)
-			self.sock.close()
+		if not self.doing_reconnect:
 
-		except Exception as e: 
-			log("Attempted to close socket, but raised exception: " + str(e))
+			self.doing_reconnect = True
 
-		log("Try to reconnect...")
-		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+			try: 
+				log("Closing socket before attempting to reconnect...")
+				self.is_socket_available = False
+				self.sock.shutdown(socket.SHUT_RDWR)
+				self.sock.close()
 
+			except Exception as e: 
+				log("Attempted to close socket, but raised exception: " + str(e))
 
-	def check_connection(self, dt):
+			log("Try to reconnect...")
+			sleep(2)
+			self.set_up_socket()
+
+	def check_connection(self):
 
 		self.HOST = self.get_ip_address()
 
 		if self.HOST != self.prev_host:
 			self.prev_host = self.HOST
-			reconnect_thread = threading.Thread(target=self.close_and_reconnect_socket())
-			reconnect_thread.daemon = True
-			reconnect_thread.start()
+			self.close_and_reconnect_socket()
 
 	def get_ip_address(self):
 
@@ -168,7 +182,6 @@ class ServerConnection(object):
 				ip_address = ''
 
 		return ip_address
-
 
 	def get_smartbench_name(self):
 		try:
