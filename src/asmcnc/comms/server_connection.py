@@ -54,6 +54,7 @@ class ServerConnection(object):
 		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
 		# self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
+		self.doing_reconnect = True
 		self.set_up_socket()
 
 		checking_thread = threading.Thread(target=self.do_check_connection_loop())
@@ -156,6 +157,7 @@ class ServerConnection(object):
 		self.HOST = self.get_ip_address()
 
 		if self.HOST != self.prev_host:
+			log("finds connection needs fixing...")
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
