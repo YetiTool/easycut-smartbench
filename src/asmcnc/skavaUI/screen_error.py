@@ -55,7 +55,17 @@ ERROR_CODES = {
     "error:35" : "A G2 or G3 arc, traced with the offset definition, is missing the IJK offset word in the selected plane to trace the arc.",
     "error:36" : "There are unused, leftover G-code words that aren't used by any command in the block.",
     "error:37" : "The G43.1 dynamic tool length offset command cannot apply an offset to an axis other than its configured axis. The Grbl default axis is the Z-axis.",
-
+    "error:38" : "Tool number greater than max supported value.",
+    "error:39" : "ASMCNC custom error: this firmware version has not recognized this command.",
+    "error:40" : "TMC command received for wrong motor (>5)",
+    "error:41" : "Realtime command crc8 error",
+    "error:42" : "Non hex code character received",
+    "error:43" : "Command supplied to the function is outside wanted range",
+    "error:44" : "Parameter supplied to the function is outside wanted range",
+    "error:45" : "Realtime command buffer parser did not find the expected packet start modifier.",
+    "error:46" : "Realtime command buffer parser found length that is higher than maximum.",
+    "error:47" : "Sequence number does not match the expected one.",
+    "error:48" : "Realtime command buffer overflow: slow down sending RTL commands or increase buffer size."
 }
 
 # Kivy UI builder:

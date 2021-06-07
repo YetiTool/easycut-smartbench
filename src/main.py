@@ -32,6 +32,7 @@ from kivy.core.window import Window
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.comms import database_storage # @UnresolvedImport
+from asmcnc.comms import server_connection
 
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
@@ -72,7 +73,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 Cmport = 'COM4'
 
 # Current version active/working on
-initial_version = 'v1.5.4'
+initial_version = 'v1.7.0-beta'
 
 # default starting screen
 start_screen = 'welcome'
@@ -149,6 +150,10 @@ class SkavaUI(App):
 
             # Create database object to talk to
             db = database_storage.DatabaseStorage(sm, m)
+
+            # Server connection object
+            sc = server_connection.ServerConnection()
+
             
 
             # initialise the screens (legacy)
