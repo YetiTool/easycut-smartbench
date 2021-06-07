@@ -2,7 +2,6 @@ import socket
 import sys, os
 import threading
 from time import sleep
-from kivy.clock import Clock
 from datetime import datetime
 import traceback
 
@@ -31,13 +30,16 @@ class ServerConnection(object):
 	prev_host = ''
 
 	is_socket_available = True
+	doing_reconnect = False
 
 	poll_connection = None
 
 	def __init__(self):
 
 		self.get_smartbench_name()
-		self.initialise_server_connection()
+		server_thread = threading.Thread(target=self.initialise_server_connection)
+		server_thread.daemon = True
+		server_thread.start()
 
 	def __del__(self):
   		log("Server connection class has been deleted")
@@ -49,8 +51,12 @@ class ServerConnection(object):
 		self.HOST = self.get_ip_address()
 		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
-		self.poll_connection = Clock.schedule_interval(self.check_connection, 2)
+		self.doing_reconnect = True
 		self.set_up_socket()
+
+		checking_thread = threading.Thread(target=self.do_check_connection_loop)
+		checking_thread.daemon = True
+		checking_thread.start()
 
 	def set_up_socket(self):
 
@@ -82,6 +88,7 @@ class ServerConnection(object):
 			else:
 				log("No IP address available to open socket with.")
 
+		self.doing_reconnect = False
 
 	def do_connection_loop(self):
 
@@ -101,9 +108,12 @@ class ServerConnection(object):
 						print("Message not sent")
 
 					conn.close()
+				else:
+					sleep(20)
 
 			except socket.timeout as e:
 				log("Timeout: " + str(e))
+				sleep(2)
 
 			except Exception as E:
 				# socket object isn't available but has not timed out
@@ -113,27 +123,40 @@ class ServerConnection(object):
 					self.close_and_reconnect_socket()
 					sleep(20)
 
+	def do_check_connection_loop(self):
+
+		log("Starting connection checking loop...")
+
+		while True:
+			if not self.doing_reconnect:
+				self.check_connection()
+			sleep(2)
 
 	def close_and_reconnect_socket(self):
 
-		try: 
-			log("Closing socket before attempting to reconnect...")
-			self.is_socket_available = False
-			self.sock.shutdown(socket.SHUT_RDWR)
-			self.sock.close()
+		if not self.doing_reconnect:
 
-		except Exception as e: 
-			log("Attempted to close socket, but raised exception: " + str(e))
+			self.doing_reconnect = True
 
-		log("Try to reconnect...")
-		new_event = Clock.schedule_once(lambda dt: self.set_up_socket(), 2)
+			try: 
+				log("Closing socket before attempting to reconnect...")
+				self.is_socket_available = False
+				self.sock.shutdown(socket.SHUT_RDWR)
+				self.sock.close()
 
+			except Exception as e: 
+				log("Attempted to close socket, but raised exception: " + str(e))
 
-	def check_connection(self, dt):
+			log("Try to reconnect...")
+			sleep(2)
+			self.set_up_socket()
+
+	def check_connection(self):
 
 		self.HOST = self.get_ip_address()
 
-		if self.HOST != self.prev_host:
+		if self.HOST != self.prev_host and not self.doing_reconnect:
+			log("finds connection needs fixing...")
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
@@ -164,7 +187,6 @@ class ServerConnection(object):
 				ip_address = ''
 
 		return ip_address
-
 
 	def get_smartbench_name(self):
 		try:
