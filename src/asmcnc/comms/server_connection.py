@@ -105,20 +105,18 @@ class ServerConnection(object):
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
 					except: 
-						print("Message not sent")
+						log("Message not sent")
 
 					conn.close()
 				else:
 					sleep(20)
 
 			except socket.timeout as e:
-				log("Timeout: " + str(e))
 				sleep(2)
 
 			except Exception as E:
 				# socket object isn't available but has not timed out
 				# reestablish socket if needs be
-				log("Exception when trying to accept: " + str(E))
 				if self.is_socket_available:
 					self.close_and_reconnect_socket()
 					sleep(20)
@@ -156,7 +154,6 @@ class ServerConnection(object):
 		self.HOST = self.get_ip_address()
 
 		if self.HOST != self.prev_host and not self.doing_reconnect:
-			log("finds connection needs fixing...")
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
