@@ -17,7 +17,7 @@ class PopupResetOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are resetting the laser datum offset.\n\nPlease confirm that this is where you have made a reference mark with the spindle."
+        description = "You are resetting the laser datum offset.\n\nPlease confirm that the tool is directly above the reference mark, and has not moved in the XY plane."
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
