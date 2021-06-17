@@ -17,7 +17,7 @@ class PopupResetOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are resetting the laser datum offset.\n\nPlease confirm that this is where you have made a reference mark with the spindle."
+        description = "You are resetting the laser datum offset.\n\nPlease confirm that the tool is directly above the reference mark, and has not moved in the XY plane."
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
@@ -25,7 +25,7 @@ class PopupResetOffset(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
-        ok_button = Button(text='[b]Yes, set reference[/b]', markup = True)
+        ok_button = Button(text='[b]Yes, set reference here[/b]', markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button = Button(text='[b]No, go back[/b]', markup = True)

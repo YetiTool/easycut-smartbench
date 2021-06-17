@@ -155,7 +155,7 @@ Builder.load_string("""
                     Label:
                         size_hint_y: 1
                         font_size: '25sp'
-                        text: 'Wifi'
+                        text: 'Wi-Fi'
                 
                 
                 BoxLayout:
