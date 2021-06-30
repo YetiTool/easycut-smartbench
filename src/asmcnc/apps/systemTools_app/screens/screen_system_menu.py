@@ -17,188 +17,204 @@ Builder.load_string("""
 
 <SystemMenuScreen>
 
-    canvas.before:
-        Color: 
-            rgba: hex('#f9f9f9ff')
-        Rectangle: 
-            size: self.size
-            pos: self.pos
+	canvas.before:
+		Color: 
+			rgba: hex('#f9f9f9ff')
+		Rectangle: 
+			size: self.size
+			pos: self.pos
 
-    GridLayout:
-        size: self.parent.size
-        pos: self.parent.pos
-        padding: [dp(8.33), dp(60)]
-        spacing: [dp(8.33), dp(60)]
-        cols: 5
-        rows: 2
+	GridLayout:
+		size: self.parent.size
+		pos: self.parent.pos
+		padding: [dp(8.33), dp(60)]
+		spacing: [dp(8.33), dp(60)]
+		cols: 5
+		rows: 2
 
 		Button:
 			text: 'System Info'
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
 			on_press: root.go_to_build_info()
-            background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
 			text: 'Download Logs'
 			on_press: root.download_logs()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
 			text: 'Reboot'
 			on_press: root.reboot()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
+			border: [dp(25)]*4
+			padding_y: 5
+
+		Button:
+			text: 'Exit Software'
+			on_press: root.quit_to_console()
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
         Button:
-            text: 'Exit Software'
-            on_press: root.quit_to_console()
+            text: 'USB First Aid'
+            on_press: root.usb_first_aid()
             valign: "bottom"
             halign: "center"
             markup: True
             font_size: '16sp'
             text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
+            background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
             border: [dp(25)]*4
             padding_y: 5
 
 		Button:
 			text: 'Beta Testing'
 			on_press: root.beta_testing()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
 			text: 'GRBL Settings'
 			on_press: root.grbl_settings()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
 			text: 'Factory'
 			on_press: root.factory_settings()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
-        Button:
-            text: 'Update Testing'
-            on_press: root.update_testing()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-            border: [dp(25)]*4
-            padding_y: 5
+		# Button:
+		# 	text: 'Update Testing'
+		# 	on_press: root.update_testing()
+		# 	valign: "bottom"
+		# 	halign: "center"
+		# 	markup: True
+		# 	font_size: '16sp'
+		# 	text_size: self.size
+		# 	background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+		# 	background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+		# 	border: [dp(25)]*4
+		# 	padding_y: 5
 
 		Button:
 			text: 'Developer'
 			on_press: root.developer()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
-        Button:
-            text: 'Go Back'
-            on_press: root.go_back()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
-            border: [dp(25)]*4
-            padding_y: 5
+		Button:
+			text: 'Go Back'
+			on_press: root.go_back()
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 """)
 
 class SystemMenuScreen(Screen):
 
-    def __init__(self, **kwargs):
-        super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
+	def __init__(self, **kwargs):
+		super(SystemMenuScreen, self).__init__(**kwargs)
+		self.systemtools_sm = kwargs['system_tools']
 
-    def go_back(self):
-    	self.systemtools_sm.exit_app()
+	def go_back(self):
+		self.systemtools_sm.exit_app()
 
-    def go_to_build_info(self):
-    	self.systemtools_sm.open_build_info_screen()
+	def go_to_build_info(self):
+		self.systemtools_sm.open_build_info_screen()
 
-    def download_logs(self):
-        popup_system.PopupDownloadLogs(self.systemtools_sm)
+	def download_logs(self):
+		popup_system.PopupDownloadLogs(self.systemtools_sm)
 
-    def reboot(self):
-        popup_system.RebootConsole(self.systemtools_sm)
+	def reboot(self):
+		popup_system.RebootConsole(self.systemtools_sm)
 
-    def quit_to_console(self):
-        popup_system.QuitToConsole(self.systemtools_sm)
+	def quit_to_console(self):
+		popup_system.QuitToConsole(self.systemtools_sm)
 
-    def beta_testing(self):
-        popup_system.PopupBetaTesting(self.systemtools_sm)
+    def usb_first_aid(self):
+        self.systemtools_sm.do_usb_first_aid()
 
-    def grbl_settings(self):
-    	popup_system.PopupGRBLSettingsPassword(self.systemtools_sm)
+	def beta_testing(self):
+		popup_system.PopupBetaTesting(self.systemtools_sm)
 
-    def factory_settings(self):
-    	popup_system.PopupFactorySettingsPassword(self.systemtools_sm)
+	def grbl_settings(self):
+		popup_system.PopupGRBLSettingsPassword(self.systemtools_sm)
 
-    def update_testing(self):
-        popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
+	def factory_settings(self):
+		popup_system.PopupFactorySettingsPassword(self.systemtools_sm)
 
-    def developer(self):
-    	popup_system.PopupDeveloperPassword(self.systemtools_sm)
+	# def update_testing(self):
+	# 	popup_system.PopupUpdateTestingPassword(self.systemtools_sm)
+
+	def developer(self):
+		popup_system.PopupDeveloperPassword(self.systemtools_sm)
 
 
 
