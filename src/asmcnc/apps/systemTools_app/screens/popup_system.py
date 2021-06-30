@@ -179,7 +179,9 @@ class PopupUSBFirstAid(Widget):
         
         self.systemtools_sm = screen_manager
         
-        description = "If your USB stick is plugged into the console, please remove it now. \n\nWhen you have removed it, press 'Ok'."
+        description = "If your USB stick is plugged into the console, please remove it now.\n\n" + \
+                    "When you have removed it, press 'Ok'." + \
+                    "[b]WARNING: Not following this step could cause files to be deleted from your USB stick.[/b]"
 
         def clear_mountpoint(*args):
             self.systemtools_sm.clear_usb_mountpoint()
