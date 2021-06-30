@@ -233,13 +233,13 @@ class AlarmSequenceManager(object):
 
 		def get_report(count):
 			if self.usb_stick.is_usb_mounted_flag == True:
-        		message = 'Downloading report, please wait...'
-        		wait_popup = popup_info.PopupWait(self.sm, description = message)
+				message = 'Downloading report, please wait...'
+				wait_popup = popup_info.PopupWait(self.sm, description = message)
 				self.write_report_to_file()
 				wait_popup.popup.dismiss()
 				self.usb_stick.disable()
-                message = 'Report downloaded'
-                popup_info.PopupMiniInfo(self.sm, description = message)
+				message = 'Report downloaded'
+				popup_info.PopupMiniInfo(self.sm, description = message)
 
 			elif count > 30:
 				if self.usb_stick.is_available(): self.usb_stick.disable()
