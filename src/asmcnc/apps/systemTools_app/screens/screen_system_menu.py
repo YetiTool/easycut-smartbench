@@ -84,18 +84,18 @@ Builder.load_string("""
 			border: [dp(25)]*4
 			padding_y: 5
 
-        Button:
-            text: 'USB First Aid'
-            on_press: root.usb_first_aid()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: '16sp'
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-            border: [dp(25)]*4
-            padding_y: 5
+		Button:
+			text: 'USB First Aid'
+			on_press: root.usb_first_aid()
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: '16sp'
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
 			text: 'Beta Testing'
@@ -198,8 +198,8 @@ class SystemMenuScreen(Screen):
 	def quit_to_console(self):
 		popup_system.QuitToConsole(self.systemtools_sm)
 
-    def usb_first_aid(self):
-        self.systemtools_sm.do_usb_first_aid()
+	def usb_first_aid(self):
+		self.systemtools_sm.do_usb_first_aid()
 
 	def beta_testing(self):
 		popup_system.PopupBetaTesting(self.systemtools_sm)
