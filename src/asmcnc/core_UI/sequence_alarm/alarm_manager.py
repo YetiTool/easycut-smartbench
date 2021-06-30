@@ -7,6 +7,7 @@ from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
 screen_alarm_4, screen_alarm_5
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 # this class is set up in serial comms, so that alarm screens are available at any time
 # not going to use it as a "screen manager" as alarm screens want to be instantly available at all times
