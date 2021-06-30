@@ -179,7 +179,7 @@ class ScreenManagerSystemTools(object):
         message = 'Ensuring USB is unmounted, please wait...'
         wait_popup = popup_info.PopupWait(self.sm, description = message)
         umount_out = (str(os.popen("sudo umount /media/usb/").read())) # using popen for the block
-        popup_system.PopupUSBFirstAid(self.systemtools_sm)
+        popup_system.PopupUSBFirstAid(self)
         wait_popup.popup.dismiss()
 
     def clear_usb_mountpoint(self):
