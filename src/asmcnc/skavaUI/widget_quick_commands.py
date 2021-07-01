@@ -157,6 +157,11 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
+        # Check if stylus option is enabled
+        if self.m.is_stylus_enabled == True:
+            # Display tool selection screen
+            self.sm.current = 'tool_selection'
+
         if self.sm.get_screen('home').job_gcode ==[]:
             info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
 

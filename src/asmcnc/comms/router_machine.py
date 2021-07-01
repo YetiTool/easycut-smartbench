@@ -79,6 +79,9 @@ class RouterMachine(object):
     is_laser_on = False
     is_laser_enabled = False
 
+    ## STYLUS SETTINGS
+    is_stylus_enabled = False
+
     ## BRUSH VALUES
     spindle_brush_use_seconds = 0
     spindle_brush_lifetime_seconds = float(120*3600)
