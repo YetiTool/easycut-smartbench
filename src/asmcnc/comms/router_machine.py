@@ -81,6 +81,7 @@ class RouterMachine(object):
 
     ## STYLUS SETTINGS
     is_stylus_enabled = False
+    stylus_router_choice = 'router'
 
     ## BRUSH VALUES
     spindle_brush_use_seconds = 0

@@ -157,11 +157,6 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
-        # Check if stylus option is enabled
-        if self.m.is_stylus_enabled == True:
-            # Display tool selection screen
-            self.sm.current = 'tool_selection'
-
         if self.sm.get_screen('home').job_gcode ==[]:
             info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
 
@@ -183,17 +178,23 @@ class QuickCommands(Widget):
 
         else:
 
-            # clear to proceed
-            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
-            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
-            self.sm.get_screen('go').return_to_screen = 'home'
-            self.sm.get_screen('go').cancel_to_screen = 'home'
-            
-            # is fw capable of auto Z lift?
-            if self.m.fw_can_operate_zUp_on_pause():
-                self.sm.current = 'lift_z_on_pause_or_not'
+            # Check if stylus option is enabled
+            if self.m.is_stylus_enabled == True:
+                # Display tool selection screen
+                self.sm.current = 'tool_selection'
+
             else:
-                self.sm.current = 'jobstart_warning'
+                # clear to proceed
+                self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
+                self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
+                self.sm.get_screen('go').return_to_screen = 'home'
+                self.sm.get_screen('go').cancel_to_screen = 'home'
+                
+                # is fw capable of auto Z lift?
+                if self.m.fw_can_operate_zUp_on_pause():
+                    self.sm.current = 'lift_z_on_pause_or_not'
+                else:
+                    self.sm.current = 'jobstart_warning'
 
 
 

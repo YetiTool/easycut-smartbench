@@ -88,7 +88,22 @@ class ToolSelectionScreen(Screen):
 
 
     def router_button_pressed(self):
-        self.sm.current = 'home'
+        self.m.stylus_router_choice = 'router'
+        self.exit_stylus_router_selection()
 
     def stylus_button_pressed(self):
-        self.sm.current = 'home'
+        self.m.stylus_router_choice = 'stylus'
+        self.exit_stylus_router_selection()
+    
+    def exit_stylus_router_selection(self):
+        # clear to proceed
+        self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
+        self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
+        self.sm.get_screen('go').return_to_screen = 'home'
+        self.sm.get_screen('go').cancel_to_screen = 'home'
+        
+        # is fw capable of auto Z lift?
+        if self.m.fw_can_operate_zUp_on_pause():
+            self.sm.current = 'lift_z_on_pause_or_not'
+        else:
+            self.sm.current = 'jobstart_warning'
