@@ -1,6 +1,7 @@
 '''
 Created on 30 June 2021
 @author: Dennis
+
 Screen to select router or CNC stylus tool
 '''
 
@@ -104,6 +105,10 @@ class ToolSelectionScreen(Screen):
         
         # is fw capable of auto Z lift?
         if self.m.fw_can_operate_zUp_on_pause():
-            self.sm.current = 'lift_z_on_pause_or_not'
+            if self.m.stylus_router_choice == 'stylus':
+                self.sm.get_screen('go').lift_z_on_job_pause = True
+                self.sm.current = 'jobstart_warning'
+            else:    
+                self.sm.current = 'lift_z_on_pause_or_not'
         else:
             self.sm.current = 'jobstart_warning'

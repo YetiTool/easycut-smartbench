@@ -414,7 +414,7 @@ class SerialConnection(object):
 
         if self.m_state != "Check":
 
-            if str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30"):
+            if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) and self.m.stylus_router_choice != 'stylus':
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)

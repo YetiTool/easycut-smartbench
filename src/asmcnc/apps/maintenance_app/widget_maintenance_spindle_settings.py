@@ -240,4 +240,5 @@ class SpindleSettingsWidget(Widget):
 
         else:
             self.m.is_stylus_enabled = False
+            self.m.stylus_router_choice = 'router'
 
