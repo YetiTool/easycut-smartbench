@@ -157,6 +157,14 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
+
+        # Stylus setting should always be based on the file
+        if self.m.is_stylus_enabled_setting == 'True' or self.m.is_stylus_enabled_setting == True:
+            self.m.is_stylus_enabled = True
+        else:
+            self.m.is_stylus_enabled = False
+
+
         if self.sm.get_screen('home').job_gcode ==[]:
             info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
 

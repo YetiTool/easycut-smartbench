@@ -548,6 +548,13 @@ class MaintenanceScreenClass(Screen):
             string_digital = 'manual'
             self.spindle_settings_widget.spindle_cooldown_speed.disabled = True
 
+        if self.m.is_stylus_enabled_setting:
+            self.m.is_stylus_enabled = True
+            self.spindle_settings_widget.stylus_switch.active = True
+        else:
+            self.m.is_stylus_enabled = False
+            self.spindle_settings_widget.stylus_switch.active = False
+
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)

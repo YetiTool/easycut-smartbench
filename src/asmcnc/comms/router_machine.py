@@ -93,6 +93,7 @@ class RouterMachine(object):
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
+    is_stylus_enabled_setting = False # Stylus disabled by default
 
     reminders_enabled = True
 
@@ -153,7 +154,8 @@ class RouterMachine(object):
                 str(self.spindle_voltage) + "\n" + 
                 str(self.spindle_digital) + "\n" + 
                 str(self.spindle_cooldown_time_seconds) + "\n" +
-                str(self.spindle_cooldown_rpm)
+                str(self.spindle_cooldown_rpm) + "\n" +
+                str(self.is_stylus_enabled_setting)
                 )
             file.close()
 
@@ -401,6 +403,11 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
+            if read_spindle[5] == 'True':
+                self.is_stylus_enabled_setting = True
+            else:
+                self.is_stylus_enabled_setting = False
+
             log("Read in spindle cooldown settings")
             return True
 
@@ -408,12 +415,12 @@ class RouterMachine(object):
             log("Unable to read spindle cooldown settings")
             return False
 
-    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
+    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm, stylus):
         try:
 
             file = open(self.spindle_cooldown_settings_file_path, "w")
 
-            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm)
+            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm) + "\n" + str(stylus)
 
             file.write(file_string)
             file.close()
@@ -426,6 +433,11 @@ class RouterMachine(object):
 
             self.spindle_cooldown_time_seconds = int(time_seconds)
             self.spindle_cooldown_rpm = int(rpm)
+
+            if stylus == 'True' or stylus == True:
+                self.is_stylus_enabled_setting = True
+            else:
+                self.is_stylus_enabled_setting = False
 
             log("Spindle cooldown settings written to file")
             return True
