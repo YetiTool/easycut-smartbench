@@ -80,13 +80,15 @@ class SpindleSaveWidget(Widget):
 
     def get_info(self):
 
-        spindle_settings_info = "[b]Spindle cooldown[/b]\nThe spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
-        "We recommend the following cooldown settings:\n\n" + \
+        spindle_settings_info = "[b]Spindle cooldown:[/b] The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
+        "We recommend the following cooldown settings:\n" + \
         "       Yeti: 20,000 RPM; 10 seconds\n" + \
         "       AMB: 10,000 RPM; 30 seconds\n\n" + \
-        "[b]Spindle brand[/b]\n" + \
+        "[b]Spindle brand:[/b] " + \
         "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
-        "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle."
+        "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.\n\n" + \
+        "[b]CNC Stylus switch:[/b] " + \
+        "When enabled, you will always be asked whether you are using a stylus or a spindle at the beginning of every job."
 
         popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
 
