@@ -253,6 +253,8 @@ class DoorScreen(Screen):
     def on_pre_enter(self):
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
+        self.resume_button.opacity = 0
+        self.cancel_button.opacity = 0
 
     def on_enter(self):
 
@@ -302,6 +304,8 @@ class DoorScreen(Screen):
 
 
     def ready_to_resume(self, dt): 
+        self.resume_button.opacity = 1
+        self.cancel_button.opacity = 1
         self.resume_button.disabled = False
         self.cancel_button.disabled = False
         self.anim_stop_bar.repeat = True
