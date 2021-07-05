@@ -22,6 +22,7 @@ Builder.load_string("""
     spindle_image: spindle_image
     reset_button: reset_button
     save_button: save_button
+    save_button_image: save_button_image
     
     BoxLayout:
     
@@ -126,7 +127,8 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/apps/maintenance_app/img/save_button_132.png"
+                            id: save_button_image
+                            source: "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -149,16 +151,21 @@ class LaserDatumButtons(Widget):
         popup_maintenance.PopupResetOffset(self.sm)
 
     def save_button_press(self):
-        if self.m.is_laser_enabled == True:
-            popup_maintenance.PopupSaveOffset(self.sm)
-        else:
-            warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
-            ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
-            popup_info.PopupError(self.sm, warning_message)
+        if self.m.is_laser_save_available == True:
+            if self.m.is_laser_enabled == True:
+                popup_maintenance.PopupSaveOffset(self.sm)
+            else:
+                warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
+                ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
+                popup_info.PopupError(self.sm, warning_message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_y = self.m.mpos_y()
+
+        # Save button becomes available
+        self.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132.png"
+        self.m.is_laser_save_available = True
 
     def save_laser_offset(self):
         # need to cleverly calculate from movements & saving calibration from maintenance screen
@@ -167,6 +174,11 @@ class LaserDatumButtons(Widget):
 
         if self.m.write_z_head_laser_offset_values('True', self.m.laser_offset_x_value, self.m.laser_offset_y_value):
             popup_info.PopupMiniInfo(self.sm,"Settings saved!")
+
+            # Save button becomes unavailable
+            self.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+            self.m.is_laser_save_available = False
+
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \
             " please contact the YetiTool support team."

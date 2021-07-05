@@ -69,7 +69,7 @@ class PopupSaveOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are saving the laser datum offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your refernce mark."
+        description = "You are saving the laser datum offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your reference mark."
 
         def save_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
