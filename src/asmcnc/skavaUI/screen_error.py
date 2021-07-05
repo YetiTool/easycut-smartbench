@@ -32,7 +32,7 @@ ERROR_CODES = {
     "error:10" : "Soft limits cannot be enabled without homing also enabled.",
     "error:11" : "Max characters per line exceeded. Line was not processed and executed.",
     "error:12" : "(Compile Option Grbl '$' setting value exceeds the maximum step rate supported.",
-    "error:13" : "Stop bar detected as pressed. Check all four contacts at the stop bar ends are not pressed. Pressing each switch a few times may clear the contact.",
+    "error:13" : "Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.",
     "error:14" : "(Grbl-Mega Only Build info or startup line exceeded EEPROM line length limit.",
     "error:15" : "Have you homed the machine yet? If not, please do so now.\nJog target exceeds machine travel. Command ignored.",
     "error:16" : "Jog command with no '=' or contains prohibited g-code.",
