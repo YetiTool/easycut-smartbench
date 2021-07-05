@@ -87,7 +87,7 @@ Builder.load_string("""
             Label:
                 size_hint: (None, None)
                 font_size: '30sp'
-                text: '[b]Stop bar pushed![/b]'
+                text: '[b]Interrupt bar pushed![/b]'
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
