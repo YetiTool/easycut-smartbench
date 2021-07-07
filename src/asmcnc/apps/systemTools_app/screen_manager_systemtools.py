@@ -184,7 +184,7 @@ class ScreenManagerSystemTools(object):
 
     def clear_usb_mountpoint(self):
         clear_mountpoint_out = (str(os.popen("sudo rm /media/usb/*").read())) # using popen for the block
-        message = 'USB cache cleared.\n\nFirst aid complete.'
+        message = 'First aid complete.\n\nYou can now use your USB stick.'
         popup_info.PopupMiniInfo(self.sm, description = message)
 
 
