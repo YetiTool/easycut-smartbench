@@ -99,7 +99,7 @@ Builder.load_string("""
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
-                sort_func: root.sort_func
+                sort_func: root.default_sort_func
                 FileChooserIconLayout
                 FileChooserListLayout
                
@@ -398,6 +398,8 @@ class LocalFileChooser(Screen):
             popup_info.PopupDeleteFile(screen_manager = self.sm, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):        
+        self.refresh_filechooser()
+
         if os.path.isfile(filename):
             try: 
                 os.remove(filename)
@@ -410,6 +412,8 @@ class LocalFileChooser(Screen):
 
     def delete_all(self):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
+        self.refresh_filechooser()
+
         if files_in_cache:
             for file in files_in_cache:
                 try: 
@@ -442,4 +446,4 @@ class LocalFileChooser(Screen):
         return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
 
-    sort_func = ObjectProperty(date_order_sort)
+    default_sort_func = ObjectProperty(date_order_sort)

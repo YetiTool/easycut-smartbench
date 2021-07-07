@@ -80,7 +80,7 @@ Builder.load_string("""
             show_hidden: False
             filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
             on_selection: root.refresh_filechooser()
-            sort_func: root.sort_func
+            sort_func: root.default_sort_func
             FileChooserIconLayout
             FileChooserListLayout
                
@@ -317,4 +317,4 @@ class USBFileChooser(Screen):
         return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
 
-    sort_func = ObjectProperty(date_order_sort)
+    default_sort_func = ObjectProperty(date_order_sort)
