@@ -80,7 +80,7 @@ Builder.load_string("""
             show_hidden: False
             filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
             on_selection: root.refresh_filechooser()
-            sort_func: root.default_sort_func
+            sort_func: root.sort_by_date
             FileChooserIconLayout
             FileChooserListLayout
                
@@ -104,6 +104,11 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
+
+            ToggleButton:
+                id: toggle_sort_button
+                size_hint_x: 1
+                on_press: root.switch_sort()
 
             Button:
                 disabled: False
@@ -175,12 +180,22 @@ job_cache_dir = './jobCache/'    # where job files are cached for selection (for
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 verbose = True
 
+def name_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+            sorted(f for f in files if not filesystem.is_dir(f)))
+
+def date_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
+
 class USBFileChooser(Screen):
 
 
     filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
 
+    sort_by_name = ObjectProperty(name_order_sort)
+    sort_by_date = ObjectProperty(date_order_sort)
 
     def __init__(self, **kwargs):
  
@@ -245,6 +260,15 @@ class USBFileChooser(Screen):
             self.filechooser_usb.view_mode = 'list'
             self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
+    def switch_sort(self):
+
+        if self.filechooser_usb.sort_func == self.sort_by_date:
+            self.filechooser_usb.sort_func = self.sort_by_name
+        else:
+            self.filechooser_usb.sort_func = self.sort_by_date
+
+        self.filechooser_usb._update_files()
+
     def refresh_filechooser(self):
 
         if verbose: print 'Refreshing filechooser'
@@ -301,20 +325,3 @@ class USBFileChooser(Screen):
     def go_to_loading_screen(self, file_selection):
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
-
-
-    def sort_by_name(self):
-        self.filechooser.sort_func = ObjectProperty(self.alphanumeric_folders_first)
-
-    def alphanumeric_folders_first(files, filesystem):
-        return (sorted(f for f in files if filesystem.is_dir(f)) +
-                sorted(f for f in files if not filesystem.is_dir(f)))
-
-    def sort_by_date(self):    
-        self.filechooser.sort_func = ObjectProperty(self.date_order_sort)
-
-    def date_order_sort(files, filesystem):
-        return (sorted(f for f in files if filesystem.is_dir(f)) +
-            sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
-
-    default_sort_func = ObjectProperty(date_order_sort)
