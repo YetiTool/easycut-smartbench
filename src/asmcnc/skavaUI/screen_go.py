@@ -570,6 +570,7 @@ class GoScreen(Screen):
             modified_job_gcode.append("AF")  # turns vac off
         else:
             modified_job_gcode.extend(self.job_gcode)
+            self.m.vac_off()
 
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution

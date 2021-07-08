@@ -88,7 +88,7 @@ class SpindleSaveWidget(Widget):
         "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
         "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.\n\n" + \
         "[b]CNC Stylus switch:[/b] " + \
-        "When enabled, you will always be asked whether you are using a stylus or a spindle at the beginning of every job."
+        "When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job."
 
         popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
 
