@@ -41,6 +41,7 @@ Builder.load_string("""
     delete_selected_button:delete_selected_button
     delete_all_button:delete_all_button
     image_view : image_view
+    image_sort: image_sort
     image_usb:image_usb
     image_delete:image_delete
     image_delete_all:image_delete_all
@@ -130,6 +131,18 @@ Builder.load_string("""
                 id: toggle_sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_sort
+                        source: "./asmcnc/skavaUI/img/file_select_sort_date.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
             Button:
                 id: button_usb
@@ -344,10 +357,13 @@ class LocalFileChooser(Screen):
 
     def switch_sort(self):
 
-        if self.filechooser.sort_func == self.sort_by_date:
-            self.filechooser.sort_func = self.sort_by_name
-        else:
+        if self.toggle_sort_button.state == "normal":
             self.filechooser.sort_func = self.sort_by_date
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_date.png"
+
+        elif self.toggle_sort_button.state == "down":
+            self.filechooser.sort_func = self.sort_by_name
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_name.png"
 
         self.filechooser._update_files()
 

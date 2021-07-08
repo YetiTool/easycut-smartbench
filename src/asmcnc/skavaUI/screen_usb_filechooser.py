@@ -28,8 +28,10 @@ Builder.load_string("""
 
     filechooser_usb:filechooser_usb
     toggle_view_button : toggle_view_button
+    toggle_sort_button: toggle_sort_button
     load_button:load_button
     image_view : image_view
+    image_sort: image_sort
     image_select:image_select
     usb_status_label:usb_status_label
 
@@ -109,6 +111,18 @@ Builder.load_string("""
                 id: toggle_sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_sort
+                        source: "./asmcnc/skavaUI/img/file_select_sort_date.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
             Button:
                 disabled: False
@@ -262,10 +276,13 @@ class USBFileChooser(Screen):
 
     def switch_sort(self):
 
-        if self.filechooser_usb.sort_func == self.sort_by_date:
-            self.filechooser_usb.sort_func = self.sort_by_name
-        else:
+        if self.toggle_sort_button.state == "normal":
             self.filechooser_usb.sort_func = self.sort_by_date
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_date.png"
+
+        elif self.toggle_sort_button.state == "down":
+            self.filechooser_usb.sort_func = self.sort_by_name
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_name.png"
 
         self.filechooser_usb._update_files()
 
