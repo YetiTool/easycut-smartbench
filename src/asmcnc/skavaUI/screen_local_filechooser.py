@@ -138,7 +138,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_sort
-                        source: "./asmcnc/skavaUI/img/file_select_sort_date.png"
+                        source: "./asmcnc/skavaUI/img/file_select_sort_name.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -359,11 +359,11 @@ class LocalFileChooser(Screen):
 
         if self.toggle_sort_button.state == "normal":
             self.filechooser.sort_func = self.sort_by_date
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_date.png"
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_name.png"
 
         elif self.toggle_sort_button.state == "down":
             self.filechooser.sort_func = self.sort_by_name
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_name.png"
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_date.png"
 
         self.filechooser._update_files()
 
