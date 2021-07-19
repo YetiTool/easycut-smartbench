@@ -101,7 +101,7 @@ Builder.load_string("""
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
-                sort_func: root.sort_by_date
+                sort_func: root.sort_by_date_reverse
                 FileChooserIconLayout
                 FileChooserListLayout
                
@@ -138,7 +138,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_sort
-                        source: "./asmcnc/skavaUI/img/file_select_sort_name.png"
+                        source: "./asmcnc/skavaUI/img/file_select_sort_down.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -277,11 +277,11 @@ job_cache_dir = './jobCache/'    # where job files are cached for selection (for
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 ftp_file_dir = '../../router_ftp/'   # Linux location where incoming files are FTP'd to
 
-def name_order_sort(files, filesystem):
-    return (sorted(f for f in files if filesystem.is_dir(f)) +
-            sorted(f for f in files if not filesystem.is_dir(f)))
-
 def date_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = False))
+
+def date_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
         sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
 
@@ -289,8 +289,8 @@ class LocalFileChooser(Screen):
 
     filename_selected_label_text = StringProperty()
     
-    sort_by_name = ObjectProperty(name_order_sort)
     sort_by_date = ObjectProperty(date_order_sort)
+    sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
 
     def __init__(self, **kwargs):
 
@@ -358,12 +358,12 @@ class LocalFileChooser(Screen):
     def switch_sort(self):
 
         if self.toggle_sort_button.state == "normal":
-            self.filechooser.sort_func = self.sort_by_date
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_name.png"
+            self.filechooser.sort_func = self.sort_by_date_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down.png"
 
         elif self.toggle_sort_button.state == "down":
-            self.filechooser.sort_func = self.sort_by_name
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_date.png"
+            self.filechooser.sort_func = self.sort_by_date
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up.png"
 
         self.filechooser._update_files()
 
