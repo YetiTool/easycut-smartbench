@@ -122,6 +122,7 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.save_button_press()
+                    disabled: True
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -151,13 +152,12 @@ class LaserDatumButtons(Widget):
         popup_maintenance.PopupResetOffset(self.sm)
 
     def save_button_press(self):
-        if self.m.is_laser_save_available == True:
-            if self.m.is_laser_enabled == True:
-                popup_maintenance.PopupSaveOffset(self.sm)
-            else:
-                warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
-                ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
-                popup_info.PopupError(self.sm, warning_message)
+        if self.m.is_laser_enabled == True:
+            popup_maintenance.PopupSaveOffset(self.sm)
+        else:
+            warning_message = 'Could not save laser datum offset!\n\nYou need to line up the laser crosshair' + \
+            ' with the mark you made with the spindle (press [b]i[/b] for help).\n\nPlease enable laser to set offset.'
+            popup_info.PopupError(self.sm, warning_message)
 
     def reset_laser_offset(self):
         self.sm.get_screen('maintenance').laser_datum_reset_coordinate_x = self.m.mpos_x()
@@ -165,7 +165,7 @@ class LaserDatumButtons(Widget):
 
         # Save button becomes available
         self.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132.png"
-        self.m.is_laser_save_available = True
+        self.save_button.disabled = False
 
     def save_laser_offset(self):
         # need to cleverly calculate from movements & saving calibration from maintenance screen
@@ -177,7 +177,7 @@ class LaserDatumButtons(Widget):
 
             # Save button becomes unavailable
             self.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
-            self.m.is_laser_save_available = False
+            self.save_button.disabled = True
 
         else:
             warning_message = "There was a problem saving your settings.\n\nPlease check your settings and try again, or if the probem persists" + \

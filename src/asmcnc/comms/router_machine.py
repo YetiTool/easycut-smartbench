@@ -78,7 +78,6 @@ class RouterMachine(object):
 
     is_laser_on = False
     is_laser_enabled = False
-    is_laser_save_available = False
 
     ## BRUSH VALUES
     spindle_brush_use_seconds = 0
