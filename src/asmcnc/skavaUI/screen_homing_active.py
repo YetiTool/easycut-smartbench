@@ -161,6 +161,9 @@ class HomingScreenActive(Screen):
             Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
 
+        if self.m.is_laser_enabled:
+            self.m.jog_relative('X', self.m.laser_offset_x_value - self.m.s.setting_27 + self.m.limit_switch_safety_distance, 3000)
+
 
     def after_successful_completion_return_to_screen(self):
         self.sm.current = self.return_to_screen
