@@ -97,11 +97,6 @@ class ToolSelectionScreen(Screen):
         self.exit_stylus_router_selection()
     
     def exit_stylus_router_selection(self):
-        # clear to proceed
-        self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
-        self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
-        self.sm.get_screen('go').return_to_screen = 'home'
-        self.sm.get_screen('go').cancel_to_screen = 'home'
         
         # is fw capable of auto Z lift?
         if self.m.fw_can_operate_zUp_on_pause():

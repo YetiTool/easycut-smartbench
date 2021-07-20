@@ -181,6 +181,12 @@ class QuickCommands(Widget):
 
         else:
 
+            # clear to proceed
+            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
+            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
+            self.sm.get_screen('go').return_to_screen = 'home'
+            self.sm.get_screen('go').cancel_to_screen = 'home'
+
             # Check if stylus option is enabled
             if self.m.is_stylus_enabled == True:
                 # Display tool selection screen
@@ -188,12 +194,6 @@ class QuickCommands(Widget):
 
             else:
                 self.m.stylus_router_choice = 'router'
-
-                # clear to proceed
-                self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
-                self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
-                self.sm.get_screen('go').return_to_screen = 'home'
-                self.sm.get_screen('go').cancel_to_screen = 'home'
                 
                 # is fw capable of auto Z lift?
                 if self.m.fw_can_operate_zUp_on_pause():
