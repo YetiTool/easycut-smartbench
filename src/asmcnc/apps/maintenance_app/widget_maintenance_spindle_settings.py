@@ -202,7 +202,6 @@ Builder.load_string("""
                 center_x: self.parent.center_x
                 y: self.parent.y
                 pos: self.parent.pos
-                on_active: root.toggle_stylus()
 
 
 
@@ -233,12 +232,3 @@ class SpindleSettingsWidget(Widget):
 
         if 'digital' in self.spindle_brand.text:
             self.spindle_cooldown_speed.disabled = False
-
-    def toggle_stylus(self):
-        if self.stylus_switch.active == True:
-            self.m.is_stylus_enabled = True
-
-        else:
-            self.m.is_stylus_enabled = False
-            self.m.stylus_router_choice = 'router'
-

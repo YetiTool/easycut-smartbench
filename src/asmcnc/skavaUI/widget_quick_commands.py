@@ -158,11 +158,6 @@ class QuickCommands(Widget):
         # Job must be within machine bounds.
 
 
-        # Stylus setting should always be based on the file
-        if self.m.is_stylus_enabled_setting == 'True' or self.m.is_stylus_enabled_setting == True:
-            self.m.is_stylus_enabled = True
-        else:
-            self.m.is_stylus_enabled = False
 
 
         if self.sm.get_screen('home').job_gcode ==[]:
@@ -192,6 +187,8 @@ class QuickCommands(Widget):
                 self.sm.current = 'tool_selection'
 
             else:
+                self.m.stylus_router_choice = 'router'
+
                 # clear to proceed
                 self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
                 self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename

@@ -570,7 +570,7 @@ class GoScreen(Screen):
             modified_job_gcode.append("AF")  # turns vac off
         else:
             modified_job_gcode.extend(self.job_gcode)
-            self.m.vac_off()
+
 
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
@@ -578,7 +578,10 @@ class GoScreen(Screen):
         
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
-            culprits = ['M30', 'M2']
+            if self.m.stylus_router_choice == 'router':
+                culprits = ['M30', 'M2']
+            else:
+                culprits = ['M30', 'M2', 'M3', 'M03', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')

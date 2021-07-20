@@ -93,7 +93,6 @@ class RouterMachine(object):
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
-    is_stylus_enabled_setting = False # Stylus disabled by default
 
     reminders_enabled = True
 
@@ -155,7 +154,7 @@ class RouterMachine(object):
                 str(self.spindle_digital) + "\n" + 
                 str(self.spindle_cooldown_time_seconds) + "\n" +
                 str(self.spindle_cooldown_rpm) + "\n" +
-                str(self.is_stylus_enabled_setting)
+                str(self.is_stylus_enabled)
                 )
             file.close()
 
@@ -404,9 +403,9 @@ class RouterMachine(object):
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
             if read_spindle[5] == 'True':
-                self.is_stylus_enabled_setting = True
+                self.is_stylus_enabled = True
             else:
-                self.is_stylus_enabled_setting = False
+                self.is_stylus_enabled = False
 
             log("Read in spindle cooldown settings")
             return True
@@ -435,9 +434,9 @@ class RouterMachine(object):
             self.spindle_cooldown_rpm = int(rpm)
 
             if stylus == 'True' or stylus == True:
-                self.is_stylus_enabled_setting = True
+                self.is_stylus_enabled = True
             else:
-                self.is_stylus_enabled_setting = False
+                self.is_stylus_enabled = False
 
             log("Spindle cooldown settings written to file")
             return True
