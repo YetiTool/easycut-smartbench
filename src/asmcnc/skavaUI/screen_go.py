@@ -619,6 +619,8 @@ class GoScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
+        self.m.stylus_router_choice = 'router'
+
             
 ### SCREEN UPDATES
     

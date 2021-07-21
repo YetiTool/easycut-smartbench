@@ -480,8 +480,9 @@ class SerialConnection(object):
         running_seconds = int(running_seconds_remainder % 60)
 
         # Add time taken in seconds to brush use: 
-        self.m.spindle_brush_use_seconds += only_running_time_seconds
-        self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
+        if self.m.stylus_router_choice == 'router':
+            self.m.spindle_brush_use_seconds += only_running_time_seconds
+            self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
 
         # Add time taken in seconds to calibration tracking
         self.m.time_since_calibration_seconds += only_running_time_seconds
