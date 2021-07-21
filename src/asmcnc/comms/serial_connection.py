@@ -114,9 +114,11 @@ class SerialConnection(object):
                 list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port]
 
                 # set up serial connection with first (most preferred) available port
-                if list_of_available_ports: 
-                    devicePort = list_of_available_ports[0] # take whole line (includes suffix address e.g. ttyACM0
-                    self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                for available_port in list_of_available_ports:
+                    try: 
+                        self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    except: 
+                        pass
 
 
                 # legacy code
