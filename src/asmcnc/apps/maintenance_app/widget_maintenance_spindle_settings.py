@@ -138,7 +138,7 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(60) # 62 high image
+            height: dp(60)
             width: dp(160)
             padding: [dp(56), dp(5), dp(40), dp(5)] # 15 padding
 
