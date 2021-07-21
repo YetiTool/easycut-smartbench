@@ -99,17 +99,38 @@ class SerialConnection(object):
 
         else:
             try:
-                filesForDevice = listdir('/dev/') # put all device files into list[]
-                for line in filesForDevice: # run through all files
 
-                    # FLAG: This if statement is only relevant in linux environment. 
-                    # EITHER: USB Comms hardware
-                    # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-                    # OR: UART Comms hardware
-                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                # list of portst that we may want to use, in order of preference
+                default_serial_port = 'ttyS'
+                ACM_port = 'ttyACM'
+                USB_port = 'ttyUSB'
+                AMA_port = 'ttyAMA'
+
+                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+
+                filesForDevice = listdir('/dev/') # put all device files into list[]
+
+                # this comes out in order of preference too :)
+                list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port]
+
+                # set up serial connection with first (most preferred) available port
+                if list_of_available_ports: 
+                    devicePort = list_of_available_ports[0] # take whole line (includes suffix address e.g. ttyACM0
+                    self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+
+                # legacy code
+                # for line in filesForDevice: # run through all files
+
+                #     # FLAG: This if statement is only relevant in linux environment. 
+                #     # EITHER: USB Comms hardware
+                #     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
+                #     # OR: UART Comms hardware
+                #     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
+                #         # When platform is updated, this needs to be moved across to the AMA0 port :)
+
+                    # devicePort = list_of_available_ports[0] # take whole line (includes suffix address e.g. ttyACM0
+                    # self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
                     # elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
                     
@@ -117,9 +138,9 @@ class SerialConnection(object):
                     #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                     #     return True
                         
-                    elif (line[:12] == 'tty.usbmodem'): # look for...   
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    # elif (line[:12] == 'tty.usbmodem'): # look for...   
+                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
+                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
