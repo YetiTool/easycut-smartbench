@@ -126,9 +126,22 @@ class SerialConnection(object):
                                 log('\n'.join(stripped_input))
                                 SmartBench_port = available_port
                                 break
+                            else:
+                                self.s.close()
+                        else:
+                            self.s.close()
+
                     except: 
                         pass
 
+                # If all else fails, try to connect to S0 anyway
+                if SmartBench_port == '':
+                    try:
+                        first_port = list_of_available_ports[0]
+                        if default_serial_port in first_port:
+                            self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    except:
+                        pass
 
                 # legacy code
                 # for line in filesForDevice: # run through all files
