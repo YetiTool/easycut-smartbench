@@ -77,6 +77,7 @@ class SerialConnection(object):
     def establish_connection(self, win_port):
 
         log('Start to establish connection...')
+        SmartBench_port = ''
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
@@ -94,6 +95,7 @@ class SerialConnection(object):
                         # When platform is updated, this needs to be moved across to the AMA0 port :)
                         devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                         self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        SmartBench_port = devicePort
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
@@ -117,8 +119,13 @@ class SerialConnection(object):
                 for available_port in list_of_available_ports:
                     try: 
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        devicePort = available_port
-                        break
+                        if self.s.inWaiting() > 0:
+
+                            stripped_input = map(str.strip, s_0.readlines())
+                            if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                                log('\n'.join(stripped_input))
+                                SmartBench_port = available_port
+                                break
                     except: 
                         pass
 
@@ -149,7 +156,7 @@ class SerialConnection(object):
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
-        log("Serial connection status: " + str(self.is_connected()) + " " + str(devicePort))
+        log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
 
         if self.is_connected():
             log('Initialising grbl...')
@@ -861,7 +868,7 @@ class SerialConnection(object):
 
                 self.expecting_probe_result = False # clear flag
                 
-            elif stripped_message.startswith('ASM CNC'):
+            elif stripped_message.startswith('ASM CNC') or stripped_message.startswith('SmartBench'):
                 fw_hw_versions = stripped_message.split(';')
                 self.fw_version = (fw_hw_versions[1]).split(':')[1]
                 self.hw_version = (fw_hw_versions[2]).split(':')[1]
