@@ -119,9 +119,15 @@ class SerialConnection(object):
                 for available_port in list_of_available_ports:
                     try: 
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        self.s.close()
+                        self.s.open()
+
                         if self.s.inWaiting() > 0:
 
                             stripped_input = map(str.strip, s_0.readlines())
+
+                            log(stripped_input)
+
                             if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
                                 log('\n'.join(stripped_input))
                                 SmartBench_port = available_port
