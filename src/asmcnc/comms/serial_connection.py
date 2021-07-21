@@ -117,6 +117,8 @@ class SerialConnection(object):
                 for available_port in list_of_available_ports:
                     try: 
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        devicePort = available_port
+                        break
                     except: 
                         pass
 
@@ -147,7 +149,7 @@ class SerialConnection(object):
             except:
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
-        log("Serial connection status: " + str(self.is_connected()))
+        log("Serial connection status: " + str(self.is_connected()) + " " + str(devicePort))
 
         if self.is_connected():
             log('Initialising grbl...')
