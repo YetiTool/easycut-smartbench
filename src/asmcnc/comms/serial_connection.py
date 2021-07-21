@@ -119,6 +119,7 @@ class SerialConnection(object):
                 for available_port in list_of_available_ports:
                     try: 
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        log("Reset port")
                         self.s.close()
                         self.s.open()
 
