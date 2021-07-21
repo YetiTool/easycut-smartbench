@@ -146,7 +146,7 @@ class SerialConnection(object):
                         first_port = list_of_available_ports[0]
                         if default_serial_port in first_port:
                             self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                            SmartBench_port = first_port
+                            SmartBench_port = "Could not identify if SmartBench, attempting default: " + first_port
                     except:
                         pass
 
