@@ -122,20 +122,25 @@ class SerialConnection(object):
                         log("Try to connect to: " + available_port)
                         # set up connection
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+                        # reopen port, just in case its been in use somewhere else
                         self.s.close()
                         self.s.open()
                         # serial object needs time to make the connection before we can do anything else
                         time.sleep(1)
 
                         try:
+                            # flush input and soft-reset: this will trigger the GRBL welcome message
                             self.s.flushInput()
                             self.s.write("\x18")
                             # give it a second to reply
                             time.sleep(1)
                             first_bytes = self.s.inWaiting()
-                            log("Is port SmartBench? " + str(available_port) + " First read: " + str(first_bytes))
+                            log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
+
 
                             if first_bytes:
+
                                 # Read in first input and log it
                                 def strip_and_log(input_string):
                                     new_string = input_string.strip()
@@ -145,7 +150,7 @@ class SerialConnection(object):
                                 stripped_input = map(strip_and_log, self.s.readlines())
 
                                 # Is this device a SmartBench? 
-                                if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                                if any('SmartBench' in ele for ele in stripped_input):
                                     # Found SmartBench! 
                                     SmartBench_port = available_port
                                     break
@@ -160,12 +165,8 @@ class SerialConnection(object):
                     except: 
                         log("Wow definitely not that port")
 
-                # If all else fails, try to connect to ttyS port anyway
+                # If all else fails, try to connect to ttyS or ttyAMA port anyway
                 if SmartBench_port == '':
-
-                    first_list_index = 0
-                    last_list_index = len(list_of_available_ports)
-
 
                     first_port = list_of_available_ports[0]
                     last_port = list_of_available_ports[-1]
@@ -179,24 +180,15 @@ class SerialConnection(object):
                             last_list_index = -1
                             self.s = serial.Serial('/dev/' + last_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                             SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + last_port
-                        else:
-                            # last ditch attempt to connect to something
-                            for remaining_port in list_of_available_ports[first_list_index:last_list_index]:
-                                try: 
-                                    self.s = serial.Serial('/dev/' + remaining_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                                    SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + last_port
-                                    break
-                                except:
-                                    pass
+
                     if SmartBench_port == '':
                         Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
 
             except:
-                # This only gets triggered if last ditch attempt at S0 port fails OR if not ports can be listed in the first place (less likely)
+                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
 
         log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
-
         
         try: 
             if self.is_connected():
@@ -226,9 +218,7 @@ class SerialConnection(object):
         t.start()
         
         # Clear any hard switch presses that may have happened during boot
-        self.m.bootup_sequence()  
-
-
+        self.m.bootup_sequence() 
 
 # SCANNER: listens for responses from Grbl
 
@@ -239,7 +229,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
 
