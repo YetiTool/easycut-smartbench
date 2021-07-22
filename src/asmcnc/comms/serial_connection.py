@@ -105,6 +105,7 @@ class SerialConnection(object):
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
                 # ACM_port = 'ttyACM'
+                ACM_port = ''
                 USB_port = 'ttyUSB'
                 AMA_port = 'ttyAMA'
 
