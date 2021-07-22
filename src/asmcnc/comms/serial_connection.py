@@ -140,23 +140,24 @@ class SerialConnection(object):
                                     self.m._grbl_soft_reset()
                                     time.sleep(5)
                                     first_bytes = self.s.inWaiting()
+                                    log("Bytes in waiting after reset: " + first_bytes)
                                 except:
                                     log("GRBL reset did not work")
 
-                            if first_bytes:
+                            # if first_bytes:
                                 # Read in first input and log it
-                                def strip_and_log(input_string):
-                                    new_string = input_string.strip()
-                                    log(new_string)
-                                    return new_string
+                            def strip_and_log(input_string):
+                                new_string = input_string.strip()
+                                log(new_string)
+                                return new_string
 
-                                stripped_input = map(strip_and_log, self.s.readlines())
+                            stripped_input = map(strip_and_log, self.s.readlines())
 
-                                # Is this device a SmartBench? 
-                                if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
-                                    # Found SmartBench! 
-                                    SmartBench_port = available_port
-                                    break
+                            # Is this device a SmartBench? 
+                            if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                                # Found SmartBench! 
+                                SmartBench_port = available_port
+                                break
 
 
 
