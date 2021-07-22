@@ -126,7 +126,7 @@ class SerialConnection(object):
                         self.s.open()
 
                         # serial object needs time to make the connection before we can do anything else
-                        time.sleep(60)
+                        time.sleep(1)
 
                         try:
                             first_bytes = self.s.inWaiting()
@@ -166,14 +166,18 @@ class SerialConnection(object):
 
             except:
                 # This only gets triggered if last ditch attempt at S0 port fails OR if not ports can be listed in the first place (less likely)
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 10) # necessary bc otherwise screens not initialised yet      
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
 
         log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
 
-        if self.is_connected():
-            log('Initialising grbl...')
-            time.sleep(10)
-            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
+        
+        try: 
+            if self.is_connected():
+                log('Initialising grbl...')
+                self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
+
+        except:
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
 
     # is serial port connected?
     def is_connected(self):
