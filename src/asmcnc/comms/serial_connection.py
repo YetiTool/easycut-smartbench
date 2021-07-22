@@ -124,46 +124,46 @@ class SerialConnection(object):
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                         self.s.close()
                         self.s.open()
-
                         # serial object needs time to make the connection before we can do anything else
+                        time.sleep(1)
+                        self.s.flushInput()
+                        self.s.write("\x18")
+                        # give it a second to reply
                         time.sleep(1)
 
                         try:
                             first_bytes = self.s.inWaiting()
                             log("Is port SmartBench? " + str(available_port) + " First read: " + str(first_bytes))
 
-                            # try resetting grbl if nothing coming out
-                            if not first_bytes:
-                                try:
-                                    self.s.flushInput()
-                                    # time.sleep(1)
-                                    self.s.write("\x18")
-                                    time.sleep(1)
-                                    first_bytes = self.s.inWaiting()
-                                    log("Bytes in waiting after reset: " + str(first_bytes))
-                                except:
-                                    log("GRBL reset did not work")
+                            # # try resetting grbl if nothing coming out
+                            # if not first_bytes:
+                            #     try:
+                            #         self.s.flushInput()
+                            #         # time.sleep(1)
+                            #         self.s.write("\x18")
+                            #         time.sleep(1)
+                            #         first_bytes = self.s.inWaiting()
+                            #         log("Bytes in waiting after reset: " + str(first_bytes))
+                            #     except:
+                            #         log("GRBL reset did not work")
 
-                            # if first_bytes:
+                            if first_bytes:
                                 # Read in first input and log it
-                            def strip_and_log(input_string):
-                                new_string = input_string.strip()
-                                log(new_string)
-                                return new_string
+                                def strip_and_log(input_string):
+                                    new_string = input_string.strip()
+                                    log(new_string)
+                                    return new_string
 
-                            stripped_input = map(strip_and_log, self.s.readlines())
+                                stripped_input = map(strip_and_log, self.s.readlines())
 
-                            # Is this device a SmartBench? 
-                            if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
-                                # Found SmartBench! 
-                                SmartBench_port = available_port
-                                break
+                                # Is this device a SmartBench? 
+                                if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                                    # Found SmartBench! 
+                                    SmartBench_port = available_port
+                                    break
 
-
-
-
-                                # else:
-                                #     self.s.close()
+                                else:
+                                    self.s.close()
                             else:
                                 self.s.close()
                         except:
