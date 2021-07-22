@@ -122,6 +122,7 @@ class SerialConnection(object):
                     log("Reset port: " + str(available_port))
                     self.s.close()
                     self.s.open()
+                    time.sleep(1)
 
                     log(self.s.inWaiting())
 
