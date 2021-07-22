@@ -104,8 +104,7 @@ class SerialConnection(object):
 
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
-                # ACM_port = 'ttyACM'
-                ACM_port = 'ttyS'
+                ACM_port = 'ttyACM'
                 USB_port = 'ttyUSB'
                 AMA_port = 'ttyAMA'
 
@@ -151,7 +150,7 @@ class SerialConnection(object):
                             else:
                                 self.s.close()
                         except:
-                            log("Could not read from port")
+                            log("Could not read from that port at all")
 
                     except: 
                         log("Wow definitely not that port")
@@ -161,7 +160,7 @@ class SerialConnection(object):
                     first_port = list_of_available_ports[0]
                     if default_serial_port in first_port:
                         self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        SmartBench_port = "Could not identify if SmartBench, attempting default: " + first_port
+                        SmartBench_port = "Could not identify if any port was SmartBench, so attempting default: " + first_port
 
             except:
                 # This only gets triggered if last ditch attempt at S0 port fails OR if not ports can be listed in the first place (less likely)
