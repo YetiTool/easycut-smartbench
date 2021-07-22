@@ -279,7 +279,7 @@ class SerialConnection(object):
                 try:
                     rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
                     self.grbl_out = rec_temp;
-                    # print self.grbl_out
+                    print self.grbl_out
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
