@@ -159,10 +159,34 @@ class SerialConnection(object):
 
                 # If all else fails, try to connect to ttyS port anyway
                 if SmartBench_port == '':
+
+                    first_list_index = 0
+                    last_list_index = len(list_of_available_ports)
+
+
                     first_port = list_of_available_ports[0]
-                    if default_serial_port in first_port:
-                        self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        SmartBench_port = "Could not identify if any port was SmartBench, so attempting default: " + first_port
+                    last_port = list_of_available_ports[-1]
+                    try: 
+                        if default_serial_port in first_port:
+                            first_list_index = 1
+                            self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                            SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + first_port
+                    except: 
+                        if AMA_port in last_port:
+                            last_list_index = -1
+                            self.s = serial.Serial('/dev/' + last_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                            SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + last_port
+                        else:
+                            # last ditch attempt to connect to something
+                            for remaining_port in list_of_available_ports[first_list_index:last_list_index]:
+                                try: 
+                                    self.s = serial.Serial('/dev/' + remaining_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                                    SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + last_port
+                                    break
+                                except:
+                                    pass
+                    if SmartBench_port == '':
+                        Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
 
             except:
                 # This only gets triggered if last ditch attempt at S0 port fails OR if not ports can be listed in the first place (less likely)
