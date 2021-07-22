@@ -78,6 +78,7 @@ class SerialConnection(object):
 
         log('Start to establish connection...')
         SmartBench_port = ''
+
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
         if sys.platform == "win32":
             try:
@@ -101,7 +102,6 @@ class SerialConnection(object):
 
         else:
             try:
-
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
                 ACM_port = 'ttyACM'
