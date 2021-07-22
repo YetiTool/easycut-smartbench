@@ -100,7 +100,7 @@ class SerialConnection(object):
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
         else:
-            # try:
+            try:
 
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
@@ -119,67 +119,53 @@ class SerialConnection(object):
                 # set up serial connection with first (most preferred) available port
                 for available_port in list_of_available_ports:
 
-                    log("Try to connect to: " + available_port)
+                    try: 
+                        log("Try to connect to: " + available_port)
+                        # set up connection
+                        self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-                    # try: 
-                    self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                    time.sleep(1)
+                        # serial object needs time to make the connection before we can do anything else
+                        time.sleep(1)
 
-                    log("Trying reading from port: " + str(available_port) + " " + str(self.s.inWaiting()))
+                        try:
+                            first_bytes = self.s.inWaiting()
+                            log("Is port SmartBench? " + str(available_port) + " First read: " + str(first_bytes))
+                            if first_bytes:
 
-                    if self.s.inWaiting():
+                                # Read in first input and log it
+                                def strip_and_log(input_string):
+                                    new_string = input_string.strip()
+                                    log(new_string)
+                                    return new_string
 
-                        stripped_input = map(str.strip, self.s.readlines())
+                                stripped_input = map(strip_and_log, self.s.readlines())
 
-                        log(stripped_input)
+                                # Is this device a SmartBench? 
+                                if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                                    # Found SmartBench! 
+                                    SmartBench_port = available_port
+                                    break
 
-                        if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
-                            log('\n'.join(stripped_input))
-                            SmartBench_port = available_port
-                            break
-                        else:
-                            self.s.close()
-                    else:
-                        self.s.close()
+                                else:
+                                    self.s.close()
+                            else:
+                                self.s.close()
+                        except:
+                            log("Could not read from port")
 
-                    # except: 
-                    #     pass
+                    except: 
+                        log("Wow definitely not that port")
 
-                # If all else fails, try to connect to S0 anyway
+                # If all else fails, try to connect to ttyS port anyway
                 if SmartBench_port == '':
-                    try:
-                        first_port = list_of_available_ports[0]
-                        if default_serial_port in first_port:
-                            self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                            SmartBench_port = "Could not identify if SmartBench, attempting default: " + first_port
-                    except:
-                        pass
+                    first_port = list_of_available_ports[0]
+                    if default_serial_port in first_port:
+                        self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        SmartBench_port = "Could not identify if SmartBench, attempting default: " + first_port
 
-                # legacy code
-                # for line in filesForDevice: # run through all files
-
-                #     # FLAG: This if statement is only relevant in linux environment. 
-                #     # EITHER: USB Comms hardware
-                #     # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-                #     # OR: UART Comms hardware
-                #     if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
-                #         # When platform is updated, this needs to be moved across to the AMA0 port :)
-
-                    # devicePort = list_of_available_ports[0] # take whole line (includes suffix address e.g. ttyACM0
-                    # self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-
-                    # elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
-                    
-                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                    #     return True
-                        
-                    # elif (line[:12] == 'tty.usbmodem'): # look for...   
-                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-
-            # except:
-            #     Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+            except:
+                # This only gets triggered if last ditch attempt at S0 port fails OR if not ports can be listed in the first place (less likely)
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
         log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
 
