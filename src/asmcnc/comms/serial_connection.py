@@ -136,7 +136,8 @@ class SerialConnection(object):
                             if not first_bytes:
                                 try:
                                     self.s.flushInput()
-                                    # self.m._grbl_soft_reset()
+                                    time.sleep(5)
+                                    self.m._grbl_soft_reset()
                                     time.sleep(5)
                                     first_bytes = self.s.inWaiting()
                                 except:
