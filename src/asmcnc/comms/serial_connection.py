@@ -122,6 +122,8 @@ class SerialConnection(object):
                         log("Try to connect to: " + available_port)
                         # set up connection
                         self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                        self.s.close()
+                        self.s.open()
 
                         # serial object needs time to make the connection before we can do anything else
                         time.sleep(1)
@@ -878,7 +880,7 @@ class SerialConnection(object):
 
                 self.expecting_probe_result = False # clear flag
                 
-            elif stripped_message.startswith('ASM CNC') or stripped_message.startswith('SmartBench'):
+            elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
                 self.fw_version = (fw_hw_versions[1]).split(':')[1]
                 self.hw_version = (fw_hw_versions[2]).split(':')[1]
