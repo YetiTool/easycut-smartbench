@@ -135,7 +135,7 @@ class SerialConnection(object):
                             # try resetting grbl if nothing coming out
                             if not first_bytes:
                                 try:
-                                    self._grbl_soft_reset()
+                                    self.m._grbl_soft_reset()
                                     time.sleep(1)
                                     first_bytes = self.s.inWaiting()
                                 except:
