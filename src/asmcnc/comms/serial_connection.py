@@ -118,11 +118,14 @@ class SerialConnection(object):
 
                 # set up serial connection with first (most preferred) available port
                 for available_port in list_of_available_ports:
+
+                    log("Try to connect to: " + available_port)
+
                     # try: 
                     self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                     time.sleep(1)
 
-                    log("Trying port: " + str(available_port) + " " + str(self.s.inWaiting()))
+                    log("Trying reading from port: " + str(available_port) + " " + str(self.s.inWaiting()))
 
                     if self.s.inWaiting():
 
