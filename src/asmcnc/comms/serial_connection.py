@@ -100,7 +100,7 @@ class SerialConnection(object):
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
         else:
-            try:
+            # try:
 
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
@@ -119,10 +119,9 @@ class SerialConnection(object):
                 for available_port in list_of_available_ports:
                     # try: 
                     self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                    log("Reset port: " + str(available_port))
                     time.sleep(1)
 
-                    log(self.s.inWaiting())
+                    log("Trying port: " + str(available_port) + " " + (self.s.inWaiting()))
 
                     if self.s.inWaiting():
 
@@ -175,8 +174,8 @@ class SerialConnection(object):
                     #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
                     #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
 
-            except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+            # except:
+            #     Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
 
         log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
 
