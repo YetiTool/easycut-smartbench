@@ -142,7 +142,7 @@ class SerialConnection(object):
                                     log(new_string)
                                     return new_string
 
-                                stripped_input = map(strip_and_log, self.s.readlines())
+                                stripped_input = map(strip_and_log, self.s.readlines(hint=5))
 
                                 # Is this device a SmartBench? 
                                 if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
