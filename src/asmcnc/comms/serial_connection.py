@@ -117,29 +117,31 @@ class SerialConnection(object):
 
                 # set up serial connection with first (most preferred) available port
                 for available_port in list_of_available_ports:
-                    try: 
-                        self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        log("Reset port")
-                        self.s.close()
-                        self.s.open()
+                    # try: 
+                    self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                    log("Reset port")
+                    self.s.close()
+                    self.s.open()
 
-                        if self.s.inWaiting():
+                    log(self.s.inWaiting())
 
-                            stripped_input = map(str.strip, self.s.readlines())
+                    if self.s.inWaiting():
 
-                            log(stripped_input)
+                        stripped_input = map(str.strip, self.s.readlines())
 
-                            if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
-                                log('\n'.join(stripped_input))
-                                SmartBench_port = available_port
-                                break
-                            else:
-                                self.s.close()
+                        log(stripped_input)
+
+                        if any(bench in ele for ele in stripped_input for bench in ['SmartBench', 'ASM CNC']):
+                            log('\n'.join(stripped_input))
+                            SmartBench_port = available_port
+                            break
                         else:
                             self.s.close()
+                    else:
+                        self.s.close()
 
-                    except: 
-                        pass
+                    # except: 
+                    #     pass
 
                 # If all else fails, try to connect to S0 anyway
                 if SmartBench_port == '':
