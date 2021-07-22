@@ -123,7 +123,7 @@ class SerialConnection(object):
                         self.s.close()
                         self.s.open()
 
-                        if self.s.inWaiting() > 0:
+                        if self.s.inWaiting():
 
                             stripped_input = map(str.strip, self.s.readlines())
 
