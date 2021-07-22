@@ -135,10 +135,8 @@ class SerialConnection(object):
                             # try resetting grbl if nothing coming out
                             if not first_bytes:
                                 try:
-                                    log('Attempt initialising grbl...')
-                                    self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)
                                     self.m._grbl_soft_reset()
-                                    time.sleep(10)
+                                    time.sleep(60)
                                     first_bytes = self.s.inWaiting()
                                 except:
                                     log("GRBL reset did not work")
