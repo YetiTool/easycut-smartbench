@@ -913,10 +913,17 @@ class SerialConnection(object):
                 
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
-                self.fw_version = (fw_hw_versions[1]).split(':')[1]
-                self.hw_version = (fw_hw_versions[2]).split(':')[1]
-                log('FW version: ' + str(self.fw_version))
-                log('HW version: ' + str(self.hw_version))
+                try: 
+                    self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                    log('FW version: ' + str(self.fw_version))
+                except: 
+                    log("Could not retrieve FW version")
+
+                try: 
+                    self.hw_version = (fw_hw_versions[2]).split(':')[1]
+                    log('HW version: ' + str(self.hw_version))
+                except: 
+                    log("Could not retrieve HW version")
 
 
     def check_for_sustained_max_overload(self, dt):
