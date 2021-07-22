@@ -162,8 +162,8 @@ class SerialConnection(object):
 
 
 
-                                else:
-                                    self.s.close()
+                                # else:
+                                #     self.s.close()
                             else:
                                 self.s.close()
                         except:
