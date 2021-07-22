@@ -136,11 +136,11 @@ class SerialConnection(object):
                             if not first_bytes:
                                 try:
                                     self.s.flushInput()
-                                    time.sleep(5)
-                                    self.m._grbl_soft_reset()
-                                    time.sleep(5)
+                                    # time.sleep(1)
+                                    self.s.write("\x18")
+                                    time.sleep(1)
                                     first_bytes = self.s.inWaiting()
-                                    log("Bytes in waiting after reset: " + first_bytes)
+                                    log("Bytes in waiting after reset: " + str(first_bytes))
                                 except:
                                     log("GRBL reset did not work")
 
