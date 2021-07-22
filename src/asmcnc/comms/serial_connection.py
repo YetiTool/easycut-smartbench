@@ -104,11 +104,11 @@ class SerialConnection(object):
             try:
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
+                AMA_port = 'ttyAMA'
                 ACM_port = 'ttyACM'
                 USB_port = 'ttyUSB'
-                AMA_port = 'ttyAMA'
 
-                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+                port_list = [default_serial_port, AMA_port, ACM_port, USB_port]
 
                 filesForDevice = listdir('/dev/') # put all device files into list[]
 
@@ -126,26 +126,14 @@ class SerialConnection(object):
                         self.s.open()
                         # serial object needs time to make the connection before we can do anything else
                         time.sleep(1)
-                        self.s.flushInput()
-                        self.s.write("\x18")
-                        # give it a second to reply
-                        time.sleep(1)
 
                         try:
+                            self.s.flushInput()
+                            self.s.write("\x18")
+                            # give it a second to reply
+                            time.sleep(1)
                             first_bytes = self.s.inWaiting()
                             log("Is port SmartBench? " + str(available_port) + " First read: " + str(first_bytes))
-
-                            # # try resetting grbl if nothing coming out
-                            # if not first_bytes:
-                            #     try:
-                            #         self.s.flushInput()
-                            #         # time.sleep(1)
-                            #         self.s.write("\x18")
-                            #         time.sleep(1)
-                            #         first_bytes = self.s.inWaiting()
-                            #         log("Bytes in waiting after reset: " + str(first_bytes))
-                            #     except:
-                            #         log("GRBL reset did not work")
 
                             if first_bytes:
                                 # Read in first input and log it
@@ -167,7 +155,7 @@ class SerialConnection(object):
                             else:
                                 self.s.close()
                         except:
-                            log("Could not read from that port at all")
+                            log("Could not communicate with that port at all")
 
                     except: 
                         log("Wow definitely not that port")
