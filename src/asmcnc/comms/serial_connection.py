@@ -104,11 +104,11 @@ class SerialConnection(object):
             try:
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
-                AMA_port = 'ttyAMA'
                 ACM_port = 'ttyACM'
                 USB_port = 'ttyUSB'
+                AMA_port = 'ttyAMA'
 
-                port_list = [default_serial_port, AMA_port, ACM_port, USB_port]
+                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
 
                 filesForDevice = listdir('/dev/') # put all device files into list[]
 
@@ -281,8 +281,7 @@ class SerialConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-                    self.grbl_out = rec_temp;
-                    print self.grbl_out
+
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
