@@ -122,7 +122,7 @@ class SerialConnection(object):
                     self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                     time.sleep(1)
 
-                    log("Trying port: " + str(available_port) + " " + (self.s.inWaiting()))
+                    log("Trying port: " + str(available_port) + " " + str(self.s.inWaiting()))
 
                     if self.s.inWaiting():
 
