@@ -68,7 +68,7 @@ class PopupDatum(Widget):
       self.m = machine
       
       description = warning_message
-      chk_message = "         Use laser datum?"
+      chk_message = "            Use laser crosshair?"
 
       def on_checkbox_active(checkbox, value):
         if value: 

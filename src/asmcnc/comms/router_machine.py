@@ -1032,7 +1032,7 @@ class RouterMachine(object):
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
@@ -1045,7 +1045,7 @@ class RouterMachine(object):
             x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_y_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('Y'): 
@@ -1058,7 +1058,7 @@ class RouterMachine(object):
             y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
 
     def set_jobstart_z(self):
