@@ -104,7 +104,7 @@ class SerialConnection(object):
 
                 # list of portst that we may want to use, in order of preference
                 default_serial_port = 'ttyS'
-                ACM_port = 'ttyACM'
+                # ACM_port = 'ttyACM'
                 USB_port = 'ttyUSB'
                 AMA_port = 'ttyAMA'
 
@@ -120,8 +120,6 @@ class SerialConnection(object):
                     # try: 
                     self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                     log("Reset port: " + str(available_port))
-                    # self.s.close()
-                    # self.s.open()
                     time.sleep(1)
 
                     log(self.s.inWaiting())
