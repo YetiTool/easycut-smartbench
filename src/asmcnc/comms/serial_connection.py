@@ -120,8 +120,8 @@ class SerialConnection(object):
                     # try: 
                     self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
                     log("Reset port: " + str(available_port))
-                    self.s.close()
-                    self.s.open()
+                    # self.s.close()
+                    # self.s.open()
                     time.sleep(1)
 
                     log(self.s.inWaiting())
