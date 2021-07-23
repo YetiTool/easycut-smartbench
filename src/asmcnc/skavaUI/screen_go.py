@@ -453,6 +453,13 @@ class GoScreen(Screen):
             self.spindle_speed_showing = False
 
 
+        # Show stylus or router graphic depending on choice
+        if self.m.stylus_router_choice == 'stylus':
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit_stylus.png'
+        else:
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
+
+
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
 
