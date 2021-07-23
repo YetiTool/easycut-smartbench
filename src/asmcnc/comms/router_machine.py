@@ -1200,22 +1200,11 @@ class RouterMachine(object):
 # HOMING
 
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
-    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str, force_squaring_decision = False):
-        
-        # Force user to decide between manual/auto squaring
-        if force_squaring_decision: self.is_machine_completed_the_initial_squaring_decision = False
- 
-        # If squaring has already been completed and decision isn't getting forced again       
-        if self.is_machine_completed_the_initial_squaring_decision:
-            self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen_str
-            self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen_str
-            self.sm.current = 'prepare_to_home'  
+    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
 
-        # If decision needs to be made again (either via forced arg, or because it's never been attempted or completed fully)
-        else:
-            self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
-            self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
-            self.sm.current = 'squaring_decision'
+        self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
+        self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
+        self.sm.current = 'squaring_decision'
 
 
     # Home the Z axis by moving the cutter down until it touches the probe.

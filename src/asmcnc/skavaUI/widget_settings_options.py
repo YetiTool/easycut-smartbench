@@ -153,7 +153,7 @@ class SettingsOptions(Widget):
         sys.exit()
 
     def square_axes(self):
-        self.m.request_homing_procedure('home','home',force_squaring_decision = True)
+        self.m.request_homing_procedure('home','home')
 
     def return_to_lobby(self):
         self.sm.current = 'lobby'
