@@ -172,7 +172,7 @@ class HomingScreenActive(Screen):
             print("result from addition and subtraction: " + str(self.m.laser_offset_x_value - self.m.s.setting_27 + self.m.limit_switch_safety_distance))
 
 
-            self.m.jog_relative('X', self.m.laser_offset_x_value - self.m.s.setting_27 + self.m.limit_switch_safety_distance, 3000)
+            self.m.jog_relative('X', abs(self.m.laser_offset_x_value - self.m.s.setting_27 + self.m.limit_switch_safety_distance), 3000)
 
         # allow breather for sequential stream to process
         Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
