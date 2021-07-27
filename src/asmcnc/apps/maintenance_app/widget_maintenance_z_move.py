@@ -174,6 +174,6 @@ class MaintenanceZMove(Widget):
                 "1. Enable laser crosshair (switch to [b]on[/b]).\n\n" + \
                 "2. On a test piece, cut a mark using manual moves.\n\n" + \
                 "3. Lift head and press the [b]reset[/b] button in the bottom left.\n\n" + \
-                "4. Move the Z head so that the cross hair lines up with the mark centre.\n\n" + \
+                "4. Move the Z head so that the crosshair lines up with the mark centre.\n\n" + \
                 "5. Press [b]save[/b]."
         popup_info.PopupInfo(self.sm, 700, info)   

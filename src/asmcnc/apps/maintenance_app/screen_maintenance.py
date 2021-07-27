@@ -108,14 +108,14 @@ Builder.load_string("""
                             orientation: 'horizontal'
                             Label: 
                                 color: 0,0,0,1
-                                font_size: dp(16)
+                                font_size: dp(24)
                                 markup: True
                                 halign: "center"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]LASER CROSSHAIR[/b]"
+                                text: "[b]LASER[/b]"
 
                             BoxLayout:
                                 size_hint: (None,None)
