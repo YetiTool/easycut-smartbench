@@ -595,9 +595,9 @@ class GoScreen(Screen):
 
             if self.m.stylus_router_choice == 'stylus':
                 if 'M3' in line:
-                    line = line.replace('M3','')
+                    line = ''
                 if 'M03' in line:
-                    line = line.replace('M03','')
+                    line = ''
 
             if line in culprits:
                 line = ''
