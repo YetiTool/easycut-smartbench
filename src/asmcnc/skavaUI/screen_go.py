@@ -592,10 +592,13 @@ class GoScreen(Screen):
 
             if 'S0' in line:
                 line = line.replace('S0','')
-            if 'M3' in line:
-                line = line.replace('M3','')
-            if 'M03' in line:
-                line = line.replace('M03','')
+
+            if self.m.stylus_router_choice == 'stylus':
+                if 'M3' in line:
+                    line = line.replace('M3','')
+                if 'M03' in line:
+                    line = line.replace('M03','')
+
             if line in culprits:
                 line = ''
 
