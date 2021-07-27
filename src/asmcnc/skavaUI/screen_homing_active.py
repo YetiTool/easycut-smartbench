@@ -169,7 +169,7 @@ class HomingScreenActive(Screen):
             print("laser offset: "  + str(self.m.laser_offset_x_value))
             print("setting 27: " + str(self.m.s.setting_27))
             print("safety: " + str(self.m.limit_switch_safety_distance))
-            print("result from addition and subtraction: " + str(self.m.laser_offset_x_value - self.m.s.setting_27 + self.m.limit_switch_safety_distance))
+            print("result from addition and subtraction: " + str(abs(self.m.laser_offset_x_value) - self.m.s.setting_27 + self.m.limit_switch_safety_distance))
 
 
             self.m.jog_relative('X', abs(self.m.laser_offset_x_value) - self.m.s.setting_27 + self.m.limit_switch_safety_distance, 3000)
