@@ -1158,6 +1158,10 @@ class RouterMachine(object):
 
         if axis == 'X' or axis == 'XY' or axis == 'YX':
 
+
+            print("Laser offset value: " + str(self.laser_offset_x_value))
+            print("Pos value: " + str(self.mpos_x()))
+
             print("Try to move to: " + str(self.mpos_x() + float(self.laser_offset_x_value)))
             print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
 
