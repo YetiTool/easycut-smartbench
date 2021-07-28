@@ -1158,7 +1158,7 @@ class RouterMachine(object):
 
         if axis == 'X' or axis == 'XY' or axis == 'YX':
 
-
+            # Keep this is for beta testing, as 
             print("Laser offset value: " + str(self.laser_offset_x_value))
             print("Pos value: " + str(self.mpos_x()))
 
