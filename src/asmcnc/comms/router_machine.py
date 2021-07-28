@@ -49,8 +49,9 @@ class RouterMachine(object):
 
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
-    
+    smartbench_values_dir = './sb_values/'
+
+
     ### Individual files to hold persistent values
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
     z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
@@ -105,9 +106,9 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-        if sys.platform != "win32" and sys.platform != "darwin":
-            self.check_presence_of_sb_values_files()
-            self.get_persistent_values()
+        # if sys.platform != "win32" and sys.platform != "darwin":
+        self.check_presence_of_sb_values_files()
+        self.get_persistent_values()
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
