@@ -171,8 +171,13 @@ class HomingScreenActive(Screen):
             print("safety: " + str(self.m.limit_switch_safety_distance))
             print("result from addition and subtraction: " + str(abs(self.m.laser_offset_x_value) - self.m.s.setting_27 + self.m.limit_switch_safety_distance))
 
+            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) - self.m.laser_offset_x_value))
 
-            self.m.jog_relative('X', abs(self.m.laser_offset_x_value) - self.m.s.setting_27 + self.m.limit_switch_safety_distance, 3000)
+
+            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) - self.m.laser_offset_x_value, 3000)
+
+
+            # self.m.jog_relative('X', abs(self.m.laser_offset_x_value) - self.m.s.setting_27 + self.m.limit_switch_safety_distance, 3000)
 
         # allow breather for sequential stream to process
         Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
