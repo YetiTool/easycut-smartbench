@@ -1158,6 +1158,14 @@ class RouterMachine(object):
     def jog_spindle_to_laser_datum(self, axis):
 
         if axis == 'X' or axis == 'XY' or axis == 'YX':
+
+            # Keep this is for beta testing, as 
+            print("Laser offset value: " + str(self.laser_offset_x_value))
+            print("Pos value: " + str(self.mpos_x()))
+
+            print("Try to move to: " + str(self.mpos_x() + float(self.laser_offset_x_value)))
+            print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
+
             # Check that movement is within bounds before jogging
             if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
             and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
