@@ -83,7 +83,7 @@ class RouterMachine(object):
     is_laser_enabled = False
 
     ## STYLUS SETTINGS
-    is_stylus_enabled = False
+    is_stylus_enabled = True
     stylus_router_choice = 'router'
 
     ## BRUSH VALUES
