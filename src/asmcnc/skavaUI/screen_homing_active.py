@@ -168,7 +168,7 @@ class HomingScreenActive(Screen):
 
             print("laser offset: "  + str(self.m.laser_offset_x_value))
 
-            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + step_tolerance - self.m.laser_offset_x_value)
+            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + step_tolerance - self.m.laser_offset_x_value))
 
 
             self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + step_tolerance - self.m.laser_offset_x_value, 3000)
