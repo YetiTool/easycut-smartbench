@@ -49,7 +49,10 @@ class RouterMachine(object):
 
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
+    if sys.platform == 'win32':
+        smartbench_values_dir = './sb_values/'
+    else:
+        smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
     
     ### Individual files to hold persistent values
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
