@@ -58,6 +58,7 @@ Builder.load_string("""
         tab_pos: 'top_left'
         tab_height: dp(90)
         tab_width: dp(142)
+        on_touch_down: root.on_tab_switch()
 
 
         # LASER DATUM SETTINGS
@@ -107,14 +108,14 @@ Builder.load_string("""
                             orientation: 'horizontal'
                             Label: 
                                 color: 0,0,0,1
-                                font_size: dp(22)
+                                font_size: dp(24)
                                 markup: True
                                 halign: "center"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-                                text: "[b]LASER DATUM[/b]"
+                                text: "[b]LASER[/b]"
 
                             BoxLayout:
                                 size_hint: (None,None)
@@ -571,6 +572,10 @@ class MaintenanceScreenClass(Screen):
 
     def on_pre_leave(self):
 
+        # Save button disabled upon exiting app
+        self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+        self.laser_datum_buttons_widget.save_button.disabled = True
+
         # LASER DATUM
         self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
 
@@ -578,3 +583,9 @@ class MaintenanceScreenClass(Screen):
         else: self.sm.get_screen('home').default_datum_choice = 'spindle'
 
         self.m.laser_off()
+
+    def on_tab_switch(self):
+        # Save button disabled upon switching tabs
+        if self.tab_panel.current_tab != self.laser_tab:
+            self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+            self.laser_datum_buttons_widget.save_button.disabled = True

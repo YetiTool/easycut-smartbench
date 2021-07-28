@@ -28,8 +28,10 @@ Builder.load_string("""
 
     filechooser_usb:filechooser_usb
     toggle_view_button : toggle_view_button
+    toggle_sort_button: toggle_sort_button
     load_button:load_button
     image_view : image_view
+    image_sort: image_sort
     image_select:image_select
     usb_status_label:usb_status_label
 
@@ -80,6 +82,7 @@ Builder.load_string("""
             show_hidden: False
             filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
             on_selection: root.refresh_filechooser()
+            sort_func: root.sort_by_date_reverse
             FileChooserIconLayout
             FileChooserListLayout
                
@@ -103,6 +106,23 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
+
+            ToggleButton:
+                id: toggle_sort_button
+                size_hint_x: 1
+                on_press: root.switch_sort()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_sort
+                        source: "./asmcnc/skavaUI/img/file_select_sort_down.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
             Button:
                 disabled: False
@@ -174,12 +194,22 @@ job_cache_dir = './jobCache/'    # where job files are cached for selection (for
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 verbose = True
 
+def date_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = False))
+
+def date_order_sort_reverse(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
+
 class USBFileChooser(Screen):
 
 
     filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
 
+    sort_by_date = ObjectProperty(date_order_sort)
+    sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
 
     def __init__(self, **kwargs):
  
@@ -243,6 +273,18 @@ class USBFileChooser(Screen):
         elif self.toggle_view_button.state == "down":
             self.filechooser_usb.view_mode = 'list'
             self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
+
+    def switch_sort(self):
+
+        if self.toggle_sort_button.state == "normal":
+            self.filechooser_usb.sort_func = self.sort_by_date_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down.png"
+
+        elif self.toggle_sort_button.state == "down":
+            self.filechooser_usb.sort_func = self.sort_by_date
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up.png"
+
+        self.filechooser_usb._update_files()
 
     def refresh_filechooser(self):
 

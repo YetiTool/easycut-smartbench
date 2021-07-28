@@ -395,6 +395,7 @@ class BuildInfoScreen(Screen):
     smartbench_name_filepath = '/home/pi/smartbench_name.txt'
 
     smartbench_name_unformatted = 'My SmartBench'
+    smartbench_name_formatted = 'My SmartBench'
 
 
     def __init__(self, **kwargs):
@@ -530,8 +531,13 @@ class BuildInfoScreen(Screen):
         except: 
             self.smartbench_name_unformatted = 'My SmartBench'
 
-        self.smartbench_name.text = '[b]' + self.smartbench_name_unformatted + '[/b]'
-        self.smartbench_name_input.text = self.smartbench_name_unformatted
+        # Remove newlines
+        self.smartbench_name_formatted = self.smartbench_name_unformatted.replace('\n', ' ')
+        # Remove trailing and leading whitespaces
+        self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
+
+        self.smartbench_name.text = '[b]' + self.smartbench_name_formatted + '[/b]'
+        self.smartbench_name_input.text = self.smartbench_name_formatted
 
     def write_name_to_file(self):
 
