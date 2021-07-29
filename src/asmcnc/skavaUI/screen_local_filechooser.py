@@ -34,6 +34,8 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser:filechooser
+    icon_layout_fc : icon_layout_fc
+    list_layout_fc : list_layout_fc
     toggle_view_button : toggle_view_button
     toggle_sort_button: toggle_sort_button
     button_usb:button_usb
@@ -105,7 +107,9 @@ Builder.load_string("""
                 on_selection: root.refresh_filechooser()
                 sort_func: root.sort_by_date_reverse
                 FileChooserIconLayout
+                    id: icon_layout_fc
                 FileChooserListLayout
+                    id: list_layout_fc
                
 
         BoxLayout:
@@ -473,6 +477,9 @@ class LocalFileChooser(Screen):
 
 
     def quit_to_home(self):
+
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = False
+        self.list_layout_fc.ids.scrollview.do_scroll_y = False
 
         self.manager.current = 'home'
         #self.manager.transition.direction = 'up'   
