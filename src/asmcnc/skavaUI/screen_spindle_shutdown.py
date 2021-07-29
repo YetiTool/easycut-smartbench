@@ -18,6 +18,8 @@ Builder.load_string("""
 
 <SpindleShutdownScreen>:
 
+    text_label: text_label
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -34,6 +36,7 @@ Builder.load_string("""
             size_hint_y: 1 
             
         Label:
+            id: text_label
             size_hint_y: 1
             text: '[color=333333]SmartBench is pausing the spindle motor.[/color]'
             markup: True
@@ -97,8 +100,15 @@ class SpindleShutdownScreen(Screen):
         super(SpindleShutdownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
-    
+
+    def on_pre_enter(self):
+        if self.m.stylus_router_choice == 'router':
+            self.text_label.text = '[color=333333]SmartBench is pausing the spindle motor.[/color]'
+
+        elif self.m.stylus_router_choice == 'stylus':
+            self.text_label.text = '[color=333333]SmartBench is raising the Z axis.[/color]'
+
+
     def on_enter(self):
 
         log('Pausing job...')

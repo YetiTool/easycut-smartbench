@@ -296,6 +296,8 @@ class HomeScreen(Screen):
 
     def on_enter(self): 
 
+        self.m.stylus_router_choice = 'router'
+
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
