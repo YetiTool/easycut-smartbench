@@ -7,6 +7,7 @@ from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
 screen_alarm_4, screen_alarm_5
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 # this class is set up in serial comms, so that alarm screens are available at any time
 # not going to use it as a "screen manager" as alarm screens want to be instantly available at all times
@@ -20,7 +21,7 @@ ALARM_CODES_DICT = {
 	"ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
 	"ALARM:5" : "Probe fail. Tool did not contact the probe within the search distance.",
 	"ALARM:6" : "Homing fail: SmartBench was reset during active homing cycle.",
-	"ALARM:7" : "Homing fail: the stop bar was triggered during the homing cycle.",
+	"ALARM:7" : "Homing fail: the interrupt bar was triggered during the homing cycle.",
 	"ALARM:8" : "Homing fail: during the homing cycle, an axis failed to clear the limit switch when pulling off.",
 	"ALARM:9" : "Homing fail: could not find the limit switch within search distance.",
 	"ALARM:10": "Homing fail: on dual axis machines, could not find the second limit switch for self-squaring."
@@ -233,8 +234,13 @@ class AlarmSequenceManager(object):
 
 		def get_report(count):
 			if self.usb_stick.is_usb_mounted_flag == True:
+				message = 'Downloading report, please wait...'
+				wait_popup = popup_info.PopupWait(self.sm, description = message)
 				self.write_report_to_file()
+				wait_popup.popup.dismiss()
 				self.usb_stick.disable()
+				message = 'Report downloaded'
+				popup_info.PopupMiniInfo(self.sm, description = message)
 
 			elif count > 30:
 				if self.usb_stick.is_available(): self.usb_stick.disable()

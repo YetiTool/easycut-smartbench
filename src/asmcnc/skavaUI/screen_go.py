@@ -586,9 +586,9 @@ class GoScreen(Screen):
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
             if self.m.stylus_router_choice == 'router':
-                culprits = ['M30', 'M2']
+                culprits = ['M30', 'M2', 'M00']
             else:
-                culprits = ['M30', 'M2', 'AE']
+                culprits = ['M30', 'M2', 'M00', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')

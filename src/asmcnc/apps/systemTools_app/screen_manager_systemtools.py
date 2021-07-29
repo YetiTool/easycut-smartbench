@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
-from asmcnc.apps.systemTools_app.screens import screen_system_menu, screen_build_info, screen_beta_testing, \
+from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
 screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test
 
 class ScreenManagerSystemTools(object):
@@ -174,3 +174,18 @@ class ScreenManagerSystemTools(object):
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
             print (screen_name + ' deleted')
+
+    def do_usb_first_aid(self):
+        message = 'Ensuring USB is unmounted, please wait...'
+        wait_popup = popup_info.PopupWait(self.sm, description = message)
+        umount_out = (str(os.popen("sudo umount /media/usb/").read())) # using popen for the block
+        popup_system.PopupUSBFirstAid(self)
+        wait_popup.popup.dismiss()
+
+    def clear_usb_mountpoint(self):
+        clear_mountpoint_out = (str(os.popen("sudo rm /media/usb/*").read())) # using popen for the block
+        message = 'First aid complete.\n\nYou can now use your USB stick.'
+        popup_info.PopupMiniInfo(self.sm, description = message)
+
+
+
