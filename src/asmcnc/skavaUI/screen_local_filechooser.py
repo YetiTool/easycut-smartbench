@@ -101,14 +101,14 @@ Builder.load_string("""
                 size_hint_y: 5
                 rootpath: './jobCache/'
                 show_hidden: False
-                on_touch_move: 
-                    root.scrolling_start()
-                    root.list_layout_fc.ids.scrollview.do_scroll_y = True
-                    root.icon_layout_fc.ids.scrollview.do_scroll_y = True
-                on_touch_up: 
-                    root.scrolling_stop()
-                    root.list_layout_fc.ids.scrollview.do_scroll_y = False
-                    root.icon_layout_fc.ids.scrollview.do_scroll_y = False
+                # on_touch_move: 
+                #     root.scrolling_start()
+                #     root.list_layout_fc.ids.scrollview.do_scroll_y = True
+                #     root.icon_layout_fc.ids.scrollview.do_scroll_y = True
+                # on_touch_up: 
+                #     root.scrolling_stop()
+                #     root.list_layout_fc.ids.scrollview.do_scroll_y = False
+                #     root.icon_layout_fc.ids.scrollview.do_scroll_y = False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
                 sort_func: root.sort_by_date_reverse
@@ -312,6 +312,11 @@ class LocalFileChooser(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
@@ -383,9 +388,10 @@ class LocalFileChooser(Screen):
 
     def open_USB(self):
 
-        self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-        self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-        self.manager.current = 'usb_filechooser'
+        if not self.is_filechooser_scrolling:
+            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
+            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
+            self.manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
 
@@ -438,13 +444,14 @@ class LocalFileChooser(Screen):
 
     def go_to_loading_screen(self, file_selection):
 
-        if os.path.isfile(file_selection):
-            self.manager.get_screen('loading').loading_file_name = file_selection
-            self.manager.current = 'loading'
+        if not self.is_filechooser_scrolling:
+            if os.path.isfile(file_selection):
+                self.manager.get_screen('loading').loading_file_name = file_selection
+                self.manager.current = 'loading'
 
-        else: 
-            error_message = 'File selected does not exist!'
-            popup_info.PopupError(self.sm, error_message)
+            else: 
+                error_message = 'File selected does not exist!'
+                popup_info.PopupError(self.sm, error_message)
 
     def delete_popup(self, **kwargs):
 
@@ -484,15 +491,12 @@ class LocalFileChooser(Screen):
 
     def quit_to_home(self):
 
-        self.icon_layout_fc.ids.scrollview.do_scroll_y = False
-        self.list_layout_fc.ids.scrollview.do_scroll_y = False
+        if not self.is_filechooser_scrolling:
+            self.manager.current = 'home'
+            #self.manager.transition.direction = 'up'   
 
-        self.manager.current = 'home'
-        #self.manager.transition.direction = 'up'   
-
-
-    def scrolling_start(self):
+    def scrolling_start(self, *args):
         self.is_filechooser_scrolling = True
 
-    def scrolling_stop(self):
+    def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
