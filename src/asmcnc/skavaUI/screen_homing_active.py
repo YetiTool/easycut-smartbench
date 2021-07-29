@@ -165,10 +165,10 @@ class HomingScreenActive(Screen):
         # If laser is enabled, move by offset
         if self.m.is_laser_enabled:
 
-            step_tolerance = 0.01
+            tolerance = 5 # mm
 
-            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + step_tolerance - self.m.laser_offset_x_value))
-            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + step_tolerance - self.m.laser_offset_x_value, 3000)
+            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
+            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
 
         # allow breather for sequential stream to process
         Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
