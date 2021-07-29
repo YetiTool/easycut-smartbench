@@ -50,10 +50,7 @@ class RouterMachine(object):
 
 
     ## PERSISTENT VALUES SETUP
-    if sys.platform != 'win32' and sys.platform != 'darwin':
-        smartbench_values_dir = '/home/pi/easycut-smartbench/src/sb_values/'
-    else:
-        smartbench_values_dir = 'sb_values/'
+    smartbench_values_dir = './sb_values/'
        
     
     ### Individual files to hold persistent values
@@ -64,7 +61,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
-    device_label_file_path = '/home/pi/smartbench_name.txt'
+    device_label_file_path = 'smartbench_name.txt'
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0

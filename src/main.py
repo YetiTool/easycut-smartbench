@@ -33,6 +33,7 @@ from kivy.core.window import Window
 from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.comms import database_storage # @UnresolvedImport
 from asmcnc.comms import server_connection
+from asmcnc.comms import archie_db
 
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
@@ -70,7 +71,7 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 
 
 # developer testing
-Cmport = 'COM4'
+Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v1.7.0'
@@ -149,7 +150,9 @@ class SkavaUI(App):
             am = app_manager.AppManagerClass(sm, m, sett)
 
             # Create database object to talk to
-            db = database_storage.DatabaseStorage(sm, m)
+            # db = database_storage.DatabaseStorage(sm, m)
+
+            db = archie_db.SQLRabbit(m, sm)
 
             # Server connection object
             sc = server_connection.ServerConnection()
