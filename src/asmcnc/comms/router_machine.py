@@ -62,6 +62,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -156,9 +157,14 @@ class RouterMachine(object):
                 str(self.spindle_voltage) + "\n" + 
                 str(self.spindle_digital) + "\n" + 
                 str(self.spindle_cooldown_time_seconds) + "\n" +
-                str(self.spindle_cooldown_rpm) + "\n" +
-                str(self.is_stylus_enabled)
+                str(self.spindle_cooldown_rpm)
                 )
+            file.close()
+
+        if not path.exists(self.stylus_settings_file_path):
+            log("Creating stylus settings file...")
+            file = open(self.stylus_settings_file_path, "w+")
+            file.write(str(self.is_stylus_enabled))
             file.close()
 
         if not path.exists(self.calibration_settings_file_path):
@@ -181,6 +187,7 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+        self.read_stylus_settings()
 
 
     ## SET UP OPTIONS
@@ -405,11 +412,6 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
             self.spindle_cooldown_rpm = int(read_spindle[4])
 
-            if read_spindle[5] == 'True':
-                self.is_stylus_enabled = True
-            else:
-                self.is_stylus_enabled = False
-
             log("Read in spindle cooldown settings")
             return True
 
@@ -417,12 +419,12 @@ class RouterMachine(object):
             log("Unable to read spindle cooldown settings")
             return False
 
-    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm, stylus):
+    def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
         try:
 
             file = open(self.spindle_cooldown_settings_file_path, "w")
 
-            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm) + "\n" + str(stylus)
+            file_string = str(brand) + "\n" + str(voltage) + "\n" + str(digital) + "\n" + str(time_seconds) + "\n" + str(rpm)
 
             file.write(file_string)
             file.close()
@@ -436,16 +438,49 @@ class RouterMachine(object):
             self.spindle_cooldown_time_seconds = int(time_seconds)
             self.spindle_cooldown_rpm = int(rpm)
 
-            if stylus == 'True' or stylus == True:
-                self.is_stylus_enabled = True
-            else:
-                self.is_stylus_enabled = False
-
             log("Spindle cooldown settings written to file")
             return True
 
         except: 
             log("Unable to write spindle cooldown settings")
+            return False
+
+    ## STYLUS OPTIONS
+    def read_stylus_settings(self):
+
+        try:
+            file = open(self.stylus_settings_file_path, 'r')
+            read_stylus = file.read()
+            file.close()
+
+            if read_stylus == 'True':
+                self.is_stylus_enabled = True
+            else:
+                self.is_stylus_enabled = False
+
+            log("Read in stylus settings")
+            return True
+
+        except: 
+            log("Unable to read stylus settings")
+            return False
+
+    def write_stylus_settings(self, stylus):
+        try:
+            file = open(self.stylus_settings_file_path, "w")
+            file.write(str(stylus))
+            file.close()
+
+            if stylus == 'True' or stylus == True:
+                self.is_stylus_enabled = True
+            else:
+                self.is_stylus_enabled = False
+
+            log("Stylus settings written to file")
+            return True
+
+        except: 
+            log("Unable to write stylus settings")
             return False
 
 # GRBL SETTINGS

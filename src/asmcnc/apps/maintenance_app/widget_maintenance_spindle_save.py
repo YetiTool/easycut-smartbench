@@ -165,7 +165,7 @@ class SpindleSaveWidget(Widget):
             return
 
 
-        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed, self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
+        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
             popup_info.PopupMiniInfo(self.sm,"Settings saved!")
 
         else:
