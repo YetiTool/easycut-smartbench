@@ -101,8 +101,14 @@ Builder.load_string("""
                 size_hint_y: 5
                 rootpath: './jobCache/'
                 show_hidden: False
-                on_touch_move: root.scrolling_start()
-                on_touch_up: root.scrolling_stop()
+                on_touch_move: 
+                    root.scrolling_start()
+                    root.list_layout_fc.ids.scrollview.do_scroll_y = True
+                    root.icon_layout_fc.ids.scrollview.do_scroll_y = True
+                on_touch_up: 
+                    root.scrolling_stop()
+                    root.list_layout_fc.ids.scrollview.do_scroll_y = False
+                    root.icon_layout_fc.ids.scrollview.do_scroll_y = False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
                 sort_func: root.sort_by_date_reverse
