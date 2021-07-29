@@ -99,6 +99,8 @@ Builder.load_string("""
                 size_hint_y: 5
                 rootpath: './jobCache/'
                 show_hidden: False
+                on_touch_move: root.scrolling_start()
+                on_touch_up: root.scrolling_stop()
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
                 sort_func: root.sort_by_date_reverse
@@ -291,6 +293,7 @@ class LocalFileChooser(Screen):
     
     sort_by_date = ObjectProperty(date_order_sort)
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
+    is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
 
@@ -328,22 +331,23 @@ class LocalFileChooser(Screen):
         self.usb_status_label.size_hint_y = 0
 
     def check_USB_status(self, dt):
-        
-        if self.usb_stick.is_available():
-            self.button_usb.disabled = False
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-            self.sm.get_screen('loading').usb_status_label.opacity = 1
-            self.usb_status_label.size_hint_y = 0.7
-            self.usb_status_label.canvas.before.clear()
-            with self.usb_status_label.canvas.before:
-                Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-        else:
-            self.button_usb.disabled = True
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-            self.usb_status_label.size_hint_y = 0
-            self.sm.get_screen('loading').usb_status = None
-            self.sm.get_screen('loading').usb_status_label.opacity = 0
+
+        if not self.is_filechooser_scrolling:
+            if self.usb_stick.is_available():
+                self.button_usb.disabled = False
+                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
+                self.sm.get_screen('loading').usb_status_label.opacity = 1
+                self.usb_status_label.size_hint_y = 0.7
+                self.usb_status_label.canvas.before.clear()
+                with self.usb_status_label.canvas.before:
+                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            else:
+                self.button_usb.disabled = True
+                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
+                self.usb_status_label.size_hint_y = 0
+                self.sm.get_screen('loading').usb_status = None
+                self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -472,3 +476,10 @@ class LocalFileChooser(Screen):
 
         self.manager.current = 'home'
         #self.manager.transition.direction = 'up'   
+
+
+    def scrolling_start(self):
+        self.is_filechooser_scrolling = True
+
+    def scrolling_stop(self):
+        self.is_filechooser_scrolling = False
