@@ -561,7 +561,7 @@ class GoScreen(Screen):
         
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
-            culprits = ['M30', 'M2']
+            culprits = ['M30', 'M2', 'M00']
 
             if 'S0' in line:
                 line = line.replace('S0','')
