@@ -152,7 +152,7 @@ class SkavaUI(App):
             # Create database object to talk to
             # db = database_storage.DatabaseStorage(sm, m)
 
-            db = archie_db.SQLRabbit(m, sm)
+            db = archie_db.SQLRabbit(sm, m)
 
             # Server connection object
             sc = server_connection.ServerConnection()
