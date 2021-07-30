@@ -156,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.open_USB()
+                    root.screen_change_command(root.open_USB)
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -237,7 +237,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.quit_to_home()
+                    root.screen_change_command(root.quit_to_home)
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -259,7 +259,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.go_to_loading_screen(filechooser.selection[0])
+                    root.screen_change_command(root.go_to_loading_screen)
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -384,7 +384,7 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_files()
 
-    def open_USB(self):
+    def open_USB(self, dt):
 
         if not self.is_filechooser_scrolling:
             self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
@@ -441,7 +441,9 @@ class LocalFileChooser(Screen):
                     os.remove(ftp_file_dir + file) # clean original space
 
 
-    def go_to_loading_screen(self, file_selection):
+    def go_to_loading_screen(self, dt):
+
+        file_selection = self.filechooser.selection[0]
 
         if not self.is_filechooser_scrolling:
             if os.path.isfile(file_selection):
@@ -489,12 +491,15 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()       
 
 
-    def quit_to_home(self):
+    def screen_change_command(self, screen_function):
 
         if not self.is_filechooser_scrolling:
             self.fully_disable_scroll()
-            self.manager.current = 'home'
-            #self.manager.transition.direction = 'up'   
+            Clock.schedule_once(screen_function, 0.1)
+
+
+    def quit_to_home(self, dt):
+        self.manager.current = 'home'
 
     def scrolling_start(self, *args):
         self.is_filechooser_scrolling = True
