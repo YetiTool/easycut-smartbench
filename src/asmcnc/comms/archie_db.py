@@ -9,8 +9,8 @@ class SQLRabbit:
     def __init__(self, screen_manager, machine):
         self.queue = 'machine_data'
         # Updated these variables to match convention throughout rest of code
-        self.m = m
-        self.sm = sm
+        self.m = machine
+        self.sm = screen_manager
         
         try:
             self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
