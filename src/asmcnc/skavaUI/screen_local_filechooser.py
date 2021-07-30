@@ -337,7 +337,6 @@ class LocalFileChooser(Screen):
     
     
     def on_pre_leave(self):
-        self.fully_disable_scroll()
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
@@ -390,6 +389,7 @@ class LocalFileChooser(Screen):
         if not self.is_filechooser_scrolling:
             self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
             self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
+            self.fully_disable_scroll()
             self.manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
@@ -446,6 +446,7 @@ class LocalFileChooser(Screen):
         if not self.is_filechooser_scrolling:
             if os.path.isfile(file_selection):
                 self.manager.get_screen('loading').loading_file_name = file_selection
+                self.fully_disable_scroll()
                 self.manager.current = 'loading'
 
             else: 
@@ -491,6 +492,7 @@ class LocalFileChooser(Screen):
     def quit_to_home(self):
 
         if not self.is_filechooser_scrolling:
+            self.fully_disable_scroll()
             self.manager.current = 'home'
             #self.manager.transition.direction = 'up'   
 
