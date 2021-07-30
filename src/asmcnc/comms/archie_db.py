@@ -11,9 +11,14 @@ class SQLRabbit:
         self.router = router
         self.screen = screen
         
-        # self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        # self.channel = self.connection.channel()
-        # self.channel.queue_declare(queue=self.queue)
+        try:
+            self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+            self.channel = self.connection.channel()
+            self.channel.queue_declare(queue=self.queue)
+        
+        except Exception as e:
+            log("Pika connection exception: " + str(e))
+
         
         self.interval = 10
         
@@ -104,6 +109,7 @@ class SQLRabbit:
     def run(self, dt):
         # if self.router.s.m_state != "Idle":
         #     return 
-        # self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
+        try: self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
+        except Exception as e: log("Data send exception: " + str(e))
         log(self.get_data())
         
