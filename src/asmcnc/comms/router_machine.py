@@ -61,7 +61,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
-    device_label_file_path = 'smartbench_name.txt'
+    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -279,7 +279,7 @@ class RouterMachine(object):
             file.write(str(value))
             file.close()
 
-            self.device_label_file_path = str(value)
+            self.device_label = str(value)
             log("device label written to file")
             return True
 
