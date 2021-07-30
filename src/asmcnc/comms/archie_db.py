@@ -13,7 +13,7 @@ class SQLRabbit:
         self.sm = screen_manager
         
         try:
-            self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+            self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/', pika.credentials.PlainCredentials('console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
             self.channel = self.connection.channel()
             self.channel.queue_declare(queue=self.queue)
         
@@ -67,7 +67,6 @@ class SQLRabbit:
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,
                     "overload_peak": float(self.sm.get_screen('go').overload_peak) or ''
-
                 },
                 "events": {
                     "placeholder": ""
@@ -77,33 +76,6 @@ class SQLRabbit:
         ]
         
         return data
-        # except:
-        #     data = [
-        #         {
-        #             "payload_type": "semi",
-        #             "machine_info": {
-        #                 "name": self.m.device_label,
-        #                 "location": "Office",
-        #                 "hostname": socket.gethostname()
-        #             },
-        #             "statuses": {
-        #                 "status": self.m.s.m_state,
-        #                 "z_lube_%_left": z_lube_percent_left,
-        #                 "z_lube_hrs_before_next": z_lube_hrs_left,
-        #                 "spindle_brush_%_left": spindle_brush_percent_left,
-        #                 "spindle_brush_hrs_before_next": spindle_brush_hrs_left,
-        #                 "calibration_%_left": calibration_percent_left,
-        #                 "calibration_hrs_before_next": calibration_hrs_left,
-        #                 "gcode_line": self.m.s.g_count
-        #             },
-        #             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        #         }
-        #     ]
-        
-    ###    
-    ### Don't send data unless machine is running job - old data from job end will
-    ### will still be relevant.
-    ###   
      
     def run(self, dt):
         # if self.m.s.m_state != "Idle":
