@@ -321,6 +321,10 @@ class LocalFileChooser(Screen):
                 file.write('*.nc')
                 file.close()
 
+    def on_pre_enter(self):
+        self.list_layout_fc.ids.scrollview.do_scroll_y = True
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = True
+
     def on_enter(self):
         
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
@@ -333,7 +337,7 @@ class LocalFileChooser(Screen):
     
     
     def on_pre_leave(self):
-        
+        self.fully_disable_scroll()
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
@@ -495,3 +499,7 @@ class LocalFileChooser(Screen):
 
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
+
+    def fully_disable_scroll(self):
+        self.list_layout_fc.ids.scrollview.do_scroll_y = False
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = False
