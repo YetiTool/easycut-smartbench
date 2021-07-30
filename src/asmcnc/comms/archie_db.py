@@ -1,15 +1,19 @@
 from kivy.clock import Clock
 import json, pika, socket, datetime
 
+def log(message):
+    timestamp = datetime.datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 class SQLRabbit:
     def __init__(self, router, screen):
         self.queue = 'machine_data'
         self.router = router
         self.screen = screen
         
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-        self.channel = self.connection.channel()
-        self.channel.queue_declare(queue=self.queue)
+        # self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        # self.channel = self.connection.channel()
+        # self.channel.queue_declare(queue=self.queue)
         
         self.interval = 10
         
@@ -100,5 +104,6 @@ class SQLRabbit:
     def run(self, dt):
         # if self.router.s.m_state != "Idle":
         #     return 
-        self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
+        # self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
+        log(self.get_data())
         
