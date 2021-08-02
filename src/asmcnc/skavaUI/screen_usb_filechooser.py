@@ -330,7 +330,7 @@ class USBFileChooser(Screen):
         self.filechooser_usb._update_files()
 
      
-    def import_usb_file(self):
+    def import_usb_file(self, dt):
 
         file_selection = filechooser_usb.selection[0]
 
@@ -348,7 +348,7 @@ class USBFileChooser(Screen):
             self.go_to_loading_screen(new_file_path)
         
 
-    def quit_to_local(self):
+    def quit_to_local(self, dt):
         self.manager.current = 'local_filechooser'
 
         
