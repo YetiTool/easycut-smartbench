@@ -523,7 +523,8 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_name()
 
     def get_smartbench_name(self):
-        if not self.m.read_device_label(): self.smartbench_name_unformatted = 'My SmartBench'
+        
+        self.smartbench_name_unformatted = self.m.device_label
 
         # Remove newlines
         self.smartbench_name_formatted = self.smartbench_name_unformatted.replace('\n', ' ')

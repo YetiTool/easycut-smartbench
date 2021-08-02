@@ -98,7 +98,7 @@ class RouterMachine(object):
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
     ## DEVICE LABEL 
-    device_label = "default" #TODO needs tying to machine unique ID else all machines will refence this dataseries
+    device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     reminders_enabled = True
 
