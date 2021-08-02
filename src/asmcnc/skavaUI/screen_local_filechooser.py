@@ -386,10 +386,10 @@ class LocalFileChooser(Screen):
 
     def open_USB(self, dt):
 
-        if not self.is_filechooser_scrolling:
-            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-            self.manager.current = 'usb_filechooser'
+        # if not self.is_filechooser_scrolling:
+        self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
+        self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
+        self.manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
 
@@ -444,14 +444,14 @@ class LocalFileChooser(Screen):
 
         file_selection = self.filechooser.selection[0]
 
-        if not self.is_filechooser_scrolling:
-            if os.path.isfile(file_selection):
-                self.manager.get_screen('loading').loading_file_name = file_selection
-                self.manager.current = 'loading'
+        # if not self.is_filechooser_scrolling:
+        if os.path.isfile(file_selection):
+            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.manager.current = 'loading'
 
-            else: 
-                error_message = 'File selected does not exist!'
-                popup_info.PopupError(self.sm, error_message)
+        else: 
+            error_message = 'File selected does not exist!'
+            popup_info.PopupError(self.sm, error_message)
 
     def delete_popup(self, **kwargs):
 
@@ -506,5 +506,9 @@ class LocalFileChooser(Screen):
         self.is_filechooser_scrolling = False
 
     def fully_disable_scroll(self):
+
+        log("Disable scroll")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
+        self.list_layout_fc.ids.scrollview.do_scroll_x = True
+        self.icon_layout_fc.ids.scrollview.do_scroll_x = True
