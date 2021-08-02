@@ -497,6 +497,8 @@ class LocalFileChooser(Screen):
 
 
     def quit_to_home(self, dt):
+
+        print("Quit to home")
         self.manager.current = 'home'
 
     def scrolling_start(self, *args):
@@ -507,7 +509,7 @@ class LocalFileChooser(Screen):
 
     def fully_disable_scroll(self):
 
-        log("Disable scroll")
+        print("Disable scroll")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
         self.list_layout_fc.ids.scrollview.do_scroll_x = True
