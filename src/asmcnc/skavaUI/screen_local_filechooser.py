@@ -385,7 +385,7 @@ class LocalFileChooser(Screen):
         self.filechooser._update_files()
 
     def open_USB(self, dt):
-
+        print("Stability test")
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
         self.manager.current = 'usb_filechooser'
@@ -440,6 +440,7 @@ class LocalFileChooser(Screen):
 
 
     def go_to_loading_screen(self, dt):
+        print("Stability test")
 
         file_selection = self.filechooser.selection[0]
 
@@ -487,8 +488,8 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()       
 
     def quit_to_home(self, dt):
+        print("Stability test")
         self.manager.current = 'home'
-
 
     def screen_change_command(self, screen_function):
 

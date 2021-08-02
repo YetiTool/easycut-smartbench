@@ -349,10 +349,12 @@ class USBFileChooser(Screen):
         
 
     def quit_to_local(self, dt):
+        print("Stability test")
         self.manager.current = 'local_filechooser'
 
         
     def go_to_loading_screen(self, file_selection):
+        print("Stability test")
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
 
