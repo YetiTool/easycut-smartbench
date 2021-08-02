@@ -312,6 +312,8 @@ class LocalFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
+        self.fully_disable_scroll()
+
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
@@ -331,7 +333,7 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 0.5)
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
     def on_pre_leave(self):
