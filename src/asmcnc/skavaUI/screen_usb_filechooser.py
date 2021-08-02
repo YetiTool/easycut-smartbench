@@ -239,6 +239,7 @@ class USBFileChooser(Screen):
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
     def on_enter(self):
+        print("open usb filechooser")
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
@@ -250,6 +251,9 @@ class USBFileChooser(Screen):
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
+
+    def on_leave(self):
+        print("close usb filechooser")
 
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
@@ -382,4 +386,3 @@ class USBFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
         Clock.unschedule(self.enable_scroll_event)
-

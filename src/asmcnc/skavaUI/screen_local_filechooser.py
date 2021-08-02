@@ -325,6 +325,8 @@ class LocalFileChooser(Screen):
 
     def on_enter(self):
         
+        print("open local filechooser")
+
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         self.usb_stick.enable() # start the object scanning for USB stick
         self.refresh_filechooser()
@@ -341,7 +343,9 @@ class LocalFileChooser(Screen):
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
     def on_leave(self):
+        print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
+
 
     def check_USB_status(self, dt):
 
