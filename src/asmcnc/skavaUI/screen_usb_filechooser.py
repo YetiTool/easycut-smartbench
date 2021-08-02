@@ -27,6 +27,8 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser_usb:filechooser_usb
+    icon_layout_fc : icon_layout_fc
+    list_layout_fc : list_layout_fc
     toggle_view_button : toggle_view_button
     toggle_sort_button: toggle_sort_button
     load_button:load_button
@@ -84,7 +86,9 @@ Builder.load_string("""
             on_selection: root.refresh_filechooser()
             sort_func: root.sort_by_date_reverse
             FileChooserIconLayout
+                id: icon_layout_fc
             FileChooserListLayout
+                id: list_layout_fc
                
         BoxLayout:
             size_hint_y: None
@@ -152,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.quit_to_local()
+                    root.screen_change_command(root.quit_to_local)
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -171,7 +175,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.import_usb_file(filechooser_usb.selection[0])
+                    root.screen_change_command(root.import_usb_file)
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -210,11 +214,22 @@ class USBFileChooser(Screen):
 
     sort_by_date = ObjectProperty(date_order_sort)
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
+    is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+
+        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+
+        self.fully_disable_scroll()
 
 
     def set_USB_path(self, usb_path):
@@ -231,6 +246,8 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
         
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
@@ -313,7 +330,9 @@ class USBFileChooser(Screen):
         self.filechooser_usb._update_files()
 
      
-    def import_usb_file(self, file_selection):
+    def import_usb_file(self):
+
+        file_selection = filechooser_usb.selection[0]
 
         self.check_for_job_cache_dir()
         
@@ -330,15 +349,35 @@ class USBFileChooser(Screen):
         
 
     def quit_to_local(self):
-
         self.manager.current = 'local_filechooser'
-
-          
-    def quit_to_home(self):
-
-        self.manager.current = 'home'
 
         
     def go_to_loading_screen(self, file_selection):
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
+
+    def screen_change_command(self, screen_function):
+
+        if not self.is_filechooser_scrolling:
+            self.fully_disable_scroll()
+            Clock.schedule_once(screen_function, 1)
+
+    def scrolling_start(self, *args):
+        self.is_filechooser_scrolling = True
+
+    def scrolling_stop(self, *args):
+        self.is_filechooser_scrolling = False
+
+    def fully_disable_scroll(self):
+
+        print("Disable scroll")
+        self.list_layout_fc.ids.scrollview.do_scroll_y = False
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = False
+
+    def enable_scroll_on_enter(self, dt):
+        print('Enable scroll')
+        self.list_layout_fc.ids.scrollview.do_scroll_y = True
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = True
+
+        Clock.unschedule(self.enable_scroll_event)
+

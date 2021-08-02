@@ -385,9 +385,7 @@ class LocalFileChooser(Screen):
         self.filechooser._update_files()
 
     def open_USB(self, dt):
-        # print("Stability test")
 
-        # if not self.is_filechooser_scrolling:
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
         self.manager.current = 'usb_filechooser'
@@ -442,11 +440,9 @@ class LocalFileChooser(Screen):
 
 
     def go_to_loading_screen(self, dt):
-        # print("Stability test")
 
         file_selection = self.filechooser.selection[0]
 
-        # if not self.is_filechooser_scrolling:
         if os.path.isfile(file_selection):
             self.manager.get_screen('loading').loading_file_name = file_selection
             self.manager.current = 'loading'
@@ -490,17 +486,15 @@ class LocalFileChooser(Screen):
 
         self.refresh_filechooser()       
 
+    def quit_to_home(self, dt):
+        self.manager.current = 'home'
+
 
     def screen_change_command(self, screen_function):
 
         if not self.is_filechooser_scrolling:
             self.fully_disable_scroll()
             Clock.schedule_once(screen_function, 1)
-
-
-    def quit_to_home(self, dt):
-        # print("Stability test")
-        self.manager.current = 'home'
 
     def scrolling_start(self, *args):
         self.is_filechooser_scrolling = True
@@ -515,7 +509,7 @@ class LocalFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, dt):
-        print('enable scroll')
+        print('Enable scroll')
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
