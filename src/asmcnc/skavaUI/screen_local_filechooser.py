@@ -321,9 +321,6 @@ class LocalFileChooser(Screen):
                 file.write('*.nc')
                 file.close()
 
-    def on_pre_enter(self):
-        self.fully_disable_scroll()
-
     def on_enter(self):
         
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
