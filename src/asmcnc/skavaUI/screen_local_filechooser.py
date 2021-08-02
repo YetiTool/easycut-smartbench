@@ -512,5 +512,5 @@ class LocalFileChooser(Screen):
         print("Disable scroll")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
-        # self.list_layout_fc.ids.scrollview.do_scroll_x = True
-        # self.icon_layout_fc.ids.scrollview.do_scroll_x = True
+        self.list_layout_fc.ids.scrollview.do_scroll_x = True
+        self.icon_layout_fc.ids.scrollview.do_scroll_x = True
