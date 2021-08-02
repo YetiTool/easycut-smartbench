@@ -321,6 +321,10 @@ class LocalFileChooser(Screen):
                 file.write('*.nc')
                 file.close()
 
+    def on_pre_enter(self):
+        self.fully_disable_scroll()
+        Clock.schedule_once(self.enable_scroll, 1)
+
     def on_enter(self):
         
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
@@ -507,8 +511,6 @@ class LocalFileChooser(Screen):
         print("Disable scroll")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
-        self.list_layout_fc.ids.scrollview.do_scroll_x = True
-        self.icon_layout_fc.ids.scrollview.do_scroll_x = True
 
     def enable_scroll(self, dt):
         print('enable scroll')
