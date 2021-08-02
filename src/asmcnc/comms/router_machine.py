@@ -496,7 +496,7 @@ class RouterMachine(object):
 
         try: 
             file = open(self.device_label_file_path, 'r')
-            self.device_label  = str(file.read())
+            self.device_label = str(file.read())
             file.close()
 
             log("Read in device label")
