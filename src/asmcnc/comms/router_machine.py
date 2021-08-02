@@ -4,7 +4,6 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from kivy.clock import Clock
 import sys, os, time
@@ -51,8 +50,7 @@ class RouterMachine(object):
 
     ## PERSISTENT VALUES SETUP
     smartbench_values_dir = './sb_values/'
-       
-    
+
     ### Individual files to hold persistent values
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
     z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
@@ -61,6 +59,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
 
     ## PROBE SETTINGS
@@ -75,10 +74,6 @@ class RouterMachine(object):
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
     time_to_remind_user_to_lube_z_seconds = float(50*3600)
-    
-
-    ## DEVICE LABEL 
-    device_label = "default" #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -86,6 +81,10 @@ class RouterMachine(object):
 
     is_laser_on = False
     is_laser_enabled = False
+
+    ## STYLUS SETTINGS
+    is_stylus_enabled = True
+    stylus_router_choice = 'router'
 
     ## BRUSH VALUES
     spindle_brush_use_seconds = 0
@@ -97,6 +96,9 @@ class RouterMachine(object):
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
+
+    ## DEVICE LABEL 
+    device_label = "default" #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     reminders_enabled = True
 
@@ -113,10 +115,8 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-#         if sys.platform != "win32" and sys.platform != "darwin":
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
-        
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -162,6 +162,12 @@ class RouterMachine(object):
                 )
             file.close()
 
+        if not path.exists(self.stylus_settings_file_path):
+            log("Creating stylus settings file...")
+            file = open(self.stylus_settings_file_path, "w+")
+            file.write(str(self.is_stylus_enabled))
+            file.close()
+
         if not path.exists(self.calibration_settings_file_path):
             log('Creating calibration settings file...')
             file = open(self.calibration_settings_file_path, 'w+')
@@ -180,8 +186,6 @@ class RouterMachine(object):
             file.write(str(self.device_label))
             file.close()
 
-
-
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -190,6 +194,7 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
+        self.read_stylus_settings()
         self.read_device_label()
 
 
@@ -255,38 +260,6 @@ class RouterMachine(object):
         except:
             log("Unable to write z touch plate thickness")
             return False
-
-
-    ## DEVICE LABEL
-    def read_device_label(self):
-
-        try: 
-            file = open(self.device_label_file_path, 'r')
-            self.device_label  = str(file.read())
-            file.close()
-
-            log("Read in device label")
-            return True
-
-        except:
-            log("Unable to read device label")
-            return False
-
-    def write_device_label(self, value):
-
-        try:
-            file = open(self.device_label_file_path, 'w+')
-            file.write(str(value))
-            file.close()
-
-            self.device_label = str(value)
-            log("device label written to file")
-            return True
-
-        except:
-            log("Unable to write device label")
-            return False
-
 
 
     ## CALIBRATION SETTINGS
@@ -478,6 +451,74 @@ class RouterMachine(object):
 
         except: 
             log("Unable to write spindle cooldown settings")
+            return False
+
+    ## STYLUS OPTIONS
+    def read_stylus_settings(self):
+
+        try:
+            file = open(self.stylus_settings_file_path, 'r')
+            read_stylus = file.read()
+            file.close()
+
+            if read_stylus == 'True':
+                self.is_stylus_enabled = True
+            else:
+                self.is_stylus_enabled = False
+
+            log("Read in stylus settings")
+            return True
+
+        except: 
+            log("Unable to read stylus settings")
+            return False
+
+    def write_stylus_settings(self, stylus):
+        try:
+            file = open(self.stylus_settings_file_path, "w")
+            file.write(str(stylus))
+            file.close()
+
+            if stylus == 'True' or stylus == True:
+                self.is_stylus_enabled = True
+            else:
+                self.is_stylus_enabled = False
+
+            log("Stylus settings written to file")
+            return True
+
+        except: 
+            log("Unable to write stylus settings")
+            return False
+
+    ## DEVICE LABEL
+    def read_device_label(self):
+
+        try: 
+            file = open(self.device_label_file_path, 'r')
+            self.device_label  = str(file.read())
+            file.close()
+
+            log("Read in device label")
+            return True
+
+        except:
+            log("Unable to read device label")
+            return False
+
+    def write_device_label(self, value):
+
+        try:
+            file = open(self.device_label_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.device_label = str(value)
+            log("device label written to file")
+            return True
+
+        except:
+            log("Unable to write device label")
             return False
 
 # GRBL SETTINGS
@@ -1082,7 +1123,7 @@ class RouterMachine(object):
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
@@ -1095,7 +1136,7 @@ class RouterMachine(object):
             x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
     def set_y_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('Y'): 
@@ -1108,7 +1149,7 @@ class RouterMachine(object):
             y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser datum is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
 
 
     def set_jobstart_z(self):
@@ -1207,6 +1248,14 @@ class RouterMachine(object):
     def jog_spindle_to_laser_datum(self, axis):
 
         if axis == 'X' or axis == 'XY' or axis == 'YX':
+
+            # Keep this is for beta testing, as 
+            print("Laser offset value: " + str(self.laser_offset_x_value))
+            print("Pos value: " + str(self.mpos_x()))
+
+            print("Try to move to: " + str(self.mpos_x() + float(self.laser_offset_x_value)))
+            print("Limit at: " + str(float(self.x_min_jog_abs_limit)))
+
             # Check that movement is within bounds before jogging
             if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
             and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
@@ -1250,22 +1299,11 @@ class RouterMachine(object):
 # HOMING
 
     # ensure that return and cancel args match the names of the screen names defined in the screen manager
-    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str, force_squaring_decision = False):
-        
-        # Force user to decide between manual/auto squaring
-        if force_squaring_decision: self.is_machine_completed_the_initial_squaring_decision = False
- 
-        # If squaring has already been completed and decision isn't getting forced again       
-        if self.is_machine_completed_the_initial_squaring_decision:
-            self.sm.get_screen('prepare_to_home').return_to_screen = return_to_screen_str
-            self.sm.get_screen('prepare_to_home').cancel_to_screen = cancel_to_screen_str
-            self.sm.current = 'prepare_to_home'  
+    def request_homing_procedure(self, return_to_screen_str, cancel_to_screen_str):
 
-        # If decision needs to be made again (either via forced arg, or because it's never been attempted or completed fully)
-        else:
-            self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
-            self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
-            self.sm.current = 'squaring_decision'
+        self.sm.get_screen('squaring_decision').return_to_screen = return_to_screen_str
+        self.sm.get_screen('squaring_decision').cancel_to_screen = cancel_to_screen_str
+        self.sm.current = 'squaring_decision'
 
 
     # Home the Z axis by moving the cutter down until it touches the probe.
@@ -1400,5 +1438,3 @@ class RouterMachine(object):
 
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
-
-

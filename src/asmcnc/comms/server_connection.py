@@ -193,3 +193,8 @@ class ServerConnection(object):
 
 		except: 
 			self.smartbench_name = 'My SmartBench'
+
+		# Remove newlines
+		self.smartbench_name = self.smartbench_name.replace('\n', ' ')
+		# Strip trailing and leading whitespaces
+		self.smartbench_name = self.smartbench_name.strip()

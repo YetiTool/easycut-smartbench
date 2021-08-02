@@ -19,7 +19,7 @@ from datetime import datetime
 from multiprocessing import Process, Manager
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
-from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_settings_options, widget_gcode_view # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_gcode_view # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
@@ -295,6 +295,8 @@ class HomeScreen(Screen):
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
 
     def on_enter(self): 
+
+        self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)

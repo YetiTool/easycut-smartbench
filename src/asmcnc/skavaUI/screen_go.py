@@ -39,7 +39,7 @@ Builder.load_string("""
     z_height_container:z_height_container
     job_progress_container:job_progress_container
     feed_override_container:feed_override_container
-    speed_override_container:speed_override_container
+    speed_override_widget_container:speed_override_widget_container
     start_or_pause_button_image:start_or_pause_button_image
     btn_back: btn_back
     stop_start:stop_start
@@ -51,6 +51,8 @@ Builder.load_string("""
     spindle_overload_container:spindle_overload_container
     # spindle_voltage: spindle_voltage
     spindle_widgets: spindle_widgets
+    speed_override_container: speed_override_container
+    override_and_progress_container: override_and_progress_container
     
     BoxLayout:
         padding: 0
@@ -144,6 +146,7 @@ Builder.load_string("""
                                         allow_stretch: True
 
                     BoxLayout:
+                        id: override_and_progress_container
                         orientation: 'horizontal'
                         size_hint_y: 0.7
                         padding: 00
@@ -202,6 +205,7 @@ Builder.load_string("""
     
 
                         BoxLayout:
+                            id: speed_override_container
                             orientation: 'vertical'
                             padding: 10
                             spacing: 10
@@ -242,7 +246,7 @@ Builder.load_string("""
                                     text_size: self.size
 
                             BoxLayout:
-                                id: speed_override_container
+                                id: speed_override_widget_container
                                 padding: 0
                                 size_hint_y: 9
                                 canvas:
@@ -380,6 +384,7 @@ class GoScreen(Screen):
     start_or_pause_button_image = ObjectProperty()
 
     show_spindle_overload = False
+    spindle_speed_showing = True
 
     is_job_started_already = False
     temp_suppress_prompts = False
@@ -390,6 +395,7 @@ class GoScreen(Screen):
     loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
     overload_peak = 0
+
 
     def __init__(self, **kwargs):
 
@@ -406,7 +412,7 @@ class GoScreen(Screen):
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
         self.feed_override_container.add_widget(self.feedOverride)
-        self.speed_override_container.add_widget(self.speedOverride)
+        self.speed_override_widget_container.add_widget(self.speedOverride)
         
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
@@ -422,7 +428,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True):
+        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True) and self.m.stylus_router_choice != 'stylus':
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
@@ -437,6 +443,24 @@ class GoScreen(Screen):
             self.spindle_overload_container.padding = 0
             self.spindle_overload_container.spacing = 0
             self.spindle_widgets.spacing = 0
+
+
+        # Hide/show spindle speed depending on if stylus is chosen
+        if self.m.stylus_router_choice != 'stylus' and self.spindle_speed_showing == False:
+            self.override_and_progress_container.add_widget(self.speed_override_container, index = 1)
+            self.spindle_speed_showing = True
+
+        elif self.m.stylus_router_choice == 'stylus' and self.spindle_speed_showing == True:
+            self.override_and_progress_container.remove_widget(self.speed_override_container)
+            self.spindle_speed_showing = False
+
+
+        # Show stylus or router graphic depending on choice
+        if self.m.stylus_router_choice == 'stylus':
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit_stylus.png'
+        else:
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
+
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
@@ -497,7 +521,7 @@ class GoScreen(Screen):
         else:
             self.job_name_only = self.job_filename.split("/")[-1]
             self.file_data_label.text = "[color=333333]" + self.job_name_only + "[/color]"
-        
+
         # Reset flag & light
         self.is_job_started_already = False
 
@@ -550,7 +574,7 @@ class GoScreen(Screen):
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
         # Turn vac on if spindle gets turned on during job
-        if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0):
+        if ((str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)
@@ -559,16 +583,27 @@ class GoScreen(Screen):
         else:
             modified_job_gcode.extend(self.job_gcode)
 
+
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
         
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
-            culprits = ['M30', 'M2']
+            if self.m.stylus_router_choice == 'router':
+                culprits = ['M30', 'M2', 'M00']
+            else:
+                culprits = ['M30', 'M2', 'M00', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')
+
+            if self.m.stylus_router_choice == 'stylus':
+                if 'M3' in line:
+                    line = ''
+                if 'M03' in line:
+                    line = ''
+
             if line in culprits:
                 line = ''
 
@@ -599,9 +634,9 @@ class GoScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
         if self.loop_for_feeds_and_speeds != None: self.loop_for_feeds_and_speeds.cancel()
 
-            
+
 ### SCREEN UPDATES
-    
+
     percent_thru_job = 0
     time_taken_seconds = 0
     
@@ -612,7 +647,6 @@ class GoScreen(Screen):
             self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
             if self.percent_thru_job > 100: self.percent_thru_job = 100
             self.progress_percentage_label.text = "[color=333333]" + str(self.percent_thru_job) + "[size=70px] %[/size][/color]"
-
         # Runtime
         if len(self.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
 
@@ -656,14 +690,8 @@ class GoScreen(Screen):
     def update_voltage_label(self):
         self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
-
     def update_overload_peak(self, state):
 
         if state > self.overload_peak: 
             self.overload_peak = state
             print "New overload peak: " + str(self.overload_peak)
-
-
-        
-        
-        
