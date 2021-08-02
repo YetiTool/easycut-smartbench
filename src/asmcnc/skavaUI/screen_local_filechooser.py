@@ -323,7 +323,6 @@ class LocalFileChooser(Screen):
 
     def on_pre_enter(self):
         self.fully_disable_scroll()
-        Clock.schedule_once(self.enable_scroll, 1)
 
     def on_enter(self):
         
@@ -334,7 +333,7 @@ class LocalFileChooser(Screen):
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
-        # Clock.schedule_once(self.enable_scroll, 1)
+        Clock.schedule_once(self.enable_scroll, 1)
     
     
     def on_pre_leave(self):
