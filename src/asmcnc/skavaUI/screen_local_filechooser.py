@@ -334,7 +334,7 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll, 0.5)
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 0.5)
     
     
     def on_pre_leave(self):
