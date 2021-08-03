@@ -254,7 +254,7 @@ class USBFileChooser(Screen):
 
     def on_leave(self):
         print("close usb filechooser")
-        if self.sm.current == 'local_filechooser': self.sm.get_screen('local_filechooser').enable_scroll_on_enter(1)
+        self.sm.get_screen('local_filechooser').enable_scroll_on_enter(1)
 
 
     def check_for_job_cache_dir(self):
