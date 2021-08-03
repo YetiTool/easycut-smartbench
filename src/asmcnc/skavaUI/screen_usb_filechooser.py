@@ -248,7 +248,6 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
 
-    def on_pre_enter(self):
         self.sm.transition.bind(on_progress = self.fully_disable_scroll)
         self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
 

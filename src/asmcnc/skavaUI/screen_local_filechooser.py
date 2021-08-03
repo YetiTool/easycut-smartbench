@@ -325,10 +325,6 @@ class LocalFileChooser(Screen):
                 file.write('*.nc')
                 file.close()
 
-    def on_pre_enter(self):
-        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-        self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
-
 
     def on_enter(self):
         
@@ -342,6 +338,8 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
+        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
+        self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
         # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
