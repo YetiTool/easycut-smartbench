@@ -393,10 +393,11 @@ class USBFileChooser(Screen):
 
         print("Enable usb: screen: " + str(self.sm.current))
         print("Enable usb: transition: " + str(self.sm.transition.is_active))
+        print("Enable usb: animation: " + str(self.sm.transition._anim))
 
         if self.sm.current == 'usb_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
 
-            print('Enable scroll - USB')
+            print('ENABLE SCROLL - USB')
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
