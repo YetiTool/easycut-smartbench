@@ -526,9 +526,11 @@ class LocalFileChooser(Screen):
 
     def enable_scroll_on_enter(self, *args):
 
-        print('Enable scroll - local')
+        if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active):
 
-        self.list_layout_fc.ids.scrollview.do_scroll_y = True
-        self.icon_layout_fc.ids.scrollview.do_scroll_y = True
+            print('Enable scroll - local')
+
+            self.list_layout_fc.ids.scrollview.do_scroll_y = True
+            self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
         # if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
