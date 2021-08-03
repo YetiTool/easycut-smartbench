@@ -246,14 +246,15 @@ class USBFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.update_usb_status()
         self.switch_view()
-        
-        # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 10)
+
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
     def on_leave(self):
         print("close usb filechooser")
+        if self.sm.current == 'local_filechooser': self.sm.get_screen('local_filechooser').enable_scroll_on_enter(1)
+
 
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
@@ -380,9 +381,7 @@ class USBFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
-    def enable_scroll_on_enter(self, dt):
+    def enable_scroll_on_enter(self):
         print('Enable scroll - USB')
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
-
-        # Clock.unschedule(self.enable_scroll_event)

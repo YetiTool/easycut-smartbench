@@ -312,6 +312,8 @@ class LocalFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
+        self.enable_scroll_event = None
+
         self.fully_disable_scroll()
 
     def check_for_job_cache_dir(self):
@@ -335,7 +337,8 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+        if self.sm.current != 'usb_filechooser':
+            self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
     def on_pre_leave(self):
@@ -345,8 +348,7 @@ class LocalFileChooser(Screen):
     def on_leave(self):
         print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
-        self.sm.get_screen('usb_filechooser').enable_scroll_on_enter(1)
-        # if self.sm.current == 'usb_filechooser': Clock.schedule_once(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
+        if self.sm.current == 'usb_filechooser': self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
 
 
     def check_USB_status(self, dt):
@@ -522,4 +524,4 @@ class LocalFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
-        Clock.unschedule(self.enable_scroll_event)
+        if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
