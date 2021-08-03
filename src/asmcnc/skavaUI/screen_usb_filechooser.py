@@ -249,12 +249,14 @@ class USBFileChooser(Screen):
         self.switch_view()
 
     def on_pre_enter(self):
+        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
         self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
 
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
         self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
+        self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
 
     def on_leave(self):
         print("close usb filechooser")
@@ -380,7 +382,7 @@ class USBFileChooser(Screen):
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
 
-    def fully_disable_scroll(self):
+    def fully_disable_scroll(self, *args):
 
         print("Disable scroll - USB")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False

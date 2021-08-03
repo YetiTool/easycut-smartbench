@@ -326,6 +326,7 @@ class LocalFileChooser(Screen):
                 file.close()
 
     def on_pre_enter(self):
+        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
         self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
 
 
@@ -348,6 +349,7 @@ class LocalFileChooser(Screen):
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
         self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
+        self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
 
     def on_leave(self):
         print("close local filechooser")
@@ -518,13 +520,16 @@ class LocalFileChooser(Screen):
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
 
-    def fully_disable_scroll(self):
+    def fully_disable_scroll(self, *args):
 
         print("Disable scroll - local")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, *args):
+
+        print("Enable local: screen: " + str(self.sm.current))
+        print("Enable local: transition: " + str(self.sm.transition.is_active))
 
         if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active):
 
