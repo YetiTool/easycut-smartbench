@@ -28,7 +28,7 @@ Builder.load_string("""
 
     filechooser_usb:filechooser_usb
     toggle_view_button : toggle_view_button
-    toggle_sort_button: toggle_sort_button
+    sort_button: sort_button
     load_button:load_button
     image_view : image_view
     image_sort: image_sort
@@ -107,8 +107,8 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
 
-            ToggleButton:
-                id: toggle_sort_button
+            Button:
+                id: sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
@@ -118,7 +118,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         id: image_sort
-                        source: "./asmcnc/skavaUI/img/file_select_sort_down.png"
+                        source: "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -202,6 +202,14 @@ def date_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
         sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
 
+def name_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+            sorted(f for f in files if not filesystem.is_dir(f)))
+
+def name_order_sort_reverse(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+            sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
+
 class USBFileChooser(Screen):
 
 
@@ -210,6 +218,8 @@ class USBFileChooser(Screen):
 
     sort_by_date = ObjectProperty(date_order_sort)
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
+    sort_by_name = ObjectProperty(name_order_sort)
+    sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
 
     def __init__(self, **kwargs):
  
@@ -276,13 +286,21 @@ class USBFileChooser(Screen):
 
     def switch_sort(self):
 
-        if self.toggle_sort_button.state == "normal":
-            self.filechooser_usb.sort_func = self.sort_by_date_reverse
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down.png"
-
-        elif self.toggle_sort_button.state == "down":
+        if self.filechooser_usb.sort_func == self.sort_by_date_reverse:
             self.filechooser_usb.sort_func = self.sort_by_date
-            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up.png"
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
+
+        elif self.filechooser_usb.sort_func == self.sort_by_date:
+            self.filechooser_usb.sort_func = self.sort_by_name
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
+
+        elif self.filechooser_usb.sort_func == self.sort_by_name:
+            self.filechooser_usb.sort_func = self.sort_by_name_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
+
+        elif self.filechooser_usb.sort_func == self.sort_by_name_reverse:
+            self.filechooser_usb.sort_func = self.sort_by_date_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
 
         self.filechooser_usb._update_files()
 
