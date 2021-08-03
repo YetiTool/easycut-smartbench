@@ -383,10 +383,15 @@ class USBFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, dt):
-        print('Enable scroll - USB')
 
         if self.sm.current == 'usb_filechooser':
+
+            print('Enable scroll - USB')
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
             if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
+
+        else:
+
+            print('Could not enable scroll USB')
