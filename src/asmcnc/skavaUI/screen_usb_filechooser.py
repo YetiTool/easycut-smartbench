@@ -248,13 +248,17 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
 
+    def on_pre_enter(self):
+        self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
+
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
+        self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
 
     def on_leave(self):
         print("close usb filechooser")
-        self.sm.get_screen('local_filechooser').enable_scroll_on_enter(1)
+        # self.sm.get_screen('local_filechooser').enable_scroll_on_enter()
 
 
     def check_for_job_cache_dir(self):
@@ -382,16 +386,10 @@ class USBFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
-    def enable_scroll_on_enter(self, dt):
+    def enable_scroll_on_enter(self, *args):
 
-        if self.sm.current == 'usb_filechooser':
+        print('Enable scroll - USB')
+        self.list_layout_fc.ids.scrollview.do_scroll_y = True
+        self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
-            print('Enable scroll - USB')
-            self.list_layout_fc.ids.scrollview.do_scroll_y = True
-            self.icon_layout_fc.ids.scrollview.do_scroll_y = True
-
-            if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
-
-        else:
-
-            print('Could not enable scroll USB')
+        # if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
