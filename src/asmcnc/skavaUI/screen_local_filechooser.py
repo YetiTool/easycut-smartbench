@@ -348,7 +348,8 @@ class LocalFileChooser(Screen):
     def on_leave(self):
         print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
-        if self.sm.current == 'usb_filechooser': self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
+        if self.sm.current == 'usb_filechooser': 
+            self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
 
 
     def check_USB_status(self, dt):
