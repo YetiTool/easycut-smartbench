@@ -309,7 +309,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing filechooser'
+        if verbose: print 'Refreshing usb filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 
@@ -376,12 +376,12 @@ class USBFileChooser(Screen):
 
     def fully_disable_scroll(self):
 
-        print("Disable scroll")
+        print("Disable scroll - USB")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, dt):
-        print('Enable scroll')
+        print('Enable scroll - USB')
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 

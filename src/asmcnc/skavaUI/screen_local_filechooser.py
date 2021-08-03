@@ -396,6 +396,8 @@ class LocalFileChooser(Screen):
 
     def refresh_filechooser(self):
 
+        print('Refreshing local filechooser')
+
         self.filechooser._update_item_selection()
 
         try:
@@ -509,12 +511,12 @@ class LocalFileChooser(Screen):
 
     def fully_disable_scroll(self):
 
-        print("Disable scroll")
+        print("Disable scroll - local")
         self.list_layout_fc.ids.scrollview.do_scroll_y = False
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, dt):
-        print('Enable scroll')
+        print('Enable scroll - local')
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
