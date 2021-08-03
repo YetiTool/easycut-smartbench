@@ -247,7 +247,7 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
         
-        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 2)
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
