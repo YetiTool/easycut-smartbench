@@ -533,8 +533,10 @@ class LocalFileChooser(Screen):
         print("Enable local: animation: " + str(self.sm.transition._anim))
 
         if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
+
             print('ENABLE SCROLL - LOCAL')
 
+            print("Enable local inside if statement: animation: " + str(self.sm.transition._anim))
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
