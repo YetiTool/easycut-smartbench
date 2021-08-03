@@ -239,6 +239,10 @@ class USBFileChooser(Screen):
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
+    def on_pre_enter(self):
+        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
+        # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
+
     def on_enter(self):
         print("open usb filechooser")
 
@@ -248,9 +252,7 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
 
-        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-        self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
-
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
 
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
@@ -398,4 +400,4 @@ class USBFileChooser(Screen):
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
-        # if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
+            if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)

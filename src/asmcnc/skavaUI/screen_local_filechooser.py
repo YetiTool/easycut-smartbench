@@ -326,6 +326,10 @@ class LocalFileChooser(Screen):
                 file.close()
 
 
+    def on_pre_enter(self):
+        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
+        # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
+
     def on_enter(self):
         
         print("open local filechooser")
@@ -338,9 +342,7 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-        self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
-        # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
     def on_pre_leave(self):
@@ -352,8 +354,8 @@ class LocalFileChooser(Screen):
     def on_leave(self):
         print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
-        # self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
-        # self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
+        self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
+        self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
 
 
     def check_USB_status(self, dt):
@@ -536,4 +538,4 @@ class LocalFileChooser(Screen):
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
-        # if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
+            if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
