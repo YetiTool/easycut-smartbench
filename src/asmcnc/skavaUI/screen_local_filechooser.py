@@ -337,8 +337,7 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        if self.sm.current != 'usb_filechooser':
-            self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
     def on_pre_leave(self):
@@ -520,9 +519,14 @@ class LocalFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
     def enable_scroll_on_enter(self, dt):
-        print('Enable scroll - local')
-        if not self.is_filechooser_scrolling:
+        if self.sm.current == 'local_filechooser':
+
+            print('Enable scroll - local')
+
             self.list_layout_fc.ids.scrollview.do_scroll_y = True
             self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
             if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
+
+        else:
+            print('Did not enable scroll - local')
