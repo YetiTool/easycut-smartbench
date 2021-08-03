@@ -385,4 +385,4 @@ class USBFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.do_scroll_y = True
         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
 
-        Clock.unschedule(self.enable_scroll_event)
+        # Clock.unschedule(self.enable_scroll_event)
