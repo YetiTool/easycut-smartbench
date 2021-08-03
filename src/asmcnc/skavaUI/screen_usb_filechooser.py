@@ -390,6 +390,9 @@ class USBFileChooser(Screen):
 
     def enable_scroll_on_enter(self, *args):
 
+        print("Enable usb: screen: " + str(self.sm.current))
+        print("Enable usb: transition: " + str(self.sm.transition.is_active))
+
         if self.sm.current == 'usb_filechooser' and (not self.sm.transition.is_active):
 
             print('Enable scroll - USB')
