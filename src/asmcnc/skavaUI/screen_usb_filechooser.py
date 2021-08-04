@@ -361,7 +361,7 @@ class USBFileChooser(Screen):
             
             self.go_to_loading_screen(new_file_path)
 
-    def quit_to_local(self, dt):
+    def quit_to_local(self):
         self.manager.current = 'local_filechooser'
         
     def go_to_loading_screen(self, file_selection):
