@@ -442,9 +442,6 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_files()
 
-        self.alternate_update_effect_bounds_icon()
-        self.alternate_update_effect_bounds_list()
-
     
     def get_FTP_files(self):
 
