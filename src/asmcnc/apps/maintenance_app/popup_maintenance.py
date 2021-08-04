@@ -23,7 +23,7 @@ class PopupResetOffset(Widget):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = Label(size_hint_y=1.4, text_size=(380, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
         ok_button = Button(text='[b]Yes, set reference here[/b]', markup = True)
         ok_button.background_normal = ''
