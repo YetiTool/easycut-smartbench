@@ -82,7 +82,6 @@ Builder.load_string("""
             show_hidden: False
             filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
             on_selection: root.refresh_filechooser()
-            sort_func: root.sort_by_date_reverse
             FileChooserIconLayout
             FileChooserListLayout
                
@@ -194,32 +193,11 @@ job_cache_dir = './jobCache/'    # where job files are cached for selection (for
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 verbose = True
 
-def date_order_sort(files, filesystem):
-    return (sorted(f for f in files if filesystem.is_dir(f)) +
-        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = False))
-
-def date_order_sort_reverse(files, filesystem):
-    return (sorted(f for f in files if filesystem.is_dir(f)) +
-        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
-
-def name_order_sort(files, filesystem):
-    return (sorted(f for f in files if filesystem.is_dir(f)) +
-            sorted(f for f in files if not filesystem.is_dir(f)))
-
-def name_order_sort_reverse(files, filesystem):
-    return (sorted(f for f in files if filesystem.is_dir(f)) +
-            sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
-
 class USBFileChooser(Screen):
 
 
     filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
-
-    sort_by_date = ObjectProperty(date_order_sort)
-    sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
-    sort_by_name = ObjectProperty(name_order_sort)
-    sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
 
     def __init__(self, **kwargs):
  
@@ -242,6 +220,10 @@ class USBFileChooser(Screen):
         self.switch_view()
         
     def on_pre_leave(self):
+
+        self.sm.get_screen('local_filechooser').filechooser.sort_func = self.filechooser_usb.sort_func
+        self.sm.get_screen('local_filechooser').image_sort.source = self.image_sort.source
+
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
     def check_for_job_cache_dir(self):
@@ -286,20 +268,20 @@ class USBFileChooser(Screen):
 
     def switch_sort(self):
 
-        if self.filechooser_usb.sort_func == self.sort_by_date_reverse:
-            self.filechooser_usb.sort_func = self.sort_by_date
+        if self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date_reverse:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
 
-        elif self.filechooser_usb.sort_func == self.sort_by_date:
-            self.filechooser_usb.sort_func = self.sort_by_name
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
 
-        elif self.filechooser_usb.sort_func == self.sort_by_name:
-            self.filechooser_usb.sort_func = self.sort_by_name_reverse
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name_reverse
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
 
-        elif self.filechooser_usb.sort_func == self.sort_by_name_reverse:
-            self.filechooser_usb.sort_func = self.sort_by_date_reverse
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name_reverse:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date_reverse
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
 
         self.filechooser_usb._update_files()

@@ -333,7 +333,10 @@ class LocalFileChooser(Screen):
     
     
     def on_pre_leave(self):
-        
+
+        self.sm.get_screen('usb_filechooser').filechooser_usb.sort_func = self.filechooser.sort_func
+        self.sm.get_screen('usb_filechooser').image_sort.source = self.image_sort.source
+
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
 
