@@ -304,6 +304,8 @@ class LocalFileChooser(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
+    # MANAGING KIVY SCROLL BUG
+
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
@@ -342,6 +344,8 @@ class LocalFileChooser(Screen):
 
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
+
+    # SCREEN FUNCTIONS
 
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
@@ -515,12 +519,4 @@ class LocalFileChooser(Screen):
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
             self.manager.current = 'home'
-
-    def screen_change_command(self, screen_function):
-
-        # if not self.is_filechooser_scrolling:
-        #     self.fully_disable_scroll()
-        #     Clock.schedule_once(screen_function, 1)
-
-        Clock.schedule_once(screen_function, 1)
 

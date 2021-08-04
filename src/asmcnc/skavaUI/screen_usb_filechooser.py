@@ -221,6 +221,8 @@ class USBFileChooser(Screen):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
 
+    # MANAGING KIVY SCROLL BUG
+
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
@@ -259,6 +261,8 @@ class USBFileChooser(Screen):
 
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
+
+    # SCREEN FUNCTIONS
 
     def set_USB_path(self, usb_path):
 
@@ -380,12 +384,4 @@ class USBFileChooser(Screen):
         if not self.is_filechooser_scrolling:
             self.manager.get_screen('loading').loading_file_name = file_selection
             self.manager.current = 'loading'
-
-    def screen_change_command(self, screen_function):
-
-        # if not self.is_filechooser_scrolling:
-        #     self.fully_disable_scroll()
-        #     Clock.schedule_once(screen_function, 1)
-
-        Clock.schedule_once(screen_function, 1)
 
