@@ -9,7 +9,7 @@ Screen allows user to select their job for loading into easycut, either from Job
 
 import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, TransitionBase
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
@@ -156,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.screen_change_command(root.open_USB)
+                    root.open_USB()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -237,7 +237,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.screen_change_command(root.quit_to_home)
+                    root.quit_to_home()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -259,7 +259,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.screen_change_command(root.go_to_loading_screen)
+                    root.go_to_loading_screen()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -304,22 +304,14 @@ class LocalFileChooser(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
-        # self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        # self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-
-        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
-        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        # self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        # self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
 
-        # self.enable_scroll_event = None
-
-        # self.fully_disable_scroll()
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -341,7 +333,6 @@ class LocalFileChooser(Screen):
             print("Scroll failed")
 
 
-
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
@@ -351,14 +342,7 @@ class LocalFileChooser(Screen):
                 file.write('*.nc')
                 file.close()
 
-
-    # def on_pre_enter(self):
-    #     self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-    #     # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
-
     def on_enter(self):
-        
-        print("open local filechooser")
 
         self.filechooser.path = job_cache_dir  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         self.usb_stick.enable() # start the object scanning for USB stick
@@ -367,26 +351,16 @@ class LocalFileChooser(Screen):
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25) # poll status to update button           
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
-
-        # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
-    
     
     def on_pre_leave(self):
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
-        # self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
-        # self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
 
     def on_leave(self):
-        print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
-        # self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
-        # self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
-
 
     def check_USB_status(self, dt):
 
-        # if not self.is_filechooser_scrolling:
         if self.usb_stick.is_available():
             self.button_usb.disabled = False
             self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
@@ -425,15 +399,12 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_files()
 
-    def open_USB(self, dt):
-        print("Stability test")
+    def open_USB(self):
         self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
         self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
         self.manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
-
-        print('Refreshing local filechooser')
 
         self.filechooser._update_item_selection()
 
@@ -482,8 +453,7 @@ class LocalFileChooser(Screen):
                     os.remove(ftp_file_dir + file) # clean original space
 
 
-    def go_to_loading_screen(self, dt):
-        print("Stability test")
+    def go_to_loading_screen(self):
 
         file_selection = self.filechooser.selection[0]
 
@@ -530,8 +500,7 @@ class LocalFileChooser(Screen):
 
         self.refresh_filechooser()       
 
-    def quit_to_home(self, dt):
-        print("Stability test")
+    def quit_to_home(self):
         self.manager.current = 'home'
 
     def screen_change_command(self, screen_function):
@@ -542,30 +511,3 @@ class LocalFileChooser(Screen):
 
         Clock.schedule_once(screen_function, 1)
 
-    # def scrolling_start(self, *args):
-    #     self.is_filechooser_scrolling = True
-
-    # def scrolling_stop(self, *args):
-    #     self.is_filechooser_scrolling = False
-
-    # def fully_disable_scroll(self, *args):
-
-    #     print("Disable scroll - local")
-    #     self.list_layout_fc.ids.scrollview.do_scroll_y = False
-    #     self.icon_layout_fc.ids.scrollview.do_scroll_y = False
-
-    # def enable_scroll_on_enter(self, *args):
-
-    #     print("Enable local: screen: " + str(self.sm.current))
-    #     print("Enable local: transition: " + str(self.sm.transition.is_active))
-    #     print("Enable local: animation: " + str(self.sm.transition._anim))
-
-    #     if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
-
-    #         print('ENABLE SCROLL - LOCAL')
-
-    #         print("Enable local inside if statement: animation: " + str(self.sm.transition._anim))
-    #         self.list_layout_fc.ids.scrollview.do_scroll_y = True
-    #         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
-
-    #         if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)

@@ -6,7 +6,7 @@ Created on 19 Aug 2017
 
 import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
@@ -156,7 +156,7 @@ Builder.load_string("""
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
-                    root.screen_change_command(root.quit_to_local)
+                    root.quit_to_local()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
                     padding: 25
@@ -175,7 +175,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.screen_change_command(root.import_usb_file)
+                    root.import_usb_file()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -221,22 +221,14 @@ class USBFileChooser(Screen):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
 
-        # self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        # self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-
-        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
-        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        # self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        # self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
 
-        # self.fully_disable_scroll()
-
-        # self.enable_scroll_event = None
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -263,12 +255,7 @@ class USBFileChooser(Screen):
         self.filechooser_usb.rootpath = usb_path # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
         if verbose: print 'Filechooser_usb path: ' + self.filechooser_usb.path
 
-    # def on_pre_enter(self):
-    #     self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-        # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
-
     def on_enter(self):
-        print("open usb filechooser")
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
@@ -276,17 +263,8 @@ class USBFileChooser(Screen):
         self.update_usb_status()
         self.switch_view()
 
-        # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
-
     def on_pre_leave(self):
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
-        # self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
-        # self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
-
-    def on_leave(self):
-        print("close usb filechooser")
-        # self.sm.get_screen('local_filechooser').enable_scroll_on_enter()
-
 
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
@@ -367,7 +345,7 @@ class USBFileChooser(Screen):
         self.filechooser_usb._update_files()
 
      
-    def import_usb_file(self, dt):
+    def import_usb_file(self):
 
         file_selection = filechooser_usb.selection[0]
 
@@ -383,15 +361,11 @@ class USBFileChooser(Screen):
             print new_file_path
             
             self.go_to_loading_screen(new_file_path)
-        
 
     def quit_to_local(self, dt):
-        print("Stability test")
         self.manager.current = 'local_filechooser'
-
         
     def go_to_loading_screen(self, file_selection):
-        print("Stability test")
         self.manager.get_screen('loading').loading_file_name = file_selection
         self.manager.current = 'loading'
 
@@ -403,30 +377,3 @@ class USBFileChooser(Screen):
 
         Clock.schedule_once(screen_function, 1)
 
-    # def scrolling_start(self, *args):
-    #     self.is_filechooser_scrolling = True
-
-    # def scrolling_stop(self, *args):
-    #     self.is_filechooser_scrolling = False
-
-    # def fully_disable_scroll(self, *args):
-
-    #     print("Disable scroll - USB")
-    #     self.list_layout_fc.ids.scrollview.do_scroll_y = False
-    #     self.icon_layout_fc.ids.scrollview.do_scroll_y = False
-
-    # def enable_scroll_on_enter(self, *args):
-
-    #     print("Enable usb: screen: " + str(self.sm.current))
-    #     print("Enable usb: transition: " + str(self.sm.transition.is_active))
-    #     print("Enable usb: animation: " + str(self.sm.transition._anim))
-
-    #     if self.sm.current == 'usb_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
-
-    #         print('ENABLE SCROLL - USB')
-
-    #         print("Enable usb inside if statement: animation: " + str(self.sm.transition._anim))
-    #         self.list_layout_fc.ids.scrollview.do_scroll_y = True
-    #         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
-
-    #         if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
