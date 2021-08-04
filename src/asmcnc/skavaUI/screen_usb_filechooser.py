@@ -320,7 +320,6 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing usb filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 
@@ -347,7 +346,7 @@ class USBFileChooser(Screen):
      
     def import_usb_file(self):
 
-        file_selection = filechooser_usb.selection[0]
+        file_selection = self.filechooser_usb.selection[0]
 
         self.check_for_job_cache_dir()
         
