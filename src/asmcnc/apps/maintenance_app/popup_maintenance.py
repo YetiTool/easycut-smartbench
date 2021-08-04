@@ -17,7 +17,7 @@ class PopupResetOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are resetting the laser crosshair offset.\n\nPlease confirm that the tool is directly above the reference mark, and has not moved in the XY plane."
+        description = "You are RESETTING the laser crosshair offset, and setting a new REFERENCE MARK with your tool.\n\nConfirm that you have not moved the position of the tool in the X or Y axis since making your mark."
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
@@ -43,7 +43,7 @@ class PopupResetOffset(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='Reset laser crosshair offset',
+        popup = Popup(title='RESET laser crosshair offset',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
@@ -69,7 +69,7 @@ class PopupSaveOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are saving the laser crosshair offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your reference mark."
+        description = "You are SAVING the new laser crosshair offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your reference mark."
 
         def save_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
@@ -95,7 +95,7 @@ class PopupSaveOffset(Widget):
         layout_plan.add_widget(btn_layout)
         
 
-        popup = Popup(title='Save laser crosshair offset',
+        popup = Popup(title='SAVE laser crosshair offset',
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
