@@ -304,10 +304,10 @@ class LocalFileChooser(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        # self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        # self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        # self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
 
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
@@ -317,9 +317,9 @@ class LocalFileChooser(Screen):
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
 
-        self.enable_scroll_event = None
+        # self.enable_scroll_event = None
 
-        self.fully_disable_scroll()
+        # self.fully_disable_scroll()
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -352,9 +352,9 @@ class LocalFileChooser(Screen):
                 file.close()
 
 
-    def on_pre_enter(self):
-        self.sm.transition.bind(on_progress = self.fully_disable_scroll)
-        # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
+    # def on_pre_enter(self):
+    #     self.sm.transition.bind(on_progress = self.fully_disable_scroll)
+    #     # self.sm.transition.bind(on_complete = self.enable_scroll_on_enter)
 
     def on_enter(self):
         
@@ -368,40 +368,40 @@ class LocalFileChooser(Screen):
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.switch_view()
 
-        self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
+        # self.enable_scroll_event = Clock.schedule_interval(self.enable_scroll_on_enter, 1)
     
     
     def on_pre_leave(self):
         Clock.unschedule(self.poll_USB)
         if self.sm.current != 'usb_filechooser': self.usb_stick.disable()
-        self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
-        self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
+        # self.sm.transition.unbind(on_complete = self.enable_scroll_on_enter)
+        # self.sm.transition.unbind(on_progress = self.fully_disable_scroll)
 
     def on_leave(self):
         print("close local filechooser")
         self.usb_status_label.size_hint_y = 0
-        self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
-        self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
+        # self.sm.get_screen('usb_filechooser').enable_scroll_on_enter()
+        # self.sm.get_screen('usb_filechooser').enable_scroll_event = Clock.schedule_interval(self.sm.get_screen('usb_filechooser').enable_scroll_on_enter, 1)
 
 
     def check_USB_status(self, dt):
 
-        if not self.is_filechooser_scrolling:
-            if self.usb_stick.is_available():
-                self.button_usb.disabled = False
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-                self.sm.get_screen('loading').usb_status_label.opacity = 1
-                self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.canvas.before.clear()
-                with self.usb_status_label.canvas.before:
-                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-            else:
-                self.button_usb.disabled = True
-                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-                self.usb_status_label.size_hint_y = 0
-                self.sm.get_screen('loading').usb_status = None
-                self.sm.get_screen('loading').usb_status_label.opacity = 0
+        # if not self.is_filechooser_scrolling:
+        if self.usb_stick.is_available():
+            self.button_usb.disabled = False
+            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
+            self.sm.get_screen('loading').usb_status_label.opacity = 1
+            self.usb_status_label.size_hint_y = 0.7
+            self.usb_status_label.canvas.before.clear()
+            with self.usb_status_label.canvas.before:
+                Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+        else:
+            self.button_usb.disabled = True
+            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
+            self.usb_status_label.size_hint_y = 0
+            self.sm.get_screen('loading').usb_status = None
+            self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -536,34 +536,36 @@ class LocalFileChooser(Screen):
 
     def screen_change_command(self, screen_function):
 
-        if not self.is_filechooser_scrolling:
-            self.fully_disable_scroll()
-            Clock.schedule_once(screen_function, 1)
+        # if not self.is_filechooser_scrolling:
+        #     self.fully_disable_scroll()
+        #     Clock.schedule_once(screen_function, 1)
 
-    def scrolling_start(self, *args):
-        self.is_filechooser_scrolling = True
+        Clock.schedule_once(screen_function, 1)
 
-    def scrolling_stop(self, *args):
-        self.is_filechooser_scrolling = False
+    # def scrolling_start(self, *args):
+    #     self.is_filechooser_scrolling = True
 
-    def fully_disable_scroll(self, *args):
+    # def scrolling_stop(self, *args):
+    #     self.is_filechooser_scrolling = False
 
-        print("Disable scroll - local")
-        self.list_layout_fc.ids.scrollview.do_scroll_y = False
-        self.icon_layout_fc.ids.scrollview.do_scroll_y = False
+    # def fully_disable_scroll(self, *args):
 
-    def enable_scroll_on_enter(self, *args):
+    #     print("Disable scroll - local")
+    #     self.list_layout_fc.ids.scrollview.do_scroll_y = False
+    #     self.icon_layout_fc.ids.scrollview.do_scroll_y = False
 
-        print("Enable local: screen: " + str(self.sm.current))
-        print("Enable local: transition: " + str(self.sm.transition.is_active))
-        print("Enable local: animation: " + str(self.sm.transition._anim))
+    # def enable_scroll_on_enter(self, *args):
 
-        if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
+    #     print("Enable local: screen: " + str(self.sm.current))
+    #     print("Enable local: transition: " + str(self.sm.transition.is_active))
+    #     print("Enable local: animation: " + str(self.sm.transition._anim))
 
-            print('ENABLE SCROLL - LOCAL')
+    #     if self.sm.current == 'local_filechooser' and (not self.sm.transition.is_active) and (self.sm.transition._anim == None):
 
-            print("Enable local inside if statement: animation: " + str(self.sm.transition._anim))
-            self.list_layout_fc.ids.scrollview.do_scroll_y = True
-            self.icon_layout_fc.ids.scrollview.do_scroll_y = True
+    #         print('ENABLE SCROLL - LOCAL')
 
-            if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
+    #         print("Enable local inside if statement: animation: " + str(self.sm.transition._anim))
+    #         self.list_layout_fc.ids.scrollview.do_scroll_y = True
+    #         self.icon_layout_fc.ids.scrollview.do_scroll_y = True
+
+    #         if self.enable_scroll_event != None: Clock.unschedule(self.enable_scroll_event)
