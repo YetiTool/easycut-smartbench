@@ -221,8 +221,13 @@ class USBFileChooser(Screen):
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
 
-        # self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
-        # self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+
+        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
@@ -248,6 +253,12 @@ class USBFileChooser(Screen):
 
         except: 
             print("Scroll failed")
+
+    def scrolling_start(self, *args):
+        self.is_filechooser_scrolling = True
+
+    def scrolling_stop(self, *args):
+        self.is_filechooser_scrolling = False
 
     def set_USB_path(self, usb_path):
 
@@ -362,11 +373,13 @@ class USBFileChooser(Screen):
             self.go_to_loading_screen(new_file_path)
 
     def quit_to_local(self):
-        self.manager.current = 'local_filechooser'
+        if not self.is_filechooser_scrolling:
+            self.manager.current = 'local_filechooser'
         
     def go_to_loading_screen(self, file_selection):
-        self.manager.get_screen('loading').loading_file_name = file_selection
-        self.manager.current = 'loading'
+        if not self.is_filechooser_scrolling:
+            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.manager.current = 'loading'
 
     def screen_change_command(self, screen_function):
 

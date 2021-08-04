@@ -304,8 +304,13 @@ class LocalFileChooser(Screen):
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
-        # self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
-        # self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+
+        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
         self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
@@ -332,6 +337,11 @@ class LocalFileChooser(Screen):
         except: 
             print("Scroll failed")
 
+    def scrolling_start(self, *args):
+        self.is_filechooser_scrolling = True
+
+    def scrolling_stop(self, *args):
+        self.is_filechooser_scrolling = False
 
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
@@ -361,21 +371,22 @@ class LocalFileChooser(Screen):
 
     def check_USB_status(self, dt):
 
-        if self.usb_stick.is_available():
-            self.button_usb.disabled = False
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
-            self.sm.get_screen('loading').usb_status_label.opacity = 1
-            self.usb_status_label.size_hint_y = 0.7
-            self.usb_status_label.canvas.before.clear()
-            with self.usb_status_label.canvas.before:
-                Color(76 / 255., 175 / 255., 80 / 255., 1.)
-                Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
-        else:
-            self.button_usb.disabled = True
-            self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
-            self.usb_status_label.size_hint_y = 0
-            self.sm.get_screen('loading').usb_status = None
-            self.sm.get_screen('loading').usb_status_label.opacity = 0
+        if not self.is_filechooser_scrolling:
+            if self.usb_stick.is_available():
+                self.button_usb.disabled = False
+                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb.png'
+                self.sm.get_screen('loading').usb_status_label.opacity = 1
+                self.usb_status_label.size_hint_y = 0.7
+                self.usb_status_label.canvas.before.clear()
+                with self.usb_status_label.canvas.before:
+                    Color(76 / 255., 175 / 255., 80 / 255., 1.)
+                    Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
+            else:
+                self.button_usb.disabled = True
+                self.image_usb.source = './asmcnc/skavaUI/img/file_select_usb_disabled.png'
+                self.usb_status_label.size_hint_y = 0
+                self.sm.get_screen('loading').usb_status = None
+                self.sm.get_screen('loading').usb_status_label.opacity = 0
 
     def switch_view(self):
 
@@ -400,9 +411,10 @@ class LocalFileChooser(Screen):
         self.filechooser._update_files()
 
     def open_USB(self):
-        self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
-        self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
-        self.manager.current = 'usb_filechooser'
+        if not self.is_filechooser_scrolling:
+            self.sm.get_screen('usb_filechooser').set_USB_path(self.usb_stick.get_path())
+            self.sm.get_screen('usb_filechooser').usb_stick = self.usb_stick
+            self.manager.current = 'usb_filechooser'
 
     def refresh_filechooser(self):
 
@@ -501,7 +513,8 @@ class LocalFileChooser(Screen):
         self.refresh_filechooser()       
 
     def quit_to_home(self):
-        self.manager.current = 'home'
+        if not self.is_filechooser_scrolling:
+            self.manager.current = 'home'
 
     def screen_change_command(self, screen_function):
 
