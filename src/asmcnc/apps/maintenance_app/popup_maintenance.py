@@ -17,7 +17,7 @@ class PopupResetOffset(Widget):
         
         self.sm = screen_manager
         
-        description = "You are RESETTING the laser crosshair offset, and setting a new REFERENCE MARK with your tool.\n\nConfirm that you have not moved the position of the tool in the X or Y axis since making your mark."
+        description = "You are RESETTING the laser crosshair offset by setting a new REFERENCE MARK with your tool.\n\nConfirm that you have not moved the position of the tool in the X or Y axis since making your mark."
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
@@ -49,7 +49,7 @@ class PopupResetOffset(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(400, 360),
+                      size=(420, 380),
                       auto_dismiss= False
                       )
         
