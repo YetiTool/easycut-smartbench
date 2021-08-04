@@ -337,7 +337,7 @@ class LocalFileChooser(Screen):
             scrollview_object.effect_y.value = scrollview_object.effect_y.max * scrollview_object.scroll_y
 
         except: 
-            print("Scroll failed")
+            pass
 
     def scrolling_start(self, *args):
         self.is_filechooser_scrolling = True
