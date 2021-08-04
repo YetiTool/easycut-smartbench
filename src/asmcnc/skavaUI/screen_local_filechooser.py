@@ -312,9 +312,35 @@ class LocalFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
 
+        self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
+        self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
+        self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
+        self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
+
         self.enable_scroll_event = None
 
         self.fully_disable_scroll()
+
+    def alternate_update_effect_bounds_icon(self, *args):
+        self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
+
+    def alternate_update_effect_bounds_list(self, *args):
+        self.update_y_bounds_try_except(self.list_layout_fc.ids.scrollview)
+
+    def update_y_bounds_try_except(sefl, scrollview_object):
+
+        try:
+            if not scrollview_object._viewport or not scrollview_object.effect_y:
+                return
+            scrollable_height = scrollview_object.height - scrollview_object.viewport_size[1]
+            scrollview_object.effect_y.min = 0 if scrollable_height < 0 else scrollable_height
+            scrollview_object.effect_y.max = scrollable_height
+            scrollview_object.effect_y.value = scrollview_object.effect_y.max * scrollview_object.scroll_y
+
+        except: 
+            print("Scroll failed")
+
+
 
     def check_for_job_cache_dir(self):
         if not os.path.exists(job_cache_dir):
