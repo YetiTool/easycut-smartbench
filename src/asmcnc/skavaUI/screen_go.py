@@ -4,7 +4,7 @@ Created on 19 Aug 2017
 @author: Ed
 '''
 # config
-
+from asmcnc.comms import archie_db
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -405,6 +405,7 @@ class GoScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.job_gcode=kwargs['job']
         self.am=kwargs['app_manager']
+        self.database=kwargs['database']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
@@ -555,6 +556,8 @@ class GoScreen(Screen):
 
 
     def _start_running_job(self):
+
+        self.database.send_event(0, "Job started", "Started job: " + self.job_name_only)
 
         self.m.set_pause(False)
         self.is_job_started_already = True

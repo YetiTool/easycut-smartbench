@@ -68,19 +68,65 @@ class SQLRabbit:
                     "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,
                     "overload_peak": float(self.sm.get_screen('go').overload_peak) or ''
                 },
-                "events": {
-                    "placeholder": ""
-                },
                 "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
         ]
         
         return data
-     
-    def run(self, dt):
-        # if self.m.s.m_state != "Idle":
-        #     return 
-        try: self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
-        except Exception as e: log("Data send exception: " + str(e))
+
+    #0 - info
+    #1 - warning
+    #2 - critical
+    def send_event(self, event_severity, event_name, event_description):
+        data = [
+            {
+                "payload_type": "event",
+                "machine_info": {
+                    "hostname": socket.gethostname()
+                },
+                "event": {
+                    "severity": event_severity,
+                    "name": event_name,
+                    "description": event_description
+                },
+                "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        ]
+
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+        except Exception as e:
+            log("Event send exception: " + str(e))
+        log(str(data))
+
+    #send payload containing all data
+    def send_full_payload(self):
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
+        except Exception as e:
+            log("Data send exception: " + str(e))
         log(self.get_data())
-        
+
+    #send alive 'ping' to server
+    def send_alive(self):
+        data = [
+            {
+                "payload_type": "alive",
+                "machine_info": {
+                    "hostname": socket.gethostname()
+                },
+                "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        ]
+
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+        except Exception as e:
+            log("Data send exception: " + str(e))
+        log(data)
+
+    def run(self, dt):
+        if self.m.s.m_state == "Idle":
+            self.send_alive()
+        else:
+            self.send_full_payload()
