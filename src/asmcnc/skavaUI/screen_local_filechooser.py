@@ -529,14 +529,15 @@ class LocalFileChooser(Screen):
             for file in files_in_cache:
                 try: 
                     os.remove(job_cache_dir+file)
-                    self.filechooser.selection = []
+                    if files_in_cache.index(file) + 2 >= len(files_in_cache):
+                        self.refresh_filechooser()
 
                 except: 
                     print "attempt to delete folder, or undeletable file"
 
-        self.refresh_filechooser()       
+        self.filechooser.selection = []
+        self.refresh_filechooser()
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
             self.manager.current = 'home'
-
