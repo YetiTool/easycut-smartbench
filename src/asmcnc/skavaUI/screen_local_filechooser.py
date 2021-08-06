@@ -460,22 +460,15 @@ class LocalFileChooser(Screen):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
         self.refresh_filechooser()
 
-        def delete_files_loop():
-            self.refresh_filechooser()
-
-            try: 
-                os.remove(job_cache_dir + files_in_cache[0])
-                files_in_cache.pop(0)
-                if files_in_cache:
-                    Clock.schedule_once(lambda self: delete_files_loop(), 0.1)
-                else:
-                    self.refresh_filechooser()
-
-            except:
-                print "attempt to delete folder, or undeletable file"
-
         if files_in_cache:
-            Clock.schedule_once(lambda self: delete_files_loop(), 0.1)
+            for file in files_in_cache:
+                try: 
+                    os.remove(job_cache_dir+file)
+                    if files_in_cache.index(file) + 2 >= len(files_in_cache):
+                        self.refresh_filechooser()
+
+                except: 
+                    print "attempt to delete folder, or undeletable file"
 
         self.filechooser.selection = []
         self.refresh_filechooser()
