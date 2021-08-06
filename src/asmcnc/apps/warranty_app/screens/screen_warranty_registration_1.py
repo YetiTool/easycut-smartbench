@@ -85,7 +85,6 @@ Builder.load_string("""
 					id: minutes_label
 					size_hint_y: 0.25
 					font_size: '20sp'
-					# text: "[color=333333ff]It will only a take a few minutes.[/color]"
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
@@ -120,10 +119,21 @@ Builder.load_string("""
 
 			BoxLayout:
 				orientation: 'horizontal'
-				padding: [10, 0, 10, 10]
+				padding: [dp(10), 0, dp(10), dp(10)]
 				size_hint: (None,None)
 				width: dp(800)
 				height: dp(62)
+				spacing: dp(676)
+
+				Button:
+				    size_hint: (None,None)
+				    height: dp(52)
+				    width: dp(52)
+				    background_color: hex('##e5e5e5')
+				    background_normal: ''
+				    center: self.parent.center
+				    pos: self.parent.pos
+				    on_press: root.go_to_factory_settings()
 
                 Button:
                     size_hint: (None,None)
@@ -159,9 +169,6 @@ Builder.load_string("""
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_console()
-		
-
-
 """)
 
 class WarrantyScreen1(Screen):
@@ -194,6 +201,8 @@ class WarrantyScreen1(Screen):
 		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
 		self.next_button.text = self.l.get_str("Next") + "..."
 
+	def go_to_factory_settings(self):
+		popup_warranty.PopupFactorySettingsPassword(self.wm.am)
 	
 
 

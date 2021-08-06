@@ -28,7 +28,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
+        padding: [70, 40]
         spacing: 70
         size_hint_x: 1
 
@@ -66,9 +66,11 @@ Builder.load_string("""
                             allow_stretch: True
                     
             Label: 
-                size_hint_y: 0.2
+                size_hint_y: 0.4
                 text: root.jobdone_text
+                text_size: self.size
                 markup: True
+                halign: "center"
                 font_size: '20sp' 
                 valign: 'top'
                 

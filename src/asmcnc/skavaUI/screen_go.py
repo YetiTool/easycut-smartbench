@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_info # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -46,6 +46,8 @@ Builder.load_string("""
     overload_status_label:overload_status_label
     spindle_overload_container:spindle_overload_container
     spindle_widgets: spindle_widgets
+    speed_override_container: speed_override_container
+    override_and_progress_container: override_and_progress_container
 
     feed_label : feed_label
     rate_label : rate_label
@@ -207,6 +209,7 @@ Builder.load_string("""
     
 
                         BoxLayout:
+                            id: speed_override_container
                             orientation: 'vertical'
                             padding: 10
                             spacing: 10
@@ -251,7 +254,7 @@ Builder.load_string("""
                                     color: hex('#808080ff')
 
                             BoxLayout:
-                                id: speed_override_container
+                                id: speed_override_widget_container
                                 padding: 0
                                 size_hint_y: 9
                                 canvas:
@@ -379,6 +382,7 @@ class GoScreen(Screen):
     start_or_pause_button_image = ObjectProperty()
 
     show_spindle_overload = False
+    spindle_speed_showing = True
 
     is_job_started_already = False
     temp_suppress_prompts = False
@@ -423,7 +427,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
 
         # show overload status if running precision pro
-        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True):
+        if ((str(self.m.serial_number())).endswith('03') or self.show_spindle_overload == True) and self.m.stylus_router_choice != 'stylus':
             self.update_overload_label(self.m.s.overload_state)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
@@ -438,6 +442,24 @@ class GoScreen(Screen):
             self.spindle_overload_container.padding = 0
             self.spindle_overload_container.spacing = 0
             self.spindle_widgets.spacing = 0
+
+
+        # Hide/show spindle speed depending on if stylus is chosen
+        if self.m.stylus_router_choice != 'stylus' and self.spindle_speed_showing == False:
+            self.override_and_progress_container.add_widget(self.speed_override_container, index = 1)
+            self.spindle_speed_showing = True
+
+        elif self.m.stylus_router_choice == 'stylus' and self.spindle_speed_showing == True:
+            self.override_and_progress_container.remove_widget(self.speed_override_container)
+            self.spindle_speed_showing = False
+
+
+        # Show stylus or router graphic depending on choice
+        if self.m.stylus_router_choice == 'stylus':
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit_stylus.png'
+        else:
+            self.z_height_container.children[0].z_bit.source = './asmcnc/skavaUI/img/zBit.png'
+
 
         self.loop_for_job_progress = Clock.schedule_interval(self.poll_for_job_progress, 1)  # then poll repeatedly
         self.loop_for_feeds_and_speeds = Clock.schedule_interval(self.poll_for_feeds_and_speeds, 0.2)  # then poll repeatedly
@@ -583,7 +605,7 @@ class GoScreen(Screen):
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
         # Turn vac on if spindle gets turned on during job
-        if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0):
+        if ((str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
             modified_job_gcode.extend(self.job_gcode)
@@ -592,16 +614,27 @@ class GoScreen(Screen):
         else:
             modified_job_gcode.extend(self.job_gcode)
 
+
         # Spindle command?? 
         if self.lift_z_on_job_pause and self.m.fw_can_operate_zUp_on_pause():  # extra 'and' as precaution
             modified_job_gcode.append("M56 P0")  #append cleaned up gcode to object
         
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
-            culprits = ['M30', 'M2']
+            if self.m.stylus_router_choice == 'router':
+                culprits = ['M30', 'M2', 'M00']
+            else:
+                culprits = ['M30', 'M2', 'M00', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')
+
+            if self.m.stylus_router_choice == 'stylus':
+                if 'M3' in line:
+                    line = ''
+                if 'M03' in line:
+                    line = ''
+
             if line in culprits:
                 line = ''
 
@@ -716,10 +749,3 @@ class GoScreen(Screen):
 
         if len(value.text) > 12:
             value.font_size = '11px'
-
-
-
-
-        
-        
-        

@@ -10,14 +10,12 @@ from asmcnc.skavaUI import widget_status_bar
 
 # Kivy UI builder:
 Builder.load_string("""
-
 <AlarmScreen3>:
-
 	status_container : status_container
 	description_label : description_label
 	next_button : next_button
-
 	camera_img : camera_img
+	next_button : next_button
 	# usb_img : usb_img
 
 	BoxLayout: 
@@ -25,22 +23,18 @@ Builder.load_string("""
 		width: dp(800)
 		height: dp(480)
 		orientation: 'vertical'
-
 		canvas:
 			Color:
 				rgba: [1,1,1,1]
 			Rectangle:
 				size: self.size
 				pos: self.pos
-
 		BoxLayout:
 			id: status_container 
 			size_hint_y: 0.08
-
 		BoxLayout:
 			size_hint_y: 0.92
 			orientation: 'vertical'
-
 			BoxLayout: 
 				orientation: 'vertical'
 				padding: [20,10]
@@ -53,7 +47,6 @@ Builder.load_string("""
 					valign: 'top'
 					text_size: self.size
 					size: self.size
-
 			# Buttons
 			BoxLayout: 
 				padding: [10,0,10,10]
@@ -61,7 +54,6 @@ Builder.load_string("""
 				height: dp(142)
 				width: dp(800)
 				orientation: 'horizontal'
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
@@ -85,7 +77,6 @@ Builder.load_string("""
 								y: self.parent.y
 								size: self.parent.width, self.parent.height
 								allow_stretch: True
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
@@ -106,13 +97,11 @@ Builder.load_string("""
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
-
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(132)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
-
 	FloatLayout:
         Image:
         	id: camera_img
@@ -122,7 +111,7 @@ Builder.load_string("""
             height: 100
             width: 120
             allow_stretch: True
-
+            opacity: 1
 	# FloatLayout:
  #        Image:
  #        	id: usb_img
@@ -136,6 +125,8 @@ Builder.load_string("""
 
 class AlarmScreen3(Screen):
 
+	for_support = True
+
 	def __init__(self, **kwargs):
 		super(AlarmScreen3, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
@@ -148,11 +139,28 @@ class AlarmScreen3(Screen):
 		self.next_button.text = self.a.l.get_str("Next") + "..."
 		# self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
-	def on_enter(self):
-		self.a.download_alarm_report()
+	def on_pre_enter(self):
+
+		if self.for_support:
+			self.next_button.text = "Next..."
+			self.camera_img.opacity = 1
+			self.a.download_alarm_report()
+
+		else:
+			self.next_button.text = "Get support"
+			self.camera_img.opacity = 0
+
 
 	def next_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.for_support:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = 'alarm_2'
+
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_2'
+		if self.for_support:
+			self.a.sm.current = 'alarm_2'
+		else:
+			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
+			self.a.sm.current = 'alarm_5'

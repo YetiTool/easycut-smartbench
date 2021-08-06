@@ -22,10 +22,11 @@ Builder.load_string("""
     button_download_logs: button_download_logs
     button_reboot: button_reboot
     button_exit_software: button_exit_software
+    button_usb_first_aid: button_usb_first_aid
     button_beta_testing: button_beta_testing
     button_grbl_settings: button_grbl_settings
     button_factory: button_factory
-    button_update_testing: button_update_testing
+    # button_update_testing: button_update_testing
     button_developer: button_developer
     button_go_back: button_go_back
 
@@ -53,10 +54,10 @@ Builder.load_string("""
             font_size: root.default_font_size
             text_size: self.size
 			on_press: root.go_to_build_info()
-            background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            border: [dp(25)]*4
-            padding_y: 5
+			background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+			border: [dp(25)]*4
+			padding_y: 5
 
 		Button:
             id: button_download_logs
@@ -101,6 +102,20 @@ Builder.load_string("""
             padding_y: 5
 
 		Button:
+			id: button_usb_first_aid
+			text: 'USB First Aid'
+			on_press: root.usb_first_aid()
+			valign: "bottom"
+			halign: "center"
+			markup: True
+			font_size: root.default_font_size
+			text_size: self.size
+			background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+			background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+			border: [dp(25)]*4
+			padding_y: 5
+
+		Button:
             id: button_beta_testing
 			text: 'Beta Testing'
 			on_press: root.beta_testing()
@@ -142,24 +157,26 @@ Builder.load_string("""
             border: [dp(25)]*4
             padding_y: 5
 
-        Button:
-            id: button_update_testing
-            text: 'Update Testing'
-            on_press: root.update_testing()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-            border: [dp(25)]*4
-            padding_y: 5
+        # Button:
+        #     id: button_update_testing
+        #     text: 'Update Testing'
+        #     on_press: root.update_testing()
+        #     valign: "bottom"
+        #     halign: "center"
+        #     markup: True
+        #     font_size: root.default_font_size
+        #     text_size: self.size
+        #     background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+        #     background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+        #     border: [dp(25)]*4
+        #     padding_y: 5
+
 
 		Button:
             id: button_developer
 			text: 'Developer'
 			on_press: root.developer()
+
             valign: "bottom"
             halign: "center"
             markup: True
@@ -190,7 +207,6 @@ class SystemMenuScreen(Screen):
 
     default_font_size = 16
 
-
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -201,22 +217,22 @@ class SystemMenuScreen(Screen):
         self.button_download_logs,
         self.button_reboot,
         self.button_exit_software,
+        self.button_usb_first_aid,
         self.button_beta_testing,
         self.button_grbl_settings,
         self.button_factory,
-        self.button_update_testing,
+        # self.button_update_testing,
         self.button_developer,
         self.button_go_back
         ]
 
         self.update_strings()
 
+	def go_back(self):
+		self.systemtools_sm.exit_app()
 
-    def go_back(self):
-    	self.systemtools_sm.exit_app()
-
-    def go_to_build_info(self):
-    	self.systemtools_sm.open_build_info_screen()
+	def go_to_build_info(self):
+		self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
@@ -227,6 +243,9 @@ class SystemMenuScreen(Screen):
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
 
+	def usb_first_aid(self):
+		self.systemtools_sm.do_usb_first_aid()
+
     def beta_testing(self):
         popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
 
@@ -236,8 +255,8 @@ class SystemMenuScreen(Screen):
     def factory_settings(self):
     	popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
 
-    def update_testing(self):
-        popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
+    # def update_testing(self):
+    #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
 
     def developer(self):
     	popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
@@ -247,10 +266,11 @@ class SystemMenuScreen(Screen):
         self.button_download_logs.text = self.l.get_str('Download Logs')
         self.button_reboot.text = self.l.get_str('Reboot')
         self.button_exit_software.text = self.l.get_str('Exit Software')
+        self.button_usb_first_aid.text = self.l.get_str('USB First Aid')
         self.button_beta_testing.text = self.l.get_str('Beta Testing')
         self.button_grbl_settings.text = self.l.get_str('GRBL Settings')
         self.button_factory.text = self.l.get_str('Factory')
-        self.button_update_testing.text = self.l.get_str('Update Testing')
+        # self.button_update_testing.text = self.l.get_str('Update Testing')
         self.button_developer.text = self.l.get_str('Developer')
         self.button_go_back.text = self.l.get_str('Go Back')
 

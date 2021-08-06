@@ -33,6 +33,7 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import server_connection
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
@@ -65,13 +66,14 @@ from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 
 
 # developer testing
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.5.4'
+initial_version = 'v1.7.2'
 
 # default starting screen
 start_screen = 'welcome'
@@ -138,6 +140,9 @@ class SkavaUI(App):
 
         else: 
 
+            # Server connection object
+            sc = server_connection.ServerConnection()
+
             # Initialise settings object
             sett = settings_manager.Settings(sm)
 
@@ -145,6 +150,7 @@ class SkavaUI(App):
             m = router_machine.RouterMachine(Cmport, sm, sett, l)
             
             job_gcode = []  # declare g-code object
+
             
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett, l)      
@@ -161,6 +167,7 @@ class SkavaUI(App):
             checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode, localization = l)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, localization = l)
             serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport, localization = l)
+            homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
             safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m, localization = l)
             mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m, localization = l)
             boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
@@ -175,6 +182,7 @@ class SkavaUI(App):
             spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m, localization = l)
             stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, localization = l)
             lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
+            tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m)
 
 
         if start_screen == 'pc_alert': 
@@ -191,6 +199,7 @@ class SkavaUI(App):
             sm.add_widget(checking_screen)
             sm.add_widget(error_screen)
             sm.add_widget(serial_screen)
+            sm.add_widget(homing_screen)
             sm.add_widget(safety_screen)
             sm.add_widget(mstate_screen)
             sm.add_widget(boundary_warning_screen)
@@ -206,6 +215,7 @@ class SkavaUI(App):
             sm.add_widget(spindle_cooldown_screen)
             sm.add_widget(stop_or_resume_decision_screen)
             sm.add_widget(lift_z_on_pause_decision_screen)
+            sm.add_widget(tool_selection_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 

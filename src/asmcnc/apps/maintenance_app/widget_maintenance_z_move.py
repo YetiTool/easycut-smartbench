@@ -170,6 +170,7 @@ class MaintenanceZMove(Widget):
         if self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'free': self.m.quit_jog()
         elif self.sm.get_screen('maintenance').xy_move_widget.jogMode == 'job': self.m.quit_jog()
 
+<<<<<<< HEAD
     def get_info(self): # localize me!
 
         info = (
@@ -187,3 +188,13 @@ class MaintenanceZMove(Widget):
                 )
 
         popup_info.PopupInfo(self.sm, self.l, 700, info)   
+=======
+    def get_info(self):
+        info = "[b]To set, if laser hardware is fitted:[/b]\n\n" + \
+                "1. Enable laser crosshair (switch to [b]on[/b]).\n\n" + \
+                "2. On a test piece, cut a mark using manual moves.\n\n" + \
+                "3. Lift head and press the [b]reset[/b] button in the bottom left.\n\n" + \
+                "4. Move the Z head so that the crosshair lines up with the mark centre.\n\n" + \
+                "5. Press [b]save[/b]."
+        popup_info.PopupInfo(self.sm, 700, info)   
+>>>>>>> master

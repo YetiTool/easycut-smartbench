@@ -277,7 +277,10 @@ class BetaTestingScreen(Screen):
 
     def checkout_branch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':       
-            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + str(self.user_branch.text))
+            # Strip whitespace
+            branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
+
+            os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
             os.system("git pull")
             self.systemtools_sm.sm.current = 'rebooting'
 

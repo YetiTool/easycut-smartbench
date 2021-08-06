@@ -9,9 +9,7 @@ from kivy.clock import Clock
 
 # Kivy UI builder:
 Builder.load_string("""
-
 <AlarmScreen1>:
-
 	alarm_title : alarm_title
 	icon_container : icon_container
 	icon : icon
@@ -24,7 +22,6 @@ Builder.load_string("""
 		Rectangle: 
 			size: self.size
 			pos: self.pos
-
 	BoxLayout:
 		orientation: 'vertical'
 		padding: 0
@@ -32,7 +29,6 @@ Builder.load_string("""
 		size_hint: (None, None)
 		height: dp(480)
 		width: dp(800)
-
 		# Alarm header
 		BoxLayout: 
 			padding: [15,0,15,0]
@@ -41,7 +37,6 @@ Builder.load_string("""
 			height: dp(50)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			Label:
 				id: alarm_title
 				size_hint: (None, None)
@@ -52,7 +47,6 @@ Builder.load_string("""
 				height: dp(50)
 				width: dp(770)
 				text_size: self.size
-
 		# Red underline
 		BoxLayout: 
 			padding: [10,0,10,0]
@@ -67,7 +61,6 @@ Builder.load_string("""
 				y: self.parent.y
 				size: self.parent.width, self.parent.height
 				allow_stretch: True
-
 		# Image and text
 		BoxLayout: 
 			padding: [0,35,0,0]
@@ -76,8 +69,6 @@ Builder.load_string("""
 			height: dp(283)
 			width: dp(800)
 			orientation: 'vertical'
-
-
 			BoxLayout: 
 				id: icon_container
 				padding: [335,0,0,0]
@@ -93,8 +84,6 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(130)
 					width: dp(130)
-
-
 			BoxLayout:
 				id: description container
 				padding: [30,0,30,0]
@@ -111,7 +100,6 @@ Builder.load_string("""
 					valign: 'middle'
 					text_size: self.size
 					size: self.parent.size
-
 		# Buttons
 		BoxLayout: 
 			padding: [10,0,10,10]
@@ -119,7 +107,6 @@ Builder.load_string("""
 			height: dp(142)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -146,13 +133,11 @@ Builder.load_string("""
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-
 """)
 
 class AlarmScreen1(Screen):
@@ -166,7 +151,11 @@ class AlarmScreen1(Screen):
 		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
-		self.a.sm.current = 'alarm_2'
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_2'
+		else:
+			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
+			self.a.sm.current = 'alarm_5'
 
 	def prev_screen(self):
 		self.a.sm.current = 'alarm_1'

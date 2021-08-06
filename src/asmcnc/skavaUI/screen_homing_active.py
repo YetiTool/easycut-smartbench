@@ -164,10 +164,23 @@ class HomingScreenActive(Screen):
                         '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
                         ]
             self.m.s.start_sequential_stream(grbl_settings)
-            
-            # allow breather for sequential scream to process
-            Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
-            Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
+
+            Clock.schedule_once(lambda dt: self.post_homing_sequence(), 1)
+
+
+    def post_homing_sequence(self):
+
+        # If laser is enabled, move by offset
+        if self.m.is_laser_enabled:
+
+            tolerance = 5 # mm
+
+            print("Jog absolute: " + str(float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value))
+            self.m.jog_absolute_single_axis('X', float(self.m.x_min_jog_abs_limit) + tolerance - self.m.laser_offset_x_value, 3000)
+
+        # allow breather for sequential stream to process
+        Clock.schedule_once(lambda dt: self.after_successful_completion_return_to_screen(),1)
+        Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"),1)
 
 
     def after_successful_completion_return_to_screen(self):

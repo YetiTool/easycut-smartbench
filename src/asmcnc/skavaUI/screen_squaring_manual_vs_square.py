@@ -105,7 +105,6 @@ Builder.load_string("""
                 id: no_button
                 size_hint_x: 1
                 on_press: root.already_square()
-                # text: 'No, I manually squared already'
                 valign: "middle"
                 halign: "center"
                 markup: True
@@ -162,20 +161,22 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         super(SquaringScreenDecisionManualVsSquare, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.l=kwargs['localization']
-    
+        self.l=kwargs['localization']    
         self.update_strings()
 
-    
+    def on_pre_enter(self):
+
+        if self.m.is_machine_completed_the_initial_squaring_decision:
+            # self.already_square_button.source = "./asmcnc/skavaUI/img/squaring_btn_still_square.png"
+            self.no_button.text = self.l.get_str("No, SmartBench is still square")
+
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
         self.proceed_to_next_screen()
 
-
     def needs_auto_squaring(self):
         self.m.is_squaring_XY_needed_after_homing = True
         self.proceed_to_next_screen()
-
 
     def proceed_to_next_screen(self):
         self.sm.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen

@@ -156,6 +156,9 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
+
+
+
         if self.sm.get_screen('home').job_gcode ==[]:
             info = (
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
@@ -190,12 +193,20 @@ class QuickCommands(Widget):
             self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
             self.sm.get_screen('go').return_to_screen = 'home'
             self.sm.get_screen('go').cancel_to_screen = 'home'
-            
-            # is fw capable of auto Z lift?
-            if self.m.fw_can_operate_zUp_on_pause():
-                self.sm.current = 'lift_z_on_pause_or_not'
+
+            # Check if stylus option is enabled
+            if self.m.is_stylus_enabled == True:
+                # Display tool selection screen
+                self.sm.current = 'tool_selection'
+
             else:
-                self.sm.current = 'jobstart_warning'
+                self.m.stylus_router_choice = 'router'
+                
+                # is fw capable of auto Z lift?
+                if self.m.fw_can_operate_zUp_on_pause():
+                    self.sm.current = 'lift_z_on_pause_or_not'
+                else:
+                    self.sm.current = 'jobstart_warning'
 
         
     def is_job_within_bounds(self):

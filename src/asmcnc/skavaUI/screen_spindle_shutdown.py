@@ -40,7 +40,6 @@ Builder.load_string("""
         Label:
             id: pausing_label
             size_hint_y: 1
-            text: '[color=333333]SmartBench is pausing the spindle motor.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -52,7 +51,6 @@ Builder.load_string("""
         Label:
             id: label_wait
             size_hint_y: 1
-            text: '[color=333333]Please wait.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -106,10 +104,15 @@ class SpindleShutdownScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-    
-        self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
         self.label_wait.text = self.l.get_str('Please wait') + '.'
-    
+
+    def on_pre_enter(self):
+        if self.m.stylus_router_choice == 'router':
+            self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
+
+        elif self.m.stylus_router_choice == 'stylus':
+            self.pausing_label.text = self.l.get_str('SmartBench is raising the Z axis.')
+
     def on_enter(self):
 
         log('Pausing job...')

@@ -67,6 +67,7 @@ Builder.load_string("""
         tab_pos: 'top_left'
         tab_height: dp(90)
         tab_width: dp(142)
+        on_touch_down: root.on_tab_switch()
 
 
         # LASER DATUM SETTINGS
@@ -118,13 +119,21 @@ Builder.load_string("""
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
+<<<<<<< HEAD
                                 font_size: dp(26)
+=======
+                                font_size: dp(24)
+>>>>>>> master
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
+<<<<<<< HEAD
+=======
+                                text: "[b]LASER[/b]"
+>>>>>>> master
 
                             BoxLayout:
                                 size_hint: (None,None)
@@ -563,6 +572,11 @@ class MaintenanceScreenClass(Screen):
             string_digital = 'manual'
             self.spindle_settings_widget.spindle_cooldown_speed.disabled = True
 
+        if self.m.is_stylus_enabled:
+            self.spindle_settings_widget.stylus_switch.active = True
+        else:
+            self.spindle_settings_widget.stylus_switch.active = False
+
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
@@ -587,6 +601,10 @@ class MaintenanceScreenClass(Screen):
 
     def on_pre_leave(self):
 
+        # Save button disabled upon exiting app
+        self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+        self.laser_datum_buttons_widget.save_button.disabled = True
+
         # LASER DATUM
         self.m.write_z_head_laser_offset_values(self.m.is_laser_enabled, self.m.laser_offset_x_value, self.m.laser_offset_y_value)
 
@@ -595,8 +613,16 @@ class MaintenanceScreenClass(Screen):
 
         self.m.laser_off()
 
+<<<<<<< HEAD
     def update_strings(self):
 
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
+=======
+    def on_tab_switch(self):
+        # Save button disabled upon switching tabs
+        if self.tab_panel.current_tab != self.laser_tab:
+            self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
+            self.laser_datum_buttons_widget.save_button.disabled = True
+>>>>>>> master

@@ -9,21 +9,18 @@ from kivy.clock import Clock
 
 # Kivy UI builder:
 Builder.load_string("""
-
 <AlarmScreen5>:
-
 	alarm_title : alarm_title
 	icon_container : icon_container
 	icon : icon
 	description_label : description_label
-
+	next_button : next_button
 	canvas:
 		Color: 
 			rgba: [1, 1, 1, 1]
 		Rectangle: 
 			size: self.size
 			pos: self.pos
-
 	BoxLayout:
 		orientation: 'vertical'
 		padding: 0
@@ -31,7 +28,6 @@ Builder.load_string("""
 		size_hint: (None, None)
 		height: dp(480)
 		width: dp(800)
-
 		# Alarm header
 		BoxLayout: 
 			padding: [15,0,15,0]
@@ -40,7 +36,6 @@ Builder.load_string("""
 			height: dp(50)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			Label:
 				id: alarm_title
 				size_hint: (None, None)
@@ -51,8 +46,6 @@ Builder.load_string("""
 				height: dp(50)
 				width: dp(770)
 				text_size: self.size
-
-
 		# Red underline
 		BoxLayout: 
 			padding: [10,0,10,0]
@@ -67,7 +60,6 @@ Builder.load_string("""
 				y: self.parent.y
 				size: self.parent.width, self.parent.height
 				allow_stretch: True
-
 		# Image and text
 		BoxLayout: 
 			padding: [0,35,0,0]
@@ -76,8 +68,6 @@ Builder.load_string("""
 			height: dp(283)
 			width: dp(800)
 			orientation: 'vertical'
-
-
 			BoxLayout: 
 				id: icon_container
 				padding: [335,0,0,0]
@@ -94,8 +84,6 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(130)
 					width: dp(130)
-
-
 			BoxLayout:
 				id: description container
 				padding: [30,0,30,0]
@@ -112,7 +100,6 @@ Builder.load_string("""
 					valign: 'middle'
 					text_size: self.size
 					size: self.parent.size
-
 		# Buttons
 		BoxLayout: 
 			padding: [10,0,10,10]
@@ -120,7 +107,6 @@ Builder.load_string("""
 			height: dp(142)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -144,12 +130,27 @@ Builder.load_string("""
 							y: self.parent.y
 							size: self.parent.width, self.parent.height
 							allow_stretch: True
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
 				width: dp(291)
 				padding: [0,0,0,52]
+				Button:
+					id: next_button
+					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+					background_down: "./asmcnc/apps/warranty_app/img/next.png"
+					border: [dp(14.5)]*4
+					size_hint: (None,None)
+					width: dp(291)
+					height: dp(79)
+					on_press: root.more_info()
+					text: 'More info'
+					font_size: '30sp'
+					color: hex('#f9f9f9ff')
+					markup: True
+					center: self.parent.center
+					pos: self.parent.pos
+					opacity: 0
 
 			BoxLayout: 
 				size_hint: (None, None)
@@ -177,6 +178,8 @@ Builder.load_string("""
 """)
 
 class AlarmScreen5(Screen):
+
+	return_to_screen = 'alarm_1'
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
@@ -186,8 +189,28 @@ class AlarmScreen5(Screen):
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
 
+	def on_pre_enter(self):
+
+		if self.a.support_sequence:
+			self.next_button.opacity = 0
+			self.next_button.disabled = True
+		else:
+			if self.return_to_screen == 'alarm_1':
+				self.next_button.opacity = 1
+				self.next_button.disabled = False
+			else: 
+				self.next_button.opacity = 0
+				self.next_button.disabled = True	
+
 	def next_screen(self):
 		self.a.exit_sequence()
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_4'
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_4'
+		else:
+			self.a.sm.current = self.return_to_screen
+
+	def more_info(self):
+		self.a.sm.get_screen('alarm_3').for_support = False
+		self.a.sm.current = 'alarm_3'

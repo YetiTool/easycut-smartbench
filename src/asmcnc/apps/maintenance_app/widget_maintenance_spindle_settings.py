@@ -28,18 +28,22 @@ Builder.load_string("""
     spindle_brand: spindle_brand
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
+<<<<<<< HEAD
 
     seconds_label : seconds_label
+=======
+    stylus_switch: stylus_switch
+>>>>>>> master
     
     GridLayout:
         cols: 2
-        rows: 3
+        rows: 4
         size_hint: (None, None)
         height: dp(280)
         width: dp(580)
         cols_minimum: {0: dp(160), 1: dp(400)}
-        rows_minimum: {0: dp(70), 1: dp(70), 2: dp(70)}
-        spacing: [dp(20), dp(17.5)]
+        rows_minimum: {0: dp(40), 1: dp(40), 2: dp(40), 3: dp(40)}
+        spacing: [dp(0), dp(5)]
 
 
         # ROW 1
@@ -47,9 +51,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(60)
             width: dp(160)
-            padding: [dp(48), dp(16), dp(48), dp(16)]
+            padding: [dp(65), dp(3), dp(41), dp(3)]
 
             Image:
                 id: spindle_image
@@ -62,14 +66,14 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(50)
             width: dp(400)
             padding: [dp(0), dp(5), dp(20), dp(5)]
             spacing: dp(10)
 	        TextInput:
 	            id: spindle_cooldown_speed
 	            size_hint: (None, None)
-	            height: dp(60)
+	            height: dp(50)
 	            width: dp(250)
                 font_size: dp(30)
                 valign: "bottom"
@@ -93,9 +97,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(60)
             width: dp(160)
-            padding: [dp(53), dp(3), dp(53), dp(3)]
+            padding: [dp(65), dp(3), dp(41), dp(3)]
 
             Image:
                 id: countdown_image
@@ -108,14 +112,14 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(50)
             width: dp(400)
             padding: [dp(0), dp(5), dp(20), dp(5)]
             spacing: dp(10)
             TextInput:
                 id: spindle_cooldown_time
                 size_hint: (None, None)
-                height: dp(60)
+                height: dp(50)
                 width: dp(250)
                 font_size: dp(30)
                 valign: "bottom"
@@ -139,9 +143,9 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70) # 62 high image
+            height: dp(60)
             width: dp(160)
-            padding: [dp(51), 4, dp(51), 4] # 15 padding
+            padding: [dp(56), dp(5), dp(40), dp(5)] # 15 padding
 
             Image:
                 id: spindle_image
@@ -154,7 +158,7 @@ Builder.load_string("""
         BoxLayout: 
             size_hint: (None, None)
             # pos: self.parent.pos
-            height: dp(70)
+            height: dp(50)
             width: dp(400)
             padding: [dp(0), dp(5), dp(20), dp(5)]
             Spinner:
@@ -163,7 +167,7 @@ Builder.load_string("""
                 valign: 'middle'
                 markup: True
                 size_hint: (None, None)
-                size: 380, 60
+                size: 380, 50
                 text: 'spinner'
                 font_size: '30sp'
                 text_size: self.size
@@ -174,6 +178,36 @@ Builder.load_string("""
                 background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
                 on_text: root.autofill_rpm_time()
                 # background_color: [1,1,1,0]
+
+        # ROW 4
+
+        BoxLayout: 
+            size_hint: (None, None)
+            # pos: self.parent.pos
+            height: dp(60)
+            width: dp(160)
+            padding: [dp(56), dp(3), dp(40), dp(3)]
+
+            Image:
+                id: stylus_image
+                source: "./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png"
+                center_x: self.parent.center_x
+                y: self.parent.y
+                size: self.parent.width, self.parent.height
+                allow_stretch: True
+
+        BoxLayout:
+            size_hint: (None, None)
+            pos: self.parent.pos
+            height: dp(60)
+            width: dp(90)
+            Switch:
+                id: stylus_switch
+                background_color: [0,0,0,0]
+                center_x: self.parent.center_x
+                y: self.parent.y
+                pos: self.parent.pos
+
 
 
 """)

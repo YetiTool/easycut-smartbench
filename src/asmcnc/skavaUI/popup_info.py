@@ -94,7 +94,7 @@ class PopupDatum(Widget):
       yes_string = self.l.get_bold('Yes')
       no_string = self.l.get_bold('No')
       # chk_message = "         Use laser datum?"
-      chk_message = self.l.get_str('Use laser datum?')
+      chk_message = self.l.get_str('Use laser crosshair?')
 
       def on_checkbox_active(checkbox, value):
         if value: 
