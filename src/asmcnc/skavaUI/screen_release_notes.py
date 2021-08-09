@@ -44,19 +44,25 @@ Builder.load_string("""
         orientation: 'vertical'
 
         BoxLayout:
-            size_hint_y: 0.15
+            size_hint_y: 0.25
             orientation: 'vertical'
-            Label:
-                id: version_number_label
-                font_size: '30sp'
-                color: hex('#000000')
+            BoxLayout:
+                orientation: 'horizontal'
+                Image:
+                    size_hint_x: 0.1
+                    source: "./asmcnc/skavaUI/img/green_tick.png"
+                Label:
+                    id: version_number_label
+                    font_size: '30sp'
+                    color: hex('#000000')
+                    text_size: self.size
             Label:
                 text: 'These release notes contain critical information about how SmartBench has changed (in English).'
                 color: hex('#474747')
                 font_size: '18sp'
 
         BoxLayout:
-            padding: [dp(20), dp(20), dp(20), dp(0)]
+            padding: [dp(20), dp(5), dp(20), dp(0)]
             spacing: dp(15)
 
             ScrollReleaseNotes:
