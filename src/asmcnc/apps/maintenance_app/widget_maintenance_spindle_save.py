@@ -81,14 +81,13 @@ class SpindleSaveWidget(Widget):
 
     def get_info(self):
 
-<<<<<<< HEAD
         spindle_settings_info = (
                 self.l.get_bold("Spindle cooldown") + \
-                "\n" + \
+                "[b]: [/b]" + \
                 self.l.get_str("The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime.") + \
                 " " + \
                 self.l.get_str("We recommend the following cooldown settings:") + \
-                "\n\n" + \
+                "\n" + \
                 "       " + \
                 self.l.get_str("Yeti: 20,000 RPM; 10 seconds") + \
                 "\n" + \
@@ -96,26 +95,17 @@ class SpindleSaveWidget(Widget):
                 self.l.get_str("AMB: 10,000 RPM; 30 seconds") + \
                 "\n\n" + \
                 self.l.get_bold("Spindle brand") + \
-                "\n" + \
+                "[b]: [/b]" + \
                 self.l.get_str("SmartBench will operate slightly differently depending on the type of spindle you are using.") + \
                 " " + \
-                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.")
+                self.l.get_str("It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.") + \
+                "\n\n" + \
+                self.l.get_bold("CNC Stylus switch") + \
+                "[b]: [/b]" + \
+                self.l.get_str("When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job.")
             )
 
         popup_info.PopupInfo(self.sm, self.l, 750, spindle_settings_info)
-=======
-        spindle_settings_info = "[b]Spindle cooldown:[/b] The spindle needs to cool down after a job to prevent it from overheating, and to extend its lifetime. " + \
-        "We recommend the following cooldown settings:\n" + \
-        "       Yeti: 20,000 RPM; 10 seconds\n" + \
-        "       AMB: 10,000 RPM; 30 seconds\n\n" + \
-        "[b]Spindle brand:[/b] " + \
-        "SmartBench will operate slightly differently depending on the type of spindle you are using. " + \
-        "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle.\n\n" + \
-        "[b]CNC Stylus switch:[/b] " + \
-        "When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job."
-
-        popup_info.PopupInfo(self.sm, 750, spindle_settings_info)
->>>>>>> master
 
     def save(self):
 
@@ -204,15 +194,9 @@ class SpindleSaveWidget(Widget):
             popup_info.PopupError(self.sm, self.l, speed_validation_error)
             return
 
-
-<<<<<<< HEAD
-        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed):
+        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
-=======
-        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
-            popup_info.PopupMiniInfo(self.sm,"Settings saved!")
->>>>>>> master
 
         else:
             warning_message = (

@@ -147,6 +147,7 @@ Builder.load_string("""
                                         allow_stretch: True
 
                     BoxLayout:
+                        id: override_and_progress_container
                         orientation: 'horizontal'
                         size_hint_y: 0.7
                         padding: 00

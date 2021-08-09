@@ -28,12 +28,9 @@ Builder.load_string("""
     spindle_brand: spindle_brand
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
-<<<<<<< HEAD
-
     seconds_label : seconds_label
-=======
     stylus_switch: stylus_switch
->>>>>>> master
+
     
     GridLayout:
         cols: 2

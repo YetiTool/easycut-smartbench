@@ -119,21 +119,14 @@ Builder.load_string("""
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-<<<<<<< HEAD
                                 font_size: dp(26)
-=======
-                                font_size: dp(24)
->>>>>>> master
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
                                 text_size: self.size
                                 size: self.parent.size
                                 pos: self.parent.pos
-<<<<<<< HEAD
-=======
                                 text: "[b]LASER[/b]"
->>>>>>> master
 
                             BoxLayout:
                                 size_hint: (None,None)
@@ -613,16 +606,16 @@ class MaintenanceScreenClass(Screen):
 
         self.m.laser_off()
 
-<<<<<<< HEAD
+
     def update_strings(self):
 
         self.laser_datum_label.text = self.l.get_bold("LASER")
         self.brush_monitor_label.text = self.l.get_bold("BRUSH MONITOR")
         self.spindle_cooldown_settings.text = self.l.get_bold("SPINDLE COOLDOWN SETTINGS")
-=======
+
+
     def on_tab_switch(self):
         # Save button disabled upon switching tabs
         if self.tab_panel.current_tab != self.laser_tab:
             self.laser_datum_buttons_widget.save_button_image.source = "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
             self.laser_datum_buttons_widget.save_button.disabled = True
->>>>>>> master

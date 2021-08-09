@@ -45,24 +45,24 @@ Builder.load_string("""
         cols: 5
         rows: 2
 
-		Button:
+        Button:
             id: button_system_info
-			text: 'System Info'
+            text: 'System Info'
             valign: "bottom"
             halign: "center"
             markup: True
             font_size: root.default_font_size
             text_size: self.size
-			on_press: root.go_to_build_info()
-			background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
-			background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-			border: [dp(25)]*4
-			padding_y: 5
+            on_press: root.go_to_build_info()
+            background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
+            border: [dp(25)]*4
+            padding_y: 5
 
-		Button:
+        Button:
             id: button_download_logs
-			text: 'Download Logs'
-			on_press: root.download_logs()
+            text: 'Download Logs'
+            on_press: root.download_logs()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -73,10 +73,10 @@ Builder.load_string("""
             border: [dp(25)]*4
             padding_y: 5
 
-		Button:
+        Button:
             id: button_reboot
-			text: 'Reboot'
-			on_press: root.reboot()
+            text: 'Reboot'
+            on_press: root.reboot()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -101,24 +101,24 @@ Builder.load_string("""
             border: [dp(25)]*4
             padding_y: 5
 
-		Button:
-			id: button_usb_first_aid
-			text: 'USB First Aid'
-			on_press: root.usb_first_aid()
-			valign: "bottom"
-			halign: "center"
-			markup: True
-			font_size: root.default_font_size
-			text_size: self.size
-			background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-			background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-			border: [dp(25)]*4
-			padding_y: 5
+        Button:
+            id: button_usb_first_aid
+            text: 'USB First Aid'
+            on_press: root.usb_first_aid()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
+            border: [dp(25)]*4
+            padding_y: 5
 
-		Button:
+        Button:
             id: button_beta_testing
-			text: 'Beta Testing'
-			on_press: root.beta_testing()
+            text: 'Beta Testing'
+            on_press: root.beta_testing()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -129,10 +129,10 @@ Builder.load_string("""
             border: [dp(25)]*4
             padding_y: 5
 
-		Button:
+        Button:
             id: button_grbl_settings
-			text: 'GRBL Settings'
-			on_press: root.grbl_settings()
+            text: 'GRBL Settings'
+            on_press: root.grbl_settings()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -143,10 +143,10 @@ Builder.load_string("""
             border: [dp(25)]*4
             padding_y: 5
 
-		Button:
+        Button:
             id: button_factory
-			text: 'Factory'
-			on_press: root.factory_settings()
+            text: 'Factory'
+            on_press: root.factory_settings()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -172,10 +172,10 @@ Builder.load_string("""
         #     padding_y: 5
 
 
-		Button:
+        Button:
             id: button_developer
-			text: 'Developer'
-			on_press: root.developer()
+            text: 'Developer'
+            on_press: root.developer()
 
             valign: "bottom"
             halign: "center"
@@ -228,11 +228,11 @@ class SystemMenuScreen(Screen):
 
         self.update_strings()
 
-	def go_back(self):
-		self.systemtools_sm.exit_app()
+    def go_back(self):
+        self.systemtools_sm.exit_app()
 
-	def go_to_build_info(self):
-		self.systemtools_sm.open_build_info_screen()
+    def go_to_build_info(self):
+        self.systemtools_sm.open_build_info_screen()
 
     def download_logs(self):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
@@ -243,23 +243,23 @@ class SystemMenuScreen(Screen):
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
 
-	def usb_first_aid(self):
-		self.systemtools_sm.do_usb_first_aid()
+    def usb_first_aid(self):
+        self.systemtools_sm.do_usb_first_aid()
 
     def beta_testing(self):
         popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
 
     def grbl_settings(self):
-    	popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
+        popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
 
     def factory_settings(self):
-    	popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
+        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
 
     # def update_testing(self):
     #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
 
     def developer(self):
-    	popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
+        popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
 
     def update_strings(self):
         self.button_system_info.text = self.l.get_str('System Info')

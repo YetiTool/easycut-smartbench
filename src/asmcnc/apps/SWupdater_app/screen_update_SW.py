@@ -419,55 +419,41 @@ class SWUpdateScreen(Screen):
 
                         else:
                             if self.wifi_image.source != self.wifi_on:
-                                refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                                refresh_error_message = (
+                                    self.l.get_str('Could not refresh version!') + \
+                                    '\n\n' + \
+                                    self.l.get_str('Please check the file on your USB stick.')
+                                    )
                                 popup_info.PopupError(self.sm, refresh_error_message)
                     else:
                         if self.wifi_image.source != self.wifi_on:
-<<<<<<< HEAD
                             refresh_error_message = (
-                                self.l.get_str('Could not refresh version!') + \
-                                '\n\n' + \
-                                self.l.get_str('Please check the file on your USB stick.')
-                                )
-                            popup_info.PopupError(self.sm, self.l, refresh_error_message)
-                else:
-                    if self.wifi_image.source != self.wifi_on:
-                        refresh_error_message = (
-                            self.l.get_str('Could not refresh version!')
-                            +'\n\n' + \
-                            self.l.get_str('Please check the file on your USB stick.')
-                            )
-                        popup_info.PopupError(self.sm, self.l, refresh_error_message)
-
-                try: self.set.clear_remote_repo(dir_path_name)
-                except: pass
-=======
-                            refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                                    self.l.get_str('Could not refresh version!') + \
+                                    '\n\n' + \
+                                    self.l.get_str('Please check the file on your USB stick.')
+                                    )
                             popup_info.PopupError(self.sm, refresh_error_message)
 
                     try: self.set.clear_remote_repo(dir_path_name)
                     except: pass
->>>>>>> master
 
                 if self.wifi_image.source == self.wifi_on:
                     self.set.refresh_latest_sw_version()
 
-<<<<<<< HEAD
-            if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
-                refresh_error_message = (
-                    self.l.get_str('Could not refresh version!')
-                    +'\n\n' + \
-                    self.l.get_str('Please check your connection.')
-                    )
-                popup_info.PopupError(self.sm, self.l, refresh_error_message)
-=======
                 if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
-                    refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
+                    refresh_error_message = (
+                            self.l.get_str('Could not refresh version!') + \
+                            '\n\n' + \
+                            self.l.get_str('Please check your connection.')
+                            )
                     popup_info.PopupError(self.sm, refresh_error_message)
             except:
-                refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
+                refresh_error_message = (
+                        self.l.get_str('Could not refresh version!') + \
+                        '\n\n' + \
+                        self.l.get_str('Please check your connection.')
+                        )
                 popup_info.PopupError(self.sm, refresh_error_message)
->>>>>>> master
 
             self.update_screen_with_latest_version()
 
@@ -475,27 +461,17 @@ class SWUpdateScreen(Screen):
 
 
     def update_screen_with_latest_version(self):
-<<<<<<< HEAD
-        if self.set.latest_sw_version != '':    
-            self.latest_software_version_label.text = (
-                self.l.get_bold('New version available') + \
-                '[b]: ' + self.set.latest_sw_version + '[/b]'
-                )
-        elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = self.l.get_bold('No WiFi or USB!')
-        else:
-            self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
-=======
+
         if self.set.latest_sw_version != '':
             if self.set.latest_sw_version != self.set.sw_version:
-                self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
+                self.latest_software_version_label.text = (
+                    self.l.get_bold('New version available') + \
+                    '[b]: ' + self.set.latest_sw_version + '[/b]'
+                    )
             else: 
-                self.latest_software_version_label.text = '[b]You are up to date![/b]'
+                self.latest_software_version_label.text = self.l.get_bold('You are up to date!')
         else:
-            self.latest_software_version_label.text = '[b]Could not fetch version! Connection issue.[/b]'
- 
-    def on_enter(self):
->>>>>>> master
+            self.latest_software_version_label.text = self.l.get_bold('No WiFi or USB!')
 
 
     def prep_for_sw_update_over_wifi(self):
@@ -561,16 +537,10 @@ class SWUpdateScreen(Screen):
             elif outcome == "Software already up to date!":
                 description = self.l.get_str("Software already up to date!")
                 popup_info.PopupError(self.sm, self.l, description)
-                
-<<<<<<< HEAD
-            elif outcome == "Could not resolve host: github.com":
+
+            elif "Could not resolve host: github.com" in outcome:
                 description = self.l.get_str("Could not connect to github. Please check that your connection is stable, or try again later.")
                 popup_info.PopupError(self.sm, self.l, description)
-=======
-            elif "Could not resolve host: github.com" in outcome:
-                description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, description)
->>>>>>> master
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
@@ -597,10 +567,9 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-<<<<<<< HEAD
 
                     description = (
-                        self.l.get_str("It was not possible to back up the software safely, please try again later.") + \
+                        self.l.get_str("It was not possible to backup the software safely, please check your connection and try again later.") + \
                         "\n\n" + \
                         self.l.get_str("If this issue persists, please contact Yeti Tool Ltd for support.")
                         )
@@ -617,15 +586,6 @@ class SWUpdateScreen(Screen):
                 )
 
                 popup_info.PopupError(self.sm, self.l, description)
-=======
-                    description = "It was not possible to backup the software safely, please check your connection and try again later.\n\n" + \
-                    "If this issue persists, please contact Yeti Tool Ltd for support."
-                    popup_info.PopupError(self.sm, description)           
-            else: 
-                description = "No WiFi connection!\n\nYou MUST have a stable wifi connection to repair your software.\n\n" + \
-                "Please try again later."
-                popup_info.PopupError(self.sm, description)
->>>>>>> master
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 

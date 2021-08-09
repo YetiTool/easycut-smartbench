@@ -17,34 +17,24 @@ class PopupResetOffset(Widget):
         
         self.sm = screen_manager
         self.l = localization
-        
-<<<<<<< HEAD
+
         description = (
-                self.l.get_str("You are resetting the laser datum offset.") + \
+                self.l.get_str("You are RESETTING the laser crosshair offset by setting a new REFERENCE MARK with your tool.") + \
                 "\n\n" + \
-                self.l.get_str("Please confirm that this is where you have made a reference mark with the spindle.")
+                self.l.get_str("Confirm that you have not moved the position of the tool in the X or Y axis since making your mark.")
             )
 
-        reset_laser_datum_offset_string = self.l.get_str('Reset laser datum offset')
-        yes_string = self.l.get_bold("Yes, set reference")
+        reset_laser_datum_offset_string = self.l.get_str('RESET laser crosshair offset')
+        yes_string = self.l.get_bold("Yes, set reference here")
         no_string = self.l.get_bold("No, go back")
-=======
-        description = "You are RESETTING the laser crosshair offset by setting a new REFERENCE MARK with your tool.\n\nConfirm that you have not moved the position of the tool in the X or Y axis since making your mark."
->>>>>>> master
 
         def reset_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-<<<<<<< HEAD
         label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
         
         ok_button = Button(text=yes_string, markup = True)
-=======
-        label = Label(size_hint_y=1.4, text_size=(380, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
-        
-        ok_button = Button(text='[b]Yes, set reference here[/b]', markup = True)
->>>>>>> master
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button = Button(text=no_string, markup = True)
@@ -60,23 +50,14 @@ class PopupResetOffset(Widget):
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
-        
 
-<<<<<<< HEAD
         popup = Popup(title=reset_laser_datum_offset_string,
-=======
-        popup = Popup(title='RESET laser crosshair offset',
->>>>>>> master
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-<<<<<<< HEAD
-                      size=(500, 360),
-=======
-                      size=(420, 380),
->>>>>>> master
+                      size=(500, 380),
                       auto_dismiss= False
                       )
         
@@ -96,20 +77,16 @@ class PopupSaveOffset(Widget):
         
         self.sm = screen_manager
         self.l = localization
-        
-<<<<<<< HEAD
+
         description = (
-                self.l.get_str("You are saving the laser datum offset.") + \
+                self.l.get_str("You are SAVING the new laser crosshair offset.") + \
                 "\n\n" + \
                 self.l.get_str("Please confirm that the laser crosshair lines up with the centre of your reference mark.")
             )
 
-        save_laser_datum_offset_string = self.l.get_str('Save laser datum offset')
+        save_laser_datum_offset_string = self.l.get_str('SAVE laser crosshair offset')
         yes_string = self.l.get_bold("Yes, set offset")
         no_string = self.l.get_bold("No, go back")
-=======
-        description = "You are SAVING the new laser crosshair offset.\n\nPlease confirm that the laser crosshair lines up with the centre of your reference mark."
->>>>>>> master
 
         def save_laser_datum_offset(*args):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
@@ -133,13 +110,8 @@ class PopupSaveOffset(Widget):
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
-        
 
-<<<<<<< HEAD
         popup = Popup(title=save_laser_datum_offset_string,
-=======
-        popup = Popup(title='SAVE laser crosshair offset',
->>>>>>> master
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',
