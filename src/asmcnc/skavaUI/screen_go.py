@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
@@ -623,9 +624,9 @@ class GoScreen(Screen):
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
             if self.m.stylus_router_choice == 'router':
-                culprits = ['M30', 'M2', 'M00']
+                culprits = ['M30', 'M2']
             else:
-                culprits = ['M30', 'M2', 'M00', 'AE']
+                culprits = ['M30', 'M2', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')
