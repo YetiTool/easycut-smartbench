@@ -74,31 +74,96 @@ class SerialConnection(object):
             self.sm.get_screen('serialScreen').error_description = serial_error
             self.sm.current = 'serialScreen'
 
+
+    def is_port_SmartBench(self, available_port):
+
+        try: 
+            log("Try to connect to: " + available_port)
+            # set up connection
+            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+            # reopen port, just in case its been in use somewhere else
+            self.s.close()
+            self.s.open()
+            # serial object needs time to make the connection before we can do anything else
+            time.sleep(1)
+
+            try:
+                # flush input and soft-reset: this will trigger the GRBL welcome message
+                self.s.flushInput()
+                self.s.write("\x18")
+                # give it a second to reply
+                time.sleep(1)
+                first_bytes = self.s.inWaiting()
+                log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
+
+                if first_bytes:
+
+                    # Read in first input and log it
+                    def strip_and_log(input_string):
+                        new_string = input_string.strip()
+                        log(new_string)
+                        return new_string
+
+                    stripped_input = map(strip_and_log, self.s.readlines())
+
+                    # Is this device a SmartBench? 
+                    if any('SmartBench' in ele for ele in stripped_input):
+                        # Found SmartBench! 
+                        SmartBench_port = available_port
+                        return SmartBench_port
+
+                    else:
+                        self.s.close()
+                else:
+                    self.s.close()
+
+            except:
+                log("Could not communicate with that port at all")
+
+        except: 
+            log("Wow definitely not that port")
+
+        return ''
+
+
     def establish_connection(self, win_port):
 
         log('Start to establish connection...')
         SmartBench_port = ''
 
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
+        # No idea if this works yet - needs testing on a windows computer!
         if sys.platform == "win32":
-            try:
-                self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
-                self.suppress_error_screens = True
-            except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+            self.suppress_error_screens = True
+
+            port_list = [port for port in serial.tools.list_ports.comports() if port[2] != 'n/a']
+
+            print("Windows port list: ") # for debugging
+            print port_list
+
+            for comport in port_list:
+                SmartBench_port = self.is_port_SmartBench(comport)
+                if SmartBench_port: break
+                
+            if not SmartBench_port: 
+                log("No arduino connected")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
-            try:
-                filesForDevice = listdir('/dev/') # put all device files into list[]
-                for line in filesForDevice: # run through all files
-                    if (line.startswith('tty.usbmodem')): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                        SmartBench_port = devicePort
-            except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+
+            filesForDevice = listdir('/dev/') # put all device files into list[]
+            for line in filesForDevice:
+                if line.startswith('tty.usbmodem'): # look for... 
+
+                    print("Mac port to try: ") # for debugging
+                    print line
+
+                    SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
+                    if SmartBench_port: break
+
+            if not SmartBench_port: 
+                log("No arduino connected")
 
         else:
             try:
@@ -117,53 +182,8 @@ class SerialConnection(object):
 
                 # set up serial connection with first (most preferred) available port
                 for available_port in list_of_available_ports:
-
-                    try: 
-                        log("Try to connect to: " + available_port)
-                        # set up connection
-                        self.s = serial.Serial('/dev/' + str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-
-                        # reopen port, just in case its been in use somewhere else
-                        self.s.close()
-                        self.s.open()
-                        # serial object needs time to make the connection before we can do anything else
-                        time.sleep(1)
-
-                        try:
-                            # flush input and soft-reset: this will trigger the GRBL welcome message
-                            self.s.flushInput()
-                            self.s.write("\x18")
-                            # give it a second to reply
-                            time.sleep(1)
-                            first_bytes = self.s.inWaiting()
-                            log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
-
-
-                            if first_bytes:
-
-                                # Read in first input and log it
-                                def strip_and_log(input_string):
-                                    new_string = input_string.strip()
-                                    log(new_string)
-                                    return new_string
-
-                                stripped_input = map(strip_and_log, self.s.readlines())
-
-                                # Is this device a SmartBench? 
-                                if any('SmartBench' in ele for ele in stripped_input):
-                                    # Found SmartBench! 
-                                    SmartBench_port = available_port
-                                    break
-
-                                else:
-                                    self.s.close()
-                            else:
-                                self.s.close()
-                        except:
-                            log("Could not communicate with that port at all")
-
-                    except: 
-                        log("Wow definitely not that port")
+                    SmartBench_port = self.is_port_SmartBench('/dev/' + str(available_port))
+                    if SmartBench_port: break
 
                 # If all else fails, try to connect to ttyS or ttyAMA port anyway
                 if SmartBench_port == '':
