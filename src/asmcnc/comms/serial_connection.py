@@ -14,7 +14,7 @@ from __builtin__ import True
 # Config.set('graphics', 'maxfps', '30')
 # Config.write()
 
-import serial, sys, time, string, threading
+import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
