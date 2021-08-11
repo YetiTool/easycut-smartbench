@@ -53,7 +53,7 @@ Builder.load_string("""
                 text: "..."
                 color: hex('1976d2ff')
                 markup: True
-                font_size: '100sp'   
+                font_size: '120sp'   
                 valign: 'middle'
                 halign: 'center'
 
