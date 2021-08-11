@@ -149,7 +149,7 @@ class AlarmScreen3(Screen):
 
         else:
             self.next_button.text = self.a.l.get_str("Get support")
-            self.update_font_size(self.next_button.text)
+            self.update_font_size(self.next_button)
             self.camera_img.opacity = 0
 
 
