@@ -92,7 +92,7 @@ Builder.load_string("""
 						height: dp(79)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '30sp'
+						font_size: root.default_font_size()
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -126,6 +126,7 @@ Builder.load_string("""
 class AlarmScreen3(Screen):
 
 	for_support = True
+	default_font_size = '30sp'
 
 	def __init__(self, **kwargs):
 		super(AlarmScreen3, self).__init__(**kwargs)
@@ -148,6 +149,7 @@ class AlarmScreen3(Screen):
 
 		else:
 			self.next_button.text = self.a.l.get_str("Get support")
+			self.update_font_size(self.next_button.text)
 			self.camera_img.opacity = 0
 
 
@@ -164,3 +166,14 @@ class AlarmScreen3(Screen):
 		else:
 			self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
 			self.a.sm.current = 'alarm_5'
+
+
+    def update_font_size(self, value):
+        if len(value.text) < 12:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 15: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 20: 
+            value.font_size = self.default_font_size - 4
+        if len(value.text) > 22: 
+            value.font_size = self.default_font_size - 5
