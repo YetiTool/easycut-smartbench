@@ -82,7 +82,7 @@ Builder.load_string("""
 
             Button:
                 text: 'Next...'
-                font_size: '25sp'
+                font_size: '30sp'
                 background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                 on_press: root.switch_screen()
 
