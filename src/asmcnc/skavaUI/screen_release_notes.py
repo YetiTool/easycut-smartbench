@@ -21,7 +21,7 @@ Builder.load_string("""
     RstDocument:
         id: release_notes
         base_font_size: 30
-        underline_color: '333333'
+        underline_color: 'e5e5e5'
         colors: root.color_dict
 
 <ReleaseNotesScreen>:
