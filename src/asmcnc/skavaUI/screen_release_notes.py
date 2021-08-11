@@ -20,7 +20,7 @@ Builder.load_string("""
 
     Label:
         id: text_container
-        color: hex('#474747')
+        color: hex('#333333')
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
@@ -35,13 +35,14 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: hex('#e5e5e5')
         Rectangle: 
             size: self.size
             pos: self.pos
 
     BoxLayout:
         orientation: 'vertical'
+        padding: [dp(0), dp(5), dp(0), dp(0)]
 
         BoxLayout:
             size_hint_y: 0.25
@@ -54,11 +55,11 @@ Builder.load_string("""
                 Label:
                     id: version_number_label
                     font_size: '30sp'
-                    color: hex('#000000')
+                    color: hex('#333333')
                     text_size: self.size
             Label:
                 text: 'These release notes contain critical information about how SmartBench has changed (in English).'
-                color: hex('#474747')
+                color: hex('#333333')
                 font_size: '18sp'
 
         BoxLayout:
@@ -72,10 +73,10 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_x: 0.3
                 Image:
-                    source: "./asmcnc/skavaUI/img/qr_release_notes.png"
+                    source: "./asmcnc/skavaUI/img/qr_release_notes_grey.png"
                 Label:
                     id: url_label
-                    color: hex('#848484')
+                    color: hex('#333333')
                     font_size: '13sp'
 
         BoxLayout:
@@ -83,17 +84,10 @@ Builder.load_string("""
             size_hint_y: 0.25
 
             Button:
-                text: 'NEXT'
+                text: 'Next...'
                 font_size: '25sp'
-                background_color: 0,0,0,0
+                background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                 on_press: root.switch_screen()
-
-                canvas.before:
-                    Color:
-                        rgba: hex('#1976d2ff')
-                    RoundedRectangle:
-                        size: self.size
-                        pos: self.pos
 
 """)
 

@@ -14,7 +14,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: hex('#e5e5e5')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -22,7 +22,7 @@ Builder.load_string("""
     Label:
         text: 'Please restart SmartBench now.'
         font_size: '40sp'
-        color: hex('#000000')
+        color: hex('#333333')
 
     BoxLayout:
         valign: 'bottom'
@@ -30,7 +30,7 @@ Builder.load_string("""
         padding: dp(30)
 
         Button:
-            size: dp(100), dp(80)
+            size: dp(80), dp(70) # Slightly bigger than image size, but image is tiny and I think slightly bigger looks fine
             size_hint: None, None
             background_color: 0,0,0,0
             on_press: root.switch_screen()
@@ -39,7 +39,7 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
-                    source: "./asmcnc/skavaUI/img/back_arrow.png"
+                    source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
                     center_x: self.parent.center_x
                     y: self.parent.y
                     size: self.parent.width, self.parent.height

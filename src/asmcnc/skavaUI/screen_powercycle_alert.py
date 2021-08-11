@@ -21,7 +21,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: hex('#e5e5e5')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -40,7 +40,7 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.5
                 text: "Finishing install... please wait"
-                color: hex('#000000')
+                color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
@@ -61,7 +61,7 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.5
                 text: "DO NOT POWER OFF SMARTBENCH"
-                color: hex('#000000')
+                color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
