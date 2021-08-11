@@ -142,12 +142,12 @@ class AlarmScreen3(Screen):
 	def on_pre_enter(self):
 
 		if self.for_support:
-			self.next_button.text = "Next..."
+			self.next_button.text = self.a.l.get_str("Next") + "..."
 			self.camera_img.opacity = 1
 			self.a.download_alarm_report()
 
 		else:
-			self.next_button.text = "Get support"
+			self.next_button.text = self.a.l.get_str("Get support")
 			self.camera_img.opacity = 0
 
 
