@@ -144,6 +144,7 @@ class AlarmScreen3(Screen):
 
         if self.for_support:
             self.next_button.text = self.a.l.get_str("Next") + "..."
+            self.update_font_size(self.next_button)
             self.camera_img.opacity = 1
             self.a.download_alarm_report()
 

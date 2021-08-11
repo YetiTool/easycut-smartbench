@@ -188,14 +188,10 @@ class AlarmScreen5(Screen):
 		self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
 		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
-		# self.next_button.text = self.a.l.get_str("More info")
-		# self.update_font_size(self.next_button)
-
-	def on_pre_enter(self):
-
-		# for testing
 		self.next_button.text = self.a.l.get_str("More info")
 		self.update_font_size(self.next_button)
+
+	def on_pre_enter(self):
 
 		if self.a.support_sequence:
 			self.next_button.opacity = 0
