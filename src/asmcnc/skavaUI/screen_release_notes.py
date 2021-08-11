@@ -25,9 +25,6 @@ Builder.load_string("""
         underline_color: 'e5e5e5'
         colors: root.color_dict
 
-    RstListBullet:
-        text: "•"
-
 <ReleaseNotesScreen>:
 
     version_number_label: version_number_label
