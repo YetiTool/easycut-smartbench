@@ -8,7 +8,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, DictProperty
 
 from datetime import datetime
 
@@ -16,16 +16,13 @@ Builder.load_string("""
 
 <ScrollReleaseNotes>:
 
-    text_container: text_container
+    release_notes: release_notes
 
-    Label:
-        id: text_container
-        color: hex('#333333')
-        size_hint_y: None
-        height: self.texture_size[1]
-        text_size: self.width, None
-        font_size: '20sp'
-        markup: True
+    RstDocument:
+        id: release_notes
+        base_font_size: 30
+        underline_color: '333333'
+        colors: root.color_dict
 
 <ReleaseNotesScreen>:
 
@@ -105,6 +102,13 @@ def filter_version_to_filename(character):
 class ScrollReleaseNotes(ScrollView):
     text = StringProperty('')
 
+    color_dict = DictProperty({
+                    'background': 'e5e5e5ff',
+                    'link': 'ce5c00ff',
+                    'paragraph': '333333ff',
+                    'title': '333333ff',
+                    'bullet': '333333ff'})
+
 class ReleaseNotesScreen(Screen):
 
     def __init__(self, **kwargs):
@@ -115,23 +119,11 @@ class ReleaseNotesScreen(Screen):
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         self.release_notes_filename = '../' + filter(filter_version_to_filename, self.version) + '.txt'
+        self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
         self.version_number_label.text = 'Console software updated successfully to ' + self.version
-        self.scroll_release_notes.effect_cls = kivy.effects.scroll.ScrollEffect
-
-        self.read_release_notes()
 
         self.url_label.text = 'To learn more about these\nrelease notes, go to:\nhttps://www.yetitool.com\n/SUPPORT/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes'
-
-    def read_release_notes(self):
-        try:
-            file = open(self.release_notes_filename, 'r')
-            self.release_notes = str(file.read())
-            file.close()
-
-            self.scroll_release_notes.text_container.text = self.release_notes
-        except:
-            log("Unable to read in release notes")
 
     def switch_screen(self):
         self.sm.current = 'restart_smartbench'
