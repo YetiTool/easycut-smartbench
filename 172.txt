@@ -1,6 +1,6 @@
 New features
 
-- Choose between Router and CNC Stylus at the start of your job. You can disable the choice in the Spindle settings part of the Maintenance app.
+• Choose between Router and CNC Stylus at the start of your job. You can disable the choice in the Spindle settings part of the Maintenance app.
 
 - Sort job files by name or date in the PRO filechooser. 
 
