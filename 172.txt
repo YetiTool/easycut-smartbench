@@ -12,12 +12,12 @@ New features
 UI Improvements
 ================
 
+**Homing with the laser enabled**
+
+We have changed the position that SmartBench goes to after homing if the laser crosshair is enabled. SmartBench will now move itself as close to home as it can whilst still having enough space to move if you set SmartBench’s working datum using the laser crosshair. 
+
 **Auto-square any time**
 
-- We have changed the position that SmartBench goes to after homing if the laser crosshair is enabled. SmartBench will now move itself as close to home as it can whilst still having enough space to move if you set SmartBench’s working datum using the laser crosshair. 
-
-**Auto-square any time**
-
-- Up until now, you have only been able to auto-square SmartBench on start-up. You can now home SmartBench at any time with auto-squaring.
+Up until now, you have only been able to auto-square SmartBench on start-up. You can now home SmartBench at any time with auto-squaring.
 
 .. _bottom:
