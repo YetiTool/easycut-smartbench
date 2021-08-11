@@ -54,7 +54,7 @@ Builder.load_string("""
                 color: hex('1976d2ff')
                 markup: True
                 font_size: '200sp'   
-                valign: 'middle'
+                valign: 'bottom'
                 halign: 'center'
 
             Label:
