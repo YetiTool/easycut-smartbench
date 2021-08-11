@@ -92,7 +92,7 @@ Builder.load_string("""
                         height: dp(79)
                         on_press: root.next_screen()
                         text: 'Next...'
-                        font_size: root.default_font_size()
+                        font_size: root.default_font_size
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
