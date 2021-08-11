@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 6 Aug 2021
 @author: Dennis
@@ -23,6 +24,9 @@ Builder.load_string("""
         base_font_size: 30
         underline_color: 'e5e5e5'
         colors: root.color_dict
+
+    RstListBullet:
+        text: "•"
 
 <ReleaseNotesScreen>:
 
@@ -85,6 +89,7 @@ Builder.load_string("""
                 font_size: '30sp'
                 background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                 on_press: root.switch_screen()
+                color: hex('f9f9f9ff')
 
 """)
 
