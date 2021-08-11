@@ -126,7 +126,7 @@ Builder.load_string("""
 class AlarmScreen3(Screen):
 
     for_support = True
-    default_font_size = '30sp'
+    default_font_size = 30
 
     def __init__(self, **kwargs):
         super(AlarmScreen3, self).__init__(**kwargs)
