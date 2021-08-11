@@ -22,8 +22,7 @@ We have changed the position that SmartBench goes to after homing if the laser c
 
 Up until now, you have only been able to auto-square SmartBench on start-up. You can now home SmartBench at any time with auto-squaring.
 
---------------------------
 
-Find full release notes on our website, by scanning the QR code on the right.
+**Find full release notes on our website, by scanning the QR code on the right.**
 
 .. _bottom:
