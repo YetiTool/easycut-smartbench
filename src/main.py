@@ -65,6 +65,8 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
+from asmcnc.skavaUI import screen_release_notes # @UnresolvedImport
+from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
 
 # developer testing
@@ -132,6 +134,8 @@ class SkavaUI(App):
 
         if start_screen == 'pc_alert': 
             powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
+            release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, version = initial_version)
+            restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
 
         else: 
 
@@ -181,6 +185,8 @@ class SkavaUI(App):
 
         if start_screen == 'pc_alert': 
             sm.add_widget(powercycle_screen)
+            sm.add_widget(release_notes_screen)
+            sm.add_widget(restart_smartbench_screen)
         else:
             # add the screens to screen manager
             sm.add_widget(lobby_screen)

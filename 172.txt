@@ -1,3 +1,28 @@
-whoa, hey there human! 
+.. _top:
 
-made this one just for you ;)
+New features
+================
+
+**Stylus or Router**
+
+Choose between **Router** and **CNC Stylus** at the start of your job. You can disable the choice in the Spindle settings part of the Maintenance app.
+
+**Filechooser sort**
+
+Sort job files by name or date in the PRO filechooser.
+
+UI Improvements
+================
+
+**Homing with the laser enabled**
+
+We have changed the position that SmartBench goes to after homing if the laser crosshair is enabled. SmartBench will now move itself as close to home as it can, whilst still having enough space to move if you set SmartBench’s working datum using the laser crosshair. 
+
+**Auto-square any time**
+
+Up until now, you have only been able to auto-square SmartBench on start-up. You can now home SmartBench at any time with auto-squaring.
+
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
