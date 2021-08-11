@@ -78,7 +78,7 @@ Builder.load_string("""
 
         BoxLayout:
             padding: [dp(250), dp(10)]
-            size_hint_y: 0.25
+            size_hint_y: 0.3
 
             Button:
                 text: 'Next...'
