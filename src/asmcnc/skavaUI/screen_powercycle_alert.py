@@ -51,7 +51,7 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.5
                 text: "..."
-                color: hex('#000000')
+                color: hex('1976d2ff')
                 markup: True
                 font_size: '100sp'   
                 valign: 'middle'
