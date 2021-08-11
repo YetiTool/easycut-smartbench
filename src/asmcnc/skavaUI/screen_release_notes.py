@@ -120,7 +120,7 @@ class ReleaseNotesScreen(Screen):
 
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
-        self.release_notes_filename = '../' + filter(filter_version_to_filename, self.version) + '.txt'
+        self.release_notes_filename = '../' + (self.version).strip('.') + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
         self.version_number_label.text = 'Console software updated successfully to ' + self.version
