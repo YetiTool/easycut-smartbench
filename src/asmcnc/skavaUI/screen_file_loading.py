@@ -440,9 +440,14 @@ class LoadingScreen(Screen):
         job_box.range_x[1] = self.gcode_preview_widget.max_x
         job_box.range_y[0] = self.gcode_preview_widget.min_y
         job_box.range_y[1] = self.gcode_preview_widget.max_y
-        job_box.range_z[0] = self.gcode_preview_widget.min_z
-        job_box.range_z[1] = self.gcode_preview_widget.max_z
-        
+
+        if [self.gcode_preview_widget.min_z, self.gcode_preview_widget.max_z] == [999999, -999999]:
+            job_box.range_z[0] = 0
+            job_box.range_z[1] = 0
+        else:
+            job_box.range_z[0] = self.gcode_preview_widget.min_z
+            job_box.range_z[1] = self.gcode_preview_widget.max_z
+
         self.sm.get_screen('home').job_box = job_box
 
         # non_modal_gcode also used for file preview in home screen
