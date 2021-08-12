@@ -81,6 +81,7 @@ Builder.load_string("""
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/router_option.png"
                 padding_y: 30
+                color: hex('#333333')
 
 
 
