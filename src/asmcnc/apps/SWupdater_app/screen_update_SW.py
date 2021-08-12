@@ -82,7 +82,7 @@ Builder.load_string("""
                         height: dp(100)
                         width: dp(375)
                         Image:
-                            size_hint_x: 0.3
+                            size_hint_x: 0.35
                             source: "./asmcnc/skavaUI/img/qr_release_notes.png"
                         BoxLayout:
                             orientation: "vertical"
