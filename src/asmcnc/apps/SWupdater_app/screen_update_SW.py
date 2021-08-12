@@ -81,35 +81,8 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         height: dp(100)
                         width: dp(375)
-# <<<<<<< HEAD
-#                         orientation: "vertical"
-#                         padding: [0,0,30,0]
-
-#                         Label: 
-#                             id: current_version_label
-#                             color: 0,0,0,1
-#                             font_size: 18
-#                             markup: True
-#                             halign: "center"
-#                             valign: "bottom"
-#                             text_size: self.size
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-            
-#                         Label:
-#                             id: sw_version_label
-#                             color: 0,0,0,1
-#                             font_size: 28
-#                             markup: True
-#                             halign: "center"
-#                             valign: "top"
-#                             text_size: self.size
-#                             size: self.parent.size
-#                             pos: self.parent.pos
-
-# =======
                         Image:
-                            size_hint_x: 0.4
+                            size_hint_x: 0.35
                             source: "./asmcnc/skavaUI/img/qr_release_notes.png"
                         BoxLayout:
                             orientation: "vertical"
@@ -121,24 +94,22 @@ Builder.load_string("""
                                 markup: True
                                 valign: "bottom"
                                 text_size: self.size
-                                # text: "[b]Current Version[/b]"
+
                             Label:
                                 id: sw_version_label
                                 color: 0,0,0,1
                                 font_size: 23
                                 markup: True
                                 text_size: self.size
-                                # text: "[b]-[/b]"
+
                             Label:
                                 id: find_release_notes_label
                                 color: 0,0,0,1
                                 font_size: 14
                                 markup: True
-                                valign: "bottom"
+                                valign: "top"
                                 text_size: self.size
-                                # text: "[b]Find release notes at yetitool.com[/b]"
-                   
-# >>>>>>> master
+
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
