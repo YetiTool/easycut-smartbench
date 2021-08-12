@@ -28,6 +28,9 @@ Builder.load_string("""
         color: hex('#333333')
         text_size: self.size
         size: self.texture_size
+        halign: "center"
+        valign: "middle"
+        markup: True
 
     BoxLayout:
         valign: 'bottom'
