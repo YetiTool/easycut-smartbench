@@ -29,7 +29,7 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: [20, 40, 20, 20]
+        padding: [20, 40]
         orientation: 'vertical'
 
 
@@ -76,13 +76,10 @@ Builder.load_string("""
                         source: "./asmcnc/skavaUI/img/stop_big.png"
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
-                        
-        Label:
-            size_hint_y: .5
             
         Label:
             id: overdrive_label
-            size_hint_y: 1
+            size_hint_y: 2
             markup: True
             font_size: '28px' 
             valign: 'middle'
