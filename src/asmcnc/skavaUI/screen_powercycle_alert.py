@@ -61,14 +61,22 @@ Builder.load_string("""
                 halign: 'center'
 
             Label:
+
+                canvas:
+                    Color: 
+                        rgba: hex('1976d2ff')
+                    Rectangle: 
+                        size: self.size
+                        pos: self.pos
+
                 id: warning_label
                 text_size: self.size
                 size: self.texture_size
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: '40sp'   
-                valign: 'bottom'
+                font_size: '40sp'
+                valign: 'top'
                 halign: 'center'
 
 """)

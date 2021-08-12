@@ -52,6 +52,7 @@ Builder.load_string("""
                 Image:
                     size_hint_x: 0.1
                     source: "./asmcnc/skavaUI/img/green_tick.png"
+                    allow_stretch: True
                 Label:
                     id: version_number_label
                     font_size: '30sp'
