@@ -172,7 +172,6 @@ class SkavaUI(App):
             checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode, localization = l)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, localization = l)
             serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport, localization = l)
-            homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
             safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m, localization = l)
             mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m, localization = l)
             boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
