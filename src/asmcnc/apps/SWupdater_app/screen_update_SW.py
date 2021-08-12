@@ -82,7 +82,7 @@ Builder.load_string("""
                         height: dp(100)
                         width: dp(375)
                         Image:
-                            size_hint_x: 0.35
+                            size_hint_x: 0.3
                             source: "./asmcnc/skavaUI/img/qr_release_notes.png"
                         BoxLayout:
                             orientation: "vertical"
@@ -105,7 +105,7 @@ Builder.load_string("""
                             Label:
                                 id: find_release_notes_label
                                 color: 0,0,0,1
-                                font_size: 14
+                                font_size: 13
                                 markup: True
                                 valign: "top"
                                 text_size: self.size
