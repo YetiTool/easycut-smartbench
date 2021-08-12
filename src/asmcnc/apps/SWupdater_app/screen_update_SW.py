@@ -132,9 +132,9 @@ Builder.load_string("""
                             Label:
                                 id: find_release_notes_label
                                 color: 0,0,0,1
-                                font_size: 12
+                                font_size: 14
                                 markup: True
-                                valign: "top"
+                                valign: "bottom"
                                 text_size: self.size
                                 # text: "[b]Find release notes at yetitool.com[/b]"
                    
