@@ -62,12 +62,13 @@ Builder.load_string("""
 
             Label:
                 id: warning_label
-                # text_size: self.size
+                text_size: self.size
+                size: self.texture_size
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
-                valign: 'middle'
+                valign: 'bottom'
                 halign: 'center'
 
 """)

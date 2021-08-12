@@ -60,7 +60,7 @@ Builder.load_string("""
                     size: self.texture_size
             Label:
                 id: please_read_label
-                padding: [10, 0]
+                padding: [15, 0]
                 # text: 'These release notes contain critical information about how SmartBench has changed (in English).'
                 color: hex('#333333')
                 font_size: '18sp'
@@ -76,7 +76,7 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-                size_hint_x: 0.3
+                size_hint_x: 0.25
                 Image:
                     source: "./asmcnc/skavaUI/img/qr_release_notes_grey.png"
                 Label:
@@ -140,8 +140,8 @@ class ReleaseNotesScreen(Screen):
         self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
         self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
         self.url_label.text = self.l.get_str("For full release notes, go to:") + \
-        "\n\n" + \
-        "https://www.yetitool.com/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
+        "\n" + \
+        "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
         self.next_button.text = self.l.get_str("Next") + "..."
 
     def switch_screen(self):
