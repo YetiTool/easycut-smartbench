@@ -22,6 +22,7 @@ Builder.load_string("""
 
     current_version_label : current_version_label
     sw_version_label : sw_version_label
+    find_release_notes_label : find_release_notes_label
     latest_software_version_label : latest_software_version_label
 
     update_using_wifi_label : update_using_wifi_label
@@ -76,35 +77,68 @@ Builder.load_string("""
                             size: self.size
 
                     # Version labels:
-                    BoxLayout: 
-                        size_hint: (None, None)
+                    BoxLayout:
+                        orientation: 'horizontal'
                         height: dp(100)
                         width: dp(375)
-                        orientation: "vertical"
-                        padding: [0,0,30,0]
+# <<<<<<< HEAD
+#                         orientation: "vertical"
+#                         padding: [0,0,30,0]
 
-                        Label: 
-                            id: current_version_label
-                            color: 0,0,0,1
-                            font_size: 18
-                            markup: True
-                            halign: "center"
-                            valign: "bottom"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
+#                         Label: 
+#                             id: current_version_label
+#                             color: 0,0,0,1
+#                             font_size: 18
+#                             markup: True
+#                             halign: "center"
+#                             valign: "bottom"
+#                             text_size: self.size
+#                             size: self.parent.size
+#                             pos: self.parent.pos
             
-                        Label:
-                            id: sw_version_label
-                            color: 0,0,0,1
-                            font_size: 28
-                            markup: True
-                            halign: "center"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
+#                         Label:
+#                             id: sw_version_label
+#                             color: 0,0,0,1
+#                             font_size: 28
+#                             markup: True
+#                             halign: "center"
+#                             valign: "top"
+#                             text_size: self.size
+#                             size: self.parent.size
+#                             pos: self.parent.pos
 
+# =======
+                        Image:
+                            size_hint_x: 0.4
+                            source: "./asmcnc/skavaUI/img/qr_release_notes.png"
+                        BoxLayout:
+                            orientation: "vertical"
+                            Label:
+                                id: current_version_label
+                                size_hint_y: 1.5
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                valign: "bottom"
+                                text_size: self.size
+                                # text: "[b]Current Version[/b]"
+                            Label:
+                                id: sw_version_label
+                                color: 0,0,0,1
+                                font_size: 23
+                                markup: True
+                                text_size: self.size
+                                # text: "[b]-[/b]"
+                            Label:
+                                id: find_release_notes_label
+                                color: 0,0,0,1
+                                font_size: 16
+                                markup: True
+                                valign: "top"
+                                text_size: self.size
+                                # text: "[b]Find release notes at yetitool.com[/b]"
+                   
+# >>>>>>> master
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
@@ -672,6 +706,7 @@ class SWUpdateScreen(Screen):
     def update_strings(self):
 
         self.current_version_label.text = self.l.get_bold("Current Version")
+        self.find_release_notes_label.text = self.l.get_bold("Find release notes at yetitool.com").replace(self.l.get_str("yetitool.com"), "yetitool.com")
         self.update_using_wifi_label.text = self.l.get_bold("Update using WiFi")
         self.update_using_wifi_instructions_label.text = self.l.get_str("Ensure connection is stable before attempting to update.")
         self.wifi_update_button.text = self.l.get_str("Update")

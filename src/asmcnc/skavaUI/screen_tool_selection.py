@@ -86,7 +86,7 @@ class ToolSelectionScreen(Screen):
         super(ToolSelectionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-
+        self.l=kwargs['localization']
 
     def router_button_pressed(self):
         self.m.stylus_router_choice = 'router'
