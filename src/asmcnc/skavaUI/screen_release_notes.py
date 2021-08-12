@@ -48,8 +48,9 @@ Builder.load_string("""
             size_hint_y: 0.4
             orientation: 'vertical'
             BoxLayout:
+                size_hint_y: 0.6
                 orientation: 'horizontal'
-                padding: [dp(15), dp(0), dp(0), dp(0)]
+                padding: [dp(15), dp(0)]
                 spacing: dp(10)
                 Image:
                     size_hint_x: 0.06
@@ -65,6 +66,7 @@ Builder.load_string("""
                     halign: "left"
             Label:
                 id: please_read_label
+                size_hint_y: 0.4
                 padding: [15, 0]
                 # text: 'These release notes contain critical information about how SmartBench has changed (in English).'
                 color: hex('#333333')
