@@ -84,7 +84,7 @@ Builder.load_string("""
                 orientation: 'vertical'
                 size_hint_x: 0.25
                 Image:
-                    size_hint_y: 0.4
+                    size_hint_y: 0.45
                     source: "./asmcnc/skavaUI/img/qr_release_notes_grey.png"
                 Label:
                     id: url_label
