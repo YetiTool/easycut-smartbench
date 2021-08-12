@@ -122,6 +122,8 @@ class SquaringScreenActive(Screen):
 
     def on_enter(self):
 
+        self.update_strings()
+
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.start_auto_squaring()
             self.poll_for_completion_loop = Clock.schedule_interval(self.check_for_successful_completion, 0.2)

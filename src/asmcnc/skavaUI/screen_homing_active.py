@@ -107,6 +107,8 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
 
+        self.update_strings()
+
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
             self.m.reset_pre_homing()
