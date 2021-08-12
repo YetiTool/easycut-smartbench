@@ -50,7 +50,7 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 Image:
-                    size_hint_x: 0.1
+                    size_hint_x: 0.08
                     source: "./asmcnc/skavaUI/img/green_tick.png"
                     allow_stretch: True
                 Label:
@@ -77,11 +77,13 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-                size_hint_x: 0.25
+                size_hint_x: 0.3
                 Image:
+                    size_hint_y: 0.4
                     source: "./asmcnc/skavaUI/img/qr_release_notes_grey.png"
                 Label:
                     id: url_label
+                    size_hint_y: 0.6
                     color: hex('#333333')
                     font_size: '13sp'
                     height: self.texture_size[1]
@@ -91,7 +93,7 @@ Builder.load_string("""
                     halign: "left"
 
         BoxLayout:
-            padding: [dp(250), dp(0), dp(250), dp(10)]
+            padding: [dp(250), dp(2), dp(250), dp(10)]
             size_hint_y: 0.25
 
             Button:

@@ -61,14 +61,6 @@ Builder.load_string("""
                 halign: 'center'
 
             Label:
-
-                canvas:
-                    Color: 
-                        rgba: hex('1976d2ff')
-                    Rectangle: 
-                        size: self.size
-                        pos: self.pos
-
                 id: warning_label
                 text_size: self.size
                 size: self.texture_size
@@ -76,7 +68,7 @@ Builder.load_string("""
                 color: hex('#333333')
                 markup: True
                 font_size: '40sp'
-                valign: 'top'
+                valign: 'middle'
                 halign: 'center'
 
 """)
@@ -89,7 +81,7 @@ class PowerCycleScreen(Screen):
         self.l=kwargs['localization']
 
         self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
-        self.warning_label = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
+        self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
 
     def on_enter(self):
         self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
