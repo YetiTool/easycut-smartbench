@@ -82,7 +82,7 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-                size_hint_x: 0.3
+                size_hint_x: 0.2
                 Image:
                     size_hint_y: 0.4
                     source: "./asmcnc/skavaUI/img/qr_release_notes_grey.png"
@@ -146,7 +146,7 @@ class ReleaseNotesScreen(Screen):
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
         self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
-        self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).") + "yyy"
+        self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
         self.url_label.text = self.l.get_str("For full release notes, go to:") + \
         "\n" + \
         "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
