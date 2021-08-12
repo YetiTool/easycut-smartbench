@@ -76,7 +76,7 @@ Builder.load_string("""
 
             Label:
                 id: header_label
-                size_hint_y: 1
+                size_hint_y: 2
                 markup: True
                 font_size: '30px' 
                 valign: 'bottom'
