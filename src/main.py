@@ -50,7 +50,6 @@ from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
 from asmcnc.skavaUI import screen_error # @UnresolvedImport
 from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing
 from asmcnc.skavaUI import screen_safety_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
@@ -205,7 +204,6 @@ class SkavaUI(App):
             sm.add_widget(checking_screen)
             sm.add_widget(error_screen)
             sm.add_widget(serial_screen)
-            sm.add_widget(homing_screen)
             sm.add_widget(safety_screen)
             sm.add_widget(mstate_screen)
             sm.add_widget(boundary_warning_screen)
