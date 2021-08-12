@@ -29,7 +29,7 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding: [20, 40]
         orientation: 'vertical'
 
 
@@ -37,6 +37,7 @@ Builder.load_string("""
             size_hint_y: .5
 
         BoxLayout:
+            padding: [20, 0]
             orientation: 'horizontal'
             spacing: 30
             size_hint_y: 2
@@ -82,9 +83,8 @@ Builder.load_string("""
         Label:
             id: overdrive_label
             size_hint_y: 1
-            # text: '[color=333333]This operation will over-drive the X beam into the legs, creating a stalling noise. This is normal.[/color]'
             markup: True
-            font_size: '30px' 
+            font_size: '28px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
