@@ -132,7 +132,7 @@ Builder.load_string("""
                             Label:
                                 id: find_release_notes_label
                                 color: 0,0,0,1
-                                font_size: 16
+                                font_size: 12
                                 markup: True
                                 valign: "top"
                                 text_size: self.size
