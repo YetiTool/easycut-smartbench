@@ -154,7 +154,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     cancel_to_screen = 'lobby'   
     return_to_screen = 'lobby'   
     
-    default_font_size = '30sp'
+    default_font_size = 30
     
     def __init__(self, **kwargs):
         
@@ -215,3 +215,17 @@ class SquaringScreenDecisionManualVsSquare(Screen):
             self.no_button.text = self.l.get_str("No, I manually squared already")
 
         self.yes_button.text = self.l.get_str("Yes, enable auto-square")
+
+
+        self.update_font_size(self.no_button)
+        self.update_font_size(self.yes_button)
+
+    def update_font_size(self, value):
+        if len(value.text) < 35:
+            value.font_size = self.default_font_size
+        elif len(value.text) > 38: 
+            value.font_size = self.default_font_size - 2
+        if len(value.text) > 42: 
+            value.font_size = self.default_font_size - 4
+        if len(value.text) > 44: 
+            value.font_size = self.default_font_size - 5

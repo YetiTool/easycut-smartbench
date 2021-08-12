@@ -29,7 +29,7 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding: [40, 20]
         orientation: 'vertical'
 
         # Cancel button
@@ -65,7 +65,6 @@ Builder.load_string("""
         Label:
             id: instruction_label
             size_hint_y: 3.5
-            text: ''
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -77,9 +76,8 @@ Builder.load_string("""
         Label:
             id: press_to_home_label
             size_hint_y: 1
-            text: '[color=333333]Then, [b]press button[/b] to home.[/color]'
             markup: True
-            font_size: '30px' 
+            font_size: '28px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -126,9 +124,11 @@ class HomingScreenPrepare(Screen):
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
         if self.m.is_squaring_XY_needed_after_homing == True:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear') + '\n' + self.l.get_str('and remove extraction hose from Z head.')
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear')
+
+        self.update_strings()
 
     
     def begin_homing(self):
