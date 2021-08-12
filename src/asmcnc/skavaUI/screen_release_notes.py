@@ -90,8 +90,8 @@ Builder.load_string("""
                     halign: "left"
 
         BoxLayout:
-            padding: [dp(250), dp(10)]
-            size_hint_y: 0.3
+            padding: [dp(250), dp(0), dp(250), dp(10)]
+            size_hint_y: 0.25
 
             Button:
                 id: next_button
