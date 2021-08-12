@@ -56,7 +56,6 @@ Builder.load_string("""
             Label:
                 id: squaring_label
                 size_hint_x: 1
-                # text: '[color=333333][b]Squaring...[/b][/color]'
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'

@@ -53,8 +53,7 @@ Builder.load_string("""
                         
             Label:
                 id: homing_label
-                size_hint_x: 1
-                text: '[color=333333][b]Homing...[/b][/color]'
+                size_hint_x: 1.1
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
