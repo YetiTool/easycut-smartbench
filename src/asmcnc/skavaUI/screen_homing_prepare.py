@@ -64,7 +64,7 @@ Builder.load_string("""
 
         Label:
             id: instruction_label
-            size_hint_y: 3.5
+            size_hint_y: 2
             markup: True
             font_size: '30px' 
             valign: 'middle'
@@ -75,7 +75,7 @@ Builder.load_string("""
 
         Label:
             id: press_to_home_label
-            size_hint_y: 1.5
+            size_hint_y: 2
             markup: True
             font_size: '28px' 
             valign: 'middle'
@@ -85,7 +85,7 @@ Builder.load_string("""
             color: hex('#333333ff')
 
         Label:
-            size_hint_y: 0.1                       
+            size_hint_y: 0.01                    
 
         Button:
             size_hint_y: 4.9
@@ -126,7 +126,7 @@ class HomingScreenPrepare(Screen):
         if self.m.is_squaring_XY_needed_after_homing == True:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
-            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear')
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
 
         self.update_strings()
 
