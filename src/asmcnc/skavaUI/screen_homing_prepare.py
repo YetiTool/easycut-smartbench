@@ -64,9 +64,9 @@ Builder.load_string("""
 
         Label:
             id: instruction_label
-            size_hint_y: 2
+            size_hint_y: 2.3
             markup: True
-            font_size: '30px' 
+            font_size: '30' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -75,17 +75,17 @@ Builder.load_string("""
 
         Label:
             id: press_to_home_label
-            size_hint_y: 2
+            size_hint_y: 2.3
             markup: True
-            font_size: '28px' 
+            font_size: '30' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
             text_size: self.size
             color: hex('#333333ff')
 
-        Label:
-            size_hint_y: 0.01                    
+        # Label:
+        #     size_hint_y: 0.1                
 
         Button:
             size_hint_y: 4.9
