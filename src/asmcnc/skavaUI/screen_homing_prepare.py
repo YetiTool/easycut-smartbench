@@ -29,7 +29,7 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: [40, 20]
+        padding: [20, 40]
         orientation: 'vertical'
 
         # Cancel button
@@ -75,7 +75,7 @@ Builder.load_string("""
 
         Label:
             id: press_to_home_label
-            size_hint_y: 1
+            size_hint_y: 1.5
             markup: True
             font_size: '28px' 
             valign: 'middle'
