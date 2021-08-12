@@ -45,7 +45,7 @@ Builder.load_string("""
         padding: [dp(0), dp(5), dp(0), dp(0)]
 
         BoxLayout:
-            size_hint_y: 0.3
+            size_hint_y: 0.4
             orientation: 'vertical'
             BoxLayout:
                 orientation: 'horizontal'
@@ -57,11 +57,14 @@ Builder.load_string("""
                     font_size: '30sp'
                     color: hex('#333333')
                     text_size: self.size
+                    size: self.texture_size
             Label:
                 id: please_read_label
                 # text: 'These release notes contain critical information about how SmartBench has changed (in English).'
                 color: hex('#333333')
                 font_size: '18sp'
+                text_size: self.size
+                size: self.texture_size
 
         BoxLayout:
             padding: [dp(20), dp(5), dp(20), dp(0)]
@@ -80,6 +83,7 @@ Builder.load_string("""
                     color: hex('#333333')
                     font_size: '13sp'
                     size: self.texture_size
+                    text_size: self.size
                     markup: True
                     valign: "top"
                     halign: "left"
@@ -132,7 +136,7 @@ class ReleaseNotesScreen(Screen):
         self.release_notes_filename = '../' + (self.version).replace(".","") + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
-        self.version_number_label.text = (self.l.get_str("Console software updated successfully to version")).replace(self.l.get_str('version'), self.version)
+        self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
         self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
         self.url_label.text = self.l.get_str("For full release notes, go to:") + \
         "\n\n" + \
