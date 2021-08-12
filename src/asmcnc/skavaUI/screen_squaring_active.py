@@ -29,7 +29,7 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: [20, 40]
+        padding: [20, 40, 20, 20]
         orientation: 'vertical'
 
 
@@ -91,8 +91,6 @@ Builder.load_string("""
             text_size: self.size
             color: hex('#333333ff')           
 
-        Label:
-            size_hint_y: .5
 
 """)
 
