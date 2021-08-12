@@ -60,6 +60,7 @@ Builder.load_string("""
                     size: self.texture_size
             Label:
                 id: please_read_label
+                padding: [10, 0]
                 # text: 'These release notes contain critical information about how SmartBench has changed (in English).'
                 color: hex('#333333')
                 font_size: '18sp'
@@ -82,7 +83,7 @@ Builder.load_string("""
                     id: url_label
                     color: hex('#333333')
                     font_size: '13sp'
-                    size: self.texture_size
+                    height: self.texture_size[1]
                     text_size: self.size
                     markup: True
                     valign: "top"
@@ -140,7 +141,7 @@ class ReleaseNotesScreen(Screen):
         self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
         self.url_label.text = self.l.get_str("For full release notes, go to:") + \
         "\n\n" + \
-        "https://www.yetitool.com\n/SUPPORT/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
+        "https://www.yetitool.com/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
         self.next_button.text = self.l.get_str("Next") + "..."
 
     def switch_screen(self):

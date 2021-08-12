@@ -42,7 +42,7 @@ Builder.load_string("""
             Label:
                 id: finishing_install_label
                 text_size: self.size
-                size_hint_y: 0.5
+                size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
@@ -52,7 +52,7 @@ Builder.load_string("""
             Label:
                 id: dots_label
                 text_size: self.size
-                size_hint_y: 0.5
+                size_hint_y: 0.33
                 text: "..."
                 color: hex('1976d2ff')
                 markup: True
@@ -62,8 +62,8 @@ Builder.load_string("""
 
             Label:
                 id: warning_label
-                text_size: self.size
-                size_hint_y: 0.5
+                # text_size: self.size
+                size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
