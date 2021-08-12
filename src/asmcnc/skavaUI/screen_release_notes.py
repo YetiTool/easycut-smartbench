@@ -19,7 +19,7 @@ Builder.load_string("""
 
     release_notes: release_notes
     BoxLayout:
-        padding: [dp(0), dp(-20), dp(0), dp(0)]
+        padding: [dp(0), dp(-15), dp(0), dp(0)]
         RstDocument:
             id: release_notes
             base_font_size: 30
