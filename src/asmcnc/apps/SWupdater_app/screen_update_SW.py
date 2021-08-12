@@ -706,7 +706,7 @@ class SWUpdateScreen(Screen):
     def update_strings(self):
 
         self.current_version_label.text = self.l.get_bold("Current Version")
-        self.find_release_notes_label.text = self.l.get_bold("Find release notes at yetitool.com").replace(self.l.get_str("yetitool.com"), "yetitool.com")
+        self.find_release_notes_label.text = self.l.get_bold("Find release notes at yetitool.com")
         self.update_using_wifi_label.text = self.l.get_bold("Update using WiFi")
         self.update_using_wifi_instructions_label.text = self.l.get_str("Ensure connection is stable before attempting to update.")
         self.wifi_update_button.text = self.l.get_str("Update")
