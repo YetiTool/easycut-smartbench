@@ -13,6 +13,10 @@ Builder.load_string("""
 
 <ToolSelectionScreen>:
 
+    question_label : question_label
+    router_button : router_button
+    stylus_button : stylus_button
+
     canvas.before:
         Color: 
             rgba: hex('#e5e5e5ff')
@@ -32,13 +36,14 @@ Builder.load_string("""
             
 
             Label:
-                text: '[color=333333]Which tool are you using?'
+                id: question_label
                 markup: True
                 font_size: '28px' 
                 valign: 'top'
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333')
 
         # Buttons
 
@@ -51,6 +56,7 @@ Builder.load_string("""
             # Stylus button
 
             Button:
+                id: stylus_button
                 text: '[color=333333]CNC Stylus'
                 on_press: root.stylus_button_pressed()
                 valign: 'bottom'
@@ -64,6 +70,7 @@ Builder.load_string("""
             # Router button
 
             Button:
+                id: router_button
                 text: '[color=333333]Router'
                 on_press: root.router_button_pressed()
                 valign: 'bottom'
@@ -87,6 +94,12 @@ class ToolSelectionScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
+
+    def on_enter(self):
+        
+        self.question_label.text = self.l.get_str("Which tool are you using?")
+        self.router_button.text = self.l.get_str("Router")
+        self.stylus_button.text = "CNC Stylus"
 
     def router_button_pressed(self):
         self.m.stylus_router_choice = 'router'
