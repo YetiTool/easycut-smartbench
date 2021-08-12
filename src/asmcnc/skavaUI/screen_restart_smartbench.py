@@ -23,9 +23,11 @@ Builder.load_string("""
 
     Label:
         id: restart_label
-        text: 'Please restart SmartBench now.'
+        padding: [dp(10),dp(0)]
         font_size: '40sp'
         color: hex('#333333')
+        text_size: self.size
+        size: self.texture_size
 
     BoxLayout:
         valign: 'bottom'
