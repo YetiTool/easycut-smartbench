@@ -97,11 +97,7 @@ class ToolSelectionScreen(Screen):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
-    def on_enter(self):
-
-        self.question_label.text = self.l.get_str("Which tool are you using?")
-        self.router_button.text = self.l.get_str("Router")
-        self.stylus_button.text = "CNC Stylus"
+        self.update_strings()
 
     def router_button_pressed(self):
         self.m.stylus_router_choice = 'router'
@@ -122,3 +118,8 @@ class ToolSelectionScreen(Screen):
                 self.sm.current = 'lift_z_on_pause_or_not'
         else:
             self.sm.current = 'jobstart_warning'
+
+    def update_strings(self):
+        self.question_label.text = self.l.get_str("Which tool are you using?")
+        self.router_button.text = self.l.get_str("Router")
+        self.stylus_button.text = "CNC Stylus"

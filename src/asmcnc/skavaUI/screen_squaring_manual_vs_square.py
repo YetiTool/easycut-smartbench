@@ -167,8 +167,9 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     def on_pre_enter(self):
 
         if self.m.is_machine_completed_the_initial_squaring_decision:
-            # self.already_square_button.source = "./asmcnc/skavaUI/img/squaring_btn_still_square.png"
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
+
+        self.update_strings()
 
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
@@ -198,7 +199,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
                 self.l.get_str("But at the end of the movement, the motor coils can bounce into a different step position.") + " " + \
                 self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring.")
 
-        popup_info.PopupInfo(self.sm, self.l, 720, info)
+        popup_info.PopupInfo(self.sm, self.l, 760, info)
 
 
     def cancel(self):
@@ -207,5 +208,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     def update_strings(self):
         self.header_label.text = self.l.get_str("Does SmartBench need to auto-square the XY?").replace(self.l.get_str('auto-square'), self.l.get_bold('auto-square'))
         self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
-        self.no_button.text = self.l.get_str("No, I manually squared already")
+
+        if self.m.is_machine_completed_the_initial_squaring_decision:
+            self.no_button.text = self.l.get_str("No, SmartBench is still square")
+        else:
+            self.no_button.text = self.l.get_str("No, I manually squared already")
+
         self.yes_button.text = self.l.get_str("Yes, enable auto-square")
