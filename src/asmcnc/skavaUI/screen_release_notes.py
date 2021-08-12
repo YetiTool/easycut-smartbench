@@ -52,7 +52,7 @@ Builder.load_string("""
                 padding: [dp(15), dp(0), dp(0), dp(0)]
                 spacing: dp(10)
                 Image:
-                    size_hint_x: 0.05
+                    size_hint_x: 0.06
                     source: "./asmcnc/skavaUI/img/green_tick.png"
                     allow_stretch: True
                 Label:
@@ -61,6 +61,8 @@ Builder.load_string("""
                     color: hex('#333333')
                     text_size: self.size
                     size: self.texture_size
+                    valign: "middle"
+                    halign: "left"
             Label:
                 id: please_read_label
                 padding: [15, 0]
