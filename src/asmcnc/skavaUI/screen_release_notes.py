@@ -18,12 +18,13 @@ Builder.load_string("""
 <ScrollReleaseNotes>:
 
     release_notes: release_notes
-
-    RstDocument:
-        id: release_notes
-        base_font_size: 30
-        underline_color: 'e5e5e5'
-        colors: root.color_dict
+    BoxLayout:
+        padding: [dp(0), dp(-4), dp(0), dp(0)]
+        RstDocument:
+            id: release_notes
+            base_font_size: 30
+            underline_color: 'e5e5e5'
+            colors: root.color_dict
 
 <ReleaseNotesScreen>:
 
@@ -74,7 +75,7 @@ Builder.load_string("""
                 size: self.texture_size
 
         BoxLayout:
-            padding: [dp(15), dp(-2), dp(20), dp(0)]
+            padding: [dp(15), dp(2), dp(20), dp(0)]
             spacing: dp(15)
 
             ScrollReleaseNotes:
