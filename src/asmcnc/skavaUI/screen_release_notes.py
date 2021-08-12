@@ -49,8 +49,9 @@ Builder.load_string("""
             orientation: 'vertical'
             BoxLayout:
                 orientation: 'horizontal'
+                padding: [dp(15), dp(0), dp(0), dp(0)]
                 Image:
-                    size_hint_x: 0.08
+                    size_hint_x: 0.05
                     source: "./asmcnc/skavaUI/img/green_tick.png"
                     allow_stretch: True
                 Label:
@@ -69,7 +70,7 @@ Builder.load_string("""
                 size: self.texture_size
 
         BoxLayout:
-            padding: [dp(20), dp(5), dp(20), dp(0)]
+            padding: [dp(15), dp(0), dp(20), dp(0)]
             spacing: dp(15)
 
             ScrollReleaseNotes:
