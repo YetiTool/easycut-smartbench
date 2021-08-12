@@ -57,7 +57,7 @@ Builder.load_string("""
 
             Button:
                 id: stylus_button
-                text: '[color=333333]CNC Stylus'
+                # text: '[color=333333]CNC Stylus'
                 on_press: root.stylus_button_pressed()
                 valign: 'bottom'
                 halign: 'center'
@@ -66,12 +66,13 @@ Builder.load_string("""
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/stylus_option.png"
                 padding_y: 30
+                color: hex('#333333')
 
             # Router button
 
             Button:
                 id: router_button
-                text: '[color=333333]Router'
+                # text: '[color=333333]Router'
                 on_press: root.router_button_pressed()
                 valign: 'bottom'
                 halign: 'center'
@@ -96,7 +97,7 @@ class ToolSelectionScreen(Screen):
         self.l=kwargs['localization']
 
     def on_enter(self):
-        
+
         self.question_label.text = self.l.get_str("Which tool are you using?")
         self.router_button.text = self.l.get_str("Router")
         self.stylus_button.text = "CNC Stylus"
