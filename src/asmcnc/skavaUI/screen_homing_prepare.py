@@ -154,3 +154,7 @@ class HomingScreenPrepare(Screen):
         
     def update_strings(self):
         self.press_to_home_label.text = self.l.get_str('Then, press button to home.')
+        if self.m.is_squaring_XY_needed_after_homing == True:
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
+        else:
+            self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
