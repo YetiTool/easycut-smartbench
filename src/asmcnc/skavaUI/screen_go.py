@@ -35,7 +35,7 @@ Builder.load_string("""
     z_height_container:z_height_container
     job_progress_container:job_progress_container
     feed_override_container:feed_override_container
-    speed_override_container:speed_override_container
+    speed_override_widget_container:speed_override_widget_container
     start_or_pause_button_image:start_or_pause_button_image
     btn_back: btn_back
     stop_start:stop_start
@@ -411,7 +411,7 @@ class GoScreen(Screen):
         # Graphics commands
         self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
         self.feed_override_container.add_widget(self.feedOverride)
-        self.speed_override_container.add_widget(self.speedOverride)
+        self.speed_override_widget_container.add_widget(self.speedOverride)
         
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
