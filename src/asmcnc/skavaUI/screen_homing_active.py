@@ -97,6 +97,18 @@ class HomingScreenActive(Screen):
 
         self.update_strings()
 
+    test_no = 0
+
+    def test_cycle(self, dt):
+        if self.test_no < len(self.l.supported_languages):
+            lang = self.l.supported_languages[self.test_no]
+            self.l.load_in_new_language(lang)
+            print("New lang: " + str(lang))
+            self.update_strings()
+            self.test_no = self.test_no + 1
+        else: 
+            self.test_no = 0
+
     
     def windows_cheat_to_procede(self):
 
@@ -107,7 +119,7 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
 
-        self.update_strings()
+        Clock.schedule_interval(self.test_cycle, 1)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
 

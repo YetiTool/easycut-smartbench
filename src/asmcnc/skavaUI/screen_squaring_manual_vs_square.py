@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
+from kivy.clock import Clock
 
 Builder.load_string("""
 
@@ -152,9 +153,11 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     
     
     cancel_to_screen = 'lobby'   
-    return_to_screen = 'lobby'   
+    return_to_screen = 'lobby'
     
     default_font_size = 30
+
+    
     
     def __init__(self, **kwargs):
         
@@ -164,12 +167,27 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.l=kwargs['localization']    
         self.update_strings()
 
+
+
+    test_no = 0
+
+    def test_cycle(self, dt):
+        if self.test_no < len(self.l.supported_languages):
+            lang = self.l.supported_languages[self.test_no]
+            self.l.load_in_new_language(lang)
+            print("New lang: " + str(lang))
+            self.update_strings()
+            self.test_no = self.test_no + 1
+        else: 
+            self.test_no = 0
+
+
     def on_pre_enter(self):
 
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
-        self.update_strings()
+        Clock.schedule_interval(self.test_cycle, 1)
 
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False

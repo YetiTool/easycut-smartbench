@@ -11,6 +11,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+from kivy.clock import Clock
 
 
 Builder.load_string("""
@@ -120,6 +121,17 @@ class HomingScreenPrepare(Screen):
 
         self.update_strings()
 
+    test_no = 0
+
+    def test_cycle(self, dt):
+        if self.test_no < len(self.l.supported_languages):
+            lang = self.l.supported_languages[self.test_no]
+            self.l.load_in_new_language(lang)
+            print("New lang: " + str(lang))
+            self.update_strings()
+            self.test_no = self.test_no + 1
+        else: 
+            self.test_no = 0
 
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
@@ -128,7 +140,7 @@ class HomingScreenPrepare(Screen):
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
 
-        self.update_strings()
+        Clock.schedule_interval(self.test_cycle, 1)
 
     
     def begin_homing(self):
