@@ -106,8 +106,6 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
 
-        Clock.schedule_interval(self.test_cycle, 1)
-
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
             self.m.reset_pre_homing()
