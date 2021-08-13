@@ -228,6 +228,25 @@ class SystemMenuScreen(Screen):
 
         self.update_strings()
 
+
+    test_no = 0
+
+    def test_cycle(self, dt):
+        if self.test_no < len(self.l.supported_languages):
+            lang = self.l.supported_languages[self.test_no]
+            self.l.load_in_new_language(lang)
+            print("New lang: " + str(lang))
+            self.update_strings()
+            self.test_no = self.test_no + 1
+        else: 
+            self.test_no = 0
+
+    def on_enter(self):
+        Clock.schedule_interval(self.test_cycle, 3)
+
+    def on_leave(self):
+        Clock.unschedule(self.test_cycle)
+
     def go_back(self):
         self.systemtools_sm.exit_app()
 
