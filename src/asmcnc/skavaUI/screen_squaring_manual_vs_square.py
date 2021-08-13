@@ -156,8 +156,6 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     return_to_screen = 'lobby'
     
     default_font_size = 30
-
-    
     
     def __init__(self, **kwargs):
         
@@ -167,30 +165,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.l=kwargs['localization']    
         self.update_strings()
 
-
-
-    test_no = 0
-
-    def test_cycle(self, dt):
-        if self.test_no < len(self.l.supported_languages):
-            lang = self.l.supported_languages[self.test_no]
-            self.l.load_in_new_language(lang)
-            print("New lang: " + str(lang))
-            self.update_strings()
-            self.test_no = self.test_no + 1
-        else: 
-            self.test_no = 0
-
-
     def on_pre_enter(self):
 
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
-
-        Clock.schedule_interval(self.test_cycle, 2)
-
-    def on_leave(self):
-        Clock.unschedule(self.test_cycle)
 
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
@@ -204,7 +182,6 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.sm.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('prepare_to_home').return_to_screen = self.return_to_screen
         self.sm.current = 'prepare_to_home'
-
 
     def popup_help(self):
         
@@ -229,14 +206,12 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     def update_strings(self):
         self.header_label.text = self.l.get_str("Does SmartBench need to auto-square the XY?").replace(self.l.get_str('auto-square'), self.l.get_bold('auto-square'))
         self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
+        self.yes_button.text = self.l.get_str("Yes, enable auto-square")
 
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
         else:
             self.no_button.text = self.l.get_str("No, I manually squared already")
-
-        self.yes_button.text = self.l.get_str("Yes, enable auto-square")
-        self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
 
         self.update_font_size(self.no_button)

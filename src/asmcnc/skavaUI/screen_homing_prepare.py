@@ -118,20 +118,7 @@ class HomingScreenPrepare(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-
         self.update_strings()
-
-    test_no = 0
-
-    def test_cycle(self, dt):
-        if self.test_no < len(self.l.supported_languages):
-            lang = self.l.supported_languages[self.test_no]
-            self.l.load_in_new_language(lang)
-            print("New lang: " + str(lang))
-            self.update_strings()
-            self.test_no = self.test_no + 1
-        else: 
-            self.test_no = 0
 
     def on_enter(self):
         self.m.set_led_colour('ORANGE')
@@ -139,17 +126,11 @@ class HomingScreenPrepare(Screen):
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear and remove extraction hose from Z head.')
         else:
             self.instruction_label.text = self.l.get_str('Ensure SmartBench is clear.')
-
-        Clock.schedule_interval(self.test_cycle, 1)
-
-    def on_leave(self):
-        Clock.unschedule(self.test_cycle)
     
     def begin_homing(self):
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
         self.sm.get_screen('homing_active').return_to_screen = self.return_to_screen
         self.sm.current = 'homing_active'
-    
     
     def cancel(self):
         self.sm.current = self.cancel_to_screen

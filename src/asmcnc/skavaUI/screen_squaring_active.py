@@ -104,22 +104,7 @@ class SquaringScreenActive(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-
         self.update_strings()
-
-
-    test_no = 0
-
-    def test_cycle(self, dt):
-        if self.test_no < len(self.l.supported_languages):
-            lang = self.l.supported_languages[self.test_no]
-            self.l.load_in_new_language(lang)
-            print("New lang: " + str(lang))
-            self.update_strings()
-            self.test_no = self.test_no + 1
-        else: 
-            self.test_no = 0
-
     
     def windows_cheat_to_procede(self):
 
@@ -129,8 +114,6 @@ class SquaringScreenActive(Screen):
         
 
     def on_enter(self):
-
-        Clock.schedule_interval(self.test_cycle, 1)
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.start_auto_squaring()
@@ -221,9 +204,7 @@ class SquaringScreenActive(Screen):
 
 
     def on_leave(self):
-        
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
-        Clock.unschedule(self.test_cycle)
 
     def update_strings(self):
 
