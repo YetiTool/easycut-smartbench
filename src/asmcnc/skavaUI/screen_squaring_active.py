@@ -57,13 +57,13 @@ Builder.load_string("""
             Label:
                 id: squaring_label
                 size_hint_x: 1.1
-                padding: [dp(-10), 0]
+                padding: [dp(-20), 0]
                 markup: True
                 font_size: '30px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
-                text_size: self.size
+                # text_size: self.size
                 color: hex('#333333ff')
                         
             Button:
