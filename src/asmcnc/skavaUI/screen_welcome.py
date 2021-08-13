@@ -82,7 +82,7 @@ class WelcomeScreenClass(Screen):
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 1)
                 # Allow time for machine reset sequence
-                Clock.schedule_once(self.go_to_next_screen, 2)
+                # Clock.schedule_once(self.go_to_next_screen, 2)
     
             # RasPi boot timings: note test on hard boot, since hard boot takes longer
             if sys.platform != 'win32':
