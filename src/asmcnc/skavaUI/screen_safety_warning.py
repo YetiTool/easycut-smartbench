@@ -68,7 +68,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
-            padding: [dp(40), dp(40), dp(40), dp(10)
+            padding: [dp(40), dp(40), dp(40), dp(10)]
             size: self.parent.size
             pos: self.parent.pos
       
