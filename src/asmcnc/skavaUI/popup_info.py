@@ -40,7 +40,7 @@ class PopupWelcome(Widget):
           self.m.write_set_up_options(True)
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(380, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
+        label = Label(size_hint_y=2, text_size=(420, None), markup=True, halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -66,7 +66,7 @@ class PopupWelcome(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(500, 440),
                       auto_dismiss= False
                       )
 
