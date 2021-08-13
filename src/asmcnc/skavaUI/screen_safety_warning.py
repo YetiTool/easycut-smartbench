@@ -283,10 +283,6 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
-
-# class RoundedButton(Button):
-#     pass
-
 class SafetyScreen(Screen):
 
 
@@ -321,23 +317,13 @@ class SafetyScreen(Screen):
             self.sm.remove_widget(self.sm.get_screen('safety'))
 
     def update_strings(self):
-
         self.header_label.text = self.l.get_str("Safety Warning")
-
-        self.label_r1_c1.text = "|" + self.l.get_str("Improper use of SmartBench can cause serious injury") + "|"
-        self.label_r2_c1.text = "|" + self.l.get_str("Always wear ear defenders, eye protection and a dust mask") + "|"
-        self.label_r3_c1.text = "|" + self.l.get_str("Risk of injury from rotating tools and axis motion") + "|"
-        self.label_r4_c1.text = "|" + self.l.get_str("Never put hands into moving machinery") + "|"
-        self.label_r1_c2.text = "|" + self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker") + "|"
-        self.label_r2_c2.text = "|" + self.l.get_str("Ensure the machine is powered from an earthed supply") + "|"
-        self.label_r3_c2.text = "|" + self.l.get_str("Never leave the machine unattended while power is on") + "|"
-        self.label_r4_c2.text = "|" + self.l.get_str("Ensure all plugs are fully inserted and secured") + "|"
-
+        self.label_r1_c1.text = self.l.get_str("Improper use of SmartBench can cause serious injury")
+        self.label_r2_c1.text = self.l.get_str("Always wear ear defenders, eye protection and a dust mask")
+        self.label_r3_c1.text = self.l.get_str("Risk of injury from rotating tools and axis motion")
+        self.label_r4_c1.text = self.l.get_str("Never put hands into moving machinery")
+        self.label_r1_c2.text = self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker")
+        self.label_r2_c2.text = self.l.get_str("Ensure the machine is powered from an earthed supply")
+        self.label_r3_c2.text = self.l.get_str("Never leave the machine unattended while power is on")
+        self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
         self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
-            
-        self.print_if_clipped()
-
-    def print_if_clipped(self):
-
-        self.confirm_button.shorten = True
-        if self.confirm_button.is_shortened: print("Button clipped in " + str(self.l.lang))
