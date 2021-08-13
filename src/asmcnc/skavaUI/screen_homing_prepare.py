@@ -79,7 +79,7 @@ Builder.load_string("""
             size_hint_y: 2.3
             markup: True
             font_size: '30' 
-            valign: 'middle'
+            valign: 'top'
             halign: 'center'
             size:self.texture_size
             text_size: self.size
