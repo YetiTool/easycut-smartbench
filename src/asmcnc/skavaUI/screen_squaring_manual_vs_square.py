@@ -187,7 +187,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
-        Clock.schedule_interval(self.test_cycle, 1)
+        Clock.schedule_interval(self.test_cycle, 2)
+
+    def on_leave(self):
+        Clock.unschedule(self.test_cycle)
 
     def already_square(self):
         self.m.is_squaring_XY_needed_after_homing = False
@@ -233,6 +236,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
             self.no_button.text = self.l.get_str("No, I manually squared already")
 
         self.yes_button.text = self.l.get_str("Yes, enable auto-square")
+        self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
 
         self.update_font_size(self.no_button)

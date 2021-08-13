@@ -142,6 +142,8 @@ class HomingScreenPrepare(Screen):
 
         Clock.schedule_interval(self.test_cycle, 1)
 
+    def on_leave(self):
+        Clock.unschedule(self.test_cycle)
     
     def begin_homing(self):
         self.sm.get_screen('homing_active').cancel_to_screen = self.cancel_to_screen
