@@ -29,18 +29,17 @@ Builder.load_string("""
 
     BoxLayout: 
         spacing: 0
-        padding: [20, 40]
+        padding: [20, 20]
         orientation: 'vertical'
 
-
         Label:
-            size_hint_y: .5
+            size_hint_y: 1
 
         BoxLayout:
             padding: [20, 0]
             orientation: 'horizontal'
             spacing: 30
-            size_hint_y: 2
+            size_hint_y: 1.5
 
             Button:
                 size_hint_x: 1
