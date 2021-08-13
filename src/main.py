@@ -245,7 +245,7 @@ class SkavaUI(App):
             else: 
                 self.test_no = 0
 
-        Clock.schedule_interval(test_cycle, 5)
+        Clock.schedule_interval(test_cycle, 10)
 
 
 
