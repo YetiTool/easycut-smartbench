@@ -68,7 +68,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
-            padding: 40
+            padding: [dp(40), dp(40), dp(40), dp(10)
             size: self.parent.size
             pos: self.parent.pos
       
@@ -91,9 +91,9 @@ Builder.load_string("""
                     color: hex('#333333ff')
                 
             BoxLayout:
-                size_hint_y: 3.9
+                size_hint_y: 4.1
     
-                padding: 15
+                padding: [15,0]
                 orientation: 'vertical'
                 BoxLayout:
                     orientation: 'horizontal'    
@@ -257,7 +257,7 @@ Builder.load_string("""
   
 
             BoxLayout:
-                size_hint_y: 1.4
+                size_hint_y: 1.2
                 orientation: 'horizontal'
 
                 Button:
@@ -335,5 +335,26 @@ class SafetyScreen(Screen):
 
         self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
             
+        self.print_if_clipped()
 
-            
+    def print_if_clipped(self):
+
+        self.label_r1_c1.shorten = True
+        self.label_r2_c1.shorten = True
+        self.label_r3_c1.shorten = True
+        self.label_r4_c1.shorten = True
+        self.label_r1_c2.shorten = True
+        self.label_r2_c2.shorten = True
+        self.label_r3_c2.shorten = True
+        self.label_r4_c2.shorten = True
+        self.confirm_button.shorten = True
+
+        if self.label_r1_c1.is_shortened: print("Check: " + self.label_r1_c1.text)
+        if self.label_r2_c1.is_shortened: print("Check: " + self.label_r2_c1.text)
+        if self.label_r3_c1.is_shortened: print("Check: " + self.label_r3_c1.text)
+        if self.label_r4_c1.is_shortened: print("Check: " + self.label_r4_c1.text)
+        if self.label_r1_c2.is_shortened: print("Check: " + self.label_r1_c2.text)
+        if self.label_r2_c2.is_shortened: print("Check: " + self.label_r2_c2.text)
+        if self.label_r3_c2.is_shortened: print("Check: " + self.label_r3_c2.text)
+        if self.label_r4_c2.is_shortened: print("Check: " + self.label_r4_c2.text)
+        if self.confirm_button.is_shortened: print("Check: " + self.confirm_button.text)        
