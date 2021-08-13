@@ -68,7 +68,7 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
-            padding: [dp(40), dp(40), dp(40), dp(10)]
+            padding: [dp(40), dp(40), dp(40), dp(20)]
             size: self.parent.size
             pos: self.parent.pos
       
@@ -324,14 +324,14 @@ class SafetyScreen(Screen):
 
         self.header_label.text = self.l.get_str("Safety Warning")
 
-        self.label_r1_c1.text = self.l.get_str("Improper use of SmartBench can cause serious injury")
-        self.label_r2_c1.text = self.l.get_str("Always wear ear defenders, eye protection and a dust mask")
-        self.label_r3_c1.text = self.l.get_str("Risk of injury from rotating tools and axis motion")
-        self.label_r4_c1.text = self.l.get_str("Never put hands into moving machinery")
-        self.label_r1_c2.text = self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker")
-        self.label_r2_c2.text = self.l.get_str("Ensure the machine is powered from an earthed supply")
-        self.label_r3_c2.text = self.l.get_str("Never leave the machine unattended while power is on")
-        self.label_r4_c2.text = self.l.get_str("Ensure all plugs are fully inserted and secured")
+        self.label_r1_c1.text = "|" + self.l.get_str("Improper use of SmartBench can cause serious injury") + "|"
+        self.label_r2_c1.text = "|" + self.l.get_str("Always wear ear defenders, eye protection and a dust mask") + "|"
+        self.label_r3_c1.text = "|" + self.l.get_str("Risk of injury from rotating tools and axis motion") + "|"
+        self.label_r4_c1.text = "|" + self.l.get_str("Never put hands into moving machinery") + "|"
+        self.label_r1_c2.text = "|" + self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker") + "|"
+        self.label_r2_c2.text = "|" + self.l.get_str("Ensure the machine is powered from an earthed supply") + "|"
+        self.label_r3_c2.text = "|" + self.l.get_str("Never leave the machine unattended while power is on") + "|"
+        self.label_r4_c2.text = "|" + self.l.get_str("Ensure all plugs are fully inserted and secured") + "|"
 
         self.confirm_button.text = self.l.get_str("I have read and understood the instruction manual")
             
@@ -341,13 +341,3 @@ class SafetyScreen(Screen):
 
         self.confirm_button.shorten = True
         if self.confirm_button.is_shortened: print("Button clipped in " + str(self.l.lang))
-
-
-        if self.label_r1_c1.text != self.l.get_str("Improper use of SmartBench can cause serious injury"): print("label_r1_c1 text: " + str(self.label_r1_c1.text))
-        if self.label_r2_c1.text != self.l.get_str("Always wear ear defenders, eye protection and a dust mask"): print("label_r2_c1 text: " + str(self.label_r2_c1.text))
-        if self.label_r3_c1.text != self.l.get_str("Risk of injury from rotating tools and axis motion"): print("label_r3_c1 text: " + str(self.label_r3_c1.text))
-        if self.label_r4_c1.text != self.l.get_str("Never put hands into moving machinery"): print("label_r4_c1 text: " + str(self.label_r4_c1.text))
-        if self.label_r1_c2.text != self.l.get_str("Danger to life by magnetic fields - do not use near a pacemaker"): print("label_r1_c2 text: " + str(self.label_r1_c2.text))
-        if self.label_r2_c2.text != self.l.get_str("Ensure the machine is powered from an earthed supply"): print("label_r2_c2 text: " + str(self.label_r2_c2.text))
-        if self.label_r3_c2.text != self.l.get_str("Never leave the machine unattended while power is on"): print("label_r3_c2 text: " + str(self.label_r3_c2.text))
-        if self.label_r4_c2.text != self.l.get_str("Ensure all plugs are fully inserted and secured"): print("label_r4_c2 text: " + str(self.label_r4_c2.text))   
