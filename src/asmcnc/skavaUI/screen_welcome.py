@@ -69,8 +69,7 @@ class WelcomeScreenClass(Screen):
         self.set=kwargs['settings']
         self.am = kwargs['app_manager']
         self.l=kwargs['localization']
-
-        self.starting_label.text = self.l.get_str('Starting SmartBench') + '...'
+        self.update_strings()
 
     def on_enter(self):
 
@@ -94,8 +93,8 @@ class WelcomeScreenClass(Screen):
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
 
-        elif sys.platform == 'win32' or sys.platform == 'darwin':
-            Clock.schedule_once(self.go_to_next_screen, 1)
+        # elif sys.platform == 'win32' or sys.platform == 'darwin':
+        #     Clock.schedule_once(self.go_to_next_screen, 1)
 
     def go_to_next_screen(self, dt):
 
@@ -118,3 +117,5 @@ class WelcomeScreenClass(Screen):
             self.sm.get_screen('lobby').trigger_update_popup = True
 
 
+    def update_strings(self):
+        self.starting_label.text = self.l.get_str('Starting SmartBench') + '...'

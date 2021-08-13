@@ -126,6 +126,7 @@ def log(message):
 
 class SkavaUI(App):
 
+    test_no = 0
 
     def build(self):
 
@@ -228,6 +229,25 @@ class SkavaUI(App):
         sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
+
+
+        def test_cycle(dt):
+            if self.test_no < len(l.supported_languages):
+                lang = l.supported_languages[self.test_no]
+                l.load_in_new_language(lang)
+                print("New lang: " + str(lang))
+                try:
+                    sm.get_screen(str(sm.current)).update_strings()
+                except: 
+                    print(str(sm.current) + " has no update strings function")
+
+                self.test_no = self.test_no + 1
+            else: 
+                self.test_no = 0
+
+        Clock.schedule_interval(test_cycle, 0.5)
+
+
 
         return sm
 
