@@ -212,7 +212,7 @@ class HomingScreenActive(Screen):
 
     
     def on_leave(self):
-        
+        Clock.unschedule(self.test_cycle)
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
 
     def update_strings(self):

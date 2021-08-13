@@ -224,6 +224,7 @@ class SquaringScreenActive(Screen):
     def on_leave(self):
         
         if self.poll_for_completion_loop != None: self.poll_for_completion_loop.cancel()
+        Clock.unschedule(self.test_cycle)
 
     def update_strings(self):
 
