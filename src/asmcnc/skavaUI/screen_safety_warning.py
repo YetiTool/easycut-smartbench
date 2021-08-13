@@ -339,22 +339,22 @@ class SafetyScreen(Screen):
 
     def print_if_clipped(self):
 
-        self.label_r1_c1.shorten = True
-        self.label_r2_c1.shorten = True
-        self.label_r3_c1.shorten = True
-        self.label_r4_c1.shorten = True
-        self.label_r1_c2.shorten = True
-        self.label_r2_c2.shorten = True
-        self.label_r3_c2.shorten = True
-        self.label_r4_c2.shorten = True
-        self.confirm_button.shorten = True
+        print("label_r1_c1 texture size: " + str(self.label_r1_c1.texture_size))
+        print("label_r2_c1 texture size: " + str(self.label_r2_c1.texture_size))
+        print("label_r3_c1 texture size: " + str(self.label_r3_c1.texture_size))
+        print("label_r4_c1 texture size: " + str(self.label_r4_c1.texture_size))
+        print("label_r1_c2 texture size: " + str(self.label_r1_c2.texture_size))
+        print("label_r2_c2 texture size: " + str(self.label_r2_c2.texture_size))
+        print("label_r3_c2 texture size: " + str(self.label_r3_c2.texture_size))
+        print("label_r4_c2 texture size: " + str(self.label_r4_c2.texture_size))
+        print("confirm_button texture size: " + str(self.confirm_button.texture_size))
 
-        if self.label_r1_c1.is_shortened: print("Check: " + self.label_r1_c1.text)
-        if self.label_r2_c1.is_shortened: print("Check: " + self.label_r2_c1.text)
-        if self.label_r3_c1.is_shortened: print("Check: " + self.label_r3_c1.text)
-        if self.label_r4_c1.is_shortened: print("Check: " + self.label_r4_c1.text)
-        if self.label_r1_c2.is_shortened: print("Check: " + self.label_r1_c2.text)
-        if self.label_r2_c2.is_shortened: print("Check: " + self.label_r2_c2.text)
-        if self.label_r3_c2.is_shortened: print("Check: " + self.label_r3_c2.text)
-        if self.label_r4_c2.is_shortened: print("Check: " + self.label_r4_c2.text)
-        if self.confirm_button.is_shortened: print("Check: " + self.confirm_button.text)        
+        print("label_r1_c1 size: " + str(self.label_r1_c1.size))
+        print("label_r2_c1 size: " + str(self.label_r2_c1.size))
+        print("label_r3_c1 size: " + str(self.label_r3_c1.size))
+        print("label_r4_c1 size: " + str(self.label_r4_c1.size))
+        print("label_r1_c2 size: " + str(self.label_r1_c2.size))
+        print("label_r2_c2 size: " + str(self.label_r2_c2.size))
+        print("label_r3_c2 size: " + str(self.label_r3_c2.size))
+        print("label_r4_c2 size: " + str(self.label_r4_c2.size))
+        print("confirm_button size: " + str(self.confirm_button.size))     
