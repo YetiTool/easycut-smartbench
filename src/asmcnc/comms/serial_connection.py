@@ -1002,7 +1002,6 @@ class SerialConnection(object):
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
-            print("THIS WOULD HAVE FAILED!")
             serialCommand = str(serialCommand)
 
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
@@ -1037,7 +1036,6 @@ class SerialConnection(object):
 
                 # SmartBench maintenance monitoring 
 #                 self.maintenance_value_logging(serialCommand)
-                
 
             except:
              # SerialException as serialError:
@@ -1045,8 +1043,7 @@ class SerialConnection(object):
                 self.get_serial_screen('Could not write last command to serial buffer.')
                 # log('Serial Error: ' + str(serialError))
 
-        else: 
-
+        else:
             log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")")
             self.get_serial_screen('Could not write last command to serial buffer.')
 
