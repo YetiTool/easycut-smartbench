@@ -1000,6 +1000,10 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
+        if not serialCommand:
+            print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            return
+
 #         print "Write in console = ", show_in_console
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
