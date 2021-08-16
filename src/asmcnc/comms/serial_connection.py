@@ -137,21 +137,27 @@ class SerialConnection(object):
         if sys.platform == "win32":
             self.suppress_error_screens = True
 
-            port_list = [port.device for port in serial.tools.list_ports.comports() if 'Arduino' in port.description]
+            # try user-given Comport first
+            SmartBench_port = self.is_port_SmartBench(win_port)
 
-            print("Windows port list: ") # for debugging
-            print(str(port_list))
+            # If given port doesn't work, try others:
+            if not SmartBench_port:
 
-            for comport in port_list:
+                port_list = [port.device for port in serial.tools.list_ports.comports() if 'n/a' not in port.description]
 
-                print("Windows port to try: ")
-                print comport
+                print("Windows port list: ") # for debugging
+                print(str(port_list))
 
-                SmartBench_port = self.is_port_SmartBench(comport)
-                if SmartBench_port: break
-                
-            if not SmartBench_port: 
-                log("No arduino connected")
+                for comport in port_list:
+
+                    print("Windows port to try: ")
+                    print comport
+
+                    SmartBench_port = self.is_port_SmartBench(comport)
+                    if SmartBench_port: break
+                    
+                if not SmartBench_port: 
+                    log("No arduino connected")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
