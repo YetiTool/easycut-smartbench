@@ -1002,6 +1002,8 @@ class SerialConnection(object):
 
         # A fully empty serial command can cause the serial write to fail, but this shouldn't be treated as a showstopper
         if not serialCommand:
+
+            print("Is printable: " + serialCommand.is_printable())
             # putting this here but want to test what serial exception comes up first
             print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
 
