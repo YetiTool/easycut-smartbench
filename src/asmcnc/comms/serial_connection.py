@@ -1000,6 +1000,11 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
+        # A fully empty serial command can cause the serial write to fail, but this shouldn't be treated as a showstopper
+        if not serialCommand:
+            # putting this here but want to test what serial exception comes up first
+            print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -1034,17 +1039,10 @@ class SerialConnection(object):
 #                 self.maintenance_value_logging(serialCommand)
                 
 
-            except:
-#               SerialException as serialError:
-
-                # A fully empty serial command can cause the serial write to fail, but this shouldn't be treated as a showstopper
-                if not serialCommand:
-                    print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-
-                else:
-                    print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                    self.get_serial_screen('Could not write last command to serial buffer.')
-        #                 log('Serial Error: ' + str(serialError))
+            except SerialException as serialError:
+                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+                # self.get_serial_screen('Could not write last command to serial buffer.')
+                log('Serial Error: ' + str(serialError))
 
         else: 
 
