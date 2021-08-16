@@ -1000,55 +1000,56 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
-        if not serialCommand:
-            print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+        # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+        try:
+            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
+            #if show_in_sys and altDisplayText==None: print serialCommand
+            if not serialCommand.startswith('?'):
+                log('> ' + serialCommand)
+            if altDisplayText != None: print altDisplayText
 
-        else:
+            # Print to console in the UI
+            if show_in_console == True and altDisplayText == None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+            if altDisplayText != None:
+                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
-    #         print "Write in console = ", show_in_console
-            # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
+        except:
+            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+            # log('Console display error: ' + str(consoleDisplayError))
+
+        # Finally issue the command        
+        if self.s:
             try:
-                # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-                #if show_in_sys and altDisplayText==None: print serialCommand
-                if not serialCommand.startswith('?'):
-                    log('> ' + serialCommand)
-                if altDisplayText != None: print altDisplayText
 
-                # Print to console in the UI
-                if show_in_console == True and altDisplayText == None:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-                if altDisplayText != None:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+                if realtime == False:
+                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+                    self.s.write(serialCommand + '\n')
+                
+                elif realtime == True:
+                    # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
+                    self.s.write(serialCommand)
+
+                # SmartBench maintenance monitoring 
+#                 self.maintenance_value_logging(serialCommand)
+                
 
             except:
-                print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                # log('Console display error: ' + str(consoleDisplayError))
+#               SerialException as serialError:
 
-            # Finally issue the command        
-            if self.s:
-                try:
+                # A fully empty serial command can cause the serial write to fail, but this shouldn't be treated as a showstopper
+                if not serialCommand:
+                    print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
 
-                    if realtime == False:
-                        # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-                        self.s.write(serialCommand + '\n')
-                    
-                    elif realtime == True:
-                        # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
-                        self.s.write(serialCommand)
-
-                    # SmartBench maintenance monitoring 
-    #                 self.maintenance_value_logging(serialCommand)
-                    
-
-                except:
-    #                  SerialException as serialError:
+                else:
                     print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                     self.get_serial_screen('Could not write last command to serial buffer.')
         #                 log('Serial Error: ' + str(serialError))
-            
-            else: 
 
-                log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
+        else: 
+
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")")
+            self.get_serial_screen('Could not write last command to serial buffer.')
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
