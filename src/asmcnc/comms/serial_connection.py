@@ -1000,12 +1000,9 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
-        # A fully empty serial command can cause the serial write to fail, but this shouldn't be treated as a showstopper
-        if not serialCommand:
-
-            print("Is printable: " + serialCommand.is_printable())
-            # putting this here but want to test what serial exception comes up first
-            print "No command to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
+        # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
+        if not serialCommand and not isinstance(serialCommand, str):
+            serialCommand = str(serialCommand)
 
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
@@ -1041,10 +1038,11 @@ class SerialConnection(object):
 #                 self.maintenance_value_logging(serialCommand)
                 
 
-            except SerialException as serialError:
+            except:
+             # SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                # self.get_serial_screen('Could not write last command to serial buffer.')
-                log('Serial Error: ' + str(serialError))
+                self.get_serial_screen('Could not write last command to serial buffer.')
+                # log('Serial Error: ' + str(serialError))
 
         else: 
 
