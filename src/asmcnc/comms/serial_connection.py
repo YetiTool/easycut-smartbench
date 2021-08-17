@@ -44,7 +44,6 @@ class SerialConnection(object):
     sm = None   # Screen manager object
 
     grbl_out = ""
-    job_gcode = []
     response_log = []
     suppress_error_screens = False
     FLUSH_FLAG = False
@@ -56,11 +55,12 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
-    def __init__(self, machine, screen_manager, settings_manager):
+    def __init__(self, machine, screen_manager, settings_manager, job):
 
         self.sm = screen_manager
         self.sett =settings_manager     
         self.m = machine
+        self.jd = job
 
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m)
@@ -321,7 +321,7 @@ class SerialConnection(object):
     def run_job(self, job_object):
         
         # TAKE IN THE FILE
-        self.job_gcode = job_object
+        self.jd.job_gcode_modified = job_object
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
@@ -332,10 +332,10 @@ class SerialConnection(object):
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
 
-        if self.initialise_job() and self.job_gcode:
+        if self.initialise_job() and self.jd.job_gcode_modified:
             Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
                                        
-        elif not self.job_gcode:
+        elif not self.jd.job_gcode_modified:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
@@ -363,9 +363,9 @@ class SerialConnection(object):
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
-        while self.l_count < len(self.job_gcode):
+        while self.l_count < len(self.jd.job_gcode):
             
-            line_to_go = self.job_gcode[self.l_count]
+            line_to_go = self.jd.job_gcode[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -414,7 +414,7 @@ class SerialConnection(object):
 
         if self.m_state != "Check":
 
-            if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) and self.m.stylus_router_choice != 'stylus':
+            if (str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) and self.m.stylus_router_choice != 'stylus':
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)

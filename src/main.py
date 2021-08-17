@@ -36,6 +36,9 @@ from asmcnc.comms import server_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
 
+# JOB DATA IMPORT
+from asmcnc.job import job_data
+
 # SKAVAUI IMPORTS (LEGACY)
 from asmcnc.skavaUI import screen_home # @UnresolvedImport
 from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
@@ -138,13 +141,14 @@ class SkavaUI(App):
             # Initialise settings object
             sett = settings_manager.Settings(sm)
 
+            # Initialise 'j'ob 'd'ata object
+            jd = job_data.JobData()
+
             # Initialise 'm'achine object
-            m = router_machine.RouterMachine(Cmport, sm, sett)
-            
-            job_gcode = []  # declare g-code object
-            
+            m = router_machine.RouterMachine(Cmport, sm, sett, jd)
+
             # App manager object
-            am = app_manager.AppManagerClass(sm, m, sett)
+            am = app_manager.AppManagerClass(sm, m, sett, jd)
 
             # Server connection object
             sc = server_connection.ServerConnection()
@@ -152,13 +156,13 @@ class SkavaUI(App):
             # initialise the screens (legacy)
             welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
-            home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
-            local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm)
-            usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm)
-            go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = job_gcode, app_manager = am)
+            home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett)
+            local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd)
+            usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd)
+            go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am)
             jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
-            loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = job_gcode)
-            checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = job_gcode)
+            loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd)
+            checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd)
             error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m)
             serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
             homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)

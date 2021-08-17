@@ -375,9 +375,6 @@ def log(message):
 
 class GoScreen(Screen):
 
-    job_filename = ""
-    job_gcode = []
-
     btn_back = ObjectProperty()
     btn_back_img = ObjectProperty()
     start_or_pause_button_image = ObjectProperty()
@@ -401,14 +398,14 @@ class GoScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.job_gcode=kwargs['job']
+        self.jd=kwargs['job']
         self.am=kwargs['app_manager']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Graphics commands
-        self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
+        self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm, job=self.jd))
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_widget_container.add_widget(self.speedOverride)
         
@@ -514,9 +511,9 @@ class GoScreen(Screen):
 
         # scrape filename title
         if sys.platform == 'win32':
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
+            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
         else:
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
+            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
         
         # Reset flag & light
         self.is_job_started_already = False
@@ -569,14 +566,14 @@ class GoScreen(Screen):
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
         # Turn vac on if spindle gets turned on during job
-        if ((str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
+        if ((str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) or (str(self.jd.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
-            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.extend(self.jd.job_gcode)
             modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
             modified_job_gcode.append("AF")  # turns vac off
         else:
-            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.extend(self.jd.job_gcode)
 
 
         # Spindle command?? 
@@ -635,13 +632,13 @@ class GoScreen(Screen):
     def poll_for_job_progress(self, dt):
 
         # % progress    
-        if len(self.job_gcode) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
+        if len(self.jd.job_gcode) != 0:
+            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0)*100.0))
             if percent_thru_job > 100: percent_thru_job = 100
             self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
-        if len(self.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
+        if len(self.jd.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
 
             stream_end_time = time.time()
             time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)

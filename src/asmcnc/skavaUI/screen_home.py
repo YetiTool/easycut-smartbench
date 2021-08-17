@@ -19,7 +19,7 @@ from datetime import datetime
 from multiprocessing import Process, Manager
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
-from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_gcode_view # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_gcode_view, widget_gcode_summary # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
@@ -229,7 +229,7 @@ Builder.load_string("""
                                 BoxLayout:
                                     id: gcode_preview_container
                                     size_hint_x: 1
-                                    orientation: 'vertical'
+                                    orientation: 'horizontal'
 
 
             BoxLayout:
@@ -249,7 +249,6 @@ def log(message):
 class HomeScreen(Screen):
 
     no_image_preview_path = 'asmcnc/skavaUI/img/image_preview_inverted.png'
-    job_filename = ''
     gcode_has_been_checked_and_its_ok = False
     non_modal_gcode_list = []
     job_box = job_envelope.BoundingBox()
@@ -264,11 +263,14 @@ class HomeScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.job_gcode = kwargs['job']
+        self.jd = kwargs['job']
         self.set = kwargs['settings']
 
         # Job tab
-        self.gcode_preview_widget = widget_gcode_view.GCodeView()
+        self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
+        self.gcode_preview_container.add_widget(self.gcode_summary_widget)
+
+        self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.jd)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
 
         # Position tab
@@ -285,16 +287,16 @@ class HomeScreen(Screen):
         self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
-        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm))
+        self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd))
 
         # Settings tab
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         
         # Quick commands
-        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm))
+        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd))
 
-    def on_enter(self): 
+    def on_pre_enter(self): 
 
         self.m.stylus_router_choice = 'router'
 
@@ -304,12 +306,12 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
         
         # File label at the top
-        if self.job_gcode != []:
+        if self.jd.job_gcode != []:
             
             if sys.platform == 'win32':
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
+                self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
             else:
-                self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
+                self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
                 
             # Preview file
             try: 
@@ -319,7 +321,6 @@ class HomeScreen(Screen):
             
         else:
             self.file_data_label.text = '[color=333333]Load a file...[/color]'
-            self.job_filename = ''
   
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
@@ -334,6 +335,8 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print 'No G-code loaded.'
+
+            self.gcode_summary_widget.hide_summary()
 
 
     def preview_job_file(self, dt):

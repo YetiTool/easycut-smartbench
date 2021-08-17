@@ -99,14 +99,15 @@ class RouterMachine(object):
 
     trigger_setup = False
             
-    def __init__(self, win_serial_port, screen_manager, settings_manager):
+    def __init__(self, win_serial_port, screen_manager, settings_manager, job):
 
         self.sm = screen_manager
         self.sett = settings_manager
+        self.jd = job
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
-        self.s = serial_connection.SerialConnection(self, self.sm, self.sett)
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.jd)
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)

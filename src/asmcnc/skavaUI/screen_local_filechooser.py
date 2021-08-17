@@ -299,6 +299,7 @@ class LocalFileChooser(Screen):
 
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.jd = kwargs['job']
         self.usb_stick = usb_storage.USB_storage(self.sm) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
@@ -429,7 +430,7 @@ class LocalFileChooser(Screen):
     def go_to_loading_screen(self, file_selection):
 
         if os.path.isfile(file_selection):
-            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.jd.filename = file_selection
             self.manager.current = 'loading'
 
         else: 

@@ -215,6 +215,7 @@ class USBFileChooser(Screen):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.jd = kwargs['job']
 
 
     def set_USB_path(self, usb_path):
@@ -340,5 +341,5 @@ class USBFileChooser(Screen):
 
         
     def go_to_loading_screen(self, file_selection):
-        self.manager.get_screen('loading').loading_file_name = file_selection
+        self.jd.filename = file_selection
         self.manager.current = 'loading'
