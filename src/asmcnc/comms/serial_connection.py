@@ -126,6 +126,19 @@ class SerialConnection(object):
 
         return ''
 
+    def quick_connect(self), available_port:
+        try: 
+            log("Try to connect to: " + available_port)
+            # set up connection
+            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            self.s.flushInput()
+            self.s.write("\x18")
+            return available_port
+        
+        except:
+            log("Could not connect to given port.")
+            return ''
+
 
     def establish_connection(self, win_port):
 
@@ -138,7 +151,7 @@ class SerialConnection(object):
             self.suppress_error_screens = True
 
             # try user-given Comport first
-            SmartBench_port = self.is_port_SmartBench(win_port)
+            SmartBench_port = self.quick_connect(win_port)
 
             # If given port doesn't work, try others:
             if not SmartBench_port:
