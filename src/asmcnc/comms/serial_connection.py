@@ -126,7 +126,7 @@ class SerialConnection(object):
 
         return ''
 
-    def quick_connect(self), available_port:
+    def quick_connect(self, available_port):
         try: 
             log("Try to connect to: " + available_port)
             # set up connection
