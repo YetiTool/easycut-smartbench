@@ -550,6 +550,8 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
+        self.database.send_event(0, "Job paused", "Paused job: " + self.job_name_only)
+
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
@@ -624,6 +626,8 @@ class GoScreen(Screen):
 
 
     def return_to_app(self):
+        self.database.send_event(0, "Job finished", "Finished job: " + self.job_name_only)
+        self.database.send_full_payload()
 
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
             self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
