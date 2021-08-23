@@ -19,7 +19,7 @@ from datetime import datetime
 from multiprocessing import Process, Manager
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands # @UnresolvedImport
-from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_view # @UnresolvedImport
+from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, widget_gcode_view, widget_false_gcode_summary # @UnresolvedImport
 from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
@@ -229,7 +229,7 @@ Builder.load_string("""
                                 BoxLayout:
                                     id: gcode_preview_container
                                     size_hint_x: 1
-                                    orientation: 'vertical'
+                                    orientation: 'horizontal'
 
 
             BoxLayout:
@@ -268,6 +268,9 @@ class HomeScreen(Screen):
         self.set = kwargs['settings']
 
         # Job tab
+        self.gcode_summary_widget = widget_false_gcode_summary.GCodeSummary()
+        self.gcode_preview_container.add_widget(self.gcode_summary_widget)
+
         self.gcode_preview_widget = widget_gcode_view.GCodeView()
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
 
