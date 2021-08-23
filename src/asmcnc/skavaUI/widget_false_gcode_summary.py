@@ -37,8 +37,6 @@ class GCodeSummary(Widget):
     def __init__(self, **kwargs):
         super(GCodeSummary, self).__init__(**kwargs)
 
-        self.display_summary()
-
     def display_summary(self):
         summary_list = [
 
@@ -117,6 +115,6 @@ class GCodeSummary(Widget):
 
     #     self.gcode_scrollview.text_container.text = '\n'.join(summary_list)
 
-    # def hide_summary(self):
+    def hide_summary(self):
 
-    #     self.gcode_scrollview.text_container.text = ''
+        self.gcode_scrollview.text_container.text = ''

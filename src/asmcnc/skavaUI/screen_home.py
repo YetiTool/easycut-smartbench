@@ -319,10 +319,13 @@ class HomeScreen(Screen):
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
                 log('Unable to preview file')
+
+            self.sm.get_screen('home').gcode_summary_widget.display_summary()
             
         else:
             self.file_data_label.text = '[color=333333]Load a file...[/color]'
             self.job_filename = ''
+            self.sm.get_screen('home').gcode_summary_widget.hide_summary()
   
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
