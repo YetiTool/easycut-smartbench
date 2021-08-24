@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.core_UI.sequence_alarm import screen_alarm_1
+from asmcnc.skavaUI import screen_fake_job_end
 
 
 class ScreenTest(App):
@@ -21,9 +21,17 @@ class ScreenTest(App):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		alarm_1_screen = screen_alarm_1.AlarmScreen1(name='final_test', screen_manager = sm, machine = m)
-		sm.add_widget(alarm_1_screen)
-		sm.current = 'final_test'
+		test_screen_widget = screen_fake_job_end.FakeJobEndScreen(name='test_screen', screen_manager = sm, machine = m)
+		sm.add_widget(test_screen_widget)
+		sm.current = 'test_screen'
 		return sm
 
 ScreenTest().run()
+
+
+# class TestScreen(Screen):
+
+#     def __init__(self, **kwargs):
+#         super(TestScreen, self).__init__(**kwargs)
+#         self.sm = kwargs['screen_manager']
+#         self.m = kwargs['machine']

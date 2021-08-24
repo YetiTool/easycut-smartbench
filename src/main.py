@@ -68,6 +68,8 @@ from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_release_notes # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
+from asmcnc.skavaUI import screen_fake_job_end
+
 
 # developer testing
 Cmport = 'COM3'
@@ -76,7 +78,8 @@ Cmport = 'COM3'
 initial_version = 'v1.7.2-beta'
 
 # default starting screen
-start_screen = 'welcome'
+# start_screen = 'welcome'
+start_screen = 'test_screen'
 
 # Config management
 def check_and_update_gpu_mem():
@@ -216,6 +219,11 @@ class SkavaUI(App):
             sm.add_widget(stop_or_resume_decision_screen)
             sm.add_widget(lift_z_on_pause_decision_screen)
             sm.add_widget(tool_selection_screen)
+
+
+        test_screen_widget = screen_fake_job_end.FakeJobEndScreen(name='test_screen', screen_manager = sm, machine = m)
+        sm.add_widget(test_screen_widget)
+
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 

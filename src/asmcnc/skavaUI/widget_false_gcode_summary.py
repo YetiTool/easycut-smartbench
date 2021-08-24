@@ -63,7 +63,7 @@ class GCodeSummary(Widget):
         '[b]Total Number of Parts Required:[/b]' + "\n" + \
         "24" + "\n" + \
         '[b]Parts made per job:[/b]' + "\n" + \
-        "10" + "\n" + \
+        "8" + "\n" + \
         '[b]Feeds and Speeds:[/b]\n' + \
         'Feed rate range: 0 - 300 mm/min\n' + \
         'Spindle speed range: 15000 - 25000\n' + \

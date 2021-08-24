@@ -444,7 +444,8 @@ class LobbyScreen(Screen):
         self.am.start_shapecutter_app()
     
     def calibrate_smartbench(self):
-        self.am.start_calibration_app('lobby')
+        # self.am.start_calibration_app('lobby')
+        self.sm.current = 'test_screen'
     
     def wifi_app(self):
         self.am.start_wifi_app()
