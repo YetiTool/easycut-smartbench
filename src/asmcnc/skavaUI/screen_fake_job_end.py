@@ -39,10 +39,9 @@ Builder.load_string("""
                     width: dp(800)
                     text: "Job completed!"
                     color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
                     font_size: dp(30)
                     halign: "center"
-                    valign: "bottom"
+                    valign: "middle"
                     markup: True
                     text_size: self.size
 
@@ -71,7 +70,7 @@ Builder.load_string("""
                         valign: "middle"
 
                     TextInput: 
-                        text: "Production notes"
+                        text: "Ready to run this job again, need more materials"
                         color: hex('#333333ff') #grey
                         font_size: dp(20)
                         markup: True

@@ -78,8 +78,8 @@ Cmport = 'COM3'
 initial_version = 'v1.7.2-beta'
 
 # default starting screen
-# start_screen = 'welcome'
-start_screen = 'test_screen'
+start_screen = 'welcome'
+# start_screen = 'test_screen' 
 
 # Config management
 def check_and_update_gpu_mem():
