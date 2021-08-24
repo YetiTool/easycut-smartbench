@@ -22,7 +22,7 @@ Builder.load_string("""
 
         BoxLayout:
             padding: 0
-            spacing: 10
+            spacing: 0
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -44,6 +44,7 @@ Builder.load_string("""
                     halign: "center"
                     valign: "bottom"
                     markup: True
+                    text_size: self.size
 
             BoxLayout:
                 size_hint: (None,None)
@@ -98,43 +99,43 @@ Builder.load_string("""
                     width: dp(800)
                     orientation: 'horizontal'
                     spacing: dp(150)
-                    padding: [dp(164), 0]
+                    padding: [dp(204), 0]
 
                     # thumbs down button
                     Button:
                         size_hint: (None,None)
                         height: dp(160)
-                        width: dp(161)
+                        width: dp(121)
                         background_color: hex('#f9f9f9ff')
                         background_normal: ""
                         on_press: root.exit_screen()
                         BoxLayout:
-                            padding: [0, 60, 0, 0]
+                            padding: [0, dp(40), 0, 0]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/thumbs_down.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
-                                size: self.parent.width - 60, self.parent.height - 60
+                                size: self.parent.width - 40, self.parent.height - 40
                                 allow_stretch: True
 
                     Button:
                         size_hint: (None,None)
                         height: dp(160)
-                        width: dp(161)
+                        width: dp(121)
                         background_color: hex('#f9f9f9ff')
                         background_normal: ""
                         on_press: root.exit_screen()
                         BoxLayout:
-                            padding: [0, 0, 0, 60]
+                            padding: [0, 0, 0, dp(40)]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
-                                size: self.parent.width - 60, self.parent.height - 60
+                                size: self.parent.width - 40, self.parent.height - 40
                                 allow_stretch: True  
 
 """)
