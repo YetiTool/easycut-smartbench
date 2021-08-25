@@ -14,6 +14,11 @@ def filter_for_comments(gcode_line):
         return True
     return False
 
+def filter_out_brackets(character):
+    if character in ['(',')']:
+        return False
+    return True
+
 class JobData(object):
 
     filename = ''
@@ -34,6 +39,7 @@ class JobData(object):
     z_min = None
     checked = False
     check_warning = ''
+    metadata_dict = {}
 
     def reset_values(self):
         self.filename = ''
@@ -54,10 +60,27 @@ class JobData(object):
         self.z_min = None
         self.checked = False
         self.check_warning = ''
+        self.metadata_dict = {}
 
     def generate_job_data(self, raw_gcode):
 
         self.job_gcode_raw = map(remove_newlines, raw_gcode)
 
-        self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
+        try:
+            metadata_start_index = self.job_gcode_raw.index('(YetiTool SmartBench MES-Data)')
+            metadata_end_index = self.job_gcode_raw.index('(End of YetiTool SmartBench MES-Data)')
+            metadata = self.job_gcode_raw[metadata_start_index + 1:metadata_end_index]
+
+            for line in metadata:
+                line = filter(filter_out_brackets, line)
+                line = line.split(':', 1)
+                self.metadata_dict[line[0]] = line[1]
+
+            # Metadata looks like comments so needs to be removed
+            gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
+            self.comments_list = filter(filter_for_comments, gcode_without_metadata)
+
+        except:
+            # In case no metadata in file
+            self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
