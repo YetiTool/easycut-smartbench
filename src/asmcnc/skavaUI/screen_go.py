@@ -4,7 +4,7 @@ Created on 19 Aug 2017
 @author: Ed
 '''
 # config
-
+from asmcnc.comms import archie_db
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -390,6 +390,7 @@ class GoScreen(Screen):
     loop_for_job_progress = None
     loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
+    overload_peak = 0
 
 
     def __init__(self, **kwargs):
@@ -400,7 +401,8 @@ class GoScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.jd=kwargs['job']
         self.am=kwargs['app_manager']
-        
+        self.database=kwargs['database']
+
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
 
@@ -476,7 +478,7 @@ class GoScreen(Screen):
                 str(int(self.m.spindle_brush_lifetime_seconds/3600)) + " hours[/b]!"
                 brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, brush_warning, 'brushes')
 
-            if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
+            if self.m.time_since_z_head_lubricated_seconds >= self.m.time_to_remind_user_to_lube_z_seconds:
                 lubrication_warning = "[b]Lubricate the z head before starting your job![/b]\n\n" + \
                 "You have used SmartBench for [b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + " hours[/b] " + \
                 "since you last told us that you lubricated the Z head\n\n" + \
@@ -522,6 +524,7 @@ class GoScreen(Screen):
         
         self.feedOverride.feed_norm()
         self.speedOverride.speed_norm()
+        self.overload_peak = 0.0
 
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
@@ -541,12 +544,16 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
+        self.database.send_event(0, "Job paused", "Paused job: " + self.job_name_only)
+
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
 
 
     def _start_running_job(self):
+
+        self.database.send_event(0, "Job started", "Started job: " + self.job_name_only)
 
         self.m.set_pause(False)
         self.is_job_started_already = True
@@ -612,6 +619,8 @@ class GoScreen(Screen):
 
 
     def return_to_app(self):
+        self.database.send_event(0, "Job finished", "Finished job: " + self.job_name_only)
+        self.database.send_full_payload()
 
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
             self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
@@ -627,7 +636,7 @@ class GoScreen(Screen):
 
 
 ### SCREEN UPDATES
-    
+
     def poll_for_job_progress(self, dt):
 
         # % progress    
@@ -640,9 +649,9 @@ class GoScreen(Screen):
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
 
             stream_end_time = time.time()
-            time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
+            self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
+            hours = int(self.time_taken_seconds / (60 * 60))
+            seconds_remainder = self.time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             
@@ -679,12 +688,8 @@ class GoScreen(Screen):
     def update_voltage_label(self):
         self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
+    def update_overload_peak(self, state):
 
-
-            
-
-
-
-        
-        
-        
+        if state > self.overload_peak:
+            self.overload_peak = state
+            print "New overload peak: " + str(self.overload_peak)

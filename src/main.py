@@ -31,7 +31,10 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import database_storage # @UnresolvedImport
 from asmcnc.comms import server_connection
+from asmcnc.comms import archie_db
+
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
@@ -68,6 +71,7 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
+
 
 
 # developer testing
@@ -129,7 +133,7 @@ class SkavaUI(App):
     def build(self):
 
         log("Starting App:")
-        
+
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
@@ -150,11 +154,15 @@ class SkavaUI(App):
             # App manager object
             am = app_manager.AppManagerClass(sm, m, sett, jd)
 
+            # Create database object to talk to
+            # db = database_storage.DatabaseStorage(sm, m)
+
+            db = archie_db.SQLRabbit(sm, m)
+
             # Server connection object
             sc = server_connection.ServerConnection()
-            
+
             # initialise the screens (legacy)
-            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, app_manager = am)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett)
             local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd)
@@ -176,6 +184,7 @@ class SkavaUI(App):
             prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
             homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
             squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
+            welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, database = db, app_manager = am)
             spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m)
             spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
             stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
@@ -202,7 +211,7 @@ class SkavaUI(App):
             sm.add_widget(mstate_screen)
             sm.add_widget(boundary_warning_screen)
             sm.add_widget(rebooting_screen)
-            sm.add_widget(job_done_screen)            
+            sm.add_widget(job_done_screen)
             sm.add_widget(door_screen)
             sm.add_widget(squaring_decision_screen)
             sm.add_widget(prepare_to_home_screen)
@@ -222,6 +231,8 @@ class SkavaUI(App):
         sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
+
+
 
         return sm
 

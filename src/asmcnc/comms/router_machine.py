@@ -60,6 +60,7 @@ class RouterMachine(object):
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
+    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -72,6 +73,7 @@ class RouterMachine(object):
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
+    time_to_remind_user_to_lube_z_seconds = float(50*3600)
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -95,6 +97,9 @@ class RouterMachine(object):
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
+    ## DEVICE LABEL
+    device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
+
     reminders_enabled = True
 
     trigger_setup = False
@@ -111,7 +116,6 @@ class RouterMachine(object):
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
-        # if sys.platform != "win32" and sys.platform != "darwin":
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
 
@@ -177,6 +181,12 @@ class RouterMachine(object):
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
+        if not path.exists(self.device_label_file_path):
+            log('Creating device label settings file...')
+            file = open(self.device_label_file_path, 'w+')
+            file.write(str(self.device_label))
+            file.close()
+
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -186,6 +196,7 @@ class RouterMachine(object):
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
+        self.read_device_label()
 
 
     ## SET UP OPTIONS
@@ -479,6 +490,36 @@ class RouterMachine(object):
 
         except: 
             log("Unable to write stylus settings")
+            return False
+
+    ## DEVICE LABEL
+    def read_device_label(self):
+
+        try:
+            file = open(self.device_label_file_path, 'r')
+            self.device_label = str(file.read())
+            file.close()
+
+            log("Read in device label")
+            return True
+
+        except:
+            log("Unable to read device label")
+            return False
+
+    def write_device_label(self, value):
+
+        try:
+            file = open(self.device_label_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.device_label = str(value)
+            log("device label written to file")
+            return True
+
+        except:
+            log("Unable to write device label")
             return False
 
 # GRBL SETTINGS
@@ -1398,5 +1439,3 @@ class RouterMachine(object):
 
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
-
-

@@ -523,13 +523,8 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_name()
 
     def get_smartbench_name(self):
-        try:
-            file = open(self.smartbench_name_filepath, 'r')
-            self.smartbench_name_unformatted = str(file.read())
-            file.close()
-
-        except: 
-            self.smartbench_name_unformatted = 'My SmartBench'
+        
+        self.smartbench_name_unformatted = self.m.device_label
 
         # Remove newlines
         self.smartbench_name_formatted = self.smartbench_name_unformatted.replace('\n', ' ')
@@ -541,13 +536,10 @@ class BuildInfoScreen(Screen):
 
     def write_name_to_file(self):
 
-        try:
-            file_sb_name = open(self.smartbench_name_filepath, "w+")
-            file_sb_name.write(str(self.smartbench_name_unformatted))
-            file_sb_name.close()
+        if self.m.write_device_label(str(self.smartbench_name_unformatted)):
             return True
 
-        except: 
+        else:
             warning_message = 'Problem saving nickname!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
