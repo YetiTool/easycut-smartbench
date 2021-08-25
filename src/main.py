@@ -158,8 +158,6 @@ class SkavaUI(App):
             # Server connection object
             sc = server_connection.ServerConnection()
 
-            
-
             # initialise the screens (legacy)
             lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
             home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = job_gcode, settings = sett)
