@@ -296,7 +296,7 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd))
 
-    def on_pre_enter(self): 
+    def on_enter(self):
 
         self.m.stylus_router_choice = 'router'
 

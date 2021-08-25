@@ -80,6 +80,14 @@ class GCodeSummary(Widget):
             summary_list.append('Z max: ' + str(self.jd.z_max) + '\n')
 
 
+        summary_list.append('[b]Check info and warnings:[/b]\n')
+        if self.jd.checked == False:
+            summary_list.append('Checked: No\n')
+        else:
+            summary_list.append('Checked: Yes')
+            summary_list.append('Check warning: ' + self.jd.check_warning + '\n')
+
+
         summary_list.append('[b]Comments:[/b]\n')
         summary_list.extend(self.jd.comments_list)
 

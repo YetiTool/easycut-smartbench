@@ -341,5 +341,6 @@ class USBFileChooser(Screen):
 
         
     def go_to_loading_screen(self, file_selection):
+        self.jd.reset_values()
         self.jd.filename = file_selection
         self.manager.current = 'loading'

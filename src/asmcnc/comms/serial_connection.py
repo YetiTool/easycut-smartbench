@@ -320,8 +320,6 @@ class SerialConnection(object):
         
     def run_job(self, job_object):
         
-        # TAKE IN THE FILE
-        self.jd.job_gcode_modified = job_object
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
@@ -332,10 +330,10 @@ class SerialConnection(object):
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
 
-        if self.initialise_job() and self.jd.job_gcode_modified:
+        if self.initialise_job() and job_object:
             Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
                                        
-        elif not self.jd.job_gcode_modified:
+        elif not job_object:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
@@ -363,9 +361,14 @@ class SerialConnection(object):
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
-        while self.l_count < len(self.jd.job_gcode):
+        if self.m_state == 'Check':
+            job_gcode = self.jd.job_gcode
+        else:
+            job_gcode = self.jd.job_gcode_modified
+
+        while self.l_count < len(job_gcode):
             
-            line_to_go = self.jd.job_gcode[self.l_count]
+            line_to_go = job_gcode[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line

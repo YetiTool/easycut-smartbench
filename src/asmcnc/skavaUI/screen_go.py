@@ -601,11 +601,10 @@ class GoScreen(Screen):
 
             return line
 
-        modified_job_gcode = map(mapGcodes, modified_job_gcode)
-
+        self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
 
         try:
-            self.m.s.run_job(modified_job_gcode)
+            self.m.s.run_job(self.jd.job_gcode_modified)
             log('Job started ok from go screen...')
 
         except:
@@ -632,13 +631,13 @@ class GoScreen(Screen):
     def poll_for_job_progress(self, dt):
 
         # % progress    
-        if len(self.jd.job_gcode) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0)*100.0))
+        if len(self.jd.job_gcode_modified) != 0:
+            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_modified) + 4) * 1.0)*100.0))
             if percent_thru_job > 100: percent_thru_job = 100
             self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
-        if len(self.jd.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
+        if len(self.jd.job_gcode_modified) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
 
             stream_end_time = time.time()
             time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)

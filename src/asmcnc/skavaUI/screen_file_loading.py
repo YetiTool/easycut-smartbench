@@ -251,6 +251,7 @@ class LoadingScreen(Screen):
             self.usb_status_label.opacity = 0
 
     def quit_to_home(self):
+        self.jd.checked = False
         self.sm.get_screen('home').z_datum_reminder_flag = True
         self.sm.current = 'home'
         
@@ -326,6 +327,11 @@ class LoadingScreen(Screen):
                                 # find 'S' prefix and strip out the value associated with it
                                 rpm = int(float(l_block[l_block.find("S")+1:].split("M")[0]))
 
+                                # Use opportunity to add min/max spindle speeds for job data module
+                                if rpm > self.jd.spindle_speed_max or self.jd.spindle_speed_max == None:
+                                    self.jd.spindle_speed_max = rpm
+                                if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
+                                    self.jd.spindle_speed_min = rpm
 
                                 # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
                                 # in order for the electronics to send the right voltage for the desired RPM
@@ -351,6 +357,12 @@ class LoadingScreen(Screen):
                             try: 
 
                                 feed_rate = re.match('\d+',l_block[l_block.find("F")+1:]).group()
+
+                                # Use opportunity to add min/max feedrates for job data module
+                                if int(feed_rate) > self.jd.feedrate_max or self.jd.feedrate_max == None:
+                                    self.jd.feedrate_max = int(feed_rate)
+                                if int(feed_rate) < self.jd.feedrate_min or self.jd.feedrate_min == None:
+                                    self.jd.feedrate_min = int(feed_rate)
 
                                 if float(feed_rate) < self.minimum_feed_rate:
                                     
@@ -414,8 +426,13 @@ class LoadingScreen(Screen):
         job_box.range_x[1] = self.gcode_preview_widget.max_x
         job_box.range_y[0] = self.gcode_preview_widget.min_y
         job_box.range_y[1] = self.gcode_preview_widget.max_y
-        job_box.range_z[0] = self.gcode_preview_widget.min_z
-        job_box.range_z[1] = self.gcode_preview_widget.max_z
+
+        if [self.gcode_preview_widget.min_z, self.gcode_preview_widget.max_z] == [999999, -999999]:
+            job_box.range_z[0] = 0
+            job_box.range_z[1] = 0
+        else:
+            job_box.range_z[0] = self.gcode_preview_widget.min_z
+            job_box.range_z[1] = self.gcode_preview_widget.max_z
         
         self.sm.get_screen('home').job_box = job_box
 

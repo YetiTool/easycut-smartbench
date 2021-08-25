@@ -266,6 +266,8 @@ class GCodeView(Widget):
         self.plane = 'G17'
         self.move = '0'
         self.feed_rate = 0    
+        self.feed_rate_list = []
+        self.speed_list = []
 
         self.xy_preview_gcode = []
 
@@ -297,6 +299,7 @@ class GCodeView(Widget):
                 line = re.sub('X', ' XX', line)
                 line = re.sub('Z', ' ZZ', line)
                 line = re.sub('F', ' FF', line)
+                line = re.sub('S', ' SS', line)
                 line = re.sub('I', ' II', line)
                 line = re.sub('J', ' JJ', line)
                 line = re.sub('K', ' KK', line)
@@ -329,7 +332,7 @@ class GCodeView(Widget):
     #             for bit in line.split(' '): # This no longer works because spaces were stripped out. 
     # ------------------------------------------------------------------------------------------------
                                       
-                for idx, bit in enumerate(re.split('( X| Y| Z| F| I| J| K| G)', line)):
+                for idx, bit in enumerate(re.split('( X| Y| Z| F| S| I| J| K| G)', line)):
                     
                     if bit == '':
                         continue
