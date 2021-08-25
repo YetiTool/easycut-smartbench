@@ -20,6 +20,7 @@ class JobData(object):
     job_gcode = []
     job_gcode_raw = []
     job_gcode_modified = []
+    job_gcode_running = []
     comments_list = []
     feedrate_max = None
     feedrate_min = None
@@ -39,6 +40,7 @@ class JobData(object):
         self.job_gcode = []
         self.job_gcode_raw = []
         self.job_gcode_modified = []
+        self.job_gcode_running = []
         self.comments_list = []
         self.feedrate_max = None
         self.feedrate_min = None
