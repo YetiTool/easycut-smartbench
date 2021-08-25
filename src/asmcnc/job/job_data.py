@@ -71,10 +71,9 @@ class JobData(object):
             metadata_end_index = self.job_gcode_raw.index('(End of YetiTool SmartBench MES-Data)')
             metadata = self.job_gcode_raw[metadata_start_index + 1:metadata_end_index]
 
-            for line in metadata:
-                line = filter(filter_out_brackets, line)
-                line = line.split(':', 1)
-                self.metadata_dict[line[0]] = line[1]
+            metadata = [line.strip('()') for line in metadata]
+            metadata = [line.split(':', 1) for line in metadata]
+            self.metadata_dict = dict(metadata)
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]

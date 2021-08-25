@@ -50,8 +50,7 @@ class GCodeSummary(Widget):
 
         summary_list = ['[b]ST Metadata:[/b]\n']
         metadata_list = self.jd.metadata_dict.items()
-        for sublist in metadata_list:
-            summary_list.append(': '.join(sublist))
+        [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
 
 
         summary_list.append('\n[b]Feeds and Speeds:[/b]\n')
