@@ -412,11 +412,9 @@ class SerialConnection(object):
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
 
-        self.jd.job_gcode_running = []
-
         if self.m_state != "Check":
 
-            if (str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) and self.m.stylus_router_choice != 'stylus':
+            if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
                 self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
                 self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
@@ -430,6 +428,8 @@ class SerialConnection(object):
             self.m.disable_check_mode()
             self.suppress_error_screens = False
             self._reset_counters()
+
+        self.jd.job_gcode_running = []
 
 
     def cancel_stream(self):
