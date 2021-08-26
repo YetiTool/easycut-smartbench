@@ -125,17 +125,17 @@ class SpindleSaveWidget(Widget):
 
             time = int(self.sm.get_screen('maintenance').spindle_settings_widget.spindle_cooldown_time.text)
 
-            if (time >= 10 and time <= 60):
+            if (time >= 1 and time <= 60):
                 pass
             else:
-                time_validation_error = "The spindle cooldown time should be between 10 and 20 seconds.\n\n" + \
+                time_validation_error = "The spindle cooldown time should be between 1 and 60 seconds.\n\n" + \
                 "Please enter a new value."
 
                 popup_info.PopupError(self.sm, time_validation_error)
                 return
 
         except: 
-            time_validation_error = "The spindle cooldown time should be a number between 10 and 20 seconds.\n\n" + \
+            time_validation_error = "The spindle cooldown time should be a number between 1 and 60 seconds.\n\n" + \
             "Please enter a new value."
 
             popup_info.PopupError(self.sm, time_validation_error)
