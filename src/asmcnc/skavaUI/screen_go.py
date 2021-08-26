@@ -414,6 +414,9 @@ class GoScreen(Screen):
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
+        #initialise for db send
+        self.time_taken_seconds = 0
+
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
 
@@ -544,7 +547,7 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
-        self.database.send_event(0, "Job paused", "Paused job: " + self.job_name_only)
+        self.database.send_event(0, "Job paused", "Paused job: " + self.jd.filename)
 
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
@@ -553,7 +556,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_event(0, "Job started", "Started job: " + self.job_name_only)
+        self.database.send_event(0, "Job started", "Started job: " + self.jd.filename)
 
         self.m.set_pause(False)
         self.is_job_started_already = True
@@ -619,7 +622,7 @@ class GoScreen(Screen):
 
 
     def return_to_app(self):
-        self.database.send_event(0, "Job finished", "Finished job: " + self.job_name_only)
+        self.database.send_event(0, "Job finished", "Finished job: " + self.jd.filename)
         self.database.send_full_payload()
 
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
@@ -641,9 +644,9 @@ class GoScreen(Screen):
 
         # % progress    
         if len(self.jd.job_gcode_running) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
-            if percent_thru_job > 100: percent_thru_job = 100
-            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
+            self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
+            if self.percent_thru_job > 100: self.percent_thru_job = 100
+            self.progress_percentage_label.text = "[color=333333]" + str(self.percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:

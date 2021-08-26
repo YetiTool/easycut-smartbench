@@ -1,5 +1,5 @@
 from kivy.clock import Clock
-import json, pika, socket, datetime
+import json, socket, datetime
 
 def log(message):
     timestamp = datetime.datetime.now()
@@ -7,10 +7,17 @@ def log(message):
 
 class SQLRabbit:
     def __init__(self, screen_manager, machine):
+        try:
+            import pika
+        except:
+            log("Couldn't import pika lib")
+
+
         self.queue = 'machine_data'
         # Updated these variables to match convention throughout rest of code
         self.m = machine
         self.sm = screen_manager
+        self.jd = self.m.jd
         
         try:
             self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/', pika.credentials.PlainCredentials('console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
@@ -41,7 +48,7 @@ class SQLRabbit:
         calibration_used_hrs = self.m.time_since_calibration_seconds/3600
         calibration_hrs_left = round(calibration_limit_hrs - calibration_used_hrs, 2)
         calibration_percent_left = round((calibration_hrs_left/calibration_limit_hrs)*100, 2) # This was percentage left, not percentage used
-        
+        print(json.dumps(self.jd.metadata_dict))
         data = [
             {
                 "payload_type": "full",
@@ -62,7 +69,7 @@ class SQLRabbit:
                     "calibration_%_left": calibration_percent_left,
                     "calibration_hrs_before_next": calibration_hrs_left,
 
-                    "file_name": self.sm.get_screen('go').job_name_only or '',
+                    "file_name": self.jd.filename or '',
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,
