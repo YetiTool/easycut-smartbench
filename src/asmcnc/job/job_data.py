@@ -81,6 +81,7 @@ class JobData(object):
 
         except Exception as e:
             self.metadata_dict['error'] = str(e) # temporary!
+            self.metadata_dict['first line'] = self.job_gcode_raw[0] # temporary!
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
