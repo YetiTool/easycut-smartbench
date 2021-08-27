@@ -27,7 +27,7 @@ class SQLRabbit:
         except Exception as e:
             log("Pika connection exception: " + str(e))
         
-        self.interval = 10
+        self.interval = 1
         
         Clock.schedule_interval(self.run, self.interval)
         
