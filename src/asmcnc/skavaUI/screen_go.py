@@ -416,6 +416,7 @@ class GoScreen(Screen):
 
         #initialise for db send
         self.time_taken_seconds = 0
+        self.percent_thru_job = 0
 
 
 ### PRE-ENTER CONTEXTS: Call one before switching to screen
@@ -547,7 +548,7 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
-        self.database.send_event(0, "Job paused", "Paused job: " + self.jd.filename)
+        self.database.send_event(0, "Job paused", "Paused job: " + self.jd.filename.split("\\")[-1])
 
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
@@ -556,7 +557,8 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_event(0, "Job started", "Started job: " + self.jd.filename)
+        self.database.send_event(0, "Job started", "Started job: " + self.jd.filename.split("\\")[-1])
+        self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
 
         self.m.set_pause(False)
         self.is_job_started_already = True

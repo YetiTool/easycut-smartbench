@@ -48,7 +48,7 @@ class SQLRabbit:
         calibration_used_hrs = self.m.time_since_calibration_seconds/3600
         calibration_hrs_left = round(calibration_limit_hrs - calibration_used_hrs, 2)
         calibration_percent_left = round((calibration_hrs_left/calibration_limit_hrs)*100, 2) # This was percentage left, not percentage used
-        print(json.dumps(self.jd.metadata_dict))
+
         data = [
             {
                 "payload_type": "full",
@@ -69,7 +69,7 @@ class SQLRabbit:
                     "calibration_%_left": calibration_percent_left,
                     "calibration_hrs_before_next": calibration_hrs_left,
 
-                    "file_name": self.jd.filename or '',
+                    "file_name": self.jd.filename.split("\\")[-1] or '',
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,
@@ -80,6 +80,32 @@ class SQLRabbit:
         ]
         
         return data
+
+    def send_job_start(self, job_name, metadata_dict):
+
+        data = [
+            {
+                "payload_type": "job_start",
+                "machine_info": {
+                    "hostname": socket.gethostname()
+                },
+                "job_data": {
+                    "job_name": job_name,
+                    "job_start": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                },
+                "metadata": {
+
+                }
+            }
+        ]
+
+        data[0]["metadata"] = metadata_dict
+
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+        except Exception as e:
+            log("Event send exception: " + str(e))
+        log(str(data))
 
     #0 - info
     #1 - warning
