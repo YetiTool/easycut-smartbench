@@ -79,7 +79,8 @@ class JobData(object):
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
             self.comments_list = filter(filter_for_comments, gcode_without_metadata)
 
-        except:
+        except Exception as e:
+            self.metadata_dict['error'] = str(e) # temporary!
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
