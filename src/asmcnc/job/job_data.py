@@ -80,6 +80,8 @@ class JobData(object):
             self.comments_list = filter(filter_for_comments, gcode_without_metadata)
 
         except Exception as e:
+            self.metadata_dict['error'] = '(YetiTool SmartBench MES-Data)' == self.job_gcode_raw[0]
+
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
