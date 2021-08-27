@@ -5,9 +5,11 @@ Module used to keep track of information about the current job
 '''
 
 def remove_newlines(gcode_line):
-    if gcode_line == '\n':
+    if gcode_line in ['\n', '\r', '\r\n']:
         return ' '
-    return gcode_line.replace('\n', '')
+    gcode_line = gcode_line.strip('\n')
+    gcode_line = gcode_line.strip('\r')
+    return gcode_line
 
 def filter_for_comments(gcode_line):
     if gcode_line[0] == '(':
@@ -79,10 +81,7 @@ class JobData(object):
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
             self.comments_list = filter(filter_for_comments, gcode_without_metadata)
 
-        except Exception as e:
-            self.metadata_dict['test_string'] = repr('(YetiTool SmartBench MES-Data)')
-            self.metadata_dict['first_line'] = repr(self.job_gcode_raw[0])
-
+        except:
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 

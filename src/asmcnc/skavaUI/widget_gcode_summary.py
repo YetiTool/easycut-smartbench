@@ -53,9 +53,10 @@ class GCodeSummary(Widget):
         if len(metadata_list) > 0:
             summary_list.append('[b]ST Metadata:[/b]\n')
             [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
+            summary_list.append('')
 
 
-        summary_list.append('\n[b]Feeds and Speeds:[/b]\n')
+        summary_list.append('[b]Feeds and Speeds:[/b]\n')
         if self.jd.feedrate_max == None and self.jd.feedrate_min == None:
             summary_list.append('Feed rate range: Undefined')
         else:
