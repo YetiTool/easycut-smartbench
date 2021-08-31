@@ -1094,7 +1094,7 @@ class RouterMachine(object):
             error_message = (
                 self.l.get_str("Laser crosshair is out of bounds!") + \
                 "\n\n" + \
-                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Datum has not been set.") + " " + \
                 self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
             popup_info.PopupError(self.sm, self.l, error_message)
