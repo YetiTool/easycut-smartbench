@@ -146,6 +146,7 @@ class BrushUseWidget(Widget):
         self.l=kwargs['localization']
 
         self.update_strings()
+        self.update_font_size(self.brush_use_label)
         
     def restore(self):
         self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
@@ -156,6 +157,12 @@ class BrushUseWidget(Widget):
     def update_strings(self):
         self.brush_use_label.text = self.l.get_bold("BRUSH USE")
         self.hours_label.text = self.l.get_str("hours")
+
+    def update_font_size(self, value):
+        if len(value.text) < 18:
+            value.font_size = 24
+        if len(value.text) > 17:
+            value.font_size = 20
 
 
 
