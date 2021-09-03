@@ -280,11 +280,11 @@ class UpdateTestingScreen(Screen):
 
         while True:
             line = proc.stdout.readline()
-            stdout.append(line)
+            stdout_buffer.append(line)
             print line,
             if line == '' and proc.poll() != None:
                 break
-        return ''.join(stdout)
+        # return ''.join(stdout_buffer)
 
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
@@ -295,7 +295,7 @@ class UpdateTestingScreen(Screen):
             bool_out = False
 
         self.add_to_user_friendly_buffer(bool_out)
-        self.add_to_user_friendly_buffer(stdout)
+        self.add_to_user_friendly_buffer(''.join(stdout_buffer))
         self.add_to_user_friendly_buffer(stderr)
 
         return [bool_out, stdout, stderr]
