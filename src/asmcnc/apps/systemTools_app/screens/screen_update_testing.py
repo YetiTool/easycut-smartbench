@@ -254,6 +254,7 @@ class UpdateTestingScreen(Screen):
 
     def add_to_user_friendly_buffer(self, message):
         self.output_view_buffer.append(str(message))
+        print(message)
 
     def update_display_text(self, dt):   
         self.output_view.text = '\n'.join(self.output_view_buffer)
@@ -266,6 +267,8 @@ class UpdateTestingScreen(Screen):
         elif input_repo == 'home': dir_path = home_dir
 
         full_cmd = 'cd ' + dir_path + ' && ' + cmd
+
+        print full_cmd
 
         proc = subprocess.Popen(full_cmd,
             stdout = subprocess.PIPE,
