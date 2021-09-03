@@ -266,11 +266,12 @@ class UpdateTestingScreen(Screen):
         if input_repo == 'easycut': dir_path = easycut_path
         elif input_repo == 'home': dir_path = home_dir
 
-        full_cmd = 'cd ' + dir_path + ' && ' + cmd
+        full_cmd = cmd
 
-        print full_cmd
+        print full_cmd 
 
         proc = subprocess.Popen(full_cmd,
+            cwd = easycut_path,
             stdout = subprocess.PIPE,
             stderr = subprocess.STDOUT,
             shell = True
@@ -317,24 +318,24 @@ class UpdateTestingScreen(Screen):
             return initial_run_success
 
     def _git_fsck(self):
-        return self.run_in_shell(repo, 'git fsck --lost-found')
+        return self.run_in_shell(repo, 'git --no pager ' + 'fsck --lost-found' + ' --progress')
 
     # git prune
     def _prune_repo(self):
-        return self.run_in_shell(repo, 'git prune')
+        return self.run_in_shell(repo, 'git --no pager ' + 'prune' + ' --progress')
 
     # git gc --aggressive
     def _gc_repo(self):
-        return self.run_in_shell(repo, 'git gc --aggressive')
+        return self.run_in_shell(repo, 'git --no pager ' + 'gc --aggressive' + ' --progress')
 
     def _fetch_tags(self):
-        return self.run_in_shell(repo, 'git fetch --all -t')
+        return self.run_in_shell(repo, 'git --no pager ' + 'fetch --all -t' + ' --progress')
 
     def _do_platform_ansible_run(self):
         return self.run_in_shell('/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh')
 
     def _checkout_new_version(self):
-        return self.run_in_shell(repo, 'git checkout ' + version + ' -f')
+        return self.run_in_shell(repo, 'git --no pager ' + 'checkout ' + version + ' -f' + ' --progress')
 
     # these are less important because we already do them
     def add_remotes(self):
