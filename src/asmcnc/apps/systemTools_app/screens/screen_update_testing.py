@@ -276,6 +276,16 @@ class UpdateTestingScreen(Screen):
             shell = True
         )
 
+        stdout_buffer = []
+
+        while True:
+            line = proc.stdout.readline()
+            stdout.append(line)
+            print line,
+            if line == '' and proc.poll() != None:
+                break
+        return ''.join(stdout)
+
         stdout, stderr = proc.communicate()
         exit_code = int(proc.returncode)
 
