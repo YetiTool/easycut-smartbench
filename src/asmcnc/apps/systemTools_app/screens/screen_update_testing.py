@@ -318,15 +318,15 @@ class UpdateTestingScreen(Screen):
             return initial_run_success
 
     def _git_fsck(self):
-        return self.run_in_shell(repo, 'git --no pager ' + 'fsck --lost-found' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'fsck --lost-found' + ' --progress')
 
     # git prune
     def _prune_repo(self):
-        return self.run_in_shell(repo, 'git --no pager ' + 'prune' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'prune' + ' --progress')
 
     # git gc --aggressive
     def _gc_repo(self):
-        return self.run_in_shell(repo, 'git --no pager ' + 'gc --aggressive' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'gc --aggressive' + ' --progress')
 
     def _fetch_tags(self):
         return self.run_in_shell(repo, 'git --no pager ' + 'fetch --all -t' + ' --progress')
@@ -335,7 +335,7 @@ class UpdateTestingScreen(Screen):
         return self.run_in_shell('/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh')
 
     def _checkout_new_version(self):
-        return self.run_in_shell(repo, 'git --no pager ' + 'checkout ' + version + ' -f' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' + version + ' -f' + ' --progress')
 
     # these are less important because we already do them
     def add_remotes(self):
