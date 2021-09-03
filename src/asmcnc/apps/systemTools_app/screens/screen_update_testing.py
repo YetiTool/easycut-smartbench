@@ -8,10 +8,13 @@ Update testing screen for system tools app
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+
+import subprocess, sys, os
+import csv, threading, time, textwrap
+from time import sleep
 
 Builder.load_string("""
 
@@ -88,52 +91,59 @@ Builder.load_string("""
                     size_hint_y: 0.67
 
                     Button:
-                        text: 'Reclone EC from USB'
+                        text: 'Repair repo'
+                        on_press: root._repair_repo()
                                 
                     Button:
-                        text: 'Reclone EC from web'
+                        text: 'Fsck repo'
+                        on_press: root._git_fsck()
                                    
                     Button:
-                        text: 'Reclone PL from USB'
+                        text: 'Prune repo'
+                        on_press: root._prune_repo()
                         
                     Button:
-                        text: 'Reclone PL from web'
+                        text: 'GC repo'
+                        on_press: root._gc_repo()
 
                     Button:
-                        text: 'EC Git repair'
+                        text: 'Fetch tags'
+                        on_press: root._fetch_tags()
 
                     Button:
-                        text: 'EC Hard reset'
+                        text: 'PL ansible run'
+                        on_press: root._do_platform_ansible_run()
 
                     Button:
-                        text: 'PL Git repair'
+                        text: 'Checkout force'
+                        on_press: root._checkout_new_version()
                                    
                     Button:
-                        text: 'PL Hard reset'
+                        text: ''
                         
                     Button:
-                        text: 'Flash FW from USB'
+                        text: ''
 
                     Button:
-                        text: 'PL Ansible run'
+                        text: ''
 
                     Button:
-                        text: 'CO platform branch'
+                        text: ''
 
                     Button:
-                        text: 'CO software branch'
+                        text: ''
                                    
                     Button:
-                        text: 'Pull PL [branch]'
+                        text: ''
                         
                     Button:
-                        text: 'Pull SW [branch]'
+                        text: ''
 
                     Button:
-                        text: 'Reboot'
+                        text: ''
                         
                     Button:
-                        text: 'Update all'
+                        text: ''
 
             BoxLayout:
                 size_hint: (None,None)
@@ -216,6 +226,11 @@ Builder.load_string("""
                                     allow_stretch: True
 """)
 
+repo = 'easycut'
+version = 'update_func_testing'
+home_dir="/home/pi/"
+easycut_path = home_dir + "easycut-smartbench/"
+
 class ScrollableLabelOSOutput(ScrollView):
     text = StringProperty('')
 
@@ -237,10 +252,82 @@ class UpdateTestingScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+    def add_to_user_friendly_buffer(self, message):
+        self.output_view_buffer.append(str(message))
+
     def update_display_text(self, dt):   
         self.output_view.text = '\n'.join(self.output_view_buffer)
         if len(self.output_view_buffer) > 61:
             del self.monitor_text_buffer[0:len(self.output_view_buffer)-60]
 
+    def run_in_shell(self, input_repo, cmd):
+
+        if input_repo == 'easycut': dir_path = easycut_path
+        elif input_repo == 'home': dir_path = home_dir
+
+        full_cmd = 'cd ' + dir_path + ' && ' + cmd
+
+        proc = subprocess.Popen(full_cmd,
+            stdout = subprocess.PIPE,
+            stderr = subprocess.STDOUT,
+            shell = True
+        )
+
+        stdout, stderr = proc.communicate()
+        exit_code = int(proc.returncode)
+
+        if exit_code == 0:
+            bool_out = True
+        else:
+            bool_out = False
+
+        self.add_to_user_friendly_buffer(bool_out)
+        self.add_to_user_friendly_buffer(stdout)
+        self.add_to_user_friendly_buffer(stderr)
+
+        return [bool_out, stdout, stderr]
+
+
 
 # UPDATE FUNCTIONS
+
+    # I think some of these will freeze the SW, so will probably need putting on separate threads. But wanna test anyway. 
+    def _repair_repo(self):
+        initial_run_success = self.run_in_shell(repo, 'git-repair --force')
+        if initial_run_success[0] != 0:
+            install_success = self.run_in_shell(repo, 'sudo aptitude install git-repair')
+            if install_success[0] == 0:
+                return self.run_in_shell(repo, 'git-repair --force')
+            else:
+                return install_success
+        else:
+            return initial_run_success
+
+    def _git_fsck(self):
+        return self.run_in_shell(repo, 'git fsck --lost-found')
+
+    # git prune
+    def _prune_repo(self):
+        return self.run_in_shell(repo, 'git prune')
+
+    # git gc --aggressive
+    def _gc_repo(self):
+        return self.run_in_shell(repo, 'git gc --aggressive')
+
+    def _fetch_tags(self):
+        return self.run_in_shell(repo, 'git fetch --all -t')
+
+    def _do_platform_ansible_run(self):
+        return self.run_in_shell('/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh')
+
+    def _checkout_new_version(self):
+        return self.run_in_shell(repo, 'git checkout ' + version + ' -f')
+
+    # these are less important because we already do them
+    def add_remotes(self):
+        pass
+
+    def remove_remotes(self):
+        pass
+
+
