@@ -6,6 +6,11 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class SQLRabbit:
+    z_lube_percent_left_next = 50
+    spindle_brush_percent_left_next = 50
+    calibration_percent_left_next = 50
+    initial_consumable_intervals_found = False
+
     def __init__(self, screen_manager, machine):
         try:
             import pika
@@ -49,6 +54,13 @@ class SQLRabbit:
         calibration_hrs_left = round(calibration_limit_hrs - calibration_used_hrs, 2)
         calibration_percent_left = round((calibration_hrs_left/calibration_limit_hrs)*100, 2) # This was percentage left, not percentage used
 
+        # Set initial values for the next percentage interval so that it doesn't go through each interval every time
+        if not self.initial_consumable_intervals_found:
+            self.find_initial_consumable_intervals(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
+
+        # Check if consumables have passed thresholds for sending events
+        self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
+
         data = [
             {
                 "payload_type": "full",
@@ -80,6 +92,54 @@ class SQLRabbit:
         ]
         
         return data
+
+    def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
+
+        def find_current_interval(value):
+            # This looks stupid but I don't have a better idea without using loops
+            if value < 50:
+                if value < 25:
+                    if value < 10:
+                        if value < 5:
+                            if value < 0:
+                                if value < -10:
+                                    return -25
+                                return -10
+                            return 0
+                        return 5
+                    return 10
+                return 25
+            return 50
+
+        self.z_lube_percent_left_next = find_current_interval(z_lube_percent)
+        self.spindle_brush_percent_left_next = find_current_interval(spindle_brush_percent)
+        self.calibration_percent_left_next = find_current_interval(calibration_percent)
+
+        self.initial_consumable_intervals_found = True
+
+    def check_consumable_percentages(self, z_lube_percent, spindle_brush_percent, calibration_percent):
+        # The next percentage to set the threshold to once one has been passed
+        next_percent_dict = {50:25, 25:10, 10:5, 5:0, 0:-10, -10:-25, -25:-25}
+        # The severity that passing each percentage corresponds to
+        severity_dict = {50:0, 25:1, 10:1, 5:2, 0:2, -10:2, -25:2}
+        # The percentage that was last passed, used to check whether the percentage has increased
+        previous_percent_dict = {50:50, 25:50, 10:25, 5:10, 0:5, -10:0, -25:-10}
+
+        if z_lube_percent < self.z_lube_percent_left_next:
+            self.send_event(severity_dict[self.z_lube_percent_left_next], 'Z-lube percentage left', 'Z-lube percentage passed below ' + str(self.z_lube_percent_left_next) + '%')
+            self.z_lube_percent_left_next = next_percent_dict[self.z_lube_percent_left_next]
+
+        if spindle_brush_percent < self.spindle_brush_percent_left_next:
+            self.send_event(severity_dict[self.spindle_brush_percent_left_next], 'Spindle brush percentage left', 'Spindle brush percentage passed below ' + str(self.spindle_brush_percent_left_next) + '%')
+            self.spindle_brush_percent_left_next = next_percent_dict[self.spindle_brush_percent_left_next]
+
+        if calibration_percent < self.calibration_percent_left_next:
+            self.send_event(severity_dict[self.calibration_percent_left_next], 'Calibration percentage left', 'Calibration percentage passed below ' + str(self.calibration_percent_left_next) + '%')
+            self.calibration_percent_left_next = next_percent_dict[self.calibration_percent_left_next]
+
+        # In case any percentages somehow increased past their previous threshold
+        if z_lube_percent > previous_percent_dict[self.z_lube_percent_left_next] or spindle_brush_percent > previous_percent_dict[self.spindle_brush_percent_left_next] or calibration_percent > previous_percent_dict[self.calibration_percent_left_next]:
+            self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
     def send_job_start(self, job_name, metadata_dict):
 

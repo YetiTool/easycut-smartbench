@@ -548,8 +548,6 @@ class GoScreen(Screen):
 
     def _pause_job(self):
 
-        self.database.send_event(0, "Job paused", "Paused job: " + self.jd.filename.split("\\")[-1])
-
         self.sm.get_screen('spindle_shutdown').reason_for_pause = "job_pause"
         self.sm.get_screen('spindle_shutdown').return_screen = "go"
         self.sm.current = 'spindle_shutdown'
@@ -557,7 +555,6 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_event(0, "Job started", "Started job: " + self.jd.filename.split("\\")[-1])
         self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
 
         self.m.set_pause(False)
@@ -624,7 +621,6 @@ class GoScreen(Screen):
 
 
     def return_to_app(self):
-        self.database.send_event(0, "Job finished", "Finished job: " + self.jd.filename)
         self.database.send_full_payload()
 
         if self.m.fw_can_operate_zUp_on_pause():  # precaution

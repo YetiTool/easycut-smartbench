@@ -63,7 +63,7 @@ class SerialConnection(object):
         self.jd = job
 
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
-        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.jd)
 
     def __del__(self):
         print 'Destructor'
@@ -683,6 +683,10 @@ class SerialConnection(object):
                     
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
+
+                    # if 'r' in pins_info:
+                    #     # Power lost, attempt to send event
+                    #     self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi')
 
                     
                 
