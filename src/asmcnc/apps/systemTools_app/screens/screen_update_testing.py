@@ -326,10 +326,10 @@ class UpdateTestingScreen(Screen):
 
     # git gc --aggressive
     def _gc_repo(self):
-        return self.run_in_shell(repo, 'git --no-pager ' + 'gc --aggressive' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'gc --aggressive')
 
     def _fetch_tags(self):
-        return self.run_in_shell(repo, 'git --no pager ' + 'fetch --all -t' + ' --progress')
+        return self.run_in_shell(repo, 'git --no-pager ' + 'fetch --all -t' + ' --progress')
 
     def _do_platform_ansible_run(self):
         return self.run_in_shell('/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh')
