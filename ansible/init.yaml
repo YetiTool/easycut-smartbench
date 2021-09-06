@@ -98,7 +98,7 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - debug: Indicates that this is coming from easycut not platform repo
+  - debug:
       msg: This is easycut
   - name: Disable bluetooth to use the AMA0 port
     lineinfile:
