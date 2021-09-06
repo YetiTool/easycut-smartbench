@@ -91,8 +91,8 @@ Builder.load_string("""
                     size_hint_y: 0.67
 
                     Button:
-                        text: 'Repair repo'
-                        on_press: root._repair_repo()
+                        text: 'PL ansible run'
+                        on_press: root._do_platform_ansible_run()
                                 
                     Button:
                         text: 'Fsck repo'
