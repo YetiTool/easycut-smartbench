@@ -98,5 +98,11 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - debug:
+  - debug: Indicates that this is coming from easycut not platform repo
       msg: This is easycut
+  - name: Disable bluetooth to use the AMA0 port
+    lineinfile:
+      name: /boot/config.txt
+      state: present
+      insertafter: 'enable_uart=1'
+      line: 'dtoverlay=pi3-disable-bt'
