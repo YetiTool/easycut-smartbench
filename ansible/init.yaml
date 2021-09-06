@@ -98,6 +98,5 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - name: Test that easycut ansible version is running
-    ansible.builtin.debug:
-      msg: "This is easycut!!"
+  - debug:
+    msg: This is easycut
