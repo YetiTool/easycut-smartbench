@@ -335,7 +335,7 @@ class UpdateTestingScreen(Screen):
         return self.run_in_shell(repo, 'git --no-pager ' + 'fetch --all -t' + ' --progress')
 
     def _do_platform_ansible_run(self):
-        return self.run_in_shell('home', '/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh')
+        return self.run_in_shell('home', '/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh')
 
     def _checkout_new_version(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' + version + ' -f' + ' --progress')
