@@ -91,8 +91,8 @@ Builder.load_string("""
                     size_hint_y: 0.67
 
                     Button:
-                        text: 'PL ansible run'
-                        on_press: root._do_platform_ansible_run()
+                        text: 'Install git repair'
+                        on_press: root.install_git_repair()
                                 
                     Button:
                         text: 'Fsck repo'
@@ -306,6 +306,9 @@ class UpdateTestingScreen(Screen):
 # UPDATE FUNCTIONS
 
     # I think some of these will freeze the SW, so will probably need putting on separate threads. But wanna test anyway. 
+    def install_git_repair(self):
+        install_success = self.run_in_shell(repo, 'sudo aptitude install git-repair')
+
     def _repair_repo(self):
         initial_run_success = self.run_in_shell(repo, 'git-repair --force')
         if initial_run_success[0] != 0:
