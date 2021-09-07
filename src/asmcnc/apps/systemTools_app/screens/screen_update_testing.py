@@ -91,8 +91,8 @@ Builder.load_string("""
                     size_hint_y: 0.67
 
                     Button:
-                        text: 'Install git repair'
-                        on_press: root.install_git_repair()
+                        text: 'Ansible reset test'
+                        on_press: root._ansible_reset_test()
                                 
                     Button:
                         text: 'Fsck repo'
@@ -339,6 +339,14 @@ class UpdateTestingScreen(Screen):
 
     def _checkout_new_version(self):
         return self.run_in_shell(repo, 'git --no-pager ' + 'checkout ' + version + ' -f' + ' --progress')
+
+    def _ansible_reset_test(self):
+        self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml')
+        if not self._do_platform_ansible_run():
+            self.run_in_shell(repo, 'git reset --hard') 
+            if self._do_platform_ansible_run():
+                print("success!")
+
 
     # these are less important because we already do them
     def add_remotes(self):
