@@ -684,8 +684,7 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'r' in pins_info: 
-                        if not self.power_loss_detected:
+                    if 'r' in pins_info and not self.power_loss_detected:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
                             self.power_loss_detected = True
