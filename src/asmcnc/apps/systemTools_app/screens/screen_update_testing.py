@@ -342,8 +342,8 @@ class UpdateTestingScreen(Screen):
 
     def _ansible_reset_test(self):
         self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml')
-        if not self._do_platform_ansible_run():
-            reset_outcome = self.run_in_shell(repo, 'git reset --hard')
+        if not self._do_platform_ansible_run()[0]:
+            reset_outcome = self.run_in_shell(repo, 'git --no-pager reset --hard')
             print("Reset outcome")
             print(reset_outcome)
             if self._do_platform_ansible_run():
