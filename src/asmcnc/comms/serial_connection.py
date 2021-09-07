@@ -56,6 +56,8 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
+    power_loss_detected = False
+
     def __init__(self, machine, screen_manager, settings_manager):
 
         self.sm = screen_manager
@@ -790,7 +792,13 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    
+                    if 'r' in pins_info and not self.power_loss_detected:
+                            # trigger power loss procedure!!
+                            self.m._grbl_door()
+                            self.m.set_pause(True)
+                            log("Power loss or DC power supply")
+                            self.power_loss_detected = True
+                            Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
