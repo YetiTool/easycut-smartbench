@@ -344,6 +344,7 @@ class UpdateTestingScreen(Screen):
         self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml')
         if not self._do_platform_ansible_run():
             reset_outcome = self.run_in_shell(repo, 'git reset --hard')
+            print("Reset outcome")
             print(reset_outcome)
             if self._do_platform_ansible_run():
                 print("success!")
