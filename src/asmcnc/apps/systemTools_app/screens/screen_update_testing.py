@@ -347,4 +347,25 @@ class UpdateTestingScreen(Screen):
     def remove_remotes(self):
         pass
 
+# def _set_origin_URL(self, repo):
+#     origin_url = easycut_origin_url
+#     return self.run_in_shell(repo, 'git remote set-url origin ' + origin_url)
 
+# ## set up temporary repository from USB
+# # arguments: argument 1 is the repo we're setting up for, argument 2 is the usb filepath
+
+# def _set_up_usb_repo(self, repo, remote_path):
+#     return self.run_in_shell(repo, 'git remote add temp_repository ' + remote_path)
+
+# def _check_usb_repo(self, repo):
+#     output = self.run_in_shell(repo, 'git remote')
+#     if 'temp_repository' in str(output[1]):
+#         return self.run_in_shell(repo, 'git remote show temp_repository')
+#     else:
+#         return [True]
+
+# def _remove_usb_repo(self, repo, remote_path):
+#     return self.run_in_shell(repo, 'git remote remove temp_repository')
+
+# def unset_temp_remotes_if_they_exist(self):
+#     if not (self._check_usb_repo('easycut')[0]): self._remove_usb_repo('easycut', remote_cache_easycut)
