@@ -684,9 +684,9 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    # if 'r' in pins_info:
-                    #     # Power lost, attempt to send event
-                    #     self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi')
+                    if 'r' in pins_info and sys.platform not in ['win32', 'darwin'] and self.m.send_power_events:
+                        # Power lost, attempt to send event
+                        self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi')
 
                     
                 

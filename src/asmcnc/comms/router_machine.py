@@ -60,6 +60,7 @@ class RouterMachine(object):
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
+    power_event_settings_file_path = smartbench_values_dir + 'power_event_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
 
     ## PROBE SETTINGS
@@ -187,6 +188,12 @@ class RouterMachine(object):
             file.write(str(self.device_label))
             file.close()
 
+        if not path.exists(self.power_event_settings_file_path):
+            log('Creating power event settings file...')
+            file = open(self.power_event_settings_file_path, 'w+')
+            file.write('True')
+            file.close()
+
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -197,6 +204,7 @@ class RouterMachine(object):
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
         self.read_device_label()
+        self.read_power_event_settings()
 
 
     ## SET UP OPTIONS
@@ -520,6 +528,26 @@ class RouterMachine(object):
 
         except:
             log("Unable to write device label")
+            return False
+
+    ## POWER EVENT
+    def read_power_event_settings(self):
+
+        try:
+            file = open(self.power_event_settings_file_path, 'r')
+            power_event_options = file.read()
+            file.close()
+
+            if power_event_options == 'True':
+                self.send_power_events = True
+            else:
+                self.send_power_events = False
+
+            log("Read in power event settings")
+            return True
+
+        except: 
+            log("Unable to read power event settings")
             return False
 
 # GRBL SETTINGS
