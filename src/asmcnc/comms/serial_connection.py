@@ -687,6 +687,7 @@ class SerialConnection(object):
                     if 'r' in pins_info and not self.power_loss_detected:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
+                            self.m.set_pause(True)
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
                     
