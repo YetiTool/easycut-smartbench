@@ -688,9 +688,9 @@ class SerialConnection(object):
                             # trigger power loss procedure!!
                             self.m._grbl_door()
                             self.m.set_pause(True)
+                            log("Power loss or DC power supply")
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
-                    
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
