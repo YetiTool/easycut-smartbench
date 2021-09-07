@@ -181,7 +181,7 @@ class StatusBar(Widget):
             except:
                 ip_address = ''
                 self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-        else:
+        elif sys.platform != "darwin":
             try:
                 f = os.popen('hostname -I')
                 first_info = f.read().strip().split(' ')[0]

@@ -64,33 +64,38 @@ Builder.load_string("""
                             pos: self.pos
                             size: self.size
                     # Version labels:
-                    BoxLayout: 
-                        size_hint: (None, None)
+                    BoxLayout:
+                        orientation: 'horizontal'
                         height: dp(100)
                         width: dp(375)
-                        orientation: "vertical"
-                        padding: [0,0,30,0]
-                        Label: 
-                            color: 0,0,0,1
-                            font_size: 18
-                            markup: True
-                            halign: "center"
-                            valign: "bottom"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            text: "[b]Current Version[/b]"                  
-                        Label:
-                            id: sw_version_label
-                            color: 0,0,0,1
-                            font_size: 28
-                            markup: True
-                            halign: "center"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            text: "[b]-[/b]"                         
+                        Image:
+                            size_hint_x: 0.4
+                            source: "./asmcnc/skavaUI/img/qr_release_notes.png"
+                        BoxLayout:
+                            orientation: "vertical"
+                            Label:
+                                size_hint_y: 1.5
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                valign: "bottom"
+                                text_size: self.size
+                                text: "[b]Current Version[/b]"
+                            Label:
+                                id: sw_version_label
+                                color: 0,0,0,1
+                                font_size: 23
+                                markup: True
+                                text_size: self.size
+                                text: "[b]-[/b]"
+                            Label:
+                                color: 0,0,0,1
+                                font_size: 16
+                                markup: True
+                                valign: "top"
+                                text_size: self.size
+                                text: "[b]Find release notes at yetitool.com[/b]"
+                   
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
@@ -369,28 +374,33 @@ class SWUpdateScreen(Screen):
 
         def do_refresh():
 
-            if self.usb_stick.is_available():
-                dir_path_name = self.set.find_usb_directory()
-        
-                if dir_path_name != 2 and dir_path_name != 0:
-                    if self.set.set_up_remote_repo(dir_path_name):
-                        self.set.refresh_latest_sw_version()
+            try:
+                if self.usb_stick.is_available():
+                    dir_path_name = self.set.find_usb_directory()
+            
+                    if dir_path_name != 2 and dir_path_name != 0 and dir_path_name != '':
+                        if self.set.set_up_remote_repo(dir_path_name):
+                            self.set.refresh_latest_sw_version()
 
+                        else:
+                            if self.wifi_image.source != self.wifi_on:
+                                refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
+                                popup_info.PopupError(self.sm, refresh_error_message)
                     else:
                         if self.wifi_image.source != self.wifi_on:
                             refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
                             popup_info.PopupError(self.sm, refresh_error_message)
-                else:
-                    if self.wifi_image.source != self.wifi_on:
-                        refresh_error_message = 'Could not refresh version!\n\nPlease check the file on your USB stick.'
-                        popup_info.PopupError(self.sm, refresh_error_message)
 
-                self.set.clear_remote_repo(dir_path_name)                 
+                    try: self.set.clear_remote_repo(dir_path_name)
+                    except: pass
 
-            if self.wifi_image.source == self.wifi_on:
-                self.set.refresh_latest_sw_version()
+                if self.wifi_image.source == self.wifi_on:
+                    self.set.refresh_latest_sw_version()
 
-            if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
+                if not self.usb_stick.is_available() and self.wifi_image.source != self.wifi_on:
+                    refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
+                    popup_info.PopupError(self.sm, refresh_error_message)
+            except:
                 refresh_error_message = 'Could not refresh version!\n\nPlease check your connection.'
                 popup_info.PopupError(self.sm, refresh_error_message)
 
@@ -399,12 +409,13 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: do_refresh(),0.5)
     
     def update_screen_with_latest_version(self):
-        if self.set.latest_sw_version != '':    
-            self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
-        elif self.wifi_image.source != self.wifi_on:
-            self.latest_software_version_label.text = 'WiFi connection is needed to check if a new version is available.'
+        if self.set.latest_sw_version != '':
+            if self.set.latest_sw_version != self.set.sw_version:
+                self.latest_software_version_label.text = '[b]New version available: ' + self.set.latest_sw_version + '[/b]'
+            else: 
+                self.latest_software_version_label.text = '[b]You are up to date![/b]'
         else:
-            self.latest_software_version_label.text = '[b]You are up to date![/b]'
+            self.latest_software_version_label.text = '[b]Could not fetch version! Connection issue.[/b]'
  
     def on_enter(self):
 
@@ -488,9 +499,9 @@ class SWUpdateScreen(Screen):
             elif outcome == "Software already up to date!": 
                 popup_info.PopupError(self.sm, outcome)
                 
-            elif outcome == "Could not resolve host: github.com":
+            elif "Could not resolve host: github.com" in outcome:
                 description = "Could not connect to github. Please check that your connection is stable, or try again later"
-                popup_info.PopupError(self.sm, outcome)
+                popup_info.PopupError(self.sm, description)
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
@@ -510,7 +521,7 @@ class SWUpdateScreen(Screen):
                 outcome = self.set.reclone_EC()
                 
                 if outcome == False:
-                    description = "It was not possible to backup the software safely, please try again later.\n\n" + \
+                    description = "It was not possible to backup the software safely, please check your connection and try again later.\n\n" + \
                     "If this issue persists, please contact Yeti Tool Ltd for support."
                     popup_info.PopupError(self.sm, description)           
             else: 

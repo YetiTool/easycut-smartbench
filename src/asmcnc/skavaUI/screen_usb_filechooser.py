@@ -6,7 +6,7 @@ Created on 19 Aug 2017
 
 import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
@@ -27,7 +27,13 @@ Builder.load_string("""
     on_enter: root.refresh_filechooser()
 
     filechooser_usb:filechooser_usb
+    icon_layout_fc : icon_layout_fc
+    list_layout_fc : list_layout_fc
+    toggle_view_button : toggle_view_button
+    sort_button: sort_button
     load_button:load_button
+    image_view : image_view
+    image_sort: image_sort
     image_select:image_select
     usb_status_label:usb_status_label
 
@@ -71,21 +77,55 @@ Builder.load_string("""
             halign: 'center'                
 
 
-        FileChooserIconView:
+        FileChooser:
             padding: [0,10]
             size_hint_y: 5
             id: filechooser_usb
             show_hidden: False
             filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-            on_selection: 
-                root.refresh_filechooser()
-
-
-
+            on_selection: root.refresh_filechooser()
+            FileChooserIconLayout
+                id: icon_layout_fc
+            FileChooserListLayout
+                id: list_layout_fc
                
         BoxLayout:
             size_hint_y: None
             height: 100
+
+            ToggleButton:
+                id: toggle_view_button
+                size_hint_x: 1
+                on_press: root.switch_view()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_view
+                        source: "./asmcnc/skavaUI/img/file_select_list_icon.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True 
+
+            Button:
+                id: sort_button
+                size_hint_x: 1
+                on_press: root.switch_sort()
+                background_color: hex('#FFFFFF00')
+                BoxLayout:
+                    padding: 25
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        id: image_sort
+                        source: "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
             Button:
                 disabled: False
@@ -134,7 +174,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.import_usb_file(filechooser_usb.selection[0])
+                    root.import_usb_file()
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -157,18 +197,78 @@ job_cache_dir = './jobCache/'    # where job files are cached for selection (for
 job_q_dir = './jobQ/'            # where file is copied if to be used next in job
 verbose = True
 
+def date_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = False))
+
+def date_order_sort_reverse(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+        sorted((f for f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi).st_mtime, reverse = True))
+
+def name_order_sort(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+            sorted(f for f in files if not filesystem.is_dir(f)))
+
+def name_order_sort_reverse(files, filesystem):
+    return (sorted(f for f in files if filesystem.is_dir(f)) +
+            sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
+
 class USBFileChooser(Screen):
 
 
     filename_selected_label_text = StringProperty()
     usb_stick = ObjectProperty()
-
+    sort_by_date = ObjectProperty(date_order_sort)
+    sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
+    is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
 
+    # MANAGING KIVY SCROLL BUG
+
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop = self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start = self.scrolling_start)
+
+        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+
+        self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.icon_layout_fc.ids.scrollview._update_effect_bounds)
+        self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
+        self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
+        self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
+
+
+    def alternate_update_effect_bounds_icon(self, *args):
+        self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
+
+    def alternate_update_effect_bounds_list(self, *args):
+        self.update_y_bounds_try_except(self.list_layout_fc.ids.scrollview)
+
+    def update_y_bounds_try_except(sefl, scrollview_object):
+
+        try:
+            if not scrollview_object._viewport or not scrollview_object.effect_y:
+                return
+            scrollable_height = scrollview_object.height - scrollview_object.viewport_size[1]
+            scrollview_object.effect_y.min = 0 if scrollable_height < 0 else scrollable_height
+            scrollview_object.effect_y.max = scrollable_height
+            scrollview_object.effect_y.value = scrollview_object.effect_y.max * scrollview_object.scroll_y
+
+        except: 
+            pass
+
+    def scrolling_start(self, *args):
+        self.is_filechooser_scrolling = True
+
+    def scrolling_stop(self, *args):
+        self.is_filechooser_scrolling = False
+
+    # SCREEN FUNCTIONS
 
     def set_USB_path(self, usb_path):
 
@@ -182,8 +282,13 @@ class USBFileChooser(Screen):
         self.refresh_filechooser()
         self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
         self.update_usb_status()
-        
+        self.switch_view()
+
     def on_pre_leave(self):
+
+        self.sm.get_screen('local_filechooser').filechooser.sort_func = self.filechooser_usb.sort_func
+        self.sm.get_screen('local_filechooser').image_sort.source = self.image_sort.source
+
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
     def check_for_job_cache_dir(self):
@@ -216,9 +321,38 @@ class USBFileChooser(Screen):
         except: 
             pass
 
+    def switch_view(self):
+
+        if self.toggle_view_button.state == "normal":
+            self.filechooser_usb.view_mode = 'icon'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+
+        elif self.toggle_view_button.state == "down":
+            self.filechooser_usb.view_mode = 'list'
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
+
+    def switch_sort(self):
+
+        if self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date_reverse:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
+
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_date:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
+
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_name_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
+
+        elif self.filechooser_usb.sort_func == self.sm.get_screen('local_filechooser').sort_by_name_reverse:
+            self.filechooser_usb.sort_func = self.sm.get_screen('local_filechooser').sort_by_date_reverse
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
+
+        self.filechooser_usb._update_files()
+
     def refresh_filechooser(self):
 
-        if verbose: print 'Refreshing filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 
@@ -243,7 +377,9 @@ class USBFileChooser(Screen):
         self.filechooser_usb._update_files()
 
      
-    def import_usb_file(self, file_selection):
+    def import_usb_file(self):
+
+        file_selection = self.filechooser_usb.selection[0]
 
         self.check_for_job_cache_dir()
         
@@ -257,18 +393,13 @@ class USBFileChooser(Screen):
             print new_file_path
             
             self.go_to_loading_screen(new_file_path)
-        
 
     def quit_to_local(self):
-
-        self.manager.current = 'local_filechooser'
-
-          
-    def quit_to_home(self):
-
-        self.manager.current = 'home'
-
+        if not self.is_filechooser_scrolling:
+            self.manager.current = 'local_filechooser'
         
     def go_to_loading_screen(self, file_selection):
-        self.manager.get_screen('loading').loading_file_name = file_selection
-        self.manager.current = 'loading'
+        if not self.is_filechooser_scrolling:
+            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.manager.current = 'loading'
+

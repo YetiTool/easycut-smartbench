@@ -16,6 +16,8 @@ Builder.load_string("""
 
 <SquaringScreenDecisionManualVsSquare>:
 
+    already_square_button: already_square_button
+
     canvas:
         Color: 
             rgba: hex('#E5E5E5FF')
@@ -101,6 +103,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
+                        id: already_square_button
                         source: "./asmcnc/skavaUI/img/squaring_btn_already_square.png"
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
@@ -147,8 +150,13 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         super(SquaringScreenDecisionManualVsSquare, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-    
-    
+
+    def on_pre_enter(self):
+
+        if self.m.is_machine_completed_the_initial_squaring_decision:
+            self.already_square_button.source = "./asmcnc/skavaUI/img/squaring_btn_still_square.png"
+
+
     def already_square(self):
         
         self.m.is_squaring_XY_needed_after_homing = False

@@ -417,9 +417,14 @@ class LoadingScreen(Screen):
         job_box.range_x[1] = self.gcode_preview_widget.max_x
         job_box.range_y[0] = self.gcode_preview_widget.min_y
         job_box.range_y[1] = self.gcode_preview_widget.max_y
-        job_box.range_z[0] = self.gcode_preview_widget.min_z
-        job_box.range_z[1] = self.gcode_preview_widget.max_z
-        
+
+        if [self.gcode_preview_widget.min_z, self.gcode_preview_widget.max_z] == [999999, -999999]:
+            job_box.range_z[0] = 0
+            job_box.range_z[1] = 0
+        else:
+            job_box.range_z[0] = self.gcode_preview_widget.min_z
+            job_box.range_z[1] = self.gcode_preview_widget.max_z
+
         self.sm.get_screen('home').job_box = job_box
 
         # non_modal_gcode also used for file preview in home screen
@@ -441,6 +446,8 @@ class LoadingScreen(Screen):
         self.progress_value = 'Could not load job'
         self.warning_title_label.text = 'ERROR:'
         self.warning_body_label.text = 'It was not possible to load your job.\nPlease double check the file for errors before attempting to re-load it.'
+        self.job_gcode = []
+        self.loading_file_name = ''
         self.check_button_label.text = 'Check job'
         self.quit_button_label.text = 'Quit to home'
         self.check_button.disabled = True

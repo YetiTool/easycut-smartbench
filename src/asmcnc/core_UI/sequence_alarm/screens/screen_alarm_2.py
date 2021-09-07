@@ -9,22 +9,18 @@ from kivy.clock import Clock
 
 # Kivy UI builder:
 Builder.load_string("""
-
 <AlarmScreen2>:
-
 	alarm_title : alarm_title
 	icon_container : icon_container
 	icon_left : icon_left
 	icon_right : icon_right
 	description_label : description_label
-
 	canvas:
 		Color: 
 			rgba: [1, 1, 1, 1]
 		Rectangle: 
 			size: self.size
 			pos: self.pos
-
 	BoxLayout:
 		orientation: 'vertical'
 		padding: 0
@@ -32,7 +28,6 @@ Builder.load_string("""
 		size_hint: (None, None)
 		height: dp(480)
 		width: dp(800)
-
 		# Alarm header
 		BoxLayout: 
 			padding: [15,0,15,0]
@@ -41,7 +36,6 @@ Builder.load_string("""
 			height: dp(50)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			Label:
 				id: alarm_title
 				size_hint: (None, None)
@@ -52,8 +46,6 @@ Builder.load_string("""
 				height: dp(50)
 				width: dp(770)
 				text_size: self.size
-
-
 		# Red underline
 		BoxLayout: 
 			padding: [10,0,10,0]
@@ -68,7 +60,6 @@ Builder.load_string("""
 				y: self.parent.y
 				size: self.parent.width, self.parent.height
 				allow_stretch: True
-
 		# Image and text
 		BoxLayout: 
 			padding: [0,35,0,0]
@@ -77,8 +68,6 @@ Builder.load_string("""
 			height: dp(283)
 			width: dp(800)
 			orientation: 'vertical'
-
-
 			BoxLayout: 
 				id: icon_container
 				padding: [190,30,218.5,0]
@@ -93,15 +82,12 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(100)
 					width: dp(120)
-
 				Image:
 					id: icon_right
 					allow_stretch: False
 					size_hint: (None, None)
 					height: dp(100)
 					width: dp(63)
-
-
 			BoxLayout:
 				id: description container
 				padding: [30,0,30,0]
@@ -118,7 +104,6 @@ Builder.load_string("""
 					valign: 'middle'
 					text_size: self.size
 					size: self.parent.size
-
 		# Buttons
 		BoxLayout: 
 			padding: [10,0,10,10]
@@ -126,7 +111,6 @@ Builder.load_string("""
 			height: dp(142)
 			width: dp(800)
 			orientation: 'horizontal'
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -150,7 +134,6 @@ Builder.load_string("""
 							y: self.parent.y
 							size: self.parent.width, self.parent.height
 							allow_stretch: True
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -170,13 +153,11 @@ Builder.load_string("""
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
-
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
 				width: dp(244.5)
 				padding: [193.5, 0, 0, 0]
-
 """)
 
 class AlarmScreen2(Screen):
@@ -191,10 +172,12 @@ class AlarmScreen2(Screen):
 		self.description_label.text = "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it."
 
 	def next_screen(self):
+		self.a.sm.get_screen('alarm_3').for_support = True
 		self.a.sm.current = 'alarm_3'
 
 	def prev_screen(self):
-		self.a.sm.current = 'alarm_1'
-
-
-# git force	
+		if self.a.support_sequence:
+			self.a.sm.current = 'alarm_1'
+		else:
+			self.a.sm.get_screen('alarm_3').for_support = False
+			self.a.sm.current = 'alarm_3'

@@ -7,6 +7,7 @@ from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1, \
 screen_alarm_2, screen_alarm_3, \
 screen_alarm_4, screen_alarm_5
 from asmcnc.comms import usb_storage
+from asmcnc.skavaUI import popup_info
 
 # this class is set up in serial comms, so that alarm screens are available at any time
 # not going to use it as a "screen manager" as alarm screens want to be instantly available at all times
@@ -20,7 +21,7 @@ ALARM_CODES_DICT = {
 	"ALARM:4" : "Probe fail. Probe was not in the expected state before starting probe cycle.",
 	"ALARM:5" : "Probe fail. Tool did not contact the probe within the search distance.",
 	"ALARM:6" : "Homing fail: SmartBench was reset during active homing cycle.",
-	"ALARM:7" : "Homing fail: the stop bar was triggered during the homing cycle.",
+	"ALARM:7" : "Homing fail: the interrupt bar was triggered during the homing cycle.",
 	"ALARM:8" : "Homing fail: during the homing cycle, an axis failed to clear the limit switch when pulling off.",
 	"ALARM:9" : "Homing fail: could not find the limit switch within search distance.",
 	"ALARM:10": "Homing fail: on dual axis machines, could not find the second limit switch for self-squaring."
@@ -33,11 +34,16 @@ class AlarmSequenceManager(object):
 	alarm_code = ''
 	alarm_description = ''
 
+	# is full support sequence needed?
+	support_sequence = False
+
 	# retrieve these for the alarm report
 	trigger_description = ''
 	status_cache = ''
 
 	report_string= 'Loading report...'
+
+	report_setup_event = None
 
 	def __init__(self, screen_manager, settings_manager, machine):
 
@@ -66,25 +72,42 @@ class AlarmSequenceManager(object):
 
 	def alert_user(self, message):
 
-		if not self.is_alarm_sequence_already_running():
-			if self.is_error_screen_already_up():
-				self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-			else:
-				self.return_to_screen = self.sm.current
+		try:
+			if not self.is_alarm_sequence_already_running():
+				if self.is_error_screen_already_up():
+					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+				else:
+					self.return_to_screen = self.sm.current
 
-			self.alarm_code = message
-			self.alarm_description = ALARM_CODES_DICT.get(message, "")
-			self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
-			self.sm.current = 'alarm_1'
+				self.alarm_code = message
+				self.alarm_description = ALARM_CODES_DICT.get(message, "")
+				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description + "\n" + "Getting details..."
+				else:
+					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
+				self.determine_screen_sequence()
+				self.sm.current = 'alarm_1'
 
-			if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-				self.sm.get_screen('alarm_1').description_label.text = (
-					self.alarm_description + \
-					"\n" + \
-					"Getting details..."
-					)
+		except:
+			print("Kivy fail happened, try everything again")
+			self.refire_screen()
 
-			self.handle_alarm_state()
+		self.handle_alarm_state()
+
+	def refire_screen(self):
+		print("Screen refired")
+		self.sm.current = 'alarm_2'
+		print("alarm 2")
+		self.sm.current = 'alarm_1'
+		print("alarm 1")
+		# this is a massive hack to get past random kivy fails
+
+
+	def determine_screen_sequence(self):
+		if ((self.alarm_code).endswith('4') or (self.alarm_code).endswith('5') or (self.alarm_code).endswith('6') or (self.alarm_code).endswith('7')):
+			self.support_sequence = False
+		else:
+			self.support_sequence = True
 
 
 	def exit_sequence(self):
@@ -188,17 +211,19 @@ class AlarmSequenceManager(object):
 					"\n" +
 					self.trigger_description
 				)
-		Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
+		self.report_setup_event = Clock.schedule_once(lambda dt: self.setup_report(), 0.2)
 
 
 
 	def reset_variables(self):
 
-		self.return_to_screen = ''
-		self.alarm_code = ''
-		self.alarm_description = ''
-		self.trigger_description = ''
-		self.status_cache = ''
+		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
+
+		self.return_to_screen = ""
+		self.alarm_code = ""
+		self.alarm_description = ""
+		self.trigger_description = ""
+		self.status_cache = ""
 		self.report_string= 'Loading report...'
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
 
@@ -209,8 +234,13 @@ class AlarmSequenceManager(object):
 
 		def get_report(count):
 			if self.usb_stick.is_usb_mounted_flag == True:
+				message = 'Downloading report, please wait...'
+				wait_popup = popup_info.PopupWait(self.sm, description = message)
 				self.write_report_to_file()
+				wait_popup.popup.dismiss()
 				self.usb_stick.disable()
+				message = 'Report downloaded'
+				popup_info.PopupMiniInfo(self.sm, description = message)
 
 			elif count > 30:
 				if self.usb_stick.is_available(): self.usb_stick.disable()
@@ -226,6 +256,13 @@ class AlarmSequenceManager(object):
 
 		self.get_status_info()
 
+		try: 
+			# If variables get reset then this will fail
+			alarm_number = str((self.alarm_code.split(':'))[1])
+		except:
+			alarm_number = ""
+
+
 		self.report_string = (
 
 			"[b]" + "Alarm report" + "[/b]" + \
@@ -235,7 +272,7 @@ class AlarmSequenceManager(object):
 			"Hardware version:" + " " + self.hw_version + "\n" + \
 			"Serial number:" + " " + self.machine_serial_number + \
 			"\n\n" + \
-			"Alarm code:" + " " + str((self.alarm_code.split(':'))[1]) + \
+			"Alarm code:" + " " + alarm_number + \
 			"\n" + \
 			"Alarm description: " + " " + self.alarm_description + \
 			"\n" + \

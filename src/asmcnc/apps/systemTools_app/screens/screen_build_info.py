@@ -9,6 +9,7 @@ import os, sys
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
@@ -21,6 +22,8 @@ Builder.load_string("""
     fw_version_label: fw_version_label
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
+    smartbench_name : smartbench_name
+    smartbench_name_input : smartbench_name_input
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -74,8 +77,46 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (None, None)
-                    height: dp(280)
+                    height: dp(300)
                     width: dp(550)
+
+                    Button:
+                        id: smartbench_name
+                        text: '[b]My SmartBench[/b]'
+                        background_color: hex('#f9f9f9ff')
+                        background_normal: ""
+                        background_down: ""
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 30
+                        size_hint_y: None
+                        height: dp(40)
+                        opacity: 1
+                        on_press: root.open_rename()
+                        focus_next: smartbench_name_input
+
+                    TextInput:
+                        padding: [4, 2]
+                        id: smartbench_name_input
+                        text: 'My SmartBench'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 24
+                        size_hint_y: None
+                        height: dp(0)
+                        size_hint_x: None
+                        width: dp(500)
+                        opacity: 0
+                        on_text_validate: root.save_new_name()
+                        # unfocus_on_touch: True
+                        disabled: True
+                        multiline: False
 
                     Label:
                         id: smartbench_model
@@ -85,7 +126,7 @@ Builder.load_string("""
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 24
+                        font_size: 22
 
                     GridLayout:
                         size: self.parent.size
@@ -93,7 +134,7 @@ Builder.load_string("""
                         cols: 2
                         rows: 8
                         size_hint: (None, None)
-                        height: dp(240)
+                        height: dp(220)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
@@ -124,7 +165,7 @@ Builder.load_string("""
                             font_size: 20
 
                         Label:
-                            text: '[b]Console serial number[/b]'
+                            text: '[b]Console hostname[/b]'
                             color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
@@ -242,7 +283,7 @@ Builder.load_string("""
                         size_hint: (None, None)
                         height: dp(35)
                         width: dp(150)
-                        # padding: [30,0]
+
                         ToggleButton:
                             id: more_info_button
                             size_hint: (None,None)
@@ -351,6 +392,10 @@ Builder.load_string("""
 class BuildInfoScreen(Screen):
 
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
+    smartbench_name_filepath = '/home/pi/smartbench_name.txt'
+
+    smartbench_name_unformatted = 'My SmartBench'
+    smartbench_name_formatted = 'My SmartBench'
 
 
     def __init__(self, **kwargs):
@@ -358,6 +403,8 @@ class BuildInfoScreen(Screen):
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
+
+        self.smartbench_name_input.bind(focus=self.on_focus)
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
@@ -376,6 +423,8 @@ class BuildInfoScreen(Screen):
         self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
 
         self.get_smartbench_model()
+        self.get_smartbench_name()
+
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -434,3 +483,71 @@ class BuildInfoScreen(Screen):
                 ip_address = ''
 
         return ip_address
+
+
+    ## SMARTBENCH NAMING
+
+    def on_focus(self, instance, value):
+        if not value:
+            self.save_new_name()
+
+    def set_focus_on_text_input(self, dt):
+        self.smartbench_name_input.focus = True
+
+    def open_rename(self):
+        
+        self.smartbench_name.disabled = True
+        self.smartbench_name_input.disabled = False
+        self.smartbench_name.height = 0
+        self.smartbench_name.opacity = 0
+        self.smartbench_name_input.height = 40
+        self.smartbench_name_input.opacity = 1
+        self.smartbench_name.focus = False
+
+        Clock.schedule_once(self.set_focus_on_text_input, 0.3)
+        
+
+    def save_new_name(self):
+        self.smartbench_name_unformatted = self.smartbench_name_input.text
+        self.write_name_to_file()
+
+        self.smartbench_name_input.focus = False
+
+        self.smartbench_name_input.disabled = True
+        self.smartbench_name.disabled = False
+        self.smartbench_name_input.height = 0
+        self.smartbench_name_input.opacity = 0
+        self.smartbench_name.height = 40
+        self.smartbench_name.opacity = 1
+
+        self.get_smartbench_name()
+
+    def get_smartbench_name(self):
+        try:
+            file = open(self.smartbench_name_filepath, 'r')
+            self.smartbench_name_unformatted = str(file.read())
+            file.close()
+
+        except: 
+            self.smartbench_name_unformatted = 'My SmartBench'
+
+        # Remove newlines
+        self.smartbench_name_formatted = self.smartbench_name_unformatted.replace('\n', ' ')
+        # Remove trailing and leading whitespaces
+        self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
+
+        self.smartbench_name.text = '[b]' + self.smartbench_name_formatted + '[/b]'
+        self.smartbench_name_input.text = self.smartbench_name_formatted
+
+    def write_name_to_file(self):
+
+        try:
+            file_sb_name = open(self.smartbench_name_filepath, "w+")
+            file_sb_name.write(str(self.smartbench_name_unformatted))
+            file_sb_name.close()
+            return True
+
+        except: 
+            warning_message = 'Problem saving nickname!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
