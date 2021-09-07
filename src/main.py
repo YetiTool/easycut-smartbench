@@ -64,13 +64,16 @@ from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
+from asmcnc.skavaUI import screen_release_notes # @UnresolvedImport
+from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
 
 # developer testing
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.7.1'
+initial_version = 'v1.7.2-beta'
 
 # default starting screen
 start_screen = 'welcome'
@@ -131,6 +134,8 @@ class SkavaUI(App):
 
         if start_screen == 'pc_alert': 
             powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
+            release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, version = initial_version)
+            restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
 
         else: 
 
@@ -175,10 +180,13 @@ class SkavaUI(App):
             spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
             stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m)
             lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
+            tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m)
 
 
         if start_screen == 'pc_alert': 
             sm.add_widget(powercycle_screen)
+            sm.add_widget(release_notes_screen)
+            sm.add_widget(restart_smartbench_screen)
         else:
             # add the screens to screen manager
             sm.add_widget(lobby_screen)
@@ -207,6 +215,7 @@ class SkavaUI(App):
             sm.add_widget(spindle_cooldown_screen)
             sm.add_widget(stop_or_resume_decision_screen)
             sm.add_widget(lift_z_on_pause_decision_screen)
+            sm.add_widget(tool_selection_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 

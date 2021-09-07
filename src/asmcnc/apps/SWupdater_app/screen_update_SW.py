@@ -64,33 +64,38 @@ Builder.load_string("""
                             pos: self.pos
                             size: self.size
                     # Version labels:
-                    BoxLayout: 
-                        size_hint: (None, None)
+                    BoxLayout:
+                        orientation: 'horizontal'
                         height: dp(100)
                         width: dp(375)
-                        orientation: "vertical"
-                        padding: [0,0,30,0]
-                        Label: 
-                            color: 0,0,0,1
-                            font_size: 18
-                            markup: True
-                            halign: "center"
-                            valign: "bottom"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            text: "[b]Current Version[/b]"                  
-                        Label:
-                            id: sw_version_label
-                            color: 0,0,0,1
-                            font_size: 28
-                            markup: True
-                            halign: "center"
-                            valign: "top"
-                            text_size: self.size
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            text: "[b]-[/b]"                         
+                        Image:
+                            size_hint_x: 0.4
+                            source: "./asmcnc/skavaUI/img/qr_release_notes.png"
+                        BoxLayout:
+                            orientation: "vertical"
+                            Label:
+                                size_hint_y: 1.5
+                                color: 0,0,0,1
+                                font_size: 20
+                                markup: True
+                                valign: "bottom"
+                                text_size: self.size
+                                text: "[b]Current Version[/b]"
+                            Label:
+                                id: sw_version_label
+                                color: 0,0,0,1
+                                font_size: 23
+                                markup: True
+                                text_size: self.size
+                                text: "[b]-[/b]"
+                            Label:
+                                color: 0,0,0,1
+                                font_size: 16
+                                markup: True
+                                valign: "top"
+                                text_size: self.size
+                                text: "[b]Find release notes at yetitool.com[/b]"
+                   
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(100)
