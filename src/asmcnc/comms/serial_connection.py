@@ -55,6 +55,8 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
+    power_loss_detected = False
+
     def __init__(self, machine, screen_manager, settings_manager, job):
 
         self.sm = screen_manager
@@ -684,9 +686,10 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'r' in pins_info and sys.platform not in ['win32', 'darwin'] and self.m.send_power_events:
+                    if 'r' in pins_info and sys.platform not in ['win32', 'darwin'] and not self.power_loss_detected:
                         # Power lost, attempt to send event
                         self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi')
+                        self.power_loss_detected = True
 
                     
                 
