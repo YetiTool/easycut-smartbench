@@ -1,0 +1,13 @@
+Very little to note here.
+
+1. Expect test folder to be a different folder to source files /src/
+2. Unit tests to inherit objects from, run on and check functionality of specific bits of src code
+3. tbc on Python packages to run this as yet.
+4. BDD likely to be used - Behaviour Driven Development (BDD)
+5. BDD uses simple phrases note a scenario that is tested:
+6. E.g.    GIVEN - the SmartBench has started
+           WHEN the user presses X button
+           THEN y happens
+           
+           Note the use of GIVEN WHEN and THEN as keywords.
+           
