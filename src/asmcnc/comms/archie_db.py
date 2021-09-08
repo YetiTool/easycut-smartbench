@@ -32,7 +32,7 @@ class SQLRabbit:
         except Exception as e:
             log("Pika connection exception: " + str(e))
         
-        self.interval = 1
+        self.interval = 10
         
         Clock.schedule_interval(self.run, self.interval)
         
@@ -67,7 +67,8 @@ class SQLRabbit:
                 "machine_info": {
                     "name": self.m.device_label,
                     "location": "Office" or '',
-                    "hostname": socket.gethostname()
+                    "hostname": socket.gethostname(),
+                    "ec_version": self.m.sett.sw_version
                 },
                 "statuses": {
                     "status": self.m.s.m_state,
