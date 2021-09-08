@@ -100,9 +100,26 @@
       line: '  reset = 17;'
   - debug:
       msg: This is easycut
-  - name: Disable bluetooth to use the AMA0 port
+  - name: Remove bluetooth line if it exists to use ttyS0 port
     lineinfile:
       name: /boot/config.txt
       state: absent
       # insertafter: 'enable_uart=1'
       line: 'dtoverlay=pi3-disable-bt'
+  - name: Update GPU memory
+    lineinfile: 
+      path: /boot/config.txt
+      regexp: 'gpu_mem=128'
+      line: 'gpu_mem=256'
+      backrefs: yes
+  - name: Copying the starteasycut shell script
+    template:
+      src: start-easycut.sh
+      dest: /home/pi/start-easycut.sh
+      mode: '0755'
+  - name: Add ansible_from_easycut line to Easycut config
+    lineinfile:
+      name: /home/pi/easycut-smartbench/src/config.txt
+      state: present
+      insertafter: EOF
+      line: 'ansible_from_easycut=True'

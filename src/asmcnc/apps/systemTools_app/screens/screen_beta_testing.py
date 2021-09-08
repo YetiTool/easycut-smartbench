@@ -275,7 +275,11 @@ class BetaTestingScreen(Screen):
         self.usb_stick.enable()
 
     def checkout_branch(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':       
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            # Update config as for any other SW release
+            self.set.update_config() 
+            
             # Strip whitespace
             branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
 

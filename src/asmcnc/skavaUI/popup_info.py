@@ -521,7 +521,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
         ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=reboot)
+        # ok_button.bind(on_press=reboot)
         
         popup.open()
         

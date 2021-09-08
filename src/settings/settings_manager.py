@@ -28,6 +28,7 @@ class Settings(object):
     fw_version = ''
     latest_fw_version = ''
     grbl_mega_dir = '/home/pi/grbl-Mega/' 
+    usb_or_wifi = ''
 
     def __init__(self, screen_manager):
         
@@ -130,7 +131,7 @@ class Settings(object):
             if version_to_checkout != self.sw_version:
                 os.system("cd /home/pi/easycut-smartbench/")
 
-                cmd  = ["git", "checkout", version_to_checkout]
+                cmd  = ["git", "checkout", "-f", version_to_checkout]
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 unformatted_git_output = p.communicate()[1]
@@ -172,13 +173,14 @@ class Settings(object):
             # copy EC into a backup directory
             os.system('mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
     
-            # Update starteasycut shell script to look for backup/other folders if required
-            # We really need to work on platform updates
-            case = (os.popen('grep "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
-            if not case.startswith('[ ! -d'):
-                backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-                sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
-                os.system(sed_cmd)
+            # GET ANSIBLE TO HANDLE THIS NOW INSTEAD:
+            # # Update starteasycut shell script to look for backup/other folders if required
+            # # We really need to work on platform updates
+            # case = (os.popen('grep "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
+            # if not case.startswith('[ ! -d'):
+            #     backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
+            #     sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
+            #     os.system(sed_cmd)
             
             # compare backup and current directory just in case, and return true if all is well    
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
@@ -319,14 +321,14 @@ class Settings(object):
 
 ## PLATFORM UPDATES
 
-    def update_platform(self):
-        self.refresh_latest_platform_version()
-        self.refresh_platform_version()
+    # def update_platform(self):
+    #     self.refresh_latest_platform_version()
+    #     self.refresh_platform_version()
 
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+    #     os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+    #     os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
 
-    def platform_ansible_service_run(self):
-        os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+    def ansible_service_run(self):
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
 
             

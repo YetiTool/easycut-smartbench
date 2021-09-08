@@ -78,14 +78,15 @@ initial_version = 'v1.7.2-beta'
 # default starting screen
 start_screen = 'welcome'
 
-# Config management
-def check_and_update_gpu_mem():
-    # System config (this should eventually be moved into platform management)
-    # Update GPU memory to handle more app
-    case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
-    if case.startswith('gpu_mem=128'):
-        os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
-        os.system('sudo reboot')
+# Moving to ansible
+# # Config management
+# def check_and_update_gpu_mem():
+#     # System config (this should eventually be moved into platform management)
+#     # Update GPU memory to handle more app
+#     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
+#     if case.startswith('gpu_mem=128'):
+#         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
+#         os.system('sudo reboot')
         
 def check_and_update_config():
     
@@ -98,12 +99,21 @@ def check_and_update_config():
     if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
         ver0_configuration()
         os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-        check_and_update_gpu_mem()
+        # check_and_update_gpu_mem() # moved to ansible
+
+        check_ansible_status()
 
         # if software update has happened, launch the power cycle screen instead
-        check_and_launch_powercycle_screen()        
+        check_and_launch_update_screen()        
 
-def check_and_launch_powercycle_screen():
+def check_ansible_status():
+    ansible_from_easycut = (os.popen('grep "ansible_from_easycut=True" /home/pi/easycut-smartbench/src/config.txt').read())
+    # if this comes out empty, run ansible and reboot
+    if not ansible_from_easycut:
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
+        os.system("sudo systemctl restart ansible.service && sudo reboot")
+
+def check_and_launch_update_screen():
     # Check whether machine needs to be power cycled (currently only after a software update)
     pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
     if pc_alert.startswith('power_cycle_alert=True'):
