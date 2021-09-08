@@ -24,6 +24,8 @@ Builder.load_string("""
     zh_version_label: zh_version_label
     smartbench_name : smartbench_name
     smartbench_name_input : smartbench_name_input
+    smartbench_location: smartbench_location
+    smartbench_location_input: smartbench_location_input
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     show_more_info: show_more_info
@@ -70,15 +72,16 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(780)
                 height: dp(320)
-                padding: 20
+                padding: [dp(20), dp(0)]
                 spacing: 0
                 orientation: 'horizontal'
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (None, None)
-                    height: dp(300)
+                    height: dp(350)
                     width: dp(550)
+                    padding: [dp(0), dp(20), dp(0), dp(0)]
 
                     Button:
                         id: smartbench_name
@@ -114,6 +117,44 @@ Builder.load_string("""
                         width: dp(500)
                         opacity: 0
                         on_text_validate: root.save_new_name()
+                        # unfocus_on_touch: True
+                        disabled: True
+                        multiline: False
+
+                    Button:
+                        id: smartbench_location
+                        text: '[b]SmartBench location[/b]'
+                        background_color: hex('#f9f9f9ff')
+                        background_normal: ""
+                        background_down: ""
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 24
+                        size_hint_y: None
+                        height: dp(30)
+                        opacity: 1
+                        on_press: root.open_rename_location()
+                        focus_next: smartbench_location_input
+
+                    TextInput:
+                        padding: [4, 2]
+                        id: smartbench_location_input
+                        text: 'SmartBench location'
+                        color: hex('#333333ff')
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: 20
+                        size_hint_y: None
+                        height: dp(0)
+                        size_hint_x: None
+                        width: dp(500)
+                        opacity: 0
+                        on_text_validate: root.save_new_location()
                         # unfocus_on_touch: True
                         disabled: True
                         multiline: False
@@ -397,6 +438,9 @@ class BuildInfoScreen(Screen):
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
+    smartbench_location_unformatted = 'SmartBench location'
+    smartbench_location_formatted = 'SmartBench location'
+
 
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
@@ -405,6 +449,7 @@ class BuildInfoScreen(Screen):
         self.set = kwargs['settings']
 
         self.smartbench_name_input.bind(focus=self.on_focus)
+        self.smartbench_location_input.bind(focus = self.on_focus_location)
 
         self.sw_version_label.text = self.set.sw_version
         self.pl_version_label.text = self.set.platform_version
@@ -424,6 +469,7 @@ class BuildInfoScreen(Screen):
 
         self.get_smartbench_model()
         self.get_smartbench_name()
+        self.get_smartbench_location()
 
 
     ## EXIT BUTTONS
@@ -541,5 +587,63 @@ class BuildInfoScreen(Screen):
 
         else:
             warning_message = 'Problem saving nickname!!'
+            popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
+            return False
+
+    ## SMARTBENCH LOCATION NAMING
+
+    def on_focus_location(self, instance, value):
+        if not value:
+            self.save_new_location()
+
+    def set_focus_on_location_input(self, dt):
+        self.smartbench_location_input.focus = True
+
+    def open_rename_location(self):
+        
+        self.smartbench_location.disabled = True
+        self.smartbench_location_input.disabled = False
+        self.smartbench_location.height = 0
+        self.smartbench_location.opacity = 0
+        self.smartbench_location_input.height = 30
+        self.smartbench_location_input.opacity = 1
+        self.smartbench_location.focus = False
+
+        Clock.schedule_once(self.set_focus_on_location_input, 0.3)
+
+    def save_new_location(self):
+        self.smartbench_location_unformatted = self.smartbench_location_input.text
+        self.write_location_to_file()
+
+        self.smartbench_location_input.focus = False
+
+        self.smartbench_location_input.disabled = True
+        self.smartbench_location.disabled = False
+        self.smartbench_location_input.height = 0
+        self.smartbench_location_input.opacity = 0
+        self.smartbench_location.height = 30
+        self.smartbench_location.opacity = 1
+
+        self.get_smartbench_location()
+
+    def get_smartbench_location(self):
+        
+        self.smartbench_location_unformatted = self.m.device_location
+
+        # Remove newlines
+        self.smartbench_location_formatted = self.smartbench_location_unformatted.replace('\n', ' ')
+        # Remove trailing and leading whitespaces
+        self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
+
+        self.smartbench_location.text = '[b]' + self.smartbench_location_formatted + '[/b]'
+        self.smartbench_location_input.text = self.smartbench_location_formatted
+
+    def write_location_to_file(self):
+
+        if self.m.write_device_location(str(self.smartbench_location_unformatted)):
+            return True
+
+        else:
+            warning_message = 'Problem saving location!!'
             popup_info.PopupWarning(self.systemtools_sm.sm, warning_message)
             return False
