@@ -108,7 +108,7 @@
       line: 'dtoverlay=pi3-disable-bt'
   - name: Update GPU memory
     lineinfile: 
-      path: /boot/config.txt
+      name: /boot/config.txt
       regexp: 'gpu_mem=128'
       line: 'gpu_mem=256'
       backrefs: yes
