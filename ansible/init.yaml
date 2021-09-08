@@ -114,8 +114,8 @@
       backrefs: yes
   - name: Copying the starteasycut shell script
     template:
-      src: start-easycut.sh
-      dest: /home/pi/start-easycut.sh
+      src: starteasycut.sh
+      dest: /home/pi/starteasycut.sh
       mode: '0755'
   - name: Add ansible_from_easycut line to Easycut config
     lineinfile:
