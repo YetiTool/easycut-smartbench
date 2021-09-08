@@ -61,6 +61,7 @@ class RouterMachine(object):
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
+    device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -99,6 +100,9 @@ class RouterMachine(object):
 
     ## DEVICE LABEL
     device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
+
+    ## DEVICE LOCATION
+    device_location = 'SmartBench location'
 
     reminders_enabled = True
 
@@ -187,6 +191,12 @@ class RouterMachine(object):
             file.write(str(self.device_label))
             file.close()
 
+        if not path.exists(self.device_location_file_path):
+            log('Creating device location settings file...')
+            file = open(self.device_location_file_path, 'w+')
+            file.write(str(self.device_location))
+            file.close()
+
     def get_persistent_values(self):
         self.read_set_up_options()
         self.read_z_touch_plate_thickness()
@@ -197,6 +207,7 @@ class RouterMachine(object):
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
         self.read_device_label()
+        self.read_device_location()
 
 
     ## SET UP OPTIONS
@@ -520,6 +531,36 @@ class RouterMachine(object):
 
         except:
             log("Unable to write device label")
+            return False
+
+    ## DEVICE LOCATION
+    def read_device_location(self):
+
+        try:
+            file = open(self.device_location_file_path, 'r')
+            self.device_location = str(file.read())
+            file.close()
+
+            log("Read in device location")
+            return True
+
+        except:
+            log("Unable to read device location")
+            return False
+
+    def write_device_location(self, value):
+
+        try:
+            file = open(self.device_location_file_path, 'w+')
+            file.write(str(value))
+            file.close()
+
+            self.device_location = str(value)
+            log("Device location written to file")
+            return True
+
+        except:
+            log("Unable to write device location")
             return False
 
 # GRBL SETTINGS
