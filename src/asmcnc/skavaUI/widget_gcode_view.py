@@ -70,12 +70,16 @@ class GCodeView(Widget):
 
     g0_move_colour = get_color_from_hex('#f4433655')
     feed_move_colour = get_color_from_hex('#2196f355')
-    line_width = 1
+    line_width = 10
 
 #     def __init__(self, **kwargs):
 #         super(GCodeView, self).__init__(**kwargs)
 
     max_lines_to_read = 2000
+    
+#   Moved these two from below DEF set_canvas_scale
+    interrupt_line_threshold = 5000
+    interrupt_delay = 0.2
 
     def draw_file_in_xy_plane(self, gcode_list):
         # log('len(gcode_list) ' + str(len(gcode_list)))
@@ -107,7 +111,7 @@ class GCodeView(Widget):
 
                 # find move
                 elif bit == 'G0': move = 'G0' # Fast move, straight
-                elif bit == 'G1': move = 'G1' # Feed move, straight
+                elif bit == 'G1': move = 'G1' # Feed (linear cutting) move, straight
                 elif bit == 'G2': move = 'G2' # CW arc
                 elif bit == 'G3': move = 'G3' # CCW arc
                 # else move remains same as last loop
@@ -240,8 +244,10 @@ class GCodeView(Widget):
             Color(0, 1, 0, 1)
 
 
-    interrupt_line_threshold = 5000
-    interrupt_delay = 0.2
+#    Why are these two variable definitions hovering here??
+#    MOVED TO ABOVE DEFS
+#    interrupt_line_threshold = 5000
+#    interrupt_delay = 0.2
    
     def prep_for_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt):
         

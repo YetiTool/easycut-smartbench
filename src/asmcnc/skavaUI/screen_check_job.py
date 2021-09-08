@@ -580,5 +580,3 @@ class CheckingScreen(Screen):
         self.flag_spindle_off = True
         self.error_log = []
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
-
-
