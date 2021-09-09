@@ -98,8 +98,6 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - debug:
-      msg: This is easycut
   - name: Remove bluetooth line if it exists to use ttyS0 port
     lineinfile:
       name: /boot/config.txt
