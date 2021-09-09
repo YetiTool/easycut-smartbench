@@ -20,7 +20,7 @@ from datetime import datetime
 import os, sys, time
 
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
-from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_network_setup, widget_z_height, popup_info # @UnresolvedImport
+from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty # @UnresolvedImport
 
@@ -592,9 +592,9 @@ class GoScreen(Screen):
         # Remove end of file command for spindle cooldown to operate smoothly
         def mapGcodes(line):
             if self.m.stylus_router_choice == 'router':
-                culprits = ['M30', 'M2', 'M00']
+                culprits = ['M30', 'M2']
             else:
-                culprits = ['M30', 'M2', 'M00', 'AE']
+                culprits = ['M30', 'M2', 'AE']
 
             if 'S0' in line:
                 line = line.replace('S0','')

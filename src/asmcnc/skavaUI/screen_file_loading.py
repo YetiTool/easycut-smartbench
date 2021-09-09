@@ -433,7 +433,7 @@ class LoadingScreen(Screen):
         else:
             job_box.range_z[0] = self.gcode_preview_widget.min_z
             job_box.range_z[1] = self.gcode_preview_widget.max_z
-        
+
         self.sm.get_screen('home').job_box = job_box
 
         # non_modal_gcode also used for file preview in home screen
