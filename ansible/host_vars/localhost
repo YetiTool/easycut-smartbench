@@ -5,6 +5,7 @@ pkgs:
 - pigpio
 - python-pigpio
 - python-pika
+- git-repair
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
