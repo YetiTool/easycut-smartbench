@@ -129,6 +129,7 @@ def check_and_launch_update_screen():
         start_screen = 'release_notes'
 
 
+
 if sys.platform != 'win32' and sys.platform != 'darwin':
     
     ## Easycut config

@@ -11,6 +11,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 
+from core_Ui.data_and_wifi import data_consent_manager
+
 from datetime import datetime
 
 Builder.load_string("""
@@ -113,6 +115,9 @@ class ScrollReleaseNotes(ScrollView):
 
 class ReleaseNotesScreen(Screen):
 
+    data_consent_app = None
+    user_has_confirmed = False
+
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -127,6 +132,24 @@ class ReleaseNotesScreen(Screen):
 
         self.url_label.text = 'To learn more about this\nrelease, go to:\nhttps://www.yetitool.com\n/SUPPORT/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes'
 
+        self.check_data_consent_screen()
+
+    # This is incomplete
+    def check_data_consent_screen():
+        data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+
+        if data_consent.endswith('False') or not data_consent:
+            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, False)
+
     def switch_screen(self):
-        # self.sm.current = 'restart_smartbench'
-        self.sm.current = 'welcome'
+        user_has_confirmed = True
+        if not self.data_consent_app: # test this
+            self.sm.current = 'welcome'
+
+        else: 
+            self.data_consent_app.open_data_consent()
+
+    def on_leave(self):
+        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
+            if self.user_has_confirmed:
+                self.sm.remove_widget(self.sm.get_screen('release_notes'))
