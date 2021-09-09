@@ -439,6 +439,8 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_wifi(self):
 
+        self.set.usb_or_wifi = "WiFi"
+
         wait_popup = popup_info.PopupWait(self.sm)
 
         def check_connection_and_version():
@@ -459,6 +461,8 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
 
     def prep_for_sw_update_over_usb(self):
+
+        self.set.usb_or_wifi = "USB"
 
         wait_popup = popup_info.PopupWait(self.sm)
 
@@ -505,7 +509,7 @@ class SWUpdateScreen(Screen):
 
             else: 
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, outcome)
-
+                self.set.ansible_service_run()
                 message = 'Please wait...\n\nConsole will reboot to finish update.'
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
 
@@ -561,7 +565,7 @@ class SWUpdateScreen(Screen):
                 self.usb_stick.disable()
                 update_success = outcome
                 popup_info.PopupSoftwareUpdateSuccess(self.sm, update_success)
-
+                self.set.ansible_service_run()
                 message = 'Please wait...\n\nConsole will reboot to finish update.'
                 Clock.schedule_once(lambda dt: popup_info.PopupMiniInfo(self.sm, message), 3)
 

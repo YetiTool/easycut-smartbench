@@ -128,4 +128,5 @@ class ReleaseNotesScreen(Screen):
         self.url_label.text = 'To learn more about this\nrelease, go to:\nhttps://www.yetitool.com\n/SUPPORT/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes'
 
     def switch_screen(self):
-        self.sm.current = 'restart_smartbench'
+        # self.sm.current = 'restart_smartbench'
+        self.sm.current = 'welcome'
