@@ -235,6 +235,8 @@ class DoorScreen(Screen):
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
 
         # # Text
         # self.door_label.font_size =  '19sp'
@@ -251,6 +253,9 @@ class DoorScreen(Screen):
         self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
 
     def on_pre_enter(self):
+        # Interrupt bar has been pushed, send event
+        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.filename.split("\\")[-1])
+
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
         self.resume_button.opacity = 0
@@ -314,11 +319,17 @@ class DoorScreen(Screen):
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):
+        # Job resumed, send event
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.filename.split("\\")[-1])
+
         self.m.resume_after_a_hard_door()    
         self.return_to_app()
 
                
     def cancel_stream(self):
+        # Job cancelled by user, send event
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.filename.split("\\")[-1])
+
         if self.return_to_screen == 'go':
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True

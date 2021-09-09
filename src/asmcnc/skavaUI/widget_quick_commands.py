@@ -135,6 +135,7 @@ class QuickCommands(Widget):
         super(QuickCommands, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.jd = kwargs['job']
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -160,7 +161,7 @@ class QuickCommands(Widget):
 
 
 
-        if self.sm.get_screen('home').job_gcode ==[]:
+        if self.jd.job_gcode == []:
             info = "Before running, a file needs to be loaded. \n\nTap the file chooser in the first tab (top left) to load a file." \
 
             popup_info.PopupInfo(self.sm, 400, info)
@@ -182,8 +183,6 @@ class QuickCommands(Widget):
         else:
 
             # clear to proceed
-            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
-            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
             self.sm.get_screen('go').return_to_screen = 'home'
             self.sm.get_screen('go').cancel_to_screen = 'home'
 

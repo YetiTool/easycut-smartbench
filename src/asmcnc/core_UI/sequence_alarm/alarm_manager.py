@@ -45,11 +45,12 @@ class AlarmSequenceManager(object):
 
 	report_setup_event = None
 
-	def __init__(self, screen_manager, settings_manager, machine):
+	def __init__(self, screen_manager, settings_manager, machine, job):
 
 		self.sm = screen_manager
 		self.set = settings_manager
 		self.m = machine
+		self.jd = job
 		self.usb_stick = usb_storage.USB_storage(self.sm)
 
 		self.set_up_alarm_screens()
@@ -129,6 +130,11 @@ class AlarmSequenceManager(object):
 
 	def handle_alarm_state(self):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.8)
+
+		if self.m.s.is_job_streaming:
+			# Job cancelled due to alarm state, send event
+			self.sm.get_screen('door').db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.filename.split("\\")[-1])
+
 		self.m.set_state('Alarm')
 		self.m.led_restore()
 		Clock.schedule_once(lambda dt: self.update_screens(), 1)

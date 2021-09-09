@@ -226,6 +226,7 @@ class USBFileChooser(Screen):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.jd = kwargs['job']
 
     # MANAGING KIVY SCROLL BUG
 
@@ -400,6 +401,6 @@ class USBFileChooser(Screen):
         
     def go_to_loading_screen(self, file_selection):
         if not self.is_filechooser_scrolling:
-            self.manager.get_screen('loading').loading_file_name = file_selection
+            self.jd.reset_values()
+            self.jd.filename = file_selection
             self.manager.current = 'loading'
-
