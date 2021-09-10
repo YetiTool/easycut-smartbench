@@ -321,12 +321,18 @@ class Settings(object):
 
 ## PLATFORM UPDATES
 
-    # def update_platform(self):
-    #     self.refresh_latest_platform_version()
-    #     self.refresh_platform_version()
+    def update_platform(self):
+        self.refresh_latest_platform_version()
+        self.refresh_platform_version()
 
-    #     os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
-    #     os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh && sudo reboot")
+        if self.latest_platform_version != self.platform_version:
+            os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
+            os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
+
+        else:
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
+
 
     def ansible_service_run(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
