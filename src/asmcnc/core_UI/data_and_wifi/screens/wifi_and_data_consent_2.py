@@ -72,7 +72,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(288)
-                padding: [dp(15), dp(5), dp(15), dp(20)]
+                padding: [dp(15), dp(5), dp(15), dp(10)]
                 spacing: 2
                 orientation: 'vertical'
 
@@ -87,7 +87,6 @@ Builder.load_string("""
 					padding: dp(1)
 	            	ScrollPrivacyNotice:
 	                	id: scroll_privacy_notice
-	                	# size_hint: (1,8)
 
                 BoxLayout: 
                 	size_hint: (1,1)
