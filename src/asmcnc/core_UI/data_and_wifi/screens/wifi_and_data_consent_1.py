@@ -140,6 +140,9 @@ class WiFiAndDataConsentScreen1(Screen):
 	def get_bold(self, words):
 		return '[b]' + words + '[/b]'
 
+	def next_screen(self):
+		self.sm.current = 'wifi2'
+
 	def update_strings(self):
 		self.user_info.text = (
 		self.get_bold("To enable Wi-Fi, you need to accept our data collection policy.") + \
