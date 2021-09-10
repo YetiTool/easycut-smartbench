@@ -54,7 +54,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(278)
+                height: dp(298)
                 padding: [dp(20), dp(0), dp(20), dp(0)]
                 spacing: 0
                 orientation: 'horizontal'
@@ -74,7 +74,7 @@ Builder.load_string("""
 			BoxLayout: 
 				padding: [10,0,10,10]
 				size_hint: (None, None)
-				height: dp(132)
+				height: dp(122)
 				width: dp(800)
 				orientation: 'horizontal'
 				BoxLayout: 
@@ -102,9 +102,9 @@ Builder.load_string("""
 					# 			allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(291)
-					padding: [0,0,0,52]
+					padding: [0,0,0,32]
 					Button:
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
@@ -121,7 +121,7 @@ Builder.load_string("""
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(244.5)
 					padding: [193.5, 0, 0, 0]
 
