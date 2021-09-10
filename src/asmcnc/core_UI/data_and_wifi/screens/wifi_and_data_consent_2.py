@@ -221,10 +221,7 @@ class WiFiAndDataConsentScreen2(Screen):
 		self.set_checkbox_default()
 
 	def prev_screen(self):
-		self.c.sm.current='consent_1'
-
-	def next_screen(self):
-		self.sm.current = 'wifi1'		
+		self.c.sm.current='consent_1'	
 
 	def get_str(self, words):
 		return words
@@ -237,17 +234,11 @@ class WiFiAndDataConsentScreen2(Screen):
 
 	def accept_terms(self):
 		if self.terms_checkbox.active: 
-			# unkill wifi
-			# update config
-			# go to whatever screen
-			self.next_screen()
+			self.c.accept_terms_and_enable_wifi()
 
 	def decline_terms(self):
 		if self.terms_checkbox.active: 
-			# kill wifi
-			# update config
-			# go to whatever screen
-			self.next_screen()
+			self.c.decline_terms_and_disable_wifi()
 
 	def on_checkbox_active(self):
 		if self.terms_checkbox.active: 
