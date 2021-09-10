@@ -144,13 +144,13 @@ Builder.load_string("""
 					width: dp(291)
 					height: dp(79)
 					on_press: root.more_info()
-					text: 'More info'
-					font_size: '30sp'
+					font_size: root.default_font_size
 					color: hex('#f9f9f9ff')
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
 					opacity: 0
+
 			BoxLayout: 
 				size_hint: (None, None)
 				height: dp(132)
@@ -179,14 +179,17 @@ Builder.load_string("""
 class AlarmScreen5(Screen):
 
 	return_to_screen = 'alarm_1'
+	default_font_size = 30
 	
 	def __init__(self, **kwargs):
 		super(AlarmScreen5, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = "[b]" + "Alarm: Job cancelled." + "[/b]"
+		self.alarm_title.text = self.a.l.get_bold("Alarm: Job cancelled.")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/alarm_icon.png"
-		self.description_label.text = "For safety reasons, SmartBench will now cancel the job."
+		self.description_label.text = self.a.l.get_str("For safety reasons, SmartBench will now cancel the job.")
+		self.next_button.text = self.a.l.get_str("More info")
+		self.update_font_size(self.next_button)
 
 	def on_pre_enter(self):
 
@@ -213,3 +216,14 @@ class AlarmScreen5(Screen):
 	def more_info(self):
 		self.a.sm.get_screen('alarm_3').for_support = False
 		self.a.sm.current = 'alarm_3'
+
+
+	def update_font_size(self, value):
+		if len(value.text) < 12:
+			value.font_size = self.default_font_size
+		elif len(value.text) > 15: 
+			value.font_size = self.default_font_size - 2
+		if len(value.text) > 20: 
+			value.font_size = self.default_font_size - 4
+		if len(value.text) > 22: 
+			value.font_size = self.default_font_size - 5

@@ -1,0 +1,8 @@
+.. _top:
+
+Localization!
+================
+**Alpha version**
+Select language from the System Tools > System Info screen, and enjoy :). 
+
+.. _bottom:

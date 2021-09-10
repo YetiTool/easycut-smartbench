@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -43,23 +44,25 @@ Builder.load_string("""
 
             Label:
                 id: pause_reason_label
-                size_hint_y: 1
+                size_hint_y: 0.6
                 markup: True
                 font_size: '30px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
          
             Label:
                 id: pause_description_label
-                size_hint_y: 2
+                size_hint_y: 2.4
                 markup: True
                 font_size: '18px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
+                color: hex('#333333ff')
      
         BoxLayout:
             orientation: 'horizontal'
@@ -124,34 +127,48 @@ class StopOrResumeDecisionScreen(Screen):
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
  
     
     def popup_help(self):
-        
-        info = "[b]Cancel[/b]\n" \
-                "Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.\n\n" \
-                "[b]Resume[/b]\n" \
-                "Pressing resume will continue the job from the point at which it was paused."
-        popup_info.PopupInfo(self.sm, 500, info)
+
+        info = (
+            self.l.get_bold('Cancel') + \
+            "\n" + \
+            self.l.get_str("Pressing cancel will cancel the job. If the job is restarted, it will restart from the beginning of the job.") + \
+            "\n\n" + \
+            self.l.get_bold('Resume') + \
+            "\n" + \
+            self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
+        )
+
+        popup_info.PopupInfo(self.sm, self.l, 500, info)
  
     
     def on_enter(self):
 
         if self.reason_for_pause == 'spindle_overload':
-            self.pause_reason_label.text = "[color=333333]Spindle motor was [b]overloaded![/b][/color]" 
-            self.pause_description_label.text = "[color=333333]SmartBench has automatically stopped the job because it detected the spindle was starting to overload. " \
-                                            "This is calculated on motor temperature, spindle load and RPM. " \
-                                            "[b]You may resume[/b], but we recommend you allow the spindle to cool off a bit first. " \
-                                            "If resuming, try adjusting the speeds and feeds to reduce the load on the spindle. " \
-                                            "Or adjust the job to reduce the chip loading. " \
-                                            "Also, check other factors like extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may give the spindle a hard time.[/color]"
+            self.pause_reason_label.text = self.l.get_str("Spindle motor was overloaded!").replace(self.l.get_str('overloaded'), self.l.get_bold('overloaded'))
+
+            self.pause_description_label.text = (
+
+                self.l.get_str('SmartBench has automatically stopped the job because it detected the spindle was starting to overload.') + \
+                "\n" + \
+                self.l.get_str(
+                    'You may resume, but we recommend you allow the spindle to cool off first.'
+                    ).replace(self.l.get_str('You may resume'),self.l.get_bold('You may resume')) + \
+                "\n" + \
+                self.l.get_str('Try adjusting the speeds and feeds to reduce the load on the spindle, or adjust the job to reduce chip loading.') + " " + \
+                self.l.get_str('Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle.')
+                )
+        
         if self.reason_for_pause == 'job_pause':
-            self.pause_reason_label.text = "[color=333333]SmartBench is paused.[/color]" 
-            self.pause_description_label.text = "[color=333333]You may resume, or cancel the job at any time.[/color]"
+            self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
+            self.pause_description_label.text = self.l.get_str("You may resume, or cancel the job at any time.")
 
     
     def cancel_job(self):
-        popup_info.PopupConfirmJobCancel(self.sm)
+        popup_info.PopupConfirmJobCancel(self.sm, self.l)
 
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()

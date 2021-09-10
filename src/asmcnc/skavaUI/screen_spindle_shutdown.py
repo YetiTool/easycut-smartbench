@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2019
 
@@ -18,7 +19,8 @@ Builder.load_string("""
 
 <SpindleShutdownScreen>:
 
-    text_label: text_label
+    pausing_label : pausing_label
+    label_wait : label_wait
 
     canvas:
         Color: 
@@ -36,25 +38,26 @@ Builder.load_string("""
             size_hint_y: 1 
             
         Label:
-            id: text_label
+            id: pausing_label
             size_hint_y: 1
-            text: '[color=333333]SmartBench is pausing the spindle motor.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
+            id: label_wait
             size_hint_y: 1
-            text: '[color=333333]Please wait.[/color]'
             markup: True
             font_size: '30px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
             text_size: self.size
+            color: hex('#333333ff')
 
         Label:
             size_hint_y: 1                        
@@ -100,14 +103,15 @@ class SpindleShutdownScreen(Screen):
         super(SpindleShutdownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+        self.label_wait.text = self.l.get_str('Please wait') + '.'
 
     def on_pre_enter(self):
         if self.m.stylus_router_choice == 'router':
-            self.text_label.text = '[color=333333]SmartBench is pausing the spindle motor.[/color]'
+            self.pausing_label.text = self.l.get_str('SmartBench is pausing the spindle motor.')
 
         elif self.m.stylus_router_choice == 'stylus':
-            self.text_label.text = '[color=333333]SmartBench is raising the Z axis.[/color]'
-
+            self.pausing_label.text = self.l.get_str('SmartBench is raising the Z axis.')
 
     def on_enter(self):
 

@@ -510,6 +510,7 @@ class ShapeCutter23ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.l=kwargs['localization']
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
