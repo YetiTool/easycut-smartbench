@@ -7,9 +7,8 @@ class DataConsentManager(object):
 
 	return_to_screen = 'safety'
 
-	def __init__(self, screen_manager, first_time_for_user = True):
+	def __init__(self, screen_manager):
 		self.sm = screen_manager
-		self.ftfu = first_time_for_user
 		self.set_up_data_screens()
 
 	def set_up_data_screens(self):

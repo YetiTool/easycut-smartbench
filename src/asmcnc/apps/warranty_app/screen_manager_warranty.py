@@ -38,7 +38,7 @@ class ScreenManagerWarranty(object):
         self.sm.current = 'warranty_1'
 
     def exit_app(self):
-        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, False)
+        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm)
         self.data_consent_app.open_data_consent('safety')
         self.destroy_screen('warranty_1')
         self.destroy_screen('warranty_2')
