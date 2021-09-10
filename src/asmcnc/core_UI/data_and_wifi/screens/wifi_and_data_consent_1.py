@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os, sys
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -131,7 +130,7 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
-		self.sm=kwargs['screen_manager']
+		self.c=kwargs['consent_manager']
 		self.update_strings()
 
 	def get_str(self, words):
@@ -141,7 +140,7 @@ class WiFiAndDataConsentScreen1(Screen):
 		return '[b]' + words + '[/b]'
 
 	def next_screen(self):
-		self.sm.current = 'wifi2'
+		self.c.sm.current='consent_2'
 
 	def update_strings(self):
 		self.user_info.text = (

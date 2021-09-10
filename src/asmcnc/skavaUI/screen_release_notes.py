@@ -11,7 +11,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 
-from core_Ui.data_and_wifi import data_consent_manager
+from asmcnc.core_UI.data_and_wifi import data_consent_manager
 
 from datetime import datetime
 
@@ -147,7 +147,7 @@ class ReleaseNotesScreen(Screen):
             self.sm.current = 'welcome'
 
         else: 
-            self.data_consent_app.open_data_consent()
+            self.data_consent_app.open_data_consent('welcome')
 
     def on_leave(self):
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 

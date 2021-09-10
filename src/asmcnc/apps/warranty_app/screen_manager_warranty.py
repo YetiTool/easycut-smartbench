@@ -7,6 +7,8 @@ from asmcnc.apps.warranty_app.screens import screen_warranty_registration_1, \
 screen_warranty_registration_2, screen_warranty_registration_3, \
 screen_warranty_registration_4, screen_warranty_registration_5
 
+from asmcnc.core_UI.data_and_wifi import data_consent_manager
+
 class ScreenManagerWarranty(object):
 
     def __init__(self, app_manager, screen_manager, machine):
@@ -36,7 +38,8 @@ class ScreenManagerWarranty(object):
         self.sm.current = 'warranty_1'
 
     def exit_app(self):
-        self.sm.current = 'safety'
+        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, False)
+        self.data_consent_app.open_data_consent('safety')
         self.destroy_screen('warranty_1')
         self.destroy_screen('warranty_2')
         self.destroy_screen('warranty_3')

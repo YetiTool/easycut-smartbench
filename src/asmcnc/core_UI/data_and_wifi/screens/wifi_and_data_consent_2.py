@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import os, sys
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 
@@ -210,12 +207,11 @@ class ScrollPrivacyNotice(ScrollView):
 
 class WiFiAndDataConsentScreen2(Screen):
 
-	return_to_screen = ''
 	checkbox_checked = False
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
-		self.sm=kwargs['screen_manager']
+		self.c=kwargs['consent_manager']
 		self.update_strings()
 		self.set_checkbox_default()
 
@@ -225,7 +221,7 @@ class WiFiAndDataConsentScreen2(Screen):
 		self.set_checkbox_default()
 
 	def prev_screen(self):
-		self.sm.current = 'wifi1'
+		self.c.sm.current='consent_1'
 
 	def next_screen(self):
 		self.sm.current = 'wifi1'		
