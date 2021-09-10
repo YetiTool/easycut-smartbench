@@ -31,7 +31,7 @@ class DataConsentManager(object):
 		self.exit_data_consent_app()
 
 	def decline_terms_and_disable_wifi(self):
-		os.system('sudo rfkill unblock wifi')
+		os.system('sudo rfkill block wifi')
 		self.exit_data_consent_app()
 
 	def exit_data_consent_app(self):

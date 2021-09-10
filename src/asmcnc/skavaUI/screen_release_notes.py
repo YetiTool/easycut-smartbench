@@ -24,7 +24,7 @@ Builder.load_string("""
     RstDocument:
         id: release_notes
         base_font_size: 30
-        underline_color: 'e5e5e5'
+        underline_color: 'f9f9f9'
         colors: root.color_dict
 
 <ReleaseNotesScreen>:
@@ -35,7 +35,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#e5e5e5')
+            rgba: hex('#f9f9f9')
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -107,11 +107,11 @@ class ScrollReleaseNotes(ScrollView):
     text = StringProperty('')
 
     color_dict = DictProperty({
-                    'background': 'e5e5e5ff',
-                    'link': 'ce5c00ff',
+                    'background': 'f9f9f9ff',
+                    'link': '1976d2ff',
                     'paragraph': '333333ff',
                     'title': '333333ff',
-                    'bullet': 'e5e5e5ff'})
+                    'bullet': 'f9f9f9ff'})
 
 class ReleaseNotesScreen(Screen):
 
