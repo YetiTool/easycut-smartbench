@@ -1,0 +1,54 @@
+from kivy.uix.screenmanager import ScreenManager, Screen
+import os
+from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_1
+from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_2
+
+class DataConsentManager(object):
+
+	return_to_screen = 'safety'
+
+	def __init__(self, screen_manager):
+		self.sm = screen_manager
+		self.set_up_data_screens()
+
+	def set_up_data_screens(self):
+		if not self.sm.has_screen('consent_1'):
+			consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', consent_manager = self)
+			self.sm.add_widget(consent_1_screen)
+
+		if not self.sm.has_screen('consent_2'):
+			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', consent_manager = self)
+			self.sm.add_widget(consent_2_screen)
+
+	def open_data_consent(self, screen_to_exit_to):
+		self.return_to_screen = screen_to_exit_to
+		self.set_up_data_screens()
+		self.sm.current = 'consent_1'
+
+	def accept_terms_and_enable_wifi(self):
+		os.system('sudo rfkill unblock wifi')
+		self.exit_data_consent_app()
+
+	def decline_terms_and_disable_wifi(self):
+		os.system('sudo rfkill block wifi')
+		self.exit_data_consent_app()
+
+	def exit_data_consent_app(self):
+		self.update_seen()
+		self.sm.current = self.return_to_screen
+		self.destroy_screen('consent_1')
+		self.destroy_screen('consent_2')
+
+	def destroy_screen(self, screen_name):
+		if self.sm.has_screen(screen_name):
+			self.sm.remove_widget(self.sm.get_screen(screen_name))
+			print (screen_name + ' deleted')
+
+	def update_seen(self):
+		user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+		
+		if not user_has_seen_privacy_notice:
+			os.system("sudo sed -i -e '$auser_has_seen_privacy_notice=True' /home/pi/easycut-smartbench/src/config.txt")
+
+		elif user_has_seen_privacy_notice.endswith('False'):
+			os.system('sudo sed -i "s/user_has_seen_privacy_notice=False/user_has_seen_privacy_notice=True/" /home/pi/easycut-smartbench/src/config.txt')
