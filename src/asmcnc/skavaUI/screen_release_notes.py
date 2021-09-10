@@ -5,7 +5,7 @@ Created on 6 Aug 2021
 Screen shown after update to display new release notes
 '''
 
-import kivy
+import kivy, os
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
