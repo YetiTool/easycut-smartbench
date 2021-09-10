@@ -16,7 +16,7 @@ Builder.load_string("""
     RstDocument:
         id: privacy_notice
         base_font_size: 30
-        underline_color: 'f9f9f9'
+        underline_color: 'e5e5e5'
         colors: root.color_dict
 
 <WiFiAndDataConsentScreen2>
@@ -32,7 +32,7 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: hex('#f9f9f9ff')
+                rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -198,7 +198,7 @@ class ScrollPrivacyNotice(ScrollView):
     text = StringProperty('')
 
     color_dict = DictProperty({
-                    'background': 'f9f9f9ff',
+                    'background': 'e5e5e5ff',
                     'link': '1976d2ff',
                     'paragraph': '333333ff',
                     'title': '333333ff',

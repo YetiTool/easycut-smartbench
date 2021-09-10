@@ -17,7 +17,7 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: hex('#f9f9f9ff')
+                rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
