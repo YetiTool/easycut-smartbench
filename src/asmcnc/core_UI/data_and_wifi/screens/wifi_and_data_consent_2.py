@@ -71,7 +71,7 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(278)
+                height: dp(288)
                 padding: [dp(15), dp(5), dp(15), dp(20)]
                 spacing: 2
                 orientation: 'vertical'
@@ -129,7 +129,7 @@ Builder.load_string("""
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(60)
 					# padding: [0, 0, 184.5, 0]
 					Button:
@@ -152,9 +152,9 @@ Builder.load_string("""
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(660)
-					padding: [dp(6),0,dp(6),dp(52)]
+					padding: [dp(6),0,dp(6),dp(42)]
 					spacing: dp(66)
 					Button:
 						id: decline_button
@@ -190,7 +190,7 @@ Builder.load_string("""
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(60)
 					# padding: [193.5, 0, 0, 0]
 

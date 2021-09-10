@@ -79,7 +79,7 @@ Builder.load_string("""
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(132)
+					height: dp(122)
 					width: dp(244.5)
 					padding: [0, 0, 184.5, 0]
 					# Button:
