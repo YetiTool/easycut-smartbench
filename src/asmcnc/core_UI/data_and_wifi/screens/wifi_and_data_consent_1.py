@@ -54,8 +54,8 @@ Builder.load_string("""
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
-                height: dp(268)
-                padding: [dp(20), dp(10), dp(20), dp(0)]
+                height: dp(278)
+                padding: [dp(20), dp(0), dp(20), dp(0)]
                 spacing: 0
                 orientation: 'horizontal'
                 Label: 
@@ -74,7 +74,7 @@ Builder.load_string("""
 			BoxLayout: 
 				padding: [10,0,10,10]
 				size_hint: (None, None)
-				height: dp(142)
+				height: dp(132)
 				width: dp(800)
 				orientation: 'horizontal'
 				BoxLayout: 
