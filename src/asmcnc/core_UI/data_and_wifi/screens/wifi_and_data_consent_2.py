@@ -159,6 +159,7 @@ Builder.load_string("""
 						id: decline_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
+						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -175,6 +176,7 @@ Builder.load_string("""
 						id: accept_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
+						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -218,6 +220,9 @@ class WiFiAndDataConsentScreen2(Screen):
 		self.set_checkbox_default()
 
 		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/core_UI/data_and_wifi/privacy_notice.txt"
+
+	def on_pre_leave(self):
+		self.set_checkbox_default()
 
 	def prev_screen(self):
 		self.sm.current = 'wifi1'
