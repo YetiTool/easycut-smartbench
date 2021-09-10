@@ -86,7 +86,7 @@ Builder.load_string("""
                     Button:
                         id: smartbench_name
                         text: '[b]My SmartBench[/b]'
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
                         color: hex('#333333ff')
@@ -124,7 +124,7 @@ Builder.load_string("""
                     Button:
                         id: smartbench_location
                         text: '[b]SmartBench location[/b]'
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
                         color: hex('#333333ff')
