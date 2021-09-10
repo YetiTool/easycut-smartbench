@@ -35,6 +35,14 @@ import unittest
 
 class UnitTestBoundaryWalkIsComplete(unittest.TestCase):
     
+    def setUp(self):
+        pass
+
+
+    def tearDown(self):
+        pass
+    
+    
     def testBoundaryIsAnArray(self):  ## test method names begin 'test*'
         assert (1 + 2) == 33
 
