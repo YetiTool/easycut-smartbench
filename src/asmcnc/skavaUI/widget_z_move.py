@@ -165,7 +165,8 @@ class ZMove(Widget):
         super(ZMove, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
+        self.jd=kwargs['job']
+        self.virtual_z_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm, job=self.jd))
 
     def jog_z(self, case):
 

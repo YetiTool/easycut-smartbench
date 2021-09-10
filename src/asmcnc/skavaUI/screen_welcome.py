@@ -64,6 +64,7 @@ class WelcomeScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
+        self.db=kwargs['database']
         self.am = kwargs['app_manager']
 
     def on_enter(self):

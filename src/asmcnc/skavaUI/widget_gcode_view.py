@@ -77,6 +77,10 @@ class GCodeView(Widget):
 
     max_lines_to_read = 2000
 
+    def __init__(self, **kwargs):
+        super(GCodeView, self).__init__(**kwargs)
+        self.jd = kwargs['job']
+
     def draw_file_in_xy_plane(self, gcode_list):
         # log('len(gcode_list) ' + str(len(gcode_list)))
         self.gCodePreview.canvas.clear()
@@ -262,6 +266,8 @@ class GCodeView(Widget):
         self.plane = 'G17'
         self.move = '0'
         self.feed_rate = 0    
+        self.feed_rate_list = []
+        self.speed_list = []
 
         self.xy_preview_gcode = []
 
@@ -293,6 +299,7 @@ class GCodeView(Widget):
                 line = re.sub('X', ' XX', line)
                 line = re.sub('Z', ' ZZ', line)
                 line = re.sub('F', ' FF', line)
+                line = re.sub('S', ' SS', line)
                 line = re.sub('I', ' II', line)
                 line = re.sub('J', ' JJ', line)
                 line = re.sub('K', ' KK', line)
@@ -325,7 +332,7 @@ class GCodeView(Widget):
     #             for bit in line.split(' '): # This no longer works because spaces were stripped out. 
     # ------------------------------------------------------------------------------------------------
                                       
-                for idx, bit in enumerate(re.split('( X| Y| Z| F| I| J| K| G)', line)):
+                for idx, bit in enumerate(re.split('( X| Y| Z| F| S| I| J| K| G)', line)):
                     
                     if bit == '':
                         continue
@@ -396,4 +403,10 @@ class GCodeView(Widget):
         else:
             
             log('> Finished getting non modal gcode')
+            self.jd.x_max = self.max_x
+            self.jd.x_min = self.min_x
+            self.jd.y_max = self.max_y
+            self.jd.y_min = self.min_y
+            self.jd.z_max = self.max_z
+            self.jd.z_min = self.min_z
             screen_manager.get_screen('loading')._finish_loading(self.xy_preview_gcode)
