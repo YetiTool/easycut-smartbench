@@ -69,6 +69,9 @@ class SQLRabbit:
         # Check if consumables have passed thresholds for sending events
         self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
 
+        file_name = self.jd.filename.split("/")[-1]
+        file_name = file_name.split("\\")[-1]
+
         data = [
             {
                 "payload_type": "full",
@@ -90,7 +93,7 @@ class SQLRabbit:
                     "calibration_%_left": calibration_percent_left,
                     "calibration_hrs_before_next": calibration_hrs_left,
 
-                    "file_name": self.jd.filename.split("\\")[-1] or '',
+                    "file_name": file_name or '',
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,

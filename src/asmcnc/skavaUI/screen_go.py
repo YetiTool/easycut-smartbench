@@ -621,8 +621,6 @@ class GoScreen(Screen):
 
 
     def return_to_app(self):
-        self.database.send_full_payload()
-
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
             self.m.send_any_gcode_command("M56 P0")  # disables Z lift on pause
         self.sm.current = self.cancel_to_screen
