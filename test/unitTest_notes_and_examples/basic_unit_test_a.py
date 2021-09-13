@@ -2,6 +2,9 @@
 Created on 8 Sep 2021
 
 @author: hsth
+@author: hugh.harford@yetitool.com (primary)
+@author: hugh.harford@poscoconsulting.com (if required)
+
 '''
 import unittest
 

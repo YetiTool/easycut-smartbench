@@ -1,0 +1,35 @@
+Very little to note here.
+
+1. Expect test folder to be a different folder to source files /src/
+2. Unit tests to inherit objects from, run on and check functionality of specific bits of src code
+3. tbc on Python packages to run this as yet.
+4. BDD likely to be used - Behaviour Driven Development (BDD)
+5. BDD uses simple phrases note a scenario that is tested:
+6. E.g.    GIVEN - the SmartBench has started
+           WHEN the user presses X button
+           THEN y happens
+           
+           Note the use of GIVEN WHEN and THEN as keywords.
+           
+SOURCE for most of the inital development:
+          http://pyunit.sourceforge.net/pyunit.html#OVERVIEW
+          
+          
+See comments from the above about where to place tests:
+          
+          
+***** Where to place testing code ***** 
+	You can place the definitions of test cases and test suites in the 
+	same modules as the code they are to test (e.g. 'widget.py'), 
+	but there are several advantages to placing the test code 
+	in a separate module, such as 'widgettests.py':
+
+		The test module can be run standalone from the command line
+		The test code can more easily be separated from shipped code
+		There is less temptation to change test code to fit the code it tests without a good reason
+		Test code should be modified much less frequently than the code it tests
+		Tested code can be refactored more easily
+		Tests for modules written in C must be in separate modules anyway, so why not be consistent?
+		If the testing strategy changes, there is no need to change the source code
+	
+	
