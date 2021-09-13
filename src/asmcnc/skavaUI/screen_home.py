@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
 
@@ -265,6 +266,7 @@ class HomeScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.set = kwargs['settings']
+        self.l = kwargs['localization']
 
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
@@ -280,21 +282,21 @@ class HomeScreen(Screen):
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
         # Bed tab
-        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm), index=100)
+        self.virtual_bed_control_container.add_widget(widget_virtual_bed_control.VirtualBedControl(machine=self.m, screen_manager=self.sm, localization=self.l), index=100)
 
         # Move tab
-        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move.XYMove(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.common_move_widget = widget_common_move.CommonMove(machine=self.m, screen_manager=self.sm)
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
         self.z_move_container.add_widget(widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd))
 
         # Settings tab
-        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm)
+        self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
         
         # Quick commands
-        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd))
+        self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
     def on_enter(self):
 
@@ -320,7 +322,10 @@ class HomeScreen(Screen):
                 log('Unable to preview file')
             
         else:
-            self.file_data_label.text = '[color=333333]Load a file...[/color]'
+            self.file_data_label.text = ('[color=333333]' + \
+                self.l.get_str('Load a file') + '...' + '[/color]'
+                )
+            self.job_filename = ''
   
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
@@ -353,5 +358,4 @@ class HomeScreen(Screen):
 
     def on_pre_leave(self):
         self.m.laser_off()
-
     

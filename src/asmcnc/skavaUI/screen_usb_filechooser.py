@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 19 Aug 2017
 
@@ -174,7 +175,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_release: 
-                    root.import_usb_file()
+                    root.import_usb_file(filechooser_usb.selection[0])
                     self.background_color = hex('#FFFFFF00')
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
@@ -222,11 +223,13 @@ class USBFileChooser(Screen):
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
     is_filechooser_scrolling = False
 
+
     def __init__(self, **kwargs):
  
         super(USBFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
+        self.l=kwargs['localization']
 
     # MANAGING KIVY SCROLL BUG
 
@@ -281,15 +284,15 @@ class USBFileChooser(Screen):
 
         self.filechooser_usb.path = self.usb_path
         self.refresh_filechooser()
-        self.filename_selected_label_text = "Only .nc and .gcode files will be shown. Press the icon to display the full filename here."
+        self.filename_selected_label_text = (
+            self.l.get_str("Press the icon to display the full filename here.")
+        )
         self.update_usb_status()
         self.switch_view()
-
+        
     def on_pre_leave(self):
-
         self.sm.get_screen('local_filechooser').filechooser.sort_func = self.filechooser_usb.sort_func
         self.sm.get_screen('local_filechooser').image_sort.source = self.image_sort.source
-
         if self.sm.current != 'local_filechooser': self.usb_stick.disable()
 
     def check_for_job_cache_dir(self):
@@ -305,14 +308,14 @@ class USBFileChooser(Screen):
         try: 
             if self.usb_stick.is_available():
                 self.usb_status_label.size_hint_y = 0.7
-                self.usb_status_label.text = "USB connected: Please do not remove USB until file is loaded."
+                self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
                     Color(76 / 255., 175 / 255., 80 / 255., 1.)
                     Rectangle(pos=self.usb_status_label.pos,size=self.usb_status_label.size)
 
             else:
-                self.usb_status_label.text = "USB removed! Files will not load properly."
+                self.usb_status_label.text = self.l.get_str("USB removed! Files will not load properly.")
                 self.usb_status_label.size_hint_y = 0.7
                 self.usb_status_label.canvas.before.clear()
                 with self.usb_status_label.canvas.before:
@@ -354,6 +357,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
 
+        if verbose: print 'Refreshing filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
                 
@@ -394,10 +398,11 @@ class USBFileChooser(Screen):
             print new_file_path
             
             self.go_to_loading_screen(new_file_path)
+        
 
     def quit_to_local(self):
         if not self.is_filechooser_scrolling:
-            self.manager.current = 'local_filechooser'
+            self.sm.current = 'local_filechooser'
         
     def go_to_loading_screen(self, file_selection):
         if not self.is_filechooser_scrolling:

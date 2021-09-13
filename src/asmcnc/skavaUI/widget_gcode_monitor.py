@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 Feb 2018
 @author: Ed
@@ -56,6 +57,17 @@ Builder.load_string("""
     consoleScrollText:consoleScrollText
     consoleStatusText:consoleStatusText
     gCodeInput:gCodeInput
+
+    enter_button: enter_button
+    hide_ok_button: hide_ok_button
+    settings_button: settings_button
+    params_button: params_button
+    state_button: state_button
+    build_button: build_button
+    check_button: check_button
+    help_button: help_button
+    clear_button: clear_button
+    status_label: status_label
     
     BoxLayout: 
         size: self.parent.size
@@ -96,9 +108,10 @@ Builder.load_string("""
                         on_text_validate: root.send_gcode_textinput()
                     
                     Button:
+                        id: enter_button
                         text: "Enter"
                         on_press: root.send_gcode_textinput()
-                        size_hint_x:0.2
+                        size_hint_x:0.3
                         background_color: .6, 1, 0.6, 1
       
                 ScrollableLabelCommands:
@@ -109,9 +122,10 @@ Builder.load_string("""
                 padding_horizontal: 5
                 spacing: 5
                 orientation: "vertical"
-                size_hint_x: 0.17
+                size_hint_x: 0.24
         
                 ToggleButton:
+                    id: hide_ok_button
                     state: root.hide_received_ok
                     markup: True
                     text: 'Hide oks'
@@ -121,67 +135,40 @@ Builder.load_string("""
 # FOR USER
                     
                 Button:
+                    id: settings_button
                     text: "Settings"
                     on_press: root.send_gcode_preset("$$")
                     size_hint_y:0.1
                 Button:
+                    id: params_button
                     text: "Params"
                     on_press: root.send_gcode_preset("$#")
                     size_hint_y:0.1
                 Button:
+                    id: state_button
                     text: "State"
                     on_press: root.send_gcode_preset("$G")
                     size_hint_y:0.1
                 Button:
+                    id: build_button
                     text: "Build"
                     size_hint_y:0.1
                     on_press: root.send_gcode_preset("$I")
                 Button:
+                    id: check_button
                     text: "Check $C"
                     on_press: root.toggle_check_mode()
                     size_hint_y:0.1
                 Button:
+                    id: help_button
                     text: "Help"
                     on_press: root.send_gcode_preset("$")
                     size_hint_y:0.1
- 
-######### START/STOP DEBUG
- 
-  
-#                 Button:
-#                     text: "Reset"
-#                     on_press: root.send_grbl_reset()
-#                     size_hint_y:0.1
-#   
-#                 Button:
-#                     text: "Door"
-#                     on_press: root.send_grbl_door()
-#                     size_hint_y:0.1
-#   
-#                 Button:
-#                     text: "Resume"
-#                     on_press: root.send_grbl_resume()
-#                     size_hint_y:0.1
-#   
-#                 Button:
-#                     text: "Unlock"
-#                     on_press: root.send_grbl_unlock()
-#                     size_hint_y:0.1
-#   
-#                 Button:
-#                     text: "LED red"
-#                     on_press: root.send_led_red()
-#                     size_hint_y:0.1
-#   
-#                 Button:
-#                     text: "LED restore"
-#                     on_press: root.send_led_restore()
-#                     size_hint_y:0.1
-  
 
 ######### END ############
  
                 Button:
+                    id: clear_button
                     text: "Clear"
                     on_press: root.clear_monitor()
                     size_hint_y:0.1
@@ -202,6 +189,7 @@ Builder.load_string("""
                     
                       
             Label:
+                id: status_label
                 text: 'Status'
                 text_size: self.size
                 halign: 'left'
@@ -230,24 +218,22 @@ class GCodeMonitor(Widget):
 
     hide_received_ok = StringProperty('down')
     hide_received_status = StringProperty('down')
-    monitor_text_buffer = ['Welcome to the GCode console...']
-    status_report_buffer = ['Welcome to the GCode console...']
+    monitor_text_buffer = []
+    status_report_buffer = []
 
     def __init__(self, **kwargs):
     
         super(GCodeMonitor, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
         Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)      # Poll for status
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status    
     
         self.popup_flag = True
+        self.update_strings()
     
     def update_monitor_text_buffer(self, input_or_output, content):
-        
-        # if content.startswith('<Alarm'): 
-        #     self.monitor_text_buffer.append(content)
-        #     return
             
         # Don't update if content is to be hidden
         if content.startswith('<') and self.hide_received_status == 'down':
@@ -270,7 +256,7 @@ class GCodeMonitor(Widget):
     def update_status_text(self, dt):
         # this needs fixing
         if self.m.state() == 'Alarm' and not any('Alarm' in s for s in self.status_report_buffer):
-            self.status_report_buffer.append('Please reset for status update')
+            self.status_report_buffer.append(self.l.get_str('Please reset for status update')) # this might work with RST can't be sure
         
         self.consoleStatusText.text = '\n'.join(self.status_report_buffer)
         if len(self.status_report_buffer) > 4:
@@ -279,17 +265,24 @@ class GCodeMonitor(Widget):
     def send_gcode_textinput(self): 
         
         if self.popup_flag == True: 
-            description = "Sending commands directly to the machine can change how it operates.\n\n" + \
-            "Please exercise caution when using this feature.\n\n"
-            popup_info.PopupWarning(self.sm, description)
+            description = (
+                self.l.get_str("Sending commands directly to the machine can change how it operates.") + \
+                "\n\n" + \
+                self.l.get_str("Please exercise caution when using this feature.") + "\n\n"
+                )
+
+            popup_info.PopupWarning(self.sm, self.l, description)
             self.popup_flag = False
         else:
             if self.validate_gcode_textinput(self.gCodeInput.text):
                 self.m.send_any_gcode_command(str(self.gCodeInput.text))
             else:
-                message = "This command is forbidden because it will alter the fundamental settings of the machine.\n\n" + \
-                "If you need to alter the fundamental settings of the machine please contact YetiTool support."
-                popup_info.PopupWarning(self.sm, message)
+                message = (
+                    self.l.get_str("This command is forbidden because it will alter the fundamental settings of the machine.") + \
+                    "\n\n" + \
+                    self.l.get_str("If you need to alter the fundamental settings of the machine please contact YetiTool support.")
+                )
+                popup_info.PopupWarning(self.sm, self.l, message)
 
     def validate_gcode_textinput(self, gcode_input):
 
@@ -313,11 +306,11 @@ class GCodeMonitor(Widget):
         elif self.m.s.m_state == "Idle":
             self.m.enable_check_mode()
         else:
-            self.update_monitor_text_buffer('debug', 'Could not enable check mode; please check machine is Idle.')
+            self.update_monitor_text_buffer('debug', self.l.get_str('Could not enable check mode; please check machine is Idle.'))
 
     def clear_monitor(self): 
         
-        self.monitor_text_buffer = ['Welcome to the GCode console...']
+        self.monitor_text_buffer = [self.l.get_str('Welcome to the GCode console') + '...']
 
 
 ######### START/STOP DEBUG
@@ -339,3 +332,18 @@ class GCodeMonitor(Widget):
 
     def send_led_restore(self):
         self.m.led_restore()
+
+## Localization
+    def update_strings(self):
+        self.enter_button.text = self.l.get_str('Enter')
+        self.hide_ok_button.text = self.l.get_str('Hide oks')
+        self.settings_button.text = self.l.get_str('Settings') 
+        self.params_button.text = self.l.get_str('Params') 
+        self.state_button.text = self.l.get_str('State') 
+        self.build_button.text = self.l.get_str('Build')
+        self.check_button.text = self.l.get_str('Check') + ' $C'
+        self.help_button.text = self.l.get_str('Help')
+        self.clear_button.text = self.l.get_str('Clear')
+        self.status_label.text = self.l.get_str('Status')
+
+

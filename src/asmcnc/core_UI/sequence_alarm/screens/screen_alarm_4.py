@@ -14,6 +14,8 @@ Builder.load_string("""
 	icon_container : icon_container
 	icon : icon
 	description_label : description_label
+	next_button : next_button
+
 	canvas:
 		Color: 
 			rgba: [1, 1, 1, 1]
@@ -134,6 +136,7 @@ Builder.load_string("""
 				width: dp(291)
 				padding: [0,0,0,52]
 				Button:
+					id: next_button
 					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 					background_down: "./asmcnc/apps/warranty_app/img/next.png"
 					border: [dp(14.5)]*4
@@ -160,13 +163,14 @@ class AlarmScreen4(Screen):
 		super(AlarmScreen4, self).__init__(**kwargs)
 		self.a=kwargs['alarm_manager']
 
-		self.alarm_title.text = "[b]" +  "Alarm: Learn more..." + "[/b]"
+		self.alarm_title.text = self.a.l.get_bold("Alarm: Learn more...")
 		self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/qr-code.png"
 		self.description_label.text = (
-			"Learn more about the cause of the alarm by visiting our knowledge base at" + \
+			self.a.l.get_str("Learn more about the cause of the alarm by visiting our knowledge base at") + \
 			"\n" +
 			"https://www.yetitool.com/support/knowledge-base/alarm-screens"
 			)
+		self.next_button.text = self.a.l.get_str("Next") + "..."
 
 	def next_screen(self):
 		self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_4'

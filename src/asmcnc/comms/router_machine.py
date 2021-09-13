@@ -63,6 +63,9 @@ class RouterMachine(object):
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
+    ## LOCALIZATION
+    persistent_language_path = smartbench_values_dir + 'user_language.txt'
+
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
     z_probe_speed = 60
@@ -107,16 +110,17 @@ class RouterMachine(object):
     reminders_enabled = True
 
     trigger_setup = False
-            
-    def __init__(self, win_serial_port, screen_manager, settings_manager, job):
+
+    def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
         self.sett = settings_manager
+        self.l = localization
         self.jd = job
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
-        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.jd)
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
@@ -195,6 +199,11 @@ class RouterMachine(object):
             log('Creating device location settings file...')
             file = open(self.device_location_file_path, 'w+')
             file.write(str(self.device_location))
+
+        if not path.exists(self.persistent_language_path):
+            log("Creating language settings file")
+            file = open(self.persistent_language_path, 'w+')
+            file.write('English (GB)')
             file.close()
 
     def get_persistent_values(self):
@@ -1165,7 +1174,13 @@ class RouterMachine(object):
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + " " + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
@@ -1178,7 +1193,13 @@ class RouterMachine(object):
             x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_y_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('Y'): 
@@ -1191,7 +1212,13 @@ class RouterMachine(object):
             y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
         else: 
-            popup_info.PopupError(self.sm, "Laser crosshair is out of bounds!\n\nDatum has not been set. Please choose a different datum using the laser crosshair.")
+            error_message = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+            popup_info.PopupError(self.sm, self.l, error_message)
 
 
     def set_jobstart_z(self):
