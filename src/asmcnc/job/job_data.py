@@ -42,6 +42,8 @@ class JobData(object):
     checked = False
     check_warning = ''
     metadata_dict = {}
+    actual_runtime = ''
+    total_time = ''
 
     def reset_values(self):
         self.filename = ''
@@ -63,6 +65,8 @@ class JobData(object):
         self.checked = False
         self.check_warning = ''
         self.metadata_dict = {}
+        self.actual_runtime = ''
+        self.total_time = ''
 
     def generate_job_data(self, raw_gcode):
 
