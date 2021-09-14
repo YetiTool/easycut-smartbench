@@ -607,7 +607,7 @@ class SerialConnection(object):
 
         # send info to the job done screen
         actual_runtime = str(running_hours) + ":" + str(running_minutes) + ":" + str(running_seconds)
-        total_time = str(hours) + ":" + (minutes) + ":" + str(seconds)
+        total_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
         self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, actual_runtime, total_time)
         if go_to_jobdone: self.sm.current = 'job_feedback'
