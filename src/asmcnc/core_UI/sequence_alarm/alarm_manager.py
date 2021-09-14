@@ -137,7 +137,7 @@ class AlarmSequenceManager(object):
 
 		if self.m.s.is_job_streaming:
 			# Job cancelled due to alarm state, send event
-			self.sm.get_screen('door').db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.filename.split("\\")[-1])
+			self.sm.get_screen('door').db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name)
 
 		self.m.set_state('Alarm')
 		self.m.led_restore()

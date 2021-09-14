@@ -554,10 +554,7 @@ class GoScreen(Screen):
         self.btn_back.disabled = False
 
         # scrape filename title
-        if sys.platform == 'win32':
-            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
-        else:
-            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
+        self.file_data_label.text = self.jd.job_name
         
         # Reset flag & light
         self.is_job_started_already = False
@@ -593,7 +590,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
+        self.database.send_job_start(self.jd.job_name, self.jd.metadata_dict)
 
         self.m.set_pause(False)
         self.is_job_started_already = True

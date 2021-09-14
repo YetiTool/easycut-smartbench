@@ -502,7 +502,7 @@ class LocalFileChooser(Screen):
 
         if os.path.isfile(file_selection):
             self.jd.reset_values()
-            self.jd.filename = file_selection
+            self.jd.set_job_filename(file_selection)
             self.manager.current = 'loading'
 
         else: 

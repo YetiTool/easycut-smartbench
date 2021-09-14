@@ -188,10 +188,7 @@ class LoadingScreen(Screen):
     def on_enter(self):    
 
         # display file selected in the filename display label
-        if sys.platform == 'win32':
-            self.filename_label.text = self.jd.filename.split("\\")[-1]
-        else:
-            self.filename_label.text = self.jd.filename.split("/")[-1]
+        self.filename_label.text = self.jd.job_name
 
         self.update_usb_status()
         self.sm.get_screen('home').gcode_has_been_checked_and_its_ok = False

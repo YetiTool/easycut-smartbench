@@ -241,7 +241,7 @@ class DoorScreen(Screen):
 
     def on_pre_enter(self):
         # Interrupt bar has been pushed, send event
-        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.filename.split("\\")[-1])
+        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name)
 
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
@@ -305,7 +305,7 @@ class DoorScreen(Screen):
 
     def resume_stream(self):
         # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.filename.split("\\")[-1])
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name)
 
         self.m.resume_after_a_hard_door()    
         self.return_to_app()
@@ -313,7 +313,7 @@ class DoorScreen(Screen):
                
     def cancel_stream(self):
         # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.filename.split("\\")[-1])
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name)
 
         if self.return_to_screen == 'go':
             self.sm.get_screen('go').is_job_started_already = False

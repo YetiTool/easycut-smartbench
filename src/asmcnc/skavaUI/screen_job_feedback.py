@@ -24,7 +24,7 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: hex('#f9f9f9ff')
+                rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -147,7 +147,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/apps/shapeCutter_app/img/thumbs_down.png"
+                                source: "./asmcnc/skavaUI/img/thumbs_down.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
                                 size: self.parent.width - 40, self.parent.height - 40
@@ -164,7 +164,7 @@ Builder.load_string("""
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                source: "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
+                                source: "./asmcnc/skavaUI/img/thumbs_up.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
                                 size: self.parent.width - 40, self.parent.height - 40
@@ -197,7 +197,7 @@ class JobFeedbackScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
-        self.db.send_job_end(self.jd.filename.split("\\")[-1])
+        self.db.send_job_end(self.jd.job_name)
 
     def confirm_job_successful(self):
         self.set_production_notes()
@@ -251,13 +251,13 @@ class JobFeedbackScreen(Screen):
 
         # Add these strings to language dict
 
-        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.filename)
+        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name)
 
         current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
         total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
 
         self.metadata_label.text = (
-            self.jd.metadata_dict.get('ProjectName', self.jd.filename) + " | " + \
+            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
             self.l.get_str("Actual runtime:") + " " + actual_runtime + \

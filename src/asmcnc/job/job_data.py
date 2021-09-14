@@ -24,6 +24,7 @@ def filter_out_brackets(character):
 class JobData(object):
 
     filename = ''
+    job_name = ''
     job_gcode = []
     job_gcode_raw = []
     job_gcode_modified = []
@@ -47,6 +48,7 @@ class JobData(object):
 
     def reset_values(self):
         self.filename = ''
+        self.job_name = ''
         self.job_gcode = []
         self.job_gcode_raw = []
         self.job_gcode_modified = []
@@ -67,6 +69,15 @@ class JobData(object):
         self.metadata_dict = {}
         self.actual_runtime = ''
         self.total_time = ''
+
+    def set_job_filename(self, job_path_and_name):
+
+        self.filename = job_path_and_name
+
+        if sys.platform == 'win32':
+            self.job_name = self.filename.split("\\")[-1]
+        else:
+            self.job_name = self.filename.split("/")[-1]
 
     def generate_job_data(self, raw_gcode):
 
