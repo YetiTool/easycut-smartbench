@@ -87,10 +87,10 @@ Builder.load_string("""
 
                         Button:
                             id: production_notes_label
-                            background_color: hex('#1976d2ff')
+                            background_color: hex('#e5e5e5ff')
                             background_normal: ""
                             background_down: ""
-                            color: hex('#333333ff')
+                            color: hex('#1976d2ff')
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
