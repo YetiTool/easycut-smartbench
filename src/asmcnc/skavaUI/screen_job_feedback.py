@@ -75,7 +75,7 @@ Builder.load_string("""
                     Label: 
                         id: metadata_label
                         color: hex('#333333ff') #grey
-                        font_size: dp(20)
+                        font_size: dp(24)
                         markup: True
                         text_size: self.size
                         halign: "left"
@@ -87,15 +87,15 @@ Builder.load_string("""
 
                         Button:
                             id: production_notes_label
-                            background_color: hex('#e5e5e5ff')
+                            background_color: hex('#1976d2ff')
                             background_normal: ""
                             background_down: ""
                             color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
-                            valign: "top"
+                            valign: "middle"
                             markup: True
-                            font_size: dp(20)
+                            font_size: dp(24)
                             size_hint_y: None
                             height: self.parent.height
                             opacity: 1
@@ -107,7 +107,7 @@ Builder.load_string("""
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
-                            foreground_color: hex('#1976d2ff')
+                            foreground_color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
                             valign: "top"
@@ -279,6 +279,6 @@ class JobFeedbackScreen(Screen):
 
         self.jd.metadata_dict['ProductionNotes'] = ''
         self.production_notes.text = ''
-        self.production_notes_label.text = self.l.get_str("Production notes")
+        self.production_notes_label.text = "<" + self.l.get_str("Production notes") + ">"
 
         self.success_question = self.l.get_str("Did this complete successfully?")
