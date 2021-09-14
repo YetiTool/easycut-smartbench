@@ -575,22 +575,15 @@ class SerialConnection(object):
 
     def update_machine_runtime(self, go_to_jobdone=False):
 
-        # Tell user the job has finished
         log("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
-        hours = int(time_taken_seconds / (60 * 60))
-        seconds_remainder = time_taken_seconds % (60 * 60)
-        minutes = int(seconds_remainder / 60)
-        seconds = int(seconds_remainder % 60)
-        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
+        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+        log(" Acutal running time: " + str(only_running_time_seconds) + " seconds")
 
-        running_hours = int(only_running_time_seconds / (60 * 60))
-        running_seconds_remainder = only_running_time_seconds % (60 * 60)
-        running_minutes = int(running_seconds_remainder / 60)
-        running_seconds = int(running_seconds_remainder % 60)
+
+        ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
         if self.m.stylus_router_choice == 'router':
@@ -605,11 +598,9 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
+        ## SEND INFO TO JOB END
         # send info to the job done screen
-        actual_runtime = str(running_hours) + ":" + str(running_minutes) + ":" + str(running_seconds)
-        total_time = str(hours) + ":" + str(minutes) + ":" + str(seconds)
-
-        self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, actual_runtime, total_time)
+        self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, only_running_time_seconds, time_taken_seconds)
         if go_to_jobdone: self.sm.current = 'job_feedback'
 
         # self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen

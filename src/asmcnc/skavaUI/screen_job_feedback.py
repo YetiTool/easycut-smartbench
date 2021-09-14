@@ -3,6 +3,7 @@ Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
 '''
+from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -41,6 +42,8 @@ Builder.load_string("""
                     Rectangle:
                         pos: self.pos
                         size: self.size
+
+                # HEADER
                 Label:
                     id: job_completed_label
                     size_hint: (None,None)
@@ -53,19 +56,21 @@ Builder.load_string("""
                     valign: "middle"
                     markup: True
                     text_size: self.size
+            # BODY
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(420)
-                padding: 0
+                padding: [dp(0), dp(10)]
                 spacing: 10
                 orientation: 'vertical'
                 
+                # METADATA AND PRODUCTION NOTES
                 BoxLayout:
                     size_hint_y: None
-                    height: dp(180)
+                    height: dp(170)
                     orientation: 'horizontal'
-                    padding: dp(20)
+                    padding: [dp(20), dp(0)]
                     
                     Label: 
                         id: metadata_label
@@ -102,6 +107,7 @@ Builder.load_string("""
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
+                            foreground_color: hex('#1976d2ff')
                             text_size: self.size
                             halign: "left"
                             valign: "top"
@@ -116,6 +122,7 @@ Builder.load_string("""
                             background_normal: ""
                             background_color: hex('#e5e5e5ff')
 
+                # FEEDBACK
                 Label:
                     id: success_question
                     size_hint: (None,None)
@@ -129,14 +136,16 @@ Builder.load_string("""
                     valign: "bottom"
                     markup: True
 
+                # Feedback buttons
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(160)
+                    height: dp(150)
                     width: dp(800)
                     orientation: 'horizontal'
                     spacing: dp(96)
-                    padding: [dp(200), 0, dp(200), dp(10)]
-                    # thumbs down button
+                    padding: [dp(200), dp(0)]
+
+                    # Thumbs down button
                     Button:
                         size_hint: (None,None)
                         height: dp(150)
@@ -153,6 +162,7 @@ Builder.load_string("""
                                 # y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
+                    # Thumbs up button
                     Button:
                         size_hint: (None,None)
                         height: dp(150)
@@ -247,11 +257,11 @@ class JobFeedbackScreen(Screen):
         self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
-    def update_strings(self, actual_runtime, total_time):
+    def update_strings(self, runtime_seconds, total_time_seconds):
 
-        # Add these strings to language dict
+        # Get these strings properly translated
 
-        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name)
+        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
         current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
         total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
@@ -260,9 +270,9 @@ class JobFeedbackScreen(Screen):
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + actual_runtime + \
+            self.l.get_str("Actual runtime:") + " " + str(datetime.timedelta(seconds=runtime_seconds)) + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + total_time + \
+            self.l.get_str("Total time (with pauses):") + " " + str(datetime.timedelta(seconds=total_time_seconds)) + \
             "\n" + \
             self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
             )
