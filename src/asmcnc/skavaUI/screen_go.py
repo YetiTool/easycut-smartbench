@@ -298,7 +298,7 @@ Builder.load_string("""
                                 color: hex('#333333ff')
                                 text: '0 %'
                                 markup: True                           
-                                font_size: '70px' 
+                                font_size: '100px' 
                                 valign: 'middle'
                                 halign: 'left'
                                 size:self.texture_size

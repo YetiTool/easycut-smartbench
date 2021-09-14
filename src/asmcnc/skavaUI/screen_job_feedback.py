@@ -3,7 +3,7 @@ Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
 '''
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -270,9 +270,9 @@ class JobFeedbackScreen(Screen):
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + str(datetime.timedelta(seconds=runtime_seconds)) + \
+            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + str(datetime.timedelta(seconds=total_time_seconds)) + \
+            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
             "\n" + \
             self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
             )
