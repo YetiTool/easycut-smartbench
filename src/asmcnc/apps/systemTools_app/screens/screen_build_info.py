@@ -354,7 +354,7 @@ Builder.load_string("""
                     width: dp(210)
                     height: dp(280)
                     padding: 0
-                    spacing: 0
+                    spacing: 20
                     orientation: 'vertical'
 
                     # canvas:
@@ -412,7 +412,7 @@ Builder.load_string("""
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(175)
+                        height: dp(115)
                         width: dp(210)
                         padding: [0,0]
 
