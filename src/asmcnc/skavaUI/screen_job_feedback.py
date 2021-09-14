@@ -268,7 +268,7 @@ class JobFeedbackScreen(Screen):
             )
 
         self.jd.metadata_dict['ProductionNotes'] = ''
-        self.production_notes.text. = ''
+        self.production_notes.text = ''
         self.production_notes_label.text = self.l.get_str("Production notes")
 
         self.success_question = self.l.get_str("Did this complete successfully?")
