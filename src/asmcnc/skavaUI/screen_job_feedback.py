@@ -133,17 +133,17 @@ Builder.load_string("""
                     width: dp(800)
                     orientation: 'horizontal'
                     spacing: dp(150)
-                    padding: [dp(204), 0]
+                    padding: [dp(204), 0, dp(204), dp(10)]
                     # thumbs down button
                     Button:
                         size_hint: (None,None)
-                        height: dp(160)
+                        height: dp(150)
                         width: dp(121)
                         background_color: hex('#f9f9f9ff')
                         background_normal: ""
-                        on_press: root.exit_screen()
+                        on_press: root.confirm_job_successful()
                         BoxLayout:
-                            padding: [0, dp(40), 0, 0]
+                            padding: [0, dp(30), 0, 0]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -154,13 +154,13 @@ Builder.load_string("""
                                 allow_stretch: True
                     Button:
                         size_hint: (None,None)
-                        height: dp(160)
+                        height: dp(150)
                         width: dp(121)
                         background_color: hex('#f9f9f9ff')
                         background_normal: ""
-                        on_press: root.exit_screen()
+                        on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
-                            padding: [0, 0, 0, dp(40)]
+                            padding: [0, 0, 0, dp(30)]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -257,7 +257,7 @@ class JobFeedbackScreen(Screen):
         total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
 
         self.metadata_label.text = (
-            self.jd.metadata_dict.get('ProjectName', '') + " | " + \
+            self.jd.metadata_dict.get('ProjectName', self.jd.filename) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
             self.l.get_str("Actual runtime:") + " " + actual_runtime + \
