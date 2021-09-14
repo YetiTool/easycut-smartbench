@@ -577,5 +577,5 @@ Step X of Y	Step X of Y	Step X of Y	Step X of Y	Step X of Y	Step X of Y	Step X o
 Actual runtime:	Actual runtime:	Actual runtime:	Actual runtime:	Actual runtime:	Actual runtime:	Actual runtime:
 Total time (with pauses):	Total time (with pauses):	Total time (with pauses):	Total time (with pauses):	Total time (with pauses):	Total time (with pauses):	Total time (with pauses):
 Parts completed:	Parts completed:	Parts completed:	Parts completed:	Parts completed:	Parts completed:	Parts completed:
-Production notes:	Production notes:	Production notes:	Production notes:	Production notes:	Production notes:	Production notes:
+Production notes	Production notes	Production notes	Production notes	Production notes	Production notes	Production notes
 Did this complete successfully?	Did this complete successfully?	Did this complete successfully?	Did this complete successfully?	Did this complete successfully?	Did this complete successfully?	Did this complete successfully?
