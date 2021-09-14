@@ -525,9 +525,9 @@ class SerialConnection(object):
         if self.m_state != "Check":
 
             if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
-                self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
-                self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
+                self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
+                self.sm.current = 'spindle_cooldown'
             else:
                 self.m.spindle_off()
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
@@ -606,13 +606,19 @@ class SerialConnection(object):
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
         # send info to the job done screen
-        self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-        self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
-        "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
-        "\n" + \
-        "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
+        actual_runtime = str(running_hours) + ":" + str(running_minutes) + ":" + str(running_seconds)
+        total_time = str(hours) + ":" + (minutes) + ":" + str(seconds)
 
-        if go_to_jobdone: self.sm.current = 'jobdone'
+        self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, actual_runtime, total_time)
+        if go_to_jobdone: self.sm.current = 'job_feedback'
+
+        # self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+        # self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
+        # "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
+        # "\n" + \
+        # "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
+
+        # if go_to_jobdone: self.sm.current = 'jobdone'
 
         self._reset_counters()
         

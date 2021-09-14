@@ -426,7 +426,7 @@ class GoScreen(Screen):
 
     def on_pre_enter(self, *args):
 
-        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+        self.sm.get_screen('job_feedback').return_to_screen = self.return_to_screen
 
         # get initial values on screen loading
         self.poll_for_job_progress(0)

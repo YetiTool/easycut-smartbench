@@ -7,10 +7,17 @@ Fake/draft job end screen
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import StringProperty
 
 Builder.load_string("""
 <JobFeedbackScreen>
 
+    job_completed_label : job_completed_label
+    metadata_label : metadata_label
+    production_notes_container : production_notes_container
+    production_notes_label : production_notes_label
+    production_notes : production_notes
+    success_question : success_question
 
     BoxLayout:
         height: dp(800)
@@ -35,6 +42,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                    id: job_completed_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -52,29 +60,63 @@ Builder.load_string("""
                 padding: 0
                 spacing: 10
                 orientation: 'vertical'
+                
                 BoxLayout:
                     size_hint_y: None
                     height: dp(180)
                     orientation: 'horizontal'
                     padding: dp(20)
+                    
                     Label: 
-                        text: root.metadata_string
+                        id: metadata_label
                         color: hex('#333333ff') #grey
                         font_size: dp(20)
                         markup: True
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
-                    TextInput: 
-                        text: "Ready to run this job again, need more materials"
-                        color: hex('#333333ff') #grey
-                        font_size: dp(20)
-                        markup: True
-                        text_size: self.size
-                        halign: "left"
-                        valign: "top"
-                        padding: dp(5)
+                    
+                    BoxLayout: 
+                        id: production_notes_container
+                        orientation: 'vertical'
+
+                        Button:
+                            id: production_notes_label
+                            background_color: hex('#e5e5e5ff')
+                            background_normal: ""
+                            background_down: ""
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "top"
+                            markup: True
+                            font_size: dp(20)
+                            size_hint_y: None
+                            height: self.parent.height
+                            opacity: 1
+                            on_press: root.open_production_notes_text_input()
+                            focus_next: production_notes
+
+                        TextInput:
+                            id: production_notes
+                            padding: [4, 2]
+                            text: ""
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "top"
+                            markup: True
+                            font_size: dp(20)
+                            size_hint_y: None
+                            height: dp(0)
+                            opacity: 0
+                            on_text_validate: root.close_production_notes_text_input()
+                            disabled: True
+                            multiline: True
+
+
                 Label:
+                    id: success_question
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -131,11 +173,13 @@ Builder.load_string("""
 
 class JobFeedbackScreen(Screen):
 
-    # Example metadata
-    metadata_string = "Project_name | Step 1 of 3" + "\n" + \
-        "Actual runtime: 0:30:43" + "\n"+ \
-        "Total time (with pauses): 0:45:41" + "\n"+ \
-        "Parts completed: 8/24"
+    return_to_screen = StringProperty()
+
+    # # Example metadata
+    # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
+    #     "Actual runtime: 0:30:43" + "\n"+ \
+    #     "Total time (with pauses): 0:45:41" + "\n"+ \
+    #     "Parts completed: 8/24"
 
     def __init__(self, **kwargs):
         super(JobFeedbackScreen, self).__init__(**kwargs)
@@ -143,17 +187,78 @@ class JobFeedbackScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
-        self.jd = kwargs['job_data']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
 
+    def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
+        self.update_strings(actual_runtime, total_time)
+        self.return_to_screen = screen_to_exit_to
 
+    def on_enter(self):
+        self.sm.get_screen('go').is_job_started_already = False
+        # self.sm.get_screen('go').loop_for_job_progress = None
+        self.db.send_job_end(self.jd.filename.split("\\")[-1])
+
+    def confirm_job_successful(self):
+        self.set_production_notes()
+        # Archie please add what needs sending here as approp
+        self.quit_to_return_screen()
+
+    def confirm_job_unsuccessful(self):
+        self.set_production_notes()
+        # Archie please add what needs sending here as approp
+        self.quit_to_return_screen()
+
+    def quit_to_return_screen(self):
+        self.sm.current = self.return_to_screen
+        
+
+    # PRODUCTION NOTES
+    def set_focus_on_production_notes(self, dt):
+        self.production_notes.focus = True
+
+    def open_production_notes_text_input(self):
+        
+        self.production_notes_label.disabled = True
+        self.production_notes.disabled = False
+        self.production_notes_label.height = 0
+        self.production_notes_label.opacity = 0
+        self.production_notes.height = self.production_notes_container.height
+        self.production_notes.opacity = 1
+        self.production_notes_label.focus = False
+
+        Clock.schedule_once(self.set_focus_on_production_notes, 0.3)
+
+    def close_production_notes_text_input(self):
+
+        self.set_production_notes()
+        self.production_notes_label.text = self.production_notes.text
+
+        self.production_notes.focus = False
+        self.production_notes.disabled = True
+        self.production_notes_label.disabled = False
+        self.production_notes.height = 0
+        self.production_notes.opacity = 0
+        self.production_notes_label.height = self.production_notes_container.height
+        self.production_notes_label.opacity = 1
+
+    def set_production_notes(self):
+        if self.production_notes.focus == True:
+            self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+
+    # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self, actual_runtime, total_time):
 
         # Add these strings to language dict
 
-        self.metadata_string = (
+        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.filename)
+
+        current_step = self.jd.metadata_dict.get('PartsCompletedSoFar')/self.jd.metadata_dict.get('PartsPerJob')
+        total_steps = self.jd.metadata_dict.get('TotalNumberOfPartsRequired')/self.jd.metadata_dict.get('PartsPerJob')
+
+        self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', '') + " | " + \
-            self.l.get_str('Step') + " " + self.jd.metadata_dict.get('PartsCompletedSoFar')/self.jd.metadata_dict.get('PartsPerJob') + \
-            self.l.get_str("of") + " " + self.jd.metadata_dict.get('TotalNumberOfPartsRequired')/self.jd.metadata_dict.get('PartsPerJob') + \
+            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
             self.l.get_str("Actual runtime:") + " " + actual_runtime + \
             "\n" + \
@@ -162,5 +267,6 @@ class JobFeedbackScreen(Screen):
             self.l.get_str("Parts completed:") + " " + self.jd.metadata_dict.get('PartsCompletedSoFar') + "/" + self.jd.metadata_dict.get('TotalNumberOfPartsRequired')
             )
 
-    def exit_screen(self):
-        self.sm.current = 'home'
+        self.production_notes_label.text = self.l.get_str("Production notes:")
+
+        self.success_question = self.l.get_str("Did this complete successfully?")
