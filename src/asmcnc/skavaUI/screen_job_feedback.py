@@ -7,6 +7,7 @@ End of job screen with feedback and metadata sending
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
+from kivy.clock import Clock
 
 Builder.load_string("""
 <JobFeedbackScreen>
@@ -113,7 +114,6 @@ Builder.load_string("""
                             disabled: True
                             multiline: True
 
-
                 Label:
                     id: success_question
                     size_hint: (None,None)
@@ -126,6 +126,7 @@ Builder.load_string("""
                     halign: "center"
                     valign: "bottom"
                     markup: True
+
                 BoxLayout:
                     size_hint: (None,None)
                     height: dp(160)
@@ -138,7 +139,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(150)
                         width: dp(121)
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_successful()
                         BoxLayout:
@@ -155,7 +156,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(150)
                         width: dp(121)
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
