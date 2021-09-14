@@ -132,42 +132,40 @@ Builder.load_string("""
                     height: dp(160)
                     width: dp(800)
                     orientation: 'horizontal'
-                    spacing: dp(150)
-                    padding: [dp(204), 0, dp(204), dp(10)]
+                    spacing: dp(96)
+                    padding: [dp(200), 0, dp(200), dp(10)]
                     # thumbs down button
                     Button:
                         size_hint: (None,None)
                         height: dp(150)
-                        width: dp(121)
+                        width: dp(152)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_successful()
                         BoxLayout:
-                            padding: [0, dp(30), 0, 0]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
                                 source: "./asmcnc/skavaUI/img/thumbs_down.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
-                                size: self.parent.width - 40, self.parent.height - 40
+                                size: self.parent.width, self.parent.height
                                 allow_stretch: True
                     Button:
                         size_hint: (None,None)
                         height: dp(150)
-                        width: dp(121)
+                        width: dp(152)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
-                            padding: [0, 0, 0, dp(30)]
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
                                 source: "./asmcnc/skavaUI/img/thumbs_up.png"
                                 # center_x: self.parent.center_x
                                 # y: self.parent.y
-                                size: self.parent.width - 40, self.parent.height - 40
+                                size: self.parent.width, self.parent.height
                                 allow_stretch: True  
 """)
 
@@ -223,6 +221,9 @@ class JobFeedbackScreen(Screen):
         self.production_notes.disabled = False
         self.production_notes_label.height = 0
         self.production_notes_label.opacity = 0
+
+        print("Height: " + str(self.production_notes_container.height))
+
         self.production_notes.height = self.production_notes_container.height
         self.production_notes.opacity = 1
         self.production_notes_label.focus = False
@@ -232,19 +233,22 @@ class JobFeedbackScreen(Screen):
     def close_production_notes_text_input(self):
 
         self.set_production_notes()
-        self.production_notes_label.text = self.production_notes.text
 
         self.production_notes.focus = False
         self.production_notes.disabled = True
         self.production_notes_label.disabled = False
         self.production_notes.height = 0
         self.production_notes.opacity = 0
+
+        print("Height: " + str(self.production_notes_container.height))
+
         self.production_notes_label.height = self.production_notes_container.height
         self.production_notes_label.opacity = 1
 
     def set_production_notes(self):
         if self.production_notes.focus:
             self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+            self.production_notes_label.text = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self, actual_runtime, total_time):
