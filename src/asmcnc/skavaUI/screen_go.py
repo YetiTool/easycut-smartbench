@@ -685,7 +685,7 @@ class GoScreen(Screen):
         if len(self.jd.job_gcode_running) != 0:
             self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
             if self.percent_thru_job > 100: self.percent_thru_job = 100
-            self.progress_percentage_label.text = str(self.percent_thru_job)
+            self.progress_percentage_label.text = str(self.percent_thru_job) + " %"
 
         # Runtime
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
