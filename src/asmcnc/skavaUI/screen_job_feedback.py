@@ -253,8 +253,8 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.filename)
 
-        current_step = self.jd.metadata_dict.get('PartsCompletedSoFar')/self.jd.metadata_dict.get('PartsPerJob')
-        total_steps = self.jd.metadata_dict.get('TotalNumberOfPartsRequired')/self.jd.metadata_dict.get('PartsPerJob')
+        current_step = self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1)
+        total_steps = self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1)
 
         self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', '') + " | " + \
@@ -264,7 +264,7 @@ class JobFeedbackScreen(Screen):
             "\n" + \
             self.l.get_str("Total time (with pauses):") + " " + total_time + \
             "\n" + \
-            self.l.get_str("Parts completed:") + " " + self.jd.metadata_dict.get('PartsCompletedSoFar') + "/" + self.jd.metadata_dict.get('TotalNumberOfPartsRequired')
+            self.l.get_str("Parts completed:") + " " + self.jd.metadata_dict.get('PartsCompletedSoFar', 1) + "/" + self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)
             )
 
         self.production_notes_label.text = self.l.get_str("Production notes:")
