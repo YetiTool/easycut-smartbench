@@ -3,6 +3,7 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
+import sys
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:

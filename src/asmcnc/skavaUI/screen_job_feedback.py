@@ -1,7 +1,6 @@
-
 '''
-Created on 24 August 2020
-Fake/draft job end screen
+Created on 13th September 2021
+End of job screen with feedback and metadata sending
 @author: Letty
 '''
 
