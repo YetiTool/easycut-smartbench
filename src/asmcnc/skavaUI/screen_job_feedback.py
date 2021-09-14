@@ -110,9 +110,11 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(0)
                             opacity: 0
-                            on_text_validate: root.close_production_notes_text_input()
                             disabled: True
                             multiline: True
+                            background_active: ""
+                            background_normal: ""
+                            background_color: hex('#e5e5e5ff')
 
                 Label:
                     id: success_question
@@ -190,6 +192,7 @@ class JobFeedbackScreen(Screen):
 
     def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
         self.update_strings(actual_runtime, total_time)
+        self.close_production_notes_text_input()
         self.return_to_screen = screen_to_exit_to
 
     def on_enter(self):
@@ -232,23 +235,16 @@ class JobFeedbackScreen(Screen):
 
     def close_production_notes_text_input(self):
 
-        self.set_production_notes()
-
         self.production_notes.focus = False
         self.production_notes.disabled = True
         self.production_notes_label.disabled = False
         self.production_notes.height = 0
         self.production_notes.opacity = 0
-
-        print("Height: " + str(self.production_notes_container.height))
-
         self.production_notes_label.height = self.production_notes_container.height
         self.production_notes_label.opacity = 1
 
     def set_production_notes(self):
-        if self.production_notes.focus:
-            self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
-            self.production_notes_label.text = self.production_notes.text
+        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self, actual_runtime, total_time):
