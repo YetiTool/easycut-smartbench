@@ -565,6 +565,9 @@ class GoScreen(Screen):
         self.speedOverride.speed_norm()
         self.overload_peak = 0.0
 
+        self.time_taken_seconds = 0
+        self.percent_thru_job = 0
+
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
         self.sm.get_screen('home').z_datum_reminder_flag = False
