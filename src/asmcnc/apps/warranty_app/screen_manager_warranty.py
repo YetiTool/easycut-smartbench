@@ -59,7 +59,7 @@ class ScreenManagerWarranty(object):
         Clock.schedule_once(lambda dt: first_screen(), 0.5)
 
     def exit_app(self):
-        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm)
+        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
         self.data_consent_app.open_data_consent('warranty_5', 'safety') # will probably make this CNC Academy screen instead
         self.destroy_screen('language_select')
         self.destroy_screen('warranty_1')

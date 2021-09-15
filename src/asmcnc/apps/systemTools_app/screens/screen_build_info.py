@@ -575,7 +575,7 @@ class BuildInfoScreen(Screen):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
     def open_data_consent_app(self):
-        self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm)
+        self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
         self.data_consent_app.open_data_consent('build_info', 'welcome')
 
     def do_show_more_info(self):

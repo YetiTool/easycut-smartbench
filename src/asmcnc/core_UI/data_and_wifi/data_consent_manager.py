@@ -7,8 +7,9 @@ class DataConsentManager(object):
 	return_to_screen = 'safety'
 	back_to_screen = 'build_info'
 
-	def __init__(self, screen_manager):
+	def __init__(self, screen_manager, localization):
 		self.sm = screen_manager
+		self.l = localization
 		self.set_up_data_screens()
 
 	def set_up_data_screens(self):
