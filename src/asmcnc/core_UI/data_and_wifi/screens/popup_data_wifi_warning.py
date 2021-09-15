@@ -27,11 +27,9 @@ class PopupDataAndWiFiDisableWarning(Widget):
         self.l = localization
         
         description = (
-			"Declining the data collection policy will cause the Console Wi-Fi to be disabled." + \
-			"\n" + \
-			"You can change your data preferences in the System Tools app at any time."
+			"[b]" + "Are you sure you want to decline the data policy and disable the Console Wi-Fi?" + "[/b]" + \
 			"\n\n" + \
-			"Are you sure you want to decline the data policy and disable Wi-Fi?"
+			"You can change your data preferences in the System Tools app at any time."
 			)
 
         title_string = self.l.get_str('Warning!') + " " + "Are you sure?"
