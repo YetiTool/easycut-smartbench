@@ -577,7 +577,7 @@ class BuildInfoScreen(Screen):
     
     def open_data_consent_app(self):
 
-        popup_info.PopupWait(self.sm, self.l, "Loading Data and Wi-Fi...")
+        popup_info.PopupWait(self.systemtools_sm.sm, self.l, "Loading Data and Wi-Fi...")
 
         def nested_open_data_consent_app(dt):
             self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
