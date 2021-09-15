@@ -27,33 +27,33 @@ class PopupDataAndWiFiDisableWarning(Widget):
         self.l = localization
         
         description = (
-        	"[b]" + "Are you sure?" + "[/b]" + \
-        	"\n\n" + \
 			"Declining the data collection policy will cause the Console Wi-Fi to be disabled." + \
 			"\n\n" + \
 			"You can change your data preferences in the System Tools app at any time."
+			"\n\n" + \
+			"Are you sure you want to decline the data policy and disable Wi-Fi?"
 			)
 
-        title_string = self.l.get_str('Warning!')
+        title_string = self.l.get_str('Warning!') + " " + "[b]" + "Are you sure?" + "[/b]"
         # ok_string = self.l.get_bold('Ok')
         ok_string = "[b]Yes, I'm sure[/b]"
         back_string = "[b]No, [/b]" + self.l.get_bold('Go Back')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
        	back_button = Button(text=back_string, markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = [25 / 255., 118 / 255., 210 / 255., 1.]
        
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,20,20,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
