@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on 16 Nov 2017
 @author: Ed
@@ -38,6 +40,7 @@ from asmcnc.comms import archie_db
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
 from settings import settings_manager # @UnresolvedImport
+from asmcnc.comms import localization
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
@@ -53,7 +56,6 @@ from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
 from asmcnc.skavaUI import screen_error # @UnresolvedImport
 from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing # @UnresolvedImport
 from asmcnc.skavaUI import screen_safety_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
@@ -80,7 +82,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.7.2'
+initial_version = 'v1.8.0-alpha'
 
 # default starting screen
 start_screen = 'welcome'
@@ -142,6 +144,7 @@ def log(message):
 
 class SkavaUI(App):
 
+    test_no = 0
 
     def build(self):
 
@@ -150,9 +153,12 @@ class SkavaUI(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+        # Localization/language object
+        l = localization.Localization()
+
         if start_screen == 'release_notes': 
             # powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
-            release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, version = initial_version)
+            release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, localization = l, version = initial_version)
             # restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
 
         # else: 
@@ -164,10 +170,10 @@ class SkavaUI(App):
         jd = job_data.JobData()
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, sett, jd)
+        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
         
         # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, jd)
+        am = app_manager.AppManagerClass(sm, m, sett, l, jd)
 
         # Create database object to talk to
         db = archie_db.SQLRabbit(sm, m)
@@ -176,33 +182,32 @@ class SkavaUI(App):
         sc = server_connection.ServerConnection()
         
         # initialise the screens (legacy)
-        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett)
-        local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd)
-        usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd)
-        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db)
-        jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m)
-        loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd)
-        checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd)
-        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db)
-        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport)
-        homing_screen = screen_homing.HomingScreen(name = 'homing', screen_manager = sm, machine =m)
-        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m)
-        mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m)
-        boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m)
-        rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm)
-        job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m, database = db, job = jd)
-        door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db)
-        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m)
-        prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m)
-        homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m)
-        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m)
-        welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, database = db, app_manager = am)
-        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db)
-        spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m)
-        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db)
-        lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m)
-        tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m)
+        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd, localization = l)
+        usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd, localization = l)
+        go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l)
+        jobstart_warning_screen= screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning', screen_manager = sm, machine = m, localization = l)
+        loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd, localization = l)
+        checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd, localization = l)
+        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
+        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport, localization = l)
+        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m, localization = l)
+        mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m, localization = l)
+        boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
+        rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm, localization = l)
+        job_done_screen = screen_job_done.JobDoneScreen(name = 'jobdone', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
+        door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
+        prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
+        homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m, localization = l)
+        squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
+        welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, database = db, app_manager = am, localization = l)
+        spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m, localization = l)
+        stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
+        lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
+        tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
 
         if start_screen == 'release_notes': 
             # sm.add_widget(powercycle_screen)
@@ -220,7 +225,6 @@ class SkavaUI(App):
         sm.add_widget(checking_screen)
         sm.add_widget(error_screen)
         sm.add_widget(serial_screen)
-        sm.add_widget(homing_screen)
         sm.add_widget(safety_screen)
         sm.add_widget(mstate_screen)
         sm.add_widget(boundary_warning_screen)
@@ -247,6 +251,21 @@ class SkavaUI(App):
         log('Screen manager activated: ' + str(sm.current))
 
 
+        # def test_cycle(dt):
+        #     if self.test_no < len(l.supported_languages):
+        #         lang = l.supported_languages[self.test_no]
+        #         l.load_in_new_language(lang)
+        #         print("New lang: " + str(lang))
+        #         try:
+        #             sm.get_screen(str(sm.current)).update_strings()
+        #         except: 
+        #             print(str(sm.current) + " has no update strings function")
+
+        #         self.test_no = self.test_no + 1
+        #     else: 
+        #         self.test_no = 0
+
+        # Clock.schedule_interval(test_cycle, 5)
 
         return sm
 

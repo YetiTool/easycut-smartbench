@@ -17,6 +17,8 @@ Builder.load_string("""
 <TouchplateOffsetWidget>
 
     touchplate_offset:touchplate_offset
+
+    touchplate_offset_label : touchplate_offset_label
     
     BoxLayout:
         size_hint: (None, None)
@@ -27,7 +29,8 @@ Builder.load_string("""
         padding: 20
         spacing: 10      
 
-        Label: 
+        Label:
+            id: touchplate_offset_label
             color: 0,0,0,1
             font_size: dp(24)
             markup: True
@@ -89,3 +92,9 @@ class TouchplateOffsetWidget(Widget):
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
+
+    def update_strings(self):
+        self.touchplate_offset_label.text = self.l.get_bold("TOUCHPLATE OFFSET")

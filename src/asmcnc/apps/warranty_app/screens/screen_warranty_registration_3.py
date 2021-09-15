@@ -11,8 +11,10 @@ Builder.load_string("""
 
 <WarrantyScreen3>:
 
-    status_container:status_container
-    serial_number_label:serial_number_label
+    status_container : status_container
+    your_serial_number_label : your_serial_number_label
+    serial_number_label : serial_number_label
+    next_button : next_button
 
     BoxLayout: 
         size_hint: (None,None)
@@ -36,13 +38,15 @@ Builder.load_string("""
             orientation: 'vertical'
                 
             Label:
+                id: your_serial_number_label
                 font_size: '30sp'
-                text: "[color=333333ff]Your serial number is[/color]"
+                # text: "[color=333333ff]Your serial number is[/color]"
                 text_size: self.size
                 valign: 'bottom'
                 halign: 'center'
                 markup: 'true'
                 bold: True
+                color: hex('#333333ff')
 
             BoxLayout:
                 orientation: 'vertical'
@@ -73,6 +77,7 @@ Builder.load_string("""
                     width: dp(291)
                     
                     Button:
+                        id: next_button
                         background_normal: "./asmcnc/apps/warranty_app/img/next.png"
                         background_down: "./asmcnc/apps/warranty_app/img/next.png"
                         border: [dp(14.5)]*4
@@ -80,7 +85,7 @@ Builder.load_string("""
                         width: dp(291)
                         height: dp(79)
                         on_press: root.next_screen()
-                        text: 'Next...'
+                        # text: 'Next...'
                         font_size: '30sp'
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -121,12 +126,15 @@ class WarrantyScreen3(Screen):
         super(WarrantyScreen3, self).__init__(**kwargs)
         self.wm=kwargs['warranty_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
         
         self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = '#1976d2'
 
         self.serial_number_label.text = self.get_serial_number()
+
+        self.update_strings()
 
     def get_serial_number(self):
         serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
@@ -148,4 +156,6 @@ class WarrantyScreen3(Screen):
     def go_back(self):
         self.wm.sm.current = 'warranty_2'
     
-
+    def update_strings(self):
+        self.your_serial_number_label.text = self.l.get_str("Your serial number is")
+        self.next_button.text = self.l.get_str("Next") + "..."

@@ -57,15 +57,15 @@ class SerialConnection(object):
 
     power_loss_detected = False
 
-    def __init__(self, machine, screen_manager, settings_manager, job):
+    def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
         self.sett =settings_manager     
         self.m = machine
         self.jd = job
-
+        self.l = localization
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
-        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.jd)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
 
     def __del__(self):
         print 'Destructor'
@@ -73,7 +73,7 @@ class SerialConnection(object):
     def get_serial_screen(self, serial_error):
 
         if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
-            self.sm.get_screen('serialScreen').error_description = serial_error
+            self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
             self.sm.current = 'serialScreen'
 
 

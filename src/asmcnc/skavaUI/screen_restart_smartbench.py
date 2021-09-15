@@ -12,6 +12,8 @@ Builder.load_string("""
 
 <RestartSmartbenchScreen>:
 
+    restart_label : restart_label
+
     canvas:
         Color: 
             rgba: hex('#e5e5e5')
@@ -20,9 +22,15 @@ Builder.load_string("""
             pos: self.pos
 
     Label:
-        text: 'Please restart SmartBench now.'
+        id: restart_label
+        padding: [dp(10),dp(0)]
         font_size: '40sp'
         color: hex('#333333')
+        text_size: self.size
+        size: self.texture_size
+        halign: "center"
+        valign: "middle"
+        markup: True
 
     BoxLayout:
         valign: 'bottom'
@@ -52,6 +60,9 @@ class RestartSmartbenchScreen(Screen):
     def __init__(self, **kwargs):
         super(RestartSmartbenchScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        self.l=kwargs['localization']
+
+        self.restart_label.text = self.l.get_str("Please restart SmartBench now.")
 
     def switch_screen(self):
         self.sm.current = 'release_notes'

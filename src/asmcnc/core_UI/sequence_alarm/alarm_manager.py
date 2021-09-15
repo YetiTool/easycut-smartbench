@@ -41,20 +41,19 @@ class AlarmSequenceManager(object):
 	trigger_description = ''
 	status_cache = ''
 
-	report_string= 'Loading report...'
-
 	report_setup_event = None
-
-	def __init__(self, screen_manager, settings_manager, machine, job):
+	
+	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
 		self.sm = screen_manager
 		self.set = settings_manager
 		self.m = machine
 		self.jd = job
-		self.usb_stick = usb_storage.USB_storage(self.sm)
+		self.l = localization
+		self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
+		self.report_string = self.l.get_str('Loading report...')
 
 		self.set_up_alarm_screens()
-
 
 	def set_up_alarm_screens(self):
 
@@ -83,9 +82,13 @@ class AlarmSequenceManager(object):
 				self.alarm_code = message
 				self.alarm_description = ALARM_CODES_DICT.get(message, "")
 				if ((self.alarm_code).endswith('1') or (self.alarm_code).endswith('8')):
-					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description + "\n" + "Getting details..."
+					self.sm.get_screen('alarm_1').description_label.text = (
+						self.l.get_str(self.alarm_description) + \
+						"\n" + \
+						self.l.get_str("Getting details...")
+						)
 				else:
-					self.sm.get_screen('alarm_1').description_label.text = self.alarm_description
+					self.sm.get_screen('alarm_1').description_label.text = self.l.get_str(self.alarm_description)
 				self.determine_screen_sequence()
 				self.sm.current = 'alarm_1'
 
@@ -94,6 +97,7 @@ class AlarmSequenceManager(object):
 			self.refire_screen()
 
 		self.handle_alarm_state()
+
 
 	def refire_screen(self):
 		print("Screen refired")
@@ -165,26 +169,26 @@ class AlarmSequenceManager(object):
 
 
 	def get_suspected_trigger(self):
-		limit_code = "Unexpected limit reached: "
+		limit_code = self.l.get_str("Unexpected limit reached:") + " "
 		limit_list = []
 
 		if self.m.s.limit_x:
-			limit_list.append('X home')
+			limit_list.append(self.l.get_str('X home'))
 
-		if self.m.s.limit_X: 
-			limit_list.append('X max')
+		if self.m.s.limit_X:
+			limit_list.append(self.l.get_str('X max'))
 
 		if self.m.s.limit_y: 
-			limit_list.append('Y home')
+			limit_list.append(self.l.get_str('Y home'))
 
 		if self.m.s.limit_Y: 
-			limit_list.append('Y max')
+			limit_list.append(self.l.get_str('Y max'))
 
 		if self.m.s.limit_z: 
-			limit_list.append('Z home')
+			limit_list.append(self.l.get_str('Z home'))
 
 		if limit_list == []:
-			limit_list.append('Unknown')
+			limit_list.append(self.l.get_str('Unknown'))
 
 		self.trigger_description = limit_code + (', ').join(limit_list)
 
@@ -213,7 +217,7 @@ class AlarmSequenceManager(object):
 
 		if self.trigger_description != '':
 			self.sm.get_screen('alarm_1').description_label.text = (
-					self.alarm_description + \
+					self.l.get_str(self.alarm_description) + \
 					"\n" +
 					self.trigger_description
 				)
@@ -224,14 +228,14 @@ class AlarmSequenceManager(object):
 	def reset_variables(self):
 
 		if self.report_setup_event != None: Clock.unschedule(self.report_setup_event)
-
-		self.return_to_screen = ""
-		self.alarm_code = ""
-		self.alarm_description = ""
-		self.trigger_description = ""
-		self.status_cache = ""
-		self.report_string= 'Loading report...'
+		self.return_to_screen = ''
+		self.alarm_code = ''
+		self.alarm_description = ''
+		self.trigger_description = ''
+		self.status_cache = ''
+		self.report_string= self.l.get_str('Loading report...')
 		self.sm.get_screen('alarm_3').description_label.text = self.report_string
+
 
 	def download_alarm_report(self):
 
@@ -241,12 +245,12 @@ class AlarmSequenceManager(object):
 		def get_report(count):
 			if self.usb_stick.is_usb_mounted_flag == True:
 				message = 'Downloading report, please wait...'
-				wait_popup = popup_info.PopupWait(self.sm, description = message)
+				wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 				self.write_report_to_file()
 				wait_popup.popup.dismiss()
 				self.usb_stick.disable()
 				message = 'Report downloaded'
-				popup_info.PopupMiniInfo(self.sm, description = message)
+				popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
 			elif count > 30:
 				if self.usb_stick.is_available(): self.usb_stick.disable()
@@ -271,20 +275,20 @@ class AlarmSequenceManager(object):
 
 		self.report_string = (
 
-			"[b]" + "Alarm report" + "[/b]" + \
+			self.l.get_bold("Alarm report") + \
 			"\n\n" + \
-			"Software version:" + " " + self.sw_version + "\n" + \
-			"Firmware version:" + " " + self.fw_version + "\n" + \
-			"Hardware version:" + " " + self.hw_version + "\n" + \
-			"Serial number:" + " " + self.machine_serial_number + \
+			self.l.get_str("Software version:") + " " + self.sw_version + "\n" + \
+			self.l.get_str("Firmware version:") + " " + self.fw_version + "\n" + \
+			self.l.get_str("Hardware version:") + " " + self.hw_version + "\n" + \
+			self.l.get_str("Serial number:") + " " + self.machine_serial_number + \
 			"\n\n" + \
-			"Alarm code:" + " " + alarm_number + \
+			self.l.get_str("Alarm code:") + " " + alarm_number + \
 			"\n" + \
-			"Alarm description: " + " " + self.alarm_description + \
+			self.l.get_str("Alarm description:") + " " + self.l.get_str(self.alarm_description) + \
 			"\n" + \
 			self.trigger_description + \
 			"\n\n" + \
-			"Status cache:" + " " + \
+			self.l.get_str("Status cache:") + " " + \
 			"\n" + \
 			self.status_cache
 			)

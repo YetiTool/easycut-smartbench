@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created March 2020
 
@@ -17,7 +18,9 @@ Builder.load_string("""
 
 <PowerCycleScreen>:
 
-    dots_label: dots_label
+    dots_label : dots_label
+    finishing_install_label : finishing_install_label
+    warning_label : warning_label
 
     canvas:
         Color: 
@@ -37,9 +40,9 @@ Builder.load_string("""
             size_hint_x: 1
                 
             Label:
+                id: finishing_install_label
                 text_size: self.size
-                size_hint_y: 0.5
-                text: "Finishing install... please wait"
+                size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
                 font_size: '40sp'   
@@ -49,7 +52,7 @@ Builder.load_string("""
             Label:
                 id: dots_label
                 text_size: self.size
-                size_hint_y: 0.5
+                size_hint_y: 0.33
                 text: "..."
                 color: hex('1976d2ff')
                 markup: True
@@ -58,12 +61,13 @@ Builder.load_string("""
                 halign: 'center'
 
             Label:
+                id: warning_label
                 text_size: self.size
-                size_hint_y: 0.5
-                text: "DO NOT POWER OFF SMARTBENCH"
+                size: self.texture_size
+                size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: '40sp'   
+                font_size: '40sp'
                 valign: 'middle'
                 halign: 'center'
 
@@ -74,6 +78,10 @@ class PowerCycleScreen(Screen):
     def __init__(self, **kwargs):
         super(PowerCycleScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
+
+        self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
+        self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
 
     def on_enter(self):
         self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)

@@ -28,7 +28,9 @@ Builder.load_string("""
     spindle_brand: spindle_brand
     spindle_cooldown_speed: spindle_cooldown_speed
     spindle_cooldown_time: spindle_cooldown_time
+    seconds_label : seconds_label
     stylus_switch: stylus_switch
+
     
     GridLayout:
         cols: 2
@@ -123,6 +125,7 @@ Builder.load_string("""
                 input_filter: 'int'
 
             Label:
+                id: seconds_label
                 color: 0,0,0,1
                 font_size: dp(30)
                 markup: True
@@ -131,7 +134,6 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
-                text: "seconds"
 
         # ROW 3
 
@@ -216,6 +218,9 @@ class SpindleSettingsWidget(Widget):
         super(SpindleSettingsWidget, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.l=kwargs['localization']
+
+        self.update_strings()
 
     def autofill_rpm_time(self):
 
@@ -232,3 +237,7 @@ class SpindleSettingsWidget(Widget):
 
         if 'digital' in self.spindle_brand.text:
             self.spindle_cooldown_speed.disabled = False
+
+    def update_strings(self):
+        self.seconds_label.text = self.l.get_str("seconds")
+
