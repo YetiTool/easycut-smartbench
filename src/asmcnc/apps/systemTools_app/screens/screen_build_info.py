@@ -391,7 +391,7 @@ Builder.load_string("""
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.open_data_consent_app()
-                        text: 'Data and wifi'
+                        text: 'Data and Wi-Fi'
                         color: hex('#f9f9f9ff')
                         markup: True
 
@@ -574,9 +574,16 @@ class BuildInfoScreen(Screen):
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
+    
     def open_data_consent_app(self):
-        self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
-        self.data_consent_app.open_data_consent('build_info', 'build_info')
+
+        popup_info.PopupWait(self.sm, self.l, "Loading Data and Wi-Fi...")
+
+        def nested_open_data_consent_app(dt):
+            self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
+            self.data_consent_app.open_data_consent('build_info', 'build_info')
+
+        Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
     def do_show_more_info(self):
         if self.advanced_button.state == 'normal':
