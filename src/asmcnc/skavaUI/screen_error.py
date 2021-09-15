@@ -165,7 +165,9 @@ class ErrorScreenClass(Screen):
     def __init__(self, **kwargs):
         super(ErrorScreenClass, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
+        self.m=kwargs['machine']  
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
         self.l=kwargs['localization']
 
         self.update_strings()
@@ -177,6 +179,8 @@ class ErrorScreenClass(Screen):
         # use the message to get the error description
         self.error_description = self.l.get_str(ERROR_CODES.get(self.message, ""))
         self.m.stop_from_gcode_error()
+        # Job cancelled due to error, send event
+        self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.filename.split("\\")[-1])
 
         self.button_function = self.return_to_screen
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)

@@ -21,15 +21,16 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings, localization):
+    def __init__(self, screen_manager, machine, settings, localization, job):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
+        self.jd = job
         self.l = localization
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
         self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
@@ -70,7 +71,7 @@ class AppManagerClass(object):
 
     def start_maintenance_app(self, landing_tab):
         if not self.sm.has_screen('maintenance'):
-            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l)
+            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd)
             self.sm.add_widget(maintenance_screen)
 
         self.sm.get_screen('maintenance').landing_tab = landing_tab

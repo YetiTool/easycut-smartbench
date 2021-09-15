@@ -19,6 +19,7 @@ from datetime import datetime
 
 import os, sys, time
 
+from asmcnc.comms import archie_db
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_feed_override, widget_speed_override # @UnresolvedImport
 from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, popup_info # @UnresolvedImport
 from asmcnc.geometry import job_envelope # @UnresolvedImport
@@ -375,9 +376,6 @@ def log(message):
 
 class GoScreen(Screen):
 
-    job_filename = ""
-    job_gcode = []
-
     btn_back = ObjectProperty()
     btn_back_img = ObjectProperty()
     start_or_pause_button_image = ObjectProperty()
@@ -393,6 +391,7 @@ class GoScreen(Screen):
     loop_for_job_progress = None
     loop_for_feeds_and_speeds = None
     lift_z_on_job_pause = False
+    overload_peak = 0
 
 
     def __init__(self, **kwargs):
@@ -401,20 +400,25 @@ class GoScreen(Screen):
 
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.job_gcode=kwargs['job']
+        self.jd=kwargs['job']
         self.am=kwargs['app_manager']
         self.l=kwargs['localization']
+        self.database=kwargs['database']
         
         self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
         self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
 
         # Graphics commands
-        self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm))
+        self.z_height_container.add_widget(widget_z_height.VirtualZ(machine=self.m, screen_manager=self.sm, job=self.jd))
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_widget_container.add_widget(self.speedOverride)
         
         # Status bar
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
+
+        #initialise for db send
+        self.time_taken_seconds = 0
+        self.percent_thru_job = 0
 
         self.update_strings()
 
@@ -496,7 +500,7 @@ class GoScreen(Screen):
 
                 brush_reminder_popup = popup_info.PopupReminder(self.sm, self.am, self.m, self.l, brush_warning, 'brushes')
 
-            if self.m.time_since_z_head_lubricated_seconds >= (50*3600):
+            if self.m.time_since_z_head_lubricated_seconds >= self.m.time_to_remind_user_to_lube_z_seconds:
 
                 time_since_lubricated_string = "[b]" + str(int(self.m.time_since_z_head_lubricated_seconds/3600)) + "[/b]"
 
@@ -551,9 +555,9 @@ class GoScreen(Screen):
 
         # scrape filename title
         if sys.platform == 'win32':
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("\\")[-1] + "[/color]"
+            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
         else:
-            self.file_data_label.text = "[color=333333]" + self.job_filename.split("/")[-1] + "[/color]"
+            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
         
         # Reset flag & light
         self.is_job_started_already = False
@@ -562,6 +566,7 @@ class GoScreen(Screen):
         
         self.feedOverride.feed_norm()
         self.speedOverride.speed_norm()
+        self.overload_peak = 0.0
 
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
@@ -588,6 +593,8 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
+        self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
+
         self.m.set_pause(False)
         self.is_job_started_already = True
         log('Starting job...')
@@ -606,14 +613,14 @@ class GoScreen(Screen):
             modified_job_gcode.append("M56")  # append cleaned up gcode to object
 
         # Turn vac on if spindle gets turned on during job
-        if ((str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) or (str(self.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
+        if ((str(self.jd.job_gcode).count("M3") > str(self.jd.job_gcode).count("M30")) or (str(self.jd.job_gcode).count("M03") > 0)) and self.m.stylus_router_choice != 'stylus':
             modified_job_gcode.append("AE")  # turns vacuum on
             modified_job_gcode.append("G4 P2")  # sends pause command
-            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.extend(self.jd.job_gcode)
             modified_job_gcode.append("G4 P2")  # sends pause command, 2 seconds
             modified_job_gcode.append("AF")  # turns vac off
         else:
-            modified_job_gcode.extend(self.job_gcode)
+            modified_job_gcode.extend(self.jd.job_gcode)
 
 
         # Spindle command?? 
@@ -641,11 +648,11 @@ class GoScreen(Screen):
 
             return line
 
-        modified_job_gcode = map(mapGcodes, modified_job_gcode)
+        self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
 
 
         try:
-            self.m.s.run_job(modified_job_gcode)
+            self.m.s.run_job(self.jd.job_gcode_modified)
             log('Job started ok from go screen...')
 
         except:
@@ -672,18 +679,18 @@ class GoScreen(Screen):
     def poll_for_job_progress(self, dt):
 
         # % progress    
-        if len(self.job_gcode) != 0:
-            percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
-            if percent_thru_job > 100: percent_thru_job = 100
-            self.progress_percentage_label.text = "[color=333333]" + str(percent_thru_job) + "[size=70px] %[/size][/color]"
+        if len(self.jd.job_gcode_running) != 0:
+            self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
+            if self.percent_thru_job > 100: self.percent_thru_job = 100
+            self.progress_percentage_label.text = "[color=333333]" + str(self.percent_thru_job) + "[size=70px] %[/size][/color]"
 
         # Runtime
-        if len(self.job_gcode) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0: 
+        if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
 
             stream_end_time = time.time()
-            time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
-            hours = int(time_taken_seconds / (60 * 60))
-            seconds_remainder = time_taken_seconds % (60 * 60)
+            self.time_taken_seconds = int(stream_end_time - self.m.s.stream_start_time)
+            hours = int(self.time_taken_seconds / (60 * 60))
+            seconds_remainder = self.time_taken_seconds % (60 * 60)
             minutes = int(seconds_remainder / 60)
             seconds = int(seconds_remainder % 60)
             
@@ -727,6 +734,11 @@ class GoScreen(Screen):
 
     def update_voltage_label(self):
         self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
+
+    def update_overload_peak(self, state):
+        if state > self.overload_peak:
+            self.overload_peak = state
+            log("New overload peak: " + str(self.overload_peak))
 
     def update_strings(self):
         self.feed_label.text = self.l.get_str("Feed")

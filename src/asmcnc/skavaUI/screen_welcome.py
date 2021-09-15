@@ -67,6 +67,7 @@ class WelcomeScreenClass(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
+        self.db=kwargs['database']
         self.am = kwargs['app_manager']
         self.l=kwargs['localization']
         self.update_strings()

@@ -133,6 +133,7 @@ class QuickCommands(Widget):
         super(QuickCommands, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.jd = kwargs['job']
         self.l=kwargs['localization']
       
     def quit_to_lobby(self):
@@ -156,10 +157,7 @@ class QuickCommands(Widget):
         # Machine must be homed.
         # Job must be within machine bounds.
 
-
-
-
-        if self.sm.get_screen('home').job_gcode ==[]:
+        if self.jd.job_gcode == []:
             info = (
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
@@ -189,8 +187,6 @@ class QuickCommands(Widget):
 
         else:
             # clear to proceed
-            self.sm.get_screen('go').job_gcode = self.sm.get_screen('home').job_gcode
-            self.sm.get_screen('go').job_filename  = self.sm.get_screen('home').job_filename
             self.sm.get_screen('go').return_to_screen = 'home'
             self.sm.get_screen('go').cancel_to_screen = 'home'
 

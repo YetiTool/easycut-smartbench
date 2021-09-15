@@ -103,6 +103,8 @@ class SpindleShutdownScreen(Screen):
         super(SpindleShutdownScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
         self.l=kwargs['localization']
         self.label_wait.text = self.l.get_str('Please wait') + '.'
 
@@ -117,6 +119,13 @@ class SpindleShutdownScreen(Screen):
 
         log('Pausing job...')
         self.m.stop_for_a_stream_pause()
+
+        if self.reason_for_pause == 'spindle_overload':
+            # Job paused due to overload, send event
+            self.db.send_event(1, "Job paused", "Paused job (Spindle overload): " + self.jd.filename.split("\\")[-1])
+        elif self.reason_for_pause == 'job_pause':
+            # Job paused by user, send event
+            self.db.send_event(0, "Job paused", "Paused job (User): " + self.jd.filename.split("\\")[-1])
 
         # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None

@@ -69,12 +69,12 @@ class ScreenManagerShapeCutter(object):
     tab_destroy_dt = 0.75
     
     positioned = False
-    
-    def __init__(self, app_manager, screen_manager, machine, localization):
 
+    def __init__(self, app_manager, screen_manager, machine, localization, job):
         self.am = app_manager
         self.sm = screen_manager
         self.m = machine
+        self.jd = job
         self.l = localization
         self.j = sC_job_parameters.ShapeCutterJobParameters(self.m, self)
 
@@ -1002,8 +1002,8 @@ class ScreenManagerShapeCutter(object):
          
         self.sm.get_screen('go').return_to_screen = return_to_screen
         self.sm.get_screen('go').cancel_to_screen = cancel_to_screen        
-        self.sm.get_screen('go').job_gcode = self.j.gcode_lines
-        self.sm.get_screen('go').job_filename  = self.j.gcode_filename
+        self.jd.job_gcode = self.j.gcode_lines
+        self.jd.filename  = self.j.gcode_filename
         
         def auto_go(dt):
             self.sm.get_screen('go').start_or_pause_button_press()
