@@ -1,8 +1,8 @@
 .. _top:
 
-================
-Privacy Notice
-================
+========================================
+Privacy Notice / Data Collection Policy
+========================================
 
 This is the privacy notice of Yeti Tool Ltd. In this document, "we", "our", or "us" refer to Yeti Tool Ltd.
 We are company number 11310906 registered in England and Wales.
