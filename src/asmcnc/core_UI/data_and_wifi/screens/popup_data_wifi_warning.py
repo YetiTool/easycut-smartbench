@@ -72,8 +72,8 @@ class PopupDataAndWiFiDisableWarning(Widget):
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
+        ok_button.bind(on_press=self.c.decline_terms_and_disable_wifi)
         ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=popup.c.decline_terms_and_disable_wifi)
         back_button.bind(on_press=popup.dismiss)
 
         popup.open()
