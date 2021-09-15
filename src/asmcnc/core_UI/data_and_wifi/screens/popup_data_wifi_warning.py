@@ -28,19 +28,19 @@ class PopupDataAndWiFiDisableWarning(Widget):
         
         description = (
 			"Declining the data collection policy will cause the Console Wi-Fi to be disabled." + \
-			"\n\n" + \
+			"\n" + \
 			"You can change your data preferences in the System Tools app at any time."
 			"\n\n" + \
 			"Are you sure you want to decline the data policy and disable Wi-Fi?"
 			)
 
-        title_string = self.l.get_str('Warning!') + " " + "[b]" + "Are you sure?" + "[/b]"
+        title_string = self.l.get_str('Warning!') + " " + "Are you sure?"
         # ok_string = self.l.get_bold('Ok')
         ok_string = "[b]Yes, I'm sure[/b]"
         back_string = "[b]No, [/b]" + self.l.get_bold('Go Back')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.3, text_size=(380, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -53,7 +53,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
         
-        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,20,20,20])
+        layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[10,20,10,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
