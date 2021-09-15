@@ -162,7 +162,6 @@ Builder.load_string("""
 						width: dp(291)
 						height: dp(79)
 						on_press: root.decline_terms()
-						text: 'Decline'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
@@ -179,7 +178,6 @@ Builder.load_string("""
 						width: dp(291)
 						height: dp(79)
 						on_press: root.accept_terms()
-						text: 'Accept'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
@@ -212,6 +210,7 @@ class WiFiAndDataConsentScreen2(Screen):
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
 		self.c=kwargs['consent_manager']
+		self.l = kwargs['localization']
 		self.update_strings()
 		self.set_checkbox_default()
 
@@ -221,16 +220,12 @@ class WiFiAndDataConsentScreen2(Screen):
 		self.set_checkbox_default()
 
 	def prev_screen(self):
-		self.c.sm.current='consent_1'	
-
-	def get_str(self, words):
-		return words
-
-	def get_bold(self, words):
-		return '[b]' + words + '[/b]'
+		self.c.sm.current='consent_1'
 
 	def update_strings(self):
-		self.user_info.text = self.get_str("I have read and understood the privacy notice")
+		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
+		self.decline_button.text = self.l.get_str("Decline")
+		self.accept_button.text = self.l.get_str("Accept")
 
 	def accept_terms(self):
 		if self.terms_checkbox.active: 

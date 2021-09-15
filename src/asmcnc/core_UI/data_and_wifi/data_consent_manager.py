@@ -14,11 +14,11 @@ class DataConsentManager(object):
 
 	def set_up_data_screens(self):
 		if not self.sm.has_screen('consent_1'):
-			consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', consent_manager = self)
+			consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_1_screen)
 
 		if not self.sm.has_screen('consent_2'):
-			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', consent_manager = self)
+			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_2_screen)
 
 	def open_data_consent(self, screen_to_go_back_to, screen_to_exit_to):

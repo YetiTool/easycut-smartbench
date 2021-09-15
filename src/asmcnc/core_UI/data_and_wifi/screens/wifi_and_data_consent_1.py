@@ -11,6 +11,7 @@ Builder.load_string("""
 <WiFiAndDataConsentScreen1>
 
 	user_info : user_info
+	next_button : next_button
 
     BoxLayout:
         height: dp(800)
@@ -105,6 +106,7 @@ Builder.load_string("""
 					width: dp(291)
 					padding: [0,0,0,32]
 					Button:
+						id: next_button
 						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 						background_down: "./asmcnc/apps/warranty_app/img/next.png"
 						border: [dp(14.5)]*4
@@ -131,13 +133,8 @@ class WiFiAndDataConsentScreen1(Screen):
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
 		self.c=kwargs['consent_manager']
+		self.l = kwargs['localization']
 		self.update_strings()
-
-	def get_str(self, words):
-		return words
-
-	def get_bold(self, words):
-		return '[b]' + words + '[/b]'
 
 	def next_screen(self):
 		self.c.sm.current='consent_2'
@@ -147,17 +144,18 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def update_strings(self):
 		self.user_info.text = (
-		self.get_bold("To enable Wi-Fi, you need to accept our data collection policy.") + \
-		"\n\n" + \
-		self.get_str("When Wi-Fi is enabled, we will only send SmartBench’s data anonymously. This allows us to enable smart features, and improve our services.") + \
-		"\n\n" + \
-		self.get_str("You will need Wi-Fi if you want to:") + \
-		"\n\n" + \
-		"[b]•[/b] " + self.get_str("Automatically receive software updates") + \
-		"\n" + \
-		"[b]•[/b] " + self.get_str("Use SmartTransfer (remotely transfer files)") + \
-		"\n" + \
-		"[b]•[/b] " + self.get_str("Use SmartManager (remotely manage and monitor SmartBenches)") + \
-		"\n\n" + \
-		self.get_str("You can disable Wi-Fi at any time.")
+			self.l.get_bold("To enable Wi-Fi, you need to accept our data collection policy.") + \
+			"\n\n" + \
+			self.l.get_str("When Wi-Fi is enabled, we will only send SmartBench’s data anonymously. This allows us to enable smart features, and improve our services.") + \
+			"\n\n" + \
+			self.l.get_str("You will need Wi-Fi if you want to:") + \
+			"\n\n" + \
+			"[b]•[/b] " + self.l.get_str("Automatically receive software updates") + \
+			"\n" + \
+			"[b]•[/b] " + self.l.get_str("Use SmartTransfer (remotely transfer files)") + \
+			"\n" + \
+			"[b]•[/b] " + self.l.get_str("Use SmartManager (remotely manage and monitor SmartBenches)") + \
+			"\n\n" + \
+			self.l.get_str("You can disable Wi-Fi at any time.")
 		)
+		self.next_button.text = self.l.get_str("Next") + "..."

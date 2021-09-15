@@ -391,7 +391,6 @@ Builder.load_string("""
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.open_data_consent_app()
-                        text: 'Data and Wi-Fi'
                         color: hex('#f9f9f9ff')
                         markup: True
 
@@ -406,7 +405,6 @@ Builder.load_string("""
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.do_show_more_info()
-                        text: 'Advanced...'
                         color: hex('#f9f9f9ff')
                         markup: True
 
@@ -519,16 +517,15 @@ class BuildInfoScreen(Screen):
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
-    smartbench_location_unformatted = 'SmartBench location'
-    smartbench_location_formatted = 'SmartBench location'
-
-
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+
+        self.smartbench_location_unformatted = self.l.get_str('SmartBench Location')
+        self.smartbench_location_formatted = self.l.get_str('SmartBench Location')
 
         self.update_strings()
         self.language_button.values = self.l.supported_languages
@@ -638,7 +635,8 @@ class BuildInfoScreen(Screen):
 
     def update_strings(self):
         self.language_button.text = self.l.lang
-        # self.advanced_button.text = self.l.get_str('More info') + '...'
+        self.data_and_wifi_button.text = self.l.get_str('Data and Wi-Fi')
+        self.advanced_button.text = self.l.get_str('Advanced') + '...'
         self.header.text = self.l.get_str('System Information')
         self.serial_number_header.text = self.l.get_str('Serial number')
         self.console_serial_number_header.text = self.l.get_str('Console hostname')
