@@ -164,7 +164,9 @@ class ReleaseNotesScreen(Screen):
     def check_data_consent_screen(self):
         data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
 
-        if data_consent.endswith('False') or not data_consent:
+        print(str(data_consent))
+
+        if ('False' in data_consent) or (not data_consent):
             self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
 
     def switch_screen(self):
