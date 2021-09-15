@@ -238,7 +238,7 @@ class WiFiAndDataConsentScreen2(Screen):
 
 	def decline_terms(self):
 		if self.terms_checkbox.active: 
-			self.c.decline_terms_and_disable_wifi()
+			self.c.warn_user_before_accepting_decline()
 
 	def on_checkbox_active(self):
 		if self.terms_checkbox.active: 
