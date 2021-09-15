@@ -576,7 +576,7 @@ class BuildInfoScreen(Screen):
 
     def open_data_consent_app(self):
         self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm)
-        self.data_consent_app.open_data_consent('welcome')
+        self.data_consent_app.open_data_consent('build_info', 'welcome')
 
     def do_show_more_info(self):
         if self.advanced_button.state == 'normal':

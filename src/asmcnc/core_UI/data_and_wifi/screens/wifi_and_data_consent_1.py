@@ -81,24 +81,24 @@ Builder.load_string("""
 					height: dp(122)
 					width: dp(244.5)
 					padding: [0, 0, 184.5, 0]
-					# Button:
-					# 	size_hint: (None,None)
-					# 	height: dp(52)
-					# 	width: dp(60)
-					# 	background_color: hex('#F4433600')
-					# 	center: self.parent.center
-					# 	pos: self.parent.pos
-					# 	on_press: root.prev_screen()
-					# 	BoxLayout:
-					# 		padding: 0
-					# 		size: self.parent.size
-					# 		pos: self.parent.pos
-					# 		Image:
-					# 			source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-					# 			center_x: self.parent.center_x
-					# 			y: self.parent.y
-					# 			size: self.parent.width, self.parent.height
-					# 			allow_stretch: True
+					Button:
+						size_hint: (None,None)
+						height: dp(52)
+						width: dp(60)
+						background_color: hex('#F4433600')
+						center: self.parent.center
+						pos: self.parent.pos
+						on_press: root.prev_screen()
+						BoxLayout:
+							padding: 0
+							size: self.parent.size
+							pos: self.parent.pos
+							Image:
+								source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+								center_x: self.parent.center_x
+								y: self.parent.y
+								size: self.parent.width, self.parent.height
+								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(122)
@@ -141,6 +141,9 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def next_screen(self):
 		self.c.sm.current='consent_2'
+
+	def prev_screen(self):
+		self.c.back_to_previous_screen()
 
 	def update_strings(self):
 		self.user_info.text = (

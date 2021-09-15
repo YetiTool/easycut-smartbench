@@ -60,13 +60,13 @@ class ScreenManagerWarranty(object):
 
     def exit_app(self):
         self.data_consent_app = data_consent_manager.DataConsentManager(self.sm)
-        self.data_consent_app.open_data_consent('safety')
+        self.data_consent_app.open_data_consent('warranty_5', 'safety') # will probably make this CNC Academy screen instead
         self.destroy_screen('language_select')
         self.destroy_screen('warranty_1')
         self.destroy_screen('warranty_2')
         self.destroy_screen('warranty_3')
         self.destroy_screen('warranty_4')
-        self.destroy_screen('warranty_5')
+        # self.destroy_screen('warranty_5')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):

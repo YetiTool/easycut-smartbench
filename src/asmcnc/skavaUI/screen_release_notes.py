@@ -173,9 +173,9 @@ class ReleaseNotesScreen(Screen):
             self.sm.current = 'welcome'
 
         else: 
-            self.data_consent_app.open_data_consent('welcome')
+            self.data_consent_app.open_data_consent('release_notes', 'welcome')
 
     def on_leave(self):
         if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
-            if self.user_has_confirmed:
+            if self.user_has_confirmed and not self.data_consent_app:
                 self.sm.remove_widget(self.sm.get_screen('release_notes'))
