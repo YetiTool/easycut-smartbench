@@ -46,7 +46,8 @@ import numpy as np
 class UnitTestsBoundaryWalk(unittest.TestCase):
     
     
-    gcodefile = 0.0;
+    gcodefile = 0.0
+    detailsToConsole = 0
     
     def setUp(self):
         # get the GIVEN
@@ -56,6 +57,7 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
             
         global gcodefile 
         #    2    GIVEN a working SB & console with software loaded
+        ##         c.f. geometry.boundary_calculator line 20 (est)
         boundarySetter = boundary_calculator.BoundaryCalculator(self)
         gcodefile = boundarySetter.get_boundary_as_gcode_array()
             
@@ -66,19 +68,56 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         pass
     
     
+    def goThroughData(self, inputGCodeFile):
+        
+        stringTestFile = []
+        
+        for i in inputGCodeFile:
+            stringTestFile[i] = str(inputGCodeFile(i))
+        
+        return stringTestFile
+    
+    
     def testBoundaryIsAnArray(self):  ## test method names begin 'test*'
-        # global gcodefile 
-        testFile = self.setUp()
+        # get global gcodefile as string
+        # double running of setUp:   testFile = self.setUp()
+        global gcodefile
+        # testFile = self.goThroughData(gcodefile)
+        testFile = gcodefile
         
-#        self.assertTrue(is(gcodefile), " not an array, this gcodefile")
+        self.assertTrue(isinstance(testFile, (list, tuple, np.ndarray)), " not an array, this gcodefile")
         
-        self.assertTrue(isinstance(testFile, (list, tuple, np.ndarray)))
-
-        
-        assert (1 + 2) == 3
+        ## basic test-assert-is-working test: 
+        # assert (1 + 2) == 33
 
     def testBoundaryIsACompletePolygon(self):
-        self.assertEqual((0 * 10), 0)
+        tester = [5,10,15,15]
+        
+        # ~~~~~~~~~~~~ @@@ ~~~~~~~~~~~ #
+        #
+        #        get the tester replaced with the 
+        #        incoming list/string array datatype.
+        #
+        #        the same is defined in boundary_calculator, but gets 
+        #        transformed or messed with...
+        #
+        # ~~~~~~~~~~~~ @@@ ~~~~~~~~~~~ #
+
+        
+        # self.gcodefile
+        first_item = tester[0]
+        last_item = tester[-1]
+                
+        # [self.gcodefile[0], self.gcodefile[-1]]
+        if self.detailsToConsole == 1:
+            print("first_item is:   " + str(first_item))
+            print("last_item is:    " + str(last_item))
+        
+        self.assertEquals(first_item, last_item, " start and end of gcode file are not the same coordinates... ")
+        
+        
+        ## basic test-assert-equals-is-working test: 
+        # self.assertEqual((0 * 10), 0)
         
     def testBoundaryAvoidsTheFurthestCut(self):
         self.assertEqual(("this cut"), "this cut")
