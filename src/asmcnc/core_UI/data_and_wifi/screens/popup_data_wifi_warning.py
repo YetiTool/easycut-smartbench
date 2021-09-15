@@ -21,7 +21,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 
 class PopupDataAndWiFiDisableWarning(Widget):   
-    def __init__(self, consent_manager, localization, warning_message):
+    def __init__(self, consent_manager, localization):
 
     	self.c = consent_manager
         self.l = localization
