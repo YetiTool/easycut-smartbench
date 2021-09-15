@@ -68,7 +68,6 @@ class VirtualZ(Widget):
         super(VirtualZ, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
         Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):
@@ -84,7 +83,7 @@ class VirtualZ(Widget):
                   
         self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
 
-        if self.jd.filename == '':
+        if self.sm.get_screen('home').job_filename == '':
             if self.z_clear.size[1] == 0: 
                 self.z_clear.size[1] = 4
 

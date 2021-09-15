@@ -311,10 +311,9 @@ class LocalFileChooser(Screen):
 
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
-        self.jd = kwargs['job']
         self.l=kwargs['localization']
-        self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
 
+        self.usb_stick = usb_storage.USB_storage(self.sm, self.l) # object to manage presence of USB stick (fun in Linux)
         self.check_for_job_cache_dir()
 
         self.usb_status_label.text = self.l.get_str("USB connected: Please do not remove USB until file is loaded.")
@@ -501,8 +500,7 @@ class LocalFileChooser(Screen):
         file_selection = self.filechooser.selection[0]
 
         if os.path.isfile(file_selection):
-            self.jd.reset_values()
-            self.jd.filename = file_selection
+            self.manager.get_screen('loading').loading_file_name = file_selection
             self.manager.current = 'loading'
 
         else: 

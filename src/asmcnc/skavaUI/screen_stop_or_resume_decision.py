@@ -127,9 +127,8 @@ class StopOrResumeDecisionScreen(Screen):
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
-        self.jd = kwargs['job']
-        self.db = kwargs['database']
         self.l=kwargs['localization']
+ 
     
     def popup_help(self):
 
@@ -174,9 +173,6 @@ class StopOrResumeDecisionScreen(Screen):
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
 
-        # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.filename.split("\\")[-1])
-
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
         if self.return_screen == 'go':
@@ -188,9 +184,5 @@ class StopOrResumeDecisionScreen(Screen):
     def resume_job(self):
 
         self.m.resume_after_a_stream_pause()
-
-        # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.filename.split("\\")[-1])
-
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         self.sm.current = self.return_screen

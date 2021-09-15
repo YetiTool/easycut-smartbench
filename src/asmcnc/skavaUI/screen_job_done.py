@@ -8,9 +8,11 @@ Screen to inform user when job is complete.
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.properties import StringProperty # @UnresolvedImport
+
 
 import sys, os
+
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -75,25 +77,23 @@ Builder.load_string("""
 
 """)
 
-
 # Intent of class is to send JobDone commands
 # Commands are sent via sequential streaming, which is monitored to evaluate whether the op has completed or not
 
 class JobDoneScreen(Screen):
+
     jobdone_text = StringProperty()
     return_to_screen = StringProperty()
 
     def __init__(self, **kwargs):
+    
         super(JobDoneScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.database = kwargs['database']
-        self.jd = kwargs['job']
-
+        self.sm=kwargs['screen_manager']
+        self.m=kwargs['machine']
+    
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
-        self.database.send_job_end(self.jd.filename.split("\\")[-1])
 
     def quit_to_go(self):
         self.sm.current = self.return_to_screen

@@ -60,8 +60,6 @@ class RouterMachine(object):
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
-    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
-    device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
@@ -77,7 +75,6 @@ class RouterMachine(object):
 
     ## Z HEAD MAINTENANCE SETTINGS
     time_since_z_head_lubricated_seconds = 0
-    time_to_remind_user_to_lube_z_seconds = float(50*3600)
 
     ## LASER VALUES
     laser_offset_x_value = 0
@@ -101,26 +98,19 @@ class RouterMachine(object):
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 20000 # YETI value is 20k 
 
-    ## DEVICE LABEL
-    device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
-
-    ## DEVICE LOCATION
-    device_location = 'SmartBench location'
-
     reminders_enabled = True
 
     trigger_setup = False
-
-    def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job):
+            
+    def __init__(self, win_serial_port, screen_manager, settings_manager, localization):
 
         self.sm = screen_manager
         self.sett = settings_manager
         self.l = localization
-        self.jd = job
         self.set_jog_limits()
 
         # Establish 's'erial comms and initialise
-        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
+        self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l)
         self.s.establish_connection(win_serial_port)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
@@ -189,17 +179,6 @@ class RouterMachine(object):
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
-        if not path.exists(self.device_label_file_path):
-            log('Creating device label settings file...')
-            file = open(self.device_label_file_path, 'w+')
-            file.write(str(self.device_label))
-            file.close()
-
-        if not path.exists(self.device_location_file_path):
-            log('Creating device location settings file...')
-            file = open(self.device_location_file_path, 'w+')
-            file.write(str(self.device_location))
-
         if not path.exists(self.persistent_language_path):
             log("Creating language settings file")
             file = open(self.persistent_language_path, 'w+')
@@ -215,8 +194,6 @@ class RouterMachine(object):
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
-        self.read_device_label()
-        self.read_device_location()
 
 
     ## SET UP OPTIONS
@@ -510,66 +487,6 @@ class RouterMachine(object):
 
         except: 
             log("Unable to write stylus settings")
-            return False
-
-    ## DEVICE LABEL
-    def read_device_label(self):
-
-        try:
-            file = open(self.device_label_file_path, 'r')
-            self.device_label = str(file.read())
-            file.close()
-
-            log("Read in device label")
-            return True
-
-        except:
-            log("Unable to read device label")
-            return False
-
-    def write_device_label(self, value):
-
-        try:
-            file = open(self.device_label_file_path, 'w+')
-            file.write(str(value))
-            file.close()
-
-            self.device_label = str(value)
-            log("device label written to file")
-            return True
-
-        except:
-            log("Unable to write device label")
-            return False
-
-    ## DEVICE LOCATION
-    def read_device_location(self):
-
-        try:
-            file = open(self.device_location_file_path, 'r')
-            self.device_location = str(file.read())
-            file.close()
-
-            log("Read in device location")
-            return True
-
-        except:
-            log("Unable to read device location")
-            return False
-
-    def write_device_location(self, value):
-
-        try:
-            file = open(self.device_location_file_path, 'w+')
-            file.write(str(value))
-            file.close()
-
-            self.device_location = str(value)
-            log("Device location written to file")
-            return True
-
-        except:
-            log("Unable to write device location")
             return False
 
 # GRBL SETTINGS

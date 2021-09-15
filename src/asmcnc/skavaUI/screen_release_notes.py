@@ -5,13 +5,11 @@ Created on 6 Aug 2021
 Screen shown after update to display new release notes
 '''
 
-import kivy, os
+import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
-
-from asmcnc.core_UI.data_and_wifi import data_consent_manager
 
 from datetime import datetime
 
@@ -130,15 +128,12 @@ class ScrollReleaseNotes(ScrollView):
 
     color_dict = DictProperty({
                     'background': 'e5e5e5ff',
-                    'link': '1976d2ff',
+                    'link': 'ce5c00ff',
                     'paragraph': '333333ff',
                     'title': '333333ff',
                     'bullet': 'e5e5e5ff'})
 
 class ReleaseNotesScreen(Screen):
-
-    data_consent_app = None
-    user_has_confirmed = False
 
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
@@ -158,23 +153,5 @@ class ReleaseNotesScreen(Screen):
         "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
         self.next_button.text = self.l.get_str("Next") + "..."
 
-        self.check_data_consent_screen()
-
-    def check_data_consent_screen(self):
-        data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
-
-        if ('False' in data_consent) or (not data_consent):
-            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
-
     def switch_screen(self):
-        user_has_confirmed = True
-        if not self.data_consent_app: # test this
-            self.sm.current = 'welcome'
-
-        else: 
-            self.data_consent_app.open_data_consent('release_notes', 'welcome')
-
-    def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
-            if self.user_has_confirmed and not self.data_consent_app:
-                self.sm.remove_widget(self.sm.get_screen('release_notes'))
+        self.sm.current = 'restart_smartbench'

@@ -119,6 +119,8 @@ Builder.load_string("""
             font_size: '20sp'
             halign: 'center'
             valign: 'top'
+            text: root.checking_file_name
+
 
         BoxLayout:
             orientation: 'horizontal'
@@ -218,6 +220,7 @@ def log(message):
 
 class CheckingScreen(Screen):
     
+    checking_file_name = StringProperty()
     job_checking_checked = StringProperty()
     check_outcome = StringProperty()
     display_output = StringProperty()
@@ -245,9 +248,9 @@ class CheckingScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-        self.jd=kwargs['job']
-
-        self.gcode_preview_widget = widget_gcode_view.GCodeView(job = self.jd)
+        self.job_gcode=kwargs['job']
+        
+        self.gcode_preview_widget = widget_gcode_view.GCodeView()
 
     def on_pre_enter(self):
         self.toggle_boundary_buttons(True)
@@ -259,9 +262,9 @@ class CheckingScreen(Screen):
 
         # display file selected in the filename display label
         if sys.platform == 'win32':
-            self.filename_label.text = self.jd.filename.split("\\")[-1]
+            self.filename_label.text = self.checking_file_name.split("\\")[-1]
         else:
-            self.filename_label.text = self.jd.filename.split("/")[-1]
+            self.filename_label.text = self.checking_file_name.split("/")[-1]
         
         
         self.exit_label = self.l.get_str('Unload job')
@@ -276,7 +279,7 @@ class CheckingScreen(Screen):
                     self.l.get_str('Unable to run boundary check on file.') + ' ' + \
                     self.l.get_str('Please make sure file is in recognisable format.')
                     )
-                self.jd.reset_values()
+                self.job_gcode = []
         
         else:
             self.try_gcode_check()
@@ -291,7 +294,8 @@ class CheckingScreen(Screen):
                 self.l.get_str('Unable to run g-code check on file.') + ' ' + \
                 self.l.get_str('Please make sure file is in recognisable format.')
                 )
-            self.jd.reset_values()
+            self.job_gcode = []        
+
               
     def boundary_check(self):            
         
@@ -312,8 +316,6 @@ class CheckingScreen(Screen):
                 self.l.get_str('The job would exceed the working volume of the machine in one or more axes.') + "\n\n" + \
                 self.l.get_str('See help notes (right).')
                 )
-            self.jd.check_warning = self.l.get_str('The job would exceed the working volume of the machine in one or more axes.')
-            self.jd.checked = True
             self.write_boundary_output(bounds_output)
 
 
@@ -453,17 +455,17 @@ class CheckingScreen(Screen):
                 self.check_outcome = self.l.get_str('Looking for gcode errors') + '...'
                 
                 # This clock gives kivy time to sort out the screen before the pi has to do any serious legwork
-                Clock.schedule_once(partial(self.check_grbl_stream, self.jd.job_gcode), 0.1)
+                Clock.schedule_once(partial(self.check_grbl_stream, self.job_gcode), 0.1)
 
             else: 
                 self.job_checking_checked = self.l.get_str('Cannot check job')
                 self.check_outcome = self.l.get_str('Cannot check job') + ': ' + self.l.get_str('machine is not idle.') + ' ' + self.l.get_str('Please ensure machine is in idle state before attempting to reload the file.')
-                self.jd.reset_values()
+                self.job_gcode = []
             
         else:
             self.job_checking_checked = self.l.get_str('Cannot check job')
             self.check_outcome = self.l.get_str('Cannot check job') + ': ' + self.l.get_str('no serial connection.') + ' ' + self.l.get_str('Please ensure your machine is connected, and reload the file.')
-            self.jd.reset_values()
+            self.job_gcode = []
 
     loop_for_job_progress = None
      
@@ -487,7 +489,7 @@ class CheckingScreen(Screen):
 
     def poll_for_gcode_check_progress(self, dt):
 
-        percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0)*100.0))
+        percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.job_gcode) + 4) * 1.0)*100.0))
         if percent_thru_job > 100: percent_thru_job = 100
         self.job_checking_checked = self.l.get_str("Checking job") +  ": " + str(percent_thru_job) + " %"
 
@@ -504,22 +506,14 @@ class CheckingScreen(Screen):
                 self.job_checking_checked = self.l.get_str('Errors found!')
                 if self.entry_screen == 'file_loading':
                     self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review your job before attempting to reload it.')
-                    self.jd.check_warning = self.l.get_str('Errors found in G-code.')
-                    self.jd.checked = True
-
                 elif self.entry_screen == 'home':
                     self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and reload your job before attempting to run it.')
-                    self.jd.check_warning = self.l.get_str('Errors found in G-code.')
-                    self.jd.checked = True
-
                 self.job_ok = False
 
             elif self.flag_min_feed_rate or self.flag_max_feed_rate or self.flag_spindle_off:
                 self.job_checking_checked = self.l.get_str('Advisories')
                 self.check_outcome = self.l.get_str('This file will run, but it might not run in the way you expect.') + '\n\n' + \
                                     self.l.get_str('Please review your job before running it.')
-                self.jd.check_warning = self.l.get_str('This file will run, but it might not run in the way you expect.')
-                self.jd.checked = True
                 self.job_ok = True
                 
                 # add job checked already flag here
@@ -528,8 +522,6 @@ class CheckingScreen(Screen):
             else:
                 self.job_checking_checked = self.l.get_str('File is OK!')
                 self.check_outcome =  self.l.get_str("No errors found. You're good to go!")
-                self.jd.check_warning = self.l.get_str('File is OK!')
-                self.jd.checked = True
                 self.job_ok = True
                 
                 # add job checked already flag here
@@ -538,7 +530,7 @@ class CheckingScreen(Screen):
             self.write_error_output(self.error_log)
             
             if self.job_ok == False:
-                self.jd.reset_values()
+                self.job_gcode = []
     
             log('File has been checked!')
             self.exit_label = self.l.get_str('Finish')
@@ -581,7 +573,7 @@ class CheckingScreen(Screen):
         error_summary = []
         
         # Zip error log and GRBL commands together, and remove any lines with no gcode
-        no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.jd.job_gcode)))
+        no_empties = list(filter(lambda x: x != ('ok', ''), zip(error_log, self.job_gcode)))
 
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
         for idx, f in enumerate(no_empties):
@@ -625,25 +617,30 @@ class CheckingScreen(Screen):
         if check_again or (pass_no < 3): Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 1)
 
     def quit_to_home(self): 
-
+        
         if self.job_ok:
+            self.sm.get_screen('home').job_gcode = self.job_gcode
+            self.sm.get_screen('home').job_filename = self.checking_file_name
             self.sm.get_screen('home').z_datum_reminder_flag = True
             self.sm.current = 'home'
 
-        else:
-            self.jd.reset_values()
+        else:            
             self.sm.current = 'home'
 
             
     def load_file_now(self):
+        self.sm.get_screen('home').job_gcode = self.job_gcode
+        self.sm.get_screen('home').job_filename = self.checking_file_name
         self.sm.get_screen('home').z_datum_reminder_flag = True
         self.sm.current = 'home'       
     
-    def on_pre_leave(self, *args):
+    def on_leave(self, *args):
         if self.serial_function_called: 
             self.stop_check_in_serial(0)
             self.serial_function_called = False
         if self.error_out_event != None: Clock.unschedule(self.error_out_event)
+        self.job_gcode = []
+        self.checking_file_name = ''
         self.job_checking_checked = ''
         self.check_outcome = ''
         self.display_output = ''
@@ -655,7 +652,5 @@ class CheckingScreen(Screen):
         self.flag_spindle_off = True
         self.error_log = []
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
-
-        # Update summary to show check info
-        self.sm.get_screen('home').gcode_summary_widget.display_summary()
         self.toggle_boundary_buttons(True)
+

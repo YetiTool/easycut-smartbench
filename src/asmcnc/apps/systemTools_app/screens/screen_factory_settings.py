@@ -572,7 +572,6 @@ class FactorySettingsScreen(Screen):
                     self.m.reminders_enabled = True
                     self.m.trigger_setup = True
                     self.m.write_set_up_options(True)
-                    self.set_user_to_view_privacy_notice()
                     return True
                 else:
                     return False
@@ -720,15 +719,6 @@ class FactorySettingsScreen(Screen):
 
     def final_test(self):
         self.systemtools_sm.open_final_test_screen()
-
-    def set_user_to_view_privacy_notice(self):
-        user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
-        
-        if not user_has_seen_privacy_notice:
-            os.system("sudo sed -i -e '$auser_has_seen_privacy_notice=False' /home/pi/easycut-smartbench/src/config.txt")
-
-        elif user_has_seen_privacy_notice.endswith('True'):
-            os.system('sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
             
