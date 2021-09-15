@@ -157,7 +157,7 @@ class SQLRabbit:
                 previous_percent_dict[self.calibration_percent_left_next]:
             self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
-    def send_job_end(self, job_name):
+    def send_job_end(self, job_name, successful):
         data = [
             {
                 "payload_type": "job_end",
@@ -165,7 +165,8 @@ class SQLRabbit:
                     "hostname": socket.gethostname()
                 },
                 "job_data": {
-                    "job_name": job_name
+                    "job_name": job_name,
+                    "successful": successful
                 },
                 "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }

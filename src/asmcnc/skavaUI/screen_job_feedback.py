@@ -212,12 +212,12 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_successful(self):
         self.set_production_notes()
-        # Archie please add what needs sending here as approp
+        self.db.send_job_end(self.jd.job_name, True)
         self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        # Archie please add what needs sending here as approp
+        self.db.send_job_end(self.jd.job_name, True)
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
