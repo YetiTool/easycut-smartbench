@@ -35,7 +35,7 @@ class DataConsentManager(object):
 		self.exit_data_consent_app()
 
 	def warn_user_before_accepting_decline(self):
-		popup_data_and_wifi_warning.PopupDataAndWiFiDisableWarning(self, self.l)
+		popup_data_wifi_warning.PopupDataAndWiFiDisableWarning(self, self.l)
 
 	def decline_terms_and_disable_wifi(self):
 		os.system('sudo rfkill block wifi')
