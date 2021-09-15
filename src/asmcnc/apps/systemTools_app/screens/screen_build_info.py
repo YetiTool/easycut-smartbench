@@ -15,6 +15,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.core_UI.data_and_wifi import data_consent_manager
 
 Builder.load_string("""
 
@@ -54,9 +55,10 @@ Builder.load_string("""
     smartbench_location_input: smartbench_location_input
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
-    show_more_info: show_more_info
-    more_info_button: more_info_button
     language_button: language_button
+    data_and_wifi_button : data_and_wifi_button
+    advanced_button : advanced_button
+    show_more_info: show_more_info
     console_serial_number: console_serial_number
 
     BoxLayout:
@@ -352,7 +354,7 @@ Builder.load_string("""
                     width: dp(210)
                     height: dp(280)
                     padding: 0
-                    spacing: 0
+                    spacing: 20
                     orientation: 'vertical'
 
                     # canvas:
@@ -362,29 +364,53 @@ Builder.load_string("""
                     #         pos: self.pos
                     #         size: self.size
 
-
-                    BoxLayout: 
-                        size_hint: (None, None)
+                    Spinner:
+                        id: language_button
+                        size_hint: (None,None)
                         height: dp(35)
                         width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: ""
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        text: 'Choose language...'
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        option_cls: Factory.get("SystemToolsLanguageSpinner")
+                        on_text: root.choose_language()
 
-                        ToggleButton:
-                            id: more_info_button
-                            size_hint: (None,None)
-                            height: dp(35)
-                            width: dp(180)
-                            background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            border: [dp(7.5)]*4
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            on_press: root.do_show_more_info()
-                            text: 'More info...'
-                            color: hex('#f9f9f9ff')
-                            markup: True
+                    Button:
+                        id: data_and_wifi_button
+                        size_hint: (None,None)
+                        height: dp(35)
+                        width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.open_data_consent_app()
+                        color: hex('#f9f9f9ff')
+                        markup: True
+
+                    ToggleButton:
+                        id: advanced_button
+                        size_hint: (None,None)
+                        height: dp(35)
+                        width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.do_show_more_info()
+                        color: hex('#f9f9f9ff')
+                        markup: True
+
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(200)
+                        height: dp(115)
                         width: dp(210)
                         padding: [0,0]
 
@@ -395,30 +421,12 @@ Builder.load_string("""
                             color: hex('#333333ff')
 
 
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(35)
-                        width: dp(180)
-                        Spinner:
-                            id: language_button
-                            size_hint: (None,None)
-                            height: dp(35)
-                            width: dp(180)
-                            background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
-                            background_down: ""
-                            border: [dp(7.5)]*4
-                            center: self.parent.center
-                            pos: self.parent.pos
-                            text: 'Choose language...'
-                            color: hex('#f9f9f9ff')
-                            markup: True
-                            option_cls: Factory.get("SystemToolsLanguageSpinner")
-                            on_text: root.choose_language()
 
-                    BoxLayout: 
-                        size_hint: (None, None)
-                        height: dp(10)
-                        width: dp(210)
+
+                    # BoxLayout: 
+                    #     size_hint: (None, None)
+                    #     height: dp(10)
+                    #     width: dp(210)
 
             BoxLayout:
                 size_hint: (None,None)
@@ -509,16 +517,15 @@ class BuildInfoScreen(Screen):
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
-    smartbench_location_unformatted = 'SmartBench location'
-    smartbench_location_formatted = 'SmartBench location'
-
-
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+
+        self.smartbench_location_unformatted = self.l.get_str('SmartBench Location')
+        self.smartbench_location_formatted = self.l.get_str('SmartBench Location')
 
         self.update_strings()
         self.language_button.values = self.l.supported_languages
@@ -564,10 +571,22 @@ class BuildInfoScreen(Screen):
     def scrape_fw_version(self):
         self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
 
+    
+    def open_data_consent_app(self):
+
+        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, "Loading Data and Wi-Fi...")
+
+        def nested_open_data_consent_app(dt):
+            self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
+            self.data_consent_app.open_data_consent('build_info', 'build_info')
+            wait_popup.popup.dismiss()
+
+        Clock.schedule_once(nested_open_data_consent_app, 0.2)
+
     def do_show_more_info(self):
-        if self.more_info_button.state == 'normal':
+        if self.advanced_button.state == 'normal':
             self.show_more_info.opacity = 0
-        if self.more_info_button.state == 'down':
+        if self.advanced_button.state == 'down':
             self.show_more_info.opacity = 1
 
     def get_smartbench_model(self):
@@ -616,7 +635,8 @@ class BuildInfoScreen(Screen):
 
     def update_strings(self):
         self.language_button.text = self.l.lang
-        self.more_info_button.text = self.l.get_str('More info') + '...'
+        self.data_and_wifi_button.text = self.l.get_str('Data and Wi-Fi')
+        self.advanced_button.text = self.l.get_str('Advanced') + '...'
         self.header.text = self.l.get_str('System Information')
         self.serial_number_header.text = self.l.get_str('Serial number')
         self.console_serial_number_header.text = self.l.get_str('Console hostname')
@@ -629,12 +649,12 @@ class BuildInfoScreen(Screen):
         self.show_more_info.text = (
             self.l.get_str('Software') + '\n' + \
             self.set.sw_branch + '\n' + \
-            self.set.sw_hash + '\n\n' + \
-            self.l.get_str('Platform') + '\n' + \
-            self.set.pl_branch + '\n' + \
-            self.set.pl_hash + '\n\n' + \
-            self.l.get_str('IP Address') + '\n' + \
-            self.get_ip_address()
+            self.set.sw_hash + '\n\n' #+ \
+            # self.l.get_str('Platform') + '\n' + \
+            # self.set.pl_branch + '\n' + \
+            # self.set.pl_hash + '\n\n' + \
+            # self.l.get_str('IP Address') + '\n' + \
+            # self.get_ip_address()
             )
 
     def restart_app(self):
