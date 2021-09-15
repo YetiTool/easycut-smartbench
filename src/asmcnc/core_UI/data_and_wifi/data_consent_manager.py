@@ -29,7 +29,7 @@ class DataConsentManager(object):
 
 	def back_to_previous_screen(self):
 		self.sm.current = self.back_to_screen
-		if self.back_to_screen != 'build_info':
+		if self.back_to_screen == 'build_info':
 			self.remove_consent_screens()
 
 	def accept_terms_and_enable_wifi(self):
