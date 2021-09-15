@@ -407,5 +407,5 @@ class USBFileChooser(Screen):
     def go_to_loading_screen(self, file_selection):
         if not self.is_filechooser_scrolling:
             self.jd.reset_values()
-            self.jd.filename = file_selection
+            self.jd.set_job_filename(file_selection)
             self.manager.current = 'loading'

@@ -525,9 +525,9 @@ class SerialConnection(object):
         if self.m_state != "Check":
 
             if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
-                self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
-                self.sm.current = 'spindle_cooldown'
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
+                self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
+                self.sm.current = 'spindle_cooldown'
             else:
                 self.m.spindle_off()
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
@@ -575,22 +575,15 @@ class SerialConnection(object):
 
     def update_machine_runtime(self, go_to_jobdone=False):
 
-        # Tell user the job has finished
         log("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
-        hours = int(time_taken_seconds / (60 * 60))
-        seconds_remainder = time_taken_seconds % (60 * 60)
-        minutes = int(seconds_remainder / 60)
-        seconds = int(seconds_remainder % 60)
-        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
+        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
+        log(" Acutal running time: " + str(only_running_time_seconds) + " seconds")
 
-        running_hours = int(only_running_time_seconds / (60 * 60))
-        running_seconds_remainder = only_running_time_seconds % (60 * 60)
-        running_minutes = int(running_seconds_remainder / 60)
-        running_seconds = int(running_seconds_remainder % 60)
+
+        ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
         if self.m.stylus_router_choice == 'router':
@@ -605,14 +598,18 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
+        ## SEND INFO TO JOB END
         # send info to the job done screen
-        self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-        self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
-        "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
-        "\n" + \
-        "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
+        self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, only_running_time_seconds, time_taken_seconds)
+        if go_to_jobdone: self.sm.current = 'job_feedback'
 
-        if go_to_jobdone: self.sm.current = 'jobdone'
+        # self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
+        # self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
+        # "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
+        # "\n" + \
+        # "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
+
+        # if go_to_jobdone: self.sm.current = 'jobdone'
 
         self._reset_counters()
         

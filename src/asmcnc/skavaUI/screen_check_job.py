@@ -258,12 +258,7 @@ class CheckingScreen(Screen):
         self.m.set_pause(False)
 
         # display file selected in the filename display label
-        if sys.platform == 'win32':
-            self.filename_label.text = self.jd.filename.split("\\")[-1]
-        else:
-            self.filename_label.text = self.jd.filename.split("/")[-1]
-        
-        
+        self.filename_label.text = self.jd.job_name
         self.exit_label = self.l.get_str('Unload job')
         
         if self.entry_screen == 'file_loading':        

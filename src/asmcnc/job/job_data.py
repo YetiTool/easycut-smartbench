@@ -3,6 +3,7 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
+import sys
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
@@ -24,6 +25,7 @@ def filter_out_brackets(character):
 class JobData(object):
 
     filename = ''
+    job_name = ''
     job_gcode = []
     job_gcode_raw = []
     job_gcode_modified = []
@@ -42,9 +44,12 @@ class JobData(object):
     checked = False
     check_warning = ''
     metadata_dict = {}
+    actual_runtime = ''
+    total_time = ''
 
     def reset_values(self):
         self.filename = ''
+        self.job_name = ''
         self.job_gcode = []
         self.job_gcode_raw = []
         self.job_gcode_modified = []
@@ -63,6 +68,17 @@ class JobData(object):
         self.checked = False
         self.check_warning = ''
         self.metadata_dict = {}
+        self.actual_runtime = ''
+        self.total_time = ''
+
+    def set_job_filename(self, job_path_and_name):
+
+        self.filename = job_path_and_name
+
+        if sys.platform == 'win32':
+            self.job_name = self.filename.split("\\")[-1]
+        else:
+            self.job_name = self.filename.split("/")[-1]
 
     def generate_job_data(self, raw_gcode):
 

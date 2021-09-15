@@ -69,8 +69,7 @@ class SQLRabbit:
         # Check if consumables have passed thresholds for sending events
         self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
 
-        file_name = self.jd.filename.split("/")[-1]
-        file_name = file_name.split("\\")[-1]
+        file_name = self.jd.job_name
 
         data = [
             {
@@ -158,7 +157,7 @@ class SQLRabbit:
                 previous_percent_dict[self.calibration_percent_left_next]:
             self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
-    def send_job_end(self, job_name):
+    def send_job_end(self, job_name, successful):
         data = [
             {
                 "payload_type": "job_end",
@@ -166,7 +165,8 @@ class SQLRabbit:
                     "hostname": socket.gethostname()
                 },
                 "job_data": {
-                    "job_name": job_name
+                    "job_name": job_name,
+                    "successful": successful
                 },
                 "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }

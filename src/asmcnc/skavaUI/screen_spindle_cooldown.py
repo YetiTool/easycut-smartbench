@@ -129,7 +129,7 @@ Builder.load_string("""
 
 class SpindleCooldownScreen(Screen):
 
-    return_screen = 'jobdone'
+    return_screen = 'job_feedback'
     seconds = '10'
     update_timer_event = None
 

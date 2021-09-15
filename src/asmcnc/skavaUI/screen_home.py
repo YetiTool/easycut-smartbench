@@ -309,11 +309,7 @@ class HomeScreen(Screen):
         
         # File label at the top
         if self.jd.job_gcode != []:
-            
-            if sys.platform == 'win32':
-                self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
-            else:
-                self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
+            self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"
                 
             # Preview file
             try: 

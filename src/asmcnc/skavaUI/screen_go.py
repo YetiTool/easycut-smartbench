@@ -295,7 +295,8 @@ Builder.load_string("""
                             Label:
                                 size_hint_y: 3
                                 id: progress_percentage_label
-                                text: '[color=333333]0[size=70px] %[/size][/color]'
+                                color: hex('#333333ff')
+                                text: '0 %'
                                 markup: True                           
                                 font_size: '100px' 
                                 valign: 'middle'
@@ -426,7 +427,7 @@ class GoScreen(Screen):
 
     def on_pre_enter(self, *args):
 
-        self.sm.get_screen('jobdone').return_to_screen = self.return_to_screen
+        self.sm.get_screen('job_feedback').return_to_screen = self.return_to_screen
 
         # get initial values on screen loading
         self.poll_for_job_progress(0)
@@ -554,10 +555,7 @@ class GoScreen(Screen):
         self.btn_back.disabled = False
 
         # scrape filename title
-        if sys.platform == 'win32':
-            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("\\")[-1] + "[/color]"
-        else:
-            self.file_data_label.text = "[color=333333]" + self.jd.filename.split("/")[-1] + "[/color]"
+        self.file_data_label.text = self.jd.job_name
         
         # Reset flag & light
         self.is_job_started_already = False
@@ -567,6 +565,11 @@ class GoScreen(Screen):
         self.feedOverride.feed_norm()
         self.speedOverride.speed_norm()
         self.overload_peak = 0.0
+
+        self.time_taken_seconds = 0
+        self.percent_thru_job = 0
+
+        self.progress_percentage_label.text = str(self.percent_thru_job) + " %"
 
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
@@ -593,7 +596,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
+        self.database.send_job_start(self.jd.job_name, self.jd.metadata_dict)
 
         self.m.set_pause(False)
         self.is_job_started_already = True
@@ -682,7 +685,7 @@ class GoScreen(Screen):
         if len(self.jd.job_gcode_running) != 0:
             self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
             if self.percent_thru_job > 100: self.percent_thru_job = 100
-            self.progress_percentage_label.text = "[color=333333]" + str(self.percent_thru_job) + "[size=70px] %[/size][/color]"
+            self.progress_percentage_label.text = str(self.percent_thru_job) + " %"
 
         # Runtime
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
