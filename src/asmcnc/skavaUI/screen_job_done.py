@@ -93,6 +93,7 @@ class JobDoneScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
+        self.database.send_full_payload()
         self.database.send_job_end(self.jd.filename.split("\\")[-1])
 
     def quit_to_go(self):
