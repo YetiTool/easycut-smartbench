@@ -26,7 +26,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
     	self.c = consent_manager
         self.l = localization
 
-        def decline_confirmed():
+        def decline_confirmed(*args):
         	self.c.decline_terms_and_disable_wifi()
         
         description = (
