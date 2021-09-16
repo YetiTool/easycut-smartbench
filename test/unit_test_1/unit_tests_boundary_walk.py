@@ -14,7 +14,6 @@ NOTES:
 import unittest
 
 from geometry import boundary_calculator
-from array import array
 # from numpy.ma.core import isarray
 import numpy as np
 
@@ -61,6 +60,9 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         boundarySetter = boundary_calculator.BoundaryCalculator(self)
         gcodefile = boundarySetter.get_boundary_as_gcode_array()
             
+        if self.detailsToConsole == 1: 
+            print("UnitTestsBoundaryWalk().setUp() ____ gcodefile = " + str(type(gcodefile)))
+
         return gcodefile
 
 
@@ -82,31 +84,26 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         # get global gcodefile as string
         # double running of setUp:   testFile = self.setUp()
         global gcodefile
+        if self.detailsToConsole == 1: 
+            print("UnitTestsBoundaryWalk().testBoundaryIsAnArray() ____ gcodefile = " + str(type(gcodefile)))
+
         # testFile = self.goThroughData(gcodefile)
-        testFile = gcodefile
+        ############# testFile = list(gcodefile)
         
-        self.assertTrue(isinstance(testFile, (list, tuple, np.ndarray)), " not an array, this gcodefile")
+        self.assertTrue(isinstance(gcodefile, (list, tuple, np.ndarray)), " not an array, this gcodefile")
         
         ## basic test-assert-is-working test: 
         # assert (1 + 2) == 33
 
     def testBoundaryIsACompletePolygon(self):
-        tester = [5,10,15,15]
         
-        # ~~~~~~~~~~~~ @@@ ~~~~~~~~~~~ #
-        #
-        #        get the tester replaced with the 
-        #        incoming list/string array datatype.
-        #
-        #        the same is defined in boundary_calculator, but gets 
-        #        transformed or messed with...
-        #
-        # ~~~~~~~~~~~~ @@@ ~~~~~~~~~~~ #
+        global gcodefile
+        if self.detailsToConsole == 1: 
+            print("UnitTestsBoundaryWalk().testBoundaryIsACompletePolygon() ____ gcodefile = " + str(type(gcodefile)))
 
-        
         # self.gcodefile
-        first_item = tester[0]
-        last_item = tester[-1]
+        first_item = gcodefile[0]
+        last_item = gcodefile[-1]
                 
         # [self.gcodefile[0], self.gcodefile[-1]]
         if self.detailsToConsole == 1:

@@ -18,7 +18,7 @@ class BoundaryCalculator():
         pass        
     
     def get_boundary_as_gcode_array(self):
-        sampleArray = [5,10,15,20] # providing a double fails the unit test, e.g. 5.5 
+        sampleArray = [5,10,15,15] # providing a double fails the unit test, e.g. 5.5 
         return sampleArray
 
     def __init__(self, datumLatest):
