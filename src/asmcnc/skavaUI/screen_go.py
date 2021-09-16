@@ -419,7 +419,7 @@ class GoScreen(Screen):
 
         #initialise for db send
         self.time_taken_seconds = 0
-        self.percent_thru_job = 0
+        self.jd.percent_thru_job = 0
 
         self.update_strings()
 
@@ -570,9 +570,9 @@ class GoScreen(Screen):
         self.overload_peak = 0.0
 
         self.time_taken_seconds = 0
-        self.percent_thru_job = 0
+        self.jd.percent_thru_job = 0
 
-        self.progress_percentage_label.text = str(self.percent_thru_job) + " %"
+        self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
@@ -686,9 +686,9 @@ class GoScreen(Screen):
 
         # % progress    
         if len(self.jd.job_gcode_running) != 0:
-            self.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
-            if self.percent_thru_job > 100: self.percent_thru_job = 100
-            self.progress_percentage_label.text = str(self.percent_thru_job) + " %"
+            self.jd.percent_thru_job = int(round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode_running) + 4) * 1.0)*100.0))
+            if self.jd.percent_thru_job > 100: self.jd.percent_thru_job = 100
+            self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
         # Runtime
         if len(self.jd.job_gcode_running) != 0 and self.m.s.g_count != 0 and self.m.s.stream_start_time != 0:
