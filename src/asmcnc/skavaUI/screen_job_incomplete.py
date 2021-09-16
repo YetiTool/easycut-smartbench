@@ -325,7 +325,7 @@ class JobIncompleteScreen(Screen):
 
     def open_event_details_text_input(self):
 
-        if event_type == "user":
+        if self.event_type == "user":
         
             self.event_details_label.disabled = True
             self.event_details_input.disabled = False
