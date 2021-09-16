@@ -221,8 +221,7 @@ Builder.load_string("""
                                 size_hint: (None,None)
                                 width: dp(291)
                                 height: dp(79)
-                                # on_press: root.next_screen()
-                                on_press: root.test_next_screen()
+                                on_press: root.press_ok()
                                 text: 'OK'
                                 font_size: '30sp'
                                 color: hex('#f9f9f9ff')
@@ -280,21 +279,15 @@ class JobIncompleteScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
-        self.db.send_job_end(self.jd.job_name)
 
-    def confirm_job_successful(self):
+    def press_ok(self):
         self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, True)
-        self.quit_to_return_screen()
-
-    def confirm_job_unsuccessful(self):
-        self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, True)
+        self.set_event_notes()
+        self.db.send_job_end(self.jd.job_name, False)
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
-        self.sm.current = self.return_to_screen
-        
+        self.sm.current = self.jd.screen_to_return_to_after_job
 
     # PRODUCTION NOTES
     def set_focus_on_production_notes(self, dt):
