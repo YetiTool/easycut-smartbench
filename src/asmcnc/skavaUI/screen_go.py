@@ -427,6 +427,9 @@ class GoScreen(Screen):
 
     def on_pre_enter(self, *args):
 
+        self.return_to_screen = self.jd.screen_to_return_to_after_job
+        self.cancel_to_screen = self.jd.screen_to_return_to_after_cancel
+
         self.sm.get_screen('job_feedback').return_to_screen = self.return_to_screen
 
         # get initial values on screen loading

@@ -15,7 +15,7 @@ from __builtin__ import True
 # Config.write()
 
 import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
 
@@ -530,8 +530,9 @@ class SerialConnection(object):
                 self.sm.current = 'spindle_cooldown'
             else:
                 self.m.spindle_off()
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
-
+                time.sleep(0.4)
+                self.update_machine_runtime()
+                self.sm.current = 'job_feedback'
 
         else:
             self.check_streaming_started = False
@@ -559,7 +560,9 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Update time for maintenance reminders
-            Clock.schedule_once(lambda dt: self.update_machine_runtime() , 0.4)
+            time.sleep(0.4)
+            self.update_machine_runtime()
+            
 
         else:
             self.check_streaming_started = False
@@ -573,15 +576,18 @@ class SerialConnection(object):
         log("G-code streaming cancelled!")
 
 
-    def update_machine_runtime(self, go_to_jobdone=False):
+    def update_machine_runtime(self):
 
         log("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
-        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-        log(" Acutal running time: " + str(only_running_time_seconds) + " seconds")
 
+        self.jd.total_time = str(timedelta(seconds=time_taken_seconds))
+        self.jd.actual_runtime = str(timedelta(seconds=only_running_time_seconds))
+
+        log(" Time elapsed: " + self.jd.total_time)
+        log(" Acutal running time: " + self.jd.actual_runtime)
 
         ## UPDATE MAINTENANCE TRACKING
 
@@ -598,22 +604,8 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
-        ## SEND INFO TO JOB END
-        # send info to the job done screen
-        self.sm.get_screen('job_feedback').prep_this_screen(self.sm.get_screen('go').return_to_screen, only_running_time_seconds, time_taken_seconds)
-        if go_to_jobdone: self.sm.current = 'job_feedback'
-
-        # self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-        # self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
-        # "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
-        # "\n" + \
-        # "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
-
-        # if go_to_jobdone: self.sm.current = 'jobdone'
-
         self._reset_counters()
         
-
 
 # PUSH MESSAGE HANDLING
 

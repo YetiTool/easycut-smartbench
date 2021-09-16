@@ -80,7 +80,6 @@ Builder.load_string("""
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
-                        text: root.metadata_string
                     
                     BoxLayout: 
                         id: production_notes_container
@@ -202,10 +201,10 @@ class JobFeedbackScreen(Screen):
         self.jd = kwargs['job']
         self.db = kwargs['database']
 
-    def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
+    def on_pre_enter(self):
         self.update_strings(actual_runtime, total_time)
         self.close_production_notes_text_input()
-        self.return_to_screen = screen_to_exit_to
+        self.return_to_screen = self.jd.screen_to_return_to_after_job
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False

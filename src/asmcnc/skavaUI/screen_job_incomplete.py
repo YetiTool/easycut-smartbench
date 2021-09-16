@@ -268,10 +268,14 @@ class JobIncompleteScreen(Screen):
         self.jd = kwargs['job']
         self.db = kwargs['database']
 
-    def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
-        self.update_strings(actual_runtime, total_time)
+    def prep_this_screen(self, event, event_number=False):
+        self.event_type = event
+        if event_number: self.specific_event = event_number
+
+    def on_pre_enter(self):
+        self.update_strings()
         self.close_production_notes_text_input()
-        self.return_to_screen = screen_to_exit_to
+        self.return_to_screen = self.jd.screen_to_cancel_to_after_job
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
@@ -369,9 +373,9 @@ class JobIncompleteScreen(Screen):
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
+            self.l.get_str("Actual runtime:") + " " + self.jd.actual_runtime + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
+            self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
             "\n" + \
             self.l.get_str("Percentage streamed:") + " "
             )

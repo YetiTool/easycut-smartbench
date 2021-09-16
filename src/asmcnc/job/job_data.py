@@ -46,6 +46,8 @@ class JobData(object):
     metadata_dict = {}
     actual_runtime = ''
     total_time = ''
+    screen_to_return_to_after_job = 'home'
+    screen_to_return_to_after_cancel = 'home'
 
     def reset_values(self):
         self.filename = ''
@@ -70,6 +72,8 @@ class JobData(object):
         self.metadata_dict = {}
         self.actual_runtime = ''
         self.total_time = ''
+        self.screen_to_return_to_after_job = 'home'
+        self.screen_to_return_to_after_cancel = 'home'
 
     def set_job_filename(self, job_path_and_name):
 

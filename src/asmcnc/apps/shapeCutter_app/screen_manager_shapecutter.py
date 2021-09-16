@@ -1000,8 +1000,8 @@ class ScreenManagerShapeCutter(object):
             self.sm.add_widget(sCsavejob_screen)       
         
          
-        self.sm.get_screen('go').return_to_screen = return_to_screen
-        self.sm.get_screen('go').cancel_to_screen = cancel_to_screen        
+        self.jd.screen_to_return_to_after_job = return_to_screen
+        self.jd.screen_to_cancel_to_after_job = cancel_to_screen        
         self.jd.job_gcode = self.j.gcode_lines
         self.jd.filename  = self.j.gcode_filename
         
