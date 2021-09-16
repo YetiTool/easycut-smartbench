@@ -255,7 +255,7 @@ class JobFeedbackScreen(Screen):
         self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
-    def update_strings(self, runtime_seconds, total_time_seconds):
+    def update_strings(self):
 
         # Get these strings properly translated
 
