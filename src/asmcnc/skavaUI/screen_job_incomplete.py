@@ -172,7 +172,6 @@ Builder.load_string("""
                             opacity: 1
                             on_press: root.open_event_details_text_input()
                             focus_next: event_details_input
-                            text: root.event_deets_test_string
                             disabled: True
 
                         TextInput:
