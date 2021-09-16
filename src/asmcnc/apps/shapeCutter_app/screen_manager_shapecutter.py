@@ -50,7 +50,6 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_9
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_aperture_island
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_dimensions
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_exit
-from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_feedback
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_landing
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_post_job_save
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_repeat
@@ -368,12 +367,6 @@ class ScreenManagerShapeCutter(object):
             self.sm.current = 'sCsavejob'
                   
         elif self.sm.current == 'sCsavejob':
-            if not self.sm.has_screen('sCfeedback'):
-                sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', machine = self.m, shapecutter = self)
-                self.sm.add_widget(sCfeedback_screen)
-            self.sm.current = 'sCfeedback'
-                      
-        elif self.sm.current == 'sCfeedback':
             if not self.sm.has_screen('sCrepeat'):
                 sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
                 self.sm.add_widget(sCrepeat_screen)
@@ -565,14 +558,10 @@ class ScreenManagerShapeCutter(object):
                 sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sCsavejob_screen)
         elif self.sm.current == 'sC36':
-            if not self.sm.has_screen('sCfeedback'):
-                sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', machine = self.m, shapecutter = self)
-                self.sm.add_widget(sCfeedback_screen)
-        elif self.sm.current == 'sCsavejob':
             if not self.sm.has_screen('sCrepeat'):
                 sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
                 self.sm.add_widget(sCrepeat_screen)
-        elif self.sm.current == 'sCfeedback':
+        elif self.sm.current == 'sCsavejob':
             if not self.sm.has_screen('sC17'):
                 sC17_screen = screen_shapeCutter_17.ShapeCutter17ScreenClass(name = 'sC17', machine = self.m, job_parameters = self.j, shapecutter = self)
                 self.sm.add_widget(sC17_screen)
@@ -1082,7 +1071,6 @@ class ScreenManagerShapeCutter(object):
             not self.sm.has_screen('sC35') and \
             not self.sm.has_screen('sC36') and \
             not self.sm.has_screen('sCsavejob') and \
-            not self.sm.has_screen('sCfeedback') and \
             not self.sm.has_screen('sCrepeat'):
 
                 if not self.sm.current == 'alarmScreen':
@@ -1267,9 +1255,6 @@ class ScreenManagerShapeCutter(object):
 #         if not self.sm.has_screen('sCsavejob'): 
 #             sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', machine = self.m, job_parameters = self.j, shapecutter = self)
 #             self.sm.add_widget(sCsavejob_screen)
-#         if not self.sm.has_screen('sCfeedback'):
-#             sCfeedback_screen = screen_shapeCutter_feedback.ShapeCutterFeedbackScreenClass(name = 'sCfeedback', machine = self.m, shapecutter = self)
-#             self.sm.add_widget(sCfeedback_screen)
 #         if not self.sm.has_screen('sCrepeat'):
 #             sCrepeat_screen = screen_shapeCutter_repeat.ShapeCutterRepeatScreenClass(name = 'sCrepeat', machine = self.m, shapecutter = self)
 #             self.sm.add_widget(sCrepeat_screen)
@@ -1317,7 +1302,6 @@ class ScreenManagerShapeCutter(object):
         self.destroy_screen('sC35')
         self.destroy_screen('sC36')
         self.destroy_screen('sCsavejob')
-        self.destroy_screen('sCfeedback') 
         self.destroy_screen('sCrepeat')
 
     def destroy_exit_screen(self):
@@ -1651,8 +1635,6 @@ class ScreenManagerShapeCutter(object):
         if self.sm.has_screen('sCsavejob'):
             self.sm.get_screen('sCsavejob').clear_widgets() 
             self.sm.remove_widget(self.sm.get_screen('sCsavejob'))
-        if self.sm.has_screen('sCfeedback'): 
-            self.sm.remove_widget(self.sm.get_screen('sCfeedback'))
         if self.sm.has_screen('sCexit'): 
             self.sm.remove_widget(self.sm.get_screen('sCexit'))
 
