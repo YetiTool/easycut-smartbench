@@ -61,6 +61,7 @@ from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
+from asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
 from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
@@ -197,6 +198,7 @@ class SkavaUI(App):
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm, localization = l)
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
+        job_incomplete_screen = screen_job_incomplete.JobIncompleteScreen(name = 'job_incomplete', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
@@ -229,7 +231,8 @@ class SkavaUI(App):
         sm.add_widget(mstate_screen)
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
-        sm.add_widget(job_feedback_screen)            
+        sm.add_widget(job_feedback_screen)
+        sm.add_widget(job_incomplete_screen)        
         sm.add_widget(door_screen)
         sm.add_widget(squaring_decision_screen)
         sm.add_widget(prepare_to_home_screen)

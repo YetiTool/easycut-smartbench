@@ -187,8 +187,8 @@ class QuickCommands(Widget):
 
         else:
             # clear to proceed
-            self.sm.get_screen('go').return_to_screen = 'home'
-            self.sm.get_screen('go').cancel_to_screen = 'home'
+            self.jd.screen_to_return_to_after_job ='home'
+            self.jd.screen_to_cancel_to_after_job = 'home'
 
             # Check if stylus option is enabled
             if self.m.is_stylus_enabled == True:

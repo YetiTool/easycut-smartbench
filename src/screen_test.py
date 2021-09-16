@@ -17,8 +17,9 @@ from asmcnc.comms import localization
 from asmcnc.skavaUI import screen_file_loading
 from asmcnc.tests import loading_screen_test
 
-from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_1
-from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_2
+from asmcnc.skavaUI import screen_job_incomplete
+from asmcnc.skavaUI import screen_job_feedback
+
 
 
 class ScreenTest(App):
@@ -27,9 +28,9 @@ class ScreenTest(App):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		alarm_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='wifi1', screen_manager = sm, machine = m)
+		alarm_1_screen = screen_job_incomplete.JobIncompleteScreen(name='wifi1', screen_manager = sm, machine = m)
 		sm.add_widget(alarm_1_screen)
-		alarm_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='wifi2', screen_manager = sm, machine = m)
+		alarm_2_screen = screen_job_feedback.JobFeedbackScreen(name='wifi2', screen_manager = sm, machine = m)
 		sm.add_widget(alarm_2_screen)
 		sm.current = 'wifi1'
 		return sm

@@ -95,7 +95,7 @@ class SQLRabbit:
                     "file_name": file_name or '',
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
-                    "job_percent": self.sm.get_screen('go').percent_thru_job or 0.0,
+                    "job_percent": self.jd.percent_thru_job or 0.0,
                     "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
                 },
                 "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

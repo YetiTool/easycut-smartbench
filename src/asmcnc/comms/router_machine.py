@@ -1009,7 +1009,7 @@ class RouterMachine(object):
     def _stop_all_streaming(self):
         # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
         log('Streaming stopped.')
-        if self.s.is_job_streaming == True: self.s.cancel_stream() 
+        if self.s.is_job_streaming == True: self.s.cancel_stream()
         if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     def _grbl_resume(self):

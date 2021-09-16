@@ -158,7 +158,6 @@ class ErrorScreenClass(Screen):
     message = StringProperty()
     button_text = StringProperty()
     getout_button = ObjectProperty()
-    button_function = StringProperty()
     
     return_to_screen = 'home'
     
@@ -175,14 +174,17 @@ class ErrorScreenClass(Screen):
     def on_enter(self):
 
         self.getout_button.disabled = True
+        if self.m.s.is_job_streaming:
+            self.return_to_screen = 'job_incomplete'
         
         # use the message to get the error description
         self.error_description = self.l.get_str(ERROR_CODES.get(self.message, ""))
+
         self.m.stop_from_gcode_error()
+
         # Job cancelled due to error, send event
         self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name)
 
-        self.button_function = self.return_to_screen
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
 
     
@@ -193,7 +195,8 @@ class ErrorScreenClass(Screen):
         
         self.m.resume_from_gcode_error()
 
-        if self.return_to_screen == 'go':
+        if self.return_to_screen == 'job_incomplete':
+            self.sm.get_screen('job_incomplete').prep_this_screen('error', event_number=self.message)
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
 

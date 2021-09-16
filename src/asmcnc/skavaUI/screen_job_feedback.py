@@ -62,15 +62,15 @@ Builder.load_string("""
                 width: dp(800)
                 height: dp(420)
                 padding: [dp(0), dp(10)]
-                spacing: 10
+                spacing: 0
                 orientation: 'vertical'
                 
                 # METADATA AND PRODUCTION NOTES
                 BoxLayout:
                     size_hint_y: None
-                    height: dp(170)
+                    height: dp(130)
                     orientation: 'horizontal'
-                    padding: [dp(20), dp(0)]
+                    padding: [dp(20), dp(0), dp(20), dp(10)]
                     
                     Label: 
                         id: metadata_label
@@ -101,6 +101,7 @@ Builder.load_string("""
                             opacity: 1
                             on_press: root.open_production_notes_text_input()
                             focus_next: production_notes
+                            text: "<add your post-production notes here>"
 
                         TextInput:
                             id: production_notes
@@ -126,7 +127,7 @@ Builder.load_string("""
                 Label:
                     id: success_question
                     size_hint: (None,None)
-                    height: dp(60)
+                    height: dp(30)
                     width: dp(800)
                     text: "Did this complete successfully?"
                     # color: hex('#f9f9f9ff')
@@ -139,17 +140,17 @@ Builder.load_string("""
                 # Feedback buttons
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(150)
+                    height: dp(240)
                     width: dp(800)
                     orientation: 'horizontal'
                     spacing: dp(96)
-                    padding: [dp(200), dp(0)]
+                    padding: [dp(150), dp(20)]
 
                     # Thumbs down button
                     Button:
                         size_hint: (None,None)
-                        height: dp(150)
-                        width: dp(152)
+                        height: dp(200)
+                        width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_successful()
@@ -165,8 +166,8 @@ Builder.load_string("""
                     # Thumbs up button
                     Button:
                         size_hint: (None,None)
-                        height: dp(150)
-                        width: dp(152)
+                        height: dp(200)
+                        width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         on_press: root.confirm_job_unsuccessful()
@@ -185,11 +186,11 @@ class JobFeedbackScreen(Screen):
 
     return_to_screen = StringProperty()
 
-    # # Example metadata
-    # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
-    #     "Actual runtime: 0:30:43" + "\n"+ \
-    #     "Total time (with pauses): 0:45:41" + "\n"+ \
-    #     "Parts completed: 8/24"
+    # Example metadata
+    metadata_string = "Project_name | Step 1 of 3" + "\n" + \
+        "Actual runtime: 0:30:43" + "\n"+ \
+        "Total time (with pauses): 0:45:41" + "\n"+ \
+        "Parts completed: 8/24"
 
     def __init__(self, **kwargs):
         super(JobFeedbackScreen, self).__init__(**kwargs)
@@ -200,15 +201,14 @@ class JobFeedbackScreen(Screen):
         self.jd = kwargs['job']
         self.db = kwargs['database']
 
-    def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
-        self.update_strings(actual_runtime, total_time)
+    def on_pre_enter(self):
+        self.update_strings()
         self.close_production_notes_text_input()
-        self.return_to_screen = screen_to_exit_to
+        self.return_to_screen = self.jd.screen_to_return_to_after_job
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
-        self.db.send_job_end(self.jd.job_name)
 
     def confirm_job_successful(self):
         self.set_production_notes()
@@ -217,7 +217,7 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, True)
+        self.db.send_job_end(self.jd.job_name, False)
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
@@ -234,9 +234,6 @@ class JobFeedbackScreen(Screen):
         self.production_notes.disabled = False
         self.production_notes_label.height = 0
         self.production_notes_label.opacity = 0
-
-        print("Height: " + str(self.production_notes_container.height))
-
         self.production_notes.height = self.production_notes_container.height
         self.production_notes.opacity = 1
         self.production_notes_label.focus = False
@@ -257,7 +254,7 @@ class JobFeedbackScreen(Screen):
         self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
-    def update_strings(self, runtime_seconds, total_time_seconds):
+    def update_strings(self):
 
         # Get these strings properly translated
 
@@ -270,15 +267,15 @@ class JobFeedbackScreen(Screen):
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
+            self.l.get_str("Actual runtime:") + " " + self.jd.actual_runtime + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
+            self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
             "\n" + \
             self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
             )
 
         self.jd.metadata_dict['ProductionNotes'] = ''
         self.production_notes.text = ''
-        self.production_notes_label.text = "<" + self.l.get_str("Production notes") + ">"
+        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
-        self.success_question = self.l.get_str("Did this complete successfully?")
+        self.success_question.text = self.l.get_str("Did this complete successfully?")

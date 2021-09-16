@@ -49,6 +49,7 @@ class DatabaseStorage(object):
         # Excessive ;-)
         self.sm = screen_manager
         self.m = router_machine
+        self.jd = self.m.jd
         
         if pika_lib_import_ok: 
             
@@ -149,7 +150,7 @@ class DatabaseStorage(object):
                         "overload_peak": float(self.sm.get_screen('go').overload_peak),
 
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
-                        "job_percent": self.sm.get_screen('go').percent_thru_job,
+                        "job_percent": self.jd.percent_thru_job,
                         "job_name": self.sm.get_screen('go').job_name_only,
 
                         "z_lube_%_thru": z_lube_percent_used,
