@@ -18,7 +18,10 @@ Builder.load_string("""
     production_notes_container : production_notes_container
     production_notes_label : production_notes_label
     production_notes : production_notes
+    job_cancelled_label : job_cancelled_label
+    event_details_container : event_details_container
     event_details_label : event_details_label
+    event_details_input : event_details_input
 
     BoxLayout:
         height: dp(800)
@@ -126,7 +129,7 @@ Builder.load_string("""
 
                 # EVENT DETAILS
                 Label:
-                    id: event_details_label
+                    id: job_cancelled_label
                     size_hint: (None,None)
                     height: dp(30)
                     width: dp(800)
@@ -148,18 +151,48 @@ Builder.load_string("""
                     padding: [dp(0), dp(0)]
 
                     BoxLayout: 
+                        id: event_details_container
                         orientation: 'vertical'
                         padding: [dp(20), dp(0)]
 
-                        Label: 
-                            id: event_deets
+                        Button:
+                            id: event_details_label
+                            background_color: hex('#e5e5e5ff')
+                            background_normal: ""
+                            background_down: ""
                             color: hex('#333333ff') #grey
-                            font_size: dp(18)
-                            markup: True
+                            # color: hex('#1976d2ff') # blue
                             text_size: self.size
                             halign: "left"
-                            valign: "middle"
+                            valign: "bottom"
+                            markup: True
+                            font_size: dp(24)
+                            size_hint_y: None
+                            height: self.parent.height
+                            opacity: 1
+                            on_press: root.open_event_details_text_input()
+                            focus_next: event_details_input
                             text: root.event_deets_test_string
+
+                        TextInput:
+                            id: event_details_input
+                            padding: [4, 2]
+                            text: ""
+                            color: hex('#333333ff')
+                            foreground_color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "top"
+                            markup: True
+                            font_size: dp(20)
+                            size_hint_y: None
+                            height: dp(0)
+                            opacity: 0
+                            disabled: True
+                            multiline: True
+                            background_active: ""
+                            background_normal: ""
+                            background_color: hex('#e5e5e5ff')
 
                     # Buttons
                     BoxLayout: 
@@ -213,7 +246,7 @@ class JobIncompleteScreen(Screen):
     metadata_string = "Project_name | Step 1 of 3" + "\n" + \
         "Actual runtime: 0:30:43" + "\n"+ \
         "Total time (with pauses): 0:45:41" + "\n"+ \
-        "Percentage through job: 43 %"
+        "Percentage streamed: 43 %"
 
 
     event_deets_test_string = (
@@ -234,6 +267,36 @@ class JobIncompleteScreen(Screen):
 
     def test_next_screen(self):
         self.sm.current = 'wifi2'
+
+
+    # EVENT NOTES
+    def set_focus_on_event_details(self, dt):
+        self.event_details_input.focus = True
+
+    def open_event_details_text_input(self):
+        
+        self.event_details_label.disabled = True
+        self.event_details_input.disabled = False
+        self.event_details_label.height = 0
+        self.event_details_label.opacity = 0
+
+        print("Height: " + str(self.event_details_container.height))
+
+        self.event_details_input.height = self.event_details_container.height
+        self.event_details_input.opacity = 1
+        self.event_details_label.focus = False
+
+        Clock.schedule_once(self.set_focus_on_event_details, 0.3)
+
+    def close_event_details_text_input(self):
+
+        self.event_details_input.focus = False
+        self.event_details_input.disabled = True
+        self.event_details_label.disabled = False
+        self.event_details_input.height = 0
+        self.event_details_input.opacity = 0
+        self.event_details_label.height = self.event_details_container.height
+        self.event_details_label.opacity = 1
 
     #     self.l = kwargs['localization']
     #     self.jd = kwargs['job']
