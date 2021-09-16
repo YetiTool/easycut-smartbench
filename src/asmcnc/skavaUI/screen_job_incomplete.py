@@ -377,13 +377,13 @@ class JobIncompleteScreen(Screen):
         self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
         if 'user' in self.event_type:
-            self.event_details_label.color = [25/255, 118/255, 210/255, 1]
+            self.event_details_label.color = [25 / 255., 118 / 255., 210 / 255., 1.]
             self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
             self.event_details_label.text = "<" + self.l.get_str("add your reason for cancellation here") + ">"
             self.event_details_label.disabled = False
 
         else:
-            self.event_details_label.color = (51/255, 51/255, 51/255, 1)
+            self.event_details_label.color = [51 / 255., 51 / 255., 51 / 255., 1.]
             self.job_cancelled_label.text = self.l.get_str("Job cancelled due to an event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
             lost_position_message = self.l.get_str("Recover any parts from this job before rehoming and starting a new job.")
 
