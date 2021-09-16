@@ -154,8 +154,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        # on_press: root.confirm_job_successful()
-                        on_press: root.test_next_screen()
+                        on_press: root.confirm_job_successful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -172,8 +171,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        # on_press: root.confirm_job_unsuccessful()
-                        on_press: root.test_next_screen()
+                        on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -200,95 +198,89 @@ class JobFeedbackScreen(Screen):
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
+        self.l = kwargs['localization']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
 
+    def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
+        self.update_strings(actual_runtime, total_time)
+        self.close_production_notes_text_input()
+        self.return_to_screen = screen_to_exit_to
 
+    def on_enter(self):
+        self.sm.get_screen('go').is_job_started_already = False
+        # self.sm.get_screen('go').loop_for_job_progress = None
+        self.db.send_job_end(self.jd.job_name)
 
-    def test_next_screen(self):
-        self.sm.current = 'wifi1'
+    def confirm_job_successful(self):
+        self.set_production_notes()
+        self.db.send_job_end(self.jd.job_name, True)
+        self.quit_to_return_screen()
 
-    #     self.l = kwargs['localization']
-    #     self.jd = kwargs['job']
-    #     self.db = kwargs['database']
+    def confirm_job_unsuccessful(self):
+        self.set_production_notes()
+        self.db.send_job_end(self.jd.job_name, True)
+        self.quit_to_return_screen()
 
-    # def prep_this_screen(self, screen_to_exit_to, actual_runtime, total_time):
-    #     self.update_strings(actual_runtime, total_time)
-    #     self.close_production_notes_text_input()
-    #     self.return_to_screen = screen_to_exit_to
-
-    # def on_enter(self):
-    #     self.sm.get_screen('go').is_job_started_already = False
-    #     # self.sm.get_screen('go').loop_for_job_progress = None
-    #     self.db.send_job_end(self.jd.job_name)
-
-    # def confirm_job_successful(self):
-    #     self.set_production_notes()
-    #     self.db.send_job_end(self.jd.job_name, True)
-    #     self.quit_to_return_screen()
-
-    # def confirm_job_unsuccessful(self):
-    #     self.set_production_notes()
-    #     self.db.send_job_end(self.jd.job_name, True)
-    #     self.quit_to_return_screen()
-
-    # def quit_to_return_screen(self):
-    #     self.sm.current = self.return_to_screen
+    def quit_to_return_screen(self):
+        self.sm.current = self.return_to_screen
         
 
-    # # PRODUCTION NOTES
-    # def set_focus_on_production_notes(self, dt):
-    #     self.production_notes.focus = True
+    # PRODUCTION NOTES
+    def set_focus_on_production_notes(self, dt):
+        self.production_notes.focus = True
 
-    # def open_production_notes_text_input(self):
+    def open_production_notes_text_input(self):
         
-    #     self.production_notes_label.disabled = True
-    #     self.production_notes.disabled = False
-    #     self.production_notes_label.height = 0
-    #     self.production_notes_label.opacity = 0
+        self.production_notes_label.disabled = True
+        self.production_notes.disabled = False
+        self.production_notes_label.height = 0
+        self.production_notes_label.opacity = 0
 
-    #     print("Height: " + str(self.production_notes_container.height))
+        print("Height: " + str(self.production_notes_container.height))
 
-    #     self.production_notes.height = self.production_notes_container.height
-    #     self.production_notes.opacity = 1
-    #     self.production_notes_label.focus = False
+        self.production_notes.height = self.production_notes_container.height
+        self.production_notes.opacity = 1
+        self.production_notes_label.focus = False
 
-    #     Clock.schedule_once(self.set_focus_on_production_notes, 0.3)
+        Clock.schedule_once(self.set_focus_on_production_notes, 0.3)
 
-    # def close_production_notes_text_input(self):
+    def close_production_notes_text_input(self):
 
-    #     self.production_notes.focus = False
-    #     self.production_notes.disabled = True
-    #     self.production_notes_label.disabled = False
-    #     self.production_notes.height = 0
-    #     self.production_notes.opacity = 0
-    #     self.production_notes_label.height = self.production_notes_container.height
-    #     self.production_notes_label.opacity = 1
+        self.production_notes.focus = False
+        self.production_notes.disabled = True
+        self.production_notes_label.disabled = False
+        self.production_notes.height = 0
+        self.production_notes.opacity = 0
+        self.production_notes_label.height = self.production_notes_container.height
+        self.production_notes_label.opacity = 1
 
-    # def set_production_notes(self):
-    #     self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+    def set_production_notes(self):
+        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
-    # # UPDATE TEXT WITH LANGUAGE AND VARIABLES
-    # def update_strings(self, runtime_seconds, total_time_seconds):
+    # UPDATE TEXT WITH LANGUAGE AND VARIABLES
+    def update_strings(self, runtime_seconds, total_time_seconds):
 
-    #     # Get these strings properly translated
+        # Get these strings properly translated
 
-    #     self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+        self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-    #     current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
-    #     total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
+        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
+        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
 
-    #     self.metadata_label.text = (
-    #         self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
-    #         (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
-    #         "\n" + \
-    #         self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
-    #         "\n" + \
-    #         self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
-    #         "\n" + \
-    #         self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
-    #         )
+        self.metadata_label.text = (
+            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
+            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            "\n" + \
+            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
+            "\n" + \
+            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
+            "\n" + \
+            self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
+            )
 
-    #     self.jd.metadata_dict['ProductionNotes'] = ''
-    #     self.production_notes.text = ''
-    #     self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
+        self.jd.metadata_dict['ProductionNotes'] = ''
+        self.production_notes.text = ''
+        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
-    #     self.success_question.text = self.l.get_str("Did this complete successfully?")
+        self.success_question.text = self.l.get_str("Did this complete successfully?")
