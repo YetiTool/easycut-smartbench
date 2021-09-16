@@ -270,9 +270,9 @@ class JobIncompleteScreen(Screen):
         if event_number: self.specific_event = event_number
 
     def on_pre_enter(self):
-        self.update_strings()
         self.close_production_notes_text_input()
         self.close_event_details_text_input()
+        self.update_strings()
         self.return_to_screen = self.jd.screen_to_cancel_to_after_job
 
     def on_enter(self):
@@ -341,7 +341,7 @@ class JobIncompleteScreen(Screen):
 
         self.event_details_input.focus = False
         self.event_details_input.disabled = True
-        self.event_details_label.disabled = False
+        self.event_details_label.disabled = True
         self.event_details_input.height = 0
         self.event_details_input.opacity = 0
         self.event_details_label.height = self.event_details_container.height
@@ -355,7 +355,6 @@ class JobIncompleteScreen(Screen):
     def update_strings(self):
 
         # Get these strings properly translated
-
         self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
         current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
