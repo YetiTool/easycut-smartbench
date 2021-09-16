@@ -202,7 +202,7 @@ class JobFeedbackScreen(Screen):
         self.db = kwargs['database']
 
     def on_pre_enter(self):
-        self.update_strings(actual_runtime, total_time)
+        self.update_strings()
         self.close_production_notes_text_input()
         self.return_to_screen = self.jd.screen_to_return_to_after_job
 
@@ -268,9 +268,9 @@ class JobFeedbackScreen(Screen):
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
             (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
+            self.l.get_str("Actual runtime:") + " " + self.jd.actual_runtime + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
+            self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
             "\n" + \
             self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
             )
