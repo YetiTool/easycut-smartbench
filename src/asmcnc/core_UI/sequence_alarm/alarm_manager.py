@@ -74,13 +74,15 @@ class AlarmSequenceManager(object):
 
 		try:
 			if not self.is_alarm_sequence_already_running():
-				if self.m.s.is_job_streaming:
+				if self.is_error_screen_already_up():
+					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+
+				elif self.m.s.is_job_streaming:
+					self.sm.get_screen('job_incomplete').prep_this_screen('alarm', message)
 					self.return_to_screen = 'job_incomplete'
+
 				else:
-					if self.is_error_screen_already_up():
-						self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
-					else:
-						self.return_to_screen = self.sm.current
+					self.return_to_screen = self.sm.current
 
 
 				self.alarm_code = message
@@ -126,7 +128,6 @@ class AlarmSequenceManager(object):
 		if self.return_to_screen == "job_incomplete":
 			self.sm.get_screen('go').is_job_started_already = False
 			self.sm.get_screen('go').temp_suppress_prompts = True
-			self.sm.get_screen('job_incomplete').prep_this_screen('alarm', event_number=self.alarm_code)
 		
 		if self.sm.has_screen(self.return_to_screen):
 			self.sm.current = self.return_to_screen
