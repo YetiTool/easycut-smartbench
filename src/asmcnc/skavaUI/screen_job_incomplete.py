@@ -49,7 +49,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
-                    text: "Job completed!"
+                    text: "Job.nc incomplete!"
                     color: hex('#f9f9f9ff')
                     font_size: dp(30)
                     halign: "center"
@@ -151,14 +151,6 @@ Builder.load_string("""
                         orientation: 'vertical'
                         padding: [dp(20), dp(0)]
 
-                        canvas:
-                            Color:
-                                rgba: hex('#1976d2ff')
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-
-
                         Label: 
                             id: event_deets
                             color: hex('#333333ff') #grey
@@ -168,8 +160,6 @@ Builder.load_string("""
                             halign: "left"
                             valign: "middle"
                             text: root.event_deets_test_string
-
-
 
                     # Buttons
                     BoxLayout: 
@@ -223,7 +213,7 @@ class JobIncompleteScreen(Screen):
     metadata_string = "Project_name | Step 1 of 3" + "\n" + \
         "Actual runtime: 0:30:43" + "\n"+ \
         "Total time (with pauses): 0:45:41" + "\n"+ \
-        "Parts completed: 8/24"
+        "Percentage through job: 43 %"
 
 
     event_deets_test_string = (
@@ -233,17 +223,6 @@ class JobIncompleteScreen(Screen):
         "\n" + \
         "SmartBench may have lost position; recover any parts from this job before rehoming and starting a new job."
         )
-
-
-
-    #     error_resolution_message = self.l.get_str("This was caused by a problem with the gcode file.") + " " + self.l.get_str('Check the gcode file before re-running it.')
-    #     lost_position_message = self.l.get_str("SmartBench may have lost position; you should recover any parts from this job before rehoming and starting the a new job.")
-
-
-
-
-
-
 
 
     def __init__(self, **kwargs):
