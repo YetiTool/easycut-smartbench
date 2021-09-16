@@ -83,7 +83,6 @@ Builder.load_string("""
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
-                        text: root.metadata_string
                     
                     BoxLayout: 
                         id: production_notes_container
