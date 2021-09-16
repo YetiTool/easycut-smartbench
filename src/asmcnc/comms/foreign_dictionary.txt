@@ -596,3 +596,12 @@ Advanced	Advanced	Advanced	Advanced	Advanced	Advanced	Advanced
 SmartBench Location	SmartBench Location	SmartBench Location	SmartBench Location	SmartBench Location	SmartBench Location	SmartBench Location
 Accept	Accept	Accept	Accept	Accept	Accept	Accept
 Decline	Decline	Decline	Decline	Decline	Decline	Decline
+Job incomplete	Job incomplete	Job incomplete	Job incomplete	Job incomplete	Job incomplete	Job incomplete
+Percentage streamed:	Percentage streamed:	Percentage streamed:	Percentage streamed:	Percentage streamed:	Percentage streamed:	Percentage streamed:
+add your post-production notes here	add your post-production notes here	add your post-production notes here	add your post-production notes here	add your post-production notes here	add your post-production notes here	add your post-production notes here
+Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.	Recover any parts from this job before rehoming and starting a new job.
+Job cancelled due to an event.	Job cancelled due to an event.	Job cancelled due to an event.	Job cancelled due to an event.	Job cancelled due to an event.	Job cancelled due to an event.	Job cancelled due to an event.
+event	event	event	event	event	event	event
+alarm	alarm	alarm	alarm	alarm	alarm	alarm
+Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.
+add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here

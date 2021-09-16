@@ -173,6 +173,7 @@ Builder.load_string("""
                             on_press: root.open_event_details_text_input()
                             focus_next: event_details_input
                             text: root.event_deets_test_string
+                            disabled: True
 
                         TextInput:
                             id: event_details_input
@@ -239,8 +240,8 @@ Builder.load_string("""
 class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
-    event_type = StringProperty() # alarm, error, or user
-    specific_event = StringProperty()
+    event_type = 'user' # alarm, error, or user
+    specific_event = 'error:13" : "Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.'
 
     # # Example metadata
     metadata_string = "Project_name | Step 1 of 3" + "\n" + \
@@ -301,9 +302,6 @@ class JobIncompleteScreen(Screen):
         self.production_notes.disabled = False
         self.production_notes_label.height = 0
         self.production_notes_label.opacity = 0
-
-        print("Height: " + str(self.production_notes_container.height))
-
         self.production_notes.height = self.production_notes_container.height
         self.production_notes.opacity = 1
         self.production_notes_label.focus = False
@@ -323,39 +321,6 @@ class JobIncompleteScreen(Screen):
     def set_production_notes(self):
         self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
 
-    # UPDATE TEXT WITH LANGUAGE AND VARIABLES
-    def update_strings(self, runtime_seconds, total_time_seconds):
-
-        # Get these strings properly translated
-
-        self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
-
-        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
-        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
-
-        self.metadata_label.text = (
-            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
-            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
-            "\n" + \
-            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
-            "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
-            "\n" + \
-            self.l.get_str("Progress through job:") + " "
-            )
-
-        self.jd.metadata_dict['ProductionNotes'] = ''
-        self.production_notes.text = ''
-        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
-
-        self.event_details_label.text = self.l.get_str("Event details:")
-
-        if 'user' in self.event_type:
-            self.job_had_to_be_cancelled.text = self.l.get_str("The job was cancelled by the user.")
-        else:
-            self.job_had_to_be_cancelled.text = self.l.get_str("The job had to be cancelled due to the following event:").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
-        error_resolution_message = self.l.get_str("This was caused by a problem with the gcode file.") + " " + self.l.get_str('Check the gcode file before re-running it.')
-        lost_position_message = self.l.get_str("SmartBench may have lost position; you should recover any parts from this job before rehoming and starting the a new job.")
 
     # EVENT NOTES
     def set_focus_on_event_details(self, dt):
@@ -385,4 +350,59 @@ class JobIncompleteScreen(Screen):
         self.event_details_input.opacity = 0
         self.event_details_label.height = self.event_details_container.height
         self.event_details_label.opacity = 1
+
+    def set_event_notes(self):
+        # Archie not sure how you wanna skin this :) 
+        pass
+
+    # UPDATE TEXT WITH LANGUAGE AND VARIABLES
+    def update_strings(self, runtime_seconds, total_time_seconds):
+
+        # Get these strings properly translated
+
+        self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+
+        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
+        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
+
+        self.metadata_label.text = (
+            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
+            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            "\n" + \
+            self.l.get_str("Actual runtime:") + " " + str(timedelta(seconds=runtime_seconds)) + \
+            "\n" + \
+            self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
+            "\n" + \
+            self.l.get_str("Percentage streamed:") + " "
+            )
+
+        self.jd.metadata_dict['ProductionNotes'] = ''
+        self.production_notes.text = ''
+        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
+
+        if 'user' in self.event_type:
+            self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
+            self.event_details_label.text = self.l.get_str("<add your reason for cancellation here>")
+            self.event_details_label.disabled = False
+
+        else:
+            self.job_cancelled_label.text = self.l.get_str("Job cancelled due to an event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
+            lost_position_message = self.l.get_str("Recover any parts from this job before rehoming and starting a new job.")
+
+            if 'alarm' in self.event_type:
+                self.event_details_label.text = (
+                    self.specific_event + \
+                    "\n" + \
+                    lost_position_message
+                    )            
+        
+            elif 'error' in self.event_type:
+                error_resolution_message = self.l.get_str('Check the gcode file before re-running it.')
+                self.event_details_label.text = (
+                    self.specific_event + \
+                    "\n" + \
+                    error_resolution_message + \
+                    " " + \
+                    lost_position_message
+                    )
 

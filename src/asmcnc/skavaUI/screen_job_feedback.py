@@ -236,9 +236,6 @@ class JobFeedbackScreen(Screen):
         self.production_notes.disabled = False
         self.production_notes_label.height = 0
         self.production_notes_label.opacity = 0
-
-        print("Height: " + str(self.production_notes_container.height))
-
         self.production_notes.height = self.production_notes_container.height
         self.production_notes.opacity = 1
         self.production_notes_label.focus = False
