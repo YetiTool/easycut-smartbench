@@ -11,14 +11,15 @@ from kivy.properties import StringProperty
 from kivy.clock import Clock
 
 Builder.load_string("""
-<JobFeedbackScreen>
+<JobIncompleteScreen>
 
-    job_completed_label : job_completed_label
+    job_incomplete_label : job_incomplete_label
     metadata_label : metadata_label
     production_notes_container : production_notes_container
     production_notes_label : production_notes_label
     production_notes : production_notes
-    success_question : success_question
+    event_details_label : event_details_label
+    job_had_to_be_cancelled : job_had_to_be_cancelled
 
     BoxLayout:
         height: dp(800)
@@ -45,7 +46,7 @@ Builder.load_string("""
 
                 # HEADER
                 Label:
-                    id: job_completed_label
+                    id: job_incomplete_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -124,13 +125,13 @@ Builder.load_string("""
                             background_normal: ""
                             background_color: hex('#e5e5e5ff')
 
-                # FEEDBACK
+                # EVENT DETAILS
                 Label:
-                    id: success_question
+                    id: event_details_label
                     size_hint: (None,None)
                     height: dp(30)
                     width: dp(800)
-                    text: "Did this complete successfully?"
+                    text: "Event details:"
                     # color: hex('#f9f9f9ff')
                     color: hex('#333333ff') #grey
                     font_size: dp(30)
@@ -138,73 +139,121 @@ Builder.load_string("""
                     valign: "bottom"
                     markup: True
 
-                # Feedback buttons
+                # Event details
                 BoxLayout:
                     size_hint: (None,None)
                     height: dp(240)
                     width: dp(800)
                     orientation: 'horizontal'
-                    spacing: dp(96)
-                    padding: [dp(150), dp(20)]
+                    spacing: 0
+                    padding: [dp(0), dp(0)]
 
-                    # Thumbs down button
-                    Button:
-                        size_hint: (None,None)
-                        height: dp(200)
-                        width: dp(202)
-                        background_color: hex('#e5e5e5ff')
-                        background_normal: ""
-                        # on_press: root.confirm_job_successful()
-                        on_press: root.test_next_screen()
-                        BoxLayout:
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/skavaUI/img/thumbs_down.png"
-                                # center_x: self.parent.center_x
-                                # y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
-                    # Thumbs up button
-                    Button:
-                        size_hint: (None,None)
-                        height: dp(200)
-                        width: dp(202)
-                        background_color: hex('#e5e5e5ff')
-                        background_normal: ""
-                        # on_press: root.confirm_job_unsuccessful()
-                        on_press: root.test_next_screen()
-                        BoxLayout:
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/skavaUI/img/thumbs_up.png"
-                                # center_x: self.parent.center_x
-                                # y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True  
+                    Label: 
+                        id: job_had_to_be_cancelled
+                        color: hex('#333333ff') #grey
+                        font_size: dp(24)
+                        markup: True
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+
+                    # Buttons
+                    BoxLayout: 
+                        padding: [10,0,10,10]
+                        size_hint: (None, None)
+                        height: dp(142)
+                        width: dp(800)
+                        orientation: 'horizontal'
+                        BoxLayout: 
+                            size_hint: (None, None)
+                            height: dp(132)
+                            width: dp(244.5)
+                            padding: [0, 0, 184.5, 0]
+
+                        BoxLayout: 
+                            size_hint: (None, None)
+                            height: dp(132)
+                            width: dp(291)
+                            padding: [0,0,0,52]
+                            Button:
+                                id: next_button
+                                background_normal: "./asmcnc/apps/warranty_app/img/next.png"
+                                background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                                border: [dp(14.5)]*4
+                                size_hint: (None,None)
+                                width: dp(291)
+                                height: dp(79)
+                                # on_press: root.next_screen()
+                                on_press: root.test_next_screen()
+                                text: 'OK'
+                                font_size: '30sp'
+                                color: hex('#f9f9f9ff')
+                                markup: True
+                                center: self.parent.center
+                                pos: self.parent.pos
+                        BoxLayout: 
+                            size_hint: (None, None)
+                            height: dp(132)
+                            width: dp(244.5)
+                            padding: [193.5, 0, 0, 0]
+
+                    # # Thumbs down button
+                    # Button:
+                    #     size_hint: (None,None)
+                    #     height: dp(150)
+                    #     width: dp(152)
+                    #     background_color: hex('#e5e5e5ff')
+                    #     background_normal: ""
+                    #     on_press: root.confirm_job_successful()
+                    #     BoxLayout:
+                    #         size: self.parent.size
+                    #         pos: self.parent.pos
+                    #         Image:
+                    #             source: "./asmcnc/skavaUI/img/thumbs_down.png"
+                    #             # center_x: self.parent.center_x
+                    #             # y: self.parent.y
+                    #             size: self.parent.width, self.parent.height
+                    #             allow_stretch: True
+                    # # Thumbs up button
+                    # Button:
+                    #     size_hint: (None,None)
+                    #     height: dp(150)
+                    #     width: dp(152)
+                    #     background_color: hex('#e5e5e5ff')
+                    #     background_normal: ""
+                    #     on_press: root.confirm_job_unsuccessful()
+                    #     BoxLayout:
+                    #         size: self.parent.size
+                    #         pos: self.parent.pos
+                    #         Image:
+                    #             source: "./asmcnc/skavaUI/img/thumbs_up.png"
+                    #             # center_x: self.parent.center_x
+                    #             # y: self.parent.y
+                    #             size: self.parent.width, self.parent.height
+                    #             allow_stretch: True  
 """)
 
-class JobFeedbackScreen(Screen):
+class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
+    event_type = StringProperty() # alarm, error, or user
+    specific_event = StringProperty()
 
-    # Example metadata
+    # # Example metadata
     metadata_string = "Project_name | Step 1 of 3" + "\n" + \
         "Actual runtime: 0:30:43" + "\n"+ \
         "Total time (with pauses): 0:45:41" + "\n"+ \
         "Parts completed: 8/24"
 
     def __init__(self, **kwargs):
-        super(JobFeedbackScreen, self).__init__(**kwargs)
+        super(JobIncompleteScreen, self).__init__(**kwargs)
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
 
 
-
     def test_next_screen(self):
-        self.sm.current = 'wifi1'
+        self.sm.current = 'wifi2'
 
     #     self.l = kwargs['localization']
     #     self.jd = kwargs['job']
@@ -271,7 +320,7 @@ class JobFeedbackScreen(Screen):
 
     #     # Get these strings properly translated
 
-    #     self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+    #     self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
     #     current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
     #     total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
@@ -284,11 +333,19 @@ class JobFeedbackScreen(Screen):
     #         "\n" + \
     #         self.l.get_str("Total time (with pauses):") + " " + str(timedelta(seconds=total_time_seconds)) + \
     #         "\n" + \
-    #         self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
+    #         self.l.get_str("Progress through job:") + " "
     #         )
 
     #     self.jd.metadata_dict['ProductionNotes'] = ''
     #     self.production_notes.text = ''
     #     self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
-    #     self.success_question.text = self.l.get_str("Did this complete successfully?")
+    #     self.event_details_label.text = self.l.get_str("Event details:")
+
+    #     if 'user' in self.event_type:
+    #         self.job_had_to_be_cancelled.text = self.l.get_str("TThe job was cancelled by the user.")
+    #     else:
+    #         self.job_had_to_be_cancelled.text = self.l.get_str("The job had to be cancelled due to the following event:").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
+    #     error_resolution_message = self.l.get_str("This was caused by a problem with the gcode file.") + " " + self.l.get_str('Check the gcode file before re-running it.')
+    #     lost_position_message = self.l.get_str("SmartBench may have lost position; you should recover any parts from this job before rehoming and starting the a new job.")
+
