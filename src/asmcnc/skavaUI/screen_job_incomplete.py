@@ -368,7 +368,7 @@ class JobIncompleteScreen(Screen):
             "\n" + \
             self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
             "\n" + \
-            self.l.get_str("Percentage streamed:") + " " + str(self.percent_thru_job) + " %"
+            self.l.get_str("Percentage streamed:") + " " + str(self.jd.percent_thru_job) + " %"
             )
 
         self.jd.metadata_dict['ProductionNotes'] = ''
