@@ -272,6 +272,7 @@ class JobIncompleteScreen(Screen):
     def on_pre_enter(self):
         self.update_strings()
         self.close_production_notes_text_input()
+        self.close_event_details_text_input()
         self.return_to_screen = self.jd.screen_to_cancel_to_after_job
 
     def on_enter(self):
