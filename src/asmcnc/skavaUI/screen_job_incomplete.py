@@ -164,7 +164,7 @@ Builder.load_string("""
                             # color: hex('#1976d2ff') # blue
                             text_size: self.size
                             halign: "left"
-                            valign: "bottom"
+                            valign: "middle"
                             markup: True
                             font_size: dp(18)
                             size_hint_y: None
@@ -183,7 +183,7 @@ Builder.load_string("""
                             foreground_color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
-                            valign: "top"
+                            valign: "middle"
                             markup: True
                             font_size: dp(18)
                             size_hint_y: None
@@ -242,20 +242,20 @@ class JobIncompleteScreen(Screen):
     event_type = 'user' # alarm, error, or user
     specific_event = 'error:13" : "Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.'
 
-    # # Example metadata
-    metadata_string = "Project_name | Step 1 of 3" + "\n" + \
-        "Actual runtime: 0:30:43" + "\n"+ \
-        "Total time (with pauses): 0:45:41" + "\n"+ \
-        "Percentage streamed: 43 %"
+    # # # Example metadata
+    # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
+    #     "Actual runtime: 0:30:43" + "\n"+ \
+    #     "Total time (with pauses): 0:45:41" + "\n"+ \
+    #     "Percentage streamed: 43 %"
 
 
-    event_deets_test_string = (
-        "Error 1: You fucked up your code. " + \
-        "\n" + \
-        "Check the gcode file before re-running it." + \
-        " " + \
-        "Recover any parts from this job before rehoming and starting a new job."
-        )
+    # event_deets_test_string = (
+    #     "Error 1: You fucked up your code. " + \
+    #     "\n" + \
+    #     "Check the gcode file before re-running it." + \
+    #     " " + \
+    #     "Recover any parts from this job before rehoming and starting a new job."
+    #     )
 
 
     def __init__(self, **kwargs):
@@ -378,11 +378,13 @@ class JobIncompleteScreen(Screen):
         self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
         if 'user' in self.event_type:
+            self.event_details_label.color = hex('#1976d2ff')
             self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
             self.event_details_label.text = "<" + self.l.get_str("add your reason for cancellation here") + ">"
             self.event_details_label.disabled = False
 
         else:
+            self.event_details_label.color = hex('#333333ff')
             self.job_cancelled_label.text = self.l.get_str("Job cancelled due to an event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
             lost_position_message = self.l.get_str("Recover any parts from this job before rehoming and starting a new job.")
 
