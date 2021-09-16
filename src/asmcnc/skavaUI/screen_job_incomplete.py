@@ -386,7 +386,7 @@ class JobIncompleteScreen(Screen):
 
         if 'user' in self.event_type:
             self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
-            self.event_details_label.text = self.l.get_str("<add your reason for cancellation here>")
+            self.event_details_label.text = "<" + self.l.get_str("add your reason for cancellation here") + ">"
             self.event_details_label.disabled = False
 
         else:
