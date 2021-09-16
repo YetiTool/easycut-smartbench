@@ -159,6 +159,8 @@ Builder.load_string("""
                             background_color: hex('#e5e5e5ff')
                             background_normal: ""
                             background_down: ""
+                            background_disabled_normal: ""
+                            background_disabled_down: ""
                             color: hex('#333333ff') #grey
                             # color: hex('#1976d2ff') # blue
                             text_size: self.size
