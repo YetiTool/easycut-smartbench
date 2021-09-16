@@ -154,7 +154,7 @@ Builder.load_string("""
                         Label: 
                             id: event_deets
                             color: hex('#333333ff') #grey
-                            font_size: dp(20)
+                            font_size: dp(18)
                             markup: True
                             text_size: self.size
                             halign: "left"
@@ -218,9 +218,9 @@ class JobIncompleteScreen(Screen):
 
     event_deets_test_string = (
         "Error 1: You fucked up your code. " + \
-        "\n" + \
+        "\n\n" + \
         "Check the gcode file before re-running it." + \
-        "\n" + \
+        " " + \
         "SmartBench may have lost position; recover any parts from this job before rehoming and starting a new job."
         )
 
