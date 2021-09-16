@@ -171,7 +171,7 @@ Builder.load_string("""
                             size_hint_y: None
                             height: self.parent.height
                             opacity: 1
-                            # on_press: root.open_event_details_text_input()
+                            on_press: root.open_event_details_text_input()
                             focus_next: event_details_input
                             # disabled: True
 
@@ -380,13 +380,14 @@ class JobIncompleteScreen(Screen):
             self.event_details_label.color = [25 / 255., 118 / 255., 210 / 255., 1.]
             self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
             self.event_details_label.text = "<" + self.l.get_str("add your reason for cancellation here") + ">"
-            self.event_details_label.on_press = self.open_event_details_text_input()
+            # self.event_details_label.on_press = self.open_event_details_text_input()
+            self.event_details_label.disabled = False
 
         else:
             self.event_details_label.color = [51 / 255., 51 / 255., 51 / 255., 1.]
             self.job_cancelled_label.text = self.l.get_str("Job cancelled due to an event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
             lost_position_message = self.l.get_str("Recover any parts from this job before rehoming and starting a new job.")
-            self.event_details_label.on_press = self.close_event_details_text_input()
+            # self.event_details_label.on_press = self.close_event_details_text_input()
 
             if 'alarm' in self.event_type:
                 self.event_details_label.text = (
@@ -404,4 +405,6 @@ class JobIncompleteScreen(Screen):
                     " " + \
                     lost_position_message
                     )
+
+            self.event_details_label.disabled = True
 
