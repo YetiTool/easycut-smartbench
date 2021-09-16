@@ -19,7 +19,6 @@ Builder.load_string("""
     production_notes_label : production_notes_label
     production_notes : production_notes
     event_details_label : event_details_label
-    job_had_to_be_cancelled : job_had_to_be_cancelled
 
     BoxLayout:
         height: dp(800)
@@ -131,7 +130,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(30)
                     width: dp(800)
-                    text: "Event details:"
+                    text: "Job cancelled due to an event."
                     # color: hex('#f9f9f9ff')
                     color: hex('#333333ff') #grey
                     font_size: dp(30)
@@ -144,18 +143,33 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(240)
                     width: dp(800)
-                    orientation: 'horizontal'
+                    orientation: 'vertical'
                     spacing: 0
                     padding: [dp(0), dp(0)]
 
-                    Label: 
-                        id: job_had_to_be_cancelled
-                        color: hex('#333333ff') #grey
-                        font_size: dp(24)
-                        markup: True
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
+                    BoxLayout: 
+                        orientation: 'vertical'
+                        padding: [dp(20), dp(0)]
+
+                        canvas:
+                            Color:
+                                rgba: hex('#1976d2ff')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+
+                        Label: 
+                            id: event_deets
+                            color: hex('#333333ff') #grey
+                            font_size: dp(20)
+                            markup: True
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            text: root.event_deets_test_string
+
+
 
                     # Buttons
                     BoxLayout: 
@@ -174,7 +188,7 @@ Builder.load_string("""
                             size_hint: (None, None)
                             height: dp(132)
                             width: dp(291)
-                            padding: [0,0,0,52]
+                            padding: [0,0,0,dp(52)]
                             Button:
                                 id: next_button
                                 background_normal: "./asmcnc/apps/warranty_app/img/next.png"
@@ -196,41 +210,7 @@ Builder.load_string("""
                             height: dp(132)
                             width: dp(244.5)
                             padding: [193.5, 0, 0, 0]
-
-                    # # Thumbs down button
-                    # Button:
-                    #     size_hint: (None,None)
-                    #     height: dp(150)
-                    #     width: dp(152)
-                    #     background_color: hex('#e5e5e5ff')
-                    #     background_normal: ""
-                    #     on_press: root.confirm_job_successful()
-                    #     BoxLayout:
-                    #         size: self.parent.size
-                    #         pos: self.parent.pos
-                    #         Image:
-                    #             source: "./asmcnc/skavaUI/img/thumbs_down.png"
-                    #             # center_x: self.parent.center_x
-                    #             # y: self.parent.y
-                    #             size: self.parent.width, self.parent.height
-                    #             allow_stretch: True
-                    # # Thumbs up button
-                    # Button:
-                    #     size_hint: (None,None)
-                    #     height: dp(150)
-                    #     width: dp(152)
-                    #     background_color: hex('#e5e5e5ff')
-                    #     background_normal: ""
-                    #     on_press: root.confirm_job_unsuccessful()
-                    #     BoxLayout:
-                    #         size: self.parent.size
-                    #         pos: self.parent.pos
-                    #         Image:
-                    #             source: "./asmcnc/skavaUI/img/thumbs_up.png"
-                    #             # center_x: self.parent.center_x
-                    #             # y: self.parent.y
-                    #             size: self.parent.width, self.parent.height
-                    #             allow_stretch: True  
+ 
 """)
 
 class JobIncompleteScreen(Screen):
@@ -244,6 +224,27 @@ class JobIncompleteScreen(Screen):
         "Actual runtime: 0:30:43" + "\n"+ \
         "Total time (with pauses): 0:45:41" + "\n"+ \
         "Parts completed: 8/24"
+
+
+    event_deets_test_string = (
+        "Error 1: You fucked up your code. " + \
+        "\n" + \
+        "Check the gcode file before re-running it." + \
+        "\n" + \
+        "SmartBench may have lost position; recover any parts from this job before rehoming and starting a new job."
+        )
+
+
+
+    #     error_resolution_message = self.l.get_str("This was caused by a problem with the gcode file.") + " " + self.l.get_str('Check the gcode file before re-running it.')
+    #     lost_position_message = self.l.get_str("SmartBench may have lost position; you should recover any parts from this job before rehoming and starting the a new job.")
+
+
+
+
+
+
+
 
     def __init__(self, **kwargs):
         super(JobIncompleteScreen, self).__init__(**kwargs)
@@ -343,7 +344,7 @@ class JobIncompleteScreen(Screen):
     #     self.event_details_label.text = self.l.get_str("Event details:")
 
     #     if 'user' in self.event_type:
-    #         self.job_had_to_be_cancelled.text = self.l.get_str("TThe job was cancelled by the user.")
+    #         self.job_had_to_be_cancelled.text = self.l.get_str("The job was cancelled by the user.")
     #     else:
     #         self.job_had_to_be_cancelled.text = self.l.get_str("The job had to be cancelled due to the following event:").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
     #     error_resolution_message = self.l.get_str("This was caused by a problem with the gcode file.") + " " + self.l.get_str('Check the gcode file before re-running it.')
