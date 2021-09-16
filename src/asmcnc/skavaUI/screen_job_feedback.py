@@ -209,7 +209,6 @@ class JobFeedbackScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
-        self.db.send_job_end(self.jd.job_name)
 
     def confirm_job_successful(self):
         self.set_production_notes()
@@ -218,7 +217,7 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, True)
+        self.db.send_job_end(self.jd.job_name, False)
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
