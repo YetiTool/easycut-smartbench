@@ -218,10 +218,10 @@ class JobIncompleteScreen(Screen):
 
     event_deets_test_string = (
         "Error 1: You fucked up your code. " + \
-        "\n\n" + \
+        "\n" + \
         "Check the gcode file before re-running it." + \
         " " + \
-        "SmartBench may have lost position; recover any parts from this job before rehoming and starting a new job."
+        "Recover any parts from this job before rehoming and starting a new job."
         )
 
 
