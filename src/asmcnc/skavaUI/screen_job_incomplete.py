@@ -330,9 +330,6 @@ class JobIncompleteScreen(Screen):
         self.event_details_input.disabled = False
         self.event_details_label.height = 0
         self.event_details_label.opacity = 0
-
-        print("Height: " + str(self.event_details_container.height))
-
         self.event_details_input.height = self.event_details_container.height
         self.event_details_input.opacity = 1
         self.event_details_label.focus = False
@@ -342,6 +339,7 @@ class JobIncompleteScreen(Screen):
     def close_event_details_text_input(self):
 
         self.event_details_input.focus = False
+        self.event_details_label.disabled = False
         self.event_details_input.disabled = True
         self.event_details_input.height = 0
         self.event_details_input.opacity = 0
