@@ -85,7 +85,6 @@ Builder.load_string("""
 
             FileChooser:
                 padding: [0,10]
-                size_hint_y: 5
                 id: filechooser_usb
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
