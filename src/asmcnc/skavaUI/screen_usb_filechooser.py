@@ -398,9 +398,9 @@ class USBFileChooser(Screen):
 
         # display file selected in the filename display label
         if sys.platform == 'win32':
-            self.self.file_selected_label.text = self.filechooser_usb.selection[0].split("\\")[-1]
+            self.file_selected_label.text = self.filechooser_usb.selection[0].split("\\")[-1]
         else:
-            self.self.file_selected_label.text = self.filechooser_usb.selection[0].split("/")[-1]
+            self.file_selected_label.text = self.filechooser_usb.selection[0].split("/")[-1]
 
         self.get_metadata()
 
