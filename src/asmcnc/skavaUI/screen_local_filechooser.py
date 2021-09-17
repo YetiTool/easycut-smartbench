@@ -500,9 +500,9 @@ class LocalFileChooser(Screen):
 
         # display file selected in the filename display label
         if sys.platform == 'win32':
-            self.filename_selected_label_text = self.filechooser.selection[0].split("\\")[-1]
+            self.file_selected_label.text = self.filechooser.selection[0].split("\\")[-1]
         else:
-            self.filename_selected_label_text = self.filechooser.selection[0].split("/")[-1]
+            self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
 
         self.get_metadata()
 

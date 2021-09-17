@@ -414,7 +414,7 @@ class USBFileChooser(Screen):
             if "(End of YetiTool SmartBench MES-Data)" in x: return False
             else: return True
 
-        with open(self.filechooser.selection[0]) as previewed_file:
+        with open(self.filechooser_usb.selection[0]) as previewed_file:
 
             if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
                 metadata_or_gcode_preview = [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file)]
