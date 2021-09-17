@@ -532,33 +532,6 @@ class BuildInfoScreen(Screen):
         except: 
             self.smartbench_model.text = '[b]SmartBench CNC Router[/b]'
 
-    def get_ip_address(self):
-
-        ip_address = ''
-
-        if sys.platform == "win32":
-            try:
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
-                ip_address = str(IPAddr)
-
-            except:
-                ip_address = ''
-        else:
-            try:
-                f = os.popen('hostname -I')
-                first_info = f.read().strip().split(' ')[0]
-                if len(first_info.split('.')) == 4:
-                    ip_address = first_info
-
-                else:
-                    ip_address = ''
-
-            except:
-                ip_address = ''
-
-        return ip_address
-
     ## LOCALIZATION TESTING
 
     def choose_language(self):
@@ -588,7 +561,7 @@ class BuildInfoScreen(Screen):
             self.set.pl_branch + '\n' + \
             self.set.pl_hash + '\n\n' + \
             self.l.get_str('IP Address') + '\n' + \
-            self.get_ip_address()
+            str(self.set.ip_address)
             )
 
     def restart_app(self):
