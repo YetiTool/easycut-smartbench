@@ -412,6 +412,7 @@ class WifiScreen(Screen):
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
+        self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
@@ -503,39 +504,15 @@ class WifiScreen(Screen):
 
     def refresh_ip_label_value(self, dt):
 
-        ip_address = ''
-        self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-        self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        self.ip_status_label.text = self.set.ip_address
 
-        if sys.platform == "win32":
-            try:
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
-                ip_address = str(IPAddr)
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-                self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-            except:
-                ip_address = ''
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-                self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        if self.set.wifi_available:
+            self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
+            self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+
         else:
-            try:
-                f = os.popen('hostname -I')
-                first_info = f.read().strip().split(' ')[0]
-                if len(first_info.split('.')) == 4:
-                    ip_address = first_info
-                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-                    self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-                else:
-                    ip_address = ''
-                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-                    self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-            except:
-                ip_address = ''
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-                self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
-
-        self.ip_status_label.text = ip_address
+            self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+            self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]    
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

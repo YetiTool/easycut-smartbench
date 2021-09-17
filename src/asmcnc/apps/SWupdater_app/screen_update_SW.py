@@ -658,15 +658,8 @@ class SWUpdateScreen(Screen):
                 
     def check_wifi_connection(self, dt):
 
-        try:
-            f = os.popen('hostname -I')
-            first_info = f.read().strip().split(' ')[0]
-            if len(first_info.split('.')) == 4:
-                self.wifi_image.source = self.wifi_on
-            else:
-                self.wifi_image.source = self.wifi_off
-        except:
-            self.wifi_image.source = self.wifi_off
+        if self.set.wifi_available: self.wifi_image.source = self.wifi_on
+        else: self.wifi_image.source = self.wifi_off
 
     def check_USB_status(self, dt): 
         if self.usb_stick.is_available():
