@@ -348,8 +348,7 @@ class JobIncompleteScreen(Screen):
         self.event_details_label.opacity = 1
 
     def set_event_notes(self):
-        # Archie not sure how you wanna skin this :) 
-        pass
+        self.db.send_event(0, 'Job cancelled', 'User comment: ' + self.event_details_label.text)
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
