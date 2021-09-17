@@ -605,3 +605,4 @@ event	event	event	event	event	event	event
 alarm	alarm	alarm	alarm	alarm	alarm	alarm
 Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.	Job cancelled by the user.
 add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here	add your reason for cancellation here
+Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.	Select a file to see metadata or gcode preview.

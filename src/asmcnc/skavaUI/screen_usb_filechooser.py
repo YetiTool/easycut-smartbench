@@ -19,7 +19,7 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 from os import path
-
+from itertools import takewhile
 
 Builder.load_string("""
 
@@ -27,7 +27,9 @@ Builder.load_string("""
 
     on_enter: root.refresh_filechooser()
 
-    filechooser_usb:filechooser_usb
+    file_selected_label : file_selected_label
+    filechooser_usb : filechooser_usb
+    metadata_preview : metadata_preview
     icon_layout_fc : icon_layout_fc
     list_layout_fc : list_layout_fc
     toggle_view_button : toggle_view_button
@@ -77,18 +79,34 @@ Builder.load_string("""
             valign: 'middle'
             halign: 'center'                
 
-
-        FileChooser:
-            padding: [0,10]
+        BoxLayout: 
+            orientation: 'horizontal'
             size_hint_y: 5
-            id: filechooser_usb
-            show_hidden: False
-            filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
-            on_selection: root.refresh_filechooser()
-            FileChooserIconLayout
-                id: icon_layout_fc
-            FileChooserListLayout
-                id: list_layout_fc
+
+            FileChooser:
+                padding: [0,10]
+                id: filechooser_usb
+                show_hidden: False
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                on_selection: root.refresh_filechooser()
+                FileChooserIconLayout
+                    id: icon_layout_fc
+                FileChooserListLayout
+                    id: list_layout_fc
+
+            ScrollView:
+                size_hint: 1, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                do_scroll_x: True
+                do_scroll_y: True
+                scroll_type: ['bars', 'content']
+
+                Label:
+                    id: metadata_preview
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    text_size: self.width, None
+                    padding: 10, 10
                
         BoxLayout:
             size_hint_y: None
@@ -360,26 +378,52 @@ class USBFileChooser(Screen):
         if verbose: print 'Refreshing filechooser'
         try:
             if self.filechooser_usb.selection[0] != 'C':
-                
-                # display file selected in the filename display label
-                if sys.platform == 'win32':
-                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("\\")[-1]
-                else:
-                    self.filename_selected_label_text = self.filechooser_usb.selection[0].split("/")[-1]
-
-                
-                self.load_button.disabled = False
-                self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
+                self.display_selected_file()
             
             else:
                 self.loadButton.disabled = True
                 self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+                self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
+                self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
         except:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
+            self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
+            self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
         self.filechooser_usb._update_files()
+
+    def display_selected_file(self):
+
+        # display file selected in the filename display label
+        if sys.platform == 'win32':
+            self.file_selected_label.text = self.filechooser_usb.selection[0].split("\\")[-1]
+        else:
+            self.file_selected_label.text = self.filechooser_usb.selection[0].split("/")[-1]
+
+        self.get_metadata()
+
+        self.load_button.disabled = False
+        self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
+
+
+    def get_metadata(self):
+
+        def not_end_of_metadata(x):
+            if "(End of YetiTool SmartBench MES-Data)" in x: return False
+            else: return True
+
+        with open(self.filechooser_usb.selection[0]) as previewed_file:
+
+            if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+                metadata_or_gcode_preview = [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file)]
+
+            else: 
+                # just get GCode preview if no metadata
+                metadata_or_gcode_preview = [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+
+        self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
      
     def import_usb_file(self):
