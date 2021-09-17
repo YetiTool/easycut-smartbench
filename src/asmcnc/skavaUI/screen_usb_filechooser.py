@@ -19,7 +19,7 @@ from os.path import expanduser
 from shutil import copy
 from asmcnc.comms import usb_storage
 from os import path
-
+from itertools import takewhile
 
 Builder.load_string("""
 
