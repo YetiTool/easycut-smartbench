@@ -15,7 +15,7 @@ from __builtin__ import True
 # Config.write()
 
 import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
 
@@ -44,7 +44,6 @@ class SerialConnection(object):
     sm = None   # Screen manager object
 
     grbl_out = ""
-    job_gcode = []
     response_log = []
     suppress_error_screens = False
     FLUSH_FLAG = False
@@ -58,15 +57,15 @@ class SerialConnection(object):
 
     power_loss_detected = False
 
-    def __init__(self, machine, screen_manager, settings_manager, localization):
+    def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
         self.sm = screen_manager
         self.sett =settings_manager     
         self.m = machine
+        self.jd = job
         self.l = localization
-
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
-        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l)
+        self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
 
     def __del__(self):
         print 'Destructor'
@@ -430,9 +429,9 @@ class SerialConnection(object):
             return False
         
     def run_job(self, job_object):
-        
-        # TAKE IN THE FILE
-        self.job_gcode = job_object
+
+        self.jd.job_gcode_running = job_object
+
         log('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)
@@ -443,10 +442,10 @@ class SerialConnection(object):
             self.is_job_streaming = True    # allow grbl_scanner() to start stuffing buffer
             log('Job running')           
 
-        if self.initialise_job() and self.job_gcode:
+        if self.initialise_job() and self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: set_streaming_flags_to_true(), 2)
                                        
-        elif not self.job_gcode:
+        elif not self.jd.job_gcode_running:
             log('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
@@ -474,9 +473,9 @@ class SerialConnection(object):
     
     def stuff_buffer(self): # attempt to fill GRBLS's serial buffer, if there's room      
 
-        while self.l_count < len(self.job_gcode):
+        while self.l_count < len(self.jd.job_gcode_running):
             
-            line_to_go = self.job_gcode[self.l_count]
+            line_to_go = self.jd.job_gcode_running[self.l_count]
             serial_space = self.RX_BUFFER_SIZE - sum(self.c_line)
     
             # if there's room in the serial buffer, send the line
@@ -525,14 +524,15 @@ class SerialConnection(object):
 
         if self.m_state != "Check":
 
-            if (str(self.job_gcode).count("M3") > str(self.job_gcode).count("M30")) and self.m.stylus_router_choice != 'stylus':
-                self.sm.get_screen('spindle_cooldown').return_screen = 'jobdone'
-                self.sm.current = 'spindle_cooldown'
+            if (str(self.jd.job_gcode_running).count("M3") > str(self.jd.job_gcode_running).count("M30")) and self.m.stylus_router_choice != 'stylus':
                 Clock.schedule_once(lambda dt: self.update_machine_runtime(), 0.4)
+                self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
+                self.sm.current = 'spindle_cooldown'
             else:
                 self.m.spindle_off()
-                Clock.schedule_once(lambda dt: self.update_machine_runtime(go_to_jobdone=True), 0.4)
-
+                time.sleep(0.4)
+                self.update_machine_runtime()
+                self.sm.current = 'job_feedback'
 
         else:
             self.check_streaming_started = False
@@ -540,12 +540,15 @@ class SerialConnection(object):
             self.suppress_error_screens = False
             self._reset_counters()
 
+        self.jd.job_gcode_running = []
+
 
     def cancel_stream(self):
 
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False
         self.m.set_pause(False)
+        self.jd.job_gcode_running = []
 
         if self.m_state != "Check":
             
@@ -557,7 +560,9 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Update time for maintenance reminders
-            Clock.schedule_once(lambda dt: self.update_machine_runtime() , 0.4)
+            time.sleep(0.4)
+            self.update_machine_runtime()
+            
 
         else:
             self.check_streaming_started = False
@@ -571,24 +576,20 @@ class SerialConnection(object):
         log("G-code streaming cancelled!")
 
 
-    def update_machine_runtime(self, go_to_jobdone=False):
+    def update_machine_runtime(self):
 
-        # Tell user the job has finished
         log("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
-        hours = int(time_taken_seconds / (60 * 60))
-        seconds_remainder = time_taken_seconds % (60 * 60)
-        minutes = int(seconds_remainder / 60)
-        seconds = int(seconds_remainder % 60)
-        log(" Time elapsed: " + str(time_taken_seconds) + " seconds")
-
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
 
-        running_hours = int(only_running_time_seconds / (60 * 60))
-        running_seconds_remainder = only_running_time_seconds % (60 * 60)
-        running_minutes = int(running_seconds_remainder / 60)
-        running_seconds = int(running_seconds_remainder % 60)
+        self.jd.total_time = str(timedelta(seconds=time_taken_seconds))
+        self.jd.actual_runtime = str(timedelta(seconds=only_running_time_seconds))
+
+        log(" Time elapsed: " + self.jd.total_time)
+        log(" Acutal running time: " + self.jd.actual_runtime)
+
+        ## UPDATE MAINTENANCE TRACKING
 
         # Add time taken in seconds to brush use: 
         if self.m.stylus_router_choice == 'router':
@@ -603,18 +604,8 @@ class SerialConnection(object):
         self.m.time_since_z_head_lubricated_seconds += only_running_time_seconds
         self.m.write_z_head_maintenance_settings(self.m.time_since_z_head_lubricated_seconds)
 
-        # send info to the job done screen
-        self.sm.get_screen('jobdone').return_to_screen = self.sm.get_screen('go').return_to_screen
-        self.sm.get_screen('jobdone').jobdone_text = ("The job has finished.\n" + \
-        "Actual runtime: " + str(running_hours) + " hours, " + str(running_minutes) + " minutes, and " + str(running_seconds) + " seconds." + \
-        "\n" + \
-        "Total time: " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds.")
-
-        if go_to_jobdone: self.sm.current = 'jobdone'
-
         self._reset_counters()
         
-
 
 # PUSH MESSAGE HANDLING
 
@@ -793,13 +784,15 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    if 'r' in pins_info and not self.power_loss_detected:
+                    if 'r' in pins_info and not self.power_loss_detected and sys.platform not in ['win32', 'darwin']:
                             # trigger power loss procedure!!
                             self.m._grbl_door()
+                            self.sm.get_screen('door').db.send_event(2, 'Power loss', 'Connection loss: Check power and WiFi')
                             self.m.set_pause(True)
                             log("Power loss or DC power supply")
                             self.power_loss_detected = True
                             Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
+
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -829,6 +822,7 @@ class SerialConnection(object):
                     
                         try:
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
+                            self.sm.get_screen('go').update_overload_peak(self.overload_state)
                         except:
                             log('Unable to update overload state on go screen')
                     

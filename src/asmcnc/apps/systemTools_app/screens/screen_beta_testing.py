@@ -26,7 +26,7 @@ Builder.load_string("""
         width: dp(480)
         canvas.before:
             Color: 
-                rgba: hex('#f9f9f9ff')
+                rgba: hex('#e5e5e5ff')
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -276,13 +276,18 @@ class BetaTestingScreen(Screen):
         self.usb_stick.enable()
 
     def checkout_branch(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':       
+        if sys.platform != 'win32' and sys.platform != 'darwin':
+
+            # Update config as for any other SW release
+            self.set.update_config() 
+            
             # Strip whitespace
             branch_name_formatted = str(self.user_branch.text).translate(None, ' ')
 
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
             os.system("git pull")
-            self.systemtools_sm.sm.current = 'rebooting'
+            self.set.ansible_service_run()
+            # self.systemtools_sm.sm.current = 'rebooting'
 
     def update_to_latest_beta(self):
         if self.wifi_toggle.state == 'down':
