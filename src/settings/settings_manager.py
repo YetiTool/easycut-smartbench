@@ -16,6 +16,11 @@ def log(message):
 
 class Settings(object):
     
+    ping_command = 'ping -c1 one.one.one.one'
+    wifi_available = False
+    ip_address = ''
+    WIFI_REPORT_INTERVAL = 2
+
     sw_version = ''
     sw_hash = ''
     sw_branch = ''
@@ -32,7 +37,71 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
+        Clock.schedule_interval(self.check_wifi_and_refresh_ip_address, self.WIFI_REPORT_INTERVAL)
     
+
+## WIFI AND CONNECTIONS
+
+    def check_wifi_and_refresh_ip_address(self, dt):
+
+        if sys.platform == "win32":
+            try:
+                # get IP address
+                hostname=socket.gethostname()
+                IPAddr=socket.gethostbyname(hostname)
+                self.ip_address = str(IPAddr)
+
+                # # ping to check connection
+                # # NB, if this comes out false but there's an IP it indicates connection in local network
+                # self.wifi_available = self.do_ping_check()
+
+            except:
+                self.ip_address = ''
+                self.wifi_available = False
+
+        elif sys.platform != "darwin": # i.e. is a linux platform
+            try:
+
+                # get IP address
+                f = os.popen('hostname -I')
+                potential_IP_address = f.read().strip().split(' ')[0]
+                if len(potential_IP_address.split('.')) == 4:
+                    self.ip_address = potential_IP_address
+
+                    # ping to check connection
+                    self.wifi_available = self.do_ping_check()
+
+                else:
+                    self.ip_address = ''
+                    self.wifi_available = False
+
+            except:
+                self.ip_address = ''
+                self.wifi_available = False
+
+        else:
+            # ping to check connection
+            # NB, if this comes out false but there's an IP it indicates connection in local network
+            self.wifi_available = self.do_ping_check()
+
+
+    def do_ping_check(self):
+
+        ping_delay = 0.1
+        ping_timeout = 1
+
+        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+
+        while proc.poll() is None and ping_timeout > 0:
+            time.sleep(ping_delay)
+            ping_timeout -= ping_delay
+
+        if proc.poll() is not None:
+            return True
+        else:
+            return False
+
+
 
 ## REFRESH EVERYTHING AT START UP    
     def refresh_all(self):
@@ -54,7 +123,7 @@ class Settings(object):
     def refresh_latest_sw_version(self):
 
         delay = 1.0
-        timeout = int(10.0 / delay)
+        timeout = 10.0
         fetch_command = "cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet"
 
         proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)

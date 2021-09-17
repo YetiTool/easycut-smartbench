@@ -168,31 +168,8 @@ class StatusBar(Widget):
 
     def refresh_ip_label_value(self, dt):
 
-        ip_address = ''
-        self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+        self.ip_status_label.text = self.m.sett.ip_address
 
+        if self.m.sett.wifi_available: self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
+        else: self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
 
-        if sys.platform == "win32":
-            try:
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
-                ip_address = str(IPAddr)
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-            except:
-                ip_address = ''
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-        elif sys.platform != "darwin":
-            try:
-                f = os.popen('hostname -I')
-                first_info = f.read().strip().split(' ')[0]
-                if len(first_info.split('.')) == 4:
-                    ip_address = first_info
-                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-                else:
-                    ip_address = ''
-                    self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-            except:
-                ip_address = ''
-                self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-
-        self.ip_status_label.text = ip_address
