@@ -97,7 +97,10 @@ class Settings(object):
             ping_timeout -= ping_delay
 
         if proc.poll() is not None:
-            return True
+
+            if proc.returncode == 0: return True
+            else: return False
+
         else:
             return False
 
