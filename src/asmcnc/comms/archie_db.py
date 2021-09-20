@@ -76,7 +76,7 @@ class SQLRabbit:
                 "payload_type": "full",
                 "machine_info": {
                     "name": self.m.device_label,
-                    "location": "Office" or '',
+                    "location": self.m.device_location,
                     "hostname": socket.gethostname(),
                     "ec_version": self.m.sett.sw_version
                 },
