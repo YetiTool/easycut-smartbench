@@ -9,7 +9,10 @@ screen_warranty_registration_1, \
 screen_warranty_registration_2, \
 screen_warranty_registration_3, \
 screen_warranty_registration_4, \
-screen_warranty_registration_5
+screen_warranty_registration_5, \
+screen_CNC_academy, \
+screen_reboot_to_apply_language_settings
+
 
 class ScreenManagerWarranty(object):
 
@@ -50,6 +53,12 @@ class ScreenManagerWarranty(object):
         if not self.sm.has_screen('warranty_5'):
             warranty_registration_5_screen = screen_warranty_registration_5.WarrantyScreen5(name = 'warranty_5', warranty_manager = self, machine = self.m, localization = self.l)
             self.sm.add_widget(warranty_registration_5_screen)
+        if not self.sm.has_screen('cnc_academy'):
+            CNC_academy_screen = screen_CNC_academy.CNCAcademyScreen(name = 'cnc_academy', warranty_manager = self, machine = self.m, localization = self.l)
+            self.sm.add_widget(CNC_academy_screen)
+        if not self.sm.has_screen('reboot_to_apply_settings'):
+            reboot_to_apply_language_settings_screen = screen_reboot_to_apply_language_settings.ApplySettingsScreen(name = 'reboot_to_apply_settings', warranty_manager = self, machine = self.m, localization = self.l)
+            self.sm.add_widget(reboot_to_apply_language_settings_screen)
 
         def first_screen():
             self.sm.current = 'warranty_1'
@@ -64,6 +73,8 @@ class ScreenManagerWarranty(object):
         self.destroy_screen('warranty_3')
         self.destroy_screen('warranty_4')
         self.destroy_screen('warranty_5')
+        self.destroy_screen('cnc_academy')
+        self.destroy_screen('reboot_to_apply_settings')
 
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):

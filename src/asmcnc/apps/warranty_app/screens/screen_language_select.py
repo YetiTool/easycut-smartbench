@@ -7,6 +7,8 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.spinner import Spinner, SpinnerOption
+from kivy.uix.dropdown import DropDown
+from kivy.uix.scrollview import ScrollView
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
@@ -15,16 +17,21 @@ Builder.load_string("""
 
 #:import Factory kivy.factory.Factory
 
+<LanguageDropDown@DropDown>
+    bar_color: hex('#1976d2ff')
+    bar_inactive_color: hex('#333333a0')
+    bar_width: dp(20)
+    bar_margin: dp(2)
+
 <LanguageSpinner@SpinnerOption>
 
     background_normal: ''
-    background_color: [1,1,1,1]
+    background_color: hex('#f9f9f9ff')
     height: dp(45)
-    color: 0,0,0,1
+    color: hex('#333333ff')
     halign: 'left'
     markup: 'True'
     font_size: 25
-    bar_inactive_color: [0,0,0,1]
 
 <LanguageSelectScreen>:
 
@@ -40,7 +47,7 @@ Builder.load_string("""
 
 		canvas:
 			Color:
-				rgba: hex('##e5e5e5')
+				rgba: hex('#e5e5e5')
 			Rectangle:
 				size: self.size
 				pos: self.pos
@@ -83,6 +90,7 @@ Builder.load_string("""
 						option_cls: Factory.get("LanguageSpinner")
 						on_text: root.choose_language()
 						font_size: '30sp'
+						dropdown_cls: Factory.get("LanguageDropDown")
 
 				Label:
 					id: loading_label

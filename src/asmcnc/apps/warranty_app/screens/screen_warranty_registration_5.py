@@ -106,16 +106,11 @@ class WarrantyScreen5(Screen):
 		self.update_strings()
 
 	def next_screen(self):
-		# self.wm.exit_app()
-		self.wm.sm.current = 'rebooting'
+		self.wm.sm.current = 'cnc_academy'
 
 	def go_back(self):
 		self.wm.sm.current = 'warranty_4'
 
 	def update_strings(self):
-		self.success_label.text = (
-			self.l.get_str("You have sucessfully completed your warranty registration.") + "\n\n" + \
-			self.l.get_str("Reboot to apply your settings.")
-			)
-
-		self.next_button.text = self.l.get_str("Reboot!")
+		self.success_label.text = self.l.get_str("You have sucessfully completed your warranty registration.")
+		self.next_button.text = self.l.get_str("Next") + "..."
