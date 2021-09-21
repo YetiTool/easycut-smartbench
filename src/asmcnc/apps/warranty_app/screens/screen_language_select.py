@@ -180,6 +180,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_1_col_2.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_1_col_2_image
@@ -199,6 +201,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_1_col_3.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_1_col_3_image
@@ -432,6 +436,13 @@ class LanguageSelectScreen(Screen):
 
 	# def on_pre_enter(self):
 	# 	self.loading_label.text = ""
+
+	def change_checkbox_colour(self, radio_button):
+		if radio_button.state == 'down':
+			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
+
+		else: 
+			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
 
 	def next_screen(self):
 		# self.wm.open_warranty_app()
