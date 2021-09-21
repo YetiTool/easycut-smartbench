@@ -13,10 +13,12 @@ Builder.load_string("""
 	status_container : status_container
 	cnc_academy_info : cnc_academy_info
 	qr_code_container : qr_code_container
+	qr_code_image : qr_code_image
 	cnc_academy_logo_container : cnc_academy_logo_container
 	cnc_academy_logo : cnc_academy_logo
 	url_label : url_label
 	next_button : next_button
+
 	BoxLayout: 
 		size_hint: (None,None)
 		width: dp(800)
@@ -62,6 +64,7 @@ Builder.load_string("""
 					# size_hint: (None,None)
 					size_hint_x: 0.21
                     Image:
+                    	id: qr_code_image
                         source: "./asmcnc/apps/warranty_app/img/registration-qr-code.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -171,7 +174,7 @@ class CNCAcademyScreen(Screen):
 
 	def next_screen(self):
 		self.wm.sm.current = 'reboot_to_apply_settings'
-		print("QR width: " + str(self.qr_code_container.width) + " height: " + str(self.qr_code_container.height))		
+		print("QR width: " + str(self.qr_code_image.width) + " height: " + str(self.qr_code_image.height))		
 		print("LOGO CONTAINER width: " + str(self.cnc_academy_logo_container.width) + " height: " + str(self.cnc_academy_logo_container.height))
 		print("LOGO width: " + str(self.cnc_academy_logo.width) + " height: " + str(self.cnc_academy_logo.height))
 
