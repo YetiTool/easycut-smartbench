@@ -161,6 +161,7 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_1_col_1.text
+						color: hex('#1976d2ff')
 
 	                Image: 
 	                	id: row_1_col_1_image
@@ -173,6 +174,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					CheckBox: 
@@ -191,6 +193,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					CheckBox: 
@@ -209,6 +212,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					# ROW 2
@@ -229,6 +233,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					CheckBox: 
@@ -247,6 +252,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					CheckBox: 
@@ -265,6 +271,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 
 					# ROW 3
@@ -285,6 +292,7 @@ Builder.load_string("""
 						text_size: self.size
 						markup: True
 						halign: "left"
+						color: hex('#333333ff')
 
 					BoxLayout: 
 					BoxLayout: 
@@ -311,6 +319,7 @@ Builder.load_string("""
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
+						# color: hex('#333333ff')
 
 
 					# CheckBox: 
@@ -329,6 +338,7 @@ Builder.load_string("""
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
+						# color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
