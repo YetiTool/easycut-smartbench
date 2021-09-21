@@ -26,7 +26,7 @@ Builder.load_string("""
 		orientation: 'vertical'
 		canvas:
 			Color:
-				rgba: hex('##e5e5e5')
+				rgba: hex('#e5e5e5')
 			Rectangle:
 				size: self.size
 				pos: self.pos
@@ -65,28 +65,19 @@ Builder.load_string("""
 					size_hint_x: 0.21
                     Image:
                     	id: qr_code_image
-                        source: "./asmcnc/apps/warranty_app/img/registration-qr-code.png"
+                        source: "./asmcnc/apps/warranty_app/img/academy-qr-code.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 				BoxLayout:
 					orientation: 'vertical'
-					# width: dp(598)
-					# height: dp(180)
-					# padding: [0,0,0,0]
-					# size_hint: (None,None)
 					size_hint_x: 0.79
 					BoxLayout:
 						id: cnc_academy_logo_container
 						size_hint_y: 0.75
 						padding: [10, 2, 10, 0]
-						# canvas:
-						# 	Color:
-						# 		rgba: hex('#1976d2')
-						# 	Rectangle:
-						# 		size: self.size
-						# 		pos: self.pos
+
 	                    Image:
 	                    	id: cnc_academy_logo
 	                        source: "./asmcnc/apps/warranty_app/img/cnc_academy_logo.png"
