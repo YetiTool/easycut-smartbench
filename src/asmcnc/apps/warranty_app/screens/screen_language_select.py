@@ -152,7 +152,8 @@ Builder.load_string("""
 	                pos: self.parent.pos
 	                cols: 9
 	                rows: 3
-	                cols_minimum: {0: dp(10), 1: dp(56), 2: dp(190), 3: dp(10), 4: dp(56), 5: dp(190), 6: dp(10), 7: dp(56), 8: dp(180)}
+	                cols_minimum: {0: dp(15), 1: dp(56), 2: dp(170), 3: dp(15), 4: dp(56), 5: dp(170), 6: dp(15), 7: dp(56), 8: dp(170)}
+	                spacing: 5
 
 
 	                # ROW 1
@@ -163,7 +164,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_1_col_1_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_1_col_1
@@ -180,7 +181,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_1_col_2_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_1_col_2
@@ -198,7 +199,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_1_col_3_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_1_col_3
@@ -218,7 +219,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_2_col_1_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_2_col_1
@@ -236,7 +237,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_2_col_2_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_2_col_2
@@ -254,7 +255,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_2_col_3_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_2_col_3
@@ -274,7 +275,7 @@ Builder.load_string("""
 
 	                Image: 
 	                	id: row_3_col_1_image
-	                	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	                	allow_stretch: True
 
 	                Label: 
 	                	id: row_3_col_1
@@ -300,7 +301,7 @@ Builder.load_string("""
 
 	    #             Image: 
 	    #             	id: row_3_col_2_image
-	    #             	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	    				# allow_stretch: True
 
 	    #             Label: 
 	    #             	id: row_3_col_2
@@ -318,7 +319,7 @@ Builder.load_string("""
 
 	    #             Image: 
 	    #             	id: row_3_col_3_image
-	    #             	source: "./asmcnc/apps/warranty_app/img/finnish_flag.png"
+	    				# allow_stretch: True
 
 	    #             Label: 
 	    #             	id: row_3_col_3
