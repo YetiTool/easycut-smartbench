@@ -173,7 +173,7 @@ class CNCAcademyScreen(Screen):
 		self.wm.sm.current = 'warranty_5'
 
 	def update_strings(self):
-		self.cnc_academy_info.text = self.l.get_str("Did you know? We have full video tutorials on how to get started in the Yeti Tool CNC Academy.")
+		self.cnc_academy_info.text = self.l.get_str("Visit Yeti Tool CNC Academy for video tutorials on how to get started.")
 		self.url_label.text = "https://academy.yetitool.com"
 		self.next_button.text = self.l.get_str("Next") + "..."
 	# def update_strings(self):
