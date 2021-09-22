@@ -389,7 +389,7 @@ class LanguageSelectScreen(Screen):
 		self.next_button.disabled = True
 		self.loading_warranty_app = True
 		self.next_button.text = self.l.get_str("Loading...")
-		Clock.schedule_once(lambda dt: self.next_screen(), 0.3)
+		Clock.schedule_once(lambda dt: self.next_screen(), 0.1)
 
 	def on_leave(self):
 		self.next_button.disabled = False

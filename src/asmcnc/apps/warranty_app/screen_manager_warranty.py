@@ -28,6 +28,7 @@ class ScreenManagerWarranty(object):
             language_select_screen = screen_language_select.LanguageSelectScreen(name = 'language_select', warranty_manager = self, machine = self.m, localization = self.l)
             self.sm.add_widget(language_select_screen)
 
+        self.load_warranty_app()
         self.sm.current = 'language_select'
 
         # self.destroy_screen('warranty_1')
@@ -38,7 +39,7 @@ class ScreenManagerWarranty(object):
         # self.destroy_screen('cnc_academy')
         # self.destroy_screen('reboot_to_apply_settings')
 
-    def open_warranty_app(self):
+    def load_warranty_app(self):
 
         if not self.sm.has_screen('warranty_1'):
             warranty_registration_1_screen = screen_warranty_registration_1.WarrantyScreen1(name = 'warranty_1', warranty_manager = self, machine = self.m, localization = self.l)
@@ -83,10 +84,15 @@ class ScreenManagerWarranty(object):
             self.sm.get_screen('reboot_to_apply_settings').update_strings()
 
 
-        def first_screen():
-            self.sm.current = 'warranty_1'
+    def open_warranty_app(self):
 
-        Clock.schedule_once(lambda dt: first_screen(), 0.5)
+        # def first_screen():
+        #     self.sm.current = 'warranty_1'
+
+        self.load_warranty_app()
+        self.sm.current = 'warranty_1'
+
+        # Clock.schedule_once(lambda dt: first_screen(), 0.1)
 
     def exit_app(self):
         self.sm.current = 'safety'
