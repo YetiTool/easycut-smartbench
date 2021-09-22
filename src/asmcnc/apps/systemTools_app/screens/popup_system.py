@@ -188,9 +188,10 @@ class QuitToConsole(Widget):
 
 ### USB First Aid
 class PopupUSBFirstAid(Widget):
-    def __init__(self, screen_manager):
+    def __init__(self, screen_manager, localization):
         
         self.systemtools_sm = screen_manager
+        self.l = localization
         
         description = (
                 self.l.get_str("If your USB stick is plugged into the console, please remove it now.") + \
