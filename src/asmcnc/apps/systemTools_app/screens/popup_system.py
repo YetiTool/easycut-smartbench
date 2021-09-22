@@ -192,9 +192,17 @@ class PopupUSBFirstAid(Widget):
         
         self.systemtools_sm = screen_manager
         
-        description = "If your USB stick is plugged into the console, please remove it now.\n\n" + \
-                    "When you have removed it, press 'Ok'.\n\n" + \
-                    "[b]WARNING: Not following this step could cause files to be deleted from your USB stick.[/b]"
+        description = (
+                self.l.get_str("If your USB stick is plugged into the console, please remove it now.") + \
+                "\n\n" + \
+                self.l.get_str("When you have removed it, press 'Ok'.") + \
+                "\n\n" + \
+                self.l.get_bold("WARNING: Not following this step could cause files to be deleted from your USB stick.")
+                )
+        title_string = self.l.get_str('Warning!')
+        ok_string = self.l.get_bold('Yes')
+        cancel_string = self.l.get_bold('Cancel')
+
 
         def clear_mountpoint(*args):
             self.systemtools_sm.clear_usb_mountpoint()
@@ -202,10 +210,10 @@ class PopupUSBFirstAid(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=2, text_size=(320, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
         
-        ok_button = Button(text='[b]Ok[/b]', markup = True)
+        ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text='[b]Cancel[/b]', markup = True)
+        back_button = Button(text=cancel_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -219,7 +227,7 @@ class PopupUSBFirstAid(Widget):
         layout_plan.add_widget(label)
         layout_plan.add_widget(btn_layout)
         
-        popup = Popup(title='Warning!',
+        popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_font= 'Roboto-Bold',
                       title_size = '20sp',

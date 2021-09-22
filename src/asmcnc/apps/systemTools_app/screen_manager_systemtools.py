@@ -178,7 +178,7 @@ class ScreenManagerSystemTools(object):
             print (screen_name + ' deleted')
 
     def do_usb_first_aid(self):
-        message = 'Ensuring USB is unmounted, please wait...'
+        message = self.l.get_str('Ensuring USB is unmounted, please wait...')
         wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
         umount_out = (str(os.popen("sudo umount /media/usb/").read())) # using popen for the block
         popup_system.PopupUSBFirstAid(self)
@@ -186,7 +186,11 @@ class ScreenManagerSystemTools(object):
 
     def clear_usb_mountpoint(self):
         clear_mountpoint_out = (str(os.popen("sudo rm /media/usb/*").read())) # using popen for the block
-        message = 'First aid complete.\n\nYou can now use your USB stick.'
+        message = (
+            self.l.get_str("First aid complete.") + \
+                "\n\n" + \
+                self.l.get_str("You can now use your USB stick.")
+                )
         popup_info.PopupMiniInfo(self.sm, self.l, description = message)
 
 
