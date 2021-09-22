@@ -165,9 +165,6 @@ class CNCAcademyScreen(Screen):
 
 	def next_screen(self):
 		self.wm.sm.current = 'reboot_to_apply_settings'
-		print("QR width: " + str(self.qr_code_image.width) + " height: " + str(self.qr_code_image.height))		
-		print("LOGO CONTAINER width: " + str(self.cnc_academy_logo_container.width) + " height: " + str(self.cnc_academy_logo_container.height))
-		print("LOGO width: " + str(self.cnc_academy_logo.width) + " height: " + str(self.cnc_academy_logo.height))
 
 	def go_back(self):
 		self.wm.sm.current = 'warranty_5'
@@ -176,7 +173,3 @@ class CNCAcademyScreen(Screen):
 		self.cnc_academy_info.text = self.l.get_str("Visit Yeti Tool CNC Academy for video tutorials on how to get started.")
 		self.url_label.text = "https://academy.yetitool.com"
 		self.next_button.text = self.l.get_str("Next") + "..."
-	# def update_strings(self):
-	# 	self.cnc_academy_info.text = ("Did you know? We have full video tutorials on how to get started in the Yeti Tool CNC Academy.")
-	# 	self.url_label.text = "https://academy.yetitool.com"
-	# 	self.next_button.text = ("Next") + "..."
