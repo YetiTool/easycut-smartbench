@@ -409,6 +409,10 @@ class WifiScreen(Screen):
 
     wifi_documentation_path  = './asmcnc/apps/wifi_app/wifi_documentation/'
 
+    wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
+    wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
+    wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
+
     def __init__(self, **kwargs):
         super(WifiScreen, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
@@ -506,13 +510,18 @@ class WifiScreen(Screen):
 
         self.ip_status_label.text = self.set.ip_address
 
-        if self.set.wifi_available:
-            self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
+        if self.set.wifi_available: 
+            self.wifi_image.source = self.wifi_on
             self.status_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        else:
-            self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
-            self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]    
+        elif not self.set.ip_address: 
+            self.wifi_image.source = self.wifi_off
+            self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        else: 
+            self.wifi_image.source = self.wifi_warning
+            self.status_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+            
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
