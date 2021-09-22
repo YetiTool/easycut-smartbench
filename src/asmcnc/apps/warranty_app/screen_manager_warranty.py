@@ -86,15 +86,11 @@ class ScreenManagerWarranty(object):
 
     def open_warranty_app(self):
 
-        # def first_screen():
-        #     self.sm.current = 'warranty_1'
-
         self.load_warranty_app()
         self.sm.current = 'warranty_1'
 
-        # Clock.schedule_once(lambda dt: first_screen(), 0.1)
-
     def exit_app(self):
+
         self.sm.current = 'safety'
         self.destroy_screen('language_select')
         self.destroy_screen('warranty_1')
@@ -106,6 +102,7 @@ class ScreenManagerWarranty(object):
         self.destroy_screen('reboot_to_apply_settings')
 
     def destroy_screen(self, screen_name):
+
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
             print (screen_name + ' deleted')
