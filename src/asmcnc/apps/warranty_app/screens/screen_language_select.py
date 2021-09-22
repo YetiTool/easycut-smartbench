@@ -15,29 +15,10 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 
-#:import Factory kivy.factory.Factory
-
-# <LanguageDropDown@DropDown>
-#     bar_color: hex('#1976d2ff')
-#     bar_inactive_color: hex('#333333a0')
-#     bar_width: dp(20)
-#     bar_margin: dp(2)
-
-# <LanguageSpinner@SpinnerOption>
-
-#     background_normal: ''
-#     background_color: hex('#f9f9f9ff')
-#     height: dp(45)
-#     color: hex('#333333ff')
-#     halign: 'left'
-#     markup: 'True'
-#     font_size: 25
 
 <LanguageSelectScreen>:
 
 	status_container : status_container
-	# language_button : language_button
-	# loading_label : loading_label
 
 	row_1_col_1 : row_1_col_1
 	row_1_col_2 : row_1_col_2
@@ -81,69 +62,6 @@ Builder.load_string("""
 		BoxLayout:
 			size_hint_y: 0.92
 			orientation: 'vertical'
-
-			# BoxLayout:
-			# 	orientation: 'vertical'
-			# 	width: dp(800)
-			# 	# height: dp(200)
-			# 	height: dp(299.6)
-			# 	padding: [dp(254.5),dp(0),dp(254.5),0] # dp(160.6)
-			# 	spacing: 80
-			# 	size_hint: (None,None)
-
-			# 	BoxLayout: 
-			# 		size_hint: (None, None)
-			# 		height: dp(79)
-			# 		width: dp(291)
-
-			# 		Spinner:
-			# 			id: language_button
-			# 			background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-			# 			background_down: "./asmcnc/apps/warranty_app/img/next.png"
-			# 			border: [dp(14.5)]*4
-			# 			size_hint: (None,None)
-			# 			width: dp(291)
-			# 			height: dp(79)
-			# 			center: self.parent.center
-			# 			pos: self.parent.pos
-			# 			text: 'Choose language'
-			# 			color: hex('#f9f9f9ff')
-			# 			markup: True
-			# 			option_cls: Factory.get("LanguageSpinner")
-			# 			on_text: root.choose_language()
-			# 			font_size: '30sp'
-			# 			dropdown_cls: Factory.get("LanguageDropDown")
-
-			# 	Label:
-			# 		id: loading_label
-			# 		size_hint: (None, None)
-			# 		height: dp(60)
-			# 		width: dp(291)
-			# 		font_size: '20sp'
-			# 		text_size: self.size
-			# 		valign: 'top'
-			# 		halign: 'center'
-			# 		markup: 'true'
-			# 		color: hex('#333333ff')
-			# 		text: ""
-
-			# BoxLayout:
-			# 	orientation: 'vertical'
-			# 	width: dp(800)
-			# 	height: dp(80)
-			# 	padding: [dp(254.5),0,dp(254.5),0]
-			# 	size_hint: (None,None)
-			# 	BoxLayout: 
-			# 		size_hint: (None, None)
-			# 		height: dp(79)
-			# 		width: dp(291)
-								
-			# BoxLayout:
-			# 	orientation: 'vertical'
-			# 	padding: [dp(738), 0, dp(10), dp(10)]
-			# 	size_hint: (None,None)
-			# 	width: dp(800)
-			# 	height: dp(62)
 
 			BoxLayout:
 				padding: [dp(30), dp(10)]
