@@ -160,7 +160,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_1_col_1.text
+						on_press: root.select_language(self, row_1_col_1)
 						color: hex('#1976d2ff')
 
 	                Image: 
@@ -179,8 +179,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_1_col_2.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_1_col_2)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -189,7 +188,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_1_col_2
-	                	text: "Italian (IT)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -200,8 +198,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_1_col_3.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_1_col_3)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -210,7 +207,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_1_col_3
-	                	text: "Suomalainen (FI)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -223,8 +219,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_2_col_1.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_2_col_1)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -233,7 +228,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_2_col_1
-	                	text: "Suomalainen (FI)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -244,8 +238,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_2_col_2.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_2_col_2)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -254,7 +247,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_2_col_2
-	                	text: "Suomalainen (FI)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -265,8 +257,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_2_col_3.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_2_col_3)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -275,7 +266,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_2_col_3
-	                	text: "Suomalainen (FI)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -288,8 +278,7 @@ Builder.load_string("""
 
 					CheckBox: 
 						group: "language_radio_buttons" 
-						on_press: root.chosen_lang = row_3_col_1.text
-						on_press: root.change_checkbox_colour(self)
+						on_press: root.select_language(self, row_3_col_1)
 						color: hex('#333333ff')
 
 	                Image: 
@@ -298,7 +287,6 @@ Builder.load_string("""
 
 	                Label: 
 	                	id: row_3_col_1
-	                	text: "Suomalainen (FI)"
 	                	valign: "middle"
 						font_size: '20sp'
 						text_size: self.size
@@ -317,8 +305,8 @@ Builder.load_string("""
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
-					# 	on_press: root.chosen_lang = row_3_col_2.text
-						# on_press: root.change_checkbox_colour(self)
+						# on_press: root.select_language(self, row_3_col_2)
+						# on_press: root.select_language(self)
 						# color: hex('#333333ff')
 
 	    #             Image: 
@@ -338,8 +326,8 @@ Builder.load_string("""
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
-					# 	on_press: root.chosen_lang = row_3_col_3.text
-						# on_press: root.change_checkbox_colour(self)
+						# on_press: root.select_language(self, row_3_col_3)
+						# on_press: root.select_language(self)
 						# color: hex('#333333ff')
 
 	    #             Image: 
@@ -370,17 +358,21 @@ Builder.load_string("""
 						id: next_button
 	                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
 	                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
+	                    background_disabled_normal: "./asmcnc/apps/warranty_app/img/next.png"
+	                    background_disabled_down: "./asmcnc/apps/warranty_app/img/next.png"
 	                    border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
 						height: dp(79)
-						on_press: root.choose_language()
+						on_press: root.load_next_screen()
 						text: 'Next...'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 	                    center: self.parent.center
 	                    pos: self.parent.pos
+	                    opacity: 0 
+	                    disabled: True
 								
 			BoxLayout:
 				orientation: 'vertical'
@@ -414,7 +406,7 @@ Builder.load_string("""
 
 class LanguageSelectScreen(Screen):
 
-	chosen_lang = ''
+	loading_warranty_app = False
 
 	def __init__(self, **kwargs):
 		super(LanguageSelectScreen, self).__init__(**kwargs)
@@ -446,21 +438,31 @@ class LanguageSelectScreen(Screen):
 		# self.row_3_col_2_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_3_col_2.text + ".png"
 		# self.row_3_col_3_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_3_col_3.text + ".png"
 
-	# def on_pre_enter(self):
-	# 	self.loading_label.text = ""
+	def select_language(self, radio_button, language_label):
 
-	def change_checkbox_colour(self, radio_button):
-		if radio_button.state == 'down':
-			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
+		if not self.loading_warranty_app:
 
-		else: 
-			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
+			if radio_button.state == 'down':
+				radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
+				self.l.load_in_new_language(language_label.text)
+				self.next_button.text = self.l.get_str("Next") + "..."
+				self.next_button.opacity = 1
+				self.next_button.disabled = False
+
+			else: 
+				radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
 
 	def next_screen(self):
-		# self.wm.open_warranty_app()
-		print(self.chosen_lang)
+		self.wm.open_warranty_app()
 
-	def choose_language(self):
-		self.l.load_in_new_language(self.chosen_lang)
+	def load_next_screen(self):
+		self.next_button.disabled = True
+		self.loading_warranty_app = True
 		self.next_button.text = self.l.get_str("Loading...")
 		Clock.schedule_once(lambda dt: self.next_screen(), 0.3)
+
+	def on_leave(self):
+		self.next_button.disabled = False
+		self.loading_warranty_app = False
+		self.next_button.text = self.l.get_str("Next") + "..."
+
