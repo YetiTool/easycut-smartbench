@@ -152,7 +152,7 @@ Builder.load_string("""
 	                pos: self.parent.pos
 	                cols: 9
 	                rows: 3
-	                cols_minimum: {0: dp(15), 1: dp(56), 2: dp(170), 3: dp(15), 4: dp(56), 5: dp(170), 6: dp(15), 7: dp(56), 8: dp(170)}
+	                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(176), 3: dp(15), 4: dp(50), 5: dp(176), 6: dp(15), 7: dp(50), 8: dp(176)}
 	                spacing: 5
 
 
@@ -224,6 +224,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_2_col_1.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_2_col_1_image
@@ -243,6 +245,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_2_col_2.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_2_col_2_image
@@ -262,6 +266,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_2_col_3.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_2_col_3_image
@@ -283,6 +289,8 @@ Builder.load_string("""
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.chosen_lang = row_3_col_1.text
+						on_press: root.change_checkbox_colour(self)
+						color: hex('#333333ff')
 
 	                Image: 
 	                	id: row_3_col_1_image
@@ -310,6 +318,8 @@ Builder.load_string("""
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
 					# 	on_press: root.chosen_lang = row_3_col_2.text
+						# on_press: root.change_checkbox_colour(self)
+						# color: hex('#333333ff')
 
 	    #             Image: 
 	    #             	id: row_3_col_2_image
@@ -329,6 +339,8 @@ Builder.load_string("""
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
 					# 	on_press: root.chosen_lang = row_3_col_3.text
+						# on_press: root.change_checkbox_colour(self)
+						# color: hex('#333333ff')
 
 	    #             Image: 
 	    #             	id: row_3_col_3_image
@@ -414,8 +426,8 @@ class LanguageSelectScreen(Screen):
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
 
-		self.row_1_col_1.text = self.l.supported_languages[4]
-		self.row_1_col_2.text = self.l.supported_languages[4]
+		self.row_1_col_1.text = self.l.supported_languages[0]
+		self.row_1_col_2.text = self.l.supported_languages[3]
 		self.row_1_col_3.text = self.l.supported_languages[4]
 		self.row_2_col_1.text = self.l.supported_languages[4]
 		self.row_2_col_2.text = self.l.supported_languages[4]
