@@ -146,13 +146,13 @@ Builder.load_string("""
 			# 	height: dp(62)
 
 			BoxLayout:
-				padding: [dp(21), dp(10)]
+				padding: [dp(30), dp(10)]
 
 	            GridLayout:
 	                pos: self.parent.pos
 	                cols: 9
 	                rows: 3
-	                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(176), 3: dp(15), 4: dp(50), 5: dp(176), 6: dp(15), 7: dp(50), 8: dp(176)}
+	                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(170), 3: dp(15), 4: dp(50), 5: dp(170), 6: dp(15), 7: dp(50), 8: dp(170)}
 	                spacing: 5
 
 
@@ -427,12 +427,12 @@ class LanguageSelectScreen(Screen):
 		self.status_bar_widget.cheeky_color = '#1976d2'
 
 		self.row_1_col_1.text = self.l.supported_languages[0]
-		self.row_1_col_2.text = self.l.supported_languages[3]
-		self.row_1_col_3.text = self.l.supported_languages[4]
-		self.row_2_col_1.text = self.l.supported_languages[4]
+		self.row_1_col_2.text = self.l.supported_languages[1]
+		self.row_1_col_3.text = self.l.supported_languages[2]
+		self.row_2_col_1.text = self.l.supported_languages[3]
 		self.row_2_col_2.text = self.l.supported_languages[4]
-		self.row_2_col_3.text = self.l.supported_languages[4]
-		self.row_3_col_1.text = self.l.supported_languages[4]
+		self.row_2_col_3.text = self.l.supported_languages[5]
+		self.row_3_col_1.text = self.l.supported_languages[6]
 		# self.row_3_col_2.text = self.l.supported_languages[7]
 		# self.row_3_col_3.text = self.l.supported_languages[8]
 
