@@ -360,7 +360,7 @@ class SWUpdateScreen(Screen):
     
     wifi_on = "./asmcnc/apps/SWupdater_app/img/wifi_on.png"
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
-    wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
+    wifi_warning = "./asmcnc/apps/SWupdater_app/img/wifi_warning.png"
     usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
 
