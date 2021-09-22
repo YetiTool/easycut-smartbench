@@ -14,7 +14,7 @@ from __builtin__ import True
 # Config.set('graphics', 'maxfps', '30')
 # Config.write()
 
-import serial, sys, time, string, threading
+import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime
 from os import listdir
 from kivy.clock import Clock
@@ -56,6 +56,8 @@ class SerialConnection(object):
     overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
+    power_loss_detected = False
+
     def __init__(self, machine, screen_manager, settings_manager, localization):
 
         self.sm = screen_manager
@@ -75,61 +77,172 @@ class SerialConnection(object):
             self.sm.get_screen('serialScreen').error_description = self.l.get_str(serial_error)
             self.sm.current = 'serialScreen'
 
+
+    def is_port_SmartBench(self, available_port):
+
+        try: 
+            log("Try to connect to: " + available_port)
+            # set up connection
+            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+
+            # reopen port, just in case its been in use somewhere else
+            self.s.close()
+            self.s.open()
+            # serial object needs time to make the connection before we can do anything else
+            time.sleep(1)
+
+            try:
+                # flush input and soft-reset: this will trigger the GRBL welcome message
+                self.s.flushInput()
+                self.s.write("\x18")
+                # give it a second to reply
+                time.sleep(1)
+                first_bytes = self.s.inWaiting()
+                log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
+
+                if first_bytes:
+
+                    # Read in first input and log it
+                    def strip_and_log(input_string):
+                        new_string = input_string.strip()
+                        log(new_string)
+                        return new_string
+
+                    stripped_input = map(strip_and_log, self.s.readlines())
+
+                    # Is this device a SmartBench? 
+                    if any('SmartBench' in ele for ele in stripped_input):
+                        # Found SmartBench! 
+                        SmartBench_port = available_port
+                        return SmartBench_port
+
+                    else:
+                        self.s.close()
+                else:
+                    self.s.close()
+
+            except:
+                log("Could not communicate with that port at all")
+
+        except: 
+            log("Wow definitely not that port")
+
+        return ''
+
+    def quick_connect(self, available_port):
+        try: 
+            log("Try to connect to: " + available_port)
+            # set up connection
+            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+            self.s.flushInput()
+            self.s.write("\x18")
+            return available_port
+        
+        except:
+            log("Could not connect to given port.")
+            return ''
+
+
     def establish_connection(self, win_port):
 
         log('Start to establish connection...')
+        SmartBench_port = ''
+
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
+        # No idea if this works yet - needs testing on a windows computer!
         if sys.platform == "win32":
-            try:
-                self.s = serial.Serial(win_port, BAUD_RATE, timeout = 6, writeTimeout = 20)
-                self.suppress_error_screens = True
-            except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+            self.suppress_error_screens = True
+
+            # try user-given Comport first
+            SmartBench_port = self.quick_connect(win_port)
+
+            # If given port doesn't work, try others:
+            if not SmartBench_port:
+
+                port_list = [port.device for port in serial.tools.list_ports.comports() if 'n/a' not in port.description]
+
+                print("Windows port list: ") # for debugging
+                print(str(port_list))
+
+                for comport in port_list:
+
+                    print("Windows port to try: ")
+                    print comport
+
+                    SmartBench_port = self.is_port_SmartBench(comport)
+                    if SmartBench_port: break
+                    
+                if not SmartBench_port: 
+                    log("No arduino connected")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
-            try:
-                filesForDevice = listdir('/dev/') # put all device files into list[]
-                for line in filesForDevice: # run through all files
-                    if (line.startswith('tty.usbmodem')): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-            except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+
+            filesForDevice = listdir('/dev/') # put all device files into list[]
+            for line in filesForDevice:
+                if line.startswith('tty.usbmodem'): # look for... 
+
+                    print("Mac port to try: ") # for debugging
+                    print line
+
+                    SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
+                    if SmartBench_port: break
+
+            if not SmartBench_port: 
+                log("No arduino connected")
 
         else:
             try:
+                # list of portst that we may want to use, in order of preference
+                default_serial_port = 'ttyS'
+                ACM_port = 'ttyACM'
+                USB_port = 'ttyUSB'
+                AMA_port = 'ttyAMA'
+
+                port_list = [default_serial_port, ACM_port, USB_port, AMA_port]
+
                 filesForDevice = listdir('/dev/') # put all device files into list[]
-                for line in filesForDevice: # run through all files
 
-                    # FLAG: This if statement is only relevant in linux environment. 
-                    # EITHER: USB Comms hardware
-                    # if (line[:6] == 'ttyUSB' or line[:6] == 'ttyACM'): # look for prefix of known success (covers both Mega and Uno)
-                    # OR: UART Comms hardware
-                    if (line[:4] == 'ttyS' or line[:6] == 'ttyACM'): # look for...   
-                        # When platform is updated, this needs to be moved across to the AMA0 port :)
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                # this comes out in order of preference too :)
+                list_of_available_ports = [port for potential_port in port_list for port in filesForDevice if potential_port in port]
 
-                    # elif (line[:6] == 'ttyAMA'): # in the case that in /boot/config.txt, dtoverlay=pi3-disable-bt
-                    
-                    #     devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                    #     self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
-                    #     return True
-                        
-                    elif (line[:12] == 'tty.usbmodem'): # look for...   
-                        devicePort = line # take whole line (includes suffix address e.g. ttyACM0
-                        self.s = serial.Serial('/dev/' + str(devicePort), BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                # set up serial connection with first (most preferred) available port
+                for available_port in list_of_available_ports:
+                    SmartBench_port = self.is_port_SmartBench('/dev/' + str(available_port))
+                    if SmartBench_port: break
+
+                # If all else fails, try to connect to ttyS or ttyAMA port anyway
+                if SmartBench_port == '':
+
+                    first_port = list_of_available_ports[0]
+                    last_port = list_of_available_ports[-1]
+                    try: 
+                        if default_serial_port in first_port:
+                            first_list_index = 1
+                            self.s = serial.Serial('/dev/' + first_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                            SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + first_port
+                    except: 
+                        if AMA_port in last_port:
+                            last_list_index = -1
+                            self.s = serial.Serial('/dev/' + last_port, BAUD_RATE, timeout = 6, writeTimeout = 20) # assign
+                            SmartBench_port = ": could not identify if any port was SmartBench, so attempting " + last_port
+
+                    if SmartBench_port == '':
+                        Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
 
             except:
-                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 2) # necessary bc otherwise screens not initialised yet      
+                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
+                Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
 
-        log("Serial connection status: " + str(self.is_connected()))
+        log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
+        
+        try: 
+            if self.is_connected():
+                log('Initialising grbl...')
+                self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
 
-        if self.is_connected():
-            log('Initialising grbl...')
-            self.write_direct("\r\n\r\n", realtime = False, show_in_sys = False, show_in_console = False)    # Wakes grbl
+        except:
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5) # necessary bc otherwise screens not initialised yet      
 
     # is serial port connected?
     def is_connected(self):
@@ -151,9 +264,7 @@ class SerialConnection(object):
         t.start()
         
         # Clear any hard switch presses that may have happened during boot
-        self.m.bootup_sequence()  
-
-
+        self.m.bootup_sequence() 
 
 # SCANNER: listens for responses from Grbl
 
@@ -206,8 +317,7 @@ class SerialConnection(object):
                 # Read line in from serial buffer
                 try:
                     rec_temp = self.s.readline().strip() #Block the executing thread indefinitely until a line arrives
-                    self.grbl_out = rec_temp;
-                    # print self.grbl_out
+
                 except Exception as e:
                     log('serial.readline exception:\n' + str(e))
                     rec_temp = ''
@@ -683,7 +793,13 @@ class SerialConnection(object):
                     if 'G' in pins_info: self.dust_shoe_cover = True
                     else: self.dust_shoe_cover = False
 
-                    
+                    if 'r' in pins_info and not self.power_loss_detected:
+                            # trigger power loss procedure!!
+                            self.m._grbl_door()
+                            self.m.set_pause(True)
+                            log("Power loss or DC power supply")
+                            self.power_loss_detected = True
+                            Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
                 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
                     if part.startswith("Door:3"):
@@ -841,10 +957,17 @@ class SerialConnection(object):
                 
             elif stripped_message.startswith('ASM CNC'):
                 fw_hw_versions = stripped_message.split(';')
-                self.fw_version = (fw_hw_versions[1]).split(':')[1]
-                self.hw_version = (fw_hw_versions[2]).split(':')[1]
-                log('FW version: ' + str(self.fw_version))
-                log('HW version: ' + str(self.hw_version))
+                try: 
+                    self.fw_version = (fw_hw_versions[1]).split(':')[1]
+                    log('FW version: ' + str(self.fw_version))
+                except: 
+                    log("Could not retrieve FW version")
+
+                try: 
+                    self.hw_version = (fw_hw_versions[2]).split(':')[1]
+                    log('HW version: ' + str(self.hw_version))
+                except: 
+                    log("Could not retrieve HW version")
 
 
     def check_for_sustained_max_overload(self, dt):
@@ -907,7 +1030,10 @@ class SerialConnection(object):
 
     def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
 
-#         print "Write in console = ", show_in_console
+        # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
+        if not serialCommand and not isinstance(serialCommand, str):
+            serialCommand = str(serialCommand)
+
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -940,17 +1066,16 @@ class SerialConnection(object):
 
                 # SmartBench maintenance monitoring 
 #                 self.maintenance_value_logging(serialCommand)
-                
 
             except:
-#                  SerialException as serialError:
+             # SerialException as serialError:
                 print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
                 self.get_serial_screen('Could not write last command to serial buffer.')
-    #                 log('Serial Error: ' + str(serialError))
-        
-        else: 
+                # log('Serial Error: ' + str(serialError))
 
-            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")") 
+        else:
+            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")")
+            self.get_serial_screen('Could not write last command to serial buffer.')
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):

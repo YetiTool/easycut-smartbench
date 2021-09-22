@@ -890,7 +890,7 @@ class RouterMachine(object):
 
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.6) 
 
     def resume_from_a_soft_door(self):
         self._grbl_resume()
@@ -1098,7 +1098,6 @@ class RouterMachine(object):
                 self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
             popup_info.PopupError(self.sm, self.l, error_message)
-
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
