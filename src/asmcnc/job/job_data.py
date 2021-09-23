@@ -109,16 +109,19 @@ class JobData(object):
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
-        if successful:
-            self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+        if "PartsCompletedSoFar" in self.metadata_dict:
 
-        elif extra_parts_completed:
-            self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
+            if successful:
+                self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+
+            elif extra_parts_completed:
+                self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
 
 
     def post_job_data_update_post_send(self):
 
-        self.metadata_dict["ProductionNotes"] = ""
+        if "ProductionNotes" in self.metadata_dict:
+            self.metadata_dict["ProductionNotes"] = ""
 
 
 
