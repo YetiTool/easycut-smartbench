@@ -99,24 +99,31 @@ start_screen = 'welcome'
 #         os.system('sudo reboot')
         
 def check_and_update_config():
-    
-    def ver0_configuration():
-        if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
-            os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
-            os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
-            os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')   
-    
-    if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'):
-        ver0_configuration()
-        os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-        # check_and_update_gpu_mem() # moved to ansible
 
-        check_ansible_status()
+    if sys.platform != 'win32' and sys.platform != 'darwin':
+    
+        if check_config_flag():
+            ver0_configuration()
+            check_ansible_status()
+            check_and_launch_update_screen()
+            update_check_config_flag()
 
-        # if software update has happened, launch the power cycle screen instead
-        check_and_launch_update_screen()        
+def check_config_flag():
+    
+    if (os.popen('grep "check_config=True" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('check_config=True'): 
+        return True
+    else:
+        return False
+
+def ver0_configuration():
+
+    if (os.popen('grep "version=0" /home/pi/easycut-smartbench/src/config.txt').read()).startswith('version=0'):
+        os.system('cd /home/pi/easycut-smartbench/ && git update-index --skip-worktree /home/pi/easycut-smartbench/src/config.txt')
+        os.system('sudo sed -i "s/config_skipped_by_git=False/config_skipped_by_git=True/" /home/pi/easycut-smartbench/src/config.txt') 
+        os.system('sudo sed -i "s/version=0/version=' + initial_version + '/" /home/pi/easycut-smartbench/src/config.txt')
 
 def check_ansible_status():
+
     ansible_from_easycut = (os.popen('grep "ansible_from_easycut=True" /home/pi/easycut-smartbench/src/config.txt').read())
     # if this comes out empty, run ansible and reboot
     if not ansible_from_easycut:
@@ -124,6 +131,7 @@ def check_ansible_status():
         os.system("sudo systemctl restart ansible.service && sudo reboot")
 
 def check_and_launch_update_screen():
+
     # Check whether machine needs to be power cycled (currently only after a software update)
     pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
     if pc_alert.startswith('power_cycle_alert=True'):
@@ -131,12 +139,13 @@ def check_and_launch_update_screen():
         global start_screen
         start_screen = 'release_notes'
 
+def update_check_config_flag():
 
+    os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
 
-if sys.platform != 'win32' and sys.platform != 'darwin':
     
-    ## Easycut config
-    check_and_update_config()
+## Easycut config
+check_and_update_config()
 
 def log(message):
     timestamp = datetime.now()
