@@ -11,6 +11,7 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
+    supported_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)"]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -100,7 +101,17 @@ class Localization(object):
         self.load_from_dictionary()
         self.save_language_name()
 
-    supported_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)"]
+    
+    ## LOAD SUPPORTED LANGUAGES
+    # def load_supported_languages(self):
+    #     try: 
+    #         with open(self.complete_foreign_dictionary_path, "r") as csv_file:
+    #             self.supported_languages = (csv_file.readline()).strip().split('\t')
+    #         log("supported_languages: ")
+    #         print(self.supported_languages)
+
+    #     except:
+    #         log("Could not load list of supported_languages from dictionary")
 
 
     ## FAST DICTIONARY
