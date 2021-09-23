@@ -107,3 +107,18 @@ class JobData(object):
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
+    def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
+
+        if successful:
+            self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+
+        elif extra_parts_completed:
+            self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
+
+
+    def post_job_data_update_post_send(self):
+
+        self.metadata_dict["ProductionNotes"] = ""
+
+
+

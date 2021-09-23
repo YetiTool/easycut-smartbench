@@ -158,6 +158,9 @@ class SQLRabbit:
             self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
     def send_job_end(self, job_name, successful):
+
+        self.jd.post_job_data_update_pre_send(successful)
+
         data = [
             {
                 "payload_type": "job_end",
@@ -177,6 +180,9 @@ class SQLRabbit:
         except Exception as e:
             log("Event send exception: " + str(e))
         log(str(data))
+
+        self.jd.post_job_data_update_post_send()
+
 
     def send_job_start(self, job_name, metadata_dict):
 
