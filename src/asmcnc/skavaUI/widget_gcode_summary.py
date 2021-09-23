@@ -51,6 +51,7 @@ class GCodeSummary(Widget):
         summary_list = []
         metadata_list = self.jd.metadata_dict.items()
         if len(metadata_list) > 0:
+            summary_list.append("[b]SmartTransfer data[/b]")
             [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
             summary_list = [x for x in summary_list if not "ProductionNotes" in x]
             summary_list.append('')
