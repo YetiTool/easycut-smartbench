@@ -356,8 +356,8 @@ class JobIncompleteScreen(Screen):
         # Get these strings properly translated
         self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
-        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/self.jd.metadata_dict.get('PartsPerJob', 1))
+        current_step = str(int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
 
         self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
