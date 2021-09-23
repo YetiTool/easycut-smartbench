@@ -360,6 +360,7 @@ class SWUpdateScreen(Screen):
     
     wifi_on = "./asmcnc/apps/SWupdater_app/img/wifi_on.png"
     wifi_off = "./asmcnc/apps/SWupdater_app/img/wifi_off.png"
+    wifi_warning = "./asmcnc/apps/SWupdater_app/img/wifi_warning.png"
     usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
 
@@ -659,7 +660,8 @@ class SWUpdateScreen(Screen):
     def check_wifi_connection(self, dt):
 
         if self.set.wifi_available: self.wifi_image.source = self.wifi_on
-        else: self.wifi_image.source = self.wifi_off
+        elif not self.set.ip_address: self.wifi_image.source = self.wifi_off
+        else: self.wifi_image.source = self.wifi_warning
 
     def check_USB_status(self, dt): 
         if self.usb_stick.is_available():
