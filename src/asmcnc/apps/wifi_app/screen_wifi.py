@@ -561,7 +561,8 @@ class WifiScreen(Screen):
             value.font_size = self.default_font_size - 2
 
     def get_rst_source(self):
-        self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
-
-
+        try:
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
+        except: 
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
