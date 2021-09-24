@@ -153,13 +153,16 @@ class JobData(object):
 
         if "PartsCompletedSoFar" in self.metadata_dict:
 
-            prev_parts_completed_so_far = self.metadata_dict["PartsCompletedSoFar"]
+            prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
+
+            print prev_parts_completed_so_far
+            print self.metadata_dict.get('PartsPerJob', 1)
 
             if successful:
-                self.metadata_dict["PartsCompletedSoFar"] = str(int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.metadata_dict.get('PartsPerJob', 1)))
+                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('PartsPerJob', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["PartsCompletedSoFar"] = str(int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed))
+                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
 
             # # Update parts completed in job file
             grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + quote(self.filename)
