@@ -160,7 +160,6 @@ class SQLRabbit:
     def send_job_end(self, job_name, successful):
 
         self.jd.post_job_data_update_pre_send(successful)
-        self.jd.update_changeables_in_gcode_summary_string()
 
         # Send production notes here as well, from self.jd.production_notes
 

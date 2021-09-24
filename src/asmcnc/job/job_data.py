@@ -277,6 +277,12 @@ class JobData(object):
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
+        self.update_parts_completed()
+        self.update_update_info_in_metadata()
+        self.jd.update_changeables_in_gcode_summary_string()
+
+    def update_parts_completed(self, successful, extra_parts_completed = 0):
+
         if "PartsCompletedSoFar" in self.metadata_dict:
 
             prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
@@ -288,11 +294,27 @@ class JobData(object):
                 self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
 
             # # Update parts completed in job file
-            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + quote(self.filename)
-            line_to_replace = (os.popen(grep_command).read()).strip()
-            new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar")) + ")"
-            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-            os.system(sed_command)
+            self.update_metadata_in_original_file("PartsCompletedSoFar")
+
+
+    def update_update_info_in_metadata(self):
+        if self.metadata_dict:
+            self.metadata_dict['UpdatedBy'] = 'SmartBench'
+            timestamp = datetime.now()
+            self.metadata_dict['LastUpdated'] = timestamp.strftime('%H:%M:%S.%f' )[:12]
+
+            self.update_metadata_in_original_file("UpdatedBy")
+            self.update_metadata_in_original_file("LastUpdated")
+
+
+    def update_metadata_in_original_file(self, key_to_update):
+        
+        # Update in job file
+        grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
+        line_to_replace = (os.popen(grep_command).read()).strip()
+        new_line = '(' + key_to_update + ':' + str(self.metadata_dict.get(key_to_update)) + ")"
+        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
+        os.system(sed_command)
 
 
     def post_job_data_update_post_send(self):
