@@ -3,8 +3,8 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
-import sys, os, re, subprocess
-from itertools import takewhile
+import sys, os, re
+from datetime import datetime
 from pipes import quote
 
 def remove_newlines(gcode_line):
