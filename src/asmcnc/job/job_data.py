@@ -157,6 +157,8 @@ class JobData(object):
 
     def create_gcode_summary_string(self):
 
+        print("Create summary string")
+
         self.smarttransfer_metadata_into_string()
         self.scraped_feeds_speeds_and_boundaries_into_string()
         self.check_info_into_string()
@@ -172,6 +174,10 @@ class JobData(object):
             )
 
     def update_changeables_in_gcode_summary_string(self):
+
+
+        print("Update changeable string")
+
         self.check_info_into_string()
         self.smarttransfer_metadata_into_string()
         
