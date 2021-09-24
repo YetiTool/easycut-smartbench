@@ -134,6 +134,8 @@ class JobData(object):
             metadata = [line.split(':', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
+            print self.metadata_dict
+
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
             self.comments_list = filter(filter_for_comments, gcode_without_metadata)
@@ -153,10 +155,10 @@ class JobData(object):
                 self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
 
             # Update parts completed in job file
-            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + self.job_filename
+            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + self.filename
             line_to_replace = (os.popen(grep_command).read())
-            new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar"))
-            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '"' + self.job_filename
+            new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar")) + ")"
+            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '"' + self.filename
             os.system(sed_command)
 
 
