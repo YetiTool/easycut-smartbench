@@ -279,7 +279,7 @@ class JobData(object):
 
         self.update_parts_completed(successful, extra_parts_completed)
         self.update_update_info_in_metadata()
-        self.jd.update_changeables_in_gcode_summary_string()
+        self.update_changeables_in_gcode_summary_string()
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
 
