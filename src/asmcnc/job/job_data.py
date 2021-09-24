@@ -277,7 +277,7 @@ class JobData(object):
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
-        self.update_parts_completed()
+        self.update_parts_completed(successful, extra_parts_completed)
         self.update_update_info_in_metadata()
         self.jd.update_changeables_in_gcode_summary_string()
 
@@ -308,7 +308,7 @@ class JobData(object):
 
 
     def update_metadata_in_original_file(self, key_to_update):
-        
+
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
