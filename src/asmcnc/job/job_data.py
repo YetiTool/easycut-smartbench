@@ -166,10 +166,11 @@ class JobData(object):
 
             # # Update parts completed in job file
             grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + quote(self.filename)
-            line_to_replace = (os.popen(grep_command).read())
+            line_to_replace = (os.popen(grep_command).read()).strip()
             new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar")) + ")"
-            sed_command = 'sudo sed -i "s/' + quote(line_to_replace) + '/' + quote(new_line) + '/" ' + quote(self.filename)
-            os.system(sed_command)
+            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + self.filename
+            print quote(sed_command)
+            os.system(quote(sed_command))
 
 
 
