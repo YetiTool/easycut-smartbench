@@ -652,5 +652,5 @@ class CheckingScreen(Screen):
         if self.loop_for_job_progress != None: self.loop_for_job_progress.cancel()
 
         # Update summary to show check info
-        self.sm.get_screen('home').gcode_summary_widget.display_summary()
+        self.jd.update_changeables_in_gcode_summary_string()
         self.toggle_boundary_buttons(True)

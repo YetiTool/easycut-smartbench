@@ -147,6 +147,128 @@ class JobData(object):
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
 
+
+    gcode_summary_string = ''
+    smarttransfer_metadata_string = ''
+    feeds_speeds_and_boundaries_string = ''
+    check_info_string = ''    
+    comments_string = ''
+
+
+    def create_gcode_summary_string(self):
+
+        self.smarttransfer_metadata_into_string()
+        self.scraped_feeds_speeds_and_boundaries_into_string()
+        self.check_info_into_string()
+        self.comments_into_string()
+        
+        self.gcode_summary_string = (
+
+            self.smarttransfer_metadata_string + \
+            self.feeds_speeds_and_boundaries_string + \
+            self.check_info_string  + \
+            self.comments_string
+
+            )
+
+    def update_changeables_in_gcode_summary_string(self):
+        self.check_info_into_string()
+        self.smarttransfer_metadata_into_string()
+        
+        self.gcode_summary_string = (
+
+            self.smarttransfer_metadata_string + \
+            self.feeds_speeds_and_boundaries_string + \
+            self.check_info_string  + \
+            self.comments_string
+            
+            )
+
+
+    def smarttransfer_metadata_into_string(self):
+
+        summary_list = []
+        
+        # metadata_list = self.metadata_dict.items()
+        # if len(metadata_list) > 0:
+
+        if self.metadata_dict:
+            metadata_list = self.metadata_dict.items()
+            [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
+            summary_list.sort()
+            summary_list.insert(0, "[b]SmartTransfer data[/b]")
+            summary_list.append('')
+
+        summary_list.append('')
+        self.smarttransfer_metadata_string = '\n'.join(summary_list)
+
+
+    def scraped_feeds_speeds_and_boundaries_into_string(self):
+
+        summary_list = []
+
+        summary_list.append('[b]Feeds and Speeds:[/b]\n')
+        if self.feedrate_max == None and self.feedrate_min == None:
+            summary_list.append('Feed rate range: Undefined')
+        else:
+            summary_list.append('Feed rate range: ' + str(self.feedrate_min) + ' to ' + str(self.feedrate_max))
+
+        if self.spindle_speed_max == None and self.feedrate_min == None:
+            summary_list.append('Spindle speed range: Undefined\n')
+        else:
+            summary_list.append('Spindle speed range: ' + str(self.spindle_speed_min) + ' to ' + str(self.spindle_speed_max) + '\n')
+
+
+        summary_list.append('[b]Working volume:[/b]\n')
+        if self.x_max == -999999 and self.x_min == 999999:
+            summary_list.append('X range: Undefined\n')
+        else:
+            summary_list.append('X min: ' + str(self.x_min))
+            summary_list.append('X max: ' + str(self.x_max) + '\n')
+
+        if self.y_max == -999999 and self.y_min == 999999:
+            summary_list.append('Y range: Undefined\n')
+        else:
+            summary_list.append('Y min: ' + str(self.y_min))
+            summary_list.append('Y max: ' + str(self.y_max) + '\n')
+
+        if self.z_max == -999999 and self.z_min == 999999:
+            summary_list.append('Z range: Undefined\n')
+        else:
+            summary_list.append('Z min: ' + str(self.z_min))
+            summary_list.append('Z max: ' + str(self.z_max) + '\n')
+
+        summary_list.append('')
+        self.feeds_speeds_and_boundaries_string = '\n'.join(summary_list)
+
+
+    def check_info_into_string(self):
+
+        summary_list = []
+
+        summary_list.append('[b]Check info and warnings:[/b]\n')
+        if self.checked == False:
+            summary_list.append('Checked: No\n')
+        else:
+            summary_list.append('Checked: Yes')
+            summary_list.append('Check warning: ' + self.check_warning + '\n')
+
+        summary_list.append('')
+
+        self.check_info_string = '\n'.join(summary_list)
+
+
+    def comments_into_string(self):
+
+        summary_list = []
+
+        summary_list.append('[b]Comments:[/b]\n')
+        summary_list.extend(self.comments_list)
+        summary_list.append('')
+
+        self.comments_string = '\n'.join(summary_list)
+
+
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
         if "PartsCompletedSoFar" in self.metadata_dict:
