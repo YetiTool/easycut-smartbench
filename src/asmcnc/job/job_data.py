@@ -146,17 +146,12 @@ class JobData(object):
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
-        # TEST
-        self.post_job_data_update_pre_send(True)
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
         if "PartsCompletedSoFar" in self.metadata_dict:
 
             prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
-
-            print prev_parts_completed_so_far
-            print self.metadata_dict.get('PartsPerJob', 1)
 
             if successful:
                 self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('PartsPerJob', 1)))
@@ -169,9 +164,7 @@ class JobData(object):
             line_to_replace = (os.popen(grep_command).read()).strip()
             new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar")) + ")"
             sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-            print quote(sed_command)
             os.system(sed_command)
-
 
 
     def post_job_data_update_post_send(self):
