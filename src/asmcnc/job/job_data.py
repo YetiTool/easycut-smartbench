@@ -3,7 +3,7 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
-import sys
+import sys, os
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
@@ -24,58 +24,93 @@ def filter_out_brackets(character):
 
 class JobData(object):
 
+    # Job identifiers
     filename = ''
     job_name = ''
+
+    # GCode containers
     job_gcode = []
     job_gcode_raw = []
     job_gcode_modified = []
     job_gcode_running = []
+    
+    ## METADATA
+    # job info scraped from file
     comments_list = []
     feedrate_max = None
     feedrate_min = None
     spindle_speed_max = None
     spindle_speed_min = None
+    
+    # boundary info
     x_max = None
     x_min = None
     y_max = None
     y_min = None
     z_max = None
     z_min = None
+    
+    # check info
     checked = False
     check_warning = ''
+    
+    # SmartTransfer metadata container
     metadata_dict = {}
-    actual_runtime = ''
-    total_time = ''
+
+    # DURING JOB
     screen_to_return_to_after_job = 'home'
     screen_to_return_to_after_cancel = 'home'
+    
     percent_thru_job = 0
+    
+    ## END OF JOB
+    
+    # Time taken
+    actual_runtime = ''
+    total_time = ''
+    
+    # Production notes
+    production_notes = ''
+
 
     def reset_values(self):
+
         self.filename = ''
         self.job_name = ''
+
         self.job_gcode = []
         self.job_gcode_raw = []
         self.job_gcode_modified = []
         self.job_gcode_running = []
+
         self.comments_list = []
         self.feedrate_max = None
         self.feedrate_min = None
         self.spindle_speed_max = None
         self.spindle_speed_min = None
+
         self.x_max = None
         self.x_min = None
         self.y_max = None
         self.y_min = None
         self.z_max = None
         self.z_min = None
+
         self.checked = False
         self.check_warning = ''
+
         self.metadata_dict = {}
-        self.actual_runtime = ''
-        self.total_time = ''
-        self.percent_thru_job = 0
+
         self.screen_to_return_to_after_job = 'home'
         self.screen_to_return_to_after_cancel = 'home'
+
+        self.percent_thru_job = 0
+
+        self.actual_runtime = ''
+        self.total_time = ''
+
+        self.production_notes = ''
+
 
     def set_job_filename(self, job_path_and_name):
 
@@ -117,11 +152,18 @@ class JobData(object):
             elif extra_parts_completed:
                 self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
 
+            # Update parts completed in job file
+            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + self.job_filename
+            line_to_replace = (os.popen(grep_command).read())
+            new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar"))
+            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '"' + self.job_filename
+            os.system(sed_command)
+
 
     def post_job_data_update_post_send(self):
 
-        if "ProductionNotes" in self.metadata_dict:
-            self.metadata_dict["ProductionNotes"] = ""
+        self.production_notes = ''
+        self.percent_thru_job = 0
 
 
 

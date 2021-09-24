@@ -250,7 +250,7 @@ class JobFeedbackScreen(Screen):
         self.production_notes_label.opacity = 1
 
     def set_production_notes(self):
-        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+        self.jd.production_notes = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
@@ -273,7 +273,6 @@ class JobFeedbackScreen(Screen):
             self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
             )
 
-        self.jd.metadata_dict['ProductionNotes'] = ''
         self.production_notes.text = ''
         self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
