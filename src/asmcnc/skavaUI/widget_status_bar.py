@@ -140,6 +140,10 @@ class StatusBar(Widget):
     
     cheeky_color = StringProperty('#4CAF50FF')
 
+    wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
+    wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
+    wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
+
     def __init__(self, **kwargs):
 
         super(StatusBar, self).__init__(**kwargs)
@@ -170,6 +174,12 @@ class StatusBar(Widget):
 
         self.ip_status_label.text = self.m.sett.ip_address
 
-        if self.m.sett.wifi_available: self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_on.png"
-        else: self.wifi_image.source = "./asmcnc/skavaUI/img/wifi_off.png"
+        if self.m.sett.wifi_available: 
+            self.wifi_image.source = self.wifi_on
+
+        elif not self.m.sett.ip_address: 
+            self.wifi_image.source = self.wifi_off
+
+        else: 
+            self.wifi_image.source = self.wifi_warning
 
