@@ -3,7 +3,9 @@ Created on 2 Aug 2021
 @author: Dennis
 Module used to keep track of information about the current job
 '''
-import sys, os
+import sys, os, re, subprocess
+from itertools import takewhile
+from pipes import quote
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
@@ -144,22 +146,28 @@ class JobData(object):
             # In case no metadata in file
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
+        # TEST
+        self.post_job_data_update_pre_send(True)
+
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
         if "PartsCompletedSoFar" in self.metadata_dict:
 
+            prev_parts_completed_so_far = self.metadata_dict["PartsCompletedSoFar"]
+
             if successful:
-                self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+                self.metadata_dict["PartsCompletedSoFar"] = str(int(self.metadata_dict.get("PartsCompletedSoFar")) + int(self.metadata_dict.get('PartsPerJob', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["PartsCompletedSoFar"] = int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed)
+                self.metadata_dict["PartsCompletedSoFar"] = str(int(self.metadata_dict.get("PartsCompletedSoFar")) + int(extra_parts_completed))
 
-            # Update parts completed in job file
-            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + self.filename
+            # # Update parts completed in job file
+            grep_command = 'grep "' + 'PartsCompletedSoFar' + '" ' + quote(self.filename)
             line_to_replace = (os.popen(grep_command).read())
             new_line = '(PartsCompletedSoFar:' + str(self.metadata_dict.get("PartsCompletedSoFar")) + ")"
-            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '"' + self.filename
+            sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '"' + quote(self.filename)
             os.system(sed_command)
+
 
 
     def post_job_data_update_post_send(self):
