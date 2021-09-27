@@ -1,0 +1,29 @@
+.. _top:
+
+New languages!
+==============
+
+**Available languages include English (GB), Italiano (IT), and Suomalainen (FI).**
+
+Language settings can be changed by going into System Tools > System Info. 
+
+Core apps have been translated: PRO, Wi-Fi, Maintenance, Update, and System Tools. 
+
+More languages coming soon - ask your distributor about this! 
+
+
+UI Improvements
+===============
+
+**CNC Academy screen** 
+
+New screen added to SmartBench activation sequence, so new users can access the CNC Academy straight away. Access the Academy at http://academy.yetitool.com/
+
+**Wi-Fi and Internet**
+
+The Wi-Fi symbol will now show a warning symbol if SmartBench has Wi-Fi on a local network, but can’t connect to the internet.
+
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
