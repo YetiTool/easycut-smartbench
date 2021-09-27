@@ -203,7 +203,7 @@ Builder.load_string("""
                         
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(30)
+                    height: dp(20)
                     width: dp(295)
                     padding: [0,5,0,0]
                     Label: 
@@ -219,7 +219,7 @@ Builder.load_string("""
                     
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(90)
+                    height: dp(100)
                     width: dp(295)
                     padding: [0,5,0,0]
                     Label:
