@@ -17,7 +17,9 @@ UI Improvements
 
 **CNC Academy screen** 
 
-New screen added to SmartBench activation sequence, so new users can access the CNC Academy straight away. Access the Academy at http://academy.yetitool.com/
+New screen added to SmartBench activation sequence, so new users can access the CNC Academy straight away. 
+
+Haven't visited the new CNC Academy yet? Go to http://academy.yetitool.com/ for full video tutorials on CNC and SmartBench.
 
 **Wi-Fi and Internet**
 
