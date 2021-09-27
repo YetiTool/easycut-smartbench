@@ -189,11 +189,11 @@ class PopupBrushInfo(Widget):
         example_med_length.add_widget(label_med_brush_tolerance)
 
         img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False, size=(68,99))
-        label_short_brush_top = Label(text=self.l.get_bold("SHUT-OFF"), text_size=(78, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=78)
+        label_short_brush_top = Label(text=self.l.get_bold("SHUT-OFF"), text_size=(80, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=80)
         label_short_brush_length = Label(text="[b]9.5mm[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
         label_short_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
-        example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=78)
+        example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=80)
         example_short_length.add_widget(label_short_brush_top)
         example_short_length.add_widget(img_short_brush)
         example_short_length.add_widget(label_short_brush_length)
@@ -203,7 +203,7 @@ class PopupBrushInfo(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-        examples_layout = BoxLayout(orientation='horizontal', padding=[0, 0, 30, 0], spacing=20, size_hint_x = None, width=284)
+        examples_layout = BoxLayout(orientation='horizontal', padding=[0, 0, 28, 0], spacing=20, size_hint_x = None, width=284)
         examples_layout.add_widget(example_full_length)
         examples_layout.add_widget(example_med_length)
         examples_layout.add_widget(example_short_length)
