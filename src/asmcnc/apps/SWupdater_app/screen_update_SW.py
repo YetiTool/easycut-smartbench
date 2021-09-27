@@ -203,25 +203,25 @@ Builder.load_string("""
                         
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(30)
+                    height: dp(20)
                     width: dp(295)
-                    padding: [0,5,0,0]
+                    # padding: [0,5,0,0]
                     Label: 
                         id: update_using_wifi_label
                         color: 0,0,0,1
                         font_size: 18
                         markup: True
                         halign: "left"
-                        valign: "top"
+                        valign: "middle"
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos            
                     
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(90)
+                    height: dp(100)
                     width: dp(295)
-                    padding: [0,5,0,0]
+                    # padding: [0,5,0,0]
                     Label:
                         id: update_using_wifi_instructions_label
                         color: 0,0,0,1
@@ -286,7 +286,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(30)
+                    height: dp(20)
                     width: dp(295)
                     Label:
                         id: update_using_usb_label
@@ -301,7 +301,7 @@ Builder.load_string("""
                     
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(90)
+                    height: dp(100)
                     width: dp(295)
                     Label:
                         id: update_using_usb_instructions_label
@@ -309,7 +309,7 @@ Builder.load_string("""
                         font_size: 16
                         markup: True
                         halign: "left"
-                        valign: "middle"
+                        valign: "top"
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
