@@ -201,7 +201,7 @@ class PopupUSBFirstAid(Widget):
                 self.l.get_bold("WARNING: Not following this step could cause files to be deleted from your USB stick.")
                 )
         title_string = self.l.get_str('Warning!')
-        ok_string = self.l.get_bold('Yes')
+        ok_string = self.l.get_bold('Ok')
         cancel_string = self.l.get_bold('Cancel')
 
 
