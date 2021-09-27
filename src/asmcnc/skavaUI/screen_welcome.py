@@ -98,13 +98,13 @@ class WelcomeScreenClass(Screen):
 
     def go_to_next_screen(self, dt):
 
-        self.am.start_warranty_app() # FOR TESTING
+        # self.am.start_warranty_app() # FOR TESTING
 
-        # if self.m.trigger_setup == False: 
-        #     self.sm.current = 'safety'
+        if self.m.trigger_setup == False: 
+            self.sm.current = 'safety'
 
-        # else:
-        #     self.am.start_warranty_app()
+        else:
+            self.am.start_warranty_app()
             
         
     def set_machine_value_driven_user_settings(self, dt):
