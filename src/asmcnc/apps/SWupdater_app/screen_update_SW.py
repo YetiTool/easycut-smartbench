@@ -205,14 +205,14 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(20)
                     width: dp(295)
-                    padding: [0,5,0,0]
+                    # padding: [0,5,0,0]
                     Label: 
                         id: update_using_wifi_label
                         color: 0,0,0,1
                         font_size: 18
                         markup: True
                         halign: "left"
-                        valign: "top"
+                        valign: "middle"
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos            
@@ -221,7 +221,7 @@ Builder.load_string("""
                     size_hint: (None, None)
                     height: dp(100)
                     width: dp(295)
-                    padding: [0,5,0,0]
+                    # padding: [0,5,0,0]
                     Label:
                         id: update_using_wifi_instructions_label
                         color: 0,0,0,1
@@ -309,7 +309,7 @@ Builder.load_string("""
                         font_size: 16
                         markup: True
                         halign: "left"
-                        valign: "middle"
+                        valign: "top"
                         text_size: self.size
                         size: self.parent.size
                         pos: self.parent.pos
