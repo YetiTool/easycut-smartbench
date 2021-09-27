@@ -98,6 +98,8 @@ class WelcomeScreenClass(Screen):
 
     def go_to_next_screen(self, dt):
 
+        # self.am.start_warranty_app() # FOR TESTING
+
         if self.m.trigger_setup == False: 
             self.sm.current = 'safety'
 
