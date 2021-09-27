@@ -286,7 +286,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(30)
+                    height: dp(20)
                     width: dp(295)
                     Label:
                         id: update_using_usb_label
@@ -301,7 +301,7 @@ Builder.load_string("""
                     
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(90)
+                    height: dp(100)
                     width: dp(295)
                     Label:
                         id: update_using_usb_instructions_label
