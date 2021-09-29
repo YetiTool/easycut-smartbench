@@ -172,6 +172,7 @@ class SQLRabbit:
                 "job_data": {
                     "job_name": job_name,
                     "successful": successful
+                    "production_notes": self.jd.production_notes
                 },
                 "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
