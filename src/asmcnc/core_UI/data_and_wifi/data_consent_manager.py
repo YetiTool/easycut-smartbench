@@ -46,8 +46,9 @@ class DataConsentManager(object):
 	def exit_data_consent_app(self):
 		self.update_seen()
 		self.sm.current = self.return_to_screen
-		self.remove_consent_screens()
-		self.remove_entry_screens_if_necessary()
+		if self.back_to_screen != 'build_info':
+			self.remove_consent_screens()
+			self.remove_entry_screens_if_necessary()
 
 	def remove_consent_screens(self):
 		self.destroy_screen('consent_1')
