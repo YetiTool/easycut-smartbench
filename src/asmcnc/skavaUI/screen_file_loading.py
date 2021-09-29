@@ -369,10 +369,13 @@ class LoadingScreen(Screen):
 
                 log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
                 self.jd.job_gcode = self.preloaded_job_gcode
+                # Generated info is displayed in summary
+                self.jd.create_gcode_summary_string()
                 self._get_gcode_preview_and_ranges()
 
         except:
             self.update_screen('Could not load')
+            self.jd.reset_values()
 
 
     def _get_gcode_preview_and_ranges(self):
@@ -437,9 +440,6 @@ class LoadingScreen(Screen):
 
     def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
 
-        # Generated info is displayed in summary
-        self.jd.create_gcode_summary_string()
-
         job_box = job_envelope.BoundingBox()
 
         # Get bounding box
@@ -461,17 +461,6 @@ class LoadingScreen(Screen):
         self.sm.get_screen('home').non_modal_gcode_list = non_modal_gcode_list
         self.update_screen('Loaded')
         log('> END LOAD')
-        
-    def _could_not_load_file(self):
-
-        self.progress_value = 'Could not load job'
-        self.warning_title_label.text = 'ERROR:'
-        self.warning_body_label.text = 'It was not possible to load your job.\nPlease double check the file for errors before attempting to re-load it.'
-        self.jd.reset_values()
-        self.check_button_label.text = 'Check job'
-        self.quit_button_label.text = 'Quit to home'
-        self.check_button.disabled = True
-        self.home_button.disabled = False
 
 
 
