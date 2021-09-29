@@ -153,7 +153,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_successful()
+                        on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -170,7 +170,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_unsuccessful()
+                        on_press: root.confirm_job_successful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
