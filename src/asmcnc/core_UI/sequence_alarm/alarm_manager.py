@@ -42,6 +42,8 @@ class AlarmSequenceManager(object):
 	status_cache = ''
 
 	report_setup_event = None
+
+	db = None
 	
 	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
@@ -140,11 +142,6 @@ class AlarmSequenceManager(object):
 
 	def handle_alarm_state(self):
 		Clock.schedule_once(lambda dt: self.m.reset_from_alarm(), 0.8)
-
-		if self.m.s.is_job_streaming:
-			# Job cancelled due to alarm state, send event
-			self.sm.get_screen('door').db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name)
-
 		self.m.set_state('Alarm')
 		self.m.led_restore()
 		Clock.schedule_once(lambda dt: self.update_screens(), 1)

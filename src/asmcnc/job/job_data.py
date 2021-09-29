@@ -74,6 +74,12 @@ class JobData(object):
     # Production notes
     production_notes = ''
 
+    # Metadata formatting
+    gcode_summary_string = ''
+    smarttransfer_metadata_string = ''
+    feeds_speeds_and_boundaries_string = ''
+    check_info_string = ''    
+    comments_string = ''
 
     def reset_values(self):
 
@@ -113,6 +119,11 @@ class JobData(object):
 
         self.production_notes = ''
 
+        self.gcode_summary_string = ''
+        self.smarttransfer_metadata_string = ''
+        self.feeds_speeds_and_boundaries_string = ''
+        self.check_info_string = ''    
+        self.comments_string = ''
 
     def set_job_filename(self, job_path_and_name):
 
@@ -147,12 +158,6 @@ class JobData(object):
             self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
 
 
-
-    gcode_summary_string = ''
-    smarttransfer_metadata_string = ''
-    feeds_speeds_and_boundaries_string = ''
-    check_info_string = ''    
-    comments_string = ''
 
 
     def create_gcode_summary_string(self):
