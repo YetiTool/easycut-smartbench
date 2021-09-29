@@ -106,6 +106,7 @@ class WarrantyScreen5(Screen):
 		self.update_strings()
 
 	def next_screen(self):
+		self.next_button.text = self.l.get_str("Loading...")
 		self.wm.open_data_consent_app()
 
 	def go_back(self):
