@@ -171,8 +171,6 @@ class SkavaUI(App):
             release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, localization = l, version = initial_version)
             # restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
 
-        # else: 
-
         # Initialise settings object
         sett = settings_manager.Settings(sm)
 
@@ -187,6 +185,9 @@ class SkavaUI(App):
 
         # Create database object to talk to
         db = archie_db.SQLRabbit(sm, m)
+
+        # Alarm screens are set up in serial comms, need access to the db object
+        m.s.alarm.db = db
 
         # Server connection object
         sc = server_connection.ServerConnection()

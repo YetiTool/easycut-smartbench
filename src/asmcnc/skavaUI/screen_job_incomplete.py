@@ -283,6 +283,7 @@ class JobIncompleteScreen(Screen):
     def press_ok(self):
         self.set_production_notes()
         self.set_event_notes()
+        self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name)
         self.db.send_job_end(self.jd.job_name, False)
         self.quit_to_return_screen()
 
