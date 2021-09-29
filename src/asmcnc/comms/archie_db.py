@@ -211,7 +211,7 @@ class SQLRabbit:
             self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
         except Exception as e:
             log("Event send exception: " + str(e))
-        log(str(data))
+        # log(str(data))
 
     # 0 - info
     # 1 - warning
@@ -236,7 +236,7 @@ class SQLRabbit:
             self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
         except Exception as e:
             log("Event send exception: " + str(e))
-        log(str(data))
+        # log(str(data))
 
     # send payload containing all data
     def send_full_payload(self):
@@ -244,7 +244,7 @@ class SQLRabbit:
             self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
         except Exception as e:
             log("Data send exception: " + str(e))
-        log(self.get_data())
+        # log(self.get_data())
 
     # send alive 'ping' to server
     def send_alive(self):
