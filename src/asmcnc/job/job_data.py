@@ -290,6 +290,9 @@ class JobData(object):
             print("parts so far: " + str(prev_parts_completed_so_far))
             print("Parts per job: " + str(self.metadata_dict.get('PartsPerJob')))
 
+            print("successful: " + successful + " " + type(successful))
+            print("extra_parts_completed: " + extra_parts_completed)
+
             if successful:
 
                 print("successful")
