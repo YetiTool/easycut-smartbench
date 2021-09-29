@@ -40,7 +40,16 @@ Builder.load_string("""
 		BoxLayout:
 			size_hint_y: 0.92
 			orientation: 'vertical'
-				
+
+			Button:
+			    size_hint_x: None
+			    width: dp(52)
+			    background_color: hex('##e5e5e5')
+			    background_normal: ''
+			    center: self.parent.center
+			    pos: self.parent.pos
+			    on_press: root.go_to_factory_settings()
+
 			Label:
 				id: title_label
 				font_size: '30sp'
@@ -51,6 +60,10 @@ Builder.load_string("""
 				markup: 'true'
 				bold: True
 				color: hex('#333333ff')
+
+			BoxLayout: 
+			    size_hint_x: None
+			    width: dp(52)
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -123,17 +136,6 @@ Builder.load_string("""
 				size_hint: (None,None)
 				width: dp(800)
 				height: dp(62)
-				spacing: dp(676)
-
-				Button:
-				    size_hint: (None,None)
-				    height: dp(52)
-				    width: dp(52)
-				    background_color: hex('##e5e5e5')
-				    background_normal: ''
-				    center: self.parent.center
-				    pos: self.parent.pos
-				    on_press: root.go_to_factory_settings()
 
                 Button:
                     size_hint: (None,None)

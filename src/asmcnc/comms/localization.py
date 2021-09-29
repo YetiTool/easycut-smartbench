@@ -11,7 +11,8 @@ def log(message):
 class Localization(object):
 
     dictionary = {}
-    supported_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)", "Dansk (DK)"]
+    supported_languages = ["English (GB)", "Italiano (IT)", "Suomalainen (FI)"]
+    # supported_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Nederlands (NL)", "Polskie (PL)", "Dansk (DK)"]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -150,4 +151,3 @@ class Localization(object):
     #     except:
     #         log("Could not save fast dictionary")
 
-    # List of language headers
