@@ -348,6 +348,7 @@ class JobIncompleteScreen(Screen):
         self.event_details_label.opacity = 1
 
     def set_event_notes(self):
+        self.jd.production_notes = self.event_details_label.text
         self.db.send_event(0, 'Job cancelled', 'User comment: ' + self.event_details_label.text)
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
@@ -356,8 +357,8 @@ class JobIncompleteScreen(Screen):
         # Get these strings properly translated
         self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1))))
-        total_steps = str(int(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1))))
+        current_step = str(int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
 
         self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
@@ -370,7 +371,6 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Percentage streamed:") + " " + str(self.jd.percent_thru_job) + " %"
             )
 
-        self.jd.metadata_dict['ProductionNotes'] = ''
         self.production_notes.text = ''
         self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 

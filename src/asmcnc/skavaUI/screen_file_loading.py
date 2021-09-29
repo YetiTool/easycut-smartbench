@@ -438,7 +438,7 @@ class LoadingScreen(Screen):
     def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
 
         # Generated info is displayed in summary
-        self.sm.get_screen('home').gcode_summary_widget.display_summary()
+        self.jd.create_gcode_summary_string()
 
         job_box = job_envelope.BoundingBox()
 

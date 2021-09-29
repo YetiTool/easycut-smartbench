@@ -153,7 +153,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_successful()
+                        on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -170,7 +170,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_unsuccessful()
+                        on_press: root.confirm_job_successful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -222,7 +222,6 @@ class JobFeedbackScreen(Screen):
 
     def quit_to_return_screen(self):
         self.sm.current = self.return_to_screen
-        
 
     # PRODUCTION NOTES
     def set_focus_on_production_notes(self, dt):
@@ -251,7 +250,7 @@ class JobFeedbackScreen(Screen):
         self.production_notes_label.opacity = 1
 
     def set_production_notes(self):
-        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+        self.jd.production_notes = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
@@ -260,8 +259,9 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
-        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+        current_step = str(parts_completed_if_job_successful/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
 
         self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
@@ -271,10 +271,9 @@ class JobFeedbackScreen(Screen):
             "\n" + \
             self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
             "\n" + \
-            self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
+            self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('TotalPartsRequired', 1))
             )
 
-        self.jd.metadata_dict['ProductionNotes'] = ''
         self.production_notes.text = ''
         self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
 
