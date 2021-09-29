@@ -151,7 +151,7 @@ class DatabaseStorage(object):
 
                         "job_time": self.sm.get_screen('go').time_taken_seconds,
                         "job_percent": self.jd.percent_thru_job,
-                        "job_name": self.sm.get_screen('go').job_name_only,
+                        "job_name": self.jd.job_name,
 
                         "z_lube_%_thru": z_lube_percent_used,
                         "z_lube_hrs_before_next": z_lube_hrs_left,
