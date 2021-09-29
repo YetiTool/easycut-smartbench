@@ -287,7 +287,7 @@ class JobData(object):
 
             prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
 
-            print("parts so far: " + prev_parts_completed_so_far)
+            print("parts so far: " + str(prev_parts_completed_so_far))
             print("Parts per job: " + str(self.metadata_dict.get('PartsPerJob')))
 
             if successful:
@@ -299,7 +299,7 @@ class JobData(object):
                 print("Defaulting to no parts completed")
                 self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
 
-            print("New dict value: " + self.metadata_dict["PartsCompletedSoFar"])
+            print("New dict value: " + str(self.metadata_dict["PartsCompletedSoFar"]))
 
             # # Update parts completed in job file
             self.update_metadata_in_original_file("PartsCompletedSoFar")
