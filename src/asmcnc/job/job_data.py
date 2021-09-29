@@ -301,7 +301,7 @@ class JobData(object):
         if self.metadata_dict:
             self.metadata_dict['UpdatedBy'] = 'SmartBench'
             timestamp = datetime.now()
-            self.metadata_dict['LastUpdated'] = timestamp.strftime('%H:%M:%S.%f' )[:12]
+            self.metadata_dict['LastUpdated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
             self.update_metadata_in_original_file("UpdatedBy")
             self.update_metadata_in_original_file("LastUpdated")
