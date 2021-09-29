@@ -287,22 +287,11 @@ class JobData(object):
 
             prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
 
-            print("parts so far: " + str(prev_parts_completed_so_far))
-            print("Parts per job: " + str(self.metadata_dict.get('PartsPerJob')))
-
-            print("successful: " + str(successful) + " " + str(type(successful)))
-            print("extra_parts_completed: " + str(extra_parts_completed))
-
             if successful:
-
-                print("successful")
                 self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('PartsPerJob', 1)))
 
             elif extra_parts_completed:
-                print("Defaulting to no parts completed")
                 self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
-
-            print("New dict value: " + str(self.metadata_dict["PartsCompletedSoFar"]))
 
             # # Update parts completed in job file
             self.update_metadata_in_original_file("PartsCompletedSoFar")
@@ -323,17 +312,8 @@ class JobData(object):
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
-
-        print("Line to replace: " + line_to_replace)
-
         new_line = '(' + key_to_update + ':' + str(self.metadata_dict.get(key_to_update)) + ")"
-
-        print("New line: " + new_line)
-
         sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-
-        print("sed command: " + sed_command)
-
         os.system(sed_command)
 
 
