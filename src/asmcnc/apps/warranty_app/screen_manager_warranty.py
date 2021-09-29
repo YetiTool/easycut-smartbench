@@ -27,6 +27,8 @@ class ScreenManagerWarranty(object):
         self.m = machine
         self.l = localization
 
+        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
+
     def open_language_select_screen(self):
         if not self.sm.has_screen('language_select'):
             language_select_screen = screen_language_select.LanguageSelectScreen(name = 'language_select', warranty_manager = self, machine = self.m, localization = self.l)
@@ -84,8 +86,6 @@ class ScreenManagerWarranty(object):
         self.sm.current = 'warranty_1'
 
     def open_data_consent_app(self):
-        if not self.data_consent_app:
-            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
         self.data_consent_app.open_data_consent('warranty_5', 'cnc_academy') # will probably make this CNC Academy screen instead
 
     def destroy_screen(self, screen_name):
