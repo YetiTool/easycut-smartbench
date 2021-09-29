@@ -266,13 +266,14 @@ class JobData(object):
 
     def comments_into_string(self):
 
-        summary_list = []
+        if self.comments_list:
+            summary_list = []
 
-        summary_list.append('[b]Comments:[/b]\n')
-        summary_list.extend(self.comments_list)
-        summary_list.append('')
+            summary_list.append('[b]Comments:[/b]\n')
+            summary_list.extend(self.comments_list)
+            summary_list.append('')
 
-        self.comments_string = '\n'.join(summary_list)
+            self.comments_string = '\n'.join(summary_list)
 
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
