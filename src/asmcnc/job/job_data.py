@@ -203,6 +203,7 @@ class JobData(object):
             [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
             summary_list.sort()
             summary_list.insert(0, "[b]SmartTransfer data[/b]")
+            summary_list.insert(1, "")
             summary_list.append('')
 
         summary_list.append('')
@@ -274,6 +275,9 @@ class JobData(object):
             summary_list.append('')
 
             self.comments_string = '\n'.join(summary_list)
+
+        else:
+            self.comments_string = ''
 
 
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
