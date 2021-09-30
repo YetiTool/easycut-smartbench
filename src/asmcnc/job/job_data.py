@@ -4,7 +4,7 @@ Created on 2 Aug 2021
 Module used to keep track of information about the current job
 '''
 import sys, os, re
-from datetime import datetime
+from datetime import datetime, timedelta
 from pipes import quote
 
 def remove_newlines(gcode_line):
@@ -28,7 +28,7 @@ class JobData(object):
 
     # Job identifiers
     filename = ''
-    job_name = ''
+    job_name = 'Job name'
 
     # GCode containers
     job_gcode = []

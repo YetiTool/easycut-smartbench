@@ -583,8 +583,8 @@ class SerialConnection(object):
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10 # to account for cooldown time
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
 
-        self.jd.total_time = str(timedelta(seconds=time_taken_seconds))
-        self.jd.actual_runtime = str(timedelta(seconds=only_running_time_seconds))
+        self.jd.total_time = str(timedelta(seconds=time_taken_seconds)).split(".")[0]
+        self.jd.actual_runtime = str(timedelta(seconds=only_running_time_seconds)).split(".")[0]
 
         log(" Time elapsed: " + self.jd.total_time)
         log(" Acutal running time: " + self.jd.actual_runtime)

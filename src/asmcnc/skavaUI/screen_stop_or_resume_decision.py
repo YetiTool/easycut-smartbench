@@ -183,7 +183,7 @@ class StopOrResumeDecisionScreen(Screen):
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
         
-        self.sm.get_screen('job_incomplete').prep_this_screen('user', event_number=False)
+        self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
         self.sm.current = 'job_incomplete'
 
     def resume_job(self):

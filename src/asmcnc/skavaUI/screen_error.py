@@ -182,9 +182,6 @@ class ErrorScreenClass(Screen):
 
         self.m.stop_from_gcode_error()
 
-        # Job cancelled due to error, send event
-        self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name)
-
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
 
     
@@ -196,7 +193,7 @@ class ErrorScreenClass(Screen):
         self.m.resume_from_gcode_error()
 
         if self.return_to_screen == 'job_incomplete':
-            self.sm.get_screen('job_incomplete').prep_this_screen('error', event_number=self.message)
+            self.sm.get_screen('job_incomplete').prep_this_screen('Error', event_number=self.message)
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
 
