@@ -258,9 +258,7 @@ class JobFeedbackScreen(Screen):
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days("2 days, " + self.jd.pause_duration) + \
-            "\n" + \
-            self.l.get_str("Total time:") + " " + self.l.get_localized_days(self.jd.total_time)
+            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days("1 day, " + self.jd.pause_duration)
             )
 
         self.parts_completed_label.text = (
