@@ -243,7 +243,7 @@ Builder.load_string("""
 class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
-    event_type = 'unsuccessful' # alarm, error, or user
+    event_type = 'Error' # alarm, error, or user
     specific_event = '13'
 
     # # # Example metadata
