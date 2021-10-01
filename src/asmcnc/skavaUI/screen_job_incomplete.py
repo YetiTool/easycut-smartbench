@@ -243,24 +243,8 @@ Builder.load_string("""
 class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
-    event_type = '' # alarm, error, or user
+    event_type = '' # alarm, error, cancelled, or unsuccessful
     specific_event = ''
-
-    # # # Example metadata
-    # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
-    #     "Actual runtime: 0:30:43" + "\n"+ \
-    #     "Total time (with pauses): 0:45:41" + "\n"+ \
-    #     "Percentage streamed: 43 %"
-
-
-    # event_deets_test_string = (
-    #     "Error 1: You fucked up your code. " + \
-    #     "\n" + \
-    #     "Check the gcode file before re-running it." + \
-    #     " " + \
-    #     "Recover any parts from this job before rehoming and starting a new job."
-    #     )
-
 
     def __init__(self, **kwargs):
         super(JobIncompleteScreen, self).__init__(**kwargs)
@@ -281,8 +265,6 @@ class JobIncompleteScreen(Screen):
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
-        # # self.sm.get_screen('go').loop_for_job_progress = None
-
  
     def press_ok(self):
         self.set_production_notes()
@@ -306,6 +288,7 @@ class JobIncompleteScreen(Screen):
         elif 'Error' in self.event_type:
             self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name)
 
+        self.db.send_full_payload()
         self.db.send_job_end(self.jd.job_name, False)
 
 
