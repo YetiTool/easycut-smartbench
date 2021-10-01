@@ -589,7 +589,7 @@ class SerialConnection(object):
 
         log("Time elapsed: " + self.jd.total_time)
         log("Time paused: " + self.jd.pause_duration)
-        log("Acutal running time: " + self.jd.actual_runtime)
+        log("Actual running time: " + self.jd.actual_runtime)
 
         ## UPDATE MAINTENANCE TRACKING
 
