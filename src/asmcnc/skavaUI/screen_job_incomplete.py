@@ -304,15 +304,15 @@ class JobIncompleteScreen(Screen):
         else:
             self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
-        total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        current_step = str(int(self.jd.metadata_dict.get('Parts Completed So Far', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('Total Parts Required', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
 
-        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Completed So Far', 1)) + int(self.jd.metadata_dict.get('Parts Per Job', 1))
 
-        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 23:
-            project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:23] + "..."
+        if len(self.jd.metadata_dict.get('Project Name', self.jd.job_name)) > 23:
+            project_name =  self.jd.metadata_dict.get('Project Name', self.jd.job_name)[:23] + "..."
         else:
-            project_name = self.jd.metadata_dict.get('ProjectName', self.jd.job_name)
+            project_name = self.jd.metadata_dict.get('Project Name', self.jd.job_name)
 
         self.metadata_label.text = (
             project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
@@ -322,7 +322,7 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('TotalPartsRequired', 1))
+        self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
 
         self.production_notes.text = self.jd.production_notes
         self.production_notes_label.text = self.l.get_str("Production Notes")

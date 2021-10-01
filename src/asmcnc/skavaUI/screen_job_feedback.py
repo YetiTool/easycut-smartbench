@@ -220,6 +220,7 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_successful(self):
         self.set_production_notes()
+        self.jd.post_job_data_update_pre_send(True)
         self.db.send_full_payload()
         self.db.send_job_end(self.jd.job_name, True)
         self.quit_to_return_screen()
@@ -242,16 +243,16 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
-        current_step = str(parts_completed_if_job_successful/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
-        total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Completed So Far', 0)) + int(self.jd.metadata_dict.get('Parts Per Job', 1))
+        current_step = str(parts_completed_if_job_successful/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('Total Parts Required', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
 
         if current_step > total_steps: total_steps = current_step
 
-        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 23:
-            project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:23] + "..."
+        if len(self.jd.metadata_dict.get('Project Name', self.jd.job_name)) > 23:
+            project_name =  self.jd.metadata_dict.get('Project Name', self.jd.job_name)[:23] + "..."
         else:
-            project_name = self.jd.metadata_dict.get('ProjectName', self.jd.job_name)
+            project_name = self.jd.metadata_dict.get('Project Name', self.jd.job_name)
 
         self.metadata_label.text = (
             project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
@@ -262,7 +263,7 @@ class JobFeedbackScreen(Screen):
             )
 
         self.parts_completed_label.text = (
-            self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('TotalPartsRequired', 1))
+            self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
             )
 
         self.production_notes.text = self.jd.production_notes

@@ -82,6 +82,9 @@ class JobData(object):
     check_info_string = ''    
     comments_string = ''
 
+    def __init__(self, **kwargs):
+        self.l = kwargs['localization']
+
     def reset_values(self):
 
         self.filename = ''
@@ -144,8 +147,8 @@ class JobData(object):
             metadata_end_index = self.job_gcode_raw.index('(End of YetiTool SmartBench MES-Data)')
             metadata = self.job_gcode_raw[metadata_start_index + 1:metadata_end_index]
 
-            metadata = [line.strip('()') for line in metadata]
-            metadata = [line.split(':', 1) for line in metadata]
+            metadata = [line.strip('()') for line in metadata if "N/A" not in line]
+            metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
             print self.metadata_dict
@@ -206,7 +209,8 @@ class JobData(object):
 
         if self.metadata_dict:
             metadata_list = self.metadata_dict.items()
-            [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
+
+            [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
             summary_list.sort()
             summary_list.insert(0, "[b]SmartTransfer data[/b]")
             summary_list.insert(1, "")
@@ -294,28 +298,28 @@ class JobData(object):
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
 
-        if "PartsCompletedSoFar" in self.metadata_dict:
+        if "Parts Completed So Far" in self.metadata_dict:
 
-            prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
+            prev_parts_completed_so_far = int(self.metadata_dict["Parts Completed So Far"])
 
             if successful:
-                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('PartsPerJob', 1)))
+                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Per Job', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
+                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
 
             # # Update parts completed in job file
-            self.update_metadata_in_original_file("PartsCompletedSoFar")
+            self.update_metadata_in_original_file("Parts Completed So Far")
 
 
     def update_update_info_in_metadata(self):
         if self.metadata_dict:
-            self.metadata_dict['UpdatedBy'] = 'SmartBench'
+            self.metadata_dict['Updated By'] = 'SmartBench'
             timestamp = datetime.now()
-            self.metadata_dict['LastUpdated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-            self.update_metadata_in_original_file("UpdatedBy")
-            self.update_metadata_in_original_file("LastUpdated")
+            self.update_metadata_in_original_file("Updated By")
+            self.update_metadata_in_original_file("Last Updated")
 
 
     def update_metadata_in_original_file(self, key_to_update):
@@ -323,7 +327,7 @@ class JobData(object):
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ':' + str(self.metadata_dict.get(key_to_update)) + ")"
+        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ")"
         sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
         os.system(sed_command)
 
