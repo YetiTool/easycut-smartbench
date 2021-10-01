@@ -248,7 +248,7 @@ class JobFeedbackScreen(Screen):
 
         if current_step > total_steps: total_steps = current_step
 
-        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 26:
+        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 23:
             project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:23] + "..."
         else:
             project_name = self.jd.metadata_dict.get('ProjectName', self.jd.job_name)
