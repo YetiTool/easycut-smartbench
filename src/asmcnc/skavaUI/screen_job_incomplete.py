@@ -315,7 +315,7 @@ class JobIncompleteScreen(Screen):
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days("1 days, " + self.jd.pause_duration)
+            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('TotalPartsRequired', 1))

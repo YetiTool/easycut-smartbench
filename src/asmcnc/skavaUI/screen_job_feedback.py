@@ -248,8 +248,8 @@ class JobFeedbackScreen(Screen):
 
         if current_step > total_steps: total_steps = current_step
 
-        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 16:
-            project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:12] + "..."
+        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 26:
+            project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:23] + "..."
         else:
             project_name = self.jd.metadata_dict.get('ProjectName', self.jd.job_name)
 
@@ -258,7 +258,7 @@ class JobFeedbackScreen(Screen):
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days("1 day, " + self.jd.pause_duration)
+            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
         self.parts_completed_label.text = (
