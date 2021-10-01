@@ -344,7 +344,7 @@ class JobIncompleteScreen(Screen):
 
         else:
             self.job_cancelled_label.text = (
-                self.l.get_str("Job cancelled due to event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type) + \
+                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str(self.event_type) + \
                 ": " + self.specific_event)
                 )
 
