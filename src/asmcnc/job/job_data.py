@@ -82,6 +82,9 @@ class JobData(object):
     check_info_string = ''    
     comments_string = ''
 
+    def __init__(self, **kwargs):
+        self.l = kwargs['localization']
+
     def reset_values(self):
 
         self.filename = ''
@@ -206,7 +209,8 @@ class JobData(object):
 
         if self.metadata_dict:
             metadata_list = self.metadata_dict.items()
-            [summary_list.append(': '.join(sublist)) for sublist in metadata_list]
+
+            [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
             summary_list.sort()
             summary_list.insert(0, "[b]SmartTransfer data[/b]")
             summary_list.insert(1, "")
@@ -323,7 +327,7 @@ class JobData(object):
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ':' + str(self.metadata_dict.get(key_to_update)) + ")"
+        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ")"
         sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
         os.system(sed_command)
 
