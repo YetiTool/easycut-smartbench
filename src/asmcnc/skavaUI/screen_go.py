@@ -599,7 +599,7 @@ class GoScreen(Screen):
 
     def _start_running_job(self):
 
-        self.database.send_job_start(self.jd.job_name, self.jd.metadata_dict)
+        self.database.send_job_start(self.jd.filename.split("\\")[-1], self.jd.metadata_dict)
 
         self.m.set_pause(False)
         self.is_job_started_already = True
