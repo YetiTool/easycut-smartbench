@@ -145,7 +145,7 @@ class JobData(object):
             metadata = self.job_gcode_raw[metadata_start_index + 1:metadata_end_index]
 
             metadata = [line.strip('()') for line in metadata]
-            metadata = [line.split(':', 1) for line in metadata]
+            metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
             print self.metadata_dict
@@ -294,28 +294,28 @@ class JobData(object):
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
 
-        if "PartsCompletedSoFar" in self.metadata_dict:
+        if "Parts Completed So Far" in self.metadata_dict:
 
-            prev_parts_completed_so_far = int(self.metadata_dict["PartsCompletedSoFar"])
+            prev_parts_completed_so_far = int(self.metadata_dict["Parts Completed So Far"])
 
             if successful:
-                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('PartsPerJob', 1)))
+                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Per Job', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["PartsCompletedSoFar"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
+                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
 
             # # Update parts completed in job file
-            self.update_metadata_in_original_file("PartsCompletedSoFar")
+            self.update_metadata_in_original_file("Parts Completed So Far")
 
 
     def update_update_info_in_metadata(self):
         if self.metadata_dict:
-            self.metadata_dict['UpdatedBy'] = 'SmartBench'
+            self.metadata_dict['Updated By'] = 'SmartBench'
             timestamp = datetime.now()
-            self.metadata_dict['LastUpdated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-            self.update_metadata_in_original_file("UpdatedBy")
-            self.update_metadata_in_original_file("LastUpdated")
+            self.update_metadata_in_original_file("Updated By")
+            self.update_metadata_in_original_file("Last Updated")
 
 
     def update_metadata_in_original_file(self, key_to_update):
