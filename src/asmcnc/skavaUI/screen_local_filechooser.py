@@ -127,6 +127,7 @@ Builder.load_string("""
                         height: self.texture_size[1]
                         text_size: self.width, None
                         padding: 10, 10
+                        markup: True
                
 
         BoxLayout:
@@ -530,7 +531,7 @@ class LocalFileChooser(Screen):
 
             else: 
                 # just get GCode preview if no metadata
-                metadata_or_gcode_preview = [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+                metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
 
         self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
