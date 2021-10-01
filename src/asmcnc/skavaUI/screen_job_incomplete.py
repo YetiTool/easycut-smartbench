@@ -243,8 +243,8 @@ Builder.load_string("""
 class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
-    event_type = 'Error' # alarm, error, or user
-    specific_event = '13'
+    event_type = '' # alarm, error, or user
+    specific_event = ''
 
     # # # Example metadata
     # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
@@ -279,18 +279,16 @@ class JobIncompleteScreen(Screen):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
 
-    # def on_enter(self):
-        # self.sm.get_screen('go').is_job_started_already = False
+    def on_enter(self):
+        self.sm.get_screen('go').is_job_started_already = False
         # # self.sm.get_screen('go').loop_for_job_progress = None
 
  
     def press_ok(self):
         self.set_production_notes()
-
         self.jd.post_job_data_update_pre_send(False, extra_parts_completed=self.parts_completed_input.text)
-        # self.send_job_status()
-        # self.quit_to_return_screen()
-        self.sm.current = 'wifi2'
+        self.send_job_status()
+        self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
         self.sm.current = self.jd.screen_to_return_to_after_job

@@ -103,32 +103,6 @@ Builder.load_string("""
                                 valign: "top"
                                 size: self.texture_size
                                 text_size: self.size
-
-                            # TextInput:
-                            #     id: parts_completed_input
-                            #     padding: [4, 2]
-                            #     size_hint_x: None
-                            #     width: dp(50)
-                            #     text: '0'
-                            #     color: hex('#333333ff')
-                            #     text_size: self.size
-                            #     halign: "left"
-                            #     valign: "top"
-                            #     markup: True
-                            #     font_size: dp(20)
-                            #     multiline: False
-                            #     background_color: hex('#e5e5e5ff')
-                            #     input_filter: 'int'
-
-                            # Label: 
-                            #     id: out_of_total_parts_label
-                            #     text: ""
-                            #     color: hex('#333333ff') #grey
-                            #     font_size: dp(20)
-                            #     markup: True
-                            #     text_size: self.size
-                            #     halign: "left"
-                            #     valign: "top"
                     
                     BoxLayout: 
                         id: production_notes_container
@@ -241,28 +215,25 @@ class JobFeedbackScreen(Screen):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_job
 
-    # def on_enter(self):
-    #     self.sm.get_screen('go').is_job_started_already = False
+    def on_enter(self):
+        self.sm.get_screen('go').is_job_started_already = False
         # self.sm.get_screen('go').loop_for_job_progress = None
 
     def confirm_job_successful(self):
         self.set_production_notes()
-        # self.db.send_job_end(self.jd.job_name, True)
-        # self.quit_to_return_screen()
-
-        self.sm.current = 'wifi1'
+        self.db.send_job_end(self.jd.job_name, True)
+        self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        # self.db.send_job_end(self.jd.job_name, False)
-        # self.quit_to_return_screen()
-
-        self.sm.get_screen('wifi1').prep_this_screen('unsuccessful', event_number=False)
-        self.sm.current = 'wifi1'
-
-        self.sm.current = 'wifi1'
+        self.db.send_job_end(self.jd.job_name, False)
+        self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
+
+        if self.return_to_screen == 'job_incomplete':
+            self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
+
         self.sm.current = self.return_to_screen
 
     def set_production_notes(self):

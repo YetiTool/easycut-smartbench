@@ -159,8 +159,6 @@ class SQLRabbit:
 
     def send_job_end(self, job_name, successful):
 
-        # Send production notes here as well, from self.jd.production_notes
-
         data = [
             {
                 "payload_type": "job_end",

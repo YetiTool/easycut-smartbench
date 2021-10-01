@@ -28,7 +28,7 @@ class JobData(object):
 
     # Job identifiers
     filename = ''
-    job_name = 'Job name'
+    job_name = ''
 
     # GCode containers
     job_gcode = []
