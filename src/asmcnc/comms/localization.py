@@ -44,7 +44,7 @@ class Localization(object):
             return string.replace("days", self.get_str("days"))
 
         elif "day" in string:
-            return string.replace("days", self.get_str("days"))
+            return string.replace("day", self.get_str("day"))
 
         else: 
             return string

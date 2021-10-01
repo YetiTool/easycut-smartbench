@@ -86,6 +86,8 @@ Builder.load_string("""
                             text_size: self.size
                             halign: "left"
                             valign: "bottom"
+                            shorten: True
+                            split_str: "|"
 
                         BoxLayout:
                             id: parts_completed_container
@@ -247,10 +249,6 @@ class JobFeedbackScreen(Screen):
         total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
 
         if current_step > total_steps: total_steps = current_step
-
-
-
-
 
         self.metadata_label.text = (
             self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
