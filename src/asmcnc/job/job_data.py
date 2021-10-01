@@ -69,6 +69,7 @@ class JobData(object):
     
     # Time taken
     actual_runtime = ''
+    pause_duration = ''
     total_time = ''
     
     # Production notes
