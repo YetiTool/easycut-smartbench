@@ -79,8 +79,8 @@ class AlarmSequenceManager(object):
 				if self.is_error_screen_already_up():
 					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
 
-				elif self.m.s.is_job_streaming:
-					self.sm.get_screen('job_incomplete').prep_this_screen('alarm', message)
+				elif self.m.s.is_job_streaming and self.m.s.m_state != "Check":
+					self.sm.get_screen('job_incomplete').prep_this_screen('Alarm', message)
 					self.return_to_screen = 'job_incomplete'
 
 				else:

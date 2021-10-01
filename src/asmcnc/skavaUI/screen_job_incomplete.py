@@ -15,13 +15,17 @@ Builder.load_string("""
 
     job_incomplete_label : job_incomplete_label
     metadata_label : metadata_label
+    parts_completed_container : parts_completed_container
+    parts_completed_label : parts_completed_label
+    parts_completed_input : parts_completed_input
+    out_of_total_parts_label : out_of_total_parts_label
     production_notes_container : production_notes_container
     production_notes_label : production_notes_label
     production_notes : production_notes
     job_cancelled_label : job_cancelled_label
-    event_details_container : event_details_container
+    # event_details_container : event_details_container
     event_details_label : event_details_label
-    event_details_input : event_details_input
+    # event_details_input : event_details_input
 
     BoxLayout:
         height: dp(800)
@@ -74,56 +78,92 @@ Builder.load_string("""
                     height: dp(130)
                     orientation: 'horizontal'
                     padding: [dp(20), dp(0), dp(20), dp(10)]
+
+                    BoxLayout:
+                        orientation: 'vertical'
                     
-                    Label: 
-                        id: metadata_label
-                        color: hex('#333333ff') #grey
-                        font_size: dp(24)
-                        markup: True
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
+                        Label: 
+                            id: metadata_label
+                            size_hint_y: None
+                            height: dp(90)
+                            color: hex('#333333ff') #grey
+                            font_size: dp(20)
+                            markup: True
+                            text_size: self.size
+                            halign: "left"
+                            valign: "bottom"
+
+                        BoxLayout:
+                            id: parts_completed_container
+                            size_hint_y: None
+                            height: dp(30)
+                            orientation: 'horizontal'
+
+                            Label: 
+                                id: parts_completed_label
+                                text: "Parts completed: "
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                markup: True
+                                halign: "left"
+                                valign: "top"
+                                size: self.texture_size
+                                text_size: self.size
+                                # pos: metadata_label.x, self.y
+
+                            TextInput:
+                                id: parts_completed_input
+                                padding: [4, 2]
+                                size_hint_x: None
+                                width: dp(50)
+                                text: '0'
+                                color: hex('#333333ff')
+                                text_size: self.size
+                                halign: "left"
+                                valign: "top"
+                                markup: True
+                                font_size: dp(20)
+                                multiline: False
+                                background_color: hex('#e5e5e5ff')
+                                input_filter: 'int'
+
+                            Label: 
+                                id: out_of_total_parts_label
+                                text: ""
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                markup: True
+                                text_size: self.size
+                                halign: "left"
+                                valign: "top"
                     
                     BoxLayout: 
                         id: production_notes_container
                         orientation: 'vertical'
-
-                        Button:
+                        Label:
                             id: production_notes_label
-                            background_color: hex('#e5e5e5ff')
-                            background_normal: ""
-                            background_down: ""
-                            color: hex('#1976d2ff')
-                            text_size: self.size
+                            size_hint_y: 0.2
+                            text: "Production notes"
+                            color: hex('#333333ff') #grey
+                            font_size: dp(20)
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: dp(24)
-                            size_hint_y: None
-                            height: self.parent.height
-                            opacity: 1
-                            on_press: root.open_production_notes_text_input()
-                            focus_next: production_notes
-                            text: "<add your post-production notes here>"
+                            text_size: self.size
 
                         TextInput:
                             id: production_notes
+                            size_hint_y: 0.8
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
-                            foreground_color: hex('#333333ff')
+                            # foreground_color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
                             valign: "top"
                             markup: True
                             font_size: dp(20)
-                            size_hint_y: None
-                            height: dp(0)
-                            opacity: 0
-                            disabled: True
                             multiline: True
-                            background_active: ""
-                            background_normal: ""
                             background_color: hex('#e5e5e5ff')
 
                 # EVENT DETAILS
@@ -149,50 +189,15 @@ Builder.load_string("""
                     spacing: 0
                     padding: [dp(0), dp(0)]
 
-                    BoxLayout: 
-                        id: event_details_container
-                        orientation: 'vertical'
+                    Label: 
+                        id: event_details_label
                         padding: [dp(20), dp(0)]
-
-                        Button:
-                            id: event_details_label
-                            background_color: hex('#e5e5e5ff')
-                            background_normal: ""
-                            background_down: ""
-                            background_disabled_normal: ""
-                            background_disabled_down: ""
-                            color: hex('#333333ff') #grey
-                            # color: hex('#1976d2ff') # blue
-                            text_size: self.size
-                            halign: "left"
-                            valign: "middle"
-                            markup: True
-                            font_size: dp(18)
-                            size_hint_y: None
-                            height: self.parent.height
-                            opacity: 1
-                            on_press: root.open_event_details_text_input()
-                            focus_next: event_details_input
-
-                        TextInput:
-                            id: event_details_input
-                            padding: [4, 2]
-                            text: ""
-                            color: hex('#333333ff')
-                            foreground_color: hex('#333333ff')
-                            text_size: self.size
-                            halign: "left"
-                            valign: "middle"
-                            markup: True
-                            font_size: dp(18)
-                            size_hint_y: None
-                            height: dp(0)
-                            opacity: 0
-                            disabled: True
-                            multiline: True
-                            background_active: ""
-                            background_normal: ""
-                            background_color: hex('#e5e5e5ff')
+                        color: hex('#333333ff') #grey
+                        text_size: self.size
+                        halign: "left"
+                        valign: "middle"
+                        markup: True
+                        font_size: dp(20)
 
                     # Buttons
                     BoxLayout: 
@@ -238,24 +243,8 @@ Builder.load_string("""
 class JobIncompleteScreen(Screen):
 
     return_to_screen = StringProperty()
-    event_type = 'user' # alarm, error, or user
-    specific_event = 'error:13" : "Interrupt bar detected as pressed. Check all four contacts at the interrupt bar ends are not pressed. Pressing each switch a few times may clear the contact.'
-
-    # # # Example metadata
-    # metadata_string = "Project_name | Step 1 of 3" + "\n" + \
-    #     "Actual runtime: 0:30:43" + "\n"+ \
-    #     "Total time (with pauses): 0:45:41" + "\n"+ \
-    #     "Percentage streamed: 43 %"
-
-
-    # event_deets_test_string = (
-    #     "Error 1: You fucked up your code. " + \
-    #     "\n" + \
-    #     "Check the gcode file before re-running it." + \
-    #     " " + \
-    #     "Recover any parts from this job before rehoming and starting a new job."
-    #     )
-
+    event_type = '' # alarm, error, cancelled, or unsuccessful
+    specific_event = ''
 
     def __init__(self, **kwargs):
         super(JobIncompleteScreen, self).__init__(**kwargs)
@@ -268,137 +257,98 @@ class JobIncompleteScreen(Screen):
 
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event
-        if event_number: self.specific_event = event_number
+        if event_number: self.specific_event = str(event_number.split(':')[1])
 
     def on_pre_enter(self):
-        self.close_production_notes_text_input()
-        self.close_event_details_text_input()
         self.update_strings()
-        self.return_to_screen = self.jd.screen_to_cancel_to_after_job
+        self.return_to_screen = self.jd.screen_to_return_to_after_cancel
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
-        # self.sm.get_screen('go').loop_for_job_progress = None
-
+ 
     def press_ok(self):
         self.set_production_notes()
-        self.set_event_notes()
-        self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name)
-        self.db.send_job_end(self.jd.job_name, False)
+        self.jd.post_job_data_update_pre_send(False, extra_parts_completed=self.parts_completed_input.text)
+        self.send_job_status()
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
         self.sm.current = self.jd.screen_to_return_to_after_job
 
-    # PRODUCTION NOTES
-    def set_focus_on_production_notes(self, dt):
-        self.production_notes.focus = True
-
-    def open_production_notes_text_input(self):
-        
-        self.production_notes_label.disabled = True
-        self.production_notes.disabled = False
-        self.production_notes_label.height = 0
-        self.production_notes_label.opacity = 0
-        self.production_notes.height = self.production_notes_container.height
-        self.production_notes.opacity = 1
-        self.production_notes_label.focus = False
-
-        Clock.schedule_once(self.set_focus_on_production_notes, 0.3)
-
-    def close_production_notes_text_input(self):
-
-        self.production_notes.focus = False
-        self.production_notes.disabled = True
-        self.production_notes_label.disabled = False
-        self.production_notes.height = 0
-        self.production_notes.opacity = 0
-        self.production_notes_label.height = self.production_notes_container.height
-        self.production_notes_label.opacity = 1
-
     def set_production_notes(self):
-        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+        self.jd.production_notes = self.production_notes.text
 
+    def send_job_status(self):
+        if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
+            self.db.send_event(0, 'Job cancelled', self.job_cancelled_label.text)
 
-    # EVENT NOTES
-    def set_focus_on_event_details(self, dt):
-        self.event_details_input.focus = True
+        elif 'Alarm' in self.event_type:
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name)
 
-    def open_event_details_text_input(self):
+        elif 'Error' in self.event_type:
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name)
 
-        if self.event_type == "user":
-        
-            self.event_details_label.disabled = True
-            self.event_details_input.disabled = False
-            self.event_details_label.height = 0
-            self.event_details_label.opacity = 0
-            self.event_details_input.height = self.event_details_container.height
-            self.event_details_input.opacity = 1
-            self.event_details_label.focus = False
+        self.db.send_full_payload()
+        self.db.send_job_end(self.jd.job_name, False)
 
-            Clock.schedule_once(self.set_focus_on_event_details, 0.3)
-
-    def close_event_details_text_input(self):
-
-        self.event_details_input.focus = False
-        self.event_details_label.disabled = False
-        self.event_details_input.disabled = True
-        self.event_details_input.height = 0
-        self.event_details_input.opacity = 0
-        self.event_details_label.height = self.event_details_container.height
-        self.event_details_label.opacity = 1
-
-    def set_event_notes(self):
-        self.jd.production_notes = self.event_details_label.text
-        self.db.send_event(0, 'Job cancelled', 'User comment: ' + self.event_details_label.text)
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
 
+
         # Get these strings properly translated
-        self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+
+        if "unsuccessful" in self.event_type:
+            self.job_incomplete_label.text = self.l.get_str("Job unsuccessful").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
+
+        else:
+            self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
         current_step = str(int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
         total_steps = str(int(self.jd.metadata_dict.get('TotalPartsRequired', 1))/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
 
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + int(self.jd.metadata_dict.get('PartsPerJob', 1))
+
+        if len(self.jd.metadata_dict.get('ProjectName', self.jd.job_name)) > 23:
+            project_name =  self.jd.metadata_dict.get('ProjectName', self.jd.job_name)[:23] + "..."
+        else:
+            project_name = self.jd.metadata_dict.get('ProjectName', self.jd.job_name)
+
         self.metadata_label.text = (
-            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
-            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + self.jd.actual_runtime + \
+            self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
-            "\n" + \
-            self.l.get_str("Percentage streamed:") + " " + str(self.jd.percent_thru_job) + " %"
+            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.production_notes.text = ''
-        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
+        self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('TotalPartsRequired', 1))
 
-        if 'user' in self.event_type:
-            self.event_details_label.color = [25 / 255., 118 / 255., 210 / 255., 1.]
+        self.production_notes.text = self.jd.production_notes
+        self.production_notes_label.text = self.l.get_str("Production Notes")
+
+
+        if_loss = self.l.get_str("If SmartBench lost position, you will need to rehome SmartBench.")
+        may_loss = self.l.get_str("SmartBench may have lost position, so you will need to rehome SmartBench.")
+        recovery_msg = self.l.get_str("You should recover any finished parts from this job before starting a new job.")
+        percent_streamed = self.l.get_str("Percentage streamed:") + " " + str(self.jd.percent_thru_job) + " %"
+
+
+        if 'cancelled' in self.event_type:
             self.job_cancelled_label.text = self.l.get_str("Job cancelled by the user.")
-            self.event_details_label.text = "<" + self.l.get_str("add your reason for cancellation here") + ">"
+            self.event_details_label.text = percent_streamed + "\n" + if_loss + "\n" + recovery_msg
+
+        elif "unsuccessful" in self.event_type:
+            self.job_cancelled_label.text = self.l.get_str("Job marked unsuccessful by the user.")
+            self.event_details_label.text = percent_streamed + "\n" + if_loss + "\n" + recovery_msg
 
         else:
-            self.event_details_label.color = [51 / 255., 51 / 255., 51 / 255., 1.]
-            self.job_cancelled_label.text = self.l.get_str("Job cancelled due to an event.").replace(self.l.get_str("event"), self.l.get_str(self.event_type))
-            lost_position_message = self.l.get_str("Recover any parts from this job before rehoming and starting a new job.")
+            self.job_cancelled_label.text = (
+                self.l.get_str("Job cancelled due to event").replace(self.l.get_str("event"), self.l.get_str(self.event_type) + \
+                ": " + self.specific_event)
+                )
 
-            if 'alarm' in self.event_type:
-                self.event_details_label.text = (
-                    self.specific_event + \
-                    "\n" + \
-                    lost_position_message
-                    )            
+            self.event_details_label.text = percent_streamed + "\n" + may_loss + "\n" + recovery_msg
         
-            elif 'error' in self.event_type:
-                error_resolution_message = self.l.get_str('Check the gcode file before re-running it.')
-                self.event_details_label.text = (
-                    self.specific_event + \
-                    "\n" + \
-                    error_resolution_message + \
-                    " " + \
-                    lost_position_message
-                    )
-
+            if 'Error' in self.event_type:
+                self.event_details_label.text = self.event_details_label.text + "\n" + self.l.get_str("Check your GCode file before re-running it.")
