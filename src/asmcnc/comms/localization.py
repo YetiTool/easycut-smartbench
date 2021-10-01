@@ -38,6 +38,17 @@ class Localization(object):
     def get_italic(self, string):
         return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
 
+    def get_localized_days(self, string):
+
+        if "days" in string:
+            return string.replace("days", self.get_str("days"))
+
+        elif "day" in string:
+            return string.replace("days", self.get_str("days"))
+
+        else: 
+            return string
+
 
     ## DEBUGGING (forces KeyErrors)
     # def get_str(self, string):
