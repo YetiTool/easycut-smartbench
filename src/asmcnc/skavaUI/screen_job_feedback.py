@@ -226,7 +226,6 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, False)
         self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
         self.sm.current = 'job_incomplete'
 
