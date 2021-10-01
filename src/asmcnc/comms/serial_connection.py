@@ -541,7 +541,7 @@ class SerialConnection(object):
             self._reset_counters()
 
         self.jd.job_gcode_running = []
-
+        self.jd.percent_thru_job = 100
 
     def cancel_stream(self):
 

@@ -306,7 +306,7 @@ class JobData(object):
                 self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Per Job', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(extra_parts_completed))
+                self.metadata_dict["Parts Completed So Far"] = str(int(extra_parts_completed))
 
             # # Update parts completed in job file
             self.update_metadata_in_original_file("Parts Completed So Far")
