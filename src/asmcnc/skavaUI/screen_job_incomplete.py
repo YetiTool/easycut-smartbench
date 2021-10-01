@@ -257,7 +257,7 @@ class JobIncompleteScreen(Screen):
 
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event
-        if event_number: self.specific_event = event_number
+        if event_number: self.specific_event = event_number.split(':')
 
     def on_pre_enter(self):
         self.update_strings()
