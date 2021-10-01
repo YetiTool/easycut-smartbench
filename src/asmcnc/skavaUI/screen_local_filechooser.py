@@ -519,10 +519,14 @@ class LocalFileChooser(Screen):
             if "(End of YetiTool SmartBench MES-Data)" in x: return False
             else: return True
 
+        def format_metadata(y):
+            mini_list = y.split(': ')
+            return str(self.l.get_str(mini_list[0]) + ': ' + mini_list[1])
+
         with open(self.filechooser.selection[0]) as previewed_file:
 
             if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                metadata_or_gcode_preview = [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file)]
+                metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if "N/A" not in i])
 
             else: 
                 # just get GCode preview if no metadata
