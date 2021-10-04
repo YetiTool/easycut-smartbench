@@ -4,7 +4,7 @@ from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_1, wifi_a
 
 class DataConsentManager(object):
 
-	return_to_screen = 'safety'
+	return_to_screen = 'build_info'
 	back_to_screen = 'build_info'
 
 	def __init__(self, screen_manager, localization):
@@ -46,16 +46,15 @@ class DataConsentManager(object):
 	def exit_data_consent_app(self):
 		self.update_seen()
 		self.sm.current = self.return_to_screen
-		self.remove_consent_screens()
-		self.remove_entry_screens_if_necessary()
+		if self.back_to_screen == 'build_info':
+			self.remove_consent_screens()
+			self.remove_entry_screens_if_necessary()
 
 	def remove_consent_screens(self):
 		self.destroy_screen('consent_1')
 		self.destroy_screen('consent_2')
 
 	def remove_entry_screens_if_necessary(self):
-		# Get rid of entry screens as well if necessary
-		self.destroy_screen('warranty_5')
 		self.destroy_screen('release_notes')
 
 	def destroy_screen(self, screen_name):

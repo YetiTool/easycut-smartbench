@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 
 from kivy.config import Config
 from kivy.clock import Clock
@@ -14,9 +14,9 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
-from asmcnc.skavaUI import screen_file_loading
-from asmcnc.tests import loading_screen_test
 
+# JOB DATA IMPORT
+from asmcnc.job import job_data
 from asmcnc.skavaUI import screen_job_incomplete
 from asmcnc.skavaUI import screen_job_feedback
 
@@ -28,11 +28,17 @@ class ScreenTest(App):
 
 		sm = ScreenManager(transition=NoTransition())
 		m = None
-		alarm_1_screen = screen_job_incomplete.JobIncompleteScreen(name='wifi1', screen_manager = sm, machine = m)
+		l = localization.Localization()
+		jd = job_data.JobData()
+		db = None
+
+		alarm_1_screen = screen_job_incomplete.JobIncompleteScreen(name='wifi1', screen_manager = sm, machine = m, localization = l, job = jd, database = db)
 		sm.add_widget(alarm_1_screen)
-		alarm_2_screen = screen_job_feedback.JobFeedbackScreen(name='wifi2', screen_manager = sm, machine = m)
+		alarm_2_screen = screen_job_feedback.JobFeedbackScreen(name='wifi2', screen_manager = sm, machine = m, localization = l, job = jd, database = db)
 		sm.add_widget(alarm_2_screen)
 		sm.current = 'wifi1'
 		return sm
 
 ScreenTest().run()
+
+

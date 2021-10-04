@@ -15,6 +15,7 @@ Builder.load_string("""
 
     job_completed_label : job_completed_label
     metadata_label : metadata_label
+    parts_completed_label : parts_completed_label
     production_notes_container : production_notes_container
     production_notes_label : production_notes_label
     production_notes : production_notes
@@ -72,55 +73,64 @@ Builder.load_string("""
                     orientation: 'horizontal'
                     padding: [dp(20), dp(0), dp(20), dp(10)]
                     
-                    Label: 
-                        id: metadata_label
-                        color: hex('#333333ff') #grey
-                        font_size: dp(24)
-                        markup: True
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
+                    BoxLayout:
+                        orientation: 'vertical'
+                    
+                        Label: 
+                            id: metadata_label
+                            size_hint_y: None
+                            height: dp(90)
+                            color: hex('#333333ff') #grey
+                            font_size: dp(20)
+                            markup: True
+                            text_size: self.size
+                            halign: "left"
+                            valign: "bottom"
+
+                        BoxLayout:
+                            id: parts_completed_container
+                            size_hint_y: None
+                            height: dp(30)
+                            orientation: 'horizontal'
+
+                            Label: 
+                                id: parts_completed_label
+                                text: "Parts completed: "
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                markup: True
+                                halign: "left"
+                                valign: "top"
+                                size: self.texture_size
+                                text_size: self.size
                     
                     BoxLayout: 
                         id: production_notes_container
                         orientation: 'vertical'
-
-                        Button:
+                        Label:
                             id: production_notes_label
-                            background_color: hex('#e5e5e5ff')
-                            background_normal: ""
-                            background_down: ""
-                            color: hex('#1976d2ff')
-                            text_size: self.size
+                            size_hint_y: 0.2
+                            text: "Production notes"
+                            color: hex('#333333ff') #grey
+                            font_size: dp(20)
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: dp(24)
-                            size_hint_y: None
-                            height: self.parent.height
-                            opacity: 1
-                            on_press: root.open_production_notes_text_input()
-                            focus_next: production_notes
-                            text: "<add your post-production notes here>"
+                            text_size: self.size
 
                         TextInput:
                             id: production_notes
+                            size_hint_y: 0.8
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
-                            foreground_color: hex('#333333ff')
+                            # foreground_color: hex('#333333ff')
                             text_size: self.size
                             halign: "left"
                             valign: "top"
                             markup: True
                             font_size: dp(20)
-                            size_hint_y: None
-                            height: dp(0)
-                            opacity: 0
-                            disabled: True
                             multiline: True
-                            background_active: ""
-                            background_normal: ""
                             background_color: hex('#e5e5e5ff')
 
                 # FEEDBACK
@@ -153,7 +163,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_successful()
+                        on_press: root.confirm_job_unsuccessful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -170,7 +180,7 @@ Builder.load_string("""
                         width: dp(202)
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
-                        on_press: root.confirm_job_unsuccessful()
+                        on_press: root.confirm_job_successful()
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -203,55 +213,28 @@ class JobFeedbackScreen(Screen):
 
     def on_pre_enter(self):
         self.update_strings()
-        self.close_production_notes_text_input()
         self.return_to_screen = self.jd.screen_to_return_to_after_job
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
-        # self.sm.get_screen('go').loop_for_job_progress = None
 
     def confirm_job_successful(self):
         self.set_production_notes()
+        self.jd.post_job_data_update_pre_send(True)
+        self.db.send_full_payload()
         self.db.send_job_end(self.jd.job_name, True)
         self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
         self.set_production_notes()
-        self.db.send_job_end(self.jd.job_name, False)
-        self.quit_to_return_screen()
+        self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
+        self.sm.current = 'job_incomplete'
 
     def quit_to_return_screen(self):
         self.sm.current = self.return_to_screen
-        
-
-    # PRODUCTION NOTES
-    def set_focus_on_production_notes(self, dt):
-        self.production_notes.focus = True
-
-    def open_production_notes_text_input(self):
-        
-        self.production_notes_label.disabled = True
-        self.production_notes.disabled = False
-        self.production_notes_label.height = 0
-        self.production_notes_label.opacity = 0
-        self.production_notes.height = self.production_notes_container.height
-        self.production_notes.opacity = 1
-        self.production_notes_label.focus = False
-
-        Clock.schedule_once(self.set_focus_on_production_notes, 0.3)
-
-    def close_production_notes_text_input(self):
-
-        self.production_notes.focus = False
-        self.production_notes.disabled = True
-        self.production_notes_label.disabled = False
-        self.production_notes.height = 0
-        self.production_notes.opacity = 0
-        self.production_notes_label.height = self.production_notes_container.height
-        self.production_notes_label.opacity = 1
 
     def set_production_notes(self):
-        self.jd.metadata_dict['ProductionNotes'] = self.production_notes.text
+        self.jd.production_notes = self.production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
@@ -260,22 +243,31 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
-        total_steps = str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1)/int(self.jd.metadata_dict.get('PartsPerJob', 1)))
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Completed So Far', 0)) + int(self.jd.metadata_dict.get('Parts Per Job', 1))
+        current_step = str(parts_completed_if_job_successful/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
+        total_steps = str(int(self.jd.metadata_dict.get('Total Parts Required', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
+
+        if current_step > total_steps: total_steps = current_step
+
+        if len(self.jd.metadata_dict.get('Project Name', self.jd.job_name)) > 23:
+            project_name =  self.jd.metadata_dict.get('Project Name', self.jd.job_name)[:23] + "..."
+        else:
+            project_name = self.jd.metadata_dict.get('Project Name', self.jd.job_name)
 
         self.metadata_label.text = (
-            self.jd.metadata_dict.get('ProjectName', self.jd.job_name) + " | " + \
-            (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
             "\n" + \
-            self.l.get_str("Actual runtime:") + " " + self.jd.actual_runtime + \
+            self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
-            self.l.get_str("Total time (with pauses):") + " " + self.jd.total_time + \
-            "\n" + \
-            self.l.get_str("Parts completed:") + " " + str(self.jd.metadata_dict.get('PartsCompletedSoFar', 1)) + "/" + str(self.jd.metadata_dict.get('TotalNumberOfPartsRequired', 1))
+            self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.jd.metadata_dict['ProductionNotes'] = ''
-        self.production_notes.text = ''
-        self.production_notes_label.text = "<" + self.l.get_str("add your post-production notes here") + ">"
+        self.parts_completed_label.text = (
+            self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
+            )
+
+        self.production_notes.text = self.jd.production_notes
+        self.production_notes_label.text = self.l.get_str("Production Notes")
 
         self.success_question.text = self.l.get_str("Did this complete successfully?")
+

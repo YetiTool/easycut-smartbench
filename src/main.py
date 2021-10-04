@@ -83,7 +83,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.8.0-alpha'
+initial_version = 'v1.8.0'
 
 # default starting screen
 start_screen = 'welcome'
@@ -171,13 +171,11 @@ class SkavaUI(App):
             release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, localization = l, version = initial_version)
             # restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
 
-        # else: 
-
         # Initialise settings object
         sett = settings_manager.Settings(sm)
 
         # Initialise 'j'ob 'd'ata object
-        jd = job_data.JobData()
+        jd = job_data.JobData(localization = l)
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
@@ -187,6 +185,9 @@ class SkavaUI(App):
 
         # Create database object to talk to
         db = archie_db.SQLRabbit(sm, m)
+
+        # Alarm screens are set up in serial comms, need access to the db object
+        m.s.alarm.db = db
 
         # Server connection object
         sc = server_connection.ServerConnection()

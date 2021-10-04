@@ -126,6 +126,7 @@ Builder.load_string("""
                                 halign: 'center'
                                 valign: 'middle'
                                 id: file_data_label
+                                color: hex('#333333ff')
                                 
                             Button:
                                 id: stop_start
