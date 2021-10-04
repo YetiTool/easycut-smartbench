@@ -138,17 +138,17 @@ class SQLRabbit:
 
         if z_lube_percent < self.z_lube_percent_left_next:
             self.send_event(severity_dict[self.z_lube_percent_left_next], 'Z-lube percentage left',
-                            'Z-lube percentage passed below ' + str(self.z_lube_percent_left_next) + '%')
+                            'Z-lube percentage passed below ' + str(self.z_lube_percent_left_next) + '%', 2)
             self.z_lube_percent_left_next = next_percent_dict[self.z_lube_percent_left_next]
 
         if spindle_brush_percent < self.spindle_brush_percent_left_next:
             self.send_event(severity_dict[self.spindle_brush_percent_left_next], 'Spindle brush percentage left',
-                            'Spindle brush percentage passed below ' + str(self.spindle_brush_percent_left_next) + '%')
+                            'Spindle brush percentage passed below ' + str(self.spindle_brush_percent_left_next) + '%', 2)
             self.spindle_brush_percent_left_next = next_percent_dict[self.spindle_brush_percent_left_next]
 
         if calibration_percent < self.calibration_percent_left_next:
             self.send_event(severity_dict[self.calibration_percent_left_next], 'Calibration percentage left',
-                            'Calibration percentage passed below ' + str(self.calibration_percent_left_next) + '%')
+                            'Calibration percentage passed below ' + str(self.calibration_percent_left_next) + '%', 2)
             self.calibration_percent_left_next = next_percent_dict[self.calibration_percent_left_next]
 
         # In case any percentages somehow increased past their previous threshold
@@ -205,10 +205,21 @@ class SQLRabbit:
             log("Event send exception: " + str(e))
         log(str(data))
 
+    # Severity
     # 0 - info
     # 1 - warning
     # 2 - critical
-    def send_event(self, event_severity, event_name, event_description):
+
+    # Type
+    # 0 - errors
+    # 1 - alarms
+    # 2 - maintenance
+    # 3 - job pause
+    # 4 - job resume
+    # 5 - job cancel
+    # 6 - job start
+    # 7 - job end
+    def send_event(self, event_severity, event_type, event_name, event_description):
         data = [
             {
                 "payload_type": "event",
@@ -217,6 +228,7 @@ class SQLRabbit:
                 },
                 "event": {
                     "severity": event_severity,
+                    "type": event_type,
                     "name": event_name,
                     "description": event_description
                 },
