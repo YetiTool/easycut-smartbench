@@ -122,10 +122,10 @@ class SpindleShutdownScreen(Screen):
 
         if self.reason_for_pause == 'spindle_overload':
             # Job paused due to overload, send event
-            self.db.send_event(1, "Job paused", "Paused job (Spindle overload): " + self.jd.job_name)
+            self.db.send_event(1, "Job paused", "Paused job (Spindle overload): " + self.jd.job_name, 3)
         elif self.reason_for_pause == 'job_pause':
             # Job paused by user, send event
-            self.db.send_event(0, "Job paused", "Paused job (User): " + self.jd.job_name)
+            self.db.send_event(0, "Job paused", "Paused job (User): " + self.jd.job_name, 3)
 
         # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None

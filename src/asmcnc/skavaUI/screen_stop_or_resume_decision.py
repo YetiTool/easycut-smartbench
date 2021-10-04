@@ -175,7 +175,7 @@ class StopOrResumeDecisionScreen(Screen):
         self.m.stop_from_soft_stop_cancel()
 
         # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name)
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
 
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
@@ -191,7 +191,7 @@ class StopOrResumeDecisionScreen(Screen):
         self.m.resume_after_a_stream_pause()
 
         # Job resumed, send event
-        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name)
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
 
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         self.sm.current = self.return_screen
