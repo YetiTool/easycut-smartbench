@@ -175,10 +175,11 @@ class FinalTestScreen(Screen):
         super(FinalTestScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
         self.m = kwargs['machine']
+        self.l = kwargs['localization']
 
         # WIDGET SETUP
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.systemtools_sm.sm))
-        self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm.sm))
+        self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm.sm, localization=self.l))
         self.move_container.add_widget(widget_final_test_xy_move.FinalTestXYMove(machine=self.m, screen_manager=self.systemtools_sm.sm))
 
     def on_enter(self):
