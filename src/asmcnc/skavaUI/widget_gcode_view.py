@@ -245,7 +245,7 @@ class GCodeView(Widget):
 
 
 #    Why are these two variable definitions hovering here??
-#    MOVED TO ABOVE DEFS
+#    MOVED TO ABOVE FUNCTIONS
 #    interrupt_line_threshold = 5000
 #    interrupt_delay = 0.2
    

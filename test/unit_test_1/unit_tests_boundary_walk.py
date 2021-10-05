@@ -13,12 +13,11 @@ NOTES:
 '''
 import unittest
 
-from geometry import boundary_calculator
-# from numpy.ma.core import isarray
 import numpy as np
+import os.path
 
-# import main
-# import screen_test
+from geometry import boundary_calculator
+
 
 
 ##########################################################
@@ -44,22 +43,42 @@ import numpy as np
 
 class UnitTestsBoundaryWalk(unittest.TestCase):
     
-    
-    gcodefile = 0.0
     detailsToConsole = 0
     
+    gcodefile = 0.0
+    gcode_file_path = ""
+    boundarySetter = object
+    
     def setUp(self):
-        # get the GIVEN
+        # get the GIVENs sorted i.e. what we need for the test(s):
         
+        global boundarySetter
+        global gcodefile, gcode_file_path
+        # global st
+
         #    1    GIVEN a gcode file
-        # def getGCodeFile(self):
-            
-        global gcodefile 
+        boundarySetter = boundary_calculator.BoundaryCalculator()
+        gcodefile = boundarySetter.get_boundary_as_gcode_list()
+        gcode_file_path = boundarySetter.get_gcode_path()
+               
         #    2    GIVEN a working SB & console with software loaded
-        ##         c.f. geometry.boundary_calculator line 20 (est)
-        boundarySetter = boundary_calculator.BoundaryCalculator(self)
-        gcodefile = boundarySetter.get_boundary_as_gcode_array()
-            
+        #    load screen_test
+        
+        #screen test manager:
+        # stm = boundarySetter.stm
+        # stm.screen_shapeCutter_1
+        
+
+
+        #    3    GIVEN a boundary_calculator feature
+        ##         c.f. geometry.boundary_calculator
+        boundarySetter.set_boundary_datum_point()
+        
+
+
+
+
+        
         if self.detailsToConsole == 1: 
             print("UnitTestsBoundaryWalk().setUp() ____ gcodefile = " + str(type(gcodefile)))
 
@@ -98,26 +117,79 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
     def testBoundaryIsACompletePolygon(self):
         
         global gcodefile
-        if self.detailsToConsole == 1: 
-            print("UnitTestsBoundaryWalk().testBoundaryIsACompletePolygon() ____ gcodefile = " + str(type(gcodefile)))
-
-        # self.gcodefile
         first_item = gcodefile[0]
         last_item = gcodefile[-1]
                 
         # [self.gcodefile[0], self.gcodefile[-1]]
         if self.detailsToConsole == 1:
+            print("UnitTestsBoundaryWalk().testBoundaryIsACompletePolygon() ____ gcodefile = " + str(type(gcodefile)))
             print("first_item is:   " + str(first_item))
             print("last_item is:    " + str(last_item))
         
         self.assertEquals(first_item, last_item, " start and end of gcode file are not the same coordinates... ")
         
-        
         ## basic test-assert-equals-is-working test: 
         # self.assertEqual((0 * 10), 0)
         
+        
+    def testGcodeFileWorks(self):
+        global gcode_file_path
+        self.assertTrue(os.path.isfile(gcode_file_path), "gcode supplied path/file isn't working...  " + gcode_file_path)
+
+
+    def testBoundaryDatumIsNotBlank(self):
+        global boundarySetter
+        neither_are_zero = abs(boundarySetter.datum_x) + abs(boundarySetter.datum_y)
+        self.assertTrue(neither_are_zero > 0, "the datum doesn't exist? ")
+        
+        
     def testBoundaryAvoidsTheFurthestCut(self):
-        self.assertEqual(("this cut"), "this cut")
+        # this test is by far the most complex 
+        # it is the critical test to ensure the boundary 
+        # is actually what we want it to be
+        
+        # Approach:
+        
+        # ~~~ 1
+        # find the x & y "cut_mid_point" coordinate of the job envelope 
+        # will use the geometry.job_envelope module
+        # this will be used as the reference point
+        #    [n.b. this will be available as a 
+        #     function in boundary_calculator]
+        # DONE >>>>>>>>>> see in setUp
+        # and tested in: testBoundaryDatumIsNotBlank
+                
+        # ~~~ 2
+        # convert the gcode input into gcode_radial
+        # convert the found boundary into boundary_radial
+        # these need to be a datatype with 
+        # radial data and distance at that angle from the cut_mid_point
+        #    [n.b. this conversion will be available as 
+        #     a function in boundary_calculator]
+
+        # ~~~ 3
+        # sort both gcode_radial and boundary_radial as follows
+        # 
+        
+        # ~~~ 4        
+        
+        ############ IMPLEMENTING PLAN ABOVE VIA THE NUMBERS LISTED:
+        
+        ### ~~~~~~~~~~~~~~# 1
+        
+        global gcode_file_path
+        global gcodefile
+        global boundarySetter
+
+        # gcode_list = []
+        gcode_list = boundarySetter.set_gcode_as_list(gcode_file_path)
+
+        if self.detailsToConsole == 1:
+            print("boundarySetter.datum_x = " + str(boundarySetter.datum_x))
+            print("boundarySetter.datum_y = " + str(boundarySetter.datum_y))
+            
+        # print("gcode_list[] = " + str(gcode_list[:]))
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
