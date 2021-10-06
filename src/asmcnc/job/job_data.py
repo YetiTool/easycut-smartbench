@@ -14,15 +14,10 @@ def remove_newlines(gcode_line):
     gcode_line = gcode_line.strip('\r')
     return gcode_line
 
-def filter_for_comments(gcode_line):
-    if gcode_line[0] == '(':
-        return True
-    return False
-
-def filter_out_brackets(character):
-    if character in ['(',')']:
-        return False
-    return True
+# def filter_out_brackets(character):
+#     if character in ['(',')']:
+#         return False
+#     return True
 
 class JobData(object):
 
@@ -155,13 +150,12 @@ class JobData(object):
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
-            self.comments_list = filter(filter_for_comments, gcode_without_metadata)
+            
+            self.comments_list = [''.join(re.findall('\(.*?\)',s)) for s in gcode_without_metadata if "(" in s]
 
         except:
-            # In case no metadata in file
-            self.comments_list = filter(filter_for_comments, self.job_gcode_raw)
-
-
+            # If no metadata in file
+            self.comments_list = [''.join(re.findall('\(.*?\)',s)) for s in self.job_gcode_raw if "(" in s]
 
 
     def create_gcode_summary_string(self):
