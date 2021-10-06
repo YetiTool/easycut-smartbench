@@ -281,7 +281,7 @@ class JobData(object):
             summary_list = []
 
             summary_list.append('[b]Comments:[/b]\n')
-            summary_list.extend(self.comments_list)
+            summary_list.extend(self.comments_list[:20])
             summary_list.append('')
 
             self.comments_string = '\n'.join(summary_list)

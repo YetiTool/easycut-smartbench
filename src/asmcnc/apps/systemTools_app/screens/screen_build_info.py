@@ -53,6 +53,7 @@ Builder.load_string("""
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
     smartbench_location_input: smartbench_location_input
+    smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
     machine_serial_number_label: machine_serial_number_label
     language_button: language_button
@@ -189,25 +190,37 @@ Builder.load_string("""
                         disabled: True
                         multiline: False
 
-                    Label:
-                        id: smartbench_model
-                        text: '-'
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 22
+
 
                     GridLayout:
                         size: self.parent.size
                         pos: self.parent.pos
                         cols: 2
-                        rows: 8
+                        rows: 9
                         size_hint: (None, None)
-                        height: dp(220)
+                        height: dp(250)
                         width: dp(550)
                         cols_minimum: {0: dp(230), 1: dp(320)}
+
+                        Label:
+                            id: smartbench_model_header
+                            text: '[b]SmartBench model[/b]'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
+
+                        Label:
+                            id: smartbench_model
+                            text: '-'
+                            color: hex('#333333ff')
+                            text_size: self.size
+                            halign: "left"
+                            valign: "middle"
+                            markup: True
+                            font_size: 20
 
                         # Label:
                         #     text: ''
@@ -592,10 +605,10 @@ class BuildInfoScreen(Screen):
     def get_smartbench_model(self):
         try:
             file = open(self.smartbench_model_path, 'r')
-            self.smartbench_model.text = '[b]' + str(file.read()) + '[/b]'
+            self.smartbench_model.text = (str(file.read()).replace("SmartBench ", "")).replace("CNC Router", "")
             file.close()
         except: 
-            self.smartbench_model.text = '[b]SmartBench CNC Router[/b]'
+            self.smartbench_model.text = 'SmartBench CNC Router'
 
     ## LOCALIZATION TESTING
 
@@ -611,6 +624,7 @@ class BuildInfoScreen(Screen):
         self.data_and_wifi_button.text = self.l.get_str('Data and Wi-Fi')
         self.advanced_button.text = self.l.get_str('Advanced') + '...'
         self.header.text = self.l.get_str('System Information')
+        self.smartbench_model_header.text = self.l.get_str('SmartBench model')
         self.serial_number_header.text = self.l.get_str('Serial number')
         self.console_serial_number_header.text = self.l.get_str('Console hostname')
         self.software_header.text = self.l.get_str('Software')
