@@ -30,14 +30,14 @@ class PopupDataAndWiFiDisableWarning(Widget):
         	self.c.decline_terms_and_disable_wifi()
         
         description = (
-			self.l.get_bold("Are you sure you want to decline the data policy and disable the Console Wi-Fi?") + \
+			self.l.get_bold("Are you sure you want to decline the data policy? This will disable the Console Wi-Fi.") + \
 			"\n\n" + \
 			self.l.get_str("You can change your data preferences in the System Tools app at any time.")
 			)
 
         title_string = self.l.get_str('Warning!') + " " + "Are you sure?"
         # ok_string = self.l.get_bold('Ok')
-        ok_string = self.l.get_bold("Yes, I'm sure")
+        ok_string = self.l.get_bold("Yes, kill Wi-Fi")
         back_string = self.l.get_bold('No, go back')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
