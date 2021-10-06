@@ -83,7 +83,7 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.8.0'
+initial_version = 'v1.8.2'
 
 # default starting screen
 start_screen = 'welcome'
