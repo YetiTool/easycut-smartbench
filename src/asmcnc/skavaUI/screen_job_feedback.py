@@ -109,7 +109,7 @@ Builder.load_string("""
                         orientation: 'vertical'
                         Label:
                             id: production_notes_label
-                            size_hint_y: 0.4
+                            size_hint_y: 0.35
                             text: "Production notes"
                             color: hex('#333333ff') #grey
                             font_size: dp(20)
@@ -120,7 +120,7 @@ Builder.load_string("""
 
                         TextInput:
                             id: production_notes
-                            size_hint_y: 0.6
+                            size_hint_y: 0.65
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
