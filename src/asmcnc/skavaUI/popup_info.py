@@ -745,7 +745,7 @@ class PopupWait(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 300),
+                      size=(500, 200),
                       auto_dismiss= False
                       )
         
