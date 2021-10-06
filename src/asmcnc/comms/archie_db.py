@@ -202,7 +202,10 @@ class SQLRabbit:
             }
         ]
 
-        data[0]["metadata"] = metadata_dict
+
+        metadata_in_json_format = {k.translate(None, ' '): v for k, v in metadata_dict.iteritems()}
+
+        data[0]["metadata"] = metadata_in_json_format
 
         try:
             self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
