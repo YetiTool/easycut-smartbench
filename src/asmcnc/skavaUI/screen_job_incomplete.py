@@ -148,7 +148,7 @@ Builder.load_string("""
                             color: hex('#333333ff') #grey
                             font_size: dp(20)
                             halign: "left"
-                            valign: "middle"
+                            valign: "bottom"
                             markup: True
                             text_size: self.size
 
