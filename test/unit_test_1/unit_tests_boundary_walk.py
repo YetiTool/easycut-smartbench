@@ -9,7 +9,6 @@ NOTES:
     I.e. write the test first, then code to make the test pass
 
     WORK IN PROGRESS!!!
-
 '''
 import unittest
 
@@ -17,8 +16,6 @@ import numpy as np
 import os.path
 
 from geometry import boundary_calculator
-
-
 
 ##########################################################
 
@@ -38,13 +35,10 @@ from geometry import boundary_calculator
 #    *    THEN the BOUNDARY_array is a complete boundary (polygon), so the start and end point are the same
 #    *    THEN no part of the gcode file will exceed the area described by the BOUNDARY_array
 
-
 ##########################################################
 
 class UnitTestsBoundaryWalk(unittest.TestCase):
-    
     detailsToConsole = 0
-    
     gcodefile = 0.0
     gcode_file_path = ""
     boundarySetter = object
@@ -58,7 +52,7 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
 
         #    1    GIVEN a gcode file
         boundarySetter = boundary_calculator.BoundaryCalculator()
-        gcodefile = boundarySetter.get_boundary_as_gcode_list()
+        gcodefile = boundarySetter.get_sample_boundary_as_gcode_list()
         gcode_file_path = boundarySetter.get_gcode_path()
                
         #    2    GIVEN a working SB & console with software loaded
@@ -68,16 +62,9 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         # stm = boundarySetter.stm
         # stm.screen_shapeCutter_1
         
-
-
         #    3    GIVEN a boundary_calculator feature
         ##         c.f. geometry.boundary_calculator
         boundarySetter.set_boundary_datum_point()
-        
-
-
-
-
         
         if self.detailsToConsole == 1: 
             print("UnitTestsBoundaryWalk().setUp() ____ gcodefile = " + str(type(gcodefile)))
@@ -114,20 +101,29 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         ## basic test-assert-is-working test: 
         # assert (1 + 2) == 33
 
-    def testBoundaryIsACompletePolygon(self):
-        
+    def testGcodeIsACompletePolygon(self):
         global gcodefile
-        first_item = gcodefile[0]
-        last_item = gcodefile[-1]
+        self.worker_checkFirstAndLast(gcodefile,"gcodefile")
+
+    def testFoundBoundaryIsACompletePolygon(self):
+        self.worker_checkFirstAndLast(
+            boundarySetter.boundary_calc_by_segment,
+            "boundarySetter.boundary_calc_by_segment")
+
+    def worker_checkFirstAndLast(self,inputList,strInputName):
+        first_item = inputList[0]
+        last_item = inputList[-1]
                 
         # [self.gcodefile[0], self.gcodefile[-1]]
         if self.detailsToConsole == 1:
-            print("UnitTestsBoundaryWalk().testBoundaryIsACompletePolygon() ____ gcodefile = " + str(type(gcodefile)))
+            print("UnitTestsBoundaryWalk().worker_checkFirstAndLast() ____ inputList, for " + strInputName + " = " + str(type(inputList)))
             print("first_item is:   " + str(first_item))
             print("last_item is:    " + str(last_item))
         
-        self.assertEquals(first_item, last_item, " start and end of gcode file are not the same coordinates... ")
-        
+        self.assertEquals(first_item, last_item, 
+                          " start and end of DON'T MATCH: "
+                          + strInputName + "\n\n" +
+                          str(first_item) + ", " + str(last_item))
         ## basic test-assert-equals-is-working test: 
         # self.assertEqual((0 * 10), 0)
         
@@ -142,6 +138,18 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         neither_are_zero = abs(boundarySetter.datum_x) + abs(boundarySetter.datum_y)
         self.assertTrue(neither_are_zero > 0, "the datum doesn't exist? ")
         
+    def print_to_console_sorted_list(self):  
+        for x in range(len(boundarySetter.angle_sorted_boundary_xy)):
+            # print("sorted_c[x][0] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0]))
+            # print("sorted_c[x][0][0] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0][0]))
+            # print("sorted_c[x][0][1] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0][1]))
+            print("sorted_c[x][1] = " + str(boundarySetter.angle_sorted_boundary_xy[x-1][1]))
+            # print("sorted_c[x][2] = " + str(boundarySetter.angle_sorted_boundary_xy[x][2]))
+        
+    def testJobEnvelopesMatch(self):
+        boundarySetter.get_job_envelope_xy_list()
+     
+
         
     def testBoundaryAvoidsTheFurthestCut(self):
         # this test is by far the most complex 
@@ -158,18 +166,29 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         #     function in boundary_calculator]
         # DONE >>>>>>>>>> see in setUp
         # and tested in: testBoundaryDatumIsNotBlank
-                
+        pass # DONE
+                    
         # ~~~ 2
         # convert the gcode input into gcode_radial
-        # convert the found boundary into boundary_radial
+        # and find the distance from the datum at each angle
         # these need to be a datatype with 
-        # radial data and distance at that angle from the cut_mid_point
-        #    [n.b. this conversion will be available as 
-        #     a function in boundary_calculator]
+        # radial data and distance at that angle from the cut_mid_point (jobEnvelope)
+        #    [n.b. this conversion is available as 
+        #     a function in boundary_calculator[]
+        # SEE:
+        #    angle_from_datum
+        #    distance_from_datum
+        #    
+        #    creating boundary_xy with: add_coord_to_boundary()
+        pass # DONE
 
         # ~~~ 3
-        # sort both gcode_radial and boundary_radial as follows
-        # 
+        # sort the boundary_radial
+        # then find the max distance for each 'radial segment'
+        # the output of this is the "boundary"
+        #    [n.b. this conversion is available as 
+        #     a function in boundary_calculator[]
+        #        SEE: run_via_angle_checking_max_dist_n_range()
         
         # ~~~ 4        
         
@@ -181,14 +200,26 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         global gcodefile
         global boundarySetter
 
-        # gcode_list = []
-        gcode_list = boundarySetter.set_gcode_as_list(gcode_file_path)
+        # defines boundarySetter.boundary_xy based on the gcode supplied
+        boundarySetter.set_gcode_as_list(gcode_file_path) # gcode_file_path
+        # used sorted: sorting by angle boundarySetter.sorted_coordinates_by_angle
+        boundarySetter.sort_boundary_data_by_angle()
+        
+        #
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        #
+        # go through by angle and record max distance going round
+        # this is what provides the BOUNDARY:
+        boundarySetter.run_via_angle_checking_max_dist_n_range()
+        #
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        #
 
         if self.detailsToConsole == 1:
             print("boundarySetter.datum_x = " + str(boundarySetter.datum_x))
             print("boundarySetter.datum_y = " + str(boundarySetter.datum_y))
-            
-        # print("gcode_list[] = " + str(gcode_list[:]))
+            self.print_to_console_sorted_list()
+
 
 
 if __name__ == "__main__":
@@ -198,7 +229,7 @@ if __name__ == "__main__":
 
     def unitTestBoundaryWalkSuite():
         suite = unittest.TestSuite()
-        suite.addTest(UnitTestsBoundaryWalk("testBoundaryIsACompletePolygon"))
+        suite.addTest(UnitTestsBoundaryWalk("testFoundBoundaryIsACompletePolygon"))
         suite.addTest(UnitTestsBoundaryWalk("testBoundaryAvoidsTheFurthestCut"))
         return suite
         # or could use: suite = unittest.makeSuite(WidgetTestCase,'test')
@@ -208,6 +239,6 @@ if __name__ == "__main__":
 # class BoundaryWalkTestSuite(unittest.TestSuite):
 #     def __init__(self):
 #         unittest.TestSuite.__init__(self,map(UnitTestsBoundaryWalk,
-#                                               ("testBoundaryIsACompletePolygon",
+#                                               ("testFoundBoundaryIsACompletePolygon",
 #                                                "testBoundaryAvoidsTheFurthestCut"))) 
 # 

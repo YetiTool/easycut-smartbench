@@ -12,7 +12,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 
-from asmcnc.core_UI.sequence_alarm.screens import screen_alarm_1
+from asmcnc.core_UI.sequence_alarm.screens import * # screen_alarm_1
 
 
 class ScreenTest(App):
