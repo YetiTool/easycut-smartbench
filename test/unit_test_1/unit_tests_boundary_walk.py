@@ -9,13 +9,24 @@ NOTES:
     I.e. write the test first, then code to make the test pass
 
     WORK IN PROGRESS!!!
+    
+    TODO
+        refactor naming to Python conventions
+            variables: with_underscores_and_lower_case
+            class names: CapWords
+            modules: alllowercase_maybe_with_underscores
+        create test harness to run > 1 file and check them
+        test harness to pass gcodes in setUp
+
 '''
 import unittest
-
 import numpy as np
 import os.path
-
 from geometry import boundary_calculator
+from numpy.ma.core import isarray
+from operator import is_
+from pandas.core.dtypes.missing import isnull
+from numpy import isnan
 
 ##########################################################
 
@@ -39,81 +50,67 @@ from geometry import boundary_calculator
 
 class UnitTestsBoundaryWalk(unittest.TestCase):
     detailsToConsole = 0
-    gcodefile = 0.0
+    gcodefile = [0,0]
     gcode_file_path = ""
-    boundarySetter = object
+    b_setter = object
+    
+    # accepted accuracy of boundary v gcode_file actual:
+    accuracy_percent = 0.0001
     
     def setUp(self):
-        # get the GIVENs sorted i.e. what we need for the test(s):
-        
-        global boundarySetter
-        global gcodefile, gcode_file_path
-        # global st
-
+        self.gcode_file_path = ""
         #    1    GIVEN a gcode file
-        boundarySetter = boundary_calculator.BoundaryCalculator()
-        gcodefile = boundarySetter.get_sample_boundary_as_gcode_list()
-        gcode_file_path = boundarySetter.get_gcode_path()
-               
+        # gcode file path is set automatically in boundary_calculator if not supplied:
+        self.b_setter = boundary_calculator.BoundaryCalculator()
+        
+        # self.print_to_console_sorted_list()
+        
+        # test harness could pass gcodes in here...
+        # self.b_setter.set_gcode_as_list(self.gcode_file_path)
+        ### BUT actually would be best to pass in via line 60 
+        
         #    2    GIVEN a working SB & console with software loaded
         #    load screen_test
-        
-        #screen test manager:
-        # stm = boundarySetter.stm
-        # stm.screen_shapeCutter_1
+        #screen test manager: # stm = b_setter.stm # stm.screen_shapeCutter_1
         
         #    3    GIVEN a boundary_calculator feature
         ##         c.f. geometry.boundary_calculator
-        boundarySetter.set_boundary_datum_point()
         
         if self.detailsToConsole == 1: 
-            print("UnitTestsBoundaryWalk().setUp() ____ gcodefile = " + str(type(gcodefile)))
-
-        return gcodefile
-
+            print("UnitTestsBoundaryWalk().setUp() ____ gcodefile = " + 
+                  str(type(self.b_setter.get_gcode_path())))
 
     def tearDown(self):
         pass
     
-    
-    def goThroughData(self, inputGCodeFile):
-        
-        stringTestFile = []
-        
-        for i in inputGCodeFile:
-            stringTestFile[i] = str(inputGCodeFile(i))
-        
-        return stringTestFile
-    
-    
-    def testBoundaryIsAnArray(self):  ## test method names begin 'test*'
-        # get global gcodefile as string
-        # double running of setUp:   testFile = self.setUp()
-        global gcodefile
+    def testBoundaryIsAnArray(self):  
         if self.detailsToConsole == 1: 
-            print("UnitTestsBoundaryWalk().testBoundaryIsAnArray() ____ gcodefile = " + str(type(gcodefile)))
+            print("UnitTestsBoundaryWalk().testBoundaryIsAnArray() ____ gcodefile = " + 
+                  str(type(self.b_setter.gcodefile)))
 
-        # testFile = self.goThroughData(gcodefile)
-        ############# testFile = list(gcodefile)
-        
-        self.assertTrue(isinstance(gcodefile, (list, tuple, np.ndarray)), " not an array, this gcodefile")
-        
-        ## basic test-assert-is-working test: 
-        # assert (1 + 2) == 33
+        self.assertTrue(isinstance(self.b_setter.gcodefile, (list, tuple, np.ndarray)), 
+                        " not an array, this gcodefile")
 
-    def testGcodeIsACompletePolygon(self):
-        global gcodefile
-        self.worker_checkFirstAndLast(gcodefile,"gcodefile")
+    # def testGcodeIsACompletePolygon(self):
+    #     self.worker_checkFirstAndLast(self.b_setter.gcodefile,"gcodefile input")
 
     def testFoundBoundaryIsACompletePolygon(self):
         self.worker_checkFirstAndLast(
-            boundarySetter.boundary_calc_by_segment,
-            "boundarySetter.boundary_calc_by_segment")
+            self.b_setter.boundary_calc_by_segment,
+            "b_setter.boundary_calc_by_segment")
 
-    def worker_checkFirstAndLast(self,inputList,strInputName):
-        first_item = inputList[0]
-        last_item = inputList[-1]
-                
+    def worker_checkFirstAndLast(self, inputList, strInputName):
+        print("worker_checkFirstAndLast: " + strInputName + "... size of inputList is: " + str(len(inputList)))
+        try:
+            first_item = inputList[0]
+            last_item = inputList[-1]
+        except:
+            pass
+        finally:
+            print("inputList: " + str(inputList) + " from: " + strInputName)
+            return
+        
+            
         # [self.gcodefile[0], self.gcodefile[-1]]
         if self.detailsToConsole == 1:
             print("UnitTestsBoundaryWalk().worker_checkFirstAndLast() ____ inputList, for " + strInputName + " = " + str(type(inputList)))
@@ -121,35 +118,30 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
             print("last_item is:    " + str(last_item))
         
         self.assertEquals(first_item, last_item, 
-                          " start and end of DON'T MATCH: "
-                          + strInputName + "\n\n" +
+                          " start and end of " +
+                          + strInputName + " DON'T MATCH: \n\n" +
                           str(first_item) + ", " + str(last_item))
-        ## basic test-assert-equals-is-working test: 
-        # self.assertEqual((0 * 10), 0)
-        
         
     def testGcodeFileWorks(self):
-        global gcode_file_path
-        self.assertTrue(os.path.isfile(gcode_file_path), "gcode supplied path/file isn't working...  " + gcode_file_path)
+        self.assertTrue(os.path.isfile(self.b_setter.gcode_file_path), 
+                        "gcode supplied path/file isn't working...  " + 
+                        self.b_setter.gcode_file_path)
 
 
     def testBoundaryDatumIsNotBlank(self):
-        global boundarySetter
-        neither_are_zero = abs(boundarySetter.datum_x) + abs(boundarySetter.datum_y)
+        neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
         self.assertTrue(neither_are_zero > 0, "the datum doesn't exist? ")
+        if self.detailsToConsole == 1: 
+            print("datums: " + str(self.b_setter.datum_x) + "," + str(self.b_setter.datum_y))
         
     def print_to_console_sorted_list(self):  
-        for x in range(len(boundarySetter.angle_sorted_boundary_xy)):
-            # print("sorted_c[x][0] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0]))
-            # print("sorted_c[x][0][0] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0][0]))
-            # print("sorted_c[x][0][1] = " + str(boundarySetter.angle_sorted_boundary_xy[x][0][1]))
-            print("sorted_c[x][1] = " + str(boundarySetter.angle_sorted_boundary_xy[x-1][1]))
-            # print("sorted_c[x][2] = " + str(boundarySetter.angle_sorted_boundary_xy[x][2]))
+        for x in range(len(self.b_setter.angle_sorted_boundary_xy)):
+            # print("sorted_c[x][0] = " + str(b_setter.angle_sorted_boundary_xy[x][0]))
+            # print("sorted_c[x][0][0] = " + str(b_setter.angle_sorted_boundary_xy[x][0][0]))
+            # print("sorted_c[x][0][1] = " + str(b_setter.angle_sorted_boundary_xy[x][0][1]))
+            print("sorted_c[x][1] = " + str(self.b_setter.angle_sorted_boundary_xy[x-1][2]))
+            # print("sorted_c[x][2] = " + str(b_setter.angle_sorted_boundary_xy[x][2]))
         
-    def testJobEnvelopesMatch(self):
-        boundarySetter.get_job_envelope_xy_list()
-     
-
         
     def testBoundaryAvoidsTheFurthestCut(self):
         # this test is by far the most complex 
@@ -196,31 +188,70 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         
         ### ~~~~~~~~~~~~~~# 1
         
-        global gcode_file_path
-        global gcodefile
-        global boundarySetter
-
-        # defines boundarySetter.boundary_xy based on the gcode supplied
-        boundarySetter.set_gcode_as_list(gcode_file_path) # gcode_file_path
-        # used sorted: sorting by angle boundarySetter.sorted_coordinates_by_angle
-        boundarySetter.sort_boundary_data_by_angle()
+        # defines b_setter.boundary_xy based on the gcode supplied
+        # self.b_setter.set_gcode_as_list(self.gcode_file_path) # gcode_file_path
+        # THIS IS DONE IN SETUP
+        
+        # sort boundary_xy by angle
+        # used sorted: sorting by angle b_setter.sorted_coordinates_by_angle
+        # THIS IS DONE IN SETUP
         
         #
         # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         #
         # go through by angle and record max distance going round
         # this is what provides the BOUNDARY:
-        boundarySetter.run_via_angle_checking_max_dist_n_range()
+        
         #
         # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         #
 
         if self.detailsToConsole == 1:
-            print("boundarySetter.datum_x = " + str(boundarySetter.datum_x))
-            print("boundarySetter.datum_y = " + str(boundarySetter.datum_y))
+            print("b_setter.datum_x = " + str(self.b_setter.datum_x))
+            print("b_setter.datum_y = " + str(self.b_setter.datum_y))
             self.print_to_console_sorted_list()
 
 
+    def testJobEnvelopesMatch(self):
+        
+        job_envelope_g = self.b_setter.get_job_envelope_from_gcode()
+
+        # actual, from gcode_file: x max - x min
+        gcode_size_x = job_envelope_g[0][1] - job_envelope_g[0][0]
+        gcode_size_y = job_envelope_g[1][1] - job_envelope_g[1][0]
+
+        # found, from boundary calc: x max - x min
+        b_size_x = self.b_setter.bound_range_x[1] - self.b_setter.bound_range_x[0]
+        b_size_y = self.b_setter.bound_range_y[1] - self.b_setter.bound_range_y[0]
+
+
+
+        # what is the difference? assume boundary bigger...
+        x_size_diff = abs(b_size_x - gcode_size_x)
+        y_size_diff = abs(b_size_y - gcode_size_y)
+        
+        self.assertTrue(
+            x_size_diff < gcode_size_x*self.accuracy_percent, 
+            " x not close enough, accuracy(" + 
+            str(self.accuracy_percent) + "), gcode_size_x(" + 
+            str(gcode_size_x) + "), " +
+            "x_size_diff(" + str(x_size_diff) + ")")
+
+        self.assertTrue(
+            y_size_diff < gcode_size_y*self.accuracy_percent, 
+            " y not close enough, accuracy(" + 
+            str(self.accuracy_percent) + "), gcode_size_y(" 
+            + str(gcode_size_y) + "), " +
+            "y_size_diff(" + str(y_size_diff) + ")")
+        
+        if self.detailsToConsole == 1: 
+            print("gcode found_envelope x(" + str(job_envelope_g[0][0]) + "," + str(job_envelope_g[0][1]) 
+                  + ") y(" + str(job_envelope_g[1][0])  + "," + str(job_envelope_g[1][1]) + ")")
+            print("x_size_diff: " + str(x_size_diff) + 
+                  ", and y_size_diff: " + str(y_size_diff))
+            print("BOUNDARY RANGE: b_size_x = " + str(b_size_x) + ", b_size_y = " + str(b_size_y))
+
+     
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

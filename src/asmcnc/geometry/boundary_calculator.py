@@ -4,11 +4,16 @@ Created on 13 Sep 2021
 @author: hsth
 @author hugh.harford@yetitool.com
 
+Purpose: undertake geometry and return array of gcode coordinates that represent a boundary
+
 TODO:         ########## 
     hard coded .nc path to be refactored
 
+    # address this:
+    # @@@@ HACK HACK HACK! a fix to close the polygon
+           # see: in run_via_angle_checking_max_dist_n_range  
 
-Purpose: undertake geometry and return array of gcode coordinates that represent a boundary
+
 
 
 '''
@@ -28,7 +33,8 @@ class BoundaryCalculator():
     detailsToConsole = 0
     
     gcode_file_path = ""
-    boundarySetter = object
+    gcodefile = []
+    envelope_of_work = object
 
     datum_x = 0.0
     datum_y = 0.0
@@ -56,7 +62,7 @@ class BoundaryCalculator():
     ##    there will, of course be lots more than 2!
     ###########
     #
-    segment_divisor = 10000
+    segment_divisor = 10000000
     angle_max_check = math.pi/segment_divisor
     #
     ########### (see notes above on what this is for)
@@ -65,96 +71,96 @@ class BoundaryCalculator():
     # st = screen_test
     # stm = screen_manager_shapecutter
     
-    def __init__(self, file_path_to_gcode = ""):
-        '''
-        Constructor (really, I understood that __new__ was the constructor?)
-        '''
-        global gcode_file_path
+    def __init__(self, input_file_path_to_gcode = ""):
+        # re-set lists:
+        self.boundary_xy = 0
         
-        # expected path
-        gcode_file_path = "../../test/gcode_test_files/jobCache_copy/Circle.nc"
-
-        # set path to file, if provided
-        if (file_path_to_gcode != ""):
-            gcode_file_path = file_path_to_gcode
-
+        # test gcode_file_path...
+        self.gcode_file_path = "../../test/gcode_test_files/jobCache_copy/Circle.nc"
         # THE BELOW DOESN'T WORK - MUST PICK A FILE WITH .NC EXTENSION
         #    ../../test/gcode_test_files/jobCache_copy/Write Fineliner.gcode"
-        self.boundarySetter = job_envelope.BoundingBox()
-        
+        # set path to file, if provided
+        if (input_file_path_to_gcode != ""): 
+            self.gcode_file_path = input_file_path_to_gcode
+
         # get job range
-        self.boundarySetter.set_job_envelope(gcode_file_path)
+        self.envelope_of_work = job_envelope.BoundingBox()
+        self.envelope_of_work.set_job_envelope(self.gcode_file_path)
+        # set the boundary_datum (mid-mid of job envelope)
+        self.set_boundary_datum_point()
 
+        self.gcodefile = self.set_gcode_as_list(self.gcode_file_path)
 
-        ## TRYING TO SET UP A SCREEN
-        # self.st = screen_test.ScreenTest(App)
-        # self.stm = self.st.build()
+        # CHECKING OUT WHY SORT NOT OPERATIONAL BELOW
+        ##### print("self.boundary_xy: " + str(self.boundary_xy))
+        # z = 167
+        # print("self.boundary_xy[" + str(z) + "][2]: " + str(self.boundary_xy[z][2]))
+
+        for x in range(len(self.boundary_xy)):
+            # print("self.boundary_xy[" + str(x) + "]")
+            # print("__init__ self.boundary_xy[" + str(x) + "]: " + str(self.boundary_xy[x][2]))
+            pass
+
+        # still accumulating list items!!!!!!!!
+        self.sort_boundary_data_by_angle()
+        
+        self.run_via_angle_checking_max_dist_n_range()
+        b_envelope = self.get_job_envelope_xy_list()
+        self.bound_range_x = b_envelope[0]
+        self.bound_range_y = b_envelope[1]
+        
+
 
     def get_job_envelope_from_gcode(self):
-        new_gcode_boundary_setter = job_envelope.BoundingBox()
-        new_gcode_boundary_setter.set_job_envelope(gcode_file_path)
-        found_envelope = (new_gcode_boundary_setter.range_x, 
-                          new_gcode_boundary_setter.range_y) 
+        found_envelope = (self.envelope_of_work.range_x, 
+                          self.envelope_of_work.range_y) 
         return found_envelope
+
+    def get_gcode_path(self):
+        ## print("gcode_file_path = " + gcode_file_path)
+        return self.gcode_file_path
     
     def get_job_envelope_xy_list(self):
-
-        found_boundary_range_x = [0,0]
-        found_boundary_range_y = [88.0,88.1]
-
-        # MAKE SURE TO DO BOTH ENDS OF RANGE:
-        # ### , found_boundary_range_x[1] = max(self.boundary_calc_by_segment[:][1][1])
-        found_boundary_range_x[0] = min(1,2,3,4,5,6,78,-99)
-            # self.boundary_calc_by_segment[1][1])
-        z = 0
-        print(" ***** self.boundary_calc_by_segment[z]: " 
-              + str(self.boundary_calc_by_segment[:][z][0]))
-        print(" ***** _______ min found = " + 
-              str(min(self.boundary_calc_by_segment[:][z][0])))
+        ### see: run_via_angle_checking_max_dist_n_range
+        # self.bound_range_x = [x_min, x_max]
+        # self.bound_range_y = [y_min, y_max]
         
-        # found_boundary_range_x[0], found_boundary_range_x[1] = 0.009
-        
-        # self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
-        # self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
-        found_envelope = ((found_boundary_range_x[0]
-                           ,found_boundary_range_x[1]),(found_boundary_range_y[0],found_boundary_range_y[1]))
+        found_envelope = ((self.bound_range_x[0],
+                           self.bound_range_x[1]),
+                           (self.bound_range_y[0],
+                            self.bound_range_y[1]))
             
-            # new_xylist_boundary_setter.range_x, 
-            #              new_xylist_boundary_setter.range_y)
-        
-        print("found_envelope: " + str(found_envelope))
-        
+
+
         return found_envelope
 
     def set_boundary_datum_point(self):
         
         # set single x,y datum at job_envelop mid point
-        self.datum_x = abs((self.boundarySetter.range_x[0] - self.boundarySetter.range_x[1])/2)
-        self.datum_y = abs((self.boundarySetter.range_y[0] - self.boundarySetter.range_y[1])/2)
+        self.datum_x = abs((self.envelope_of_work.range_x[0] 
+                            - 
+                            self.envelope_of_work.range_x[1])
+                            /2)
+        self.datum_y = abs((self.envelope_of_work.range_y[0] 
+                            - 
+                            self.envelope_of_work.range_y[1])
+                            /2)
  
         if self.detailsToConsole == 1: 
             print("datum_x = " + str(self.datum_x))
             print("datum_y = " + str(self.datum_y))
-    
-   
-    def get_sample_boundary_as_gcode_list(self):
-        sampleArray = [5,10,15,5] # providing a double fails the unit test, e.g. 5.5 
-        return sampleArray
-    
+            
+#'''    def dev_initial_get_sample_boundary_as_gcode_list(self):
+#        sampleArray = [5,10,15,5] # providing a double fails the unit test, e.g. 5.5 
+#        return sampleArray
+#'''
 
-    
     def check_point(self, in_x, in_y, datum):
+        # use? math.angle_counterclockwise(a,b)
         
-        # math.angle_counterclockwise(a,b)
-        
-        # temp_point = (0, 0)
         temp_point = (in_x ,in_y)
-        
-        # found_angle = 0.001
-        # dist_to_boundary = 0.001
-        
-        found_angle = self.boundarySetter.angle_from_datum(in_x, in_y, datum)
-        dist_to_boundary = self.boundarySetter.distance_from_datum(in_x, in_y, datum)
+        found_angle = self.b_setter.angle_from_datum(in_x, in_y, datum)
+        dist_to_boundary = self.b_setter.distance_from_datum(in_x, in_y, datum)
             
         print("found angle and distance: " + str(found_angle) + 
               ", dist: " + str(dist_to_boundary) + 
@@ -185,43 +191,47 @@ class BoundaryCalculator():
             print("self.temp_dist_to_boundary = " + str(self.temp_dist_to_boundary))
     
     def add_coord_to_boundary(self, tp_x, tp_y):
-        global boundary_xy, boundary_xy_string, boundary_details
-        # actual values: 
-        self.boundary_xy.append([
-             (
-                 float(tp_x), 
-                 float(tp_y)
-                 ), 
-             float(self.temp_angle), 
-             float(self.temp_dist_to_boundary)
-             ])
-        # single string:
-        # temp_string = str(tp_x) + ", " + str(tp_y) + ", " + str(angle) + ", " + str(dist)
-        # self.boundary_xy_string.append(temp_string)
+        if self.boundary_xy == [[0.0, 0.0, 0.0, 0.0]]: # start, as has been reset
+            self.boundary_xy = [[
+                float(tp_x), 
+                float(tp_y), 
+                float(self.temp_angle), 
+                float(self.temp_dist_to_boundary)
+                ]]
+        else: # append as needed
+            self.boundary_xy.append([
+                float(tp_x), 
+                float(tp_y), 
+                float(self.temp_angle), 
+                float(self.temp_dist_to_boundary)
+                ])
+
         if self.detailsToConsole == 1: 
             print(" add coord: \n" + str(tp_x) + " and " + str(tp_x))
-            print(" add coord: \n" + str(boundary_xy))
+            print(" add coord: \n" + str(self.boundary_xy))
     
-    def set_gcode_as_list(self, gcode_file_path):
-        global boundary_xy, boundary_details
-        global boundarySetter
-        datum = [self.datum_x, self.datum_y]
+    def set_gcode_as_list(self, incoming_gcode_file_path):
+        self.datum = [self.datum_x, self.datum_y]
     # set first value to datum (required...?)
         temp_x = self.datum_x
         temp_y = self.datum_y
         self.temp_angle = 0.00001
-    # initially copied from job_envelope.set_job_envelope
+        # temp values
         x_values = []
         y_values = []
+        # reset boundary_xy 
+        self.boundary_xy = [[0.0, 0.0, 0.0, 0.0]]
     # check file provided is there
-        if os.path.isfile(gcode_file_path) == True:
-            print("gcode supplied: " + gcode_file_path)
-        elif os.path.isfile(gcode_file_path) == False:
-            print("gcode supplied path/file isn't working...  " + gcode_file_path)
+        if os.path.isfile(incoming_gcode_file_path) == True:
+            self.gcode_file_path = incoming_gcode_file_path
+            if self.detailsToConsole == 1:
+                print("gcode supplied: " + self.gcode_file_path)
+        elif os.path.isfile(self.gcode_file_path) == False:
+            print("gcode supplied path/file isn't working...  " + self.gcode_file_path)
             print("                      manually spec'd ERROR >>>>     " + str([99,88,77,"failed file"]))
             assert (1 == 0)
-    # open GCODE file 
-        file_in_use = open(gcode_file_path,'r');
+    # open GCODE file for use
+        file_in_use = open(self.gcode_file_path,'r');
     # go through line(s) and get out the x,y   
         for line in file_in_use:
             blocks = line.strip().split(" ")
@@ -235,9 +245,8 @@ class BoundaryCalculator():
                         y_values.append(float(part[1:]))
                         temp_y = float(part[1:])
                     if part.startswith(('Z')): 
-                        # z_values.append(float(part[1:]))
-                        # temp_z = float(part[1:])
-                        pass
+                        pass # z_values.append(float(part[1:])) # temp_z = float(part[1:])
+                        
                 # find angle from datum 
                 ########## (just exactly what angle is calculated here...??)
                     self.angle_from_datum(temp_x, temp_y) 
@@ -250,40 +259,40 @@ class BoundaryCalculator():
                     # print "Boundary calculator: skipped '" + part + "'"
                     
         file_in_use.close()
-        print("closed file, been through")
         
         if self.detailsToConsole == 1: 
+            print("closed file, been through")
             print("boundary_xy: \n" + str(self.boundary_xy))
             print("boundary_xy length = " + str(len(self.boundary_xy)))
-        print("boundary_xy length = " + str(len(self.boundary_xy)))
+            # THIS
+            print("boundary_xy length = " + str(len(self.boundary_xy)))
 
         return self.boundary_xy
         
-    def get_gcode_path(self):
-        ## print("gcode_file_path = " + gcode_file_path)
-        return gcode_file_path
     
     def sort_boundary_data_by_angle(self):
-        # global boundary_xy, boundary_details
-        # global boundarySetter
-        
+        # reset sorted b_xy:
+        ### self.angle_sorted_boundary_xy = [[0.0, 0.0, 0.0, 0.0]]
+
         # sort the boundary_xy, creating a new sorted array
         # x[1] being 2nd column, angle:
-            # x[0] = (x,y)
-            # x[1] = angle
-            # x[2] = distance
-         
-        self.angle_sorted_boundary_xy = sorted(self.boundary_xy, key=lambda x: (x[1])) 
-        
-        return self.angle_sorted_boundary_xy
+            # x[0] = x coord
+            # x[1] = y coord
+            # x[2] = angle
+            # x[3] = distance
+        self.angle_sorted_boundary_xy = sorted(self.boundary_xy, key=lambda x: (x[2])) 
+        # return self.angle_sorted_boundary_xy
     
     def run_via_angle_checking_max_dist_n_range(self):
-        print("angle_max_check = " + str(self.angle_max_check) + 
-              " ___ i.e. PI / segment_divisor, where segment_divisor = " + str(self.segment_divisor))
+        # go through the angle_sorted_boundary_xy and do 2 things:
+        # a) find the max distance from the datum at that point
+        # b) capture the boundary range while we are going through
+
         temp_max_dist_at_in_segment = 0
-        start_segment = 99 # to indicate no-started
-        
-        #####  loop logic:
+        start_segment = 99 # to indicate not-started
+        # reset output list:
+        self.boundary_calc_by_segment = [[0.0,0.0,0.0]]
+        #####  loop logic (for boundary):
             # in each segment:
             #    start_segment = "recorded"
             #    if next_entry > start_segment + self.angle_max_check:
@@ -294,25 +303,55 @@ class BoundaryCalculator():
         
         ##### NOTE: also, as we go through, 
         #           capturing bound_range x & y
+        ########
+        #    ranges x,y, min max all set to 0
+        #### also setting object range values after loop end
+        
+        #    ranges x,y, min max all set to 0
+        x_min = self.datum_x
+        x_max = self.datum_x
+        y_min = self.datum_y
+        y_max = self.datum_y
         
         for x in range(len(self.angle_sorted_boundary_xy)-1):
+            # get initial values
+            x_value = self.angle_sorted_boundary_xy[x][0]
+            y_value = self.angle_sorted_boundary_xy[x][1]
+        #####
+        #
+        ## @@@@@@@@@@@@@@ establishing x & y bound_range
+        #####
+        ## @@@ NOTE: this boundary range can be / will be APPROXIMATE
+            ## @@@       based on angle_max_check's impact
+            # x values min and max
+            if x_value > x_max: x_max = x_value
+            if x_value < x_min: x_min = x_value
+            # y values min and max
+            if y_value > y_max: y_max = y_value
+            if y_value < y_min: y_min = y_value
             
-            #### establishing x & y bound_range
-            #
-            
-            
+        #####
+        #
+        ## @@@@@@@@@@@@@@ FIND DISTANCE FROM DATUM @ ANGLE
+        #####   
             #### checking dist from datum
             #    as we go through via angle
-            if start_segment == 99: # i.e. not populated yet
+            if start_segment == 99: # i.e. not populated yet (many times pi)
                 start_segment = self.angle_sorted_boundary_xy[x][1]
             this_angle = self.angle_sorted_boundary_xy[x][1]
             if this_angle > start_segment + self.angle_max_check:    
                 # record_max_dist_found into boundary_calc_by_segment
-                self.boundary_calc_by_segment.append(
-                    [self.angle_sorted_boundary_xy[x][0][0],
-                     self.angle_sorted_boundary_xy[x][0][1], 
-                     temp_max_dist_at_in_segment]
-                    )
+                if self.boundary_calc_by_segment == [[0.0,0.0,0.0]]:
+                    self.boundary_calc_by_segment = [[
+                        x_value,
+                        y_value,
+                        temp_max_dist_at_in_segment]]
+                else:
+                    self.boundary_calc_by_segment.append(
+                        [x_value,
+                         y_value, 
+                         temp_max_dist_at_in_segment]
+                        )
                 # RESET
                 # set temp_max_dist_at_in_segment to 0
                 temp_max_dist_at_in_segment = 0
@@ -324,15 +363,27 @@ class BoundaryCalculator():
                 if self.angle_sorted_boundary_xy[x][2] > temp_max_dist_at_in_segment:
                     # if so, replace temp_max with greater distance
                     temp_max_dist_at_in_segment = self.angle_sorted_boundary_xy[x][2]
-        
         # artificially close the polygon of the boundary
-        # HACK HACK HACK!
+        # @@@@ HACK HACK HACK! a fix to close the polygon
         self.boundary_calc_by_segment.append(
                     self.boundary_calc_by_segment[0]
                     )
-        
-        
-        print("no items in calc'd boundary = " + str(len(self.boundary_calc_by_segment)))
+        # put the found range values into object.range_etc
+        self.bound_range_x = [x_min, x_max]
+        self.bound_range_y = [y_min, y_max]
+
+        # debug print lines:        
+        if self.detailsToConsole == 1:
+            print("run_via_angle_checking_max_dist_n_range:") 
+            print("  >> angle_max_check = " + str(self.angle_max_check) + 
+                  " ___ i.e. PI / segment_divisor, where segment_divisor = " + 
+                  str(self.segment_divisor))
+            print("  >> datums: x(" + str(self.datum_x) + "), y(" + str(self.datum_y) + ")")
+            print("  >> BOUND RANGE >>>>>>>>>>>>>> self.bound_range_x = " + 
+                  str(self.bound_range_x))
+            print("  >> BOUND RANGE >>>>>>>>>>>>>> self.bound_range_y = " + 
+                  str(self.bound_range_y))
+            print("  >> no. items in calc'd boundary = " + str(len(self.boundary_calc_by_segment)))
         
         return self.boundary_calc_by_segment
     
