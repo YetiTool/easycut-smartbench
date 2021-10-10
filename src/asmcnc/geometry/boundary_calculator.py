@@ -66,10 +66,6 @@ class BoundaryCalculator():
     angle_max_check = math.pi/segment_divisor
     #
     ########### (see notes above on what this is for)
-
-    # ????????????????///
-    # st = screen_test
-    # stm = screen_manager_shapecutter
     
     def __init__(self, input_file_path_to_gcode = ""):
         # re-set lists:
@@ -83,11 +79,6 @@ class BoundaryCalculator():
         if (input_file_path_to_gcode != ""): 
             self.gcode_file_path = input_file_path_to_gcode
 
-        # get job range
-        self.envelope_of_work = job_envelope.BoundingBox()
-        self.envelope_of_work.set_job_envelope(self.gcode_file_path)
-        # set the boundary_datum (mid-mid of job envelope)
-        self.set_boundary_datum_point()
 
         self.gcodefile = self.set_gcode_as_list(self.gcode_file_path)
 
@@ -105,13 +96,17 @@ class BoundaryCalculator():
         self.sort_boundary_data_by_angle()
         
         self.run_via_angle_checking_max_dist_n_range()
-        b_envelope = self.get_job_envelope_xy_list()
-        self.bound_range_x = b_envelope[0]
-        self.bound_range_y = b_envelope[1]
+        self.b_envelope = self.get_job_envelope_xy_list()
+        self.bound_range_x = self.b_envelope[0]
+        self.bound_range_y = self.b_envelope[1]
         
-
+    
 
     def get_job_envelope_from_gcode(self):
+        # get job range
+        self.envelope_of_work = job_envelope.BoundingBox()
+        self.envelope_of_work.set_job_envelope(self.gcode_file_path)
+
         found_envelope = (self.envelope_of_work.range_x, 
                           self.envelope_of_work.range_y) 
         return found_envelope
@@ -135,7 +130,6 @@ class BoundaryCalculator():
         return found_envelope
 
     def set_boundary_datum_point(self):
-        
         # set single x,y datum at job_envelop mid point
         self.datum_x = abs((self.envelope_of_work.range_x[0] 
                             - 

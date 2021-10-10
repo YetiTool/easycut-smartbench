@@ -63,6 +63,8 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         # gcode file path is set automatically in boundary_calculator if not supplied:
         self.b_setter = boundary_calculator.BoundaryCalculator()
         
+
+        
         # self.print_to_console_sorted_list()
         
         # test harness could pass gcodes in here...
@@ -87,12 +89,12 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         if self.detailsToConsole == 1: 
             print("UnitTestsBoundaryWalk().testBoundaryIsAnArray() ____ gcodefile = " + 
                   str(type(self.b_setter.gcodefile)))
-
+    
         self.assertTrue(isinstance(self.b_setter.gcodefile, (list, tuple, np.ndarray)), 
                         " not an array, this gcodefile")
 
-    # def testGcodeIsACompletePolygon(self):
-    #     self.worker_checkFirstAndLast(self.b_setter.gcodefile,"gcodefile input")
+    def testGcodeIsACompletePolygon(self):
+        self.worker_checkFirstAndLast(self.b_setter.gcodefile,"gcodefile input")
 
     def testFoundBoundaryIsACompletePolygon(self):
         self.worker_checkFirstAndLast(
@@ -100,15 +102,20 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
             "b_setter.boundary_calc_by_segment")
 
     def worker_checkFirstAndLast(self, inputList, strInputName):
-        print("worker_checkFirstAndLast: " + strInputName + "... size of inputList is: " + str(len(inputList)))
         try:
             first_item = inputList[0]
             last_item = inputList[-1]
+            self.assertEquals(first_item, last_item, 
+                          " start and end of " +
+                          + strInputName + " DON'T MATCH: \n\n" +
+                          str(first_item) + ", " + str(last_item))
+            print(" ran the worker test ____ ")
         except:
-            pass
-        finally:
+            print("worker_checkFirstAndLast: " + strInputName + "... size of inputList is: " + str(len(inputList)))
             print("inputList: " + str(inputList) + " from: " + strInputName)
-            return
+        finally:
+            pass
+            # return
         
             
         # [self.gcodefile[0], self.gcodefile[-1]]
@@ -117,10 +124,6 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
             print("first_item is:   " + str(first_item))
             print("last_item is:    " + str(last_item))
         
-        self.assertEquals(first_item, last_item, 
-                          " start and end of " +
-                          + strInputName + " DON'T MATCH: \n\n" +
-                          str(first_item) + ", " + str(last_item))
         
     def testGcodeFileWorks(self):
         self.assertTrue(os.path.isfile(self.b_setter.gcode_file_path), 
@@ -129,6 +132,10 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
 
 
     def testBoundaryDatumIsNotBlank(self):
+        # set the boundary_datum (mid-mid of job envelope)
+        self.b_setter.get_job_envelope_from_gcode()
+        self.b_setter.set_boundary_datum_point()
+        
         neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
         self.assertTrue(neither_are_zero > 0, "the datum doesn't exist? ")
         if self.detailsToConsole == 1: 
@@ -213,19 +220,13 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
 
 
     def testJobEnvelopesMatch(self):
-        
         job_envelope_g = self.b_setter.get_job_envelope_from_gcode()
-
         # actual, from gcode_file: x max - x min
         gcode_size_x = job_envelope_g[0][1] - job_envelope_g[0][0]
         gcode_size_y = job_envelope_g[1][1] - job_envelope_g[1][0]
-
         # found, from boundary calc: x max - x min
         b_size_x = self.b_setter.bound_range_x[1] - self.b_setter.bound_range_x[0]
         b_size_y = self.b_setter.bound_range_y[1] - self.b_setter.bound_range_y[0]
-
-
-
         # what is the difference? assume boundary bigger...
         x_size_diff = abs(b_size_x - gcode_size_x)
         y_size_diff = abs(b_size_y - gcode_size_y)
@@ -234,7 +235,7 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
             x_size_diff < gcode_size_x*self.accuracy_percent, 
             " x not close enough, accuracy(" + 
             str(self.accuracy_percent) + "), gcode_size_x(" + 
-            str(gcode_size_x) + "), " +
+            str(gcode_size_x) + "), " + 
             "x_size_diff(" + str(x_size_diff) + ")")
 
         self.assertTrue(
@@ -246,11 +247,10 @@ class UnitTestsBoundaryWalk(unittest.TestCase):
         
         if self.detailsToConsole == 1: 
             print("gcode found_envelope x(" + str(job_envelope_g[0][0]) + "," + str(job_envelope_g[0][1]) 
-                  + ") y(" + str(job_envelope_g[1][0])  + "," + str(job_envelope_g[1][1]) + ")")
+                 + ") y(" + str(job_envelope_g[1][0])  + "," + str(job_envelope_g[1][1]) + ")")
             print("x_size_diff: " + str(x_size_diff) + 
                   ", and y_size_diff: " + str(y_size_diff))
             print("BOUNDARY RANGE: b_size_x = " + str(b_size_x) + ", b_size_y = " + str(b_size_y))
-
      
 
 if __name__ == "__main__":
