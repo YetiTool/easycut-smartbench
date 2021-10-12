@@ -93,11 +93,12 @@ Builder.load_string("""
 						spacing: dp(5)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    width: dp(40)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 
 	                    Label: 
