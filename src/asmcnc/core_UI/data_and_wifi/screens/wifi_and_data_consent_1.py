@@ -95,10 +95,10 @@ Builder.load_string("""
 
 		                Image:
 		                    size_hint: (None, None)
+		                    width: dp(40)
 		                    source: "./asmcnc/skavaUI/img/green_tick.png"
 		                    allow_stretch: True
-		                    height: dp(20)
-		                    center_y: self.parent.center_y
+
 
 	                    Label: 
 	                    	id: job_critical_events
