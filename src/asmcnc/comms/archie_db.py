@@ -1,5 +1,6 @@
 from kivy.clock import Clock
 import json, socket, datetime
+from requests import get
 
 
 def log(message):
@@ -77,8 +78,9 @@ class SQLRabbit:
                 "machine_info": {
                     "name": self.m.device_label,
                     "location": self.m.device_location,
-                    "hostname": socket.gethostname(),
-                    "ec_version": self.m.sett.sw_version
+                    "hostname": socket.gethostname().replace(".yetitool.com", ""),
+                    "ec_version": self.m.sett.sw_version,
+                    "public_ip_address": get("https://api.ipify.org").content.decode("utf8")
                 },
                 "statuses": {
                     "status": "Run",
@@ -163,7 +165,7 @@ class SQLRabbit:
             {
                 "payload_type": "job_end",
                 "machine_info": {
-                    "hostname": socket.gethostname()
+                    "hostname": socket.gethostname().replace(".yetitool.com", "")
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -189,7 +191,7 @@ class SQLRabbit:
             {
                 "payload_type": "job_start",
                 "machine_info": {
-                    "hostname": socket.gethostname()
+                    "hostname": socket.gethostname().replace(".yetitool.com", "")
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -202,7 +204,6 @@ class SQLRabbit:
             }
         ]
 
-
         metadata_in_json_format = {k.translate(None, ' '): v for k, v in metadata_dict.iteritems()}
 
         data[0]["metadata"] = metadata_in_json_format
@@ -212,6 +213,25 @@ class SQLRabbit:
         except Exception as e:
             log("Event send exception: " + str(e))
         # log(str(data))
+
+    def send_speed_info(self):
+        data = {
+            "payload_type": "speed_info",
+            "machine_info": {
+                "hostname": socket.gethostname().replace(".yetitool.com", "")
+            },
+            "speeds": {
+                "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+                "spindle_speed": self.sm.get_screen('go').speedOverride.speed_rate_label.text
+            }
+        }
+
+        log(data)
+
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+        except Exception as e:
+            log("Speed send exception: " + str(e))
 
     # Severity
     # 0 - info
@@ -232,7 +252,7 @@ class SQLRabbit:
             {
                 "payload_type": "event",
                 "machine_info": {
-                    "hostname": socket.gethostname()
+                    "hostname": socket.gethostname().replace(".yetitool.com", "")
                 },
                 "event": {
                     "severity": event_severity,
@@ -264,7 +284,7 @@ class SQLRabbit:
             {
                 "payload_type": "alive",
                 "machine_info": {
-                    "hostname": socket.gethostname()
+                    "hostname": socket.gethostname().replace(".yetitool.com", "")
                 },
                 "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             }
