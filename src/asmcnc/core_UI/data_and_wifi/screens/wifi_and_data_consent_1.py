@@ -90,7 +90,7 @@ Builder.load_string("""
 					# Row 1 Col 1
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 						BoxLayout: 
@@ -99,7 +99,6 @@ Builder.load_string("""
 			                Image:
 			                    source: "./asmcnc/skavaUI/img/green_tick.png"
 			                    allow_stretch: True
-
 
 	                    Label: 
 	                    	id: job_critical_events
@@ -114,14 +113,15 @@ Builder.load_string("""
 					# Row 1 Col 2
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: maintenance_data
@@ -136,14 +136,15 @@ Builder.load_string("""
 					# Row 2 Col 1
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: ip_address
@@ -158,14 +159,15 @@ Builder.load_string("""
 					# Row 2 Col 2
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: console_hostname
@@ -206,14 +208,15 @@ Builder.load_string("""
 					# Row 1 Col 1
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: g_code_files
@@ -228,14 +231,15 @@ Builder.load_string("""
 					# Row 1 Col 2
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: wifi_network_details
@@ -250,14 +254,15 @@ Builder.load_string("""
 					# Row 2 Col 1
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
-		                Image:
-		                    size_hint: (None, None)
-		                    source: "./asmcnc/skavaUI/img/green_tick.png"
-		                    allow_stretch: True
-		                    height: dp(20)
+						BoxLayout: 
+							size_hint_x: None
+							width: dp(30)
+			                Image:
+			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    allow_stretch: True
 
 	                    Label: 
 	                    	id: serial_numbers
@@ -272,7 +277,7 @@ Builder.load_string("""
 					# Row 2 Col 2
 					BoxLayout: 
 						padding: dp(10), dp(0)
-						spacing: dp(5)
+						spacing: dp(10)
 						orientation: 'horizontal'
 
 
