@@ -10,67 +10,273 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen1>
 
-	user_info : user_info
+	we_will_collect : we_will_collect
+	we_wont_collect : we_wont_collect
+	job_critical_events : job_critical_events
+	maintenance_data : maintenance_data
+	ip_address : ip_address
+	console_hostname : console_hostname
+	g_code_files : g_code_files
+	wifi_network_details : wifi_network_details
+	serial_numbers : serial_numbers
 	next_button : next_button
 
-    BoxLayout:
-        height: dp(800)
-        width: dp(480)
-        canvas.before:
-            Color: 
-                rgba: hex('#e5e5e5ff')
-            Rectangle: 
-                size: self.size
-                pos: self.pos
+	BoxLayout:
+		height: dp(800)
+		width: dp(480)
+		canvas.before:
+			Color: 
+				rgba: hex('#e5e5e5ff')
+			Rectangle: 
+				size: self.size
+				pos: self.pos
 
-        BoxLayout:
-            padding: 0
-            spacing: 0
-            orientation: "vertical"
+		BoxLayout:
+			padding: 0
+			spacing: 0
+			orientation: "vertical"
 
-            # HEADER
-            BoxLayout:
-                padding: 0
-                spacing: 0
-                canvas:
-                    Color:
-                        rgba: hex('#1976d2ff')
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                Label:
-                    size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
-                    text: "Wi-Fi and Data Consent"
-                    color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
-                    font_size: dp(30)
-                    halign: "center"
-                    valign: "bottom"
-                    markup: True
-                   
-            # BODY
-            BoxLayout:
-                size_hint: (None,None)
-                width: dp(800)
-                height: dp(298)
-                padding: [dp(20), dp(0), dp(20), dp(0)]
-                spacing: 0
-                orientation: 'horizontal'
-                Label: 
-                	id: user_info
-					size_hint: (1,1)
-                    # color: hex('#f9f9f9ff') # white
-                    color: hex('#333333ff') #grey
-                    font_size: dp(18)
-                    halign: "left"
-                    valign: "middle"
-                    markup: True
-                    text_size: self.size
-                    size: self.texture_size
+			# HEADER
+			BoxLayout:
+				padding: 0
+				spacing: 0
+				canvas:
+					Color:
+						rgba: hex('#1976d2ff')
+					Rectangle:
+						pos: self.pos
+						size: self.size
+				Label:
+					size_hint: (None,None)
+					height: dp(60)
+					width: dp(800)
+					text: "Wi-Fi and Data Consent"
+					color: hex('#f9f9f9ff')
+					# color: hex('#333333ff') #grey
+					font_size: dp(30)
+					halign: "center"
+					valign: "bottom"
+					markup: True
+				   
+			# BODY
+			BoxLayout:
+				size_hint: (None,None)
+				width: dp(800)
+				height: dp(298)
+				padding: [dp(20), dp(10), dp(20), dp(18)]
+				spacing: dp(10)
+				orientation: 'vertical'
 
-            # FOOTER
+				Label: 
+					id: we_will_collect
+					size_hint: (None, None)
+					height: dp(50)
+					width: dp(740)
+					# color: hex('#f9f9f9ff') # white
+					color: hex('#333333ff') #grey
+					font_size: dp(18)
+					halign: "left"
+					valign: "top"
+					markup: True
+					text_size: self.size
+
+				GridLayout: 
+					cols: 2
+					rows: 2
+					size_hint: (None, None)
+					height: dp(80)
+					width: dp(740)
+
+					# Row 1 Col 1
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+		                    center_y: self.parent.center_y
+
+	                    Label: 
+	                    	id: job_critical_events
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 1 Col 2
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: maintenance_data
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 2 Col 1
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: ip_address
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 2 Col 2
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: console_hostname
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+	            BoxLayout: 
+					size_hint: (None, None)
+					height: dp(30)
+					width: dp(740)
+					padding: [dp(0), dp(10), dp(0), dp(0)]
+
+					Label: 
+						id: we_wont_collect
+						size_hint: (None, None)
+						height: dp(20)
+						width: dp(740)
+						# color: hex('#f9f9f9ff') # white
+						color: hex('#333333ff') #grey
+						font_size: dp(18)
+						halign: "left"
+						valign: "top"
+						markup: True
+						text_size: self.size
+
+				GridLayout: 
+					cols: 2
+					rows: 2
+					size_hint: (None, None)
+					height: dp(80)
+					width: dp(740)
+
+					# Row 1 Col 1
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: g_code_files
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 1 Col 2
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: wifi_network_details
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 2 Col 1
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+		                Image:
+		                    size_hint: (None, None)
+		                    source: "./asmcnc/skavaUI/img/green_tick.png"
+		                    allow_stretch: True
+		                    height: dp(20)
+
+	                    Label: 
+	                    	id: serial_numbers
+	                    	# color: hex('#f9f9f9ff') # white
+	                    	color: hex('#333333ff') #grey
+	                    	font_size: dp(18)
+	                    	halign: "left"
+	                    	valign: "middle"
+	                    	markup: True
+	                    	text_size: self.size
+
+					# Row 2 Col 2
+					BoxLayout: 
+						padding: dp(10), dp(0)
+						spacing: dp(5)
+						orientation: 'horizontal'
+
+
+
+			# FOOTER
 			BoxLayout: 
 				padding: [10,0,10,10]
 				size_hint: (None, None)
@@ -143,19 +349,15 @@ class WiFiAndDataConsentScreen1(Screen):
 		self.c.back_to_previous_screen()
 
 	def update_strings(self):
-		self.user_info.text = (
-			self.l.get_bold("To enable Wi-Fi, you need to accept our data collection policy.") + \
-			"\n\n" + \
-			self.l.get_str("When Wi-Fi is enabled, we will only send SmartBench’s data anonymously. This allows us to enable smart features, and improve our services.") + \
-			"\n\n" + \
-			self.l.get_str("You will need Wi-Fi if you want to:") + \
-			"\n\n" + \
-			"[b]•[/b] " + self.l.get_str("Automatically receive software updates") + \
-			"\n" + \
-			"[b]•[/b] " + self.l.get_str("Use SmartTransfer (remotely transfer files)") + \
-			"\n" + \
-			"[b]•[/b] " + self.l.get_str("Use SmartManager (remotely manage and monitor SmartBenches)") + \
-			"\n\n" + \
-			self.l.get_str("You can disable Wi-Fi at any time.")
-		)
+		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \
+			"With your consent, we will collect the following data:")
+		self.we_wont_collect.text = self.l.get_bold("We will NEVER collect the following from your Console:")
+		self.job_critical_events.text = self.l.get_str("Job critical events")
+		self.maintenance_data.text = self.l.get_str("Maintenance data")
+		self.ip_address.text = self.l.get_str("IP address")
+		self.console_hostname.text = self.l.get_str("Console hostname")
+		self.g_code_files.text = self.l.get_str("G-Code files")
+		self.wifi_network_details.text = self.l.get_str("Wi-Fi network details")
+		self.serial_numbers.text = self.l.get_str("Serial numbers")
+
 		self.next_button.text = self.l.get_str("Next") + "..."
