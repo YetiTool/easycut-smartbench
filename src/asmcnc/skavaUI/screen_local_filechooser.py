@@ -497,8 +497,6 @@ class LocalFileChooser(Screen):
 
         self.filechooser._update_files()
 
-        self.file_selected_label.text = "Drücken Sie das Symbol , um den vollständigen Dateinamen hier anzuzeigen."
-
 
     def display_selected_file(self):
 
