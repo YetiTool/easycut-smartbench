@@ -41,7 +41,7 @@ class SQLRabbit:
 
         Clock.schedule_interval(self.run, self.interval)
 
-    def get_data(self):
+    def send_full_payload(self):
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
         z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds / 3600
         z_lube_hrs_left = round(z_lube_limit_hrs - z_lube_used_hrs, 2)
@@ -104,7 +104,10 @@ class SQLRabbit:
             }
         ]
 
-        return data
+        try:
+            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+        except Exception as e:
+            log("Data send exception: " + str(e))
 
     def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 
@@ -145,7 +148,8 @@ class SQLRabbit:
 
         if spindle_brush_percent < self.spindle_brush_percent_left_next:
             self.send_event(severity_dict[self.spindle_brush_percent_left_next], 'Spindle brush percentage left',
-                            'Spindle brush percentage passed below ' + str(self.spindle_brush_percent_left_next) + '%', 2)
+                            'Spindle brush percentage passed below ' + str(self.spindle_brush_percent_left_next) + '%',
+                            2)
             self.spindle_brush_percent_left_next = next_percent_dict[self.spindle_brush_percent_left_next]
 
         if calibration_percent < self.calibration_percent_left_next:
@@ -184,9 +188,7 @@ class SQLRabbit:
 
         self.jd.post_job_data_update_post_send()
 
-
     def send_job_start(self, job_name, metadata_dict):
-
         data = [
             {
                 "payload_type": "job_start",
@@ -269,14 +271,6 @@ class SQLRabbit:
         except Exception as e:
             log("Event send exception: " + str(e))
         # log(str(data))
-
-    # send payload containing all data
-    def send_full_payload(self):
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.get_data()))
-        except Exception as e:
-            log("Data send exception: " + str(e))
-        # log(self.get_data())
 
     # send alive 'ping' to server
     def send_alive(self):
