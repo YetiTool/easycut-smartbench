@@ -77,7 +77,8 @@ Builder.load_string("""
             markup: True
             font_size: '20sp'   
             valign: 'middle'
-            halign: 'center'                
+            halign: 'center' 
+            bold: True               
 
         BoxLayout: 
             orientation: 'horizontal'

@@ -97,6 +97,7 @@ Builder.load_string("""
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'center'
+                bold: True
 
             BoxLayout: 
                 orientation: 'horizontal'
