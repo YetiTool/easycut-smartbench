@@ -157,7 +157,7 @@ class WiFiAndDataConsentScreen2(Screen):
 			"[b]•[/b] " + self.l.get_str("Remotely manage and monitor SmartBench (e.g. with SmartManager)") + \
 			"\n\n" + \
 			self.l.get_str("You can come back to this data policy at any time, and enable or disable Wi-Fi.") + \
-			"\nTest extra line here"
+			"\nTest extra line here and make it really really long so can fully see it"
 
 		)
 		self.next_button.text = self.l.get_str("Next") + "..."
