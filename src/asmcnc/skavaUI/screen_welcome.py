@@ -94,7 +94,7 @@ class WelcomeScreenClass(Screen):
                 # Allow time for machine reset sequence
                 # Then start up UI in relevant mode
                 if self.start_in_warranty_mode: 
-                    Clock.schedule_once(self.am.start_warranty_app, 6)
+                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 6)
 
                 else:
                     # start pika connection if warranty does not need activating
@@ -112,7 +112,7 @@ class WelcomeScreenClass(Screen):
 
                 # Allow time for machine reset sequence
                 if self.start_in_warranty_mode: 
-                    Clock.schedule_once(self.am.start_warranty_app, 2)
+                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 2)
 
                 else:
                     self.db.set_up_pika_connection()
@@ -122,7 +122,7 @@ class WelcomeScreenClass(Screen):
 
         elif sys.platform == 'win32' or sys.platform == 'darwin':
             if self.start_in_warranty_mode: 
-                Clock.schedule_once(self.am.start_warranty_app, 1)
+                Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 1)
 
             else:
                 self.db.set_up_pika_connection()
