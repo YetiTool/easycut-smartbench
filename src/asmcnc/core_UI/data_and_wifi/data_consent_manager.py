@@ -1,6 +1,6 @@
 from kivy.uix.screenmanager import ScreenManager, Screen
 import os
-from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, popup_data_wifi_warning
+from asmcnc.core_UI.data_and_wifi.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3, popup_data_wifi_warning
 
 class DataConsentManager(object):
 
@@ -20,6 +20,10 @@ class DataConsentManager(object):
 		if not self.sm.has_screen('consent_2'):
 			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_2_screen)
+
+		if not self.sm.has_screen('consent_3'):
+			consent_3_screen = wifi_and_data_consent_3.WiFiAndDataConsentScreen3(name='consent_3', consent_manager = self, localization = self.l)
+			self.sm.add_widget(consent_3_screen)
 
 	def open_data_consent(self, screen_to_go_back_to, screen_to_exit_to):
 		self.return_to_screen = screen_to_exit_to
@@ -53,6 +57,7 @@ class DataConsentManager(object):
 	def remove_consent_screens(self):
 		self.destroy_screen('consent_1')
 		self.destroy_screen('consent_2')
+		self.destroy_screen('consent_3')
 
 	def remove_entry_screens_if_necessary(self):
 		self.destroy_screen('release_notes')

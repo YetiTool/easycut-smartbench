@@ -60,6 +60,7 @@ def log(message):
 
 class WelcomeScreenClass(Screen):
     
+    start_in_warranty_mode = False
     
     def __init__(self, **kwargs):
         
@@ -72,41 +73,63 @@ class WelcomeScreenClass(Screen):
         self.l=kwargs['localization']
         self.update_strings()
 
+        if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
+            self.start_in_warranty_mode = True
+
+        else:
+            self.start_in_warranty_mode = False
+
     def on_enter(self):
 
         self.set.refresh_all()
 
         if self.m.s.is_connected():
-
-            # PC boot timings
-            if sys.platform == 'win32':
-                # Allow kivy to have fully loaded before doing any calls which require scheduling
-                Clock.schedule_once(self.m.s.start_services, 1)
-                # Allow time for machine reset sequence
-                Clock.schedule_once(self.go_to_next_screen, 2)
     
-            # RasPi boot timings: note test on hard boot, since hard boot takes longer
+            # RasPi boot timings
             if sys.platform != 'win32':
+                
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
+
                 # Allow time for machine reset sequence
-                Clock.schedule_once(self.go_to_next_screen, 6)
+                # Then start up UI in relevant mode
+                if self.start_in_warranty_mode: 
+                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 6)
+
+                else:
+                    # start pika connection if warranty does not need activating
+                    self.db.set_up_pika_connection()
+                    Clock.schedule_once(self.go_to_safety_screen, 6)
+
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
 
+
+            # PC boot timings
+            else:
+                # Allow kivy to have fully loaded before doing any calls which require scheduling
+                Clock.schedule_once(self.m.s.start_services, 1)
+
+                # Allow time for machine reset sequence
+                if self.start_in_warranty_mode: 
+                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 2)
+
+                else:
+                    self.db.set_up_pika_connection()
+                    Clock.schedule_once(self.go_to_safety_screen, 2)
+
+
+
         elif sys.platform == 'win32' or sys.platform == 'darwin':
-            Clock.schedule_once(self.go_to_next_screen, 1)
+            if self.start_in_warranty_mode: 
+                Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 1)
 
-    def go_to_next_screen(self, dt):
+            else:
+                self.db.set_up_pika_connection()
+                Clock.schedule_once(self.go_to_safety_screen, 1)
 
-        # self.am.start_warranty_app() # FOR TESTING
-
-        if self.m.trigger_setup == False: 
-            self.sm.current = 'safety'
-
-        else:
-            self.am.start_warranty_app()
-            
+    def go_to_safety_screen(self, dt):
+        self.sm.current = 'safety'
         
     def set_machine_value_driven_user_settings(self, dt):
 

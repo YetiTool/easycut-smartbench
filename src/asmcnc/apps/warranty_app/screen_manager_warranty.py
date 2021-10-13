@@ -27,8 +27,6 @@ class ScreenManagerWarranty(object):
         self.m = machine
         self.l = localization
 
-        self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
-
     def open_language_select_screen(self):
         if not self.sm.has_screen('language_select'):
             language_select_screen = screen_language_select.LanguageSelectScreen(name = 'language_select', warranty_manager = self, machine = self.m, localization = self.l)
@@ -68,6 +66,9 @@ class ScreenManagerWarranty(object):
             self.sm.add_widget(warranty_registration_5_screen)
         else:
             self.sm.get_screen('warranty_5').update_strings()
+
+        if not self.data_consent_app: 
+            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
 
         if not self.sm.has_screen('cnc_academy'):
             CNC_academy_screen = screen_CNC_academy.CNCAcademyScreen(name = 'cnc_academy', warranty_manager = self, machine = self.m, localization = self.l)
