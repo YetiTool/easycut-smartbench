@@ -82,19 +82,9 @@ class AppManagerClass(object):
         self.systemtools_sm.open_system_tools()
 
     def start_warranty_app(self):
-
-        # FOR TESTING
-        # self.current_app = 'warranty'
-        # self.warranty_sm.open_language_select_screen()
-
-        activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-
-        if os.path.isfile(activation_code_filepath):
-            self.current_app = 'warranty'
-            self.warranty_sm.open_language_select_screen()
-
-        else:
-            self.sm.current = 'safety'
+        # all checks now happen in welcome screen
+        self.current_app = 'warranty'
+        self.warranty_sm.open_language_select_screen()
 
 
 

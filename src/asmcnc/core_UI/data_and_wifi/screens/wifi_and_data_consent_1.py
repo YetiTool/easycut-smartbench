@@ -97,7 +97,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -120,7 +120,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -143,7 +143,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -166,7 +166,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -215,7 +215,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -238,7 +238,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -261,7 +261,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/skavaUI/img/green_tick.png"
+			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
