@@ -132,6 +132,8 @@ Builder.load_string("""
                                 color: hex('#333333ff')
                                 # foreground_color: hex('#333333ff')
                                 text_size: self.size
+                                size_hint_x: None
+                                width: dp(150)
                                 halign: "left"
                                 valign: "bottom"
                                 markup: True
@@ -142,8 +144,6 @@ Builder.load_string("""
 
                             Label: 
                                 text: ""
-                                size_hint_x: None
-                                width: dp(0)
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
@@ -164,7 +164,7 @@ Builder.load_string("""
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(59)
+                            height: dp(56)
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
