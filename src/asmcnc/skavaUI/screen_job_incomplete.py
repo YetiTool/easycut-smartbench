@@ -356,7 +356,7 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.parts_completed_label.text = self.get_str("Parts completed: ")
+        self.parts_completed_label.text = self.l.get_str("Parts completed: ")
         self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*10.5)
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
 
