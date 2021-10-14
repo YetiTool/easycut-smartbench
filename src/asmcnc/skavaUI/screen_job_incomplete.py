@@ -104,6 +104,7 @@ Builder.load_string("""
 
                             Label: 
                                 id: parts_completed_label
+                                size_hint_x: None
                                 text: "Parts completed Test: "
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
@@ -130,6 +131,7 @@ Builder.load_string("""
 
                             Label: 
                                 id: out_of_total_parts_label
+                                size_hint_x: None
                                 text: ""
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
