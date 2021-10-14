@@ -302,7 +302,7 @@ class JobFeedbackScreen(Screen):
             )
 
         self.batch_number_label.text = self.l.get_str("Batch Number Testing")
-        self.batch_number_label.width = dp(len(self.batch_number_label.text)*20)
+        self.batch_number_label.width = dp(len(self.batch_number_label.text)*12)
 
 
         self.post_production_notes.text = self.jd.post_production_notes
