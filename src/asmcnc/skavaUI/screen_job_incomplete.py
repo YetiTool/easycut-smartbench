@@ -98,6 +98,7 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(30)
                             orientation: 'horizontal'
+                            padding: [dp(0), dp(0), dp(0), dp(10)]
 
                             Label: 
                                 id: parts_completed_label
@@ -321,6 +322,8 @@ class JobIncompleteScreen(Screen):
             )
 
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
+        self.parts_completed_input.width = dp(len(self.parts_completed_input.text)*10)
+
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
 
         self.post_production_notes.text = self.jd.post_production_notes

@@ -116,7 +116,7 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(41)
                             orientation: 'horizontal'
-                            padding: [dp(0), dp(11), dp(0), dp(0)]
+                            padding: [dp(0), dp(21), dp(0), dp(0)]
 
                             Label:
                                 id: batch_number_label
@@ -302,7 +302,7 @@ class JobFeedbackScreen(Screen):
             )
 
         self.batch_number_label.text = self.l.get_str("Batch Number Testing")
-        self.batch_number_label.width = dp(len(self.batch_number_label.text)*12)
+        self.batch_number_label.width = dp(len(self.batch_number_label.text)*10)
 
 
         self.post_production_notes.text = self.jd.post_production_notes
