@@ -107,10 +107,38 @@ Builder.load_string("""
                     BoxLayout: 
                         id: post_production_notes_container
                         orientation: 'vertical'
-                        Label:
-                            id: post_production_notes_label
+
+                        BoxLayout: 
                             size_hint_y: None
                             height: dp(41)
+                            orientation: 'horizontal'
+
+                            Label:
+                                id: batch_number_label
+                                text: "Batch Number"
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                halign: "left"
+                                valign: "bottom"
+                                markup: True
+                                text_size: self.size    
+
+                            TextInput:
+                                id: batch_number_input
+                                padding: [4, 2]
+                                text: ""
+                                color: hex('#333333ff')
+                                # foreground_color: hex('#333333ff')
+                                text_size: self.size
+                                halign: "left"
+                                valign: "top"
+                                markup: True
+                                font_size: dp(20)
+                                multiline: True
+                                background_color: hex('#e5e5e5ff')
+
+                        Label:
+                            id: post_production_notes_label
                             text: "Production notes"
                             color: hex('#333333ff') #grey
                             font_size: dp(20)
@@ -122,7 +150,7 @@ Builder.load_string("""
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(79)
+                            height: dp(49)
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
