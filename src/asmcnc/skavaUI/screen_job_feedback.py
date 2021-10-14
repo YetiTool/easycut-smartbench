@@ -17,9 +17,9 @@ Builder.load_string("""
     job_completed_label : job_completed_label
     metadata_label : metadata_label
     parts_completed_label : parts_completed_label
+    post_production_notes_container : post_production_notes_container
     batch_number_container : batch_number_container
     batch_number_label : batch_number_label
-    post_production_notes_container : post_production_notes_container
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
     success_question : success_question
