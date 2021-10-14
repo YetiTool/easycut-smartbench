@@ -105,7 +105,6 @@ Builder.load_string("""
                             Label: 
                                 id: parts_completed_label
                                 size_hint_x: None
-                                text: "Parts completed Test: "
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
@@ -357,14 +356,15 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*11)
+        self.parts_completed_label.text = self.get_str("Parts completed: ")
+        self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*10.5)
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
 
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
-        self.out_of_total_parts_label.width = dp(len(self.out_of_total_parts_label.text)*11)
+        # self.out_of_total_parts_label.width = dp(len(self.out_of_total_parts_label.text)*10.5)
 
         self.batch_number_label.text = self.l.get_str("Batch Number Testing")
-        self.batch_number_label.width = dp(len(self.batch_number_label.text)*11)
+        self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
 
         self.post_production_notes.text = self.jd.post_production_notes
         self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
