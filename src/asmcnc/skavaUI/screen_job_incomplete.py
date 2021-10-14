@@ -322,7 +322,7 @@ class JobIncompleteScreen(Screen):
             )
 
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
-        self.parts_completed_input.width = dp(len(self.parts_completed_input.text)*10)
+        self.parts_completed_input.width = dp(len(self.parts_completed_input.text)*11)
 
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
 
