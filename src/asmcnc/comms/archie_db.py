@@ -42,7 +42,7 @@ class SQLRabbit:
             log("Pika connection exception: " + str(e))
 
         self.interval = 10
-        Clock.schedule_interval(self.run, self.interval)
+        Clock.schedule_interval(self.send_routine_updates_to_database, self.interval)
 
 
     def send_full_payload(self):
@@ -300,8 +300,13 @@ class SQLRabbit:
             log("Data send exception: " + str(e))
         log(data)
 
-    def run(self, dt):
-        if self.m.s.m_state == "Idle":
-            self.send_alive()
-        else:
-            self.send_full_payload()
+    def send_routine_updates_to_database(self, dt):
+
+        try:
+            if self.m.s.m_state == "Idle":
+                self.send_alive()
+            else:
+                self.send_full_payload()
+
+        except:
+            log("Could not send routine update")
