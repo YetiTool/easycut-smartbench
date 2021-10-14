@@ -17,6 +17,7 @@ Builder.load_string("""
     metadata_label : metadata_label
     parts_completed_label : parts_completed_label
     batch_number_container : batch_number_container
+    batch_number_label : batch_number_label
     post_production_notes_container : post_production_notes_container
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
@@ -118,13 +119,12 @@ Builder.load_string("""
 
                             Label:
                                 id: batch_number_label
-                                text: "Batch Number Testing"
+                                size_hint_x: None
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 halign: "left"
                                 valign: "bottom"
                                 markup: True
-                                size: self.texture_size
                                 text_size: self.size
 
                             TextInput:
@@ -144,15 +144,6 @@ Builder.load_string("""
                                 background_color: hex('#e5e5e5ff')
                                 text: '0'
 
-                            # Label: 
-                            #     text: ""
-                            #     color: hex('#333333ff') #grey
-                            #     font_size: dp(20)
-                            #     markup: True
-                            #     halign: "left"
-                            #     valign: "top"
-                            #     size: self.texture_size
-                            #     text_size: self.size
 
                         Label:
                             id: post_production_notes_label
@@ -265,12 +256,6 @@ class JobFeedbackScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
 
-        self.batch_number_label.size = self.batch_number_label.texture_size
-
-        width = self.batch_number_container.minimum_width
-        self.batch_number_container.size_hint_x = 0
-        self.batch_number_container.width = width
-
     def confirm_job_successful(self):
         self.set_post_production_notes()
         self.jd.post_job_data_update_pre_send(True)
@@ -314,6 +299,10 @@ class JobFeedbackScreen(Screen):
         self.parts_completed_label.text = (
             self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
             )
+
+        self.batch_number_label.text = self.l.get_str("Batch Number Testing")
+        self.batch_number_label.width = dp(len(self.batch_number_label.text)*20)
+
 
         self.post_production_notes.text = self.jd.post_production_notes
         self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
