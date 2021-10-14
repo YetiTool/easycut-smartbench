@@ -104,7 +104,7 @@ class SQLRabbit:
                     "job_percent": self.jd.percent_thru_job or 0.0,
                     "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
                 },
-                "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
         ]
 
@@ -180,7 +180,7 @@ class SQLRabbit:
                     "successful": successful,
                     "production_notes": self.jd.production_notes
                 },
-                "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
         ]
 
@@ -201,12 +201,12 @@ class SQLRabbit:
                 },
                 "job_data": {
                     "job_name": job_name,
-                    "job_start": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                    "job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 },
                 "metadata": {
 
                 },
-                "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
         ]
 
@@ -267,7 +267,7 @@ class SQLRabbit:
                     "name": event_name,
                     "description": event_description
                 },
-                "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
         ]
 
@@ -285,7 +285,7 @@ class SQLRabbit:
                 "machine_info": {
                     "hostname": socket.gethostname().replace(".yetitool.com", "")
                 },
-                "time": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
         ]
 
