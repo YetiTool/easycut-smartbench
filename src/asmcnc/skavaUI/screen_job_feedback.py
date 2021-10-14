@@ -133,7 +133,7 @@ Builder.load_string("""
                                 # foreground_color: hex('#333333ff')
                                 text_size: self.size
                                 size_hint_x: None
-                                width: dp(150)
+                                width: dp(100)
                                 halign: "left"
                                 valign: "bottom"
                                 markup: True

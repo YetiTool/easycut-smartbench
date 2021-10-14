@@ -101,7 +101,7 @@ Builder.load_string("""
 
                             Label: 
                                 id: parts_completed_label
-                                text: "Parts completed: "
+                                text: "Parts completed Test: "
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
