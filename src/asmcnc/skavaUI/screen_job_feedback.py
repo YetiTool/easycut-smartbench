@@ -133,12 +133,23 @@ Builder.load_string("""
                                 # foreground_color: hex('#333333ff')
                                 text_size: self.size
                                 halign: "left"
-                                valign: "top"
+                                valign: "bottom"
                                 markup: True
                                 font_size: dp(20)
                                 multiline: False
                                 background_color: hex('#e5e5e5ff')
                                 text: '0'
+
+                            Label: 
+                                text: ""
+                                size_hint_x: None
+                                width: dp(0)
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                markup: True
+                                text_size: self.size
+                                halign: "left"
+                                valign: "top"
 
                         Label:
                             id: post_production_notes_label
@@ -153,7 +164,7 @@ Builder.load_string("""
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(54)
+                            height: dp(59)
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
