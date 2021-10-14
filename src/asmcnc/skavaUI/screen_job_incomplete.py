@@ -363,7 +363,7 @@ class JobIncompleteScreen(Screen):
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
         # self.out_of_total_parts_label.width = dp(len(self.out_of_total_parts_label.text)*10.5)
 
-        self.batch_number_label.text = self.l.get_str("Batch Number Testing")
+        self.batch_number_label.text = self.l.get_str("Batch Number: ")
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
 
         self.post_production_notes.text = self.jd.post_production_notes
