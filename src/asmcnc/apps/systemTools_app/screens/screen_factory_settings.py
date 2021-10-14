@@ -727,7 +727,7 @@ class FactorySettingsScreen(Screen):
         if not user_has_seen_privacy_notice:
             os.system("sudo sed -i -e '$auser_has_seen_privacy_notice=False' /home/pi/easycut-smartbench/src/config.txt")
 
-        elif user_has_seen_privacy_notice.endswith('True'):
+        elif 'True' in user_has_seen_privacy_notice:
             os.system('sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 

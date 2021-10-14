@@ -26,6 +26,10 @@ class SQLRabbit:
         self.sm = screen_manager
         self.jd = self.m.jd
 
+    def set_up_pika_connection(self): # want to rename this function, and the class, and the file
+
+        log("Try to set up pika connection")
+
         try:
             self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/',
                                                                                 pika.credentials.PlainCredentials(
@@ -38,8 +42,8 @@ class SQLRabbit:
             log("Pika connection exception: " + str(e))
 
         self.interval = 10
-
         Clock.schedule_interval(self.run, self.interval)
+
 
     def send_full_payload(self):
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600

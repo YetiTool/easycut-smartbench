@@ -34,9 +34,6 @@ class AppManagerClass(object):
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
         self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
-        self.sm.add_widget(wifi_screen)
-
     # here are all the functions that might be called in the lobby e.g. 
     
     def start_calibration_app(self, return_to_screen):
@@ -59,6 +56,9 @@ class AppManagerClass(object):
         self.current_app = 'pro'
     
     def start_wifi_app(self):
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
+        self.sm.add_widget(wifi_screen)
+
         self.current_app = 'wifi'
         self.sm.current = 'wifi'
         
@@ -82,19 +82,9 @@ class AppManagerClass(object):
         self.systemtools_sm.open_system_tools()
 
     def start_warranty_app(self):
-
-        # FOR TESTING
-        # self.current_app = 'warranty'
-        # self.warranty_sm.open_language_select_screen()
-
-        activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-
-        if os.path.isfile(activation_code_filepath):
-            self.current_app = 'warranty'
-            self.warranty_sm.open_language_select_screen()
-
-        else:
-            self.sm.current = 'safety'
+        # all checks now happen in welcome screen
+        self.current_app = 'warranty'
+        self.warranty_sm.open_language_select_screen()
 
 
 
