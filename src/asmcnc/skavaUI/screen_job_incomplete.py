@@ -268,6 +268,9 @@ class JobIncompleteScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
 
+        self.parts_completed_label.size = self.parts_completed_label.texture_size
+        self.out_of_total_parts_label.size = self.out_of_total_parts_label.texture_size
+
         width = self.parts_completed_container.minimum_width
         self.parts_completed_container.size_hint_x = 0
         self.parts_completed_container.width = width

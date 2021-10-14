@@ -265,6 +265,8 @@ class JobFeedbackScreen(Screen):
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
 
+        self.batch_number_label.size = self.batch_number_label.texture_size
+
         width = self.batch_number_container.minimum_width
         self.batch_number_container.size_hint_x = 0
         self.batch_number_container.width = width
