@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.metrics import dp
 
 Builder.load_string("""
 <JobIncompleteScreen>
@@ -98,7 +99,6 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(30)
                             orientation: 'horizontal'
-                            padding: [dp(0), dp(0), dp(0), dp(10)]
 
                             Label: 
                                 id: parts_completed_label
