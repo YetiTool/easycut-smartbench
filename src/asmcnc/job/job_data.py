@@ -68,7 +68,7 @@ class JobData(object):
     total_time = ''
     
     # Production notes
-    production_notes = ''
+    post_production_notes = ''
 
     # Metadata formatting
     gcode_summary_string = ''
@@ -116,7 +116,7 @@ class JobData(object):
         self.actual_runtime = ''
         self.total_time = ''
 
-        self.production_notes = ''
+        self.post_production_notes = ''
 
         self.gcode_summary_string = ''
         self.smarttransfer_metadata_string = ''
@@ -292,28 +292,28 @@ class JobData(object):
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
 
-        if "Parts Completed So Far" in self.metadata_dict:
+        if "Parts Made So Far" in self.metadata_dict:
 
-            prev_parts_completed_so_far = int(self.metadata_dict["Parts Completed So Far"])
+            prev_parts_completed_so_far = int(self.metadata_dict["Parts Made So Far"])
 
             if successful:
-                self.metadata_dict["Parts Completed So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Per Job', 1)))
+                self.metadata_dict["Parts Made So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Made Per Job', 1)))
 
             elif extra_parts_completed:
-                self.metadata_dict["Parts Completed So Far"] = str(int(extra_parts_completed))
+                self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
 
             # # Update parts completed in job file
-            self.update_metadata_in_original_file("Parts Completed So Far")
+            self.update_metadata_in_original_file("Parts Made So Far")
 
 
     def update_update_info_in_metadata(self):
         if self.metadata_dict:
-            self.metadata_dict['Updated By'] = 'SmartBench'
+            self.metadata_dict['Last Updated By'] = 'SmartBench'
             timestamp = datetime.now()
-            self.metadata_dict['Last Updated'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-            self.update_metadata_in_original_file("Updated By")
-            self.update_metadata_in_original_file("Last Updated")
+            self.update_metadata_in_original_file("Last Updated By")
+            self.update_metadata_in_original_file("Last Updated Time")
 
 
     def update_metadata_in_original_file(self, key_to_update):
@@ -328,7 +328,7 @@ class JobData(object):
 
     def post_job_data_update_post_send(self):
 
-        self.production_notes = ''
+        self.post_production_notes = ''
         self.percent_thru_job = 0
 
 

@@ -253,6 +253,7 @@ class SQLRabbit:
     # 5 - job cancel
     # 6 - job start
     # 7 - job end
+
     def send_event(self, event_severity, event_type, event_name, event_description):
         data = [
             {
