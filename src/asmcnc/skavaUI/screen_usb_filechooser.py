@@ -422,7 +422,7 @@ class USBFileChooser(Screen):
         with open(self.filechooser_usb.selection[0]) as previewed_file:
 
             if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if "N/A" not in i])
+                metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (i.split(':', 1)[1]).strip('\n\r() ') ])
 
             else: 
                 # just get GCode preview if no metadata

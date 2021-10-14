@@ -142,8 +142,8 @@ class JobData(object):
             metadata_end_index = self.job_gcode_raw.index('(End of YetiTool SmartBench MES-Data)')
             metadata = self.job_gcode_raw[metadata_start_index + 1:metadata_end_index]
 
-            metadata = [line.strip('()') for line in metadata if "N/A" not in line]
-            metadata = [line.split(': ', 1) for line in metadata]
+            metadata = [(line.strip('()')).split(': ', 1) for line in metadata if (line.split(':', 1)[1]).strip('() ')]
+            # metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
             print self.metadata_dict
