@@ -267,6 +267,10 @@ class JobIncompleteScreen(Screen):
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
+
+        width = self.parts_completed_container.minimum_width
+        self.parts_completed_container.size_hint_x = 0
+        self.parts_completed_container.width = width
  
     def press_ok(self):
         self.set_post_production_notes()

@@ -16,6 +16,7 @@ Builder.load_string("""
     job_completed_label : job_completed_label
     metadata_label : metadata_label
     parts_completed_label : parts_completed_label
+    batch_number_container : batch_number_container
     post_production_notes_container : post_production_notes_container
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
@@ -109,6 +110,7 @@ Builder.load_string("""
                         orientation: 'vertical'
 
                         BoxLayout: 
+                            id: batch_number_container
                             size_hint_y: None
                             height: dp(41)
                             orientation: 'horizontal'
@@ -116,7 +118,7 @@ Builder.load_string("""
 
                             Label:
                                 id: batch_number_label
-                                text: "Batch Number"
+                                text: "Batch Number Testing"
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 halign: "left"
@@ -142,15 +144,15 @@ Builder.load_string("""
                                 background_color: hex('#e5e5e5ff')
                                 text: '0'
 
-                            Label: 
-                                text: ""
-                                color: hex('#333333ff') #grey
-                                font_size: dp(20)
-                                markup: True
-                                halign: "left"
-                                valign: "top"
-                                size: self.texture_size
-                                text_size: self.size
+                            # Label: 
+                            #     text: ""
+                            #     color: hex('#333333ff') #grey
+                            #     font_size: dp(20)
+                            #     markup: True
+                            #     halign: "left"
+                            #     valign: "top"
+                            #     size: self.texture_size
+                            #     text_size: self.size
 
                         Label:
                             id: post_production_notes_label
@@ -262,6 +264,10 @@ class JobFeedbackScreen(Screen):
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
+
+        width = self.batch_number_container.minimum_width
+        self.batch_number_container.size_hint_x = 0
+        self.batch_number_container.width = width
 
     def confirm_job_successful(self):
         self.set_post_production_notes()
