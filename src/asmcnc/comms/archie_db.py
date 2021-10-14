@@ -2,10 +2,14 @@ from kivy.clock import Clock
 import json, socket, datetime
 from requests import get
 
-
 def log(message):
     timestamp = datetime.datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
+try:
+    import pika
+except:
+    log("Couldn't import pika lib")
 
 
 class SQLRabbit:
@@ -15,10 +19,6 @@ class SQLRabbit:
     initial_consumable_intervals_found = False
 
     def __init__(self, screen_manager, machine):
-        try:
-            import pika
-        except:
-            log("Couldn't import pika lib")
 
         self.queue = 'machine_data'
         # Updated these variables to match convention throughout rest of code
@@ -46,6 +46,7 @@ class SQLRabbit:
 
 
     def send_full_payload(self):
+
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
         z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds / 3600
         z_lube_hrs_left = round(z_lube_limit_hrs - z_lube_used_hrs, 2)
@@ -110,8 +111,12 @@ class SQLRabbit:
 
         try:
             self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+
         except Exception as e:
             log("Data send exception: " + str(e))
+
+
+
 
     def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 
