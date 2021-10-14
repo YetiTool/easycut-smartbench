@@ -312,9 +312,8 @@ class JobData(object):
             timestamp = datetime.now()
             self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-            self.update_metadata_in_original_file("Last Updated By")
             self.update_metadata_in_original_file("Last Updated Time")
-
+            self.update_metadata_in_original_file("Last Updated By")
 
     def update_metadata_in_original_file(self, key_to_update):
 
@@ -322,7 +321,7 @@ class JobData(object):
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
         new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ")"
-        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
+        sed_command = 'sudo sed -i "s/' + quote(line_to_replace) + '/' + quote(new_line) + '/" ' + quote(self.filename)
         os.system(sed_command)
 
 
