@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.metrics import dp
 
 Builder.load_string("""
 <JobFeedbackScreen>
