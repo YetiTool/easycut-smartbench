@@ -98,7 +98,7 @@ class WelcomeScreenClass(Screen):
 
                 else:
                     # start pika connection if warranty does not need activating
-                    self.db.set_up_pika_connection()
+                    self.db.start_connection_to_database_thread()
                     Clock.schedule_once(self.go_to_safety_screen, 6)
 
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
@@ -115,7 +115,7 @@ class WelcomeScreenClass(Screen):
                     Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 2)
 
                 else:
-                    self.db.set_up_pika_connection()
+                    self.db.start_connection_to_database_thread()
                     Clock.schedule_once(self.go_to_safety_screen, 2)
 
 
@@ -125,7 +125,7 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 1)
 
             else:
-                self.db.set_up_pika_connection()
+                self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.go_to_safety_screen, 1)
 
     def go_to_safety_screen(self, dt):

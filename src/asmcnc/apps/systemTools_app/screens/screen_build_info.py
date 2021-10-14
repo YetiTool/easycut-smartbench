@@ -556,7 +556,7 @@ class BuildInfoScreen(Screen):
         try: self.machine_serial_number_label.text = 'YS6' + str(self.m.serial_number())[0:4]
         except: self.machine_serial_number_label.text = '-'
 
-        self.console_serial_number.text = (os.popen('hostname').read()).split('.')[0]
+        self.console_serial_number.text = self.set.console_hostname
 
         self.get_smartbench_model()
         self.get_smartbench_name()
