@@ -108,7 +108,6 @@ Builder.load_string("""
                                 markup: True
                                 halign: "left"
                                 valign: "top"
-                                size: self.texture_size
                                 text_size: self.size
 
                             TextInput:
@@ -135,7 +134,6 @@ Builder.load_string("""
                                 markup: True
                                 halign: "left"
                                 valign: "top"
-                                size: self.texture_size
                                 text_size: self.size
                     
                     BoxLayout: 
@@ -321,9 +319,8 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
+        self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*11)
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
-        self.parts_completed_input.width = dp(len(self.parts_completed_input.text)*11)
-
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
 
         self.post_production_notes.text = self.jd.post_production_notes
