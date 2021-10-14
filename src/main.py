@@ -35,7 +35,7 @@ from kivy.core.window import Window
 from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.comms import database_storage # @UnresolvedImport
 from asmcnc.comms import server_connection
-from asmcnc.comms import archie_db
+from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager # @UnresolvedImport
@@ -184,7 +184,7 @@ class SkavaUI(App):
         am = app_manager.AppManagerClass(sm, m, sett, l, jd)
 
         # Create database object to talk to
-        db = archie_db.SQLRabbit(sm, m)
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db

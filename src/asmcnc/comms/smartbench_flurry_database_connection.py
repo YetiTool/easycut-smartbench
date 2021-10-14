@@ -1,6 +1,8 @@
 from kivy.clock import Clock
 import json, socket, datetime
 from requests import get
+import threading
+from time import sleep
 
 def log(message):
     timestamp = datetime.datetime.now()
@@ -12,39 +14,131 @@ except:
     log("Couldn't import pika lib")
 
 
-class SQLRabbit:
+class DatabaseEventManager():
+
     z_lube_percent_left_next = 50
     spindle_brush_percent_left_next = 50
     calibration_percent_left_next = 50
     initial_consumable_intervals_found = False
 
-    def __init__(self, screen_manager, machine):
+    VERBOSE = True
+
+    def __init__(self, screen_manager, machine, settings_manager):
 
         self.queue = 'machine_data'
         # Updated these variables to match convention throughout rest of code
         self.m = machine
         self.sm = screen_manager
         self.jd = self.m.jd
+        self.set = settings_manager
 
-    def set_up_pika_connection(self): # want to rename this function, and the class, and the file
+    
+    ## SET UP CONNECTION TO DATABASE
+    # This is called from screen_welcome, when all connections are set up
+    ##------------------------------------------------------------------------
+
+    def start_connection_to_database_thread(self):
+        initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
+        initial_connection_thread.daemon = True
+        initial_connection_thread.start()
+
+
+    def set_up_pika_connection(self):
 
         log("Try to set up pika connection")
 
-        try:
-            self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/',
-                                                                                pika.credentials.PlainCredentials(
-                                                                                    'console',
-                                                                                    '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
-            self.channel = self.connection.channel()
-            self.channel.queue_declare(queue=self.queue)
+        while True:
 
-        except Exception as e:
-            log("Pika connection exception: " + str(e))
+            if self.set.wifi_available:
 
-        self.interval = 10
-        Clock.schedule_interval(self.send_routine_updates_to_database, self.interval)
+                try:
+                    self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/',
+                                                                                        pika.credentials.PlainCredentials(
+                                                                                            'console',
+                                                                                            '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
+                    self.channel = self.connection.channel()
+                    self.channel.queue_declare(queue=self.queue)
+                    self.send_routine_updates_to_database()
+                    break
 
 
+                except Exception as e:
+                    log("Pika connection exception: " + str(e))
+                    sleep(10)
+
+            else:
+                sleep(10)
+
+
+
+    ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
+    ##------------------------------------------------------------------------
+    def send_routine_updates_to_database(self):
+
+        def do_routine_update_loop():
+
+            while True:
+
+                if self.set.wifi_available:
+
+                    if self.VERBOSE: log("Doing ma routine checksss")
+
+                    try:
+                        if self.m.s.m_state == "Idle":
+                            self.send_alive()
+                        else:
+                            self.send_full_payload()
+
+                    except:
+                        if self.VERBOSE: log("Could not send routine update")
+
+                sleep(10)
+
+        routine_update_thread = threading.Thread(target=do_routine_update_loop)
+        routine_update_thread.daemon = True
+        routine_update_thread.start()
+
+
+    ## PUBLISH EVENT TO DATABASE
+    ##------------------------------------------------------------------------
+    def publish_event_to_flurry_database(self, data, exception_type):
+
+        if self.VERBOSE: log("Publishing data: " + exception_type)
+
+        def nested_flurry_event_sender(data, exception_type):
+
+                try: 
+                    self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                    if self.VERBOSE: log(data)
+                
+                except Exception as e:
+                    if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+
+        if self.set.wifi_available:
+            thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
+            thread_for_send_event.daemon = True
+            thread_for_send_event.start()
+
+
+    ## ROUTINE EVENTS
+    ##------------------------------------------------------------------------
+
+    # send alive 'ping' to server when SmartBench is Idle
+    def send_alive(self):
+        data = [
+            {
+                "payload_type": "alive",
+                "machine_info": {
+                    "hostname": self.set.console_hostname
+                },
+                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            }
+        ]
+
+        self.publish_event_to_flurry_database(data, "Data")
+
+
+    # During a job, send full data about machine
     def send_full_payload(self):
 
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
@@ -83,9 +177,9 @@ class SQLRabbit:
                 "machine_info": {
                     "name": self.m.device_label,
                     "location": self.m.device_location,
-                    "hostname": socket.gethostname().replace(".yetitool.com", ""),
+                    "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org").content.decode("utf8")
+                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
                 },
                 "statuses": {
                     "status": "Run",
@@ -109,14 +203,10 @@ class SQLRabbit:
             }
         ]
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-
-        except Exception as e:
-            log("Data send exception: " + str(e))
+        self.publish_event_to_flurry_database(data, "Data")
 
 
-
+    ### PART OF SENDING FULL PAYLOAD
 
     def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 
@@ -172,13 +262,18 @@ class SQLRabbit:
                 previous_percent_dict[self.calibration_percent_left_next]:
             self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
+
+    ## UNIQUE EVENTS
+    ##------------------------------------------------------------------------
+
+    ### BEGINNING AND END OF JOB
     def send_job_end(self, job_name, successful):
 
         data = [
             {
                 "payload_type": "job_end",
                 "machine_info": {
-                    "hostname": socket.gethostname().replace(".yetitool.com", "")
+                    "hostname": self.set.console_hostname
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -189,11 +284,7 @@ class SQLRabbit:
             }
         ]
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-        except Exception as e:
-            log("Event send exception: " + str(e))
-        log(str(data))
+        self.publish_event_to_flurry_database(data, "Event")
 
         self.jd.post_job_data_update_post_send()
 
@@ -202,7 +293,7 @@ class SQLRabbit:
             {
                 "payload_type": "job_start",
                 "machine_info": {
-                    "hostname": socket.gethostname().replace(".yetitool.com", "")
+                    "hostname": self.set.console_hostname
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -219,17 +310,15 @@ class SQLRabbit:
 
         data[0]["metadata"] = metadata_in_json_format
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-        except Exception as e:
-            log("Event send exception: " + str(e))
-        # log(str(data))
+        self.publish_event_to_flurry_database(data, "Event")
 
+
+    ### FEEDS AND SPEEDS
     def send_speed_info(self):
         data = {
             "payload_type": "speed_info",
             "machine_info": {
-                "hostname": socket.gethostname().replace(".yetitool.com", "")
+                "hostname": self.set.console_hostname
             },
             "speeds": {
                 "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
@@ -239,10 +328,10 @@ class SQLRabbit:
 
         log(data)
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-        except Exception as e:
-            log("Speed send exception: " + str(e))
+        self.publish_event_to_flurry_database(data, "Speeds and feeds")
+
+
+    ### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
 
     # Severity
     # 0 - info
@@ -264,7 +353,7 @@ class SQLRabbit:
             {
                 "payload_type": "event",
                 "machine_info": {
-                    "hostname": socket.gethostname().replace(".yetitool.com", "")
+                    "hostname": self.set.console_hostname
                 },
                 "event": {
                     "severity": event_severity,
@@ -276,37 +365,7 @@ class SQLRabbit:
             }
         ]
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-        except Exception as e:
-            log("Event send exception: " + str(e))
-        # log(str(data))
+        self.publish_event_to_flurry_database(data, "Event")
 
-    # send alive 'ping' to server
-    def send_alive(self):
-        data = [
-            {
-                "payload_type": "alive",
-                "machine_info": {
-                    "hostname": socket.gethostname().replace(".yetitool.com", "")
-                },
-                "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-        ]
 
-        try:
-            self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-        except Exception as e:
-            log("Data send exception: " + str(e))
-        log(data)
 
-    def send_routine_updates_to_database(self, dt):
-
-        try:
-            if self.m.s.m_state == "Idle":
-                self.send_alive()
-            else:
-                self.send_full_payload()
-
-        except:
-            log("Could not send routine update")

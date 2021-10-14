@@ -8,6 +8,7 @@ import sys,os, subprocess, time #, pigpio ## until production machines are runni
 from __builtin__ import True, False
 from datetime import datetime
 
+import socket
 from kivy.clock import Clock
 
 def log(message):
@@ -20,6 +21,8 @@ class Settings(object):
     wifi_available = False
     ip_address = ''
     WIFI_REPORT_INTERVAL = 2
+    full_hostname = socket.gethostname()
+    console_hostname = full_hostname.split('.')[0]
 
     sw_version = ''
     sw_hash = ''
@@ -45,23 +48,21 @@ class Settings(object):
 
     def check_wifi_and_refresh_ip_address(self, dt):
 
-        if sys.platform == "win32":
+        if sys.platform == "win32" or sys.platform == 'darwin':
             try:
                 # get IP address
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
+                IPAddr=socket.gethostbyname(self.full_hostname)
                 self.ip_address = str(IPAddr)
-                self.wifi_available = True
 
-                # # ping to check connection
-                # # NB, if this comes out false but there's an IP it indicates connection in local network
-                # self.wifi_available = self.do_ping_check()
+                # ping to check connection
+                # NB, if this comes out false but there's an IP it indicates connection in local network
+                self.wifi_available = self.do_ping_check()
 
             except:
                 self.ip_address = ''
                 self.wifi_available = False
 
-        elif sys.platform != "darwin": # i.e. is a linux platform
+        else: # i.e. is a linux platform
             try:
 
                 # get IP address
@@ -80,11 +81,6 @@ class Settings(object):
             except:
                 self.ip_address = ''
                 self.wifi_available = False
-
-        else:
-            # ping to check connection
-            # NB, if this comes out false but there's an IP it indicates connection in local network
-            self.wifi_available = self.do_ping_check()
 
 
     def do_ping_check(self):
