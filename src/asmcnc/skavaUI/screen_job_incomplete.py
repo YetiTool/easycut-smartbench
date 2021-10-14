@@ -367,7 +367,7 @@ class JobIncompleteScreen(Screen):
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
 
         self.post_production_notes.text = self.jd.post_production_notes
-        self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
+        self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
 
 
         if_loss = self.l.get_str("If SmartBench lost position, you will need to rehome SmartBench.")

@@ -306,7 +306,7 @@ class JobFeedbackScreen(Screen):
 
 
         self.post_production_notes.text = self.jd.post_production_notes
-        self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
+        self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
 
         self.success_question.text = self.l.get_str("Did this complete successfully?")
 
