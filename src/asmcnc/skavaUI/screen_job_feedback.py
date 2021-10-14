@@ -16,9 +16,9 @@ Builder.load_string("""
     job_completed_label : job_completed_label
     metadata_label : metadata_label
     parts_completed_label : parts_completed_label
-    production_notes_container : production_notes_container
-    production_notes_label : production_notes_label
-    production_notes : production_notes
+    post_production_notes_container : post_production_notes_container
+    post_production_notes_label : post_production_notes_label
+    post_production_notes : post_production_notes
     success_question : success_question
 
     BoxLayout:
@@ -105,10 +105,10 @@ Builder.load_string("""
                                 text_size: self.size
                     
                     BoxLayout: 
-                        id: production_notes_container
+                        id: post_production_notes_container
                         orientation: 'vertical'
                         Label:
-                            id: production_notes_label
+                            id: post_production_notes_label
                             size_hint_y: None
                             height: dp(41)
                             text: "Production notes"
@@ -120,7 +120,7 @@ Builder.load_string("""
                             text_size: self.size
 
                         TextInput:
-                            id: production_notes
+                            id: post_production_notes
                             size_hint_y: None
                             height: dp(79)
                             padding: [4, 2]
@@ -221,22 +221,22 @@ class JobFeedbackScreen(Screen):
         self.sm.get_screen('go').is_job_started_already = False
 
     def confirm_job_successful(self):
-        self.set_production_notes()
+        self.set_post_production_notes()
         self.jd.post_job_data_update_pre_send(True)
         self.db.send_full_payload()
         self.db.send_job_end(self.jd.job_name, True)
         self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
-        self.set_production_notes()
+        self.set_post_production_notes()
         self.sm.get_screen('job_incomplete').prep_this_screen('unsuccessful', event_number=False)
         self.sm.current = 'job_incomplete'
 
     def quit_to_return_screen(self):
         self.sm.current = self.return_to_screen
 
-    def set_production_notes(self):
-        self.jd.production_notes = self.production_notes.text
+    def set_post_production_notes(self):
+        self.jd.post_production_notes = self.post_production_notes.text
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
@@ -245,19 +245,15 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Completed So Far', 0)) + int(self.jd.metadata_dict.get('Parts Per Job', 1))
-        current_step = str(parts_completed_if_job_successful/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
-        total_steps = str(int(self.jd.metadata_dict.get('Total Parts Required', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
+        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.get('Parts Made Per Job', 1))
 
-        if current_step > total_steps: total_steps = current_step
-
-        if len(self.jd.metadata_dict.get('Project Name', self.jd.job_name)) > 23:
-            project_name =  self.jd.metadata_dict.get('Project Name', self.jd.job_name)[:23] + "..."
+        if len(self.jd.metadata_dict.get('Internal Order Code', '')) > 23:
+            internal_order_code =  self.jd.metadata_dict.get('Internal Order Code', '')[:23] + "..."
         else:
-            project_name = self.jd.metadata_dict.get('Project Name', self.jd.job_name)
+            internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
 
         self.metadata_label.text = (
-            project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            internal_order_code + " | " + self.jd.metadata_dict.get('Process Step', '') + \
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
@@ -268,8 +264,8 @@ class JobFeedbackScreen(Screen):
             self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
             )
 
-        self.production_notes.text = self.jd.production_notes
-        self.production_notes_label.text = self.l.get_str("Production Notes")
+        self.post_production_notes.text = self.jd.post_production_notes
+        self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
 
         self.success_question.text = self.l.get_str("Did this complete successfully?")
 

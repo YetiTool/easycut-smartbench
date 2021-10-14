@@ -19,9 +19,9 @@ Builder.load_string("""
     parts_completed_label : parts_completed_label
     parts_completed_input : parts_completed_input
     out_of_total_parts_label : out_of_total_parts_label
-    production_notes_container : production_notes_container
-    production_notes_label : production_notes_label
-    production_notes : production_notes
+    post_production_notes_container : post_production_notes_container
+    post_production_notes_label : post_production_notes_label
+    post_production_notes : post_production_notes
     job_cancelled_label : job_cancelled_label
     # event_details_container : event_details_container
     event_details_label : event_details_label
@@ -138,10 +138,10 @@ Builder.load_string("""
                                 valign: "top"
                     
                     BoxLayout: 
-                        id: production_notes_container
+                        id: post_production_notes_container
                         orientation: 'vertical'
                         Label:
-                            id: production_notes_label
+                            id: post_production_notes_label
                             size_hint_y: None
                             height: dp(41)
                             text: "Production notes"
@@ -153,7 +153,7 @@ Builder.load_string("""
                             text_size: self.size
 
                         TextInput:
-                            id: production_notes
+                            id: post_production_notes
                             size_hint_y: None
                             height: dp(79)
                             padding: [4, 2]
@@ -269,7 +269,7 @@ class JobIncompleteScreen(Screen):
         self.sm.get_screen('go').is_job_started_already = False
  
     def press_ok(self):
-        self.set_production_notes()
+        self.set_post_production_notes()
         self.jd.post_job_data_update_pre_send(False, extra_parts_completed=self.parts_completed_input.text)
         self.send_job_status()
         self.quit_to_return_screen()
@@ -277,8 +277,8 @@ class JobIncompleteScreen(Screen):
     def quit_to_return_screen(self):
         self.sm.current = self.jd.screen_to_return_to_after_job
 
-    def set_production_notes(self):
-        self.jd.production_notes = self.production_notes.text
+    def set_post_production_notes(self):
+        self.jd.post_production_notes = self.post_production_notes.text
 
     def send_job_status(self):
         if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
@@ -306,28 +306,25 @@ class JobIncompleteScreen(Screen):
         else:
             self.job_incomplete_label.text = self.l.get_str("Job incomplete").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        current_step = str(int(self.jd.metadata_dict.get('Parts Completed So Far', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
-        total_steps = str(int(self.jd.metadata_dict.get('Total Parts Required', 1))/int(self.jd.metadata_dict.get('Parts Per Job', 1)))
 
-
-        if len(self.jd.metadata_dict.get('Project Name', self.jd.job_name)) > 23:
-            project_name =  self.jd.metadata_dict.get('Project Name', self.jd.job_name)[:23] + "..."
+        if len(self.jd.metadata_dict.get('Internal Order Code', '')) > 23:
+            internal_order_code =  self.jd.metadata_dict.get('Internal Order Code', '')[:23] + "..."
         else:
-            project_name = self.jd.metadata_dict.get('Project Name', self.jd.job_name)
+            internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
 
         self.metadata_label.text = (
-            project_name + " | " + (self.l.get_str('Step X of Y').replace("X", current_step)).replace("Y", total_steps) + \
+            internal_order_code + " | " + self.jd.metadata_dict.get('Process Step', '') + \
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Completed So Far', 0))
+        self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
 
-        self.production_notes.text = self.jd.production_notes
-        self.production_notes_label.text = self.l.get_str("Production Notes")
+        self.post_production_notes.text = self.jd.post_production_notes
+        self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
 
 
         if_loss = self.l.get_str("If SmartBench lost position, you will need to rehome SmartBench.")
