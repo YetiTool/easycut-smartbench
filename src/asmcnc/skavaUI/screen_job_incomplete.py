@@ -9,6 +9,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+from kivy.metrics import dp
 
 Builder.load_string("""
 <JobIncompleteScreen>
@@ -20,6 +21,8 @@ Builder.load_string("""
     parts_completed_input : parts_completed_input
     out_of_total_parts_label : out_of_total_parts_label
     post_production_notes_container : post_production_notes_container
+    batch_number_container : batch_number_container
+    batch_number_label : batch_number_label
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
     job_cancelled_label : job_cancelled_label
@@ -101,15 +104,13 @@ Builder.load_string("""
 
                             Label: 
                                 id: parts_completed_label
-                                text: "Parts completed: "
+                                size_hint_x: None
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
                                 halign: "left"
                                 valign: "top"
-                                size: self.texture_size
                                 text_size: self.size
-                                # pos: metadata_label.x, self.y
 
                             TextInput:
                                 id: parts_completed_input
@@ -129,33 +130,68 @@ Builder.load_string("""
 
                             Label: 
                                 id: out_of_total_parts_label
+                                size_hint_x: None
                                 text: ""
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
-                                text_size: self.size
                                 halign: "left"
                                 valign: "top"
+                                text_size: self.size
                     
                     BoxLayout: 
                         id: post_production_notes_container
                         orientation: 'vertical'
-                        Label:
-                            id: post_production_notes_label
+
+                        BoxLayout: 
+                            id: batch_number_container
                             size_hint_y: None
                             height: dp(41)
+                            orientation: 'horizontal'
+                            padding: [dp(0), dp(11), dp(0), dp(0)]
+
+                            Label:
+                                id: batch_number_label
+                                size_hint_x: None
+                                color: hex('#333333ff') #grey
+                                font_size: dp(20)
+                                halign: "left"
+                                valign: "bottom"
+                                markup: True
+                                text_size: self.size
+
+                            TextInput:
+                                id: batch_number_input
+                                padding: [4, 2]
+                                text: ""
+                                color: hex('#333333ff')
+                                # foreground_color: hex('#333333ff')
+                                text_size: self.size
+                                size_hint_x: None
+                                width: dp(100)
+                                halign: "left"
+                                valign: "bottom"
+                                markup: True
+                                font_size: dp(20)
+                                multiline: False
+                                background_color: hex('#e5e5e5ff')
+                                text: '0'
+
+
+                        Label:
+                            id: post_production_notes_label
                             text: "Production notes"
                             color: hex('#333333ff') #grey
                             font_size: dp(20)
                             halign: "left"
-                            valign: "bottom"
+                            valign: "top"
                             markup: True
                             text_size: self.size
 
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(79)
+                            height: dp(56)
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
@@ -320,11 +356,18 @@ class JobIncompleteScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
+        self.parts_completed_label.text = self.l.get_str("Parts completed: ")
+        self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*10.5)
         self.parts_completed_input.text = str(self.jd.metadata_dict.get('Parts Made So Far', 0))
+
         self.out_of_total_parts_label.text = " / " + str(self.jd.metadata_dict.get('Total Parts Required', 1))
+        # self.out_of_total_parts_label.width = dp(len(self.out_of_total_parts_label.text)*10.5)
+
+        self.batch_number_label.text = self.l.get_str("Batch Number: ")
+        self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
 
         self.post_production_notes.text = self.jd.post_production_notes
-        self.post_production_notes_label.text = self.l.get_str("Post Production Notes")
+        self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
 
 
         if_loss = self.l.get_str("If SmartBench lost position, you will need to rehome SmartBench.")
