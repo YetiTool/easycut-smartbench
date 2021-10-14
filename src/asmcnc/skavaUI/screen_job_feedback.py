@@ -147,9 +147,10 @@ Builder.load_string("""
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
-                                text_size: self.size
                                 halign: "left"
                                 valign: "top"
+                                size: self.texture_size
+                                text_size: self.size
 
                         Label:
                             id: post_production_notes_label
