@@ -109,7 +109,6 @@ Builder.load_string("""
                                 valign: "top"
                                 size: self.texture_size
                                 text_size: self.size
-                                # pos: metadata_label.x, self.y
 
                             TextInput:
                                 id: parts_completed_input

@@ -112,6 +112,7 @@ Builder.load_string("""
                             size_hint_y: None
                             height: dp(41)
                             orientation: 'horizontal'
+                            padding: [dp(0), dp(11), dp(0), dp(0)]
 
                             Label:
                                 id: batch_number_label
@@ -121,7 +122,8 @@ Builder.load_string("""
                                 halign: "left"
                                 valign: "bottom"
                                 markup: True
-                                text_size: self.size    
+                                size: self.texture_size
+                                text_size: self.size
 
                             TextInput:
                                 id: batch_number_input
@@ -134,8 +136,9 @@ Builder.load_string("""
                                 valign: "top"
                                 markup: True
                                 font_size: dp(20)
-                                multiline: True
+                                multiline: False
                                 background_color: hex('#e5e5e5ff')
+                                text: '0'
 
                         Label:
                             id: post_production_notes_label
@@ -143,14 +146,14 @@ Builder.load_string("""
                             color: hex('#333333ff') #grey
                             font_size: dp(20)
                             halign: "left"
-                            valign: "bottom"
+                            valign: "top"
                             markup: True
                             text_size: self.size
 
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(49)
+                            height: dp(54)
                             padding: [4, 2]
                             text: ""
                             color: hex('#333333ff')
