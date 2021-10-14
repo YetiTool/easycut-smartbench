@@ -47,9 +47,9 @@ class DatabaseEventManager():
 
         log("Try to set up pika connection")
 
-        def try_to_connect_to_database():
+        while True:
 
-            while True:
+            if self.set.wifi_available:
 
                 try:
                     self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/',
@@ -66,12 +66,9 @@ class DatabaseEventManager():
                     log("Pika connection exception: " + str(e))
                     sleep(10)
 
-        if self.set.wifi_available:
-            try_to_connect_to_database()
+            else:
+                sleep(10)
 
-        else:
-            sleep(10)
-            try_to_connect_to_database()
 
 
     ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
@@ -110,17 +107,17 @@ class DatabaseEventManager():
 
         def nested_flurry_event_sender(data, exception_type):
 
-            try: 
-                self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-                if self.VERBOSE: log(data)
-            
-            except Exception as e:
-                if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+                try: 
+                    self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                    if self.VERBOSE: log(data)
+                
+                except Exception as e:
+                    if self.VERBOSE: log(exception_type + " send exception: " + str(e))
 
-
-        thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
-        thread_for_send_event.daemon = True
-        thread_for_send_event.start()
+        if self.set.wifi_available:
+            thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
+            thread_for_send_event.daemon = True
+            thread_for_send_event.start()
 
 
     ## ROUTINE EVENTS
