@@ -56,7 +56,6 @@ from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
 from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
 from asmcnc.skavaUI import screen_error # @UnresolvedImport
 from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from asmcnc.skavaUI import screen_safety_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
@@ -68,13 +67,11 @@ from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
-from asmcnc.skavaUI import screen_welcome # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
 from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
-from asmcnc.skavaUI import screen_release_notes # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
 
@@ -85,8 +82,7 @@ Cmport = 'COM3'
 # Current version active/working on
 initial_version = 'v1.8.2'
 
-# default starting screen
-start_screen = 'welcome'
+config_flag = False
 
 # Moving to ansible
 # # Config management
@@ -102,11 +98,12 @@ def check_and_update_config():
 
     if sys.platform != 'win32' and sys.platform != 'darwin':
     
-        if check_config_flag():
+        global config_flag
+        config_flag = check_config_flag()
+
+        if config_flag:
             ver0_configuration()
             check_ansible_status()
-            check_and_launch_update_screen()
-            update_check_config_flag()
 
 def check_config_flag():
     
@@ -129,19 +126,6 @@ def check_ansible_status():
     if not ansible_from_easycut:
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
         os.system("sudo systemctl restart ansible.service && sudo reboot")
-
-def check_and_launch_update_screen():
-
-    # Check whether machine needs to be power cycled (currently only after a software update)
-    pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
-    if pc_alert.startswith('power_cycle_alert=True'):
-        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
-        global start_screen
-        start_screen = 'release_notes'
-
-def update_check_config_flag():
-
-    os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
 
     
 ## Easycut config
@@ -166,11 +150,6 @@ class SkavaUI(App):
         # Localization/language object
         l = localization.Localization()
 
-        if start_screen == 'release_notes': 
-            # powercycle_screen = screen_powercycle_alert.PowerCycleScreen(name = 'pc_alert', screen_manager = sm)
-            release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = sm, localization = l, version = initial_version)
-            # restart_smartbench_screen = screen_restart_smartbench.RestartSmartbenchScreen(name = 'restart_smartbench', screen_manager = sm)
-
         # Initialise settings object
         sett = settings_manager.Settings(sm)
 
@@ -179,12 +158,12 @@ class SkavaUI(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-        
-        # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, l, jd)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        # App manager object
+        am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
 
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
@@ -202,8 +181,7 @@ class SkavaUI(App):
         loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = sm, machine =m, job = jd, localization = l)
         checking_screen = screen_check_job.CheckingScreen(name = 'check_job', screen_manager = sm, machine =m, job = jd, localization = l)
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
-        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport, localization = l)
-        safety_screen = screen_safety_warning.SafetyScreen(name = 'safety', screen_manager = sm, machine =m, localization = l)
+        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager = sm, machine = m, win_port = Cmport, localization = l) 
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m, localization = l)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm, localization = l)
@@ -214,18 +192,12 @@ class SkavaUI(App):
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
         homing_active_screen = screen_homing_active.HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m, localization = l)
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
-        welcome_screen = screen_welcome.WelcomeScreenClass(name = 'welcome', screen_manager = sm, machine =m, settings = sett, database = db, app_manager = am, localization = l)
         spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name = 'spindle_shutdown', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name = 'spindle_cooldown', screen_manager = sm, machine =m, localization = l)
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
 
-        if start_screen == 'release_notes': 
-            # sm.add_widget(powercycle_screen)
-            sm.add_widget(release_notes_screen)
-            # sm.add_widget(restart_smartbench_screen)
-        # else:
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
         sm.add_widget(home_screen)
@@ -237,7 +209,6 @@ class SkavaUI(App):
         sm.add_widget(checking_screen)
         sm.add_widget(error_screen)
         sm.add_widget(serial_screen)
-        sm.add_widget(safety_screen)
         sm.add_widget(mstate_screen)
         sm.add_widget(boundary_warning_screen)
         sm.add_widget(rebooting_screen)
@@ -248,7 +219,6 @@ class SkavaUI(App):
         sm.add_widget(prepare_to_home_screen)
         sm.add_widget(homing_active_screen)
         sm.add_widget(squaring_active_screen)
-        sm.add_widget(welcome_screen)
         sm.add_widget(spindle_shutdown_screen)
         sm.add_widget(spindle_cooldown_screen)
         sm.add_widget(stop_or_resume_decision_screen)
@@ -258,8 +228,6 @@ class SkavaUI(App):
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
-
-        sm.current = start_screen
 
         log('Screen manager activated: ' + str(sm.current))
 

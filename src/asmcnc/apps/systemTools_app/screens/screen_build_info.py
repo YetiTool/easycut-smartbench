@@ -15,7 +15,6 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
-from asmcnc.core_UI.data_and_wifi import data_consent_manager
 
 Builder.load_string("""
 
