@@ -7,23 +7,32 @@ class ScreenManagerDataConsent(object):
 	return_to_screen = 'build_info'
 	back_to_screen = 'build_info'
 
-	def __init__(self, screen_manager, localization):
+	def __init__(self, start_sequence, screen_manager, localization):
+		self.start_seq = start_sequence
 		self.sm = screen_manager
 		self.l = localization
 		self.set_up_data_screens()
 
 	def set_up_data_screens(self):
 		if not self.sm.has_screen('consent_1'):
-			consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', consent_manager = self, localization = self.l)
+			consent_1_screen = wifi_and_data_consent_1.WiFiAndDataConsentScreen1(name='consent_1', start_sequence = self.start_seq, consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_1_screen)
 
 		if not self.sm.has_screen('consent_2'):
-			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', consent_manager = self, localization = self.l)
+			consent_2_screen = wifi_and_data_consent_2.WiFiAndDataConsentScreen2(name='consent_2', start_sequence = self.start_seq, consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_2_screen)
 
 		if not self.sm.has_screen('consent_3'):
-			consent_3_screen = wifi_and_data_consent_3.WiFiAndDataConsentScreen3(name='consent_3', consent_manager = self, localization = self.l)
+			consent_3_screen = wifi_and_data_consent_3.WiFiAndDataConsentScreen3(name='consent_3', start_sequence = self.start_seq, consent_manager = self, localization = self.l)
 			self.sm.add_widget(consent_3_screen)
+
+		try:
+			self.start_seq.add_screen_to_sequence('consent_1')
+			self.start_seq.add_screen_to_sequence('consent_2')
+			self.start_seq.add_screen_to_sequence('consent_3')
+
+		except:
+			pass
 
 	def open_data_consent(self, screen_to_go_back_to, screen_to_exit_to):
 		self.return_to_screen = screen_to_exit_to
@@ -32,9 +41,14 @@ class ScreenManagerDataConsent(object):
 		self.sm.current = 'consent_1'
 
 	def back_to_previous_screen(self):
-		self.sm.current = self.back_to_screen
-		if self.back_to_screen == 'build_info':
-			self.remove_consent_screens()
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.sm.current = self.back_to_screen
+			if self.back_to_screen == 'build_info':
+				self.remove_consent_screens()
 
 	def accept_terms_and_enable_wifi(self):
 		os.system('sudo rfkill unblock wifi')
@@ -49,10 +63,15 @@ class ScreenManagerDataConsent(object):
 
 	def exit_data_consent_app(self):
 		self.update_seen()
-		self.sm.current = self.return_to_screen
-		if self.back_to_screen == 'build_info':
-			self.remove_consent_screens()
-			self.remove_entry_screens_if_necessary()
+
+		try:
+			self.start_seq.next_in_sequence()
+
+		except:
+			self.sm.current = self.return_to_screen
+			if self.back_to_screen == 'build_info':
+				self.remove_consent_screens()
+				self.remove_entry_screens_if_necessary()
 
 	def remove_consent_screens(self):
 		self.destroy_screen('consent_1')

@@ -97,7 +97,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -120,7 +120,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -143,7 +143,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -166,7 +166,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -215,7 +215,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -238,7 +238,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -261,7 +261,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -344,15 +344,27 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 
+
 	def next_screen(self):
-		self.c.sm.current='consent_2'
+
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_2'
 
 	def prev_screen(self):
-		self.c.back_to_previous_screen()
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.back_to_previous_screen()
+		
 
 	def update_strings(self):
 		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \

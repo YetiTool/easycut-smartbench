@@ -290,6 +290,7 @@ class SafetyScreen(Screen):
     def __init__(self, **kwargs):
         
         super(SafetyScreen, self).__init__(**kwargs)
+        self.start_seq=kwargs['start_sequence']
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']

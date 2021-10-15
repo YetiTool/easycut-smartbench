@@ -156,7 +156,7 @@ Builder.load_string("""
 						id: decline_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
-						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
+						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -172,7 +172,7 @@ Builder.load_string("""
 						id: accept_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
-						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
+						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -209,18 +209,24 @@ class WiFiAndDataConsentScreen3(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 		self.set_checkbox_default()
 
-		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/core_UI/data_and_wifi/privacy_notice.txt"
+		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice.txt"
 
 	def on_pre_leave(self):
 		self.set_checkbox_default()
 
 	def prev_screen(self):
-		self.c.sm.current='consent_2'
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.sm.current='consent_2'
 
 	def update_strings(self):
 		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")

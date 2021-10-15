@@ -14,11 +14,10 @@ screen_CNC_academy
 
 class ScreenManagerWarranty(object):
 
-    data_consent_app = None
 
-    def __init__(self, app_manager, screen_manager, machine, localization):
 
-        self.am = app_manager
+    def __init__(self, screen_manager, machine, localization):
+
         self.sm = screen_manager
         self.m = machine
         self.l = localization
@@ -61,11 +60,6 @@ class ScreenManagerWarranty(object):
         else:
             self.sm.get_screen('cnc_academy').update_strings()
 
-        if not self.sm.has_screen('reboot_to_apply_settings'):
-            reboot_to_apply_language_settings_screen = screen_reboot_to_apply_language_settings.ApplySettingsScreen(name = 'reboot_to_apply_settings', warranty_manager = self, machine = self.m, localization = self.l)
-            self.sm.add_widget(reboot_to_apply_language_settings_screen)
-        else:
-            self.sm.get_screen('reboot_to_apply_settings').update_strings()
 
     def open_warranty_app(self):
         self.load_warranty_app()

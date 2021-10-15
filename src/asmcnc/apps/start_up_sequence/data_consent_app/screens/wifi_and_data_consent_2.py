@@ -132,15 +132,25 @@ class WiFiAndDataConsentScreen2(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 
 	def next_screen(self):
-		self.c.sm.current='consent_3'
+
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_3'
 
 	def prev_screen(self):
-		self.c.sm.current='consent_1'
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.sm.current='consent_1'
 
 	def update_strings(self):
 		self.user_info.text = (

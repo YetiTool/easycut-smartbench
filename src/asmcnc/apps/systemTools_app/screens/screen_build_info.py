@@ -15,6 +15,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 
 Builder.load_string("""
 
@@ -589,7 +590,7 @@ class BuildInfoScreen(Screen):
         wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, "Loading Data and Wi-Fi...")
 
         def nested_open_data_consent_app(dt):
-            self.data_consent_app = data_consent_manager.DataConsentManager(self.systemtools_sm.sm, self.l)
+            self.data_consent_app = screen_manager_data_consent.ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l)
             self.data_consent_app.open_data_consent('build_info', 'build_info')
             wait_popup.popup.dismiss()
 

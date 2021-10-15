@@ -6,9 +6,6 @@ Created on nov 2020
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.spinner import Spinner, SpinnerOption
-from kivy.uix.dropdown import DropDown
-from kivy.uix.scrollview import ScrollView
 import sys, os
 from kivy.clock import Clock
 
@@ -20,22 +17,22 @@ Builder.load_string("""
 	row_1_col_1 : row_1_col_1
 	row_1_col_2 : row_1_col_2
 	row_1_col_3 : row_1_col_3
-	row_2_col_1 : row_2_col_1
-	row_2_col_2 : row_2_col_2
-	row_2_col_3 : row_2_col_3
-	row_3_col_1 : row_3_col_1
-	row_3_col_2 : row_3_col_2
-	row_3_col_3 : row_3_col_3
+	# row_2_col_1 : row_2_col_1
+	# row_2_col_2 : row_2_col_2
+	# row_2_col_3 : row_2_col_3
+	# row_3_col_1 : row_3_col_1
+	# row_3_col_2 : row_3_col_2
+	# row_3_col_3 : row_3_col_3
 
 	row_1_col_1_image : row_1_col_1_image
 	row_1_col_2_image : row_1_col_2_image
 	row_1_col_3_image : row_1_col_3_image
-	row_2_col_1_image : row_2_col_1_image
-	row_2_col_2_image : row_2_col_2_image
-	row_2_col_3_image : row_2_col_3_image
-	row_3_col_1_image : row_3_col_1_image
-	row_3_col_2_image : row_3_col_2_image
-	row_3_col_3_image : row_3_col_3_image
+	# row_2_col_1_image : row_2_col_1_image
+	# row_2_col_2_image : row_2_col_2_image
+	# row_2_col_3_image : row_2_col_3_image
+	# row_3_col_1_image : row_3_col_1_image
+	# row_3_col_2_image : row_3_col_2_image
+	# row_3_col_3_image : row_3_col_3_image
 
 	next_button : next_button
 
@@ -85,215 +82,212 @@ Builder.load_string("""
 				spacing: dp(10)
 				orientation: 'vertical'
 
-				BoxLayout:
+	            GridLayout:
+	                pos: self.parent.pos
+	                cols: 9
+	                rows: 3
+	                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(170), 3: dp(15), 4: dp(50), 5: dp(170), 6: dp(15), 7: dp(50), 8: dp(170)}
+	                spacing: 5
 
 
-		            GridLayout:
-		                pos: self.parent.pos
-		                cols: 9
-		                rows: 3
-		                cols_minimum: {0: dp(15), 1: dp(50), 2: dp(170), 3: dp(15), 4: dp(50), 5: dp(170), 6: dp(15), 7: dp(50), 8: dp(170)}
-		                spacing: 5
+	                # ROW 1
+
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_1_col_1)
+						color: hex('#1976d2ff')
+
+	                Image: 
+	                	id: row_1_col_1_image
+	                	allow_stretch: True
+
+	                Label: 
+	                	id: row_1_col_1
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
 
 
-		                # ROW 1
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_1_col_2)
+						color: hex('#333333ff')
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_1_col_1)
-							color: hex('#1976d2ff')
+	                Image: 
+	                	id: row_1_col_2_image
+	                	allow_stretch: True
 
-		                Image: 
-		                	id: row_1_col_1_image
-		                	allow_stretch: True
-
-		                Label: 
-		                	id: row_1_col_1
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	                Label: 
+	                	id: row_1_col_2
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
 
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_1_col_2)
-							color: hex('#333333ff')
+					CheckBox: 
+						group: "language_radio_buttons" 
+						on_press: root.select_language(self, row_1_col_3)
+						color: hex('#333333ff')
 
-		                Image: 
-		                	id: row_1_col_2_image
-		                	allow_stretch: True
+	                Image: 
+	                	id: row_1_col_3_image
+	                	allow_stretch: True
 
-		                Label: 
-		                	id: row_1_col_2
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	                Label: 
+	                	id: row_1_col_3
+	                	valign: "middle"
+						font_size: '20sp'
+						text_size: self.size
+						markup: True
+						halign: "left"
+						color: hex('#333333ff')
 
-
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_1_col_3)
-							color: hex('#333333ff')
-
-		                Image: 
-		                	id: row_1_col_3_image
-		                	allow_stretch: True
-
-		                Label: 
-		                	id: row_1_col_3
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
-
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
-						# BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
 
 
-						# ROW 2
+					# # ROW 2
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_2_col_1)
-							color: hex('#333333ff')
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_2_col_1)
+					# 	color: hex('#333333ff')
 
-		                Image: 
-		                	id: row_2_col_1_image
-		                	allow_stretch: True
+	    #             Image: 
+	    #             	id: row_2_col_1_image
+	    #             	allow_stretch: True
 
-		                Label: 
-		                	id: row_2_col_1
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
-
-
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_2_col_2)
-							color: hex('#333333ff')
-
-		                Image: 
-		                	id: row_2_col_2_image
-		                	allow_stretch: True
-
-		                Label: 
-		                	id: row_2_col_2
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	    #             Label: 
+	    #             	id: row_2_col_1
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
 
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_2_col_3)
-							color: hex('#333333ff')
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_2_col_2)
+					# 	color: hex('#333333ff')
 
-		                Image: 
-		                	id: row_2_col_3_image
-		                	allow_stretch: True
+	    #             Image: 
+	    #             	id: row_2_col_2_image
+	    #             	allow_stretch: True
 
-		                Label: 
-		                	id: row_2_col_3
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
-
-
-						# ROW 3
-
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_3_col_1)
-							color: hex('#333333ff')
-
-		                Image: 
-		                	id: row_3_col_1_image
-		                	allow_stretch: True
-
-		                Label: 
-		                	id: row_3_col_1
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	    #             Label: 
+	    #             	id: row_2_col_2
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
 
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_3_col_2)
-							on_press: root.select_language(self)
-							color: hex('#333333ff')
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_2_col_3)
+					# 	color: hex('#333333ff')
 
-		                Image: 
-		                	id: row_3_col_2_image
-		    				allow_stretch: True
+	    #             Image: 
+	    #             	id: row_2_col_3_image
+	    #             	allow_stretch: True
 
-		                Label: 
-		                	id: row_3_col_2
-		                	text: "Suomalainen (FI)"
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	    #             Label: 
+	    #             	id: row_2_col_3
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
 
 
-						CheckBox: 
-							group: "language_radio_buttons" 
-							on_press: root.select_language(self, row_3_col_3)
-							on_press: root.select_language(self)
-							color: hex('#333333ff')
+					# # ROW 3
 
-		                Image: 
-		                	id: row_3_col_3_image
-		    				allow_stretch: True
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_3_col_1)
+					# 	color: hex('#333333ff')
 
-		                Label: 
-		                	id: row_3_col_3
-		                	text: "Suomalainen (FI)"
-		                	valign: "middle"
-							font_size: '20sp'
-							text_size: self.size
-							markup: True
-							halign: "left"
-							color: hex('#333333ff')
+	    #             Image: 
+	    #             	id: row_3_col_1_image
+	    #             	allow_stretch: True
+
+	    #             Label: 
+	    #             	id: row_3_col_1
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
+
+
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_3_col_2)
+					# 	on_press: root.select_language(self)
+					# 	color: hex('#333333ff')
+
+	    #             Image: 
+	    #             	id: row_3_col_2_image
+	    # 				allow_stretch: True
+
+	    #             Label: 
+	    #             	id: row_3_col_2
+	    #             	text: "Suomalainen (FI)"
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
+
+
+					# CheckBox: 
+					# 	group: "language_radio_buttons" 
+					# 	on_press: root.select_language(self, row_3_col_3)
+					# 	on_press: root.select_language(self)
+					# 	color: hex('#333333ff')
+
+	    #             Image: 
+	    #             	id: row_3_col_3_image
+	    # 				allow_stretch: True
+
+	    #             Label: 
+	    #             	id: row_3_col_3
+	    #             	text: "Suomalainen (FI)"
+	    #             	valign: "middle"
+					# 	font_size: '20sp'
+					# 	text_size: self.size
+					# 	markup: True
+					# 	halign: "left"
+					# 	color: hex('#333333ff')
 
 			# FOOTER
 			BoxLayout: 
@@ -340,11 +334,11 @@ Builder.load_string("""
 
 class LanguageSelectScreen(Screen):
 
-	loading_warranty_app = False
 	flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
 
 	def __init__(self, **kwargs):
 		super(LanguageSelectScreen, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.sm=kwargs['screen_manager']
 		self.l=kwargs['localization']
 
@@ -352,14 +346,6 @@ class LanguageSelectScreen(Screen):
 		self.row_1_col_1.text = self.l.supported_languages[0]
 		self.row_1_col_2.text = self.l.supported_languages[1]
 		self.row_1_col_3.text = self.l.supported_languages[2]
-		self.row_2_col_1.text = self.l.supported_languages[2]
-		self.row_2_col_2.text = self.l.supported_languages[2]
-		self.row_2_col_3.text = self.l.supported_languages[2]
-		self.row_3_col_1.text = self.l.supported_languages[2]
-		self.row_3_col_2.text = self.l.supported_languages[2]
-		self.row_3_col_3.text = self.l.supported_languages[2]
-
-
 		# self.row_2_col_1.text = self.l.supported_languages[3]
 		# self.row_2_col_2.text = self.l.supported_languages[4]
 		# self.row_2_col_3.text = self.l.supported_languages[5]
@@ -370,29 +356,27 @@ class LanguageSelectScreen(Screen):
 		self.row_1_col_1_image.source = self.flag_img_path + self.row_1_col_1.text + ".png"
 		self.row_1_col_2_image.source = self.flag_img_path + self.row_1_col_2.text + ".png"
 		self.row_1_col_3_image.source = self.flag_img_path + self.row_1_col_3.text + ".png"
-		self.row_2_col_1_image.source = self.flag_img_path + self.row_2_col_1.text + ".png"
-		self.row_2_col_2_image.source = self.flag_img_path + self.row_2_col_2.text + ".png"
-		self.row_2_col_3_image.source = self.flag_img_path + self.row_2_col_3.text + ".png"
-		self.row_3_col_1_image.source = self.flag_img_path + self.row_3_col_1.text + ".png"
-		self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
-		self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
+		# self.row_2_col_1_image.source = self.flag_img_path + self.row_2_col_1.text + ".png"
+		# self.row_2_col_2_image.source = self.flag_img_path + self.row_2_col_2.text + ".png"
+		# self.row_2_col_3_image.source = self.flag_img_path + self.row_2_col_3.text + ".png"
+		# self.row_3_col_1_image.source = self.flag_img_path + self.row_3_col_1.text + ".png"
+		# self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
+		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
 
 	def select_language(self, radio_button, language_label):
 
-		if not self.loading_warranty_app:
+		if radio_button.state == 'down':
+			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
+			self.l.load_in_new_language(language_label.text)
+			self.next_button.text = self.l.get_str("Next") + "..."
+			self.next_button.opacity = 1
+			self.next_button.disabled = False
 
-			if radio_button.state == 'down':
-				radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
-				self.l.load_in_new_language(language_label.text)
-				self.next_button.text = self.l.get_str("Next") + "..."
-				self.next_button.opacity = 1
-				self.next_button.disabled = False
-
-			else: 
-				radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
+		else: 
+			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
 
 	def next_screen(self):
-		self.wm.open_warranty_app()
+		self.start_seq.next_in_sequence()
 
 	def load_next_screen(self):
 		self.next_button.disabled = True

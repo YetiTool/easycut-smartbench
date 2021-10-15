@@ -103,11 +103,11 @@ class ApplySettingsScreen(Screen):
 
 	def __init__(self, **kwargs):
 		super(ApplySettingsScreen, self).__init__(**kwargs)
-		self.wm=kwargs['warranty_manager']
+		self.sm=kwargs['screen_manager']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
 
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
+		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
 
@@ -115,10 +115,12 @@ class ApplySettingsScreen(Screen):
 
 	def next_screen(self):
 		# self.wm.exit_app()
-		self.wm.sm.current = 'rebooting'
+		# self.wm.sm.current = 'rebooting'
+		pass
 
 	def go_back(self):
-		self.wm.sm.current = 'cnc_academy'
+		# self.wm.sm.current = 'cnc_academy'
+		pass
 
 	def update_strings(self): # add to lang list!
 		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
