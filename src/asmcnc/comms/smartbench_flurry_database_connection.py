@@ -129,7 +129,11 @@ class DatabaseEventManager():
             {
                 "payload_type": "alive",
                 "machine_info": {
-                    "hostname": self.set.console_hostname
+                    "name": self.m.device_label,
+                    "location": self.m.device_location,
+                    "hostname": self.set.console_hostname,
+                    "ec_version": self.m.sett.sw_version,
+                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
@@ -273,7 +277,11 @@ class DatabaseEventManager():
             {
                 "payload_type": "job_end",
                 "machine_info": {
-                    "hostname": self.set.console_hostname
+                    "name": self.m.device_label,
+                    "location": self.m.device_location,
+                    "hostname": self.set.console_hostname,
+                    "ec_version": self.m.sett.sw_version,
+                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -293,7 +301,11 @@ class DatabaseEventManager():
             {
                 "payload_type": "job_start",
                 "machine_info": {
-                    "hostname": self.set.console_hostname
+                    "name": self.m.device_label,
+                    "location": self.m.device_location,
+                    "hostname": self.set.console_hostname,
+                    "ec_version": self.m.sett.sw_version,
+                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -318,7 +330,11 @@ class DatabaseEventManager():
         data = {
             "payload_type": "speed_info",
             "machine_info": {
-                "hostname": self.set.console_hostname
+                "name": self.m.device_label,
+                "location": self.m.device_location,
+                "hostname": self.set.console_hostname,
+                "ec_version": self.m.sett.sw_version,
+                "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
             },
             "speeds": {
                 "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
@@ -353,7 +369,11 @@ class DatabaseEventManager():
             {
                 "payload_type": "event",
                 "machine_info": {
-                    "hostname": self.set.console_hostname
+                    "name": self.m.device_label,
+                    "location": self.m.device_location,
+                    "hostname": self.set.console_hostname,
+                    "ec_version": self.m.sett.sw_version,
+                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
                 },
                 "event": {
                     "severity": event_severity,
