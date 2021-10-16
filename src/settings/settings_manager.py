@@ -48,7 +48,18 @@ class Settings(object):
 
     def check_wifi_and_refresh_ip_address(self, dt):
 
-        if sys.platform == "win32" or sys.platform == 'darwin':
+        if sys.platform == "win32":
+            try:
+                # get IP address
+                IPAddr=socket.gethostbyname(self.full_hostname)
+                self.ip_address = str(IPAddr)
+                self.wifi_available = True
+
+            except:
+                self.ip_address = ''
+                self.wifi_available = False
+
+        elif sys.platform == 'darwin':
             try:
                 # get IP address
                 IPAddr=socket.gethostbyname(self.full_hostname)
