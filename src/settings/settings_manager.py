@@ -53,6 +53,17 @@ class Settings(object):
                 # get IP address
                 IPAddr=socket.gethostbyname(self.full_hostname)
                 self.ip_address = str(IPAddr)
+                self.wifi_available = True
+
+            except:
+                self.ip_address = ''
+                self.wifi_available = False
+
+        elif sys.platform == 'darwin':
+            try:
+                # get IP address
+                IPAddr=socket.gethostbyname(self.full_hostname)
+                self.ip_address = str(IPAddr)
 
                 # ping to check connection
                 # NB, if this comes out false but there's an IP it indicates connection in local network
