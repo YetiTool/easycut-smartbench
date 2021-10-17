@@ -99,7 +99,7 @@ class StartUpSequence(object):
 			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
-	def show_release_notes():
+	def show_release_notes(self):
 
 		# Check whether machine needs to be power cycled (currently only after a software update)
 		pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
