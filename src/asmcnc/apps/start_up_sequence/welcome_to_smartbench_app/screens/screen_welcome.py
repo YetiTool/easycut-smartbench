@@ -170,6 +170,7 @@ class WelcomeTextScreen(Screen):
 		self.update_strings()
 
 	def next_screen(self):
+		self.update_seen()
 		self.start_seq.next_in_sequence()
 
 	def prev_screen(self):
