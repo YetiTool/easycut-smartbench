@@ -55,24 +55,48 @@ class StartUpSequence(object):
 
 	def set_up_sequence(self):
 
-		self.prep_welcome_app()
+		if self.welcome_user():
+			self.prep_welcome_app()
 
-		self.prep_release_notes_screen()
+		# if self.show_release_notes():
+		# 	self.prep_release_notes_screen()
 
-		self.prep_data_consent_app()
+		# if show_user_data_consent():
+		# 	self.prep_data_consent_app()
 
-		self.prep_warranty_app()
+		# self.prep_starting_smartbench_screen()
 
-		self.prep_reboot_to_apply_settings_screen()
+		# if show_warranty_app():
+		# 	self.prep_warranty_app()
 
-		self.prep_starting_smartbench_screen()
-		
-		self.prep_safety_screen()
+		# if self.reboot_in_sequence:		
+		# 	self.prep_reboot_to_apply_settings_screen()
+
+		else:
+			self.prep_starting_smartbench_screen()
+			self.prep_safety_screen()
 
 
 	def add_screen_to_sequence(self, screen_name):
 		if screen_name not in self.screen_sequence:
 			self.screen_sequence.append(screen_name)
+
+
+    def welcome_user(self):
+        flag = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+
+        if ('True' in flag) or (not flag): return True
+        else: return False
+
+
+    def welcome_user_to_smartbench(self):
+        show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if not show_user_welcome_app:
+            os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
+
+        elif 'False' in show_user_welcome_app:
+            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
 

@@ -573,6 +573,7 @@ class FactorySettingsScreen(Screen):
                     self.m.trigger_setup = True
                     self.m.write_set_up_options(True)
                     self.set_user_to_view_privacy_notice()
+                    self.welcome_user_to_smartbench()
                     return True
                 else:
                     return False
@@ -730,5 +731,12 @@ class FactorySettingsScreen(Screen):
         elif 'True' in user_has_seen_privacy_notice:
             os.system('sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
+    def welcome_user_to_smartbench(self):
+        show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if not show_user_welcome_app:
+            os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
 
+        elif 'False' in show_user_welcome_app:
+            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
             

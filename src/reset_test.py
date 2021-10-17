@@ -23,6 +23,17 @@ def activation_code_proxy():
 	activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
 	os.system("sudo touch " + activation_code_filepath)
 
+
+def welcome_user_to_smartbench():
+    show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+    
+    if not show_user_welcome_app:
+        os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
+
+    elif 'False' in show_user_welcome_app:
+        os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
+
 write_set_up_options()
 set_user_to_view_privacy_notice()
 activation_code_proxy()
+welcome_user_to_smartbench()
