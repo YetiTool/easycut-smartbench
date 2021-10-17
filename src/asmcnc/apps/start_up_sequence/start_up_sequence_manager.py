@@ -65,16 +65,16 @@ class StartUpSequence(object):
 		if self.show_user_data_consent():
 			self.prep_data_consent_app()
 
-		# self.prep_starting_smartbench_screen()
+		self.prep_starting_smartbench_screen()
 
-		# if show_warranty_app():
-		# 	self.prep_warranty_app()
+		if show_warranty_app():
+			self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()
 
 		else:
-			self.prep_starting_smartbench_screen()
+
 			self.prep_safety_screen()
 
 
@@ -86,18 +86,10 @@ class StartUpSequence(object):
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
 
-		if ('True' in flag) or (not flag): return True
+		if ('True' in flag) or (not flag): 
+			self.reboot_in_sequence = True
+			return True
 		else: return False
-
-
-	def welcome_user_to_smartbench(self):
-		show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
-		
-		if not show_user_welcome_app:
-			os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
-
-		elif 'False' in show_user_welcome_app:
-			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
 	def show_release_notes(self):
@@ -112,22 +104,13 @@ class StartUpSequence(object):
 		else: return False
 
 
-
-
-		# if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
-		#     self.start_in_warranty_mode = True
-
-		# else:
-		#     self.start_in_warranty_mode = False
-
-
+	def show_warranty_app(self):
+		if os.path.isfile("/home/pi/smartbench_activation_code.txt"): return True
+		else: return False
 
 
 	def update_check_config_flag():
-
 		os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
-
-
 
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
