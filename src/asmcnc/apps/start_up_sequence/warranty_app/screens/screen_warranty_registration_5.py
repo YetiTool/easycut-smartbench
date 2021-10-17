@@ -65,7 +65,7 @@ Builder.load_string("""
 					size_hint_x: 0.21
 					Image:
 						id: qr_code_image
-						source: "./asmcnc/apps/warranty_app/img/start_up_sequence/academy-qr-code.png"
+						source: "./asmcnc/apps/start_up_sequence/warranty_app/img/academy-qr-code.png"
 						center_x: self.parent.center_x
 						y: self.parent.y
 						size: self.parent.width, self.parent.height
@@ -80,7 +80,7 @@ Builder.load_string("""
 
 						Image:
 							id: cnc_academy_logo
-							source: "./asmcnc/apps/warranty_app/img/start_up_sequence/cnc_academy_logo.png"
+							source: "./asmcnc/apps/start_up_sequence/warranty_app/img/cnc_academy_logo.png"
 							center_x: self.parent.center_x
 							y: self.parent.y
 							# size: self.parent.width, self.parent.height
