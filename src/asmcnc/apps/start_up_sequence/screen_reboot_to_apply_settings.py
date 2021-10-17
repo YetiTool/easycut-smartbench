@@ -116,16 +116,10 @@ class ApplySettingsScreen(Screen):
 
 
 	def next_screen(self):
-		self.start_seq.next_in_sequence()
+		self.sm.current = 'rebooting'
 
 	def prev_screen(self):
 		self.start_seq.prev_in_sequence()
-
-
-	# def next_screen(self):
-	# 	# self.wm.exit_app()
-	# 	# self.wm.sm.current = 'rebooting'
-	# 	pass
 
 	def update_strings(self): # add to lang list!
 		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
