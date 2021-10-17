@@ -63,21 +63,19 @@ Builder.load_string("""
                 width: dp(800)
                 height: dp(298)
                 padding: [dp(30), dp(10)]
-                spacing: dp(10)
                 orientation: 'vertical'
 				
-				BoxLayout:
-					padding: [30, 0]
-					Label:
-						id: cnc_academy_info
-						font_size: '30sp'
-						text_size: self.size
-						valign: 'bottom'
-						halign: 'center'
-						markup: 'true'
-						bold: True
-						color: hex('#333333ff')
-						size: self.texture_size
+				Label:
+					id: cnc_academy_info
+					font_size: '30sp'
+					text_size: self.size
+					valign: 'bottom'
+					halign: 'center'
+					markup: 'true'
+					bold: True
+					color: hex('#333333ff')
+					size: self.texture_size
+
 				BoxLayout:
 					orientation: 'horizontal'
 					width: dp(800)

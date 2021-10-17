@@ -73,8 +73,6 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(298)
-                padding: [dp(30), dp(10)]
-                spacing: dp(10)
                 orientation: 'vertical'
                 
                 Label:
