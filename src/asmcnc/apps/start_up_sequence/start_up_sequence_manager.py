@@ -106,8 +106,8 @@ class StartUpSequence(object):
 
 
 	def show_user_data_consent(self):
-	    data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
-	    if ('False' in data_consent) or (not data_consent): return True
+		data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+		if ('False' in data_consent) or (not data_consent): return True
 		else: return False
 
 		
