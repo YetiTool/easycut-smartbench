@@ -186,7 +186,7 @@ class WelcomeTextScreen(Screen):
 		show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
 
 		if not show_user_welcome_app:
-			os.system("sudo sed -i -e '$show_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt")
+			os.system("sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt")
 
 		elif 'True' in show_user_welcome_app:
 			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt')
