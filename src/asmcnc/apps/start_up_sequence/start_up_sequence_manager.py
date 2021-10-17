@@ -61,16 +61,16 @@ class StartUpSequence(object):
 		if self.show_release_notes():
 			self.prep_release_notes_screen()
 
-		# if show_user_data_consent():
-		# 	self.prep_data_consent_app()
+		if show_user_data_consent():
+			self.prep_data_consent_app()
 
 		# self.prep_starting_smartbench_screen()
 
 		# if show_warranty_app():
 		# 	self.prep_warranty_app()
 
-		# if self.reboot_in_sequence:		
-		# 	self.prep_reboot_to_apply_settings_screen()
+		if self.reboot_in_sequence:		
+			self.prep_reboot_to_apply_settings_screen()
 
 		else:
 			self.prep_starting_smartbench_screen()
@@ -100,12 +100,17 @@ class StartUpSequence(object):
 
 
 	def show_release_notes(self):
-
-		# Check whether machine needs to be power cycled (currently only after a software update)
 		pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
 		if "True" in pc_alert: return True
 		else: return False
 
+
+	def show_user_data_consent(self):
+	    data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+	    if ('False' in data_consent) or (not data_consent): return True
+		else: return False
+
+		
 
 		# if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
 		#     self.start_in_warranty_mode = True
@@ -120,11 +125,7 @@ class StartUpSequence(object):
 
 		os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
 
-	# def check_data_consent_screen(self):
-	#     data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
 
-	#     if ('False' in data_consent) or (not data_consent):
-	#         self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
 
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
