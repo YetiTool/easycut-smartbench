@@ -74,7 +74,6 @@ class StartUpSequence(object):
 			self.prep_reboot_to_apply_settings_screen()
 
 		else:
-
 			self.prep_safety_screen()
 
 
