@@ -58,8 +58,8 @@ class StartUpSequence(object):
 		if self.welcome_user():
 			self.prep_welcome_app()
 
-		# if self.show_release_notes():
-		# 	self.prep_release_notes_screen()
+		if self.show_release_notes():
+			self.prep_release_notes_screen()
 
 		# if show_user_data_consent():
 		# 	self.prep_data_consent_app()
@@ -99,6 +99,13 @@ class StartUpSequence(object):
 			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
+	def show_release_notes():
+
+		# Check whether machine needs to be power cycled (currently only after a software update)
+		pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
+		if "True" in pc_alert: return True
+		else: return False
+
 
 		# if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
 		#     self.start_in_warranty_mode = True
@@ -106,12 +113,7 @@ class StartUpSequence(object):
 		# else:
 		#     self.start_in_warranty_mode = False
 
-	def check_and_launch_update_screen():
 
-		# Check whether machine needs to be power cycled (currently only after a software update)
-		pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
-		if pc_alert.startswith('power_cycle_alert=True'):
-			os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
 	def update_check_config_flag():

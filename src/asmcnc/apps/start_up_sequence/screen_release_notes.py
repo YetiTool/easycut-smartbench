@@ -159,6 +159,7 @@ class ReleaseNotesScreen(Screen):
 
     
     def next_screen(self):
+        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt')
         self.start_seq.next_in_sequence()
 
 
