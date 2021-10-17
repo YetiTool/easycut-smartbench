@@ -9,8 +9,7 @@ import sys, os
 from asmcnc.skavaUI import widget_status_bar
 Builder.load_string("""
 <WarrantyScreen5>:
-				
-	status_container : status_container
+
 	cnc_academy_info : cnc_academy_info
 	qr_code_container : qr_code_container
 	qr_code_image : qr_code_image
@@ -30,122 +29,157 @@ Builder.load_string("""
 			Rectangle:
 				size: self.size
 				pos: self.pos
-		BoxLayout:
-			id: status_container 
-			size_hint_y: 0.08
-		BoxLayout:
-			size_hint_y: 0.92
-			orientation: 'vertical'
-			
-			BoxLayout:
-				padding: [30, 0]
-				Label:
-					id: cnc_academy_info
-					font_size: '30sp'
-					text_size: self.size
-					valign: 'bottom'
-					halign: 'center'
-					markup: 'true'
-					bold: True
-					color: hex('#333333ff')
-					size: self.texture_size
-			BoxLayout:
-				orientation: 'horizontal'
-				width: dp(800)
-				height: dp(200)
-				padding: [20, 20, 20, 0]
-				size_hint: (None,None)
-				spacing: 0
-				BoxLayout:
-					id: qr_code_container
-					padding: [10,0,0,0]
-					# width: dp(162)
-					# height: dp(180)
-					# size_hint: (None,None)
-					size_hint_x: 0.21
-					Image:
-						id: qr_code_image
-						source: "./asmcnc/apps/start_up_sequence/warranty_app/img/academy-qr-code.png"
-						center_x: self.parent.center_x
-						y: self.parent.y
-						size: self.parent.width, self.parent.height
-						allow_stretch: True
-				BoxLayout:
-					orientation: 'vertical'
-					size_hint_x: 0.79
-					BoxLayout:
-						id: cnc_academy_logo_container
-						size_hint_y: 0.75
-						padding: [10, 2, 10, 0]
+        BoxLayout:
+            padding: 0
+            spacing: 0
+            orientation: "vertical"
 
-						Image:
-							id: cnc_academy_logo
-							source: "./asmcnc/apps/start_up_sequence/warranty_app/img/cnc_academy_logo.png"
-							center_x: self.parent.center_x
-							y: self.parent.y
-							# size: self.parent.width, self.parent.height
-							allow_stretch: False
+            # HEADER
+            BoxLayout:
+                padding: 0
+                spacing: 0
+                canvas:
+                    Color:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    id: title_label
+                    size_hint: (None,None)
+                    height: dp(60)
+                    width: dp(800)
+                    text: "SmartBench Warranty Registration"
+                    color: hex('#f9f9f9ff')
+                    # color: hex('#333333ff') #grey
+                    font_size: dp(30)
+                    halign: "center"
+                    valign: "bottom"
+                    markup: True
+
+            # BODY
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(800)
+                height: dp(298)
+                padding: [dp(30), dp(10)]
+                spacing: dp(10)
+                orientation: 'vertical'
+				
+				BoxLayout:
+					padding: [30, 0]
 					Label:
-						id: url_label
-						size_hint_y: 0.25
-						font_size: '25sp'
+						id: cnc_academy_info
+						font_size: '30sp'
 						text_size: self.size
-						valign: 'top'
+						valign: 'bottom'
 						halign: 'center'
 						markup: 'true'
-						multiline: True
+						bold: True
 						color: hex('#333333ff')
-			BoxLayout:
-				orientation: 'vertical'
-				width: dp(800)
-				height: dp(80)
-				padding: [dp(254.5),0,dp(254.5),0]
-				size_hint: (None,None)
-				BoxLayout: 
-					size_hint: (None, None)
-					height: dp(79)
-					width: dp(291)
-					
-					Button:
-						id: next_button
-						background_normal: "./asmcnc/skavaUI/img/next.png"
-						background_down: "./asmcnc/skavaUI/img/next.png"
-						border: [dp(14.5)]*4
-						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
-						on_press: root.next_screen()
-						# text: 'Get started!'
-						font_size: '30sp'
-						color: hex('#f9f9f9ff')
-						markup: True
-						center: self.parent.center
-						pos: self.parent.pos
-								
-			BoxLayout:
-				orientation: 'vertical'
-				padding: [10, 0, 0, 10]
-				size_hint: (None,None)
-				width: dp(70)
-				height: dp(62)
-				Button:
+						size: self.texture_size
+				BoxLayout:
+					orientation: 'horizontal'
+					width: dp(800)
+					height: dp(200)
+					padding: [20, 20, 20, 0]
 					size_hint: (None,None)
-					height: dp(52)
-					width: dp(60)
-					background_color: hex('#F4433600')
-					center: self.parent.center
-					pos: self.parent.pos
-					on_press: root.prev_screen()
+					spacing: 0
 					BoxLayout:
-						padding: 0
-						size: self.parent.size
-						pos: self.parent.pos
+						id: qr_code_container
+						padding: [10,0,0,0]
+						# width: dp(162)
+						# height: dp(180)
+						# size_hint: (None,None)
+						size_hint_x: 0.21
 						Image:
-							source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+							id: qr_code_image
+							source: "./asmcnc/apps/start_up_sequence/warranty_app/img/academy-qr-code.png"
 							center_x: self.parent.center_x
 							y: self.parent.y
 							size: self.parent.width, self.parent.height
 							allow_stretch: True
+					BoxLayout:
+						orientation: 'vertical'
+						size_hint_x: 0.79
+						BoxLayout:
+							id: cnc_academy_logo_container
+							size_hint_y: 0.75
+							padding: [10, 2, 10, 0]
+
+							Image:
+								id: cnc_academy_logo
+								source: "./asmcnc/apps/start_up_sequence/warranty_app/img/cnc_academy_logo.png"
+								center_x: self.parent.center_x
+								y: self.parent.y
+								# size: self.parent.width, self.parent.height
+								allow_stretch: False
+						Label:
+							id: url_label
+							size_hint_y: 0.25
+							font_size: '25sp'
+							text_size: self.size
+							valign: 'top'
+							halign: 'center'
+							markup: 'true'
+							multiline: True
+							color: hex('#333333ff')
+            # FOOTER
+            BoxLayout: 
+                padding: [10,0,10,10]
+                size_hint: (None, None)
+                height: dp(122)
+                width: dp(800)
+                orientation: 'horizontal'
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [0, 0, 184.5, 0]
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(52)
+                        width: dp(60)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.prev_screen()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
+
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(291)
+                    padding: [0,0,0,32]
+                    Button:
+                        id: next_button
+                        background_normal: "./asmcnc/skavaUI/img/next.png"
+                        background_down: "./asmcnc/skavaUI/img/next.png"
+                        border: [dp(14.5)]*4
+                        size_hint: (None,None)
+                        width: dp(291)
+                        height: dp(79)
+                        on_press: root.next_screen()
+                        text: 'Next...'
+                        font_size: '30sp'
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        center: self.parent.center
+                        pos: self.parent.pos
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [193.5, 0, 0, 0]
 """)
 
 class WarrantyScreen5(Screen):
@@ -155,10 +189,6 @@ class WarrantyScreen5(Screen):
 		self.start_seq=kwargs['start_sequence']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
-
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.start_seq.sm, machine=self.m)
-		self.status_container.add_widget(self.status_bar_widget)
-		self.status_bar_widget.cheeky_color = '#1976d2'
 
 		self.update_strings()
 

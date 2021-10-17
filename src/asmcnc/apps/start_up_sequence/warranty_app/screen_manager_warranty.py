@@ -59,7 +59,7 @@ class ScreenManagerWarranty(object):
 
         self.start_seq.add_screen_to_sequence('warranty_1')
         self.start_seq.add_screen_to_sequence('warranty_2')
-        self.start_seq.add_screen_to_sequence('warranty_3')
+        # self.start_seq.add_screen_to_sequence('warranty_3')
         self.start_seq.add_screen_to_sequence('warranty_4')
         self.start_seq.add_screen_to_sequence('warranty_5')
 

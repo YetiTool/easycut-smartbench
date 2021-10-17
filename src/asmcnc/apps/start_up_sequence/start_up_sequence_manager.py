@@ -65,15 +65,14 @@ class StartUpSequence(object):
 		if self.show_user_data_consent():
 			self.prep_data_consent_app()
 
-		self.prep_starting_smartbench_screen()
-
-		if self.show_warranty_app():
-			self.prep_warranty_app()
+		# if self.show_warranty_app():
+		self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()
 
 		else:
+			self.prep_starting_smartbench_screen()
 			self.prep_safety_screen()
 
 
@@ -83,7 +82,7 @@ class StartUpSequence(object):
 
 
 	def welcome_user(self):
-		flag = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
 
 		if ('True' in flag) or (not flag): 
 			self.reboot_in_sequence = True
@@ -92,13 +91,13 @@ class StartUpSequence(object):
 
 
 	def show_release_notes(self):
-		pc_alert = (os.popen('grep "power_cycle_alert=True" /home/pi/easycut-smartbench/src/config.txt').read())
+		pc_alert = (os.popen('grep "power_cycle_alert=True" config.txt').read())
 		if "True" in pc_alert: return True
 		else: return False
 
 
 	def show_user_data_consent(self):
-		data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+		data_consent = (os.popen('grep "user_has_seen_privacy_notice" config.txt').read())
 		if ('False' in data_consent) or (not data_consent): return True
 		else: return False
 
@@ -109,7 +108,7 @@ class StartUpSequence(object):
 
 
 	def update_check_config_flag():
-		os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
+		os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
 
 
 	## FUNCTIONS TO PREP APPS AND SCREENS

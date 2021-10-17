@@ -19,7 +19,7 @@ Builder.load_string("""
 
 <WarrantyScreen3>:
 
-    status_container : status_container
+    title_label : title_label
     enter_your_activation_code_label : enter_your_activation_code_label
     activation_code : activation_code
     error_message_top : error_message_top
@@ -39,84 +39,138 @@ Builder.load_string("""
                 size: self.size
                 pos: self.pos
 
-        BoxLayout:
-            id: status_container 
-            size_hint_y: 0.08
 
         BoxLayout:
-            size_hint_y: 0.92
-            orientation: 'vertical'
-                
-            Label:
-                id: enter_your_activation_code_label
-                font_size: '30sp'
-                # text: "[color=333333ff]Enter your activation code:[/color]"
-                text_size: self.size
-                valign: 'bottom'
-                halign: 'center'
-                markup: 'true'
-                bold: True
-                color: hex('#333333ff')
+            padding: 0
+            spacing: 0
+            orientation: "vertical"
 
+            # HEADER
             BoxLayout:
-                orientation: 'vertical'
-                width: dp(800)
-                height: dp(75)
-                padding: [dp(200), 0]
-                size_hint: (None,None)
-                TextInput: 
-                    id: activation_code
-                    valign: 'middle'
-                    halign: 'center'
-                    height: dp(50)
-                    width: dp(400) 
+                padding: 0
+                spacing: 0
+                canvas:
+                    Color:
+                        rgba: hex('#1976d2ff')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    id: title_label
                     size_hint: (None,None)
-                    text_size: self.size
-                    font_size: '30sp'
+                    height: dp(60)
+                    width: dp(800)
+                    text: "SmartBench Warranty Registration"
+                    color: hex('#f9f9f9ff')
+                    # color: hex('#333333ff') #grey
+                    font_size: dp(30)
+                    halign: "center"
+                    valign: "bottom"
                     markup: True
-                    multiline: False
-                    text: ''
-                    input_filter: 'int'
-                    color: hex('#333333ff')
-            BoxLayout:
-                orientation: 'vertical'
-                width: dp(800)
-                height: dp(125)
-                padding: [dp(20)]
-                size_hint: (None,None)
-                Label:
-                    id: error_message_top
-                    font_size: '20sp'
-                    text: "Please check your activation code."
-                    text_size: self.size
-                    valign: 'bottom'
-                    halign: 'center'
-                    markup: 'true'
-                    color: hex('#e64a19ff')
-                    opacity: 0
-                Label:
-                    id: error_message_bottom
-                    font_size: '20sp'
-                    text: "Stuck on this screen? Contact us at https://www.yetitool.com/support"
-                    text_size: self.size
-                    valign: 'bottom'
-                    halign: 'center'
-                    markup: 'true'
-                    color: hex('#e64a19ff')
-                    opacity: 0
 
+            # BODY
             BoxLayout:
-                orientation: 'vertical'
-                width: dp(800)
-                height: dp(80)
-                padding: [dp(254.5),0,dp(254.5),0]
                 size_hint: (None,None)
+                width: dp(800)
+                height: dp(298)
+                padding: [dp(30), dp(10)]
+                spacing: dp(10)
+                orientation: 'vertical'
+                
+                Label:
+                    id: enter_your_activation_code_label
+                    font_size: '30sp'
+                    # text: "[color=333333ff]Enter your activation code:[/color]"
+                    text_size: self.size
+                    valign: 'bottom'
+                    halign: 'center'
+                    markup: 'true'
+                    bold: True
+                    color: hex('#333333ff')
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    width: dp(800)
+                    height: dp(75)
+                    padding: [dp(200), 0]
+                    size_hint: (None,None)
+                    TextInput: 
+                        id: activation_code
+                        valign: 'middle'
+                        halign: 'center'
+                        height: dp(50)
+                        width: dp(400) 
+                        size_hint: (None,None)
+                        text_size: self.size
+                        font_size: '30sp'
+                        markup: True
+                        multiline: False
+                        text: ''
+                        input_filter: 'int'
+                        color: hex('#333333ff')
+                BoxLayout:
+                    orientation: 'vertical'
+                    width: dp(800)
+                    height: dp(125)
+                    padding: [dp(20)]
+                    size_hint: (None,None)
+                    Label:
+                        id: error_message_top
+                        font_size: '20sp'
+                        text: "Please check your activation code."
+                        text_size: self.size
+                        valign: 'bottom'
+                        halign: 'center'
+                        markup: 'true'
+                        color: hex('#e64a19ff')
+                        opacity: 0
+                    Label:
+                        id: error_message_bottom
+                        font_size: '20sp'
+                        text: "Stuck on this screen? Contact us at https://www.yetitool.com/support"
+                        text_size: self.size
+                        valign: 'bottom'
+                        halign: 'center'
+                        markup: 'true'
+                        color: hex('#e64a19ff')
+                        opacity: 0
+
+            # FOOTER
+            BoxLayout: 
+                padding: [10,0,10,10]
+                size_hint: (None, None)
+                height: dp(122)
+                width: dp(800)
+                orientation: 'horizontal'
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [0, 0, 184.5, 0]
+                    Button:
+                        size_hint: (None,None)
+                        height: dp(52)
+                        width: dp(60)
+                        background_color: hex('#F4433600')
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        on_press: root.prev_screen()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
 
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(79)
+                    height: dp(122)
                     width: dp(291)
-                    
+                    padding: [0,0,0,32]
                     Button:
                         id: next_button
                         background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -125,39 +179,18 @@ Builder.load_string("""
                         size_hint: (None,None)
                         width: dp(291)
                         height: dp(79)
-                        on_press: root.next_screen(auto=True) # EDITED!
+                        on_press: root.next_screen()
                         text: 'Next...'
                         font_size: '30sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
-                                
-            BoxLayout:
-                orientation: 'vertical'
-                padding: [10, 0, 0, 10]
-                size_hint: (None,None)
-                width: dp(70)
-                height: dp(62)
-
-                Button:
-                    size_hint: (None,None)
-                    height: dp(52)
-                    width: dp(60)
-                    background_color: hex('#F4433600')
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    on_press: root.prev_screen()
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                BoxLayout: 
+                    size_hint: (None, None)
+                    height: dp(122)
+                    width: dp(244.5)
+                    padding: [193.5, 0, 0, 0]
 
 
 """)
@@ -176,10 +209,6 @@ class WarrantyScreen3(Screen):
         self.start_seq=kwargs['start_sequence']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
-        
-        self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.start_seq.sm, machine=self.m)
-        self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = '#1976d2'
 
         self.update_strings()
         self.update_font_size(self.error_message_bottom)
