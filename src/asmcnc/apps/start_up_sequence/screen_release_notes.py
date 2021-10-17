@@ -107,7 +107,7 @@ Builder.load_string("""
                 # text: 'Next...'
                 font_size: '30sp'
                 background_normal: "./asmcnc/skavaUI/img/next.png"
-                on_press: root.switch_screen()
+                on_press: root.next_screen()
                 color: hex('f9f9f9ff')
 
 """)
@@ -140,6 +140,7 @@ class ReleaseNotesScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
+        self.start_seq=kwargs['start_sequence']
         self.sm = kwargs['screen_manager']
         self.version = kwargs['version']
         self.l=kwargs['localization']
@@ -156,23 +157,22 @@ class ReleaseNotesScreen(Screen):
         "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
         self.next_button.text = self.l.get_str("Next") + "..."
 
-        # self.check_data_consent_screen()
+    
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-    def check_data_consent_screen(self):
-        data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
 
-        if ('False' in data_consent) or (not data_consent):
-            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
 
-    def switch_screen(self):
-        user_has_confirmed = True
-        if not self.data_consent_app: # test this
-            self.sm.current = 'welcome'
 
-        else: 
-            self.data_consent_app.open_data_consent('release_notes', 'welcome')
+    # def switch_screen(self):
+    #     user_has_confirmed = True
+    #     if not self.data_consent_app: # test this
+    #         self.sm.current = 'welcome'
 
-    def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
-            if self.user_has_confirmed and not self.data_consent_app:
-                self.sm.remove_widget(self.sm.get_screen('release_notes'))
+    #     else: 
+    #         self.data_consent_app.open_data_consent('release_notes', 'welcome')
+
+    # def on_leave(self):
+    #     if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
+    #         if self.user_has_confirmed and not self.data_consent_app:
+    #             self.sm.remove_widget(self.sm.get_screen('release_notes'))

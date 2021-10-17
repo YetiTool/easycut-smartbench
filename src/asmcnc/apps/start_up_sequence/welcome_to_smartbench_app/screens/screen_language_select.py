@@ -322,6 +322,8 @@ Builder.load_string("""
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
+						opacity: 0
+						disabled: True
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(122)

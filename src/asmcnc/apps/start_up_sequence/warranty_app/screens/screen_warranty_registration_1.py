@@ -3,22 +3,26 @@ Created on nov 2020
 @author: Ollie
 '''
 
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
+from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.uix.textinput import TextInput
 from asmcnc.skavaUI import widget_status_bar
-from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
-
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.gridlayout import GridLayout
+import sys, os
 Builder.load_string("""
 
 <WarrantyScreen1>:
 
 	status_container : status_container
 	title_label : title_label
-	thankyou_label : thankyou_label
-	next_steps_label : next_steps_label
-	minutes_label : minutes_label
+	instructions_label : instructions_label
+	cant_use_web_label : cant_use_web_label
+	contact_us_at_support : contact_us_at_support
 	next_button : next_button
+
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -40,16 +44,7 @@ Builder.load_string("""
 		BoxLayout:
 			size_hint_y: 0.92
 			orientation: 'vertical'
-
-			Button:
-			    size_hint_x: None
-			    width: dp(52)
-			    background_color: hex('##e5e5e5')
-			    background_normal: ''
-			    center: self.parent.center
-			    pos: self.parent.pos
-			    on_press: root.go_to_factory_settings()
-
+				
 			Label:
 				id: title_label
 				font_size: '30sp'
@@ -61,48 +56,84 @@ Builder.load_string("""
 				bold: True
 				color: hex('#333333ff')
 
-			BoxLayout: 
-			    size_hint_x: None
-			    width: dp(52)
-
 			BoxLayout:
 				orientation: 'vertical'
 				width: dp(800)
 				height: dp(200)
-				padding: 20
+				padding: [20, 20, 20, 0]
 				size_hint: (None,None)
-				Label:
-					id: thankyou_label
-					size_hint_y: 0.25
-					font_size: '20sp'
-					# text: "[color=333333ff]Thank you for purchasing SmartBench.[/color]"
-					text_size: self.size
-					valign: 'bottom'
-					halign: 'center'
-					markup: 'true'
-					color: hex('#333333ff')
+				spacing: 0
 
 				Label:
-					id: next_steps_label
-					size_hint_y: 0.5
+					id: instructions_label
+					size_hint_y: 0.3
 					font_size: '20sp'
-					# text: "[color=333333ff]Please follow the next steps to complete your warranty registration process.[/color]"
+					# text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
-					markup: 'true'
-					multiline: True
+					markup: True
 					color: hex('#333333ff')
-				
-				Label:
-					id: minutes_label
-					size_hint_y: 0.25
-					font_size: '20sp'
-					text_size: self.size
-					valign: 'top'
-					halign: 'center'
-					markup: 'true'
-					color: hex('#333333ff')
+
+				BoxLayout:
+					orientation: 'horizontal'
+					width: dp(800)
+					height: dp(132)
+					# padding: [20, 0]
+					size_hint: (None,None)
+					spacing: 0
+
+	                BoxLayout:
+	                    padding: [10,0,0,0]
+						width: dp(162)
+						height: dp(132)
+						size_hint: (None,None)
+	                    Image:
+	                        source: "./asmcnc/apps/start_up_sequence/warranty_app/img/registration-qr-code.png"
+	                        center_x: self.parent.center_x
+	                        y: self.parent.y
+	                        size: self.parent.width, self.parent.height
+	                        allow_stretch: True
+
+					BoxLayout:
+						orientation: 'vertical'
+						width: dp(598)
+						height: dp(132)
+						padding: [0,0,0,0]
+						size_hint: (None,None)
+
+						Label:
+							size_hint_y: 0.4
+							font_size: '23sp'
+							text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
+							text_size: self.size
+							valign: 'middle'
+							halign: 'left'
+							markup: 'true'
+							multiline: True
+							color: hex('#333333ff')
+						
+						Label:
+							id: cant_use_web_label
+							size_hint_y: 0.3
+							font_size: '20sp'
+							# text: "[color=333333ff]Can't use the web form?"
+							text_size: self.size
+							valign: 'bottom'
+							halign: 'left'
+							markup: 'true'
+							color: hex('#333333ff')
+
+						Label:
+							id: contact_us_at_support
+							size_hint_y: 0.3
+							font_size: '20sp'
+							# text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
+							text_size: self.size
+							valign: 'middle'
+							halign: 'left'
+							markup: 'true'
+							color: hex('#333333ff')
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -123,18 +154,18 @@ Builder.load_string("""
 						width: dp(291)
 						height: dp(79)
 						on_press: root.next_screen()
-						# text: 'Next...'
+						text: 'Next...'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 	                    center: self.parent.center
 	                    pos: self.parent.pos
-
+								
 			BoxLayout:
-				orientation: 'horizontal'
-				padding: [dp(10), 0, dp(10), dp(10)]
+				orientation: 'vertical'
+				padding: [10, 0, 0, 10]
 				size_hint: (None,None)
-				width: dp(800)
+				width: dp(70)
 				height: dp(62)
 
                 Button:
@@ -144,7 +175,7 @@ Builder.load_string("""
                     background_color: hex('#F4433600')
                     center: self.parent.center
                     pos: self.parent.pos
-                    on_press: root.go_back()
+                    on_press: root.prev_screen()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -156,56 +187,32 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
 
-				BoxLayout:
-					orientation: 'vertical'
-					size_hint: (None,None)
-					width: dp(668)
-					height: dp(52)
-				
-                Button:
-                    size_hint: (None,None)
-                    height: dp(52)
-                    width: dp(52)
-                    background_color: hex('##e5e5e5')
-                    background_normal: ''
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    on_press: root.quit_to_console()
 """)
 
 class WarrantyScreen1(Screen):
 
 	def __init__(self, **kwargs):
 		super(WarrantyScreen1, self).__init__(**kwargs)
-		self.wm=kwargs['warranty_manager']
+		self.start_seq=kwargs['start_sequence']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
 		
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
+		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.start_seq.sm, machine=self.m)
 		self.status_container.add_widget(self.status_bar_widget)
 		self.status_bar_widget.cheeky_color = '#1976d2'
 
 		self.update_strings()
 
 	def next_screen(self):
-		self.wm.sm.current = 'warranty_2'
+		self.start_seq.next_in_sequence()
 
-	def go_back(self):
-		self.wm.open_language_select_screen()
-
-	def quit_to_console(self):
-		popup_warranty.QuitToConsoleWarranty(self.wm.sm)
-
+	def prev_screen(self):
+		self.start_seq.prev_in_sequence()
+	
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.thankyou_label.text = self.l.get_str("Thank you for purchasing SmartBench.")
-		self.next_steps_label.text = self.l.get_str("Please follow the next steps to complete your warranty registration process.")
-		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
+		self.instructions_label.text = self.l.get_str("To submit your details and receive your activation code, go to")
+		self.cant_use_web_label.text = self.l.get_str("Can't use the web form?")
+		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."
-
-	def go_to_factory_settings(self):
-		popup_warranty.PopupFactorySettingsPassword(self.wm.am)
-	
-
-
 

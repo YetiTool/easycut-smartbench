@@ -40,17 +40,12 @@ class StartUpSequence(object):
 
 	def start_sequence(self):
 
-		print(self.screen_sequence)
-
 		self.seq_step = 0
 		self.sm.current = self.screen_sequence[self.seq_step]
 
 	def next_in_sequence(self):
 
 		self.seq_step +=1
-
-		print(self.screen_sequence[self.seq_step])
-
 		self.sm.current = self.screen_sequence[self.seq_step]
 
 	def prev_in_sequence(self):
@@ -62,15 +57,16 @@ class StartUpSequence(object):
 
 		self.prep_welcome_app()
 
-		# self.prep_release_notes_screen()
+		self.prep_release_notes_screen()
 
 		self.prep_data_consent_app()
 
-		# self.prep_warranty_app()
+		self.prep_warranty_app()
 
-		# self.prep_reboot_to_apply_settings_screen()
+		self.prep_reboot_to_apply_settings_screen()
 
 		self.prep_starting_smartbench_screen()
+		
 		self.prep_safety_screen()
 
 
@@ -98,19 +94,26 @@ class StartUpSequence(object):
 
 		os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
 
+    # def check_data_consent_screen(self):
+    #     data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+
+    #     if ('False' in data_consent) or (not data_consent):
+    #         self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
+
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
-
 
 	def prep_welcome_app(self):
 		if not self.welcome_sm:
 			self.welcome_sm = screen_manager_welcome_to_smartbench.ScreenManagerWelcomeToSmartBench(self, self.sm, self.l)
 
-
 	def prep_release_notes_screen(self):
 		if not self.release_notes_screen:
-			self.release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', screen_manager = self.sm, localization = self.l, version = self.v)
+			self.release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', start_sequence = self, screen_manager = self.sm, localization = self.l, version = self.v)
 			self.sm.add_widget(self.release_notes_screen)
+
+		if 'release_notes' not in self.screen_sequence:
+			self.screen_sequence.append('release_notes')
 
 	def prep_data_consent_app(self):
 		if not self.data_consent_sm: 
@@ -118,12 +121,15 @@ class StartUpSequence(object):
 
 	def prep_warranty_app(self):
 		if not self.warranty_sm:
-			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self.sm, self.m, self.l)
+			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
 	def prep_reboot_to_apply_settings_screen(self):
 		if not self.reboot_to_apply_settings_screen:    		
-			self.reboot_to_apply_settings_screen = screen_reboot_to_apply_settings.ApplySettingsScreen(name = 'reboot_apply_settings', screen_manager = self.sm, machine = self.m, localization = self.l)
+			self.reboot_to_apply_settings_screen = screen_reboot_to_apply_settings.ApplySettingsScreen(name = 'reboot_apply_settings', start_sequence = self, screen_manager = self.sm, machine = self.m, localization = self.l)
 			self.sm.add_widget(self.reboot_to_apply_settings_screen)
+
+		if 'reboot_apply_settings' not in self.screen_sequence:
+			self.screen_sequence.append('reboot_apply_settings')
 
 	def prep_starting_smartbench_screen(self):
 		if not self.starting_smartbench_screen:
@@ -141,29 +147,29 @@ class StartUpSequence(object):
 		if 'safety' not in self.screen_sequence:
 			self.screen_sequence.append('safety')
 
-	## FUNCTIONS TO OPEN APPS AND SCREENS
+	# ## FUNCTIONS TO OPEN APPS AND SCREENS
 
-	def open_welcome_app(self):
-		self.current_app = 'welcome'
-		self.welcome_sm.open_welcome_app()
+	# def open_welcome_app(self):
+	# 	self.current_app = 'welcome'
+	# 	self.welcome_sm.open_welcome_app()
 
-	def open_release_notes(self):
-		self.sm.current = 'release_notes'
+	# def open_release_notes(self):
+	# 	self.sm.current = 'release_notes'
 
-	def open_data_consent_app(self):
-		self.current_app = 'data_consent' # might change these to start up sequence
-		self.data_consent_sm.open_data_consent('warranty_5', 'cnc_academy') # will probably make this CNC Academy screen instead
+	# def open_data_consent_app(self):
+	# 	self.current_app = 'data_consent' # might change these to start up sequence
+	# 	self.data_consent_sm.open_data_consent('warranty_5', 'cnc_academy') # will probably make this CNC Academy screen instead
 
-	def open_warranty_app(self):
-		# all checks now happen in welcome screen
-		self.current_app = 'warranty'
-		self.warranty_sm.open_warranty_app()
+	# def open_warranty_app(self):
+	# 	# all checks now happen in welcome screen
+	# 	self.current_app = 'warranty'
+	# 	self.warranty_sm.open_warranty_app()
 
-	def open_starting_smartbench(self):
-		self.sm.current = 'starting_smartbench'
+	# def open_starting_smartbench(self):
+	# 	self.sm.current = 'starting_smartbench'
 
-	def open_reboot_apply_settings(self):
-		self.sm.current = 'reboot_apply_settings'
+	# def open_reboot_apply_settings(self):
+	# 	self.sm.current = 'reboot_apply_settings'
 
-	def open_safety(self):
-		self.sm.current = 'safety'
+	# def open_safety(self):
+	# 	self.sm.current = 'safety'

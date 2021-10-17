@@ -86,7 +86,7 @@ Builder.load_string("""
                     background_color: hex('#F4433600')
                     center: self.parent.center
                     pos: self.parent.pos
-                    on_press: root.go_back()
+                    on_press: root.prev_screen()
                     BoxLayout:
                         padding: 0
                         size: self.parent.size
@@ -103,6 +103,7 @@ class ApplySettingsScreen(Screen):
 
 	def __init__(self, **kwargs):
 		super(ApplySettingsScreen, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.sm=kwargs['screen_manager']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
@@ -113,14 +114,18 @@ class ApplySettingsScreen(Screen):
 
 		self.update_strings()
 
-	def next_screen(self):
-		# self.wm.exit_app()
-		# self.wm.sm.current = 'rebooting'
-		pass
 
-	def go_back(self):
-		# self.wm.sm.current = 'cnc_academy'
-		pass
+	def next_screen(self):
+		self.start_seq.next_in_sequence()
+
+	def prev_screen(self):
+		self.start_seq.prev_in_sequence()
+
+
+	# def next_screen(self):
+	# 	# self.wm.exit_app()
+	# 	# self.wm.sm.current = 'rebooting'
+	# 	pass
 
 	def update_strings(self): # add to lang list!
 		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
