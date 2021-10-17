@@ -10,8 +10,7 @@ import sys, os
 from asmcnc.skavaUI import widget_status_bar
 Builder.load_string("""
 <ApplySettingsScreen>:
-				
-	status_container : status_container
+
 	success_label : success_label
 	next_button : next_button
 	BoxLayout: 
@@ -140,11 +139,6 @@ class ApplySettingsScreen(Screen):
 		self.sm=kwargs['screen_manager']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
-
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.sm, machine=self.m)
-		self.status_container.add_widget(self.status_bar_widget)
-		self.status_bar_widget.cheeky_color = '#1976d2'
-
 		self.update_strings()
 
 
