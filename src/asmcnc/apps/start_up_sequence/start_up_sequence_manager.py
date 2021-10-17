@@ -96,7 +96,7 @@ class StartUpSequence(object):
 			os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
 
 		elif 'False' in show_user_welcome_app:
-			os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
+			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt') 
 
 
 

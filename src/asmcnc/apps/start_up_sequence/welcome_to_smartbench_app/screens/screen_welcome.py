@@ -180,3 +180,14 @@ class WelcomeTextScreen(Screen):
 		self.next_steps_label.text = self.l.get_str("Please follow the next steps to set up your Console, and complete your warranty registration process.")
 		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
 		self.next_button.text = self.l.get_str("Next") + "..."
+
+	def update_seen(self):
+		user_has_seen_privacy_notice = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+
+		print(user_has_seen_privacy_notice)
+		
+		if not user_has_seen_privacy_notice:
+			os.system("sudo sed -i -e '$show_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt")
+
+		elif 'True' in user_has_seen_privacy_notice:
+			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt')
