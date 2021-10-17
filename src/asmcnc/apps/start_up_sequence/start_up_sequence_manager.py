@@ -67,7 +67,7 @@ class StartUpSequence(object):
 
 		self.prep_starting_smartbench_screen()
 
-		if show_warranty_app():
+		if self.show_warranty_app():
 			self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
