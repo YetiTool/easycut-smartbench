@@ -15,6 +15,7 @@ class StartUpSequence(object):
 
 	screen_sequence = []
 	seq_step = 0
+	reboot_in_sequence = False
 
 	welcome_sm = None
 	release_notes_screen = None
