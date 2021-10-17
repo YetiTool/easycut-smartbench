@@ -65,8 +65,8 @@ class StartUpSequence(object):
 		if self.show_user_data_consent():
 			self.prep_data_consent_app()
 
-		# if self.show_warranty_app():
-		self.prep_warranty_app()
+		if self.show_warranty_app():
+			self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()

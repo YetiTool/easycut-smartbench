@@ -3,5 +3,3 @@ config_skipped_by_git=False
 version=0
 power_cycle_alert=False
 calibration_alert=False
-show_user_welcome_app=False
-user_has_seen_privacy_notice=True
