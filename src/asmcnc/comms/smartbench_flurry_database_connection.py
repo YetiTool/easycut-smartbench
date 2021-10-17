@@ -52,7 +52,7 @@ class DatabaseEventManager():
             if self.set.wifi_available:
 
                 try:
-                    self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.89.232.215', 5672, '/',
+                    self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.68.204.96', 5672, '/',
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
@@ -125,8 +125,7 @@ class DatabaseEventManager():
 
     # send alive 'ping' to server when SmartBench is Idle
     def send_alive(self):
-        data = [
-            {
+        data = {
                 "payload_type": "alive",
                 "machine_info": {
                     "name": self.m.device_label,
@@ -137,7 +136,7 @@ class DatabaseEventManager():
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
-        ]
+
 
         self.publish_event_to_flurry_database(data, "Data")
 
@@ -175,8 +174,7 @@ class DatabaseEventManager():
 
         file_name = self.jd.filename.split("\\")[-1]
 
-        data = [
-            {
+        data = {
                 "payload_type": "full",
                 "machine_info": {
                     "name": self.m.device_label,
@@ -205,7 +203,7 @@ class DatabaseEventManager():
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
-        ]
+
 
         self.publish_event_to_flurry_database(data, "Data")
 
@@ -273,8 +271,7 @@ class DatabaseEventManager():
     ### BEGINNING AND END OF JOB
     def send_job_end(self, job_name, successful):
 
-        data = [
-            {
+        data =  {
                 "payload_type": "job_end",
                 "machine_info": {
                     "name": self.m.device_label,
@@ -290,15 +287,14 @@ class DatabaseEventManager():
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
-        ]
+
 
         self.publish_event_to_flurry_database(data, "Event")
 
         self.jd.post_job_data_update_post_send()
 
     def send_job_start(self, job_name, metadata_dict):
-        data = [
-            {
+        data = {
                 "payload_type": "job_start",
                 "machine_info": {
                     "name": self.m.device_label,
@@ -315,12 +311,11 @@ class DatabaseEventManager():
 
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-        ]
+        }
 
         metadata_in_json_format = {k.translate(None, ' '): v for k, v in metadata_dict.iteritems()}
 
-        data[0]["metadata"] = metadata_in_json_format
+        data["metadata"] = metadata_in_json_format
 
         self.publish_event_to_flurry_database(data, "Event")
 
@@ -365,8 +360,7 @@ class DatabaseEventManager():
     # 7 - job end
 
     def send_event(self, event_severity, event_type, event_name, event_description):
-        data = [
-            {
+        data = {
                 "payload_type": "event",
                 "machine_info": {
                     "name": self.m.device_label,
@@ -383,7 +377,7 @@ class DatabaseEventManager():
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
-        ]
+
 
         self.publish_event_to_flurry_database(data, "Event")
 
