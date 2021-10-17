@@ -61,7 +61,7 @@ class StartUpSequence(object):
 		if self.show_release_notes():
 			self.prep_release_notes_screen()
 
-		if show_user_data_consent():
+		if self.show_user_data_consent():
 			self.prep_data_consent_app()
 
 		# self.prep_starting_smartbench_screen()
@@ -110,7 +110,8 @@ class StartUpSequence(object):
 		if ('False' in data_consent) or (not data_consent): return True
 		else: return False
 
-		
+
+
 
 		# if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
 		#     self.start_in_warranty_mode = True
