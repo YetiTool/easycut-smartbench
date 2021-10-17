@@ -82,29 +82,29 @@ class StartUpSequence(object):
 			self.screen_sequence.append(screen_name)
 
 
-    def welcome_user(self):
-        flag = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+	def welcome_user(self):
+		flag = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
 
-        if ('True' in flag) or (not flag): return True
-        else: return False
-
-
-    def welcome_user_to_smartbench(self):
-        show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
-        
-        if not show_user_welcome_app:
-            os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
-
-        elif 'False' in show_user_welcome_app:
-            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
+		if ('True' in flag) or (not flag): return True
+		else: return False
 
 
+	def welcome_user_to_smartbench(self):
+		show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+		
+		if not show_user_welcome_app:
+			os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
 
-        # if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
-        #     self.start_in_warranty_mode = True
+		elif 'False' in show_user_welcome_app:
+			os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
 
-        # else:
-        #     self.start_in_warranty_mode = False
+
+
+		# if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
+		#     self.start_in_warranty_mode = True
+
+		# else:
+		#     self.start_in_warranty_mode = False
 
 	def check_and_launch_update_screen():
 
@@ -118,11 +118,11 @@ class StartUpSequence(object):
 
 		os.system('sudo sed -i "s/check_config=True/check_config=False/" /home/pi/easycut-smartbench/src/config.txt')
 
-    # def check_data_consent_screen(self):
-    #     data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+	# def check_data_consent_screen(self):
+	#     data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
 
-    #     if ('False' in data_consent) or (not data_consent):
-    #         self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
+	#     if ('False' in data_consent) or (not data_consent):
+	#         self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
 
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
