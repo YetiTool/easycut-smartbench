@@ -44,7 +44,7 @@ Builder.load_string("""
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
-					text: "SmartBench Warranty Registration"
+					text: "Reboot!"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
 					font_size: dp(30)
