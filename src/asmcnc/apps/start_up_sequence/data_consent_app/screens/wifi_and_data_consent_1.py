@@ -19,6 +19,7 @@ Builder.load_string("""
 	g_code_files : g_code_files
 	wifi_network_details : wifi_network_details
 	serial_numbers : serial_numbers
+	prev_screen_button : prev_screen_button
 	next_button : next_button
 
 	BoxLayout:
@@ -295,6 +296,7 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [0, 0, 184.5, 0]
 					Button:
+						id: prev_screen_button
 						size_hint: (None,None)
 						height: dp(52)
 						width: dp(60)

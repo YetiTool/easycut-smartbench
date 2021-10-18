@@ -24,6 +24,7 @@ Builder.load_string("""
 	instructions_label : instructions_label
 	cant_use_web_label : cant_use_web_label
 	contact_us_at_support : contact_us_at_support
+	prev_screen_button : prev_screen_button
 	next_button : next_button
 
 
@@ -187,6 +188,7 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [0, 0, 184.5, 0]
 					Button:
+						id: prev_screen_button
 						size_hint: (None,None)
 						height: dp(52)
 						width: dp(60)
@@ -194,6 +196,7 @@ Builder.load_string("""
 						center: self.parent.center
 						pos: self.parent.pos
 						on_press: root.prev_screen()
+						opacity: 1
 						BoxLayout:
 							padding: 0
 							size: self.parent.size

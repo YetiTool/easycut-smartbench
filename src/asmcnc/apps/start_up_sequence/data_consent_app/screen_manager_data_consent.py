@@ -31,6 +31,9 @@ class ScreenManagerDataConsent(object):
 			self.start_seq.add_screen_to_sequence('consent_2')
 			self.start_seq.add_screen_to_sequence('consent_3')
 
+			if not self.start_seq.screen_sequence.index('consent_1'):
+				self.sm.get_screen('consent_1').prev_screen_button.opacity = 0
+
 		except:
 			pass
 
