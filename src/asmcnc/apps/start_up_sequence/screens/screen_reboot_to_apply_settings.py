@@ -143,8 +143,7 @@ class ApplySettingsScreen(Screen):
 
 
 	def next_screen(self):
-		# self.sm.current = 'rebooting'
-		sys.exit()
+		self.sm.current = 'rebooting'
 
 	def prev_screen(self):
 		self.start_seq.prev_in_sequence()
