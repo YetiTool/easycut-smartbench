@@ -44,23 +44,19 @@ class StartUpSequence(object):
 
 	def set_up_sequence(self):
 
-		# if self.cc:
+		if self.cc:
 
-		# 	if self.welcome_user():
-		# 		self.prep_welcome_app()
+			if self.welcome_user():
+				self.prep_welcome_app()
 
-		# 	if self.show_release_notes():
-		# 		self.prep_release_notes_screen()
+			if self.show_release_notes():
+				self.prep_release_notes_screen()
 
-		# 	if self.show_user_data_consent():
-		# 		self.prep_data_consent_app()
+			if self.show_user_data_consent():
+				self.prep_data_consent_app()
 
-		# 	if self.show_warranty_app():
-		# 		self.prep_warranty_app()
-
-
-		self.prep_warranty_app()
-
+			if self.show_warranty_app():
+				self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()
