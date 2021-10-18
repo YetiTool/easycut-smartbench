@@ -395,7 +395,6 @@ class LanguageSelectScreen(Screen):
 			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
 			self.l.load_in_new_language(language_label.text)
 			[self.sm.get_screen(screen).update_strings() for screen in self.start_seq.screen_sequence]
-			self.next_button.text = self.l.get_str("Next") + "..."
 			self.next_button.opacity = 1
 			self.next_button.disabled = False
 
@@ -405,15 +404,12 @@ class LanguageSelectScreen(Screen):
 	def next_screen(self):
 		self.start_seq.next_in_sequence()
 
-	def load_next_screen(self):
-		self.next_button.disabled = True
-		self.loading_warranty_app = True
-		self.next_button.text = self.l.get_str("Loading...")
-		Clock.schedule_once(lambda dt: self.next_screen(), 0.1)
+	def update_strings(self):
+		self.header_label.text = self.l.get_str("Welcome to SmartBench")
+		self.next_button.text = self.l.get_str("Next") + "..."
+		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
 
 	def on_leave(self):
 		self.next_button.disabled = False
 		self.loading_warranty_app = False
-		self.next_button.text = self.l.get_str("Next") + "..."
-		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
 
