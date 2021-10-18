@@ -1,6 +1,6 @@
 import os
 
-from asmcnc.apps.start_up_sequence import \
+from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
 screen_release_notes, \
 screen_starting_smartbench, \
@@ -25,8 +25,9 @@ class StartUpSequence(object):
 	reboot_to_apply_settings_screen = None
 	safety_screen = None
 
-	def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version):
+	def __init__(self, app_manager, screen_manager, machine, settings, localization, job, database, config_check, version):
 
+		self.am = app_manager
 		self.sm = screen_manager
 		self.m = machine
 		self.set = settings
@@ -59,14 +60,14 @@ class StartUpSequence(object):
 		if self.welcome_user():
 			self.prep_welcome_app()
 
-		if self.show_release_notes():
-			self.prep_release_notes_screen()
+		# if self.show_release_notes():
+		# 	self.prep_release_notes_screen()
 
-		if self.show_user_data_consent():
-			self.prep_data_consent_app()
+		# if self.show_user_data_consent():
+		# 	self.prep_data_consent_app()
 
-		if self.show_warranty_app():
-			self.prep_warranty_app()
+		# if self.show_warranty_app():
+		self.prep_warranty_app()
 
 		if self.reboot_in_sequence:		
 			self.prep_reboot_to_apply_settings_screen()

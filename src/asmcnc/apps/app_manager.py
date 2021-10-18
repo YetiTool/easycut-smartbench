@@ -42,7 +42,7 @@ class AppManagerClass(object):
 
     def start_start_up_sequence(self):
 
-        self.start_up = start_up_sequence_manager.StartUpSequence(self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
+        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
 
 
 

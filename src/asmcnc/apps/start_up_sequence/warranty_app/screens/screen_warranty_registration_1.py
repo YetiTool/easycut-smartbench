@@ -12,6 +12,9 @@ from asmcnc.skavaUI import widget_status_bar
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 import sys, os
+
+from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
+
 Builder.load_string("""
 
 <WarrantyScreen1>:
@@ -71,6 +74,14 @@ Builder.load_string("""
 				width: dp(800)
 				height: dp(298)
 				orientation: 'vertical'
+
+
+				Button:
+				    size_hint_x: None
+				    width: dp(52)
+				    background_color: hex('##e5e5e5')
+				    background_normal: ''
+				    on_press: root.go_to_factory_settings()
 
 				Label:
 					id: scan_qr_code
@@ -169,6 +180,7 @@ Builder.load_string("""
 				height: dp(122)
 				width: dp(800)
 				orientation: 'horizontal'
+
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(122)
@@ -213,11 +225,20 @@ Builder.load_string("""
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
+
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(122)
 					width: dp(244.5)
-					padding: [193.5, 0, 0, 0]
+					padding: [dp(192.5), 0, 0, 0]
+
+	                Button:
+	                    size_hint: (None,None)
+	                    height: dp(52)
+	                    width: dp(52)
+	                    background_color: hex('##e5e5e5')
+	                    background_normal: ''
+	                    on_press: root.quit_to_console()
 
 """)
 
@@ -243,3 +264,8 @@ class WarrantyScreen1(Screen):
 		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."
 
+	def go_to_factory_settings(self):
+		popup_warranty.PopupFactorySettingsPassword(self.start_seq.am)
+
+	def quit_to_console(self):
+		popup_warranty.QuitToConsoleWarranty(self.start_seq.sm)
