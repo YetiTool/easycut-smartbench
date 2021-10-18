@@ -166,8 +166,7 @@ class StartUpSequence(object):
 		if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
 			if user_has_confirmed:
 
-				try: self.update_check_config_flag()
-				except: pass
+				self.update_check_config_flag()
 
 				[self.destroy_screen(i) for i in self.screen_sequence]
 				self.__del__()
