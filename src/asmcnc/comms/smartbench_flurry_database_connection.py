@@ -52,7 +52,7 @@ class DatabaseEventManager():
             if self.set.wifi_available:
 
                 try:
-                    self.connection = pika.BlockingConnection(pika.ConnectionParameters('51.68.204.96', 5672, '/',
+                    self.connection = pika.BlockingConnection(pika.ConnectionParameters('receiver.yetitool.com', 5672, '/',
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
