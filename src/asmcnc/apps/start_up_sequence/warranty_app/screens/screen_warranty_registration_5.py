@@ -10,6 +10,7 @@ from asmcnc.skavaUI import widget_status_bar
 Builder.load_string("""
 <WarrantyScreen5>:
 
+	title_label : title_label
 	cnc_academy_info : cnc_academy_info
 	qr_code_container : qr_code_container
 	qr_code_image : qr_code_image
