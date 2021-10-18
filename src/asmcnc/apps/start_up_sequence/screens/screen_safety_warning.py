@@ -254,7 +254,7 @@ Builder.load_string("""
                     id: confirm_button
                     width: dp(700)
                     height: dp(90)
-                    on_press: root.go_to_next_screen()
+                    on_press: root.next_screen()
                     markup: True
                     font_size: '24sp'
                     text_size: self.size
@@ -294,7 +294,7 @@ class SafetyScreen(Screen):
     def on_enter(self):
         log('Safety screen UP')        
         
-    def go_to_next_screen(self):
+    def next_screen(self):
         self.user_has_confirmed = True
         self.sm.current = 'squaring_decision'
         

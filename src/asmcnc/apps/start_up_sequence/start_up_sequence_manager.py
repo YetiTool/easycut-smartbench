@@ -190,3 +190,6 @@ class StartUpSequence(object):
 
 	def __del__(self):
 		print 'End of startup sequence'
+
+
+

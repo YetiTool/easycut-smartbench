@@ -248,6 +248,22 @@ class SkavaUI(App):
 
 		# Clock.schedule_interval(test_cycle, 5)
 
+
+
+		def test_run_through_sequence(dt):
+
+			if sm.current != 'warranty_3' and sm.current != 'consent_3':
+				sm.get_screen(str(sm.current)).next_screen()
+
+			elif sm.current == 'warranty_3':
+				self.sm.get_screen('warranty_3').activation_code.text = "42230169"
+
+			elif sm.current == 'consent_3':
+				self.sm.get_screen('consent_3').accept_terms()
+
+		Clock.schedule_interval(test_run_through_sequence, 5)
+
+
 		return sm
 
 if __name__ == '__main__':
