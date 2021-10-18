@@ -159,7 +159,7 @@ class DatabaseEventManager():
     ##------------------------------------------------------------------------
 
     # send alive 'ping' to server when SmartBench is Idle
-    def send_alive(self, channel):
+    def send_alive(self):
         data = {
                 "payload_type": "alive",
                 "machine_info": {
@@ -177,7 +177,7 @@ class DatabaseEventManager():
 
 
     # During a job, send full data about machine
-    def send_full_payload(self, channel):
+    def send_full_payload(self):
 
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
         z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds / 3600
