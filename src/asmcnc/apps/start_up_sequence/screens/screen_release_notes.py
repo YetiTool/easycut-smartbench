@@ -145,10 +145,13 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs['version']
         self.l=kwargs['localization']
 
+
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         self.release_notes_filename = '../' + (self.version).replace(".","") + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
+
+    def update_strings(self):
 
         self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
         self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")

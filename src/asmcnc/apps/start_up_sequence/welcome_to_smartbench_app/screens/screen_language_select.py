@@ -394,6 +394,7 @@ class LanguageSelectScreen(Screen):
 		if radio_button.state == 'down':
 			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
 			self.l.load_in_new_language(language_label.text)
+			[self.sm.get_screen(screen).update_strings() for screen in start_seq]
 			self.next_button.text = self.l.get_str("Next") + "..."
 			self.next_button.opacity = 1
 			self.next_button.disabled = False
