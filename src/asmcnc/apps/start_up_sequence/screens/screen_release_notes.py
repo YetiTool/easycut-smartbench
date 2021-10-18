@@ -151,6 +151,8 @@ class ReleaseNotesScreen(Screen):
         self.release_notes_filename = '../' + (self.version).replace(".","") + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
 
+        self.update_strings()
+
     def update_strings(self):
 
         self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
