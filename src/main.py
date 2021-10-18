@@ -252,19 +252,19 @@ class SkavaUI(App):
 
 		def test_run_through_sequence(dt):
 
-			if sm.current != 'warranty_3' and sm.current != 'consent_3':
+			if sm.current != 'warranty_3' and sm.current != 'consent_3' and sm.current != 'starting_smartbench':
 				sm.get_screen(str(sm.current)).next_screen()
 
 			elif sm.current == 'warranty_3':
 				sm.get_screen('warranty_3').activation_code.text = "42230169"
 
 			elif sm.current == 'consent_3':
-				sm.get_screen('consent_3').terms_checkbox.active
+				sm.get_screen('consent_3').terms_checkbox.active = True
 				sm.get_screen('consent_3').accept_terms()
 
 
 		def start_loop(dt):
-			Clock.schedule_interval(test_run_through_sequence, 5)
+			Clock.schedule_interval(test_run_through_sequence, 3)
 
 		Clock.schedule_once(start_loop, 10)
 
