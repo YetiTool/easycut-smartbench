@@ -11,6 +11,7 @@ from asmcnc.skavaUI import widget_status_bar
 Builder.load_string("""
 <ApplySettingsScreen>:
 
+	title_label : title_label
 	success_label : success_label
 	next_button : next_button
 	BoxLayout: 
