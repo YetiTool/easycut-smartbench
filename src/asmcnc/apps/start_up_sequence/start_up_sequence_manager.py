@@ -166,13 +166,14 @@ class StartUpSequence(object):
 		if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
 			if user_has_confirmed:
 
-				self.update_check_config_flag()
+				try: self.update_check_config_flag()
+				except: pass
 
 				[self.destroy_screen(i) for i in self.screen_sequence]
 				self.__del__()
 
 
-	def update_check_config_flag():
+	def update_check_config_flag(self):
 		os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
 
 
