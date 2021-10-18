@@ -32,6 +32,10 @@ class DatabaseEventManager():
         self.jd = self.m.jd
         self.set = settings_manager
 
+    def __del__(self):
+
+        log("Database Event Manager closed - garbage collected!")
+
     
     ## SET UP CONNECTION TO DATABASE
     # This is called from screen_welcome, when all connections are set up
@@ -56,8 +60,6 @@ class DatabaseEventManager():
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
-                    self.channel = self.connection.channel()
-                    self.channel.queue_declare(queue=self.queue)
                     self.send_routine_updates_to_database()
                     break
 
@@ -69,6 +71,15 @@ class DatabaseEventManager():
             else:
                 sleep(10)
 
+    def reinstate_channel_if_missing(self, channel):
+
+        if channel is None:
+
+            channel = self.connection.channel()
+            channel.queue_declare(queue=self.queue)
+
+        return channel
+
 
 
     ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
@@ -76,6 +87,9 @@ class DatabaseEventManager():
     def send_routine_updates_to_database(self):
 
         def do_routine_update_loop():
+
+            self.routine_updates_channel = self.connection.channel()
+            self.routine_updates_channel.queue_declare(queue=self.queue)
 
             while True:
 
@@ -85,9 +99,9 @@ class DatabaseEventManager():
 
                     try:
                         if self.m.s.m_state == "Idle":
-                            self.send_alive()
+                            self.send_alive(self.routine_updates_channel)
                         else:
-                            self.send_full_payload()
+                            self.send_full_payload(self.routine_updates_channel)
 
                     except:
                         if self.VERBOSE: log("Could not send routine update")
@@ -101,20 +115,41 @@ class DatabaseEventManager():
 
     ## PUBLISH EVENT TO DATABASE
     ##------------------------------------------------------------------------
-    def publish_event_to_flurry_database(self, data, exception_type):
+    def publish_event_with_routine_updates_channel(self, data, exception_type):
 
         if self.VERBOSE: log("Publishing data: " + exception_type)
 
-        def nested_flurry_event_sender(data, exception_type):
+        if self.set.wifi_available:
+
+            try: 
+                self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                if self.VERBOSE: log(data)
+            
+            except Exception as e:
+                if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+                self.routine_updates_channel = self.reinstate_channel_if_missing(channel) # this might work now
+
+
+    def publish_event_with_temp_channel(self, data, exception_type):
+
+        if self.VERBOSE: log("Publishing data: " + exception_type)
+
+        if self.set.wifi_available:
+
+            def nested_flurry_event_sender(data, exception_type):
+
+                temp_event_channel = self.connection.channel()
+                temp_event_channel.queue_declare(queue=self.queue)
 
                 try: 
-                    self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                    temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
                     if self.VERBOSE: log(data)
                 
                 except Exception as e:
                     if self.VERBOSE: log(exception_type + " send exception: " + str(e))
 
-        if self.set.wifi_available:
+                temp_event_channel.close()
+
             thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
             thread_for_send_event.daemon = True
             thread_for_send_event.start()
@@ -124,7 +159,7 @@ class DatabaseEventManager():
     ##------------------------------------------------------------------------
 
     # send alive 'ping' to server when SmartBench is Idle
-    def send_alive(self):
+    def send_alive(self, channel):
         data = {
                 "payload_type": "alive",
                 "machine_info": {
@@ -138,11 +173,11 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Data")
+        self.publish_event_with_routine_updates_channel(data, "Data")
 
 
     # During a job, send full data about machine
-    def send_full_payload(self):
+    def send_full_payload(self, channel):
 
         z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
         z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds / 3600
@@ -205,7 +240,7 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Data")
+        self.publish_event_with_routine_updates_channel(data, "Data")
 
 
     ### PART OF SENDING FULL PAYLOAD
@@ -289,7 +324,7 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
 
         self.jd.post_job_data_update_post_send()
 
@@ -317,7 +352,7 @@ class DatabaseEventManager():
 
         data["metadata"] = metadata_in_json_format
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
 
 
     ### FEEDS AND SPEEDS
@@ -339,7 +374,7 @@ class DatabaseEventManager():
 
         log(data)
 
-        self.publish_event_to_flurry_database(data, "Speeds and feeds")
+        self.publish_event_with_temp_channel(data, "Speeds and feeds")
 
 
     ### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -379,7 +414,7 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
 
 
 
