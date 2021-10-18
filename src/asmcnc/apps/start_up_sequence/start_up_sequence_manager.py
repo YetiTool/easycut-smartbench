@@ -80,7 +80,7 @@ class StartUpSequence(object):
 
 	def prev_in_sequence(self):
 
-		if self.seq_step > -1:
+		if self.seq_step > 0:
 			self.seq_step -=1
 			self.sm.current = self.screen_sequence[self.seq_step]
 
