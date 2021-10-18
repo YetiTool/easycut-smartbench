@@ -33,8 +33,13 @@ def welcome_user_to_smartbench():
     elif 'False' in show_user_welcome_app:
         os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
 
+
+def set_check_config_flag():
+    os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
+
 write_set_up_options()
 set_user_to_view_privacy_notice()
 activation_code_proxy()
 welcome_user_to_smartbench()
 os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
+set_check_config_flag()

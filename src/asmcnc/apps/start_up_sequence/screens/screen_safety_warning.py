@@ -309,9 +309,7 @@ class SafetyScreen(Screen):
         self.sm.current = 'squaring_decision'
         
     def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
-            if self.user_has_confirmed:
-                self.sm.remove_widget(self.sm.get_screen('safety'))
+        self.start_seq.exit_sequence(self.user_has_confirmed)
 
     def update_strings(self):
         self.header_label.text = self.l.get_str("Safety Warning")

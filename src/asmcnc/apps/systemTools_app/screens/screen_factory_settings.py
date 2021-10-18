@@ -574,6 +574,7 @@ class FactorySettingsScreen(Screen):
                     self.m.write_set_up_options(True)
                     self.set_user_to_view_privacy_notice()
                     self.welcome_user_to_smartbench()
+                    self.set_check_config_flag()
                     return True
                 else:
                     return False
@@ -738,5 +739,8 @@ class FactorySettingsScreen(Screen):
             os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
 
         elif 'False' in show_user_welcome_app:
-            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt') 
+            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt')
+
+    def set_check_config_flag(self):
+        os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             

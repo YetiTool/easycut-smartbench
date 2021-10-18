@@ -37,13 +37,8 @@ class AppManagerClass(object):
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
 
-        self.start_start_up_sequence()
-
-
-    def start_start_up_sequence(self):
-
+        # Start start up sequence
         self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
-
 
 
     # here are all the functions that might be called in the lobby e.g. 
@@ -92,23 +87,4 @@ class AppManagerClass(object):
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

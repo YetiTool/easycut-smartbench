@@ -40,6 +40,34 @@ class StartUpSequence(object):
 		self.set_up_sequence()
 		self.start_sequence()
 
+	## SCREEN SEQUENCE
+
+	def set_up_sequence(self):
+
+		if self.cc:
+
+			if self.welcome_user():
+				self.prep_welcome_app()
+
+			if self.show_release_notes():
+				self.prep_release_notes_screen()
+
+			if self.show_user_data_consent():
+				self.prep_data_consent_app()
+
+			if self.show_warranty_app():
+				self.prep_warranty_app()
+
+
+		if self.reboot_in_sequence:		
+			self.prep_reboot_to_apply_settings_screen()
+
+		else:
+			self.prep_starting_smartbench_screen()
+			self.prep_safety_screen()
+
+	## BASIC SEQUENCE NAVIGATION FUNCTIONS
+
 	def start_sequence(self):
 
 		self.seq_step = 0
@@ -55,32 +83,11 @@ class StartUpSequence(object):
 		self.seq_step -=1
 		self.sm.current = self.screen_sequence[self.seq_step]
 
-	def set_up_sequence(self):
-
-		if self.welcome_user():
-			self.prep_welcome_app()
-
-		if self.show_release_notes():
-			self.prep_release_notes_screen()
-
-		if self.show_user_data_consent():
-			self.prep_data_consent_app()
-
-		if self.show_warranty_app():
-			self.prep_warranty_app()
-
-		if self.reboot_in_sequence:		
-			self.prep_reboot_to_apply_settings_screen()
-
-		else:
-			self.prep_starting_smartbench_screen()
-			self.prep_safety_screen()
-
-
 	def add_screen_to_sequence(self, screen_name):
 		if screen_name not in self.screen_sequence:
 			self.screen_sequence.append(screen_name)
 
+	## FUNCTIONS TO CHECK WHICH SCREENS TO SHOW
 
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
@@ -90,26 +97,19 @@ class StartUpSequence(object):
 			return True
 		else: return False
 
-
 	def show_release_notes(self):
 		pc_alert = (os.popen('grep "power_cycle_alert=True" config.txt').read())
 		if "True" in pc_alert: return True
 		else: return False
-
 
 	def show_user_data_consent(self):
 		data_consent = (os.popen('grep "user_has_seen_privacy_notice" config.txt').read())
 		if ('False' in data_consent) or (not data_consent): return True
 		else: return False
 
-
 	def show_warranty_app(self):
 		if os.path.isfile("/home/pi/smartbench_activation_code.txt"): return True
 		else: return False
-
-
-	def update_check_config_flag():
-		os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
 
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
@@ -158,29 +158,35 @@ class StartUpSequence(object):
 		if 'safety' not in self.screen_sequence:
 			self.screen_sequence.append('safety')
 
-	# ## FUNCTIONS TO OPEN APPS AND SCREENS
 
-	# def open_welcome_app(self):
-	# 	self.current_app = 'welcome'
-	# 	self.welcome_sm.open_welcome_app()
+	## END OF SEQUENCE FUNCTIONS
 
-	# def open_release_notes(self):
-	# 	self.sm.current = 'release_notes'
+	def exit_sequence(self, user_has_confirmed):
 
-	# def open_data_consent_app(self):
-	# 	self.current_app = 'data_consent' # might change these to start up sequence
-	# 	self.data_consent_sm.open_data_consent('warranty_5', 'cnc_academy') # will probably make this CNC Academy screen instead
+		if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
+			if user_has_confirmed:
 
-	# def open_warranty_app(self):
-	# 	# all checks now happen in welcome screen
-	# 	self.current_app = 'warranty'
-	# 	self.warranty_sm.open_warranty_app()
+				try: self.update_check_config_flag()
+				except: pass
 
-	# def open_starting_smartbench(self):
-	# 	self.sm.current = 'starting_smartbench'
+				[self.destroy_screen(i) for i in self.screen_sequence]
+				self.__del__()
 
-	# def open_reboot_apply_settings(self):
-	# 	self.sm.current = 'reboot_apply_settings'
 
-	# def open_safety(self):
-	# 	self.sm.current = 'safety'
+	def update_check_config_flag():
+		os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
+
+
+	def destroy_screen(self, screen_name):
+
+		if self.sm.has_screen(screen_name):
+
+			try:
+				self.sm.remove_widget(self.sm.get_screen(screen_name))
+				print (screen_name + ' deleted')
+
+			except: pass
+
+
+	def __del__(self):
+		print 'End of startup sequence'
