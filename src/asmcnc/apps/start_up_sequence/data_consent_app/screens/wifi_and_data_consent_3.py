@@ -21,6 +21,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen3>
 
+	header_label : header_label
 	scroll_privacy_notice : scroll_privacy_notice
 	user_info : user_info
 	terms_checkbox : terms_checkbox
@@ -53,6 +54,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                	id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -154,9 +156,9 @@ Builder.load_string("""
 					spacing: dp(66)
 					Button:
 						id: decline_button
-						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-						background_down: "./asmcnc/apps/warranty_app/img/next.png"
-						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
+						background_normal: "./asmcnc/skavaUI/img/next.png"
+						background_down: "./asmcnc/skavaUI/img/next.png"
+						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -170,9 +172,9 @@ Builder.load_string("""
 
 					Button:
 						id: accept_button
-						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-						background_down: "./asmcnc/apps/warranty_app/img/next.png"
-						background_disabled_normal: "./asmcnc/core_UI/data_and_wifi/img/standard_button_disabled.png"
+						background_normal: "./asmcnc/skavaUI/img/next.png"
+						background_down: "./asmcnc/skavaUI/img/next.png"
+						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -209,20 +211,27 @@ class WiFiAndDataConsentScreen3(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 		self.set_checkbox_default()
 
-		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/core_UI/data_and_wifi/privacy_notice.txt"
+		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice.txt"
 
 	def on_pre_leave(self):
 		self.set_checkbox_default()
 
 	def prev_screen(self):
-		self.c.sm.current='consent_2'
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.sm.current='consent_2'
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
 		self.decline_button.text = self.l.get_str("Decline")
 		self.accept_button.text = self.l.get_str("Accept")

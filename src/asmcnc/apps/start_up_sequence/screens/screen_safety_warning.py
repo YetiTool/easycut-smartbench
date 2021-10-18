@@ -23,16 +23,6 @@ from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 # Kivy UI builder:
 Builder.load_string("""
 
-# <RoundedButton@Button>:
-#     background_color: 0,0,0,0
-#     canvas.before:
-#         Color:
-#             rgba: hex('#1976d2ff')
-#         RoundedRectangle:
-#             pos: self.pos
-#             size: self.size
-#             radius: [dp(30), dp(30)]
-
 <SafetyScreen>:
 
     status_container:status_container
@@ -264,7 +254,7 @@ Builder.load_string("""
                     id: confirm_button
                     width: dp(700)
                     height: dp(90)
-                    on_press: root.go_to_next_screen()
+                    on_press: root.next_screen()
                     markup: True
                     font_size: '24sp'
                     text_size: self.size
@@ -290,6 +280,7 @@ class SafetyScreen(Screen):
     def __init__(self, **kwargs):
         
         super(SafetyScreen, self).__init__(**kwargs)
+        self.start_seq=kwargs['start_sequence']
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.l=kwargs['localization']
@@ -303,14 +294,12 @@ class SafetyScreen(Screen):
     def on_enter(self):
         log('Safety screen UP')        
         
-    def go_to_next_screen(self):
+    def next_screen(self):
         self.user_has_confirmed = True
         self.sm.current = 'squaring_decision'
         
     def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door':
-            if self.user_has_confirmed:
-                self.sm.remove_widget(self.sm.get_screen('safety'))
+        self.start_seq.exit_sequence(self.user_has_confirmed)
 
     def update_strings(self):
         self.header_label.text = self.l.get_str("Safety Warning")

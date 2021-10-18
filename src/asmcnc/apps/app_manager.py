@@ -13,7 +13,7 @@ from asmcnc.calibration_app import screen_landing
 from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
-from asmcnc.apps.warranty_app import screen_manager_warranty
+from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 
 # import shape cutter managing object
 
@@ -21,18 +21,25 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings, localization, job):
+    def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
         self.jd = job
         self.l = localization
+        self.db = database
+        self.cc = config_check
+        self.v = version
+
         
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
-        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
+
+        # Start start up sequence
+        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
+
 
     # here are all the functions that might be called in the lobby e.g. 
     
@@ -80,26 +87,4 @@ class AppManagerClass(object):
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
-
-    def start_warranty_app(self):
-        # all checks now happen in welcome screen
-        self.current_app = 'warranty'
-        self.warranty_sm.open_language_select_screen()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

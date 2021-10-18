@@ -35,8 +35,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 			self.l.get_str("You can change your data preferences in the System Tools app at any time.")
 			)
 
-        title_string = self.l.get_str('Warning!') + " " + "Are you sure?"
-        # ok_string = self.l.get_bold('Ok')
+        title_string = self.l.get_str('Warning!') + " " + self.l.get_str("Are you sure?")
         ok_string = self.l.get_bold("Yes, disable Wi-Fi")
         back_string = self.l.get_bold('No, go back')
         
