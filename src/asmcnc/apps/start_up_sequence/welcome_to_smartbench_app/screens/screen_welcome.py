@@ -14,6 +14,7 @@ Builder.load_string("""
 
 <WelcomeTextScreen>:
 
+	header_label : header_label
 	thankyou_label : thankyou_label
 	next_steps_label : next_steps_label
 	minutes_label : minutes_label
@@ -46,10 +47,10 @@ Builder.load_string("""
 						pos: self.pos
 						size: self.size
 				Label:
+					id: header_label
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
-					text: "Welcome to SmartBench"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
 					font_size: dp(30)
@@ -177,6 +178,7 @@ class WelcomeTextScreen(Screen):
 		self.start_seq.prev_in_sequence()
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Welcome to SmartBench")
 		self.thankyou_label.text = self.l.get_str("Thank you for purchasing SmartBench.")
 		self.next_steps_label.text = self.l.get_str("Please follow the next steps to set up your Console, and complete your warranty registration process.")
 		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")

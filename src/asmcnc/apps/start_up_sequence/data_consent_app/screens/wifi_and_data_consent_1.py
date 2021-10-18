@@ -10,6 +10,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen1>
 
+	header_label : header_label
 	we_will_collect : we_will_collect
 	we_wont_collect : we_wont_collect
 	job_critical_events : job_critical_events
@@ -48,10 +49,10 @@ Builder.load_string("""
 						pos: self.pos
 						size: self.size
 				Label:
+					id: header_label
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
-					text: "Wi-Fi and Data Consent"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
 					font_size: dp(30)
@@ -369,6 +370,7 @@ class WiFiAndDataConsentScreen1(Screen):
 		
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \
 			"With your consent, we will collect the following data:")
 		self.we_wont_collect.text = self.l.get_bold("We will NEVER collect the following from your Console:")

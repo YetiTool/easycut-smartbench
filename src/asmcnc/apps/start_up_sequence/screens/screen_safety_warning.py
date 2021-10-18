@@ -23,16 +23,6 @@ from asmcnc.skavaUI import widget_status_bar # @UnresolvedImport
 # Kivy UI builder:
 Builder.load_string("""
 
-# <RoundedButton@Button>:
-#     background_color: 0,0,0,0
-#     canvas.before:
-#         Color:
-#             rgba: hex('#1976d2ff')
-#         RoundedRectangle:
-#             pos: self.pos
-#             size: self.size
-#             radius: [dp(30), dp(30)]
-
 <SafetyScreen>:
 
     status_container:status_container

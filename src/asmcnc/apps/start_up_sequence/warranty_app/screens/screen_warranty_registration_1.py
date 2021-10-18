@@ -78,16 +78,15 @@ Builder.load_string("""
 
 
 				Button:
-				    size_hint_x: None
-				    width: dp(52)
-				    background_color: hex('##e5e5e5')
-				    background_normal: ''
-				    on_press: root.go_to_factory_settings()
+					size_hint_x: None
+					width: dp(52)
+					background_color: hex('##e5e5e5')
+					background_normal: ''
+					on_press: root.go_to_factory_settings()
 
 				Label:
 					id: scan_qr_code
 					font_size: '30sp'
-					text: "Scan the QR Code to start"
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
@@ -122,17 +121,17 @@ Builder.load_string("""
 						size_hint: (None,None)
 						spacing: 0
 
-		                BoxLayout:
-		                    padding: [10,0,0,0]
+						BoxLayout:
+							padding: [10,0,0,0]
 							width: dp(162)
 							height: dp(132)
 							size_hint: (None,None)
-		                    Image:
-		                        source: "./asmcnc/apps/start_up_sequence/warranty_app/img/registration-qr-code.png"
-		                        center_x: self.parent.center_x
-		                        y: self.parent.y
-		                        size: self.parent.width, self.parent.height
-		                        allow_stretch: True
+							Image:
+								source: "./asmcnc/apps/start_up_sequence/warranty_app/img/registration-qr-code.png"
+								center_x: self.parent.center_x
+								y: self.parent.y
+								size: self.parent.width, self.parent.height
+								allow_stretch: True
 
 						BoxLayout:
 							orientation: 'vertical'
@@ -235,13 +234,13 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [dp(192.5), 0, 0, 0]
 
-	                Button:
-	                    size_hint: (None,None)
-	                    height: dp(52)
-	                    width: dp(52)
-	                    background_color: hex('##e5e5e5')
-	                    background_normal: ''
-	                    on_press: root.quit_to_console()
+					Button:
+						size_hint: (None,None)
+						height: dp(52)
+						width: dp(52)
+						background_color: hex('##e5e5e5')
+						background_normal: ''
+						on_press: root.quit_to_console()
 
 """)
 
@@ -262,6 +261,7 @@ class WarrantyScreen1(Screen):
 	
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+		self.scan_qr_code.text = self.l.get_str("Scan the QR Code to start")
 		self.instructions_label.text = self.l.get_str("To submit your details and receive your activation code, go to")
 		self.cant_use_web_label.text = self.l.get_str("Can't use the web form?")
 		self.contact_us_at_support.text = self.l.get_str("Contact us at https://www.yetitool.com/support")

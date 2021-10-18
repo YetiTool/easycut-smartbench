@@ -21,6 +21,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen3>
 
+	header_label : header_label
 	scroll_privacy_notice : scroll_privacy_notice
 	user_info : user_info
 	terms_checkbox : terms_checkbox
@@ -53,6 +54,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                	id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -229,6 +231,7 @@ class WiFiAndDataConsentScreen3(Screen):
 			self.c.sm.current='consent_2'
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.user_info.text = self.l.get_str("I have read and understood the privacy notice")
 		self.decline_button.text = self.l.get_str("Decline")
 		self.accept_button.text = self.l.get_str("Accept")

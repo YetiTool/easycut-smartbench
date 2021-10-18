@@ -14,6 +14,8 @@ Builder.load_string("""
 
 <LanguageSelectScreen>:
 
+	header_label : header_label
+
 	row_1_col_1 : row_1_col_1
 	row_1_col_2 : row_1_col_2
 	row_1_col_3 : row_1_col_3
@@ -62,6 +64,7 @@ Builder.load_string("""
 						pos: self.pos
 						size: self.size
 				Label:
+					id: header_label
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
@@ -338,12 +341,20 @@ class LanguageSelectScreen(Screen):
 
 	flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
 
+	welcome_to_smartbench_labels = [
+		"Welcome to SmartBench",
+		"Benvenuti in Smartbench",
+		"Tervetuloa Smartbenchiin"
+	]
+
+	welcome_i = 0
+	update_welcome_header = None
+
 	def __init__(self, **kwargs):
 		super(LanguageSelectScreen, self).__init__(**kwargs)
 		self.start_seq=kwargs['start_sequence']
 		self.sm=kwargs['screen_manager']
 		self.l=kwargs['localization']
-
 
 		self.row_1_col_1.text = self.l.supported_languages[0]
 		self.row_1_col_2.text = self.l.supported_languages[1]
@@ -364,6 +375,19 @@ class LanguageSelectScreen(Screen):
 		# self.row_3_col_1_image.source = self.flag_img_path + self.row_3_col_1.text + ".png"
 		# self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
 		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
+
+	def on_enter(self):
+		self.update_welcome_header = Clock.schedule_interval(self.change_welcome_label, 1)
+
+	def change_welcome_label(self, dt):
+
+		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
+
+		if self.welcome_i < 2:
+			self.welcome_i += 1
+
+		else:
+			self.welcome_i = 0
 
 	def select_language(self, radio_button, language_label):
 
@@ -390,4 +414,5 @@ class LanguageSelectScreen(Screen):
 		self.next_button.disabled = False
 		self.loading_warranty_app = False
 		self.next_button.text = self.l.get_str("Next") + "..."
+		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
 

@@ -10,6 +10,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen2>
 
+	header_label : header_label
 	user_info : user_info
 	next_button : next_button
 
@@ -39,6 +40,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                	id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -153,6 +155,7 @@ class WiFiAndDataConsentScreen2(Screen):
 			self.c.sm.current='consent_1'
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.user_info.text = (
 			self.l.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
 			"\n\n" + \

@@ -44,7 +44,6 @@ Builder.load_string("""
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
-					text: "Reboot!"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
 					font_size: dp(30)
@@ -148,6 +147,7 @@ class ApplySettingsScreen(Screen):
 	def prev_screen(self):
 		self.start_seq.prev_in_sequence()
 
-	def update_strings(self): # add to lang list!
+	def update_strings(self):
+		self.title_label.text = self.l.get_str("Reboot!")
 		self.success_label.text = self.l.get_str("Reboot to finish applying your settings, and get started!")
 		self.next_button.text = self.l.get_str("Reboot!")
