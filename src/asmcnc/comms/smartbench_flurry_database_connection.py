@@ -228,7 +228,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.get_public_ip_address()
                 },
                 "statuses": {
                     "status": "Run",
@@ -325,7 +325,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.get_public_ip_address()
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -348,7 +348,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.get_public_ip_address()
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -376,7 +376,7 @@ class DatabaseEventManager():
                 "location": self.m.device_location,
                 "hostname": self.set.console_hostname,
                 "ec_version": self.m.sett.sw_version,
-                "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                "public_ip_address": self.get_public_ip_address()
             },
             "speeds": {
                 "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
@@ -414,7 +414,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.get_public_ip_address()
                 },
                 "event": {
                     "severity": event_severity,
@@ -427,6 +427,18 @@ class DatabaseEventManager():
 
 
         self.publish_event_with_temp_channel(data, "Event")
+
+
+    def get_public_ip_address(self):
+
+        try: 
+            public_ip = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+        except:
+            public_ip = "Unavailable"
+
+        return public_ip
+
 
 
 
