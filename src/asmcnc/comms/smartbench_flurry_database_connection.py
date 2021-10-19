@@ -25,6 +25,9 @@ class DatabaseEventManager():
 
     public_ip_address = ''
 
+    routine_updates_channel = None
+    routine_update_thread = None
+
     def __init__(self, screen_manager, machine, settings_manager):
 
         self.queue = 'machine_data'
@@ -65,7 +68,31 @@ class DatabaseEventManager():
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
-                    self.send_routine_updates_to_database()
+                    
+                    
+                    try:
+                        if self.routine_updates_channel is None:
+                            self.routine_updates_channel = self.connection.channel()
+                            self.routine_updates_channel.queue_declare(queue=self.queue)
+
+                        elif self.routine_updates_channel.is_closed:
+                            self.routine_updates_channel.open()
+
+                    except:
+                        try: 
+                            self.routine_updates_channel.close()
+                        except: 
+                            pass
+                        
+                        self.routine_updates_channel = None
+                        self.routine_updates_channel = self.connection.channel()
+                        self.routine_updates_channel.queue_declare(queue=self.queue)
+
+
+                    try: 
+                        if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+                    except: 
+                        self.send_routine_updates_to_database()
                     break
 
 
@@ -76,34 +103,36 @@ class DatabaseEventManager():
             else:
                 sleep(10)
 
-    def reinstate_channel_if_missing(self, channel):
+    def reinstate_channel_or_connection_if_missing(self):
 
         log("Attempt to reinstate channel")
 
-        if channel is None:
+        if self.connection.is_closed:
+            self.set_up_pika_connection()
 
-            log("channel is none")
+        elif self.routine_updates_channel.is_closed:
+            try:
+                self.routine_updates_channel = self.connection.channel()
+                self.routine_updates_channel.queue_declare(queue=self.queue)
 
-            channel = self.connection.channel()
-            channel.queue_declare(queue=self.queue)
+            except:
+                log("connection not closed, but could not set up channel")
 
-        else:
+        else: 
 
-            log("channel is not none")
-            print channel
+            try: 
+                self.connection.close()
+                self.set_up_pika_connection()
 
-        return channel
-
-
+            except:
+                sleep(10)
+                self.reinstate_channel_or_connection_if_missing()
 
     ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
     ##------------------------------------------------------------------------
     def send_routine_updates_to_database(self):
 
         def do_routine_update_loop():
-
-            self.routine_updates_channel = self.connection.channel()
-            self.routine_updates_channel.queue_declare(queue=self.queue)
 
             while True:
 
@@ -125,9 +154,9 @@ class DatabaseEventManager():
 
                 sleep(10)
 
-        routine_update_thread = threading.Thread(target=do_routine_update_loop)
-        routine_update_thread.daemon = True
-        routine_update_thread.start()
+        self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
+        self.routine_update_thread.daemon = True
+        self.routine_update_thread.start()
 
 
     ## PUBLISH EVENT TO DATABASE
@@ -144,7 +173,7 @@ class DatabaseEventManager():
             
             except Exception as e:
                 if self.VERBOSE: log(exception_type + " send exception: " + str(e))
-                self.routine_updates_channel = self.reinstate_channel_if_missing(channel) # this might work now
+                self.reinstate_channel_or_connection_if_missing()
 
 
     def publish_event_with_temp_channel(self, data, exception_type):
@@ -155,17 +184,24 @@ class DatabaseEventManager():
 
             def nested_flurry_event_sender(data, exception_type):
 
-                temp_event_channel = self.connection.channel()
-                temp_event_channel.queue_declare(queue=self.queue)
+                while True:
+    
+                    try: 
+                        temp_event_channel = self.connection.channel()
+                        temp_event_channel.queue_declare(queue=self.queue)
 
-                try: 
-                    temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-                    if self.VERBOSE: log(data)
-                
-                except Exception as e:
-                    if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+                        try: 
+                            temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                            if self.VERBOSE: log(data)
+                        
+                        except Exception as e:
+                            if self.VERBOSE: log(exception_type + " send exception: " + str(e))
 
-                temp_event_channel.close()
+                        temp_event_channel.close()
+                        break
+
+                    except: 
+                        sleep(10)
 
             thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
             thread_for_send_event.daemon = True
