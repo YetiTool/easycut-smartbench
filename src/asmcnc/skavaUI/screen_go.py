@@ -730,15 +730,15 @@ class GoScreen(Screen):
         self.feedOverride.update_feed_rate_label()
         # self.update_voltage_label()
 
-        if self.speedOverride.speed_override_percentage > self.spindle_speed_max_percentage:
-            self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage
-        if self.speedOverride.spindle_rpm > self.spindle_speed_max_absolute:
-            self.spindle_speed_max_absolute = self.speedOverride.spindle_rpm
+        if self.speedOverride.speed_override_percentage.text > self.spindle_speed_max_percentage:
+            self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage.text
+        if self.speedOverride.spindle_rpm.text > self.spindle_speed_max_absolute:
+            self.spindle_speed_max_absolute = self.speedOverride.spindle_rpm.text
 
-        if self.feedOverride.feed_override_percentage > self.feed_rate_max_percentage:
-            self.feed_rate_max_percentage = self.feedOverride.feed_override_percentage
-        if self.feedOverride.feed_absolute > self.feed_rate_max_absolute:
-            self.feed_rate_max_absolute = self.feedOverride.feed_absolute
+        if self.feedOverride.feed_override_percentage.text > self.feed_rate_max_percentage:
+            self.feed_rate_max_percentage = self.feedOverride.feed_override_percentage.text
+        if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
+            self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 
     # Called from serial_connection if change in state seen
     def update_overload_label(self, state):
