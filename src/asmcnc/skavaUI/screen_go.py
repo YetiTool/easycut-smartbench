@@ -406,8 +406,8 @@ class GoScreen(Screen):
         self.l = kwargs['localization']
         self.database = kwargs['database']
 
-        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
-        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
+        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
+        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
 
         # Graphics commands
         self.z_height_container.add_widget(

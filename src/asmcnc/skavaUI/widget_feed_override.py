@@ -115,6 +115,7 @@ class FeedOverride(Widget):
         super(FeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.db=kwargs['database']
 
     def update_feed_rate_label(self):
         self.feed_absolute.text = str(self.m.feed_rate())
@@ -130,12 +131,14 @@ class FeedOverride(Widget):
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.15) 
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.2)
                 Clock.schedule_once(lambda dt: self.m.feed_override_up_1(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
                 
     def feed_norm(self):
         self.feed_override_percentage = 100
         self.feed_rate_label.text = str(self.feed_override_percentage) + '%'
         self.m.feed_override_reset()
+        Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 
     def feed_down(self):
         self.push =+ 1 
@@ -148,6 +151,7 @@ class FeedOverride(Widget):
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.15) 
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.2)
                 Clock.schedule_once(lambda dt: self.m.feed_override_down_1(final_percentage=self.feed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.db.send_feed_rate_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def disable_buttons(self):
