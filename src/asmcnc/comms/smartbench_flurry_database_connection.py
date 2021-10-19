@@ -23,6 +23,11 @@ class DatabaseEventManager():
 
     VERBOSE = True
 
+    public_ip_address = ''
+
+    routine_updates_channel = None
+    routine_update_thread = None
+
     def __init__(self, screen_manager, machine, settings_manager):
 
         self.queue = 'machine_data'
@@ -32,12 +37,19 @@ class DatabaseEventManager():
         self.jd = self.m.jd
         self.set = settings_manager
 
+    def __del__(self):
+
+        log("Database Event Manager closed - garbage collected!")
+
     
     ## SET UP CONNECTION TO DATABASE
     # This is called from screen_welcome, when all connections are set up
     ##------------------------------------------------------------------------
 
     def start_connection_to_database_thread(self):
+
+        self.start_get_public_ip_address_thread()        
+
         initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
         initial_connection_thread.daemon = True
         initial_connection_thread.start()
@@ -56,9 +68,31 @@ class DatabaseEventManager():
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
-                    self.channel = self.connection.channel()
-                    self.channel.queue_declare(queue=self.queue)
-                    self.send_routine_updates_to_database()
+                    
+                    
+                    try:
+                        if self.routine_updates_channel is None:
+                            self.routine_updates_channel = self.connection.channel()
+                            self.routine_updates_channel.queue_declare(queue=self.queue)
+
+                        elif self.routine_updates_channel.is_closed:
+                            self.routine_updates_channel.open()
+
+                    except:
+                        try: 
+                            self.routine_updates_channel.close()
+                        except: 
+                            pass
+                        
+                        self.routine_updates_channel = None
+                        self.routine_updates_channel = self.connection.channel()
+                        self.routine_updates_channel.queue_declare(queue=self.queue)
+
+
+                    try: 
+                        if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+                    except: 
+                        self.send_routine_updates_to_database()
                     break
 
 
@@ -69,7 +103,30 @@ class DatabaseEventManager():
             else:
                 sleep(10)
 
+    def reinstate_channel_or_connection_if_missing(self):
 
+        log("Attempt to reinstate channel")
+
+        if self.connection.is_closed:
+            self.set_up_pika_connection()
+
+        elif self.routine_updates_channel.is_closed:
+            try:
+                self.routine_updates_channel = self.connection.channel()
+                self.routine_updates_channel.queue_declare(queue=self.queue)
+
+            except:
+                log("connection not closed, but could not set up channel")
+
+        else: 
+
+            try: 
+                self.connection.close()
+                self.set_up_pika_connection()
+
+            except:
+                sleep(10)
+                self.reinstate_channel_or_connection_if_missing()
 
     ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
     ##------------------------------------------------------------------------
@@ -89,32 +146,63 @@ class DatabaseEventManager():
                         else:
                             self.send_full_payload()
 
-                    except:
-                        if self.VERBOSE: log("Could not send routine update")
+                    except Exception as e:
+                        if self.VERBOSE: 
+                            log("Could not send routine update:")
+                            log(str(e))
+
 
                 sleep(10)
 
-        routine_update_thread = threading.Thread(target=do_routine_update_loop)
-        routine_update_thread.daemon = True
-        routine_update_thread.start()
+        self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
+        self.routine_update_thread.daemon = True
+        self.routine_update_thread.start()
 
 
     ## PUBLISH EVENT TO DATABASE
     ##------------------------------------------------------------------------
-    def publish_event_to_flurry_database(self, data, exception_type):
+    def publish_event_with_routine_updates_channel(self, data, exception_type):
 
         if self.VERBOSE: log("Publishing data: " + exception_type)
 
-        def nested_flurry_event_sender(data, exception_type):
+        if self.set.wifi_available:
 
-                try: 
-                    self.channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-                    if self.VERBOSE: log(data)
-                
-                except Exception as e:
-                    if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+            try: 
+                self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                if self.VERBOSE: log(data)
+            
+            except Exception as e:
+                if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+                self.reinstate_channel_or_connection_if_missing()
+
+
+    def publish_event_with_temp_channel(self, data, exception_type):
+
+        if self.VERBOSE: log("Publishing data: " + exception_type)
 
         if self.set.wifi_available:
+
+            def nested_flurry_event_sender(data, exception_type):
+
+                while True:
+    
+                    try: 
+                        temp_event_channel = self.connection.channel()
+                        temp_event_channel.queue_declare(queue=self.queue)
+
+                        try: 
+                            temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+                            if self.VERBOSE: log(data)
+                        
+                        except Exception as e:
+                            if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+
+                        temp_event_channel.close()
+                        break
+
+                    except: 
+                        sleep(10)
+
             thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
             thread_for_send_event.daemon = True
             thread_for_send_event.start()
@@ -138,7 +226,7 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Data")
+        self.publish_event_with_routine_updates_channel(data, "Data")
 
 
     # During a job, send full data about machine
@@ -181,7 +269,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.public_ip_address
                 },
                 "statuses": {
                     "status": "Run",
@@ -199,13 +287,18 @@ class DatabaseEventManager():
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.jd.percent_thru_job or 0.0,
-                    "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
+                    "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0,
+
+                    "max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
+                    "max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or '',
+                    "max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
+                    "max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
 
 
-        self.publish_event_to_flurry_database(data, "Data")
+        self.publish_event_with_routine_updates_channel(data, "Data")
 
 
     ### PART OF SENDING FULL PAYLOAD
@@ -278,7 +371,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.public_ip_address
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -289,7 +382,7 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
 
         self.jd.post_job_data_update_post_send()
 
@@ -301,7 +394,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.public_ip_address
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -317,11 +410,11 @@ class DatabaseEventManager():
 
         data["metadata"] = metadata_in_json_format
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
 
 
     ### FEEDS AND SPEEDS
-    def send_speed_info(self):
+    def send_spindle_speed_info(self):
         data = {
             "payload_type": "speed_info",
             "machine_info": {
@@ -329,17 +422,34 @@ class DatabaseEventManager():
                 "location": self.m.device_location,
                 "hostname": self.set.console_hostname,
                 "ec_version": self.m.sett.sw_version,
-                "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                "public_ip_address": self.public_ip_address
             },
             "speeds": {
-                "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
-                "spindle_speed": self.sm.get_screen('go').speedOverride.speed_rate_label.text
+                "spindle_speed": self.m.spindle_speed(),
+                "spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text
             }
         }
 
-        log(data)
+        self.publish_event_with_temp_channel(data, "Spindle speed")
 
-        self.publish_event_to_flurry_database(data, "Speeds and feeds")
+
+    def send_feed_rate_info(self):
+        data = {
+            "payload_type": "speed_info",
+            "machine_info": {
+                "name": self.m.device_label,
+                "location": self.m.device_location,
+                "hostname": self.set.console_hostname,
+                "ec_version": self.m.sett.sw_version,
+                "public_ip_address": self.public_ip_address
+            },
+            "feeds": {
+                "feed_rate": self.m.feed_rate(),
+                "feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+            }
+        }
+
+        self.publish_event_with_temp_channel(data, "Feed rate")
 
 
     ### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -367,7 +477,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.public_ip_address
                 },
                 "event": {
                     "severity": event_severity,
@@ -379,7 +489,33 @@ class DatabaseEventManager():
             }
 
 
-        self.publish_event_to_flurry_database(data, "Event")
+        self.publish_event_with_temp_channel(data, "Event")
+
+
+    ## LOOP TO ROUTINELY CHECK IP ADDRESS
+
+    def start_get_public_ip_address_thread(self):
+
+        def do_ip_address_loop():
+
+            while True:
+
+                try: 
+                    self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+                except:
+                    self.public_ip_address = "Unavailable"
+
+
+                sleep(600)
+
+        ip_address_thread = threading.Thread(target=do_ip_address_loop)
+        ip_address_thread.daemon = True
+        ip_address_thread.start()
+
+
+
+
 
 
 

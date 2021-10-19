@@ -395,6 +395,11 @@ class GoScreen(Screen):
     lift_z_on_job_pause = False
     overload_peak = 0
 
+    spindle_speed_max_percentage = 100
+    spindle_speed_max_absolute = 0
+    feed_rate_max_percentage = 100
+    feed_rate_max_absolute = 0
+
     def __init__(self, **kwargs):
 
         super(GoScreen, self).__init__(**kwargs)
@@ -406,8 +411,8 @@ class GoScreen(Screen):
         self.l = kwargs['localization']
         self.database = kwargs['database']
 
-        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm)
-        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm)
+        self.feedOverride = widget_feed_override.FeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
+        self.speedOverride = widget_speed_override.SpeedOverride(machine=self.m, screen_manager=self.sm, database=self.database)
 
         # Graphics commands
         self.z_height_container.add_widget(
@@ -576,6 +581,11 @@ class GoScreen(Screen):
 
         self.progress_percentage_label.text = str(self.jd.percent_thru_job) + " %"
 
+        self.spindle_speed_max_percentage = 100
+        self.spindle_speed_max_absolute = 0
+        self.feed_rate_max_percentage = 100
+        self.feed_rate_max_absolute = 0
+
         # Reset job tracking flags
         self.sm.get_screen('home').has_datum_been_reset = False
         self.sm.get_screen('home').z_datum_reminder_flag = False
@@ -719,6 +729,16 @@ class GoScreen(Screen):
         self.speedOverride.update_spindle_speed_label()
         self.feedOverride.update_feed_rate_label()
         # self.update_voltage_label()
+
+        if self.speedOverride.speed_override_percentage > self.spindle_speed_max_percentage:
+            self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage
+        if self.speedOverride.spindle_rpm.text > self.spindle_speed_max_absolute:
+            self.spindle_speed_max_absolute = self.speedOverride.spindle_rpm.text
+
+        if self.feedOverride.feed_override_percentage > self.feed_rate_max_percentage:
+            self.feed_rate_max_percentage = self.feedOverride.feed_override_percentage
+        if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
+            self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
 
     # Called from serial_connection if change in state seen
     def update_overload_label(self, state):

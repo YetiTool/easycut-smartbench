@@ -8,8 +8,7 @@ screen_warranty_registration_1, \
 screen_warranty_registration_2, \
 screen_warranty_registration_3, \
 screen_warranty_registration_4, \
-screen_warranty_registration_5, \
-screen_CNC_academy
+screen_warranty_registration_5
 
 
 class ScreenManagerWarranty(object):
