@@ -73,10 +73,19 @@ class DatabaseEventManager():
 
     def reinstate_channel_if_missing(self, channel):
 
+        log("Attempt to reinstate channel")
+
         if channel is None:
+
+            log("channel is none")
 
             channel = self.connection.channel()
             channel.queue_declare(queue=self.queue)
+
+        else:
+
+            log("channel is not none")
+            print channel
 
         return channel
 
@@ -103,8 +112,11 @@ class DatabaseEventManager():
                         else:
                             self.send_full_payload(self.routine_updates_channel)
 
-                    except:
-                        if self.VERBOSE: log("Could not send routine update")
+                    except Exception as e:
+                        if self.VERBOSE: 
+                            log("Could not send routine update:")
+                            log(str(e))
+
 
                 sleep(10)
 
