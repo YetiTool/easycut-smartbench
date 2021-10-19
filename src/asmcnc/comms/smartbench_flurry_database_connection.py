@@ -251,7 +251,12 @@ class DatabaseEventManager():
                     "job_time": self.sm.get_screen('go').time_taken_seconds or '',
                     "gcode_line": self.m.s.g_count or 0,
                     "job_percent": self.jd.percent_thru_job or 0.0,
-                    "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
+                    "overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0,
+
+                    "max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
+                    "max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or '',
+                    "max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
+                    "max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
