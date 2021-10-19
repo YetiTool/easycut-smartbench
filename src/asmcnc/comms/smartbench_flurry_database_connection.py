@@ -373,7 +373,7 @@ class DatabaseEventManager():
 
 
     ### FEEDS AND SPEEDS
-    def send_speed_info(self):
+    def send_spindle_speed_info(self):
         data = {
             "payload_type": "speed_info",
             "machine_info": {
@@ -384,14 +384,31 @@ class DatabaseEventManager():
                 "public_ip_address": self.public_ip_address
             },
             "speeds": {
-                "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
-                "spindle_speed": self.sm.get_screen('go').speedOverride.speed_rate_label.text
+                "spindle_speed": self.m.spindle_speed(),
+                "spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text
             }
         }
 
-        log(data)
+        self.publish_event_with_temp_channel(data, "Spindle speed")
 
-        self.publish_event_with_temp_channel(data, "Speeds and feeds")
+
+    def send_feed_rate_info(self):
+        data = {
+            "payload_type": "speed_info",
+            "machine_info": {
+                "name": self.m.device_label,
+                "location": self.m.device_location,
+                "hostname": self.set.console_hostname,
+                "ec_version": self.m.sett.sw_version,
+                "public_ip_address": self.public_ip_address
+            },
+            "feeds": {
+                "feed_rate": self.m.feed_rate(),
+                "feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+            }
+        }
+
+        self.publish_event_with_temp_channel(data, "Feed rate")
 
 
     ### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
