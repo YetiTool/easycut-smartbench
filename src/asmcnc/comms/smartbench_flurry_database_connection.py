@@ -389,8 +389,6 @@ class DatabaseEventManager():
             }
         }
 
-        log(data)
-
         self.publish_event_with_temp_channel(data, "Spindle speed")
 
 
@@ -409,8 +407,6 @@ class DatabaseEventManager():
                 "feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
             }
         }
-
-        log(data)
 
         self.publish_event_with_temp_channel(data, "Feed rate")
 
