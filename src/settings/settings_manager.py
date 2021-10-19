@@ -4,7 +4,8 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, time #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time, threading #, pigpio ## until production machines are running latest img
+from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
 
@@ -16,6 +17,8 @@ def log(message):
 
 class Settings(object):
     
+    wifi_check_thread = None
+
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
@@ -37,53 +40,59 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
-        Clock.schedule_interval(self.check_wifi_and_refresh_ip_address, self.WIFI_REPORT_INTERVAL)
+        self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
+        self.wifi_check_thread.daemon = True
+        self.wifi_check_thread.start()
     
 
 ## WIFI AND CONNECTIONS
 
-    def check_wifi_and_refresh_ip_address(self, dt):
+    def check_wifi_and_refresh_ip_address(self):
 
-        if sys.platform == "win32":
-            try:
-                # get IP address
-                hostname=socket.gethostname()
-                IPAddr=socket.gethostbyname(hostname)
-                self.ip_address = str(IPAddr)
-                self.wifi_available = True
+        while True:
 
-                # # ping to check connection
-                # # NB, if this comes out false but there's an IP it indicates connection in local network
-                # self.wifi_available = self.do_ping_check()
+            if sys.platform == "win32":
+                try:
+                    # get IP address
+                    hostname=socket.gethostname()
+                    IPAddr=socket.gethostbyname(hostname)
+                    self.ip_address = str(IPAddr)
+                    self.wifi_available = True
 
-            except:
-                self.ip_address = ''
-                self.wifi_available = False
+                    # # ping to check connection
+                    # # NB, if this comes out false but there's an IP it indicates connection in local network
+                    # self.wifi_available = self.do_ping_check()
 
-        elif sys.platform != "darwin": # i.e. is a linux platform
-            try:
-
-                # get IP address
-                f = os.popen('hostname -I')
-                potential_IP_address = f.read().strip().split(' ')[0]
-                if len(potential_IP_address.split('.')) == 4:
-                    self.ip_address = potential_IP_address
-
-                    # ping to check connection
-                    self.wifi_available = self.do_ping_check()
-
-                else:
+                except:
                     self.ip_address = ''
                     self.wifi_available = False
 
-            except:
-                self.ip_address = ''
-                self.wifi_available = False
+            elif sys.platform != "darwin": # i.e. is a linux platform
+                try:
 
-        else:
-            # ping to check connection
-            # NB, if this comes out false but there's an IP it indicates connection in local network
-            self.wifi_available = self.do_ping_check()
+                    # get IP address
+                    f = os.popen('hostname -I')
+                    potential_IP_address = f.read().strip().split(' ')[0]
+                    if len(potential_IP_address.split('.')) == 4:
+                        self.ip_address = potential_IP_address
+
+                        # ping to check connection
+                        self.wifi_available = self.do_ping_check()
+
+                    else:
+                        self.ip_address = ''
+                        self.wifi_available = False
+
+                except:
+                    self.ip_address = ''
+                    self.wifi_available = False
+
+            else:
+                # ping to check connection
+                # NB, if this comes out false but there's an IP it indicates connection in local network
+                self.wifi_available = self.do_ping_check()
+
+            sleep(self.WIFI_REPORT_INTERVAL)
 
 
     def do_ping_check(self):
