@@ -108,9 +108,9 @@ class DatabaseEventManager():
 
                     try:
                         if self.m.s.m_state == "Idle":
-                            self.send_alive(self.routine_updates_channel)
+                            self.send_alive()
                         else:
-                            self.send_full_payload(self.routine_updates_channel)
+                            self.send_full_payload()
 
                     except Exception as e:
                         if self.VERBOSE: 
