@@ -359,7 +359,7 @@ class DatabaseEventManager():
     # 6 - job start
     # 7 - job end
 
-    def send_event(self, event_severity, event_type, event_name, event_description):
+    def send_event(self, event_severity, event_description, event_name, event_type):
         data = {
                 "payload_type": "event",
                 "machine_info": {
