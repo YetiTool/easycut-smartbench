@@ -23,6 +23,8 @@ class DatabaseEventManager():
 
     VERBOSE = True
 
+    public_ip_address = ''
+
     def __init__(self, screen_manager, machine, settings_manager):
 
         self.queue = 'machine_data'
@@ -42,6 +44,9 @@ class DatabaseEventManager():
     ##------------------------------------------------------------------------
 
     def start_connection_to_database_thread(self):
+
+        self.start_get_public_ip_address_thread()        
+
         initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
         initial_connection_thread.daemon = True
         initial_connection_thread.start()
@@ -228,7 +233,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": self.get_public_ip_address()
+                    "public_ip_address": self.public_ip_address
                 },
                 "statuses": {
                     "status": "Run",
@@ -325,7 +330,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": self.get_public_ip_address()
+                    "public_ip_address": self.public_ip_address
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -348,7 +353,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": self.get_public_ip_address()
+                    "public_ip_address": self.public_ip_address
                 },
                 "job_data": {
                     "job_name": job_name,
@@ -376,7 +381,7 @@ class DatabaseEventManager():
                 "location": self.m.device_location,
                 "hostname": self.set.console_hostname,
                 "ec_version": self.m.sett.sw_version,
-                "public_ip_address": self.get_public_ip_address()
+                "public_ip_address": self.public_ip_address
             },
             "speeds": {
                 "feed_rate": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
@@ -414,7 +419,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": self.get_public_ip_address()
+                    "public_ip_address": self.public_ip_address
                 },
                 "event": {
                     "severity": event_severity,
@@ -429,15 +434,29 @@ class DatabaseEventManager():
         self.publish_event_with_temp_channel(data, "Event")
 
 
-    def get_public_ip_address(self):
+    ## LOOP TO ROUTINELY CHECK IP ADDRESS
 
-        try: 
-            public_ip = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+    def start_get_public_ip_address_thread(self):
 
-        except:
-            public_ip = "Unavailable"
+        def do_ip_address_loop():
 
-        return public_ip
+            while True:
+
+                try: 
+                    self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+                except:
+                    self.public_ip_address = "Unavailable"
+
+
+                sleep(600)
+
+        ip_address_thread = threading.Thread(target=do_ip_address_loop)
+        ip_address_thread.daemon = True
+        ip_address_thread.start()
+
+
+
 
 
 
