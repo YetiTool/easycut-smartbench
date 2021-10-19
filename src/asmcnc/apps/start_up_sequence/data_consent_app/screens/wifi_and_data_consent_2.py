@@ -10,6 +10,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen2>
 
+	header_label : header_label
 	user_info : user_info
 	next_button : next_button
 
@@ -39,6 +40,7 @@ Builder.load_string("""
                         pos: self.pos
                         size: self.size
                 Label:
+                	id: header_label
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
@@ -107,8 +109,8 @@ Builder.load_string("""
 					padding: [0,0,0,32]
 					Button:
 						id: next_button
-						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-						background_down: "./asmcnc/apps/warranty_app/img/next.png"
+						background_normal: "./asmcnc/skavaUI/img/next.png"
+						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -132,17 +134,28 @@ class WiFiAndDataConsentScreen2(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen2, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 
 	def next_screen(self):
-		self.c.sm.current='consent_3'
+
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_3'
 
 	def prev_screen(self):
-		self.c.sm.current='consent_1'
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.sm.current='consent_1'
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.user_info.text = (
 			self.l.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
 			"\n\n" + \

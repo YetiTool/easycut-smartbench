@@ -10,6 +10,7 @@ Builder.load_string("""
 
 <WiFiAndDataConsentScreen1>
 
+	header_label : header_label
 	we_will_collect : we_will_collect
 	we_wont_collect : we_wont_collect
 	job_critical_events : job_critical_events
@@ -19,6 +20,7 @@ Builder.load_string("""
 	g_code_files : g_code_files
 	wifi_network_details : wifi_network_details
 	serial_numbers : serial_numbers
+	prev_screen_button : prev_screen_button
 	next_button : next_button
 
 	BoxLayout:
@@ -47,10 +49,10 @@ Builder.load_string("""
 						pos: self.pos
 						size: self.size
 				Label:
+					id: header_label
 					size_hint: (None,None)
 					height: dp(60)
 					width: dp(800)
-					text: "Wi-Fi and Data Consent"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
 					font_size: dp(30)
@@ -97,7 +99,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -120,7 +122,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -143,7 +145,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -166,7 +168,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/green_tick.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -215,7 +217,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -238,7 +240,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -261,7 +263,7 @@ Builder.load_string("""
 							size_hint_x: None
 							width: dp(30)
 			                Image:
-			                    source: "./asmcnc/core_UI/data_and_wifi/img/red_cross.png"
+			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
 
 	                    Label: 
@@ -295,6 +297,7 @@ Builder.load_string("""
 					width: dp(244.5)
 					padding: [0, 0, 184.5, 0]
 					Button:
+						id: prev_screen_button
 						size_hint: (None,None)
 						height: dp(52)
 						width: dp(60)
@@ -319,8 +322,8 @@ Builder.load_string("""
 					padding: [0,0,0,32]
 					Button:
 						id: next_button
-						background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-						background_down: "./asmcnc/apps/warranty_app/img/next.png"
+						background_normal: "./asmcnc/skavaUI/img/next.png"
+						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
@@ -344,17 +347,30 @@ class WiFiAndDataConsentScreen1(Screen):
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen1, self).__init__(**kwargs)
+		self.start_seq=kwargs['start_sequence']
 		self.c=kwargs['consent_manager']
 		self.l = kwargs['localization']
 		self.update_strings()
 
+
 	def next_screen(self):
-		self.c.sm.current='consent_2'
+
+		try:
+			self.start_seq.next_in_sequence()
+		except:
+			self.c.sm.current='consent_2'
 
 	def prev_screen(self):
-		self.c.back_to_previous_screen()
+
+		try:
+			self.start_seq.prev_in_sequence()
+
+		except:
+			self.c.back_to_previous_screen()
+		
 
 	def update_strings(self):
+		self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 		self.we_will_collect.text = self.l.get_bold("To keep improving our services, we want to collect data from your SmartBench. " + \
 			"With your consent, we will collect the following data:")
 		self.we_wont_collect.text = self.l.get_bold("We will NEVER collect the following from your Console:")

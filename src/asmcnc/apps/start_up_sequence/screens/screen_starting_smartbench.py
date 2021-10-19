@@ -20,7 +20,7 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
-<WelcomeScreenClass>:
+<StartingSmartBenchScreen>:
 
     starting_label: starting_label
 
@@ -58,26 +58,20 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
-class WelcomeScreenClass(Screen):
+class StartingSmartBenchScreen(Screen):
     
     start_in_warranty_mode = False
     
     def __init__(self, **kwargs):
         
-        super(WelcomeScreenClass, self).__init__(**kwargs)
+        super(StartingSmartBenchScreen, self).__init__(**kwargs)
+        self.start_seq=kwargs['start_sequence']
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
         self.set=kwargs['settings']
         self.db=kwargs['database']
-        self.am = kwargs['app_manager']
         self.l=kwargs['localization']
         self.update_strings()
-
-        if self.m.trigger_setup and os.path.isfile("/home/pi/smartbench_activation_code.txt"):
-            self.start_in_warranty_mode = True
-
-        else:
-            self.start_in_warranty_mode = False
 
     def on_enter(self):
 
@@ -92,14 +86,8 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(self.m.s.start_services, 4)
 
                 # Allow time for machine reset sequence
-                # Then start up UI in relevant mode
-                if self.start_in_warranty_mode: 
-                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 6)
-
-                else:
-                    # start pika connection if warranty does not need activating
-                    self.db.start_connection_to_database_thread()
-                    Clock.schedule_once(self.go_to_safety_screen, 6)
+                self.db.start_connection_to_database_thread()
+                Clock.schedule_once(self.next_screen, 6)
 
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings,6.2)
@@ -111,25 +99,17 @@ class WelcomeScreenClass(Screen):
                 Clock.schedule_once(self.m.s.start_services, 1)
 
                 # Allow time for machine reset sequence
-                if self.start_in_warranty_mode: 
-                    Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 2)
-
-                else:
-                    self.db.start_connection_to_database_thread()
-                    Clock.schedule_once(self.go_to_safety_screen, 2)
+                self.db.start_connection_to_database_thread()
+                Clock.schedule_once(self.next_screen, 2)
 
 
 
         elif sys.platform == 'win32' or sys.platform == 'darwin':
-            if self.start_in_warranty_mode: 
-                Clock.schedule_once(lambda dt: self.am.start_warranty_app(), 1)
-
-            else:
                 self.db.start_connection_to_database_thread()
-                Clock.schedule_once(self.go_to_safety_screen, 1)
+                Clock.schedule_once(self.next_screen, 1)
 
-    def go_to_safety_screen(self, dt):
-        self.sm.current = 'safety'
+    def next_screen(self, dt):
+        self.start_seq.next_in_sequence()
         
     def set_machine_value_driven_user_settings(self, dt):
 

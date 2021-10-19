@@ -6,11 +6,7 @@ Created on nov 2020
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.spinner import Spinner, SpinnerOption
-from kivy.uix.dropdown import DropDown
-from kivy.uix.scrollview import ScrollView
 import sys, os
-from asmcnc.skavaUI import widget_status_bar
 from kivy.clock import Clock
 
 Builder.load_string("""
@@ -18,7 +14,7 @@ Builder.load_string("""
 
 <LanguageSelectScreen>:
 
-	status_container : status_container
+	header_label : header_label
 
 	row_1_col_1 : row_1_col_1
 	row_1_col_2 : row_1_col_2
@@ -42,29 +38,52 @@ Builder.load_string("""
 
 	next_button : next_button
 
-	BoxLayout: 
-		size_hint: (None,None)
-		width: dp(800)
-		height: dp(480)
-		orientation: 'vertical'
-
-		canvas:
-			Color:
-				rgba: hex('#e5e5e5')
-			Rectangle:
+	BoxLayout:
+		height: dp(800)
+		width: dp(480)
+		canvas.before:
+			Color: 
+				rgba: hex('#e5e5e5ff')
+			Rectangle: 
 				size: self.size
 				pos: self.pos
 
-		BoxLayout: 
-			id: status_container 
-			size_hint_y: 0.08
-
 		BoxLayout:
-			size_hint_y: 0.92
-			orientation: 'vertical'
+			padding: 0
+			spacing: 0
+			orientation: "vertical"
 
+			# HEADER
 			BoxLayout:
+				padding: 0
+				spacing: 0
+				canvas:
+					Color:
+						rgba: hex('#1976d2ff')
+					Rectangle:
+						pos: self.pos
+						size: self.size
+				Label:
+					id: header_label
+					size_hint: (None,None)
+					height: dp(60)
+					width: dp(800)
+					text: "Welcome to SmartBench"
+					color: hex('#f9f9f9ff')
+					# color: hex('#333333ff') #grey
+					font_size: dp(30)
+					halign: "center"
+					valign: "bottom"
+					markup: True
+				   
+			# BODY
+			BoxLayout:
+				size_hint: (None,None)
+				width: dp(800)
+				height: dp(298)
 				padding: [dp(30), dp(10)]
+				spacing: dp(10)
+				orientation: 'vertical'
 
 	            GridLayout:
 	                pos: self.parent.pos
@@ -131,6 +150,25 @@ Builder.load_string("""
 						markup: True
 						halign: "left"
 						color: hex('#333333ff')
+
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
+					BoxLayout: 
 
 
 					# # ROW 2
@@ -212,36 +250,16 @@ Builder.load_string("""
 					# 	halign: "left"
 					# 	color: hex('#333333ff')
 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-					BoxLayout: 
-
-
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
-						# on_press: root.select_language(self, row_3_col_2)
-						# on_press: root.select_language(self)
-						# color: hex('#333333ff')
+					# 	on_press: root.select_language(self, row_3_col_2)
+					# 	on_press: root.select_language(self)
+					# 	color: hex('#333333ff')
 
 	    #             Image: 
 	    #             	id: row_3_col_2_image
-	    				# allow_stretch: True
+	    # 				allow_stretch: True
 
 	    #             Label: 
 	    #             	id: row_3_col_2
@@ -251,18 +269,18 @@ Builder.load_string("""
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
-						# color: hex('#333333ff')
+					# 	color: hex('#333333ff')
 
 
 					# CheckBox: 
 					# 	group: "language_radio_buttons" 
-						# on_press: root.select_language(self, row_3_col_3)
-						# on_press: root.select_language(self)
-						# color: hex('#333333ff')
+					# 	on_press: root.select_language(self, row_3_col_3)
+					# 	on_press: root.select_language(self)
+					# 	color: hex('#333333ff')
 
 	    #             Image: 
 	    #             	id: row_3_col_3_image
-	    				# allow_stretch: True
+	    # 				allow_stretch: True
 
 	    #             Label: 
 	    #             	id: row_3_col_3
@@ -272,63 +290,48 @@ Builder.load_string("""
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
-						# color: hex('#333333ff')
+					# 	color: hex('#333333ff')
 
-			BoxLayout:
-				orientation: 'vertical'
+			# FOOTER
+			BoxLayout: 
+				padding: [10,0,10,10]
+				size_hint: (None, None)
+				height: dp(122)
 				width: dp(800)
-				height: dp(80)
-				padding: [dp(254.5),0,dp(254.5),0]
-				size_hint: (None,None)
-                BoxLayout: 
-                    size_hint: (None, None)
-                    height: dp(79)
-                    width: dp(291)
+				orientation: 'horizontal'
+				BoxLayout: 
+					size_hint: (None, None)
+					height: dp(122)
+					width: dp(244.5)
+					padding: [0, 0, 184.5, 0]
+
+				BoxLayout: 
+					size_hint: (None, None)
+					height: dp(122)
+					width: dp(291)
+					padding: [0,0,0,32]
 					Button:
 						id: next_button
-	                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-	                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
-	                    background_disabled_normal: "./asmcnc/apps/warranty_app/img/next.png"
-	                    background_disabled_down: "./asmcnc/apps/warranty_app/img/next.png"
-	                    border: [dp(14.5)]*4
+						background_normal: "./asmcnc/skavaUI/img/next.png"
+						background_down: "./asmcnc/skavaUI/img/next.png"
+						border: [dp(14.5)]*4
 						size_hint: (None,None)
 						width: dp(291)
 						height: dp(79)
-						on_press: root.load_next_screen()
+						on_press: root.next_screen()
 						text: 'Next...'
 						font_size: '30sp'
 						color: hex('#f9f9f9ff')
 						markup: True
-	                    center: self.parent.center
-	                    pos: self.parent.pos
-	                    opacity: 0 
-	                    disabled: True
-								
-			BoxLayout:
-				orientation: 'vertical'
-				padding: [10, 0, 0, 10]
-				size_hint: (None,None)
-				width: dp(70)
-				height: dp(62)
-
-                # Button:
-                #     size_hint: (None,None)
-                #     height: dp(52)
-                #     width: dp(60)
-                #     background_color: hex('#F4433600')
-                #     center: self.parent.center
-                #     pos: self.parent.pos
-                #     on_press: root.go_back()
-                #     BoxLayout:
-                #         padding: 0
-                #         size: self.parent.size
-                #         pos: self.parent.pos
-                #         Image:
-                #             source: "./asmcnc/apps/systemTools_app/img/back_to_menu.png"
-                #             center_x: self.parent.center_x
-                #             y: self.parent.y
-                #             size: self.parent.width, self.parent.height
-                #             allow_stretch: True
+						center: self.parent.center
+						pos: self.parent.pos
+						opacity: 0
+						disabled: True
+				BoxLayout: 
+					size_hint: (None, None)
+					height: dp(122)
+					width: dp(244.5)
+					padding: [193.5, 0, 0, 0]
 
 
 
@@ -336,17 +339,22 @@ Builder.load_string("""
 
 class LanguageSelectScreen(Screen):
 
-	loading_warranty_app = False
+	flag_img_path = "./asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img/"
+
+	welcome_to_smartbench_labels = [
+		"Welcome to SmartBench",
+		"Benvenuti in Smartbench",
+		"Tervetuloa Smartbenchiin"
+	]
+
+	welcome_i = 0
+	update_welcome_header = None
 
 	def __init__(self, **kwargs):
 		super(LanguageSelectScreen, self).__init__(**kwargs)
-		self.wm=kwargs['warranty_manager']
-		self.m=kwargs['machine']
+		self.start_seq=kwargs['start_sequence']
+		self.sm=kwargs['screen_manager']
 		self.l=kwargs['localization']
-		
-		self.status_bar_widget = widget_status_bar.StatusBar(screen_manager=self.wm.sm, machine=self.m)
-		self.status_container.add_widget(self.status_bar_widget)
-		self.status_bar_widget.cheeky_color = '#1976d2'
 
 		self.row_1_col_1.text = self.l.supported_languages[0]
 		self.row_1_col_2.text = self.l.supported_languages[1]
@@ -358,41 +366,50 @@ class LanguageSelectScreen(Screen):
 		# self.row_3_col_2.text = self.l.supported_languages[7]
 		# self.row_3_col_3.text = self.l.supported_languages[8]
 
-		self.row_1_col_1_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_1_col_1.text + ".png"
-		self.row_1_col_2_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_1_col_2.text + ".png"
-		self.row_1_col_3_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_1_col_3.text + ".png"
-		# self.row_2_col_1_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_2_col_1.text + ".png"
-		# self.row_2_col_2_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_2_col_2.text + ".png"
-		# self.row_2_col_3_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_2_col_3.text + ".png"
-		# self.row_3_col_1_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_3_col_1.text + ".png"
-		# self.row_3_col_2_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_3_col_2.text + ".png"
-		# self.row_3_col_3_image.source = "./asmcnc/apps/warranty_app/img/flags/" + self.row_3_col_3.text + ".png"
+		self.row_1_col_1_image.source = self.flag_img_path + self.row_1_col_1.text + ".png"
+		self.row_1_col_2_image.source = self.flag_img_path + self.row_1_col_2.text + ".png"
+		self.row_1_col_3_image.source = self.flag_img_path + self.row_1_col_3.text + ".png"
+		# self.row_2_col_1_image.source = self.flag_img_path + self.row_2_col_1.text + ".png"
+		# self.row_2_col_2_image.source = self.flag_img_path + self.row_2_col_2.text + ".png"
+		# self.row_2_col_3_image.source = self.flag_img_path + self.row_2_col_3.text + ".png"
+		# self.row_3_col_1_image.source = self.flag_img_path + self.row_3_col_1.text + ".png"
+		# self.row_3_col_2_image.source = self.flag_img_path + self.row_3_col_2.text + ".png"
+		# self.row_3_col_3_image.source = self.flag_img_path + self.row_3_col_3.text + ".png"
+
+	def on_enter(self):
+		self.update_welcome_header = Clock.schedule_interval(self.change_welcome_label, 1)
+
+	def change_welcome_label(self, dt):
+
+		self.header_label.text = self.welcome_to_smartbench_labels[self.welcome_i]
+
+		if self.welcome_i < 2:
+			self.welcome_i += 1
+
+		else:
+			self.welcome_i = 0
 
 	def select_language(self, radio_button, language_label):
 
-		if not self.loading_warranty_app:
+		if radio_button.state == 'down':
+			radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
+			self.l.load_in_new_language(language_label.text)
+			[self.sm.get_screen(screen).update_strings() for screen in self.start_seq.screen_sequence]
+			self.next_button.opacity = 1
+			self.next_button.disabled = False
 
-			if radio_button.state == 'down':
-				radio_button.color = [25 / 255., 118 / 255., 210 / 255., 1]
-				self.l.load_in_new_language(language_label.text)
-				self.next_button.text = self.l.get_str("Next") + "..."
-				self.next_button.opacity = 1
-				self.next_button.disabled = False
-
-			else: 
-				radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
+		else: 
+			radio_button.color = [51 / 255., 51 / 255., 51 / 255., 1.]
 
 	def next_screen(self):
-		self.wm.open_warranty_app()
+		self.start_seq.next_in_sequence()
 
-	def load_next_screen(self):
-		self.next_button.disabled = True
-		self.loading_warranty_app = True
-		self.next_button.text = self.l.get_str("Loading...")
-		Clock.schedule_once(lambda dt: self.next_screen(), 0.1)
+	def update_strings(self):
+		self.header_label.text = self.l.get_str("Welcome to SmartBench")
+		self.next_button.text = self.l.get_str("Next") + "..."
+		if self.update_welcome_header: Clock.unschedule(self.update_welcome_header)
 
 	def on_leave(self):
 		self.next_button.disabled = False
 		self.loading_warranty_app = False
-		self.next_button.text = self.l.get_str("Next") + "..."
 

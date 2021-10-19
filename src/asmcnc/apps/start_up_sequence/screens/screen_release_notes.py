@@ -11,8 +11,6 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 
-from asmcnc.core_UI.data_and_wifi import data_consent_manager
-
 from datetime import datetime
 
 Builder.load_string("""
@@ -108,8 +106,8 @@ Builder.load_string("""
                 id: next_button
                 # text: 'Next...'
                 font_size: '30sp'
-                background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-                on_press: root.switch_screen()
+                background_normal: "./asmcnc/skavaUI/img/next.png"
+                on_press: root.next_screen()
                 color: hex('f9f9f9ff')
 
 """)
@@ -142,14 +140,20 @@ class ReleaseNotesScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
+        self.start_seq=kwargs['start_sequence']
         self.sm = kwargs['screen_manager']
         self.version = kwargs['version']
         self.l=kwargs['localization']
+
 
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         self.release_notes_filename = '../' + (self.version).replace(".","") + '.txt'
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
+
+        self.update_strings()
+
+    def update_strings(self):
 
         self.version_number_label.text = (self.l.get_str("Software updated successfully to version")).replace(self.l.get_str('version'), self.version)
         self.please_read_label.text = self.l.get_str("These release notes contain critical information about how SmartBench has changed (in English).")
@@ -158,23 +162,7 @@ class ReleaseNotesScreen(Screen):
         "https://www.yetitool.com\n/SUPPORT\n/KNOWLEDGE-BASE\n/smartbench1-console-\noperations-software-\nupdates-release-notes"
         self.next_button.text = self.l.get_str("Next") + "..."
 
-        self.check_data_consent_screen()
-
-    def check_data_consent_screen(self):
-        data_consent = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
-
-        if ('False' in data_consent) or (not data_consent):
-            self.data_consent_app = data_consent_manager.DataConsentManager(self.sm, self.l)
-
-    def switch_screen(self):
-        user_has_confirmed = True
-        if not self.data_consent_app: # test this
-            self.sm.current = 'welcome'
-
-        else: 
-            self.data_consent_app.open_data_consent('release_notes', 'welcome')
-
-    def on_leave(self):
-        if self.sm.current != 'alarmScreen' and self.sm.current != 'errorScreen' and self.sm.current != 'door': 
-            if self.user_has_confirmed and not self.data_consent_app:
-                self.sm.remove_widget(self.sm.get_screen('release_notes'))
+    
+    def next_screen(self):
+        os.system('sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt')
+        self.start_seq.next_in_sequence()

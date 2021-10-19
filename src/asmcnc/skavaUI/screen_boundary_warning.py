@@ -93,8 +93,8 @@ Builder.load_string("""
                         id: quit_button
                         on_press: root.quit_to_home()
                         text: root.exit_label
-                        background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-                        background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                        background_normal: "./asmcnc/skavaUI/img/next.png"
+                        background_down: "./asmcnc/skavaUI/img/next.png"
                         border: [dp(14.5)]*4
                         size_hint: (None,None)
                         width: dp(291)
