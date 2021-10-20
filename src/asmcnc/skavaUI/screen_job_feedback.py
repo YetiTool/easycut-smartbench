@@ -260,7 +260,7 @@ class JobFeedbackScreen(Screen):
     def confirm_job_successful(self):
         self.set_post_production_notes()
         self.jd.post_job_data_update_pre_send(True)
-        self.db.send_job_end(self.jd.job_name, True)
+        self.db.send_job_end(True)
         self.quit_to_return_screen()
 
     def confirm_job_unsuccessful(self):
