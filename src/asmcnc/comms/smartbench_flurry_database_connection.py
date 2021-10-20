@@ -184,7 +184,7 @@ class DatabaseEventManager():
 
             def nested_flurry_event_sender(data, exception_type):
 
-                while True:
+                while self.set.wifi_available:
     
                     try: 
                         temp_event_channel = self.connection.channel()
