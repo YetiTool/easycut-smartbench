@@ -333,7 +333,7 @@ class JobData(object):
         new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
         print("New line: " + str(new_line))
 
-        sed_command = 'sudo sed -i "s/' + quote(line_to_replace) + '/' + quote(new_line) + '/" ' + quote(self.filename)
+        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
         print("Sed command: " + str(sed_command))
 
         os.system(sed_command)
