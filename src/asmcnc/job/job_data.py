@@ -320,11 +320,22 @@ class JobData(object):
 
     def update_metadata_in_original_file(self, key_to_update):
 
+
+        print("Update metadata in the job file")
+
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
+        print("Grep command: " + str(grep_command))
+
         line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ")"
+        print("Line to replace: " + str(line_to_replace))
+
+        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
+        print("New line: " + str(new_line))
+
         sed_command = 'sudo sed -i "s/' + quote(line_to_replace) + '/' + quote(new_line) + '/" ' + quote(self.filename)
+        print("Sed command: " + str(sed_command))
+
         os.system(sed_command)
 
 
