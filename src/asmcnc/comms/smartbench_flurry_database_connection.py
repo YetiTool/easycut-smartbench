@@ -360,7 +360,7 @@ class DatabaseEventManager():
 	##------------------------------------------------------------------------
 
 	### BEGINNING AND END OF JOB
-	def send_job_end(self, job_name, successful):
+	def send_job_end(self, successful):
 
 		data =  {
 				"payload_type": "job_end",
@@ -372,7 +372,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.public_ip_address
 				},
 				"job_data": {
-					"job_name": job_name,
+					"job_name": self.jd.job_name or '',
 					"successful": successful,
 					"PostProductionNotes": self.jd.post_production_notes
 				},
@@ -381,10 +381,9 @@ class DatabaseEventManager():
 
 
 		self.publish_event_with_temp_channel(data, "Job End Event")
-
 		self.jd.post_job_data_update_post_send()
 
-	def send_job_start(self, job_name, metadata_dict):
+	def send_job_start(self):
 		data = {
 				"payload_type": "job_start",
 				"machine_info": {
@@ -395,7 +394,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.public_ip_address
 				},
 				"job_data": {
-					"job_name": job_name,
+					"job_name": self.jd.job_name or '',
 					"job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				},
 				"metadata": {
@@ -404,7 +403,7 @@ class DatabaseEventManager():
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 		}
 
-		metadata_in_json_format = {k.translate(None, ' '): v for k, v in metadata_dict.iteritems()}
+		metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
 
 		data["metadata"] = metadata_in_json_format
 
