@@ -19,7 +19,6 @@ from datetime import datetime
 
 import os, sys, time
 
-from asmcnc.comms import archie_db
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, \
     widget_feed_override, widget_speed_override  # @UnresolvedImport
 from asmcnc.skavaUI import widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, \

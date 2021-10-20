@@ -170,7 +170,6 @@ class DatabaseEventManager():
 			
 			except Exception as e:
 				if self.VERBOSE: log(exception_type + " send exception: " + str(e))
-				self.connection = None
 				self.reinstate_channel_or_connection_if_missing()
 
 
