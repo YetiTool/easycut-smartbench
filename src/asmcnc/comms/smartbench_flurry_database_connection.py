@@ -192,7 +192,7 @@ class DatabaseEventManager():
 							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 							if self.VERBOSE: log(data)
 
-							if "Job End" in self.exception_type:
+							if "Job End" in exception_type:
 								temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
 								if self.VERBOSE: log(data)
 
