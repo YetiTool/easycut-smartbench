@@ -561,7 +561,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
         ok_button.bind(on_press=popup.dismiss)
-        ok_button.bind(on_press=reboot)
+        # ok_button.bind(on_press=reboot)
         
         popup.open()
         
@@ -722,22 +722,22 @@ class PopupWait(Widget):
           description = self.l.get_str("Please wait") + "..."
 
         title_string = self.l.get_str("Please Wait") + "..."
-        ok_string = self.l.get_bold("Ok")
+        # ok_string = self.l.get_bold("Ok")
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
         
-        ok_button = Button(text=ok_string, markup = True)
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        # ok_button = Button(text=ok_string, markup = True)
+        # ok_button.background_normal = ''
+        # ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         
-        btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
-        btn_layout.add_widget(ok_button)
+        # btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
+        # btn_layout.add_widget(ok_button)
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[40,20,40,20])
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
-        layout_plan.add_widget(btn_layout)
+        # layout_plan.add_widget(btn_layout)
         
         self.popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
@@ -745,7 +745,7 @@ class PopupWait(Widget):
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 400),
+                      size=(500, 200),
                       auto_dismiss= False
                       )
         
@@ -753,7 +753,7 @@ class PopupWait(Widget):
         self.popup.separator_height = '4dp'
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
-        ok_button.bind(on_press=self.popup.dismiss)    
+        # ok_button.bind(on_press=self.popup.dismiss)
 
         self.popup.open()
 

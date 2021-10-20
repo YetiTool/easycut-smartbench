@@ -42,15 +42,19 @@ class AlarmSequenceManager(object):
 	status_cache = ''
 
 	report_setup_event = None
+
+	db = None
 	
-	def __init__(self, screen_manager, settings_manager, machine, localization):
+	def __init__(self, screen_manager, settings_manager, machine, localization, job):
 
 		self.sm = screen_manager
 		self.set = settings_manager
 		self.m = machine
+		self.jd = job
 		self.l = localization
 		self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
 		self.report_string = self.l.get_str('Loading report...')
+
 		self.set_up_alarm_screens()
 
 	def set_up_alarm_screens(self):
@@ -74,8 +78,14 @@ class AlarmSequenceManager(object):
 			if not self.is_alarm_sequence_already_running():
 				if self.is_error_screen_already_up():
 					self.return_to_screen = self.sm.get_screen('errorScreen').return_to_screen
+
+				elif self.m.s.is_job_streaming and self.m.s.m_state != "Check":
+					self.sm.get_screen('job_incomplete').prep_this_screen('Alarm', message)
+					self.return_to_screen = 'job_incomplete'
+
 				else:
 					self.return_to_screen = self.sm.current
+
 
 				self.alarm_code = message
 				self.alarm_description = ALARM_CODES_DICT.get(message, "")
@@ -117,7 +127,7 @@ class AlarmSequenceManager(object):
 		
 		self.m.resume_from_alarm()
 
-		if self.return_to_screen == 'go':
+		if self.return_to_screen == "job_incomplete":
 			self.sm.get_screen('go').is_job_started_already = False
 			self.sm.get_screen('go').temp_suppress_prompts = True
 		
@@ -135,7 +145,6 @@ class AlarmSequenceManager(object):
 		self.m.set_state('Alarm')
 		self.m.led_restore()
 		Clock.schedule_once(lambda dt: self.update_screens(), 1)
-
 
 	def is_alarm_sequence_already_running(self):
 

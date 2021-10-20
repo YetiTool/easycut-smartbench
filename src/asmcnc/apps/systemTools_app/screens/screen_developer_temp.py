@@ -121,7 +121,8 @@ Builder.load_string("""
                         rows: 4
 
                         Button:
-                            text: ''
+                            text: "Update test"
+                            on_press: root.open_update_testing()
                                     
                         Button:
                             text: ''
@@ -304,3 +305,6 @@ class DeveloperTempScreen(Screen):
 
     def send_gcode_textinput(self): 
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
+
+    def open_update_testing(self):
+        self.systemtools_sm.open_update_testing_screen()

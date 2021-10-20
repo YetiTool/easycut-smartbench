@@ -13,7 +13,7 @@ from asmcnc.calibration_app import screen_landing
 from asmcnc.calibration_app import screen_finished
 from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
-from asmcnc.apps.warranty_app import screen_manager_warranty
+from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 
 # import shape cutter managing object
 
@@ -21,20 +21,25 @@ class AppManagerClass(object):
     
     current_app = ''
     
-    def __init__(self, screen_manager, machine, settings, localization):
+    def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
+        self.jd = job
         self.l = localization
+        self.db = database
+        self.cc = config_check
+        self.v = version
+
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
-        self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
 
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
-        self.sm.add_widget(wifi_screen)
+        # Start start up sequence
+        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
+
 
     # here are all the functions that might be called in the lobby e.g. 
     
@@ -58,6 +63,9 @@ class AppManagerClass(object):
         self.current_app = 'pro'
     
     def start_wifi_app(self):
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
+        self.sm.add_widget(wifi_screen)
+
         self.current_app = 'wifi'
         self.sm.current = 'wifi'
         
@@ -70,7 +78,7 @@ class AppManagerClass(object):
 
     def start_maintenance_app(self, landing_tab):
         if not self.sm.has_screen('maintenance'):
-            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l)
+            maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd)
             self.sm.add_widget(maintenance_screen)
 
         self.sm.get_screen('maintenance').landing_tab = landing_tab
@@ -79,36 +87,4 @@ class AppManagerClass(object):
     def start_systemtools_app(self):
         self.current_app = 'system_tools'
         self.systemtools_sm.open_system_tools()
-
-    def start_warranty_app(self):
-
-        # FOR TESTING
-        # self.current_app = 'warranty'
-        # self.warranty_sm.open_language_select_screen()
-
-        activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
-
-        if os.path.isfile(activation_code_filepath):
-            self.current_app = 'warranty'
-            self.warranty_sm.open_language_select_screen()
-
-        else:
-            self.sm.current = 'safety'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
