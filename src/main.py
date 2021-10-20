@@ -33,7 +33,6 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine  # @UnresolvedImport
-from asmcnc.comms import database_storage # @UnresolvedImport
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
