@@ -68,25 +68,8 @@ class DatabaseEventManager():
                                                                                         pika.credentials.PlainCredentials(
                                                                                             'console',
                                                                                             '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
-                    
-                    
-                    try:
-                        if self.routine_updates_channel is None:
-                            self.routine_updates_channel = self.connection.channel()
-                            self.routine_updates_channel.queue_declare(queue=self.queue)
-
-                        elif self.routine_updates_channel.is_closed:
-                            self.routine_updates_channel.open()
-
-                    except:
-                        try: 
-                            self.routine_updates_channel.close()
-                        except: 
-                            pass
-                        
-                        self.routine_updates_channel = None
-                        self.routine_updates_channel = self.connection.channel()
-                        self.routine_updates_channel.queue_declare(queue=self.queue)
+                    self.routine_updates_channel = self.connection.channel()
+                    self.routine_updates_channel.queue_declare(queue=self.queue)
 
 
                     try: 
@@ -220,7 +203,7 @@ class DatabaseEventManager():
                     "location": self.m.device_location,
                     "hostname": self.set.console_hostname,
                     "ec_version": self.m.sett.sw_version,
-                    "public_ip_address": get("https://api.ipify.org", timeout=2).content.decode("utf8")
+                    "public_ip_address": self.public_ip_address
                 },
                 "time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             }
