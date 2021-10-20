@@ -326,7 +326,6 @@ class JobIncompleteScreen(Screen):
         elif 'Error' in self.event_type:
             self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 5)
 
-        self.db.send_full_payload()
         self.db.send_job_end(self.jd.job_name, False)
 
 

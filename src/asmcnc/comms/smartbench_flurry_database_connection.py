@@ -141,7 +141,7 @@ class DatabaseEventManager():
 						if self.m.s.m_state == "Idle":
 							self.send_alive()
 						else:
-							self.send_full_payload()
+							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
 					except Exception as e:
 						if self.VERBOSE: 
@@ -191,6 +191,11 @@ class DatabaseEventManager():
 						try: 
 							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 							if self.VERBOSE: log(data)
+
+							if "Job End" in self.exception_type:
+								temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+								if self.VERBOSE: log(data)
+
 						
 						except Exception as e:
 							if self.VERBOSE: log(exception_type + " send exception: " + str(e))
@@ -223,12 +228,12 @@ class DatabaseEventManager():
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			}
 
+		self.publish_event_with_routine_updates_channel(data, "Alive")
 
-		self.publish_event_with_routine_updates_channel(data, "Data")
 
+	### FUNCTIONS FOR SENDING FULL PAYLOAD
 
-	# During a job, send full data about machine
-	def send_full_payload(self):
+	def generate_full_payload_data(self):
 
 		z_lube_limit_hrs = self.m.time_to_remind_user_to_lube_z_seconds / 3600
 		z_lube_used_hrs = self.m.time_since_z_head_lubricated_seconds / 3600
@@ -258,8 +263,6 @@ class DatabaseEventManager():
 		# Check if consumables have passed thresholds for sending events
 		self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
 
-		file_name = self.jd.filename.split("\\")[-1]
-
 		data = {
 				"payload_type": "full",
 				"machine_info": {
@@ -281,7 +284,7 @@ class DatabaseEventManager():
 					"calibration_%_left": calibration_percent_left,
 					"calibration_hrs_before_next": calibration_hrs_left,
 
-					"file_name": file_name or '',
+					"file_name": self.jd.job_name or '',
 					"job_time": self.sm.get_screen('go').time_taken_seconds or '',
 					"gcode_line": self.m.s.g_count or 0,
 					"job_percent": self.jd.percent_thru_job or 0.0,
@@ -295,11 +298,8 @@ class DatabaseEventManager():
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			}
 
+		return data
 
-		self.publish_event_with_routine_updates_channel(data, "Data")
-
-
-	### PART OF SENDING FULL PAYLOAD
 
 	def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 
@@ -380,7 +380,7 @@ class DatabaseEventManager():
 			}
 
 
-		self.publish_event_with_temp_channel(data, "Event")
+		self.publish_event_with_temp_channel(data, "Job End Event")
 
 		self.jd.post_job_data_update_post_send()
 
@@ -408,7 +408,7 @@ class DatabaseEventManager():
 
 		data["metadata"] = metadata_in_json_format
 
-		self.publish_event_with_temp_channel(data, "Event")
+		self.publish_event_with_temp_channel(data, "Job Start Event")
 
 
 	### FEEDS AND SPEEDS
