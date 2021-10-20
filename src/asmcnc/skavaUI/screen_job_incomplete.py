@@ -117,7 +117,6 @@ Builder.load_string("""
                                 padding: [4, 2]
                                 size_hint_x: None
                                 width: dp(50)
-                                text: '0'
                                 color: hex('#333333ff')
                                 text_size: self.size
                                 halign: "left"
