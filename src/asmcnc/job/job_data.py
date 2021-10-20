@@ -323,8 +323,8 @@ class JobData(object):
         # Update in job file
         grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
         line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ")"
-        sed_command = 'sudo sed -i "s/' + quote(line_to_replace) + '/' + quote(new_line) + '/" ' + quote(self.filename)
+        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
+        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
         os.system(sed_command)
 
 
