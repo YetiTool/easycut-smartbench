@@ -260,7 +260,7 @@ class DatabaseEventManager():
         # Check if consumables have passed thresholds for sending events
         self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
 
-        file_name = self.jd.filename.split("\\")[-1]
+        file_name = self.jd.filename.split("/")[-1]
 
         data = {
                 "payload_type": "full",
