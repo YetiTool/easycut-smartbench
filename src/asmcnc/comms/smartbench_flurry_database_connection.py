@@ -288,12 +288,8 @@ class DatabaseEventManager():
 					"job_time": self.sm.get_screen('go').time_taken_seconds or '',
 					"gcode_line": self.m.s.g_count or 0,
 					"job_percent": self.jd.percent_thru_job or 0.0,
-					"overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0,
+					"overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
 
-					"max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
-					"max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or '',
-					"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
-					"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
 				},
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			}
@@ -413,7 +409,7 @@ class DatabaseEventManager():
 	### FEEDS AND SPEEDS
 	def send_spindle_speed_info(self):
 		data = {
-			"payload_type": "speed_info",
+			"payload_type": "spindle_speed",
 			"machine_info": {
 				"name": self.m.device_label,
 				"location": self.m.device_location,
@@ -424,6 +420,8 @@ class DatabaseEventManager():
 			"speeds": {
 				"spindle_speed": self.m.spindle_speed(),
 				"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text
+                "max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
+                "max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
 			}
 		}
 
@@ -432,7 +430,7 @@ class DatabaseEventManager():
 
 	def send_feed_rate_info(self):
 		data = {
-			"payload_type": "speed_info",
+			"payload_type": "feed_rate",
 			"machine_info": {
 				"name": self.m.device_label,
 				"location": self.m.device_location,
@@ -443,6 +441,8 @@ class DatabaseEventManager():
 			"feeds": {
 				"feed_rate": self.m.feed_rate(),
 				"feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+                "max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
+                "max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or ''
 			}
 		}
 
