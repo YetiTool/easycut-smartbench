@@ -117,7 +117,6 @@ Builder.load_string("""
                                 padding: [4, 2]
                                 size_hint_x: None
                                 width: dp(50)
-                                text: '0'
                                 color: hex('#333333ff')
                                 text_size: self.size
                                 halign: "left"
@@ -306,7 +305,7 @@ class JobIncompleteScreen(Screen):
  
     def press_ok(self):
         self.set_post_production_notes()
-        self.jd.post_job_data_update_pre_send(False, extra_parts_completed=self.parts_completed_input.text)
+        self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
         self.send_job_status()
         self.quit_to_return_screen()
 
