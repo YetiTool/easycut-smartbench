@@ -123,8 +123,8 @@ def check_ansible_status():
 	ansible_from_easycut = (os.popen('grep "ansible_from_easycut=True" /home/pi/easycut-smartbench/src/config.txt').read())
 	# if this comes out empty, run ansible and reboot
 	if not ansible_from_easycut:
-		os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
-		os.system("sudo systemctl restart ansible.service && sudo reboot")
+		# when the playbook fails, it stops the other commands from running as well
+		os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
 
 	
 ## Easycut config
