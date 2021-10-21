@@ -1,0 +1,10 @@
+.. _top:
+
+Beta Release!
+==============
+
+**Patch for lag when Console has a poor Wi-Fi connection.**
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
