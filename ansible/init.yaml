@@ -19,7 +19,6 @@
       name: "{{ item }}"
       state: present
     with_items: "{{ pkgs }}"
-    ignore_errors: yes
   - name: Define glbal export for current tag
     template:
       src=profile-platform-v-var.sh
