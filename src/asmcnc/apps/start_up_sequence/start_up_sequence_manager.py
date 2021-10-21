@@ -92,7 +92,7 @@ class StartUpSequence(object):
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
 
-		if ('True' in flag) or (not flag): 
+		if ('True' in flag): 
 			self.reboot_in_sequence = True
 			return True
 		else: return False
