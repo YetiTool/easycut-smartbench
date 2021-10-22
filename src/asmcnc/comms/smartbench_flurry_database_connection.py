@@ -1,5 +1,5 @@
 from kivy.clock import Clock
-import json, socket, datetime
+import json, socket, datetime, time
 from requests import get
 import threading
 from time import sleep
@@ -29,6 +29,8 @@ class DatabaseEventManager():
 
 	routine_updates_channel = None
 	routine_update_thread = None
+
+	event_send_timeout = 5*60
 
 	def __init__(self, screen_manager, machine, settings_manager):
 
@@ -183,7 +185,9 @@ class DatabaseEventManager():
 
 			def nested_flurry_event_sender(data, exception_type):
 
-				while self.set.ip_address:
+				timeout = time.time() + self.event_send_timeout
+
+				while time.time() < timeout and self.set.ip_address:
 	
 					try: 
 						temp_event_channel = self.connection.channel()
