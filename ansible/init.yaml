@@ -122,9 +122,3 @@
       state: present
       insertafter: EOF
       line: 'ansible_from_easycut=True'
-  - name: Do quick update test
-    lineinfile:
-      name: /home/pi/easycut-smartbench/src/config.txt
-      state: present
-      insertafter: EOF
-      line: 'yo, update test'

@@ -286,8 +286,7 @@ class BetaTestingScreen(Screen):
 
             os.system("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout " + branch_name_formatted)
             os.system("git pull")
-            self.set.ansible_service_run()
-            # self.systemtools_sm.sm.current = 'rebooting'
+            self.systemtools_sm.sm.current = 'rebooting'
 
     def update_to_latest_beta(self):
         if self.wifi_toggle.state == 'down':
