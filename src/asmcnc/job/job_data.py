@@ -205,7 +205,6 @@ class JobData(object):
             metadata_list = self.metadata_dict.items()
 
             [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
-            summary_list.sort()
             summary_list.insert(0, "[b]SmartTransfer data[/b]")
             summary_list.insert(1, "")
             summary_list.append('')
