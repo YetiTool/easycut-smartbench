@@ -1,7 +1,7 @@
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
-import threading, queue
+import threading, Queue
 from time import sleep
 
 def log(message):
@@ -42,7 +42,7 @@ class DatabaseEventManager():
 		self.jd = self.m.jd
 		self.set = settings_manager
 
-		self.event_queue = queue.Queue()
+		self.event_queue = Queue.Queue()
 
 	def __del__(self):
 
