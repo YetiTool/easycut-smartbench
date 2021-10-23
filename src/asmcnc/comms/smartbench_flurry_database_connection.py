@@ -1,7 +1,7 @@
 from kivy.clock import Clock
-import json, socket, datetime
+import json, socket, datetime, time
 from requests import get
-import threading
+import threading, Queue
 from time import sleep
 
 def log(message):
@@ -30,6 +30,10 @@ class DatabaseEventManager():
 	routine_updates_channel = None
 	routine_update_thread = None
 
+	thread_for_send_event = None
+
+	event_send_timeout = 5*60
+
 	def __init__(self, screen_manager, machine, settings_manager):
 
 		self.queue = 'machine_data'
@@ -37,6 +41,8 @@ class DatabaseEventManager():
 		self.sm = screen_manager
 		self.jd = self.m.jd
 		self.set = settings_manager
+
+		self.event_queue = Queue.Queue()
 
 	def __del__(self):
 
@@ -56,6 +62,8 @@ class DatabaseEventManager():
 			initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
 			initial_connection_thread.daemon = True
 			initial_connection_thread.start()
+
+			self.send_events_to_database()
 
 
 	def set_up_pika_connection(self):
@@ -158,6 +166,26 @@ class DatabaseEventManager():
 		self.routine_update_thread.start()
 
 
+	## QUEUE LOOP THAT SENDS EVENTS TO DATABASE IN ORDER
+	## --------------------------------------------------
+
+	def send_events_to_database(self):
+
+		def do_event_sending_loop():
+
+			while True:
+
+				event_task, args = self.event_queue.get()
+				event_task(*args)
+
+
+		self.thread_for_send_event = threading.Thread(target=do_event_sending_loop) #, args=(data, exception_type))
+		self.thread_for_send_event.daemon = True
+		self.thread_for_send_event.start()
+
+
+
+
 	## PUBLISH EVENT TO DATABASE
 	##------------------------------------------------------------------------
 	def publish_event_with_routine_updates_channel(self, data, exception_type):
@@ -175,41 +203,36 @@ class DatabaseEventManager():
 				self.reinstate_channel_or_connection_if_missing()
 
 
-	def publish_event_with_temp_channel(self, data, exception_type):
+	def publish_event_with_temp_channel(self, data, exception_type, timeout):
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
-		if self.set.ip_address:
+		while time.time() < timeout and self.set.ip_address:
 
-			def nested_flurry_event_sender(data, exception_type):
+			try: 
+				temp_event_channel = self.connection.channel()
+				temp_event_channel.queue_declare(queue=self.queue)
 
-				while self.set.ip_address:
-	
-					try: 
-						temp_event_channel = self.connection.channel()
-						temp_event_channel.queue_declare(queue=self.queue)
+				try: 
+					temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+					if self.VERBOSE: log(data)
 
-						try: 
-							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-							if self.VERBOSE: log(data)
+					if "Job End" in exception_type:
+						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+						if self.VERBOSE: log(data)
 
-							if "Job End" in exception_type:
-								temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
-								if self.VERBOSE: log(data)
+				
+				except Exception as e:
+					if self.VERBOSE: log(exception_type + " send exception: " + str(e))
 
-						
-						except Exception as e:
-							if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+				temp_event_channel.close()
+				break
 
-						temp_event_channel.close()
-						break
+			except: 
+				sleep(10)
 
-					except: 
-						sleep(10)
+		self.event_queue.task_done()
 
-			thread_for_send_event = threading.Thread(target=nested_flurry_event_sender, args=(data, exception_type))
-			thread_for_send_event.daemon = True
-			thread_for_send_event.start()
 
 
 	## ROUTINE EVENTS
@@ -378,8 +401,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-
-			self.publish_event_with_temp_channel(data, "Job End Event")
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End Event", time.time() + self.event_send_timeout]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -410,7 +432,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.publish_event_with_temp_channel(data, "Job Start Event")
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start Event", time.time() + self.event_send_timeout]) )
 
 
 	### FEEDS AND SPEEDS
@@ -435,7 +457,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.publish_event_with_temp_channel(data, "Spindle speed")
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout]) )
 
 
 	def send_feed_rate_info(self):
@@ -459,7 +481,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.publish_event_with_temp_channel(data, "Feed rate")
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -501,9 +523,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-
-			self.publish_event_with_temp_channel(data, "Event")
-
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
 
 	## LOOP TO ROUTINELY CHECK IP ADDRESS
 
