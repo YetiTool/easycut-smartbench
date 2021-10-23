@@ -205,7 +205,13 @@ class JobData(object):
             metadata_list = self.metadata_dict.items()
 
             [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
-            summary_list.sort()
+
+            try: 
+                summary_list.sort(key = lambda i: self.metadata_order[i.split(':')[0]])
+
+            except Exception as e:
+                print(str(e))
+
             summary_list.insert(0, "[b]SmartTransfer data[/b]")
             summary_list.insert(1, "")
             summary_list.append('')
@@ -334,4 +340,33 @@ class JobData(object):
         self.percent_thru_job = 0
 
 
+    metadata_order = {
 
+            "Last Updated Time": 0,
+            "Last Updated By": 1,
+            "Internal Order Code": 2,
+            "Process Step": 3,
+            "Total Parts Required": 4,
+            "Parts Made Per Job": 5,
+            "Stock Material Type": 6,
+            "Job Size X Axis": 7,
+            "Job Size Y Axis": 8,
+            "Job Size Z Axis": 9,
+            "Stock Material Size": 10,
+            "Pre Production Notes": 11,
+            "Primary Operator": 12,
+            "Job Duration": 13,
+            "End Effector": 14,
+            "Tool Diameter And Type": 15,
+            "Toolpath Name": 16,
+            "XY Datum Position": 17,
+            "Z Datum Position": 18,
+            "Maximum Feed Rate": 19,
+            "Maximum Plunge Rate": 20,
+            "Maximum Spindle Speed": 21,
+            "Customer Name": 22,
+            "Customer Part Number": 22,
+            "Customer Part Description": 23,
+            "Customer Order Reference": 24,
+            "Parts Made So Far": 25
+            }
