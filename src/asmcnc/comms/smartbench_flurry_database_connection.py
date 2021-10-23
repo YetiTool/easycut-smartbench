@@ -401,7 +401,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( self.publish_event_with_temp_channel, [data, "Job End Event", time.time() + self.event_send_timeout])
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End Event", time.time() + self.event_send_timeout]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -432,7 +432,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.event_queue.put( self.publish_event_with_temp_channel, [data, "Job Start Event", time.time() + self.event_send_timeout])
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start Event", time.time() + self.event_send_timeout]) )
 
 
 	### FEEDS AND SPEEDS
@@ -457,7 +457,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout])
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout]) )
 
 
 	def send_feed_rate_info(self):
@@ -481,7 +481,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout])
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -523,7 +523,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout])
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
 
 	## LOOP TO ROUTINELY CHECK IP ADDRESS
 
