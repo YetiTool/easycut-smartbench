@@ -1,9 +1,9 @@
 .. _top:
 
-Beta Release!
+Patch for lag!
 ==============
 
-**Patch for lag when Console has a poor Wi-Fi connection.**
+**Patch for lag that happens if Console is connected to an unstable or lagging network.**
 
 **Find full release notes on our website, by scanning the QR code on the right.**
 
