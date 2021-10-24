@@ -79,19 +79,9 @@ from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v1.8.3'
+initial_version = 'v2.0.0-beta'
 
 config_flag = False
-
-# Moving to ansible
-# # Config management
-# def check_and_update_gpu_mem():
-#     # System config (this should eventually be moved into platform management)
-#     # Update GPU memory to handle more app
-#     case = (os.popen('grep -Fx "gpu_mem=128" /boot/config.txt').read())
-#     if case.startswith('gpu_mem=128'):
-#         os.system('sudo sed -i "s/gpu_mem=128/gpu_mem=256/" /boot/config.txt')     
-#         os.system('sudo reboot')
 		
 def check_and_update_config():
 
