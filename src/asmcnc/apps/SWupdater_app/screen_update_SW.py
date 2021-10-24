@@ -23,6 +23,7 @@ Builder.load_string("""
     current_version_label : current_version_label
     sw_version_label : sw_version_label
     find_release_notes_label : find_release_notes_label
+    refresh_button : refresh_button
     latest_software_version_label : latest_software_version_label
 
     update_using_wifi_label : update_using_wifi_label
@@ -124,6 +125,7 @@ Builder.load_string("""
                             width: dp(49)
                             padding: [5,35,15,35]
                             Button:
+                                id: refresh_button
                                 size_hint: (None,None)
                                 height: dp(30)
                                 width: dp(29)
@@ -410,6 +412,8 @@ class SWUpdateScreen(Screen):
 
     def refresh_latest_software_version(self):
 
+        self.refresh_button.disabled = True
+
         self.latest_software_version_label.text = (
             self.l.get_bold('Refreshing') + \
             '...' + '\n\n' + \
@@ -465,8 +469,9 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, refresh_error_message)
 
             self.update_screen_with_latest_version()
+            self.refresh_button.disabled = False
 
-        # Clock.schedule_once(lambda dt: do_refresh(),0.5)
+        Clock.schedule_once(lambda dt: do_refresh(),0.5)
 
 
     def update_screen_with_latest_version(self):
