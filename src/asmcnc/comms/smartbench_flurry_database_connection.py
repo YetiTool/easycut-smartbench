@@ -396,7 +396,9 @@ class DatabaseEventManager():
 						"job_name": self.jd.job_name or '',
 						"successful": successful,
 						"post_production_notes": self.jd.post_production_notes,
-						"batch_number": self.jd.batch_number
+						"batch_number": self.jd.batch_number,
+						"actual_job_duration": self.jd.actual_runtime,
+						"actual_pause_duration": self.jd.pause_duration
 					},
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
