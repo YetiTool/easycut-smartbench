@@ -466,7 +466,7 @@ class SWUpdateScreen(Screen):
 
             self.update_screen_with_latest_version()
 
-        Clock.schedule_once(lambda dt: do_refresh(),0.5)
+        # Clock.schedule_once(lambda dt: do_refresh(),0.5)
 
 
     def update_screen_with_latest_version(self):
