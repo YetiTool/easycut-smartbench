@@ -108,6 +108,7 @@ Builder.load_string("""
                     height: self.texture_size[1]
                     text_size: self.width, None
                     padding: 10, 10
+                    markup: True
                
         BoxLayout:
             size_hint_y: None
