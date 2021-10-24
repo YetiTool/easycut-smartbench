@@ -1,0 +1,22 @@
+.. _top:
+
+SmartManager Console update - beta version.
+===========================================
+
+Hi! Thanks for trying out SmartManager. We’re really excited about this release, and how it can optimize the Yeti Tool workflow. 
+
+This is a beta release, so you may come across sneaky bugs. If you find one, tell us immediately.
+
+It’s really important that we get feedback from you *as soon as possible* so that we can provide the best experience possible for our customers next week. 
+
+If everything goes well, it’s important that we know that too! 
+
+We look forward to hearing from you soon.
+
+All the best,
+
+The Yeti Tool Team. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
