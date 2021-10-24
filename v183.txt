@@ -1,0 +1,16 @@
+.. _top:
+
+Patches
+========
+
+**Patch for the lag that happens if Console is connected to an unstable or lagging network.**
+
+Some users were experiencing lag on their Consoles after the updating to v1.8.0. 
+
+This was caused by changes to the way that the Console checked its internet connection. If the Console was connected to a slower or more unstable connection, its background check would take longer, and briefly lock up the user interface. 
+
+This has now been patched. 
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
