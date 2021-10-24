@@ -23,6 +23,7 @@ Builder.load_string("""
     post_production_notes_container : post_production_notes_container
     batch_number_container : batch_number_container
     batch_number_label : batch_number_label
+    batch_number_input : batch_number_input
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
     job_cancelled_label : job_cancelled_label
@@ -162,7 +163,6 @@ Builder.load_string("""
                             TextInput:
                                 id: batch_number_input
                                 padding: [4, 2]
-                                text: ""
                                 color: hex('#333333ff')
                                 # foreground_color: hex('#333333ff')
                                 text_size: self.size
@@ -174,7 +174,6 @@ Builder.load_string("""
                                 font_size: dp(20)
                                 multiline: False
                                 background_color: hex('#e5e5e5ff')
-                                text: '0'
 
 
                         Label:
@@ -314,6 +313,7 @@ class JobIncompleteScreen(Screen):
 
     def set_post_production_notes(self):
         self.jd.post_production_notes = self.post_production_notes.text
+        self.jd.batch_code = self.batch_number_input.text
 
     def send_job_status(self):
         if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
@@ -375,6 +375,7 @@ class JobIncompleteScreen(Screen):
 
         self.batch_number_label.text = self.l.get_str("Batch Number: ")
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
+        self.batch_number_input.text = self.jd.batch_number
 
         self.post_production_notes.text = self.jd.post_production_notes
         self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")

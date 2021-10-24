@@ -69,6 +69,7 @@ class JobData(object):
     
     # Production notes
     post_production_notes = ''
+    batch_code = ''
 
     # Metadata formatting
     gcode_summary_string = ''

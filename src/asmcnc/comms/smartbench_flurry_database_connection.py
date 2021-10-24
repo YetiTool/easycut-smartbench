@@ -396,7 +396,8 @@ class DatabaseEventManager():
 					"job_data": {
 						"job_name": self.jd.job_name or '',
 						"successful": successful,
-						"PostProductionNotes": self.jd.post_production_notes
+						"post_production_notes": self.jd.post_production_notes,
+						"batch_number": self.jd.batch_number
 					},
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
