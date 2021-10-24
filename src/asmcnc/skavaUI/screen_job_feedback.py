@@ -280,13 +280,15 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        if len(self.jd.metadata_dict.get('Internal Order Code', '')) > 23:
-            internal_order_code =  self.jd.metadata_dict.get('Internal Order Code', '')[:23] + "..."
-        else:
-            internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
+        internal_order_code = self.jd.metadata_dict.get('Internal Order Code', '')
+
+        if len(internal_order_code) > 23:
+            internal_order_code =  internal_order_code[:23] + "... | "
+        elif len(internal_order_code) > 0:
+            internal_order_code = internal_order_code + " | "
 
         self.metadata_label.text = (
-            internal_order_code + " | " + self.jd.metadata_dict.get('Process Step', '') + \
+            internal_order_code + self.jd.metadata_dict.get('Process Step', '') + \
             "\n" + \
             self.l.get_str("Job duration:") + " " + self.l.get_localized_days(self.jd.actual_runtime) + \
             "\n" + \
