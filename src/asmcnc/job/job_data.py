@@ -300,19 +300,23 @@ class JobData(object):
 
         if "Parts Made So Far" in self.metadata_dict:
 
-            prev_parts_completed_so_far = int(self.metadata_dict["Parts Made So Far"])
+            try:
+                prev_parts_completed_so_far = int(self.metadata_dict["Parts Made So Far"])
 
-            if successful:
-                self.metadata_dict["Parts Made So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Made Per Job', 1)))
+                if successful:
+                    self.metadata_dict["Parts Made So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Made Per Job', 1)))
 
-                # # Update parts completed in job file
-                self.update_metadata_in_original_file("Parts Made So Far")
+                    # # Update parts completed in job file
+                    self.update_metadata_in_original_file("Parts Made So Far")
 
-            elif extra_parts_completed > prev_parts_completed_so_far:
-                self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
+                elif extra_parts_completed > prev_parts_completed_so_far:
+                    self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
 
-                # # Update parts completed in job file
-                self.update_metadata_in_original_file("Parts Made So Far")
+                    # # Update parts completed in job file
+                    self.update_metadata_in_original_file("Parts Made So Far")
+
+            except:
+                print("Parts Made So Far couldn't be updated.")
 
 
     def update_update_info_in_metadata(self):

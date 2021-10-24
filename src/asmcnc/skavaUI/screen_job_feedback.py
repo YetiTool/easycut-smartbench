@@ -98,7 +98,6 @@ Builder.load_string("""
 
                             Label: 
                                 id: parts_completed_label
-                                text: "Parts completed: "
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
@@ -281,8 +280,6 @@ class JobFeedbackScreen(Screen):
 
         self.job_completed_label.text = self.l.get_str("Job completed").replace(self.l.get_str("Job"), self.jd.job_name) + "!"
 
-        parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.get('Parts Made Per Job', 1))
-
         if len(self.jd.metadata_dict.get('Internal Order Code', '')) > 23:
             internal_order_code =  self.jd.metadata_dict.get('Internal Order Code', '')[:23] + "..."
         else:
@@ -296,9 +293,6 @@ class JobFeedbackScreen(Screen):
             self.l.get_str("Pause duration:") + " " + self.l.get_localized_days(self.jd.pause_duration)
             )
 
-        self.parts_completed_label.text = (
-            self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
-            )
 
         self.batch_number_label.text = self.l.get_str("Batch Number: ")
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
@@ -308,4 +302,14 @@ class JobFeedbackScreen(Screen):
         self.post_production_notes_label.text = self.l.get_str("Post Production Notes:")
 
         self.success_question.text = self.l.get_str("Did this complete successfully?")
+
+        try:
+            parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.get('Parts Made Per Job', 1))
+
+            self.parts_completed_label.text = (
+                self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(int(self.jd.metadata_dict.get('Total Parts Required', 1)))
+                )
+
+        except: 
+            self.parts_completed_label.text = self.l.get_str("Parts completed:") + " 1/1"
 
