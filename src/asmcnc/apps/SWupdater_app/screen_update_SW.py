@@ -365,6 +365,9 @@ class SWUpdateScreen(Screen):
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
 
     default_font_size = 30
+
+    poll_USB = None
+    poll_wifi = None
     
     def __init__(self, **kwargs):
         super(SWUpdateScreen, self).__init__(**kwargs)
@@ -395,8 +398,8 @@ class SWUpdateScreen(Screen):
 
 
     def on_leave(self):
-        Clock.unschedule(self.poll_USB)
-        Clock.unschedule(self.poll_wifi)
+        if self.poll_USB: Clock.unschedule(self.poll_USB)
+        if self.poll_wifi: Clock.unschedule(self.poll_wifi)
         self.usb_stick.disable()
         self.sm.remove_widget(self.sm.get_screen('update'))
 
