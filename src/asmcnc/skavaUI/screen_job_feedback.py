@@ -307,7 +307,7 @@ class JobFeedbackScreen(Screen):
             parts_completed_if_job_successful = int(self.jd.metadata_dict.get('Parts Made So Far', 0)) + int(self.jd.metadata_dict.get('Parts Made Per Job', 1))
 
             self.parts_completed_label.text = (
-                self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(self.jd.metadata_dict.get('Total Parts Required', 1))
+                self.l.get_str("Parts completed:") + " " + str(parts_completed_if_job_successful) + "/" + str(int(self.jd.metadata_dict.get('Total Parts Required', 1)))
                 )
 
         except: 
