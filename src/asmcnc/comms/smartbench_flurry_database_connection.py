@@ -23,7 +23,7 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = True
+	VERBOSE = False
 
 	public_ip_address = ''
 
@@ -103,7 +103,7 @@ class DatabaseEventManager():
 		try:
 			if self.connection.is_closed:
 
-				if self.VERBOSE: log("Connection is closed, set up new connection")
+				log("Connection is closed, set up new connection")
 				self.set_up_pika_connection()
 
 			elif self.routine_updates_channel.is_closed:
@@ -114,12 +114,12 @@ class DatabaseEventManager():
 			else: 
 
 				try:
-					if self.VERBOSE: log("Close connection and start again") 
+					log("Close connection and start again") 
 					self.connection.close()
 					self.set_up_pika_connection()
 
 				except:
-					if self.VERBOSE: log("sleep and try reinstating connection again in a minute") 
+					log("sleep and try reinstating connection again in a minute") 
 					sleep(10)
 					self.reinstate_channel_or_connection_if_missing()
 
@@ -154,9 +154,8 @@ class DatabaseEventManager():
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
 					except Exception as e:
-						if self.VERBOSE: 
-							log("Could not send routine update:")
-							log(str(e))
+						log("Could not send routine update:")
+						log(str(e))
 
 
 				sleep(10)
@@ -199,13 +198,13 @@ class DatabaseEventManager():
 				if self.VERBOSE: log(data)
 			
 			except Exception as e:
-				if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+				log(exception_type + " send exception: " + str(e))
 				self.reinstate_channel_or_connection_if_missing()
 
 
 	def publish_event_with_temp_channel(self, data, exception_type, timeout):
 
-		if self.VERBOSE: log("Publishing data: " + exception_type)
+		log("Publishing data: " + exception_type)
 
 		while time.time() < timeout and self.set.ip_address:
 
@@ -223,7 +222,7 @@ class DatabaseEventManager():
 
 				
 				except Exception as e:
-					if self.VERBOSE: log(exception_type + " send exception: " + str(e))
+					log(exception_type + " send exception: " + str(e))
 
 				temp_event_channel.close()
 				break
