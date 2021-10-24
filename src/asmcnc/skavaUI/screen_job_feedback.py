@@ -311,5 +311,5 @@ class JobFeedbackScreen(Screen):
                 )
 
         except: 
-            self.l.get_str("Parts completed:") + " 1/1"
+            self.parts_completed_label.text = self.l.get_str("Parts completed:") + " 1/1"
 
