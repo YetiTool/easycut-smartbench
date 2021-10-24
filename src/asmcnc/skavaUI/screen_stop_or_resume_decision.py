@@ -127,8 +127,9 @@ class StopOrResumeDecisionScreen(Screen):
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
         self.l=kwargs['localization']
- 
     
     def popup_help(self):
 
@@ -173,16 +174,24 @@ class StopOrResumeDecisionScreen(Screen):
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
 
+        # Job cancelled by user, send event
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
+
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
-        if self.return_screen == 'go':
+        if self.jd.screen_to_return_to_after_job == 'go':
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
-        self.sm.current = self.return_screen
+        
+        self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+        self.sm.current = 'job_incomplete'
 
-    
     def resume_job(self):
 
         self.m.resume_after_a_stream_pause()
+
+        # Job resumed, send event
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         self.sm.current = self.return_screen

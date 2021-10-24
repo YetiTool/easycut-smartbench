@@ -8,13 +8,6 @@ import traceback
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 
-# THINGS THIS MODULE NEEDS:
-## timeout
-## protection against garbage colleciton (timeout might be enough)
-## better logging
-## reinstate connection if it is dropped / connection polling
-### maybe have this if there is a change in the IP address...
-
 def log(message):
 	timestamp = datetime.now()
 	print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' Server connection: ' + str(message))

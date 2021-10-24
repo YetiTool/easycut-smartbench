@@ -120,8 +120,8 @@ Builder.load_string("""
 				padding: [0,0,0,52]
 				Button:
 					id: next_button
-					background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-					background_down: "./asmcnc/apps/warranty_app/img/next.png"
+					background_normal: "./asmcnc/skavaUI/img/next.png"
+					background_down: "./asmcnc/skavaUI/img/next.png"
 					border: [dp(14.5)]*4
 					size_hint: (None,None)
 					width: dp(291)

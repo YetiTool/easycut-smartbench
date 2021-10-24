@@ -114,7 +114,8 @@ class SpeedOverride(Widget):
     def __init__(self, **kwargs):
         super(SpeedOverride, self).__init__(**kwargs)
         self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']     
+        self.sm=kwargs['screen_manager']
+        self.db=kwargs['database']   
 
     def update_spindle_speed_label(self):
         self.spindle_rpm.text = str(self.m.spindle_speed())
@@ -130,12 +131,14 @@ class SpeedOverride(Widget):
                 Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.15) 
                 Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.2)
                 Clock.schedule_once(lambda dt: self.m.speed_override_up_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
         
     def speed_norm(self):
         self.speed_override_percentage = 100
         self.speed_rate_label.text = str(self.speed_override_percentage) + "%"
         self.m.speed_override_reset()
+        Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
                 
     def speed_down(self):
         self.push =+ 1 
@@ -148,6 +151,7 @@ class SpeedOverride(Widget):
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.15) 
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.2)
                 Clock.schedule_once(lambda dt: self.m.speed_override_down_1(final_percentage=self.speed_override_percentage), 0.25)
+                Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
                 Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def disable_buttons(self):

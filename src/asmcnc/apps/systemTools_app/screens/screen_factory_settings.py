@@ -397,6 +397,8 @@ class FactorySettingsScreen(Screen):
     smartbench_model_path = '/home/pi/smartbench_model_name.txt'
     machine_serial_number_filepath  = "/home/pi/smartbench_serial_number.txt"
 
+    dev_mode = False
+
     def __init__(self, **kwargs):
         super(FactorySettingsScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -545,49 +547,60 @@ class FactorySettingsScreen(Screen):
 
     def factory_reset(self):
 
-        if self.smartbench_model.text == 'Choose model':
-            warning_message = 'Please ensure machine model is set before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+        def nested_factory_reset():
+            if self.write_activation_code_to_file() and self.write_serial_number_to_file():
+                lifetime = float(120*3600)
+                self.m.write_spindle_brush_values(0, lifetime)
+                self.m.write_z_head_maintenance_settings(0)
+                self.m.write_calibration_settings(0, float(320*3600))
+                self.m.reminders_enabled = True
+                self.m.trigger_setup = True
+                self.m.write_set_up_options(True)
+                self.set_user_to_view_privacy_notice()
+                self.welcome_user_to_smartbench()
+                self.set_check_config_flag()
+                return True
+            else:
+                return False
 
-        elif not self.check_serial_number_for_factory_reset():
-            warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+        if self.dev_mode:
+            if nested_factory_reset():
 
-        elif self.software_version_label.text != self.latest_software_version.text:
-            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-
-        elif self.platform_version_label.text != self.latest_platform_version.text:
-            warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                print("doing factory reset...")
+                Clock.schedule_once(self.shutdown_console, 5)
 
         else:
 
-            def nested_factory_reset():
-                if self.write_activation_code_to_file() and self.write_serial_number_to_file():
-                    lifetime = float(120*3600)
-                    self.m.write_spindle_brush_values(0, lifetime)
-                    self.m.write_z_head_maintenance_settings(0)
-                    self.m.write_calibration_settings(0, float(320*3600))
-                    self.m.reminders_enabled = True
-                    self.m.trigger_setup = True
-                    self.m.write_set_up_options(True)
-                    return True
-                else:
-                    return False
-
-            if nested_factory_reset():
-                reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
-                "Maintenance reminders set and enabled.\n\n" + \
-                "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n" + \
-                "Not doing this may corrupt the warranty registration start up sequence."
-                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
-
-                Clock.schedule_once(self.shutdown_console, 5)
-
-            else: 
-                warning_message = 'There was an issue doing the factory reset! Get Letty for help.'
+            if self.smartbench_model.text == 'Choose model':
+                warning_message = 'Please ensure machine model is set before doing a factory reset.'
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+            elif not self.check_serial_number_for_factory_reset():
+                warning_message = 'Please ensure machine has a serial number before doing a factory reset.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+            elif self.software_version_label.text != self.latest_software_version.text:
+                warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+            elif self.platform_version_label.text != self.latest_platform_version.text:
+                warning_message = 'Please ensure machine is fully updated before doing a factory reset.'
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+
+            else:
+
+                if nested_factory_reset():
+                    reset_warning = "FACTORY RESET TRIGGERED\n\n" + \
+                    "Maintenance reminders set and enabled.\n\n" + \
+                    "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n" + \
+                    "Not doing this may corrupt the warranty registration start up sequence."
+                    popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
+
+                    Clock.schedule_once(self.shutdown_console, 5)
+
+                else: 
+                    warning_message = 'There was an issue doing the factory reset! Get Letty for help.'
+                    popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
 
 
@@ -720,5 +733,24 @@ class FactorySettingsScreen(Screen):
     def final_test(self):
         self.systemtools_sm.open_final_test_screen()
 
+    def set_user_to_view_privacy_notice(self):
+        user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if not user_has_seen_privacy_notice:
+            os.system("sudo sed -i -e '$auser_has_seen_privacy_notice=False' /home/pi/easycut-smartbench/src/config.txt")
 
+        elif 'True' in user_has_seen_privacy_notice:
+            os.system('sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt') 
+
+    def welcome_user_to_smartbench(self):
+        show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
+        
+        if not show_user_welcome_app:
+            os.system("sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt")
+
+        elif 'False' in show_user_welcome_app:
+            os.system('sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt')
+
+    def set_check_config_flag(self):
+        os.system('sudo sed -i "s/check_config=False/check_config=True/" config.txt')
             

@@ -225,6 +225,8 @@ class DoorScreen(Screen):
         super(DoorScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
+        self.jd = kwargs['job']
+        self.db = kwargs['database']
         self.l=kwargs['localization']
 
         self.header_label.text = self.l.get_bold('Interrupt bar pushed!')
@@ -238,6 +240,9 @@ class DoorScreen(Screen):
         self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
 
     def on_pre_enter(self):
+        # Interrupt bar has been pushed, send event
+        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
+
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
         self.resume_button.opacity = 0
@@ -259,7 +264,7 @@ class DoorScreen(Screen):
     def on_pre_leave(self):
         if self.poll_for_resume != None: Clock.unschedule(self.poll_for_resume)
         self.anim_stop_bar.repeat = False
-        self.anim_stop_img.repeat = False 
+        self.anim_stop_img.repeat = False
 
     def on_leave(self):
         self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
@@ -288,7 +293,7 @@ class DoorScreen(Screen):
             self.start_x_beam_animation(1.5)
 
 
-    def ready_to_resume(self, dt): 
+    def ready_to_resume(self, dt):
         self.resume_button.opacity = 1
         self.cancel_button.opacity = 1
         self.resume_button.disabled = False
@@ -299,11 +304,17 @@ class DoorScreen(Screen):
         self.spindle_raise_label.opacity = 1
 
     def resume_stream(self):
-        self.m.resume_after_a_hard_door()    
+        # Job resumed, send event
+        self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
+
+        self.m.resume_after_a_hard_door()
         self.return_to_app()
 
-               
+
     def cancel_stream(self):
+        # Job cancelled by user, send event
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
+
         if self.return_to_screen == 'go':
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True

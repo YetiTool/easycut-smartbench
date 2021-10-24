@@ -186,8 +186,8 @@ Builder.load_string("""
                     id: confirm_button
                     size_hint: (None,None)
                     on_press: root.continue_to_go_screen()
-                    background_normal: "./asmcnc/apps/warranty_app/img/next.png"
-                    background_down: "./asmcnc/apps/warranty_app/img/next.png"
+                    background_normal: "./asmcnc/skavaUI/img/next.png"
+                    background_down: "./asmcnc/skavaUI/img/next.png"
                     border: [dp(14.5)]*4
                     width: dp(291)
                     height: dp(79)
