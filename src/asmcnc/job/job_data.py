@@ -69,7 +69,7 @@ class JobData(object):
     
     # Production notes
     post_production_notes = ''
-    batch_code = ''
+    batch_number = ''
 
     # Metadata formatting
     gcode_summary_string = ''
@@ -117,6 +117,7 @@ class JobData(object):
         self.actual_runtime = ''
         self.total_time = ''
 
+        self.batch_number = ''
         self.post_production_notes = ''
 
         self.gcode_summary_string = ''
@@ -342,6 +343,7 @@ class JobData(object):
     def post_job_data_update_post_send(self):
 
         self.post_production_notes = ''
+        self.batch_number = ''
         self.percent_thru_job = 0
 
 

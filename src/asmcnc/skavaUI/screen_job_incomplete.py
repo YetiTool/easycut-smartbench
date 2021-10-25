@@ -313,7 +313,7 @@ class JobIncompleteScreen(Screen):
 
     def set_post_production_notes(self):
         self.jd.post_production_notes = self.post_production_notes.text
-        self.jd.batch_code = self.batch_number_input.text
+        self.jd.batch_number = self.batch_number_input.text
 
     def send_job_status(self):
         if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
