@@ -752,6 +752,9 @@ class BuildInfoScreen(Screen):
         # Remove trailing and leading whitespaces
         self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
 
+        if self.smartbench_location_formatted == 'SmartBench location':
+            self.smartbench_location_formatted = self.l.get_str('SmartBench location')
+
         self.smartbench_location.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 

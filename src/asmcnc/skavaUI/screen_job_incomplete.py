@@ -60,7 +60,6 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(60)
                     width: dp(800)
-                    text: "Job.nc incomplete!"
                     color: hex('#f9f9f9ff')
                     font_size: dp(30)
                     halign: "center"
@@ -131,7 +130,6 @@ Builder.load_string("""
                             Label: 
                                 id: out_of_total_parts_label
                                 size_hint_x: None
-                                text: ""
                                 color: hex('#333333ff') #grey
                                 font_size: dp(20)
                                 markup: True
@@ -208,7 +206,6 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(30)
                     width: dp(800)
-                    text: "Job cancelled due to an event."
                     # color: hex('#f9f9f9ff')
                     color: hex('#333333ff') #grey
                     font_size: dp(30)
@@ -358,7 +355,7 @@ class JobIncompleteScreen(Screen):
             )
 
 
-        self.parts_completed_label.text = self.l.get_str("Parts completed: ")
+        self.parts_completed_label.text = self.l.get_str("Parts completed:") + " "
         self.parts_completed_label.width = dp(len(self.parts_completed_label.text)*10.5)
 
         try:
@@ -373,7 +370,7 @@ class JobIncompleteScreen(Screen):
         except:
             self.out_of_total_parts_label.text = " / " + str(1)
 
-        self.batch_number_label.text = self.l.get_str("Batch Number: ")
+        self.batch_number_label.text = self.l.get_str("Batch Number:") + " "
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
         self.batch_number_input.text = self.jd.batch_number
 
