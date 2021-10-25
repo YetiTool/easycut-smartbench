@@ -208,6 +208,7 @@ class ScrollPrivacyNotice(ScrollView):
 class WiFiAndDataConsentScreen3(Screen):
 
 	checkbox_checked = False
+	privacy_notice_path = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice/"
 
 	def __init__(self, **kwargs):
 		super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
@@ -217,7 +218,7 @@ class WiFiAndDataConsentScreen3(Screen):
 		self.update_strings()
 		self.set_checkbox_default()
 
-		self.scroll_privacy_notice.privacy_notice.source = "./asmcnc/apps/start_up_sequence/data_consent_app/privacy_notice.txt"
+		self.scroll_privacy_notice.privacy_notice.source = self.privacy_notice_path + self.l.lang + '.rst'
 
 	def on_pre_leave(self):
 		self.set_checkbox_default()
