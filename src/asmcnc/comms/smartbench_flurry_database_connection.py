@@ -296,7 +296,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.public_ip_address
 				},
 				"statuses": {
-					"status": "Run",
+					"status": self.m.state(),
 
 					"z_lube_%_left": z_lube_percent_left,
 					"z_lube_hrs_before_next": z_lube_hrs_left,
