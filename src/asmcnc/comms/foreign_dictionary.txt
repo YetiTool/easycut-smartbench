@@ -677,3 +677,4 @@ Check info and warnings	Info und Warnungen prüfen	Vérifier les informations et
 Checked:	Geprüft:	Vérifié :	Controllato:	Tarkistettu:	Gecontroleerd:	Sprawdzono:	Kontrolleret:
 Check warning:	Warnung prüfen:	Vérifier l'avertissement :	Controllare le avvertenze:	Tarkista varoitus:	Controleer waarschuwing:	Sprawdź ostrzeżenie:	Kontroller advarsel:
 Comments	Kommentare	Commentaires 	Commenti	Kommentit	Opmerkingen	Uwagi	Kommentarer
+Loading Data and Wi-Fi	Laden von Daten und Wi-Fi	Chargement des données et Wi-Fi	Caricamento dei dati e Wi-Fi	Tietojen lataaminen ja Wi-Fi	Gegevens laden en Wi-Fi	Ładowanie danych i sieci Wi-Fi	Indlæsning af data og Wi-Fi
