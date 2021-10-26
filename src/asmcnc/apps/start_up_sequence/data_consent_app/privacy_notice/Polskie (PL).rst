@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+=============================================================
 Informacja o ochronie prywatności i zasady gromadzenia danych
-==========================================
+=============================================================
 
 
 To jest informacja o prywatności Yeti Tool Ltd. W tym dokumencie, "my", "nasz" lub "nas" odnoszą się do Yeti Tool Ltd.
@@ -11,7 +11,7 @@ Nasza siedziba mieści się w Unit 12 Old Mill Road, Portishead, Bristol BS20 7B
 
 
 Wstęp
-------------
+-----
 
 Niniejsza informacja o prywatności ma na celu poinformowanie Państwa o tym, w jaki sposób zbieramy i przetwarzamy wszelkie informacje, które otrzymujemy od Państwa lub które Państwo nam przekazują. Obejmuje ona informacje, które mogą zidentyfikować użytkownika ("dane osobowe") oraz informacje, które nie mogą. W kontekście prawa i niniejszej informacji, "przetwarzanie" oznacza zbieranie, przechowywanie, przekazywanie, wykorzystywanie lub inne działania na informacjach. Informuje o prawach do prywatności i o tym, jak chroni Cię prawo.
 
@@ -27,7 +27,7 @@ Z wyjątkiem sytuacji opisanych poniżej, nie udostępniamy, nie sprzedajemy ani
 
 
 1. Inspektor ochrony danych
-++++++++++++++++++++++++++
++++++++++++++++++++++++++++
 
 Wyznaczyliśmy inspektora ochrony danych (DPO), który jest odpowiedzialny za zapewnienie, że nasza polityka jest przestrzegana.
 
@@ -35,7 +35,7 @@ Jeśli mają Państwo jakiekolwiek pytania dotyczące niniejszej informacji o oc
 
 
 2. Dane, które przetwarzamy
-++++++++++++++++++
++++++++++++++++++++++++++++
 
 Możemy zbierać, używać, przechowywać i przesyłać różnego rodzaju anonimowe dane dotyczące pracy SmartBench. 
 
@@ -46,28 +46,28 @@ W dowolnym celu możemy gromadzić dane anonimowe, takie jak dane statystyczne l
 Jeśli jednak połączymy lub połączymy dane zbiorcze z danymi osobowymi użytkownika w taki sposób, że będą one mogły w jakikolwiek sposób zidentyfikować użytkownika, wówczas takie dane zbiorcze będziemy traktować jako dane osobowe i będą one wykorzystywane zgodnie z niniejszą informacją o ochronie prywatności.
 
 Adres IP
-~~~~~~~~~~
+~~~~~~~~
 
 Jest to Twój publiczny adres IP lub adres IP sieci WAN. Będzie on traktowany jako informacja osobista. 
 
 Dane dotyczące krytycznych zdarzeń w miejscu pracy
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Są to dane maszynowe odnoszące się do zdarzeń SmartBench krytycznych dla zadania, w tym alarmów GRBL, błędów GRBL, przeciążenia wrzeciona, utraty zasilania i innych zdarzeń, które mogą spowodować niepowodzenie zadania. 
 
 Dane dotyczące konserwacji
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Są to dane, które mogą odnosić się do harmonogramów konserwacji i działania SmartBench. Dane te mogą obejmować czas pracy i gotowości, statystyki konserwacji (np. jak często wymieniane są szczotki), posuwów i prędkości oraz inne anonimowe dane użytkowe. 
 
 Nazwa hosta konsoli
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Jest to unikalny identyfikator konsoli, który jest używany do łączenia SmartBench z usługami Yeti Tool, w tym SmartManager. Nazwa hosta konsoli nie jest zapisywana wraz z innymi danymi umożliwiającymi identyfikację, takimi jak numery seryjne lub informacje kontaktowe klienta, ani nie jest z nimi łączona.
 
 
 Podstawy, na których przetwarzamy informacje o Tobie
----------------------------------------------------
+----------------------------------------------------
 
 Prawo wymaga od nas określenia, na podstawie której z sześciu zdefiniowanych podstaw przetwarzamy różne kategorie Państwa danych osobowych oraz poinformowania Państwa o podstawie dla każdej kategorii.
 
@@ -77,7 +77,7 @@ Jeżeli podstawa ta ulegnie zmianie, wówczas, jeżeli jest to wymagane przez pr
 
 
 3. Informacje, które przetwarzamy, ponieważ mamy wobec Ciebie zobowiązania umowne
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Kiedy akceptujesz warunki oprogramowania konsoli lub w inny sposób zgadzasz się z naszymi warunkami, powstaje umowa między Tobą a nami.
 
@@ -94,7 +94,7 @@ Będziemy przetwarzać te informacje do czasu zakończenia umowy między nami lu
 
 
 4. Informacje, które przetwarzamy za Twoją zgodą
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 Jeśli użytkownik udzielił nam wyraźnej zgody na takie działanie, akceptując warunki aktualizacji oprogramowania, możemy od czasu do czasu przekazywać jego nazwisko i dane kontaktowe wybranym współpracownikom, którzy naszym zdaniem mogą świadczyć usługi.
 
@@ -104,7 +104,7 @@ Możesz wycofać swoją zgodę w dowolnym momencie, instruując nas na sales@yet
 
 
 5. Informacje, które przetwarzamy dla celów wynikających z prawnie uzasadnionych interesów
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Możemy przetwarzać informacje w oparciu o uzasadniony interes, zarówno dla Państwa, jak i dla nas.
 
@@ -125,10 +125,10 @@ Na przykład, możemy przetwarzać Państwa dane na tej podstawie dla celów:
 
 
 Określone sposoby wykorzystania informacji, które nam Państwo przekazują
-----------------------------------------------
+------------------------------------------------------------------------
 
 6. Komunikowanie się z nami
-++++++++++++++++++++++++
++++++++++++++++++++++++++++
 
 Kiedy kontaktują się Państwo z nami, czy to telefonicznie, poprzez naszą stronę internetową, czy też pocztą elektroniczną, gromadzimy podane przez Państwa dane, aby móc odpowiedzieć na Państwa zapytanie.
 
@@ -138,7 +138,7 @@ Przechowujemy dane osobowe związane z Twoją wiadomością, takie jak imię i n
 
 
 7. Skargi
-++++++++++++++
++++++++++
 
 Kiedy otrzymujemy skargę, zapisujemy wszystkie informacje, które nam przekazałeś.
 
@@ -150,10 +150,10 @@ Możemy również opracować statystyki przedstawiające informacje uzyskane z t
 
 
 Inne sprawy
--------------
+-----------
 
 8. Jak można złożyć skargę
-+++++++++++++++++++++++
+++++++++++++++++++++++++++
 
 Jeśli nie jesteś zadowolony z naszej polityki prywatności lub jeśli masz jakiekolwiek skargi, powinieneś nas o tym poinformować.
 
@@ -163,14 +163,14 @@ Jeśli są Państwo w jakikolwiek sposób niezadowoleni z tego, w jaki sposób p
 
 
 9. Zgodność z prawem
-+++++++++++++++++++++++++++
+++++++++++++++++++++
 
 Nasza polityka prywatności została opracowana w taki sposób, aby była zgodna z prawem każdego kraju lub jurysdykcji prawnej, w której zamierzamy prowadzić działalność. Jeśli uważasz, że nie spełnia ona wymogów prawa Twojej jurysdykcji, chcielibyśmy usłyszeć od Ciebie.
 
 Ostatecznie to Ty decydujesz, czy chcesz zaakceptować tę politykę prywatności i czy włączysz konsolę SmartBench do wysyłania danych przez Wi-Fi. Kiedy konsola Wi-Fi jest włączona, oznacza to, że zgadzasz się na warunki korzystania z danych, jak opisano w tej informacji o prywatności.
 
 10. Przegląd niniejszej polityki prywatności
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++
 
 Możemy od czasu do czasu aktualizować niniejszą informację o prywatności, jeśli zajdzie taka potrzeba. Warunki, które mają zastosowanie do Ciebie to te zapisane na Konsoli SmartBench w dniu, w którym korzystasz z Konsoli SmartBench.
 

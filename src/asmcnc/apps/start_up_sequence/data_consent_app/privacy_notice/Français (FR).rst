@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+============================================================
 Avis de confidentialité et politique de collecte des données
-==========================================
+============================================================
 
 
 Ceci est l'avis de confidentialité de Yeti Tool Ltd. Dans ce document, les termes "nous", "notre" ou "nos" font référence à Yeti Tool Ltd.
@@ -27,7 +27,7 @@ La loi nous oblige à vous informer de vos droits et de nos obligations envers v
 
 
 1. Délégué à la protection des données
-++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++
 
 Nous avons nommé un délégué à la protection des données (DPD) qui est chargé de veiller au respect de notre politique.
 
@@ -35,7 +35,7 @@ Si vous avez des questions concernant cet avis de confidentialité, y compris to
 
 
 2. Données que nous traitons
-++++++++++++++++++
+++++++++++++++++++++++++++++
 
 Nous pouvons collecter, utiliser, stocker et transférer différents types de données anonymes concernant le fonctionnement de votre SmartBench. 
 
@@ -51,23 +51,23 @@ Adresse IP
 Il s'agit de votre adresse IP publique ou WAN. Elle sera traitée comme une information personnelle. 
 
 Données sur les événements critiques du travail
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Il s'agit de données machine relatives aux événements SmartBench critiques pour le travail, notamment les alarmes GRBL, les erreurs GRBL, la surcharge de la broche, la perte de puissance et tout autre événement susceptible de provoquer l'échec du travail. 
 
 Données de maintenance
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Il s'agit de données qui peuvent concerner les programmes de maintenance et le fonctionnement du SmartBench. Ces données peuvent inclure le temps d'exécution et le temps de fonctionnement, les statistiques de maintenance (par exemple, la fréquence de remplacement des brosses), l'alimentation et les vitesses, ainsi que d'autres données d'utilisation anonymes. 
 
 Nom d'hôte de la console
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Il s'agit d'un identifiant unique pour votre console qui est utilisé pour relier votre SmartBench aux services de Yeti Tool, y compris SmartManager. Le nom d'hôte de la console n'est pas enregistré ni regroupé avec d'autres données identifiables telles que les numéros de série ou les coordonnées des clients.
 
 
 Les bases sur lesquelles nous traitons les informations vous concernant
----------------------------------------------------
+-----------------------------------------------------------------------
 
 La loi nous oblige à déterminer sur quelle base, parmi six bases définies, nous traitons les différentes catégories de vos informations personnelles, et à vous informer de la base de chaque catégorie.
 
@@ -77,7 +77,7 @@ Si la base change, nous vous informerons, si la loi l'exige, de ce changement et
 
 
 3. Informations que nous traitons parce que nous avons une obligation contractuelle avec vous
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Lorsque vous acceptez les conditions du logiciel de la console ou que vous acceptez nos conditions générales d'une autre manière, un contrat est formé entre vous et nous.
 
@@ -94,7 +94,7 @@ Nous continuerons à traiter ces informations jusqu'à ce que le contrat entre n
 
 
 4. Informations que nous traitons avec votre consentement
-+++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Si vous nous avez donné l'autorisation explicite de le faire en acceptant les conditions générales de la mise à jour du logiciel, nous pouvons de temps à autre transmettre votre nom et vos coordonnées à des associés sélectionnés qui, selon nous, peuvent vous fournir des services.
 
@@ -104,7 +104,7 @@ Vous pouvez retirer votre consentement à tout moment en nous en informant à l'
 
 
 5. Informations que nous traitons aux fins d'intérêts légitimes
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Nous pouvons traiter les informations sur la base d'un intérêt légitime, pour vous ou pour nous, de le faire.
 
@@ -125,7 +125,7 @@ Par exemple, nous pouvons traiter vos données sur cette base aux fins de :
 
 
 Utilisations spécifiques des informations que vous nous fournissez
-----------------------------------------------
+------------------------------------------------------------------
 
 6. Communiquer avec nous
 ++++++++++++++++++++++++
@@ -150,10 +150,10 @@ Nous pouvons également compiler des statistiques montrant les informations obte
 
 
 Autres questions
--------------
+----------------
 
 8. Comment vous pouvez vous plaindre
-+++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++
 
 Si vous n'êtes pas satisfait de notre politique de confidentialité ou si vous avez une plainte à formuler, vous devez nous en informer.
 
@@ -163,14 +163,14 @@ Si vous n'êtes pas satisfait de la manière dont nous traitons vos informations
 
 
 9. Respect de la loi
-+++++++++++++++++++++++++++
+++++++++++++++++++++
 
 Notre politique de confidentialité a été élaborée de manière à être conforme à la loi de chaque pays ou juridiction dans lequel nous souhaitons exercer nos activités. Si vous pensez qu'elle n'est pas conforme à la loi de votre juridiction, nous aimerions avoir votre avis.
 
 En fin de compte, c'est vous qui décidez si vous souhaitez accepter cette politique de confidentialité et si vous autorisez votre SmartBench Console à envoyer des données par Wi-Fi. Lorsque le Wi-Fi de votre console est activé, cela indique que vous avez accepté les conditions d'utilisation des données telles que décrites dans le présent avis de confidentialité.
 
 10. Révision de la présente politique de confidentialité
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Nous pouvons mettre à jour cet avis de confidentialité de temps en temps si nécessaire. Les conditions qui s'appliquent à vous sont celles enregistrées sur votre console SmartBench le jour où vous utilisez votre console SmartBench.
 

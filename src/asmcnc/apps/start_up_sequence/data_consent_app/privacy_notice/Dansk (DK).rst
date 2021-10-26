@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+=====================================================================================
 Meddelelse om beskyttelse af personlige oplysninger og politik for indsamling af data
-==========================================
+=====================================================================================
 
 
 Dette er en meddelelse om beskyttelse af personlige oplysninger fra Yeti Tool Ltd. I dette dokument henviser "vi", "vores" eller "os" til Yeti Tool Ltd.
@@ -27,7 +27,7 @@ Med undtagelse af nedenstående deler, sælger eller videregiver vi ikke oplysni
 
 
 1. Databeskyttelsesrådgiver
-++++++++++++++++++++++++++
+++++++++++++++++++++++++++++
 
 Vi har udpeget en databeskyttelsesansvarlig (DPO), som er ansvarlig for at sikre, at vores politik følges.
 
@@ -35,7 +35,7 @@ Hvis du har spørgsmål om denne meddelelse om beskyttelse af personlige oplysni
 
 
 2. Data, vi behandler
-++++++++++++++++++
++++++++++++++++++++++
 
 Vi kan indsamle, bruge, gemme og overføre forskellige former for anonyme data om din SmartBench's funktion. 
 
@@ -51,23 +51,23 @@ IP-adresse
 Dette er din offentlige IP-adresse eller WAN-IP-adresse. Denne behandles som personlige oplysninger. 
 
 Data om kritiske hændelser i jobbet
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Dette er maskindata vedrørende jobkritiske SmartBench-hændelser, herunder GRBL-alarmer, GRBL-fejl, spindeloverbelastning, strømsvigt og andre hændelser, der kan få jobbet til at mislykkes. 
 
 Vedligeholdelsesdata
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Dette er data, der kan vedrøre vedligeholdelsesplaner og drift af SmartBench. Disse data kan omfatte køretid og oppetid, vedligeholdelsesstatistik (f.eks. hvor ofte børsterne udskiftes), fremføring og hastigheder og andre anonyme brugsdata. 
 
 Værtsnavn på konsollen
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Dette er en unik identifikator for din konsol, som bruges til at forbinde din SmartBench med Yeti Tool-tjenester, herunder SmartManager. Konsolens værtsnavn registreres ikke sammen med eller aggregeres med andre identificerbare data, f.eks. serienumre eller kundekontaktoplysninger.
 
 
 De grundlag, som vi behandler oplysninger om dig på
----------------------------------------------------
+----------------------------------------------------
 
 Loven kræver, at vi skal fastslå, på hvilket af seks definerede grundlag vi behandler forskellige kategorier af dine personlige oplysninger, og at vi skal oplyse dig om grundlaget for hver kategori.
 
@@ -77,7 +77,7 @@ Hvis grundlaget ændres, skal vi, hvis loven kræver det, underrette dig om ænd
 
 
 3. Oplysninger, som vi behandler, fordi vi har en kontraktlig forpligtelse over for dig
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Når du accepterer vilkårene i konsolsoftwaren eller på anden måde accepterer vores vilkår og betingelser, indgås der en kontrakt mellem dig og os.
 
@@ -94,7 +94,7 @@ Vi fortsætter med at behandle disse oplysninger, indtil kontrakten mellem os op
 
 
 4. Oplysninger, som vi behandler med dit samtykke
-+++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Hvis du har givet os udtrykkelig tilladelse til det ved at acceptere vilkårene og betingelserne for softwareopdateringen, kan vi fra tid til anden videregive dit navn og dine kontaktoplysninger til udvalgte samarbejdspartnere, som vi mener kan levere tjenester.
 
@@ -125,10 +125,10 @@ Vi kan f.eks. behandle dine oplysninger på dette grundlag med henblik på:
 
 
 Specifik brug af de oplysninger, du giver os
-----------------------------------------------
+--------------------------------------------
 
 6. Kommunikere med os
-++++++++++++++++++++++++
++++++++++++++++++++++
 
 Når du kontakter os, enten pr. telefon, via vores websted eller via e-mail, indsamler vi de oplysninger, du har givet os, for at kunne svare dig med de oplysninger, du har brug for.
 
@@ -138,7 +138,7 @@ Vi opbevarer personligt identificerbare oplysninger i forbindelse med din besked
 
 
 7. Klager
-++++++++++++++
++++++++++
 
 Når vi modtager en klage, registrerer vi alle de oplysninger, som du har givet os.
 
@@ -150,7 +150,7 @@ Vi kan også udarbejde statistikker med oplysninger fra denne kilde for at vurde
 
 
 Andre spørgsmål
--------------
+---------------
 
 8. Hvordan du kan klage
 +++++++++++++++++++++++
@@ -163,14 +163,14 @@ Hvis du på nogen måde er utilfreds med den måde, vi behandler dine personlige
 
 
 9. Overholdelse af loven
-+++++++++++++++++++++++++++
+++++++++++++++++++++++++
 
 Vores fortrolighedspolitik er blevet udarbejdet for at overholde lovgivningen i alle de lande eller retsområder, hvor vi ønsker at drive forretning. Hvis du mener, at den ikke opfylder lovgivningen i din jurisdiktion, vil vi gerne høre fra dig.
 
 Det er i sidste ende dit valg, om du vil acceptere denne fortrolighedspolitik, og om du vil aktivere din SmartBench Console til at sende data via Wi-Fi. Når din konsols Wi-Fi er aktiveret, vil dette indikere, at du har givet dit samtykke til vilkårene for brug af data som beskrevet i denne fortrolighedserklæring.
 
 10. Gennemgang af denne politik om beskyttelse af personlige oplysninger
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Vi kan opdatere denne meddelelse om beskyttelse af personlige oplysninger fra tid til anden efter behov. De vilkår, der gælder for dig, er dem, der er gemt på din SmartBench-konsol den dag, du bruger din SmartBench-konsol.
 

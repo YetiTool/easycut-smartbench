@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+===========================================
 Tietosuojailmoitus ja tietojenkeruukäytäntö
-==========================================
+===========================================
 
 
 Tämä on Yeti Tool Ltd:n tietosuojailmoitus. Tässä asiakirjassa "me", "meidän" tai "meidät" viittaavat Yeti Tool Ltd:hen.
@@ -11,7 +11,7 @@ Rekisteröity toimistomme sijaitsee osoitteessa Unit 12 Old Mill Road, Portishea
 
 
 Johdanto
-------------
+--------
 
 Tämän tietosuojailmoituksen tarkoituksena on kertoa sinulle, miten keräämme ja käsittelemme sinulta keräämiämme tai meille antamiasi tietoja. Se kattaa tiedot, joista sinut voidaan tunnistaa ("henkilötiedot"), ja tiedot, joista sinua ei voida tunnistaa. Lain ja tämän ilmoituksen yhteydessä "käsittelemisellä" tarkoitetaan tietojen keräämistä, tallentamista, siirtämistä, käyttämistä tai muuta käsittelyä. Siinä kerrotaan yksityisyydensuojaan liittyvistä oikeuksistasi ja siitä, miten laki suojaa sinua.
 
@@ -27,7 +27,7 @@ Lukuun ottamatta jäljempänä mainittuja tapauksia emme jaa, myy tai luovuta ko
 
 
 1. Tietosuojavastaava
-++++++++++++++++++++++++++
++++++++++++++++++++++
 
 Olemme nimittäneet tietosuojavastaavan, joka vastaa siitä, että politiikkaamme noudatetaan.
 
@@ -35,7 +35,7 @@ Jos sinulla on kysyttävää tästä tietosuojailmoituksesta, mukaan lukien lail
 
 
 2. Käsittelemämme tiedot
-++++++++++++++++++
+++++++++++++++++++++++++
 
 Voimme kerätä, käyttää, tallentaa ja siirtää erilaisia anonyymejä tietoja SmartBenchin toiminnasta. 
 
@@ -46,28 +46,28 @@ Voimme koota anonyymejä tietoja, kuten tilastollisia tai demografisia tietoja, 
 Jos kuitenkin yhdistämme tai yhdistämme yhdistettyjä tietoja henkilötietoihisi niin, että sinut voidaan tunnistaa millään tavalla, käsittelemme yhdistettyjä tietoja henkilötietoina, ja niitä käytetään tämän tietosuojailmoituksen mukaisesti.
 
 IP-osoite
-~~~~~~~~~~
+~~~~~~~~~
 
 Tämä on julkinen tai WAN-IP-osoitteesi. Tätä käsitellään henkilökohtaisena tietona. 
 
 Kriittisiä tapahtumia koskevat tiedot
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Nämä ovat konetietoja, jotka liittyvät työn kannalta kriittisiin SmartBench-tapahtumiin, kuten GRBL-hälytyksiin, GRBL-virheisiin, karan ylikuormitukseen, virran katkeamiseen ja muihin tapahtumiin, jotka voivat aiheuttaa työn epäonnistumisen. 
 
 Huoltotiedot
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Nämä tiedot voivat liittyä huoltoaikatauluihin ja SmartBenchin toimintaan. Näihin tietoihin voi sisältyä käyttö- ja käyttöaikaa, huoltotilastoja (esim. kuinka usein harjat vaihdetaan), syöttöjä ja nopeuksia sekä muita anonyymejä käyttötietoja. 
 
 Konsolin isäntänimi
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Tämä on konsolisi yksilöllinen tunniste, jota käytetään SmartBenchin yhdistämiseen Yeti Toolin palveluihin, kuten SmartManageriin. Konsolin isäntänimeä ei tallenneta muiden tunnistettavien tietojen, kuten sarjanumeroiden tai asiakkaan yhteystietojen, rinnalle tai yhdistetä niihin.
 
 
 Perusteet, joiden perusteella käsittelemme sinua koskevia tietoja
----------------------------------------------------
+-----------------------------------------------------------------
 
 Lain mukaan meidän on määriteltävä, millä kuudesta määritellystä perusteesta käsittelemme henkilötietojesi eri luokkia, ja ilmoitettava sinulle kunkin luokan peruste.
 
@@ -77,7 +77,7 @@ Jos peruste muuttuu, ilmoitamme sinulle lain niin vaatiessa muutoksesta ja uudes
 
 
 3. Tiedot, joita käsittelemme, koska meillä on sopimusvelvoite sinua kohtaan.
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Kun hyväksyt konsoliohjelmiston ehdot tai muutoin hyväksyt ehtomme, sinun ja meidän välillemme syntyy sopimus.
 
@@ -94,7 +94,7 @@ Jatkamme näiden tietojen käsittelyä, kunnes välillämme oleva sopimus päät
 
 
 4. Suostumuksellasi käsittelemämme tiedot
-+++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++
 
 Jos olet antanut meille siihen nimenomaisen luvan hyväksymällä ohjelmistopäivityksen ehdot, voimme aika ajoin välittää nimesi ja yhteystietosi valituille yhteistyökumppaneille, jotka voivat tarjota palveluja.
 
@@ -104,7 +104,7 @@ Voit peruuttaa suostumuksesi milloin tahansa ilmoittamalla meille osoitteessa sa
 
 
 5. Tiedot, joita käsittelemme oikeutettujen etujen vuoksi
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Voimme käsitellä tietoja sillä perusteella, että siihen on oikeutettu etu joko sinulle tai meille.
 
@@ -125,10 +125,10 @@ Voimme esimerkiksi käsitellä tietojasi tällä perusteella seuraavia tarkoituk
 
 
 Meille antamiesi tietojen erityiset käyttötarkoitukset
-----------------------------------------------
+------------------------------------------------------
 
 6. Yhteydenpito kanssamme
-++++++++++++++++++++++++
+++++++++++++++++++++++++++
 
 Kun otat meihin yhteyttä joko puhelimitse, verkkosivustomme kautta tai sähköpostitse, keräämme antamasi tiedot, jotta voimme vastata sinulle tarvitsemasi tiedot.
 
@@ -138,7 +138,7 @@ Säilytämme viestisi yhteydessä henkilökohtaisesti tunnistettavia tietoja, ku
 
 
 7. Valittaminen
-++++++++++++++
++++++++++++++++
 
 Kun vastaanotamme valituksen, tallennamme kaikki meille antamasi tiedot.
 
@@ -150,7 +150,7 @@ Voimme myös laatia tilastoja, jotka sisältävät tästä lähteestä saatuja t
 
 
 Muut asiat
--------------
+----------
 
 8. Miten voit valittaa
 +++++++++++++++++++++++
@@ -163,14 +163,14 @@ Jos olet millään tavoin tyytymätön siihen, miten käsittelemme henkilötieto
 
 
 9. Lain noudattaminen
-+++++++++++++++++++++++++++
++++++++++++++++++++++
 
 Tietosuojakäytäntömme on laadittu siten, että se noudattaa kaikkien niiden maiden lakeja, joissa aiomme harjoittaa liiketoimintaa. Jos olet sitä mieltä, että se ei vastaa lainkäyttöalueesi lakia, haluaisimme kuulla sinusta.
 
 On viime kädessä sinun valintasi, haluatko hyväksyä tämän tietosuojakäytännön ja sallitko SmartBench-konsolin lähettää tietoja Wi-Fi:n kautta. Kun konsolisi Wi-Fi on käytössä, tämä osoittaa, että olet hyväksynyt tässä tietosuojailmoituksessa esitetyt tietojen käyttöä koskevat ehdot.
 
 10. Tämän tietosuojakäytännön tarkistaminen
-+++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++
 
 Voimme päivittää tätä tietosuojailmoitusta aika ajoin tarpeen mukaan. Sinuun sovelletaan SmartBench-konsoliisi tallennettuja ehtoja sinä päivänä, jona käytät SmartBench-konsoliasi.
 

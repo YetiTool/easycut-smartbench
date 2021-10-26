@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+=========================================================
 Informativa sulla privacy e politica di raccolta dei dati
-==========================================
+=========================================================
 
 
 Questa è l'informativa sulla privacy di Yeti Tool Ltd. In questo documento, "noi", "nostro", o "noi" si riferiscono a Yeti Tool Ltd.
@@ -27,7 +27,7 @@ Ad eccezione di quanto indicato di seguito, non condividiamo, né vendiamo, né 
 
 
 1. Responsabile della protezione dei dati
-++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++
 
 Abbiamo nominato un responsabile della protezione dei dati (DPO) che è responsabile di assicurare che la nostra politica sia seguita.
 
@@ -35,7 +35,7 @@ Se avete domande su questa informativa sulla privacy, compresa qualsiasi richies
 
 
 2. Dati che trattiamo
-++++++++++++++++++
++++++++++++++++++++++
 
 Possiamo raccogliere, utilizzare, conservare e trasferire diversi tipi di dati anonimi sul funzionamento del tuo SmartBench. 
 
@@ -46,28 +46,28 @@ Possiamo aggregare dati anonimi come dati statistici o demografici per qualsiasi
 Tuttavia, se combiniamo o colleghiamo i dati aggregati con le vostre informazioni personali in modo da potervi identificare in qualsiasi modo, trattiamo i dati combinati come informazioni personali e saranno utilizzati in conformità con questa informativa sulla privacy.
 
 Indirizzo IP
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 Questo è il tuo indirizzo IP pubblico o WAN. Questo sarà trattato come informazione personale. 
 
 Dati sugli eventi critici del lavoro
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Questo costituisce i dati della macchina relativi agli eventi SmartBench critici del lavoro, compresi gli allarmi GRBL, gli errori GRBL, il sovraccarico del mandrino, la perdita di potenza e qualsiasi altro evento che può causare il fallimento del lavoro. 
 
 Dati di manutenzione
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Si tratta di dati che possono riguardare i programmi di manutenzione e il funzionamento di SmartBench. Questi dati possono includere il tempo di esecuzione e il tempo di attività, le statistiche di manutenzione (ad esempio quanto spesso vengono sostituite le spazzole), gli avanzamenti e le velocità, e altri dati di utilizzo anonimi. 
 
 Hostname della console
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Questo è un identificatore unico per la tua Console che viene utilizzato per collegare il tuo SmartBench con i servizi di Yeti Tool, compreso SmartManager. L'hostname della Console non è registrato insieme o aggregato con altri dati identificabili come i numeri di serie o le informazioni di contatto del cliente.
 
 
 Le basi su cui trattiamo le informazioni che la riguardano
----------------------------------------------------
+----------------------------------------------------------
 
 La legge ci impone di determinare in base a quale delle sei basi definite trattiamo le diverse categorie di dati personali e di notificarvi la base di ogni categoria.
 
@@ -77,7 +77,7 @@ Se la base cambia, se richiesto dalla legge, vi informeremo del cambiamento e di
 
 
 3. Informazioni che trattiamo perché abbiamo un obbligo contrattuale con lei
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Quando accetti i termini del software della console o accetti in altro modo i nostri termini e condizioni, si forma un contratto tra te e noi.
 
@@ -94,7 +94,7 @@ Continueremo a trattare queste informazioni fino a quando il contratto tra noi t
 
 
 4. Informazioni che trattiamo con il suo consenso
-+++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Se ci avete dato il permesso esplicito di farlo accettando i termini e le condizioni dell'aggiornamento del software, possiamo di tanto in tanto passare il vostro nome e le informazioni di contatto a soci selezionati che riteniamo possano fornire servizi.
 
@@ -104,7 +104,7 @@ Puoi ritirare il tuo consenso in qualsiasi momento dandoci istruzioni all'indiri
 
 
 5. Informazioni che trattiamo ai fini dei legittimi interessi
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Possiamo elaborare le informazioni sulla base del fatto che c'è un interesse legittimo, sia per voi che per noi, di farlo.
 
@@ -125,10 +125,10 @@ Per esempio, possiamo trattare i suoi dati su questa base per le finalità di:
 
 
 Usi specifici delle informazioni che ci fornisce
-----------------------------------------------
+------------------------------------------------
 
 6. Comunicare con noi
-++++++++++++++++++++++++
++++++++++++++++++++++
 
 Quando ci contattate, per telefono, attraverso il nostro sito web o per e-mail, raccogliamo i dati che ci avete fornito per potervi rispondere con le informazioni di cui avete bisogno.
 
@@ -138,7 +138,7 @@ Conserviamo le informazioni di identificazione personale associate al tuo messag
 
 
 7. Lamentarsi
-++++++++++++++
++++++++++++++
 
 Quando riceviamo un reclamo, registriamo tutte le informazioni che ci avete dato.
 
@@ -150,10 +150,10 @@ Possiamo anche compilare statistiche che mostrano le informazioni ottenute da qu
 
 
 Altre questioni
--------------
+---------------
 
 8. Come ci si può lamentare
-+++++++++++++++++++++++
++++++++++++++++++++++++++++
 
 Se non siete soddisfatti della nostra politica sulla privacy o se avete qualche reclamo, dovreste dircelo.
 
@@ -163,14 +163,14 @@ Se sei in qualche modo insoddisfatto di come trattiamo i tuoi dati personali, ha
 
 
 9. Conformità con la legge
-+++++++++++++++++++++++++++
+++++++++++++++++++++++++++
 
 La nostra politica sulla privacy è stata compilata in modo da soddisfare la legge di ogni paese o giurisdizione legale in cui intendiamo fare affari. Se pensate che non soddisfi la legge della vostra giurisdizione, ci piacerebbe sentire da voi.
 
 La scelta di accettare o meno questa informativa sulla privacy e di abilitare o meno la Console SmartBench all'invio di dati via Wi-Fi è in ultima analisi una tua scelta. Quando il Wi-Fi della tua console è abilitato, questo indicherà che hai acconsentito ai termini di utilizzo dei dati come indicato in questa informativa sulla privacy.
 
 10. Revisione di questa politica sulla privacy
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++
 
 Possiamo aggiornare questa informativa sulla privacy di volta in volta, se necessario. I termini che si applicano a te sono quelli memorizzati sulla tua Console SmartBench il giorno in cui usi la tua Console SmartBench.
 

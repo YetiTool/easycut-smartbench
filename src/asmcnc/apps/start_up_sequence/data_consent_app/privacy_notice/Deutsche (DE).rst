@@ -1,8 +1,8 @@
 .. _top:
 
-==========================================
+=============================================
 Datenschutzhinweis und Datenerfassungspolitik
-==========================================
+=============================================
 
 
 Dies ist der Datenschutzhinweis von Yeti Tool Ltd. In diesem Dokument beziehen sich die Begriffe "wir", "unser" oder "uns" auf Yeti Tool Ltd.
@@ -11,7 +11,7 @@ Unser eingetragener Sitz befindet sich in Unit 12 Old Mill Road, Portishead, Bri
 
 
 Einführung
-------------
+----------
 
 Dieser Datenschutzhinweis soll Sie darüber informieren, wie wir Informationen, die wir von Ihnen erhalten oder die Sie uns zur Verfügung stellen, sammeln und verarbeiten. Sie umfasst Informationen, mit denen Sie identifiziert werden können ("personenbezogene Daten") und Informationen, die dies nicht können. Im Zusammenhang mit dem Gesetz und diesem Hinweis bedeutet "verarbeiten" das Sammeln, Speichern, Übertragen, Verwenden oder anderweitige Verarbeiten von Daten. Er informiert Sie über Ihre Datenschutzrechte und darüber, wie das Gesetz Sie schützt.
 
@@ -35,7 +35,7 @@ Wenn Sie Fragen zu dieser Datenschutzerklärung haben oder Ihre Rechte geltend m
 
 
 2. Daten, die wir verarbeiten
-++++++++++++++++++
++++++++++++++++++++++++++++++
 
 Wir können verschiedene Arten von anonymen Daten über den Betrieb Ihrer SmartBench sammeln, verwenden, speichern und übertragen. 
 
@@ -51,23 +51,23 @@ IP-Adresse
 Dies ist Ihre öffentliche oder WAN-IP-Adresse. Sie wird als persönliche Information behandelt. 
 
 Jobkritische Ereignisdaten
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Hierbei handelt es sich um Maschinendaten, die sich auf auftragskritische SmartBench-Ereignisse beziehen, einschließlich GRBL-Alarme, GRBL-Fehler, Spindelüberlastung, Stromausfall und alle anderen Ereignisse, die zum Scheitern des Auftrags führen können. 
 
 Daten zur Wartung
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Dabei handelt es sich um Daten, die sich auf die Wartungspläne und den Betrieb der SmartBench beziehen können. Diese Daten können Laufzeit und Betriebszeit, Wartungsstatistiken (z. B. wie oft Bürsten ersetzt werden), Vorschübe und Geschwindigkeiten sowie andere anonyme Nutzungsdaten umfassen. 
 
 Hostname der Konsole
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Dies ist ein eindeutiger Identifikator für Ihre Konsole, der verwendet wird, um Ihre SmartBench mit den Yeti Tool-Diensten einschließlich SmartManager zu verknüpfen. Der Hostname der Konsole wird nicht zusammen mit anderen identifizierbaren Daten wie Seriennummern oder Kundenkontaktinformationen aufgezeichnet oder zusammengefasst.
 
 
 Die Grundlagen, auf denen wir Informationen über Sie verarbeiten
----------------------------------------------------
+----------------------------------------------------------------
 
 Das Gesetz verlangt von uns, dass wir festlegen, auf welcher von sechs definierten Grundlagen wir verschiedene Kategorien Ihrer persönlichen Daten verarbeiten, und dass wir Sie über die Grundlage für jede Kategorie informieren.
 
@@ -77,7 +77,7 @@ Wenn sich die Grundlage ändert, werden wir Sie, sofern dies gesetzlich vorgesch
 
 
 3. Informationen, die wir verarbeiten, weil wir eine vertragliche Verpflichtung mit Ihnen haben
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Wenn Sie die Bedingungen der Konsolensoftware akzeptieren oder auf andere Weise unseren Bedingungen zustimmen, kommt ein Vertrag zwischen Ihnen und uns zustande.
 
@@ -94,7 +94,7 @@ Wir werden diese Daten so lange verarbeiten, bis der Vertrag zwischen uns endet 
 
 
 4. Informationen, die wir mit Ihrer Zustimmung verarbeiten
-+++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Wenn Sie uns durch die Annahme der Bedingungen des Software-Updates die ausdrückliche Erlaubnis dazu erteilt haben, können wir von Zeit zu Zeit Ihren Namen und Ihre Kontaktinformationen an ausgewählte Partner weitergeben, die unserer Meinung nach Dienstleistungen anbieten können.
 
@@ -104,7 +104,7 @@ Sie können Ihre Zustimmung jederzeit widerrufen, indem Sie uns unter sales@yeti
 
 
 5. Informationen, die wir für die Zwecke der legitimen Interessen verarbeiten
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Wir können Informationen auf der Grundlage eines berechtigten Interesses, entweder für Sie oder für uns, verarbeiten.
 
@@ -125,7 +125,7 @@ Zum Beispiel können wir Ihre Daten auf dieser Grundlage für folgende Zwecke ve
 
 
 Spezifische Verwendung der uns von Ihnen zur Verfügung gestellten Informationen
-----------------------------------------------
+-------------------------------------------------------------------------------
 
 6. Mit uns kommunizieren
 ++++++++++++++++++++++++
@@ -138,7 +138,7 @@ Wir speichern personenbezogene Daten, die mit Ihrer Nachricht in Verbindung steh
 
 
 7. Beanstandungen
-++++++++++++++
++++++++++++++++++
 
 Wenn wir eine Beschwerde erhalten, erfassen wir alle Informationen, die Sie uns gegeben haben.
 
@@ -150,10 +150,10 @@ Wir können auch Statistiken mit Informationen aus dieser Quelle erstellen, um d
 
 
 Andere Angelegenheiten
--------------
+----------------------
 
 8. Wie Sie sich beschweren können
-+++++++++++++++++++++++
++++++++++++++++++++++++++++++++++
 
 Wenn Sie mit unserer Datenschutzpolitik nicht zufrieden sind oder eine Beschwerde haben, sollten Sie uns dies mitteilen.
 
@@ -163,14 +163,14 @@ Wenn Sie in irgendeiner Weise unzufrieden damit sind, wie wir Ihre personenbezog
 
 
 9. Einhaltung der gesetzlichen Bestimmungen
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++
 
 Unsere Datenschutzpolitik wurde so gestaltet, dass sie den Gesetzen aller Länder oder Rechtsordnungen entspricht, in denen wir geschäftlich tätig werden wollen. Wenn Sie der Meinung sind, dass sie den Gesetzen Ihrer Rechtsordnung nicht entspricht, würden wir uns freuen, von Ihnen zu hören.
 
 Es ist letztlich Ihre Entscheidung, ob Sie diese Datenschutzbestimmungen akzeptieren möchten und ob Sie Ihre SmartBench-Konsole zum Senden von Daten über Wi-Fi aktivieren. Wenn die Wi-Fi-Funktion Ihrer Konsole aktiviert ist, bedeutet dies, dass Sie den Bedingungen der Datennutzung, wie sie in dieser Datenschutzerklärung beschrieben sind, zugestimmt haben.
 
 10. Überprüfung dieser Datenschutzrichtlinie
-+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++
 
 Wir können diese Datenschutzerklärung von Zeit zu Zeit bei Bedarf aktualisieren. Für Sie gelten die Bedingungen, die an dem Tag, an dem Sie Ihre SmartBench-Konsole nutzen, auf Ihrer SmartBench-Konsole gespeichert sind.
 
