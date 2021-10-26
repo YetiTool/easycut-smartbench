@@ -296,7 +296,7 @@ class JobFeedbackScreen(Screen):
             )
 
 
-        self.batch_number_label.text = self.l.get_str("Batch Number: ")
+        self.batch_number_label.text = self.l.get_str("Batch Number:") + " "
         self.batch_number_label.width = dp(len(self.batch_number_label.text)*10.5)
         self.batch_number_input.text = ''
 

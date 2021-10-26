@@ -159,7 +159,7 @@ class WiFiAndDataConsentScreen2(Screen):
 		self.user_info.text = (
 			self.l.get_str("If you do not want Yeti Tool to collect machine data from your SmartBench, you can decline the data policy on the next screen.") + \
 			"\n\n" + \
-			self.l.get_bold("This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool. ") + \
+			self.l.get_bold("This will disable Wi-Fi to prevent SmartBench sending data to Yeti Tool.") + \
 			"\n\n" + \
 			self.l.get_str("You will need Wi-Fi to:") + \
 			"\n\n" + \

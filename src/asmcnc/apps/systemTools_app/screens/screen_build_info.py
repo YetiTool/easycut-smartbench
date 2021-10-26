@@ -587,7 +587,7 @@ class BuildInfoScreen(Screen):
     
     def open_data_consent_app(self):
 
-        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, "Loading Data and Wi-Fi...")
+        wait_popup = popup_info.PopupWait(self.systemtools_sm.sm, self.l, self.l.get_str("Loading Data and Wi-Fi") + "...")
 
         def nested_open_data_consent_app(dt):
             self.data_consent_app = screen_manager_data_consent.ScreenManagerDataConsent(None, self.systemtools_sm.sm, self.l)
@@ -751,6 +751,9 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_formatted = self.smartbench_location_unformatted.replace('\n', ' ')
         # Remove trailing and leading whitespaces
         self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
+
+        if self.smartbench_location_formatted == 'SmartBench location':
+            self.smartbench_location_formatted = self.l.get_str('SmartBench location')
 
         self.smartbench_location.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
