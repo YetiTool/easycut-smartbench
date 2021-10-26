@@ -145,8 +145,6 @@ class DatabaseEventManager():
 
 				if self.set.ip_address:
 
-					if self.VERBOSE: log("Doing ma routine checksss")
-
 					try:
 						if self.m.s.m_state == "Idle":
 							self.send_alive()
@@ -395,15 +393,45 @@ class DatabaseEventManager():
 					"job_data": {
 						"job_name": self.jd.job_name or '',
 						"successful": successful,
-						"post_production_notes": self.jd.post_production_notes,
-						"batch_number": self.jd.batch_number,
 						"actual_job_duration": self.jd.actual_runtime,
 						"actual_pause_duration": self.jd.pause_duration
 					},
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End Event", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
+
+
+	def send_job_summary(self, successful):
+
+		if pika:
+
+			data =  {
+					"payload_type": "job_summary",
+					"machine_info": {
+						"name": self.m.device_label,
+						"location": self.m.device_location,
+						"hostname": self.set.console_hostname,
+						"ec_version": self.m.sett.sw_version,
+						"public_ip_address": self.public_ip_address
+					},
+					"job_data": {
+						"job_name": self.jd.job_name or '',
+						"successful": successful,
+						"post_production_notes": self.jd.post_production_notes,
+						"batch_number": self.jd.batch_number,
+					},
+					"metadata": {
+
+					},
+					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				}
+
+			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
+
+			data["metadata"] = metadata_in_json_format
+
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -434,7 +462,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start Event", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
 
 
 	### FEEDS AND SPEEDS
