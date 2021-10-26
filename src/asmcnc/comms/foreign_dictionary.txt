@@ -658,3 +658,22 @@ Are you sure you want to decline the data policy? This will disable the Console 
 You can change your data preferences in the System Tools app at any time.	Sie können Ihre Dateneinstellungen jederzeit in der App System Tools ändern.	Vous pouvez modifier vos préférences en matière de données dans l'application Outils système à tout moment.	Puoi cambiare le tue preferenze sui dati nell'app Strumenti di sistema in qualsiasi momento.	Voit milloin tahansa muuttaa data-asetuksiasi Järjestelmätyökalut-sovelluksessa.	U kunt uw gegevensvoorkeuren op elk moment wijzigen in de app Systeemhulpprogramma's.	Preferencje dotyczące danych można zmienić w dowolnym momencie w aplikacji Narzędzia systemowe.	Du kan til enhver tid ændre dine datapræferencer i appen Systemværktøjer.
 Are you sure?	Sind Sie sicher?	Êtes-vous sûr ?	Sei sicuro?	Oletko varma?	Weet u het zeker?	Czy na pewno?	Er du sikker?
 Yes, disable Wi-Fi	Ja, Wi-Fi deaktivieren	Oui, désactivez le Wi-Fi	Sì, disabilita il Wi-Fi	Kyllä, poista Wi-Fi käytöstä	Ja, schakel Wi-Fi uit	Tak, wyłącz Wi-Fi.	Ja, deaktivere Wi-Fi
+SmartTransfer data	SmartTransfer-Daten	Données SmartTransfer	Dati SmartTransfer	SmartTransfer-tiedot	SmartTransfer gegevens	Dane SmartTransfer	SmartTransfer-data
+Feeds and Speeds	Vorschübe und Geschwindigkeiten	Avances et vitesses 	Alimentazioni e velocità	Syötöt ja nopeudet	Voedingen en snelheden	Posuwy i prędkości	Feeds og hastigheder
+Feed rate range:	Bereich der Vorschubgeschwindigkeit:	Plage de vitesse d'avance :	Gamma di avanzamento:	Syöttönopeusalue:	Aanzetbereik:	Zakres prędkości posuwu:	Fremføringshastighedsområde:
+Undefined	Undefiniert	Indéfinie	Non definito	Määrittelemätön	Ongedefinieerd	Nieokreślony	Udefineret
+Spindle speed range:	Spindeldrehzahlbereich:	Plage de vitesse de broche :	Gamma di velocità del mandrino:	Karan nopeusalue:	Bereik spiltoerental:	Zakres prędkości obrotowej wrzeciona:	Spindelhastighedsområde:
+Working volume	Arbeitsvolumen	Volume de travail 	Volume di lavoro	Työstötilavuus	Werkvolume	Objętość robocza	Arbejdsvolumen
+X range:	X Bereich:	Gamme X :	X range:	X-alue:	X bereik:	X zakres:	X-område: X-område:
+X min:	X min:	X min :	X min:	X min:	X min:	X min:	X min:
+X max:	X max:	X max :	X max:	X max:	X max:	X max:	X max:
+Y range:	Y-Bereich:	Gamme Y :	Gamma Y:	Y-alue:	Y-bereik:	Y zakres:	Y-område:
+Y min:	Y min:	Y min :	Y min:	Y min:	Y min:	Y min:	Y min:
+Y max:	Y max:	Y max :	Y max:	Y max:	Y max:	Y max:	Y max:
+Z range:	Z Bereich:	Z gamme :	Gamma Z:	Z-alue:	Z bereik:	Z zakres:	Z-område:
+Z min:	Z min:	Z min :	Z min:	Z min:	Z min:	Z min:	Z min:
+Z max:	Z max:	Z max :	Z max:	Z max:	Z max:	Z max:	Z max:
+Check info and warnings	Info und Warnungen prüfen	Vérifier les informations et les avertissements 	Controllare le informazioni e gli avvertimenti	Tarkista tiedot ja varoitukset	Info en waarschuwingen controleren	Sprawdź informacje i ostrzeżenia	Tjek info og advarsler
+Checked:	Geprüft:	Vérifié :	Controllato:	Tarkistettu:	Gecontroleerd:	Sprawdzono:	Kontrolleret:
+Check warning:	Warnung prüfen:	Vérifier l'avertissement :	Controllare le avvertenze:	Tarkista varoitus:	Controleer waarschuwing:	Sprawdź ostrzeżenie:	Kontroller advarsel:
+Comments	Kommentare	Commentaires 	Commenti	Kommentit	Opmerkingen	Uwagi	Kommentarer

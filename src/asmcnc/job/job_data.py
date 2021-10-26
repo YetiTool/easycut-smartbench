@@ -126,6 +126,37 @@ class JobData(object):
         self.check_info_string = ''    
         self.comments_string = ''
 
+        self.metadata_order = {
+
+            self.l.get_str("Last Updated Time"): 0,
+            self.l.get_str("Last Updated By"): 1,
+            self.l.get_str("Internal Order Code"): 2,
+            self.l.get_str("Process Step"): 3,
+            self.l.get_str("Total Parts Required"): 4,
+            self.l.get_str("Parts Made Per Job"): 5,
+            self.l.get_str("Stock Material Type"): 6,
+            self.l.get_str("Job Size X Axis"): 7,
+            self.l.get_str("Job Size Y Axis"): 8,
+            self.l.get_str("Job Size Z Axis"): 9,
+            self.l.get_str("Stock Material Size"): 10,
+            self.l.get_str("Pre Production Notes"): 11,
+            self.l.get_str("Primary Operator"): 12,
+            self.l.get_str("Job Duration"): 13,
+            self.l.get_str("End Effector"): 14,
+            self.l.get_str("Tool Diameter And Type"): 15,
+            self.l.get_str("Toolpath Name"): 16,
+            self.l.get_str("XY Datum Position"): 17,
+            self.l.get_str("Z Datum Position"): 18,
+            self.l.get_str("Maximum Feed Rate"): 19,
+            self.l.get_str("Maximum Plunge Rate"): 20,
+            self.l.get_str("Maximum Spindle Speed"): 21,
+            self.l.get_str("Customer Name"): 22,
+            self.l.get_str("Customer Part Number"): 22,
+            self.l.get_str("Customer Part Description"): 23,
+            self.l.get_str("Customer Order Reference"): 24,
+            self.l.get_str("Parts Made So Far"): 25
+            }
+
     def set_job_filename(self, job_path_and_name):
 
         self.filename = job_path_and_name
@@ -214,7 +245,7 @@ class JobData(object):
             except Exception as e:
                 print(str(e))
 
-            summary_list.insert(0, "[b]SmartTransfer data[/b]")
+            summary_list.insert(0, self.l.get_bold("SmartTransfer data"))
             summary_list.insert(1, "")
             summary_list.append('')
 
@@ -226,36 +257,36 @@ class JobData(object):
 
         summary_list = []
 
-        summary_list.append('[b]Feeds and Speeds:[/b]\n')
+        summary_list.append(self.l.get_bold('Feeds and Speeds') + '\n')
         if self.feedrate_max == None and self.feedrate_min == None:
-            summary_list.append('Feed rate range: Undefined')
+            summary_list.append(self.l.get_str('Feed rate range:') + ' ' + self.l.get_str('Undefined'))
         else:
-            summary_list.append('Feed rate range: ' + str(self.feedrate_min) + ' to ' + str(self.feedrate_max))
+            summary_list.append(self.l.get_str('Feed rate range:') + ' ' + str(self.feedrate_min) + ' - ' + str(self.feedrate_max))
 
         if self.spindle_speed_max == None and self.feedrate_min == None:
-            summary_list.append('Spindle speed range: Undefined\n')
+            summary_list.append(self.l.get_str('Spindle speed range:') + ' ' + self.l.get_str('Undefined') + '\n')
         else:
-            summary_list.append('Spindle speed range: ' + str(self.spindle_speed_min) + ' to ' + str(self.spindle_speed_max) + '\n')
+            summary_list.append(self.l.get_str('Spindle speed range:') + ' ' + str(self.spindle_speed_min) + ' - ' + str(self.spindle_speed_max) + '\n')
 
 
-        summary_list.append('[b]Working volume:[/b]\n')
+        summary_list.append(self.l.get_bold('Working volume') + '\n')
         if self.x_max == -999999 and self.x_min == 999999:
-            summary_list.append('X range: Undefined\n')
+            summary_list.append(self.l.get_str('X range:') + ' ' + self.l.get_str('Undefined') + '\n')
         else:
-            summary_list.append('X min: ' + str(self.x_min))
-            summary_list.append('X max: ' + str(self.x_max) + '\n')
+            summary_list.append(self.l.get_str('X min:') + ' ' + str(self.x_min))
+            summary_list.append(self.l.get_str('X max:') + ' ' + str(self.x_max) + '\n')
 
         if self.y_max == -999999 and self.y_min == 999999:
-            summary_list.append('Y range: Undefined\n')
+            summary_list.append(self.l.get_str('Y range:') + ' ' + self.l.get_str('Undefined') + '\n')
         else:
-            summary_list.append('Y min: ' + str(self.y_min))
-            summary_list.append('Y max: ' + str(self.y_max) + '\n')
+            summary_list.append(self.l.get_str('Y min:') + ' ' + str(self.y_min))
+            summary_list.append(self.l.get_str('Y max:') + ' ' + str(self.y_max) + '\n')
 
         if self.z_max == -999999 and self.z_min == 999999:
-            summary_list.append('Z range: Undefined\n')
+            summary_list.append(self.l.get_str('Z range:') + ' ' + self.l.get_str('Undefined') + '\n')
         else:
-            summary_list.append('Z min: ' + str(self.z_min))
-            summary_list.append('Z max: ' + str(self.z_max) + '\n')
+            summary_list.append(self.l.get_str('Z min:') + ' ' + str(self.z_min))
+            summary_list.append(self.l.get_str('Z max:') + ' ' + str(self.z_max) + '\n')
 
         summary_list.append('')
         self.feeds_speeds_and_boundaries_string = '\n'.join(summary_list)
@@ -265,12 +296,12 @@ class JobData(object):
 
         summary_list = []
 
-        summary_list.append('[b]Check info and warnings:[/b]\n')
+        summary_list.append(self.l.get_bold('Check info and warnings') + '\n')
         if self.checked == False:
-            summary_list.append('Checked: No\n')
+            summary_list.append(self.l.get_str('Checked:') + ' ' + self.l.get_str('No') + '\n')
         else:
-            summary_list.append('Checked: Yes')
-            summary_list.append('Check warning: ' + self.check_warning + '\n')
+            summary_list.append(self.l.get_str('Checked:') + ' ' + self.l.get_str('Yes'))
+            summary_list.append(self.l.get_str('Check warning:') + ' ' + self.check_warning + '\n')
 
         summary_list.append('')
 
@@ -282,7 +313,7 @@ class JobData(object):
         if self.comments_list:
             summary_list = []
 
-            summary_list.append('[b]Comments:[/b]\n')
+            summary_list.append(self.l.get_bold('Comments') + '\n')
             summary_list.extend(self.comments_list[:20])
             summary_list.append('')
 
@@ -345,35 +376,3 @@ class JobData(object):
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
-
-
-    metadata_order = {
-
-            "Last Updated Time": 0,
-            "Last Updated By": 1,
-            "Internal Order Code": 2,
-            "Process Step": 3,
-            "Total Parts Required": 4,
-            "Parts Made Per Job": 5,
-            "Stock Material Type": 6,
-            "Job Size X Axis": 7,
-            "Job Size Y Axis": 8,
-            "Job Size Z Axis": 9,
-            "Stock Material Size": 10,
-            "Pre Production Notes": 11,
-            "Primary Operator": 12,
-            "Job Duration": 13,
-            "End Effector": 14,
-            "Tool Diameter And Type": 15,
-            "Toolpath Name": 16,
-            "XY Datum Position": 17,
-            "Z Datum Position": 18,
-            "Maximum Feed Rate": 19,
-            "Maximum Plunge Rate": 20,
-            "Maximum Spindle Speed": 21,
-            "Customer Name": 22,
-            "Customer Part Number": 22,
-            "Customer Part Description": 23,
-            "Customer Order Reference": 24,
-            "Parts Made So Far": 25
-            }
