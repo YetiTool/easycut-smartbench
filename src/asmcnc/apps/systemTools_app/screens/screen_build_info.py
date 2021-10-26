@@ -12,6 +12,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
+from kivy.metrics import dp
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
@@ -131,7 +132,7 @@ Builder.load_string("""
                             size: self.parent.size
                             orientation: 'horizontal'
                             padding: dp(5)
-                            
+
                             BoxLayout: 
                                 size_hint_x: None
                                 width: dp(30)
@@ -184,12 +185,6 @@ Builder.load_string("""
                             orientation: 'horizontal'
                             padding: dp(5)
 
-                            BoxLayout: 
-                                size_hint_x: None
-                                width: dp(24)
-                                Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
-                                    allow_stretch: True
                             Label:
                                 id: smartbench_location_label
                                 color: hex('#333333ff')
@@ -198,6 +193,16 @@ Builder.load_string("""
                                 valign: "middle"
                                 markup: True
                                 font_size: 24
+
+                            BoxLayout: 
+                                size_hint_x: None
+                                width: dp(24)
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                    allow_stretch: True
+
+                            BoxLayout: 
+                                orientation: 'horizontal'
 
 
                     TextInput:
@@ -787,6 +792,8 @@ class BuildInfoScreen(Screen):
 
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
+
+        self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10.5)
 
     def write_location_to_file(self):
 
