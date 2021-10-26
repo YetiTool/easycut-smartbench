@@ -50,8 +50,10 @@ Builder.load_string("""
     hw_version_label: hw_version_label
     zh_version_label: zh_version_label
     smartbench_name : smartbench_name
+    smartbench_name_label : smartbench_name_label
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
+    smartbench_location_label : smartbench_location_label
     smartbench_location_input: smartbench_location_input
     smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
@@ -116,22 +118,35 @@ Builder.load_string("""
 
                     Button:
                         id: smartbench_name
-                        text: '[b]My SmartBench[/b]'
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 30
-                        size_hint_y: None
-                        height: dp(40)
                         opacity: 1
                         on_press: root.open_rename()
                         focus_next: smartbench_name_input
-
+                        size_hint_y: None
+                        height: dp(40)
+                        BoxLayout:
+                            pos: self.parent.pos
+                            size: self.parent.size
+                            orientation: 'horizontal'
+                            padding: dp(5)
+                            
+                            BoxLayout: 
+                                size_hint_x: None
+                                width: dp(30)
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                    allow_stretch: True
+                            Label:
+                                id: smartbench_name_label
+                                text: "The text"
+                                text_size: self.size
+                                halign: "left"
+                                valign: "middle"
+                                markup: True
+                                font_size: 30
+                                color: hex('#333333ff')
                     TextInput:
                         padding: [4, 2]
                         id: smartbench_name_input
@@ -154,21 +169,36 @@ Builder.load_string("""
 
                     Button:
                         id: smartbench_location
-                        text: '[b]SmartBench location[/b]'
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
-                        color: hex('#333333ff')
-                        text_size: self.size
-                        halign: "left"
-                        valign: "middle"
-                        markup: True
-                        font_size: 24
                         size_hint_y: None
                         height: dp(30)
                         opacity: 1
                         on_press: root.open_rename_location()
                         focus_next: smartbench_location_input
+
+                        BoxLayout:
+                            pos: self.parent.pos
+                            size: self.parent.size
+                            orientation: 'horizontal'
+                            padding: dp(5)
+
+                            BoxLayout: 
+                                size_hint_x: None
+                                width: dp(24)
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                    allow_stretch: True
+                            Label:
+                                id: smartbench_location_label
+                                color: hex('#333333ff')
+                                text_size: self.size
+                                halign: "left"
+                                valign: "middle"
+                                markup: True
+                                font_size: 24
+
 
                     TextInput:
                         padding: [4, 2]
@@ -694,7 +724,7 @@ class BuildInfoScreen(Screen):
         # Remove trailing and leading whitespaces
         self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
 
-        self.smartbench_name.text = '[b]' + self.smartbench_name_formatted + '[/b]'
+        self.smartbench_name_label.text = '[b]' + self.smartbench_name_formatted + '[/b]'
         self.smartbench_name_input.text = self.smartbench_name_formatted
 
     def write_name_to_file(self):
@@ -755,7 +785,7 @@ class BuildInfoScreen(Screen):
         if self.smartbench_location_formatted == 'SmartBench location':
             self.smartbench_location_formatted = self.l.get_str('SmartBench location')
 
-        self.smartbench_location.text = '[b]' + self.smartbench_location_formatted + '[/b]'
+        self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
     def write_location_to_file(self):
