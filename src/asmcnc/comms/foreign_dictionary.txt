@@ -607,7 +607,7 @@ SmartBench model	SmartBench-Modell	Modèle SmartBench	Modello SmartBench	SmartBe
 Data and Wi-Fi	Daten und Wi-Fi	Données et Wi-Fi	Dati e Wi-Fi	Data ja Wi-Fi	Gegevens en Wi-Fi	Dane i Wi-Fi	Data og Wi-Fi
 Advanced	Erweitert	Avancé	Avanzato	Edistynyt	Geavanceerd	Zaawansowane	Avanceret
 SmartBench location	SmartBench-Standort	Emplacement du SmartBench	Posizione SmartBench	SmartBenchin sijainti	SmartBench locatie	Lokalizacja SmartBench	SmartBench-placering
-Job completed	Auftrag abgeschlossen	Travail terminé	Lavoro completato	Työ suoritettu	Opdracht voltooid	Zadanie ukończone	Job afsluttet
+Job completed	Auftrag abgeschlossen	Travail terminé	Lavoro completato	Työ suoritettu	Taak voltooid	Zadanie ukończone	Job afsluttet
 Job	Auftrag	Travail	Lavoro	Työ	Taak	Zadanie	Job
 Job duration:	Dauer des Auftrags:	Durée du travail :	Durata del lavoro:	Työn kesto:	Taak duur:	Czas trwania zadania:	Job varighed:
 Pause duration:	Pausendauer:	Durée de la pause :	Durata della pausa:	Tauko kesto:	Pauze duur:	Czas trwania pauzy:	Pause varighed:
@@ -623,7 +623,7 @@ You should recover any finished parts from this job before starting a new job.	B
 Percentage streamed:	Prozentsatz gestreamt:	Pourcentage diffusé :	Percentuale in streaming:	Prosenttiosuus suoratoistosta:	Percentage gestreamd:	Wartość procentowa przekazana:	Procentdel streamet:
 Job cancelled by the user.	Auftrag vom Benutzer abgebrochen.	Travail annulé par l'utilisateur.	Lavoro cancellato dall'utente.	Käyttäjän peruuttama työ.	Taak geannuleerd door de gebruiker.	Zadanie anulowane przez użytkownika.	Job annulleret af brugeren.
 Job marked unsuccessful by the user.	Auftrag vom Benutzer als erfolglos markiert.	Travail marqué comme infructueux par l'utilisateur.	Lavoro segnato come non riuscito dall'utente.	Käyttäjä on merkinnyt työn epäonnistuneeksi.	Opdracht door de gebruiker als mislukt gemarkeerd.	Zadanie oznaczone przez użytkownika jako nieudane.	Job markeret som mislykkedes af brugeren.
-Job cancelled due to event	Auftrag abgebrochen aufgrund eines Ereignisses	Travail annulé en raison d'un événement	Lavoro annullato a causa di un evento	Työ peruutettu tapahtuman vuoksi	Opdracht geannuleerd door gebeurtenis	Zadanie anulowane z powodu zdarzenia	Job aflyst på grund af en hændelse
+Job cancelled due to event	Auftrag abgebrochen aufgrund eines Ereignis	Travail annulé en raison d'un événement	Lavoro annullato a causa di un evento	Työ peruutettu tapahtuman tapahtuma	Opdracht geannuleerd door gebeurtenis	Zadanie anulowane z powodu zdarzenie	Job aflyst på grund af en begivenhed
 event	Ereignis	événement	evento	tapahtuma	gebeurtenis	zdarzenie	begivenhed
 Check your GCode file before re-running it.	Überprüfen Sie Ihre GCode-Datei, bevor Sie sie erneut ausführen.	Vérifiez votre fichier GCode avant de le ré-exécuter.	Controlla il tuo file GCode prima di eseguirlo nuovamente.	Tarkista GCode-tiedosto ennen sen suorittamista uudelleen.	Controleer uw GCode bestand voordat u het opnieuw uitvoert.	Sprawdź swój plik GCode przed ponownym uruchomieniem.	Kontroller din GCode-fil, før du kører den igen.
 Last Updated Time	Letzte Aktualisierungszeit	Heure de la dernière mise à jour	Ora dell'ultimo aggiornamento	Viimeksi päivitetty aika	Laatst bijgewerkt Tijd	Czas ostatniej aktualizacji	Sidst opdaterede tid
