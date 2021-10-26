@@ -237,10 +237,10 @@ class JobData(object):
         if self.metadata_dict:
             metadata_list = self.metadata_dict.items()
 
-            [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
+            [summary_list.append('[b]:[/b] '.join(map(self.l.get_bold, sublist))) for sublist in metadata_list]
 
             try: 
-                summary_list.sort(key = lambda i: self.metadata_order[i.split(':')[0]])
+                summary_list.sort(key = lambda i: self.metadata_order[i.split('[b]:[/b]')[0]])
 
             except Exception as e:
                 print(str(e))
