@@ -401,4 +401,5 @@ class JobIncompleteScreen(Screen):
             self.event_details_label.text = percent_streamed + "\n" + may_loss + "\n" + recovery_msg
         
             if 'Error' in self.event_type:
-                self.event_details_label.text = self.event_details_label.text + "\n" + self.l.get_str("Check your GCode file before re-running it.")
+                self.event_details_label.text = self.event_details_label.text + " " + self.l.get_str("Check your GCode file before re-running it.")
+
