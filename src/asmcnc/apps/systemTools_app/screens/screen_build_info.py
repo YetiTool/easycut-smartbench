@@ -187,6 +187,7 @@ Builder.load_string("""
 
                             Label:
                                 id: smartbench_location_label
+                                size_hint_x: None
                                 color: hex('#333333ff')
                                 text_size: self.size
                                 halign: "left"
@@ -201,8 +202,6 @@ Builder.load_string("""
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
 
-                            BoxLayout: 
-                                orientation: 'horizontal'
 
 
                     TextInput:
