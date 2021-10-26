@@ -128,33 +128,33 @@ class JobData(object):
 
         self.metadata_order = {
 
-            self.l.get_str("Last Updated Time"): 0,
-            self.l.get_str("Last Updated By"): 1,
-            self.l.get_str("Internal Order Code"): 2,
-            self.l.get_str("Process Step"): 3,
-            self.l.get_str("Total Parts Required"): 4,
-            self.l.get_str("Parts Made Per Job"): 5,
-            self.l.get_str("Stock Material Type"): 6,
-            self.l.get_str("Job Size X Axis"): 7,
-            self.l.get_str("Job Size Y Axis"): 8,
-            self.l.get_str("Job Size Z Axis"): 9,
-            self.l.get_str("Stock Material Size"): 10,
-            self.l.get_str("Pre Production Notes"): 11,
-            self.l.get_str("Primary Operator"): 12,
-            self.l.get_str("Job Duration"): 13,
-            self.l.get_str("End Effector"): 14,
-            self.l.get_str("Tool Diameter And Type"): 15,
-            self.l.get_str("Toolpath Name"): 16,
-            self.l.get_str("XY Datum Position"): 17,
-            self.l.get_str("Z Datum Position"): 18,
-            self.l.get_str("Maximum Feed Rate"): 19,
-            self.l.get_str("Maximum Plunge Rate"): 20,
-            self.l.get_str("Maximum Spindle Speed"): 21,
-            self.l.get_str("Customer Name"): 22,
-            self.l.get_str("Customer Part Number"): 22,
-            self.l.get_str("Customer Part Description"): 23,
-            self.l.get_str("Customer Order Reference"): 24,
-            self.l.get_str("Parts Made So Far"): 25
+            self.l.get_bold("Last Updated Time"): 0,
+            self.l.get_bold("Last Updated By"): 1,
+            self.l.get_bold("Internal Order Code"): 2,
+            self.l.get_bold("Process Step"): 3,
+            self.l.get_bold("Total Parts Required"): 4,
+            self.l.get_bold("Parts Made Per Job"): 5,
+            self.l.get_bold("Stock Material Type"): 6,
+            self.l.get_bold("Job Size X Axis"): 7,
+            self.l.get_bold("Job Size Y Axis"): 8,
+            self.l.get_bold("Job Size Z Axis"): 9,
+            self.l.get_bold("Stock Material Size"): 10,
+            self.l.get_bold("Pre Production Notes"): 11,
+            self.l.get_bold("Primary Operator"): 12,
+            self.l.get_bold("Job Duration"): 13,
+            self.l.get_bold("End Effector"): 14,
+            self.l.get_bold("Tool Diameter And Type"): 15,
+            self.l.get_bold("Toolpath Name"): 16,
+            self.l.get_bold("XY Datum Position"): 17,
+            self.l.get_bold("Z Datum Position"): 18,
+            self.l.get_bold("Maximum Feed Rate"): 19,
+            self.l.get_bold("Maximum Plunge Rate"): 20,
+            self.l.get_bold("Maximum Spindle Speed"): 21,
+            self.l.get_bold("Customer Name"): 22,
+            self.l.get_bold("Customer Part Number"): 22,
+            self.l.get_bold("Customer Part Description"): 23,
+            self.l.get_bold("Customer Order Reference"): 24,
+            self.l.get_bold("Parts Made So Far"): 25
             }
 
     def set_job_filename(self, job_path_and_name):
@@ -237,10 +237,10 @@ class JobData(object):
         if self.metadata_dict:
             metadata_list = self.metadata_dict.items()
 
-            [summary_list.append(': '.join(map(self.l.get_str, sublist))) for sublist in metadata_list]
+            [summary_list.append('[b]:[/b] '.join([self.l.get_bold(sublist[0]), sublist[1]])) for sublist in metadata_list]
 
             try: 
-                summary_list.sort(key = lambda i: self.metadata_order[i.split(':')[0]])
+                summary_list.sort(key = lambda i: self.metadata_order[i.split('[b]:[/b]')[0]])
 
             except Exception as e:
                 print(str(e))

@@ -523,7 +523,7 @@ class LocalFileChooser(Screen):
 
         def format_metadata(y):
             mini_list = y.split(': ')
-            return str(self.l.get_str(mini_list[0]) + ': ' + mini_list[1])
+            return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
             # return y
 
         with open(self.filechooser.selection[0]) as previewed_file:
