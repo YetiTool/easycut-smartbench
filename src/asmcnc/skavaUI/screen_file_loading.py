@@ -395,6 +395,8 @@ class LoadingScreen(Screen):
         if stage == 'Getting ready':
             self.check_button.disabled = True
             self.home_button.disabled = True
+            self.check_button.opacity = 0
+            self.home_button.opacity = 0
             self.progress_value = self.l.get_str('Getting ready') + '...'
             # self.warning_title_label.text = ''
             self.warning_body_label.text = ''
@@ -421,6 +423,9 @@ class LoadingScreen(Screen):
             self.check_button.disabled = False
             self.home_button.disabled = False
 
+            self.check_button.opacity = 1
+            self.home_button.opacity = 1
+
         if stage == 'Could not load':
             self.progress_value = self.l.get_str('Could not load job')
             self.warning_body_label.text = (
@@ -436,6 +441,9 @@ class LoadingScreen(Screen):
 
             self.check_button.disabled = True
             self.home_button.disabled = False
+
+            self.check_button.opacity = 1
+            self.home_button.opacity = 1
 
 
     def _finish_loading(self, non_modal_gcode_list): # called by gcode preview widget
