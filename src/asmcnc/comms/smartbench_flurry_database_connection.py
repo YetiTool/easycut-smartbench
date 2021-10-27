@@ -284,6 +284,16 @@ class DatabaseEventManager():
 		# Check if consumables have passed thresholds for sending events
 		self.check_consumable_percentages(z_lube_percent_left, spindle_brush_percent_left, calibration_percent_left)
 
+
+		# Human readable machine status:
+		status = self.m.state()
+
+		if 'Door' in status: 
+			if '3' in status:
+				status = "Resuming"
+			else: 
+				status = "Paused"
+
 		data = {
 				"payload_type": "full",
 				"machine_info": {
@@ -294,7 +304,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.public_ip_address
 				},
 				"statuses": {
-					"status": self.m.state(),
+					"status": status,
 
 					"z_lube_%_left": z_lube_percent_left,
 					"z_lube_hrs_before_next": z_lube_hrs_left,
