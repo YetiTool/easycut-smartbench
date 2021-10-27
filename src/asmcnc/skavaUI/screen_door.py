@@ -210,11 +210,8 @@ Builder.load_string("""
 
 class DoorScreen(Screen):
 
-    
-    poll_for_resume = None  
-    
+    poll_for_resume = None 
     return_to_screen = 'home'
-    cancel_to_screen = 'home'
 
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
@@ -306,10 +303,8 @@ class DoorScreen(Screen):
     def resume_stream(self):
         # Job resumed, send event
         self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
-
         self.m.resume_after_a_hard_door()
         self.return_to_app()
-
 
     def cancel_stream(self):
         # Job cancelled by user, send event
@@ -318,11 +313,14 @@ class DoorScreen(Screen):
         if self.return_to_screen == 'go':
             self.sm.get_screen('go').is_job_started_already = False
             self.sm.get_screen('go').temp_suppress_prompts = True
+            self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+            self.return_to_screen = 'job_incomplete'
+
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+
         self.m.cancel_after_a_hard_door()
         self.return_to_app()
-
             
     def return_to_app(self):
         if self.sm.has_screen(self.return_to_screen):
