@@ -314,7 +314,7 @@ class JobIncompleteScreen(Screen):
 
     def send_job_status(self):
         if 'cancelled' in self.event_type:
-            self.db.send_event(0, 'Job cancelled', self.job_cancelled_label.text, 5)
+            self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
 
         elif 'Alarm' in self.event_type:
             self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 5)

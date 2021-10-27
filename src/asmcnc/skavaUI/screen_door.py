@@ -237,9 +237,6 @@ class DoorScreen(Screen):
         self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
 
     def on_pre_enter(self):
-        # Interrupt bar has been pushed, send event
-        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
-
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
         self.resume_button.opacity = 0
@@ -256,6 +253,7 @@ class DoorScreen(Screen):
 
         else: Clock.schedule_once(self.ready_to_resume, 0.2)
 
+        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
