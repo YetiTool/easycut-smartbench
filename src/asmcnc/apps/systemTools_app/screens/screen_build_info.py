@@ -803,8 +803,13 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
-        self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*11)
+        self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10)
         self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+
+        if self.smartbench_location_label.is_shortened: 
+            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*12)
+            self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+
 
     def write_location_to_file(self):
 
