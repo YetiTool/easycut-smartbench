@@ -781,9 +781,8 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.height = 0
         self.smartbench_location_input.opacity = 0
         self.smartbench_location.height = 30
-        self.get_smartbench_location()
         self.smartbench_location.opacity = 1
-
+        self.get_smartbench_location()
 
 
     def get_smartbench_location(self):
@@ -803,12 +802,14 @@ class BuildInfoScreen(Screen):
 
         self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10)
         self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+        self.smartbench_location_label.texture_update()
 
         print("*10, " + str(self.smartbench_location_label.is_shortened))
 
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*14)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            self.smartbench_location_label.texture_update()
             print("*14, " + str(self.smartbench_location_label.is_shortened))
 
         else: 
@@ -817,6 +818,7 @@ class BuildInfoScreen(Screen):
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*18)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            self.smartbench_location_label.texture_update()
             print("*18, " + str(self.smartbench_location_label.is_shortened))
         else: 
             return
@@ -824,6 +826,7 @@ class BuildInfoScreen(Screen):
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*20)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            self.smartbench_location_label.texture_update()
             print("*20, " + str(self.smartbench_location_label.is_shortened))
 
 
