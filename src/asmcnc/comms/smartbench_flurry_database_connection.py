@@ -399,6 +399,9 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
+			print("Job End sample data")
+			print(str(data))
+
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
 
 
@@ -420,18 +423,15 @@ class DatabaseEventManager():
 						"successful": successful,
 						"post_production_notes": self.jd.post_production_notes,
 						"batch_number": self.jd.batch_number,
-					},
-					"metadata": {
-
+						"parts_made_so_far": self.jd.metadata_dict.get('Parts Made So Far', 0)
 					},
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
-
-			data["metadata"] = metadata_in_json_format
-
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
+
+			print("Job Summary sample data")
+			print(str(data))
 
 		self.jd.post_job_data_update_post_send()
 
