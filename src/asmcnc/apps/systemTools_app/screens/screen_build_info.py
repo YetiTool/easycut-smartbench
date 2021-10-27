@@ -55,7 +55,6 @@ Builder.load_string("""
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
     smartbench_location_label : smartbench_location_label
-    # smartbench_location_buffer : smartbench_location_buffer
     smartbench_location_input: smartbench_location_input
     smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
@@ -800,31 +799,70 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
-        self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10)
-        self.smartbench_location_label.texture_update()
+        max_width = dp(self.smartbench_location.width) - dp(24)
+        label_width = dp(len(self.smartbench_location_label.text)*10)
 
-        print("*10, " + str(self.smartbench_location_label.is_shortened))
+        if label_width < max_width:
+
+            self.smartbench_location_label.width = label_width
+            self.smartbench_location_label.texture_update()
+            print("*10, " + str(self.smartbench_location_label.is_shortened))
+
+        else: 
+            self.smartbench_location_label.width = max_width
+            self.smartbench_location_label.texture_update()
+            return
 
         if self.smartbench_location_label.is_shortened: 
-            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*14)
-            self.smartbench_location_label.texture_update()
-            print("*14, " + str(self.smartbench_location_label.is_shortened))
+
+            label_width = dp(len(self.smartbench_location_label.text)*12)
+            if label_width < max_width:
+
+                self.smartbench_location_label.width = label_width
+                self.smartbench_location_label.texture_update()
+                print("*12, " + str(self.smartbench_location_label.is_shortened))
+
+            else: 
+                self.smartbench_location_label.width = max_width
+                self.smartbench_location_label.texture_update()
+                return
 
         else: 
             return
 
         if self.smartbench_location_label.is_shortened: 
-            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*18)
-            self.smartbench_location_label.texture_update()
-            print("*18, " + str(self.smartbench_location_label.is_shortened))
+
+            label_width = dp(len(self.smartbench_location_label.text)*14)
+            if label_width < max_width:
+
+                self.smartbench_location_label.width = label_width
+                self.smartbench_location_label.texture_update()
+                print("*14, " + str(self.smartbench_location_label.is_shortened))
+
+            else: 
+                self.smartbench_location_label.width = max_width
+                self.smartbench_location_label.texture_update()
+                return
+
         else: 
             return
 
         if self.smartbench_location_label.is_shortened: 
-            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*20)
-            self.smartbench_location_label.texture_update()
-            print("*20, " + str(self.smartbench_location_label.is_shortened))
 
+            label_width = dp(len(self.smartbench_location_label.text)*16)
+            if label_width < max_width:
+
+                self.smartbench_location_label.width = label_width
+                self.smartbench_location_label.texture_update()
+                print("*16, " + str(self.smartbench_location_label.is_shortened))
+
+            else: 
+                self.smartbench_location_label.width = max_width
+                self.smartbench_location_label.texture_update()
+                return
+
+        else: 
+            return
 
     def write_location_to_file(self):
 
