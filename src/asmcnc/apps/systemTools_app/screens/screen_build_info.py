@@ -803,6 +803,8 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
         max_width = dp(self.smartbench_location.width) - dp(34)
+
+
         label_width = dp(len(self.smartbench_location_label.text)*10)
 
         if label_width < max_width:
@@ -813,6 +815,7 @@ class BuildInfoScreen(Screen):
             self.smartbench_location.texture_update()
             print("*10, " + str(self.smartbench_location_label.is_shortened))
             Clock.schedule_once(self.check_shortened_again, 2)
+            Clock.schedule_once(lambda dt: self.test_width_func(self.smartbench_location_label.is_shortened), 5)
 
         else: 
             self.smartbench_location_label.width = dp(max_width)
@@ -887,7 +890,14 @@ class BuildInfoScreen(Screen):
         else: 
             return
 
-    def check_shortened_again(self, dt):
+
+    def test_width_func(self, is_shortened):
+
+        print("test width func " + str(is_shortened))
+
+
+
+    def check_shortened_again(self):
         print("after delay, " + str(self.smartbench_location_label.is_shortened))
 
 
