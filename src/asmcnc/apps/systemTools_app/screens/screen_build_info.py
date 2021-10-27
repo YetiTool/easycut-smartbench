@@ -777,13 +777,11 @@ class BuildInfoScreen(Screen):
 
         self.smartbench_location_input.focus = False
         self.smartbench_location_input.disabled = True
-
-        self.get_smartbench_location()
-
         self.smartbench_location.disabled = False
         self.smartbench_location_input.height = 0
         self.smartbench_location_input.opacity = 0
         self.smartbench_location.height = 30
+        self.get_smartbench_location()
         self.smartbench_location.opacity = 1
 
 
