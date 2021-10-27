@@ -132,7 +132,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            padding: dp(5)
+                            padding: [dp(5), dp(0)]
 
                             BoxLayout: 
                                 size_hint_x: None
@@ -186,7 +186,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            padding: dp(5)
+                            padding: [dp(5), dp(0)]
 
                             Label:
                                 id: smartbench_location_label
@@ -807,7 +807,19 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
         if self.smartbench_location_label.is_shortened: 
-            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*16)
+            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*14)
+            self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+        else: 
+            return
+
+        if self.smartbench_location_label.is_shortened: 
+            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*18)
+            self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+        else: 
+            return
+
+        if self.smartbench_location_label.is_shortened: 
+            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*20)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
 
