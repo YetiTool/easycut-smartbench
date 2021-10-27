@@ -804,21 +804,27 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10)
         self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
+        print("*10, " + str(self.smartbench_location_label.is_shortened))
+
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*14)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            print("*14, " + str(self.smartbench_location_label.is_shortened))
+
         else: 
             return
 
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*18)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            print("*18, " + str(self.smartbench_location_label.is_shortened))
         else: 
             return
 
         if self.smartbench_location_label.is_shortened: 
             self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*20)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
+            print("*20, " + str(self.smartbench_location_label.is_shortened))
 
 
     def write_location_to_file(self):
