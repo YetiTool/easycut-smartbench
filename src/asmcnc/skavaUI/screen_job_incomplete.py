@@ -293,13 +293,11 @@ class JobIncompleteScreen(Screen):
         if event_number: self.specific_event = str(event_number.split(':')[1])
         if not 'unsuccessful' in self.event_type: self.db.send_job_end(False)
         self.send_job_status()
+        self.sm.get_screen('go').is_job_started_already = False
 
     def on_pre_enter(self):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
-
-    def on_enter(self):
-        self.sm.get_screen('go').is_job_started_already = False
  
     def press_ok(self):
         self.set_post_production_notes()

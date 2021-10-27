@@ -179,10 +179,6 @@ class StopOrResumeDecisionScreen(Screen):
 
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
-        if self.jd.screen_to_return_to_after_job == 'go':
-            self.sm.get_screen('go').is_job_started_already = False
-            self.sm.get_screen('go').temp_suppress_prompts = True
-        
         self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
         self.sm.current = 'job_incomplete'
 

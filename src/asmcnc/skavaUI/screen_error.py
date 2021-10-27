@@ -184,8 +184,6 @@ class ErrorScreenClass(Screen):
 
         if self.return_to_screen == 'job_incomplete':
             self.sm.get_screen('job_incomplete').prep_this_screen('Error', event_number=self.message)
-            self.sm.get_screen('go').is_job_started_already = False
-            self.sm.get_screen('go').temp_suppress_prompts = True
 
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
 
