@@ -317,10 +317,13 @@ class JobIncompleteScreen(Screen):
             self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
 
         elif 'Alarm' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 5)
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 1)
 
         elif 'Error' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 5)
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 0)
+
+        elif 'unsuccessful' in self.event_type:
+            self.db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' + self.jd.job_name, 8)
 
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
