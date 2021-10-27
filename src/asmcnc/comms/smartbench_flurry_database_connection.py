@@ -399,9 +399,6 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			print("Job End sample data")
-			print(str(data))
-
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
 
 
@@ -429,9 +426,6 @@ class DatabaseEventManager():
 				}
 
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
-
-			print("Job Summary sample data")
-			print(str(data))
 
 		self.jd.post_job_data_update_post_send()
 
