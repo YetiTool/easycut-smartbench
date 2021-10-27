@@ -313,7 +313,7 @@ class JobIncompleteScreen(Screen):
         self.jd.batch_number = self.batch_number_input.text
 
     def send_job_status(self):
-        if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
+        if 'cancelled' in self.event_type:
             self.db.send_event(0, 'Job cancelled', self.job_cancelled_label.text, 5)
 
         elif 'Alarm' in self.event_type:

@@ -173,10 +173,6 @@ class StopOrResumeDecisionScreen(Screen):
 
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
-
-        # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
-
         self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         
         self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)

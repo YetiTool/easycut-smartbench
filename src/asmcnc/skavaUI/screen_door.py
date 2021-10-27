@@ -307,9 +307,6 @@ class DoorScreen(Screen):
         self.return_to_app()
 
     def cancel_stream(self):
-        # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
-
         if self.return_to_screen == 'go':
             self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
             self.return_to_screen = 'job_incomplete'
