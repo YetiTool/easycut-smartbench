@@ -807,7 +807,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
         if self.smartbench_location_label.is_shortened: 
-            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*12)
+            self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*16)
             self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
 
