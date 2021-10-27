@@ -55,6 +55,7 @@ Builder.load_string("""
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
     smartbench_location_label : smartbench_location_label
+    smartbench_location_buffer : smartbench_location_buffer
     smartbench_location_input: smartbench_location_input
     smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
@@ -201,6 +202,10 @@ Builder.load_string("""
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
+
+                            Label: 
+                                id: smartbench_location_buffer
+                                size_hint_x: None
 
 
 
@@ -793,6 +798,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
         self.smartbench_location_label.width = dp(len(self.smartbench_location_label.text)*10.5)
+        self.smartbench_location_buffer.width = dp(self.smartbench_location.width) - dp(self.smartbench_location_label.width) - dp(24)
 
     def write_location_to_file(self):
 
