@@ -306,7 +306,10 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else: 
             Clock.schedule_once(lambda dt: self.m.set_led_colour('GREEN'), 0.2)
-        
+    
+
+    def on_pre_enter(self):
+
         # File label at the top
         if self.jd.job_gcode != []:
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"

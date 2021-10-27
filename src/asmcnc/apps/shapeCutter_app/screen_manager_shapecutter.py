@@ -986,13 +986,15 @@ class ScreenManagerShapeCutter(object):
         
         if not self.sm.has_screen('sCsavejob'): 
             sCsavejob_screen = screen_shapeCutter_post_job_save.ShapeCutterSaveJobScreenClass(name = 'sCsavejob', machine = self.m, job_parameters = self.j, shapecutter = self)
-            self.sm.add_widget(sCsavejob_screen)       
-        
+            self.sm.add_widget(sCsavejob_screen)
+
+        self.jd.reset_values()
          
         self.jd.screen_to_return_to_after_job = return_to_screen
         self.jd.screen_to_cancel_to_after_job = cancel_to_screen        
         self.jd.job_gcode = self.j.gcode_lines
         self.jd.filename  = self.j.gcode_filename
+        self.jd.job_name = self.j.gcode_job_name
         
         def auto_go(dt):
             self.sm.get_screen('go').start_or_pause_button_press()
@@ -1087,13 +1089,13 @@ class ScreenManagerShapeCutter(object):
                     gc.collect()
 
         self.j.refresh_parameters
-#         self.destroy_nearly_all_screens()
-#         destruction_poll = Clock.schedule_interval(check_destruction_status, 0.2)
-
+        self.jd.reset_values()
+        
         if not self.sm.current == 'alarmScreen':
             self.sm.current = 'lobby'
         else: 
             self.sm.get_screen('alarmScreen').return_to_screen = 'lobby'
+
         gc.collect()
   
     def open_shapecutter(self):

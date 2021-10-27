@@ -80,6 +80,36 @@ class JobData(object):
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
+        self.metadata_order = {
+
+            self.l.get_bold("Last Updated Time"): 0,
+            self.l.get_bold("Last Updated By"): 1,
+            self.l.get_bold("Internal Order Code"): 2,
+            self.l.get_bold("Process Step"): 3,
+            self.l.get_bold("Total Parts Required"): 4,
+            self.l.get_bold("Parts Made Per Job"): 5,
+            self.l.get_bold("Stock Material Type"): 6,
+            self.l.get_bold("Job Size X Axis"): 7,
+            self.l.get_bold("Job Size Y Axis"): 8,
+            self.l.get_bold("Job Size Z Axis"): 9,
+            self.l.get_bold("Stock Material Size"): 10,
+            self.l.get_bold("Pre Production Notes"): 11,
+            self.l.get_bold("Primary Operator"): 12,
+            self.l.get_bold("Job Duration"): 13,
+            self.l.get_bold("End Effector"): 14,
+            self.l.get_bold("Tool Diameter And Type"): 15,
+            self.l.get_bold("Toolpath Name"): 16,
+            self.l.get_bold("XY Datum Position"): 17,
+            self.l.get_bold("Z Datum Position"): 18,
+            self.l.get_bold("Maximum Feed Rate"): 19,
+            self.l.get_bold("Maximum Plunge Rate"): 20,
+            self.l.get_bold("Maximum Spindle Speed"): 21,
+            self.l.get_bold("Customer Name"): 22,
+            self.l.get_bold("Customer Part Number"): 22,
+            self.l.get_bold("Customer Part Description"): 23,
+            self.l.get_bold("Customer Order Reference"): 24,
+            self.l.get_bold("Parts Made So Far"): 25
+            }
 
     def reset_values(self):
 
@@ -125,37 +155,6 @@ class JobData(object):
         self.feeds_speeds_and_boundaries_string = ''
         self.check_info_string = ''    
         self.comments_string = ''
-
-        self.metadata_order = {
-
-            self.l.get_bold("Last Updated Time"): 0,
-            self.l.get_bold("Last Updated By"): 1,
-            self.l.get_bold("Internal Order Code"): 2,
-            self.l.get_bold("Process Step"): 3,
-            self.l.get_bold("Total Parts Required"): 4,
-            self.l.get_bold("Parts Made Per Job"): 5,
-            self.l.get_bold("Stock Material Type"): 6,
-            self.l.get_bold("Job Size X Axis"): 7,
-            self.l.get_bold("Job Size Y Axis"): 8,
-            self.l.get_bold("Job Size Z Axis"): 9,
-            self.l.get_bold("Stock Material Size"): 10,
-            self.l.get_bold("Pre Production Notes"): 11,
-            self.l.get_bold("Primary Operator"): 12,
-            self.l.get_bold("Job Duration"): 13,
-            self.l.get_bold("End Effector"): 14,
-            self.l.get_bold("Tool Diameter And Type"): 15,
-            self.l.get_bold("Toolpath Name"): 16,
-            self.l.get_bold("XY Datum Position"): 17,
-            self.l.get_bold("Z Datum Position"): 18,
-            self.l.get_bold("Maximum Feed Rate"): 19,
-            self.l.get_bold("Maximum Plunge Rate"): 20,
-            self.l.get_bold("Maximum Spindle Speed"): 21,
-            self.l.get_bold("Customer Name"): 22,
-            self.l.get_bold("Customer Part Number"): 22,
-            self.l.get_bold("Customer Part Description"): 23,
-            self.l.get_bold("Customer Order Reference"): 24,
-            self.l.get_bold("Parts Made So Far"): 25
-            }
 
     def set_job_filename(self, job_path_and_name):
 

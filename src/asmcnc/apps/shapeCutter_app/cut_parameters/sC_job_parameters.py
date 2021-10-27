@@ -35,6 +35,7 @@ class ShapeCutterJobParameters(object):
         # gcode
         self.gcode_lines = []
         self.gcode_filename = ''
+        self.gcode_job_name = ''
         
         # shape dimensions
         self.circle_dimensions = {
@@ -666,8 +667,8 @@ class ShapeCutterJobParameters(object):
         return True     
 
     def generate_gCode_filename(self):
-        self.gcode_filename = self.jobCache_file_path + self.shape_dict["shape"] \
-         + "_" + self.shape_dict["cut_type"] + "_" + self.profile_filename + ".nc"
+        self.gcode_job_name = self.shape_dict["shape"] + "_" + self.shape_dict["cut_type"] + "_" + self.profile_filename + ".nc"
+        self.gcode_filename = self.jobCache_file_path + self.gcode_job_name
        
     def save_gCode(self):
         self.generate_gCode_filename()
