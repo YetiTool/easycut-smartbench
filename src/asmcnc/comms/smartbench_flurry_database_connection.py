@@ -534,6 +534,7 @@ class DatabaseEventManager():
 	# 5 - job cancel
 	# 6 - job start
 	# 7 - job end
+	# 8 - job unsuccessful
 
 	def send_event(self, event_severity, event_description, event_name, event_type):
 
