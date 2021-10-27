@@ -197,6 +197,8 @@ Builder.load_string("""
                                 valign: "middle"
                                 markup: True
                                 font_size: 24
+                                shorten_from: 'right'
+                                shorten: True
 
                             BoxLayout: 
                                 size_hint_x: None
@@ -774,15 +776,17 @@ class BuildInfoScreen(Screen):
         self.write_location_to_file()
 
         self.smartbench_location_input.focus = False
-
         self.smartbench_location_input.disabled = True
+
+        self.get_smartbench_location()
+
         self.smartbench_location.disabled = False
         self.smartbench_location_input.height = 0
         self.smartbench_location_input.opacity = 0
         self.smartbench_location.height = 30
         self.smartbench_location.opacity = 1
 
-        self.get_smartbench_location()
+
 
     def get_smartbench_location(self):
         
