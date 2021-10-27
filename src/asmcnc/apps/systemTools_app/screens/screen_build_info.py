@@ -149,6 +149,8 @@ Builder.load_string("""
                                 markup: True
                                 font_size: 30
                                 color: hex('#333333ff')
+                                multiline: False
+                                shorten: True
                     TextInput:
                         padding: [4, 2]
                         id: smartbench_name_input
