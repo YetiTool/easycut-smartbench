@@ -805,12 +805,12 @@ class BuildInfoScreen(Screen):
         if label_width < max_width:
 
             self.smartbench_location_label.width = dp(label_width)
-            self.smartbench_location_label.texture_update()
+            self.smartbench_location.texture_update()
             print("*10, " + str(self.smartbench_location_label.is_shortened))
 
         else: 
             self.smartbench_location_label.width = dp(max_width)
-            self.smartbench_location_label.texture_update()
+            self.smartbench_location.texture_update()
             return
 
         if self.smartbench_location_label.is_shortened: 
@@ -819,12 +819,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 print("*12, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 return
 
         else: 
@@ -836,12 +836,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 print("*14, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 return
 
         else: 
@@ -853,12 +853,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 print("*16, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location_label.texture_update()
+                self.smartbench_location.texture_update()
                 return
 
         else: 
