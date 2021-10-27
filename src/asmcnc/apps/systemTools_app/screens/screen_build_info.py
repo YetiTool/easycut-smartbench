@@ -897,7 +897,7 @@ class BuildInfoScreen(Screen):
 
 
 
-    def check_shortened_again(self):
+    def check_shortened_again(self, dt):
         print("after delay, " + str(self.smartbench_location_label.is_shortened))
 
 
