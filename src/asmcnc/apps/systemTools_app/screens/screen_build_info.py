@@ -55,6 +55,7 @@ Builder.load_string("""
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
     smartbench_location_label : smartbench_location_label
+    smartbench_location_buffer : smartbench_location_buffer
     smartbench_location_input: smartbench_location_input
     smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
@@ -131,7 +132,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            padding: [dp(5), dp(0)]
+                            spacing: dp(5)
 
                             BoxLayout: 
                                 size_hint_x: None
@@ -185,7 +186,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            padding: [dp(5), dp(0)]
+                            spacing: dp(5)
 
                             Label:
                                 id: smartbench_location_label
@@ -206,9 +207,9 @@ Builder.load_string("""
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
 
-                            # Label: 
-                            #     id: smartbench_location_buffer
-                            #     size_hint_x: None
+                            Label: 
+                                id: smartbench_location_buffer
+                                size_hint_x: None
 
 
 
@@ -805,12 +806,12 @@ class BuildInfoScreen(Screen):
         if label_width < max_width:
 
             self.smartbench_location_label.width = dp(label_width)
-            self.smartbench_location.texture_update()
+            self.smartbench_location_label.texture_update()
             print("*10, " + str(self.smartbench_location_label.is_shortened))
 
         else: 
             self.smartbench_location_label.width = dp(max_width)
-            self.smartbench_location.texture_update()
+            self.smartbench_location_label.texture_update()
             return
 
         if self.smartbench_location_label.is_shortened: 
@@ -819,12 +820,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 print("*12, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 return
 
         else: 
@@ -836,12 +837,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 print("*14, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 return
 
         else: 
@@ -853,12 +854,12 @@ class BuildInfoScreen(Screen):
             if label_width < max_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 print("*16, " + str(self.smartbench_location_label.is_shortened))
 
             else: 
                 self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 return
 
         else: 
