@@ -291,18 +291,18 @@ class JobIncompleteScreen(Screen):
     def prep_this_screen(self, event, event_number=False):
         self.event_type = event
         if event_number: self.specific_event = str(event_number.split(':')[1])
+        if not 'unsuccessful' in self.event_type: self.db.send_job_end(False)
+        self.send_job_status()
+        self.sm.get_screen('go').is_job_started_already = False
 
     def on_pre_enter(self):
         self.update_strings()
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
-
-    def on_enter(self):
-        self.sm.get_screen('go').is_job_started_already = False
  
     def press_ok(self):
         self.set_post_production_notes()
         self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
-        self.send_job_status()
+        self.db.send_job_summary(False)
         self.quit_to_return_screen()
 
     def quit_to_return_screen(self):
@@ -313,16 +313,17 @@ class JobIncompleteScreen(Screen):
         self.jd.batch_number = self.batch_number_input.text
 
     def send_job_status(self):
-        if 'cancelled' in self.event_type or 'unsuccessful' in self.event_type:
-            self.db.send_event(0, 'Job cancelled', self.job_cancelled_label.text, 5)
+        if 'cancelled' in self.event_type:
+            self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
 
         elif 'Alarm' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 5)
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Alarm): ' + self.jd.job_name, 1)
 
         elif 'Error' in self.event_type:
-            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 5)
+            self.db.send_event(2, 'Job cancelled', 'Cancelled job (Error): ' + self.jd.job_name, 0)
 
-        self.db.send_job_end(False)
+        elif 'unsuccessful' in self.event_type:
+            self.db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' + self.jd.job_name, 8)
 
 
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES

@@ -210,11 +210,8 @@ Builder.load_string("""
 
 class DoorScreen(Screen):
 
-    
-    poll_for_resume = None  
-    
+    poll_for_resume = None 
     return_to_screen = 'home'
-    cancel_to_screen = 'home'
 
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
@@ -240,9 +237,6 @@ class DoorScreen(Screen):
         self.anim_countdown_img_end = Animation(opacity = 0, duration = 0.5)
 
     def on_pre_enter(self):
-        # Interrupt bar has been pushed, send event
-        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
-
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
         self.resume_button.opacity = 0
@@ -259,6 +253,7 @@ class DoorScreen(Screen):
 
         else: Clock.schedule_once(self.ready_to_resume, 0.2)
 
+        self.db.send_event(1, "Job paused", "Paused job (Interrupt bar pushed): " + self.jd.job_name, 3)
         self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
@@ -306,23 +301,19 @@ class DoorScreen(Screen):
     def resume_stream(self):
         # Job resumed, send event
         self.db.send_event(0, 'Job resumed', 'Resumed job: ' + self.jd.job_name, 4)
-
         self.m.resume_after_a_hard_door()
         self.return_to_app()
 
-
     def cancel_stream(self):
-        # Job cancelled by user, send event
-        self.db.send_event(0, 'Job cancelled', 'Cancelled job (User): ' + self.jd.job_name, 5)
-
         if self.return_to_screen == 'go':
-            self.sm.get_screen('go').is_job_started_already = False
-            self.sm.get_screen('go').temp_suppress_prompts = True
+            self.sm.get_screen('job_incomplete').prep_this_screen('cancelled', event_number=False)
+            self.return_to_screen = 'job_incomplete'
+
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel = False)
+
         self.m.cancel_after_a_hard_door()
         self.return_to_app()
-
             
     def return_to_app(self):
         if self.sm.has_screen(self.return_to_screen):

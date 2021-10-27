@@ -126,10 +126,6 @@ class AlarmSequenceManager(object):
 	def exit_sequence(self):
 		
 		self.m.resume_from_alarm()
-
-		if self.return_to_screen == "job_incomplete":
-			self.sm.get_screen('go').is_job_started_already = False
-			self.sm.get_screen('go').temp_suppress_prompts = True
 		
 		if self.sm.has_screen(self.return_to_screen):
 			self.sm.current = self.return_to_screen
