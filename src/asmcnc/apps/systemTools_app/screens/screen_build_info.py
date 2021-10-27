@@ -809,6 +809,7 @@ class BuildInfoScreen(Screen):
 
             self.smartbench_location_label.width = dp(label_width)
             self.smartbench_location_buffer.width = max_width - label_width
+            self.smartbench_location_label.text_size = self.smartbench_location_label.size
             self.smartbench_location.texture_update()
             print("*10, " + str(self.smartbench_location_label.is_shortened))
             Clock.schedule_once(self.check_shortened_again, 2)
@@ -816,6 +817,7 @@ class BuildInfoScreen(Screen):
         else: 
             self.smartbench_location_label.width = dp(max_width)
             self.smartbench_location_buffer.width = dp(0)
+            self.smartbench_location_label.text_size = self.smartbench_location_label.size
             self.smartbench_location.texture_update()
             return
 
@@ -826,6 +828,7 @@ class BuildInfoScreen(Screen):
 
                 self.smartbench_location_label.width = dp(label_width)
                 self.smartbench_location_buffer.width = max_width - label_width
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 print("*12, " + str(self.smartbench_location_label.is_shortened))
                 Clock.schedule_once(self.check_shortened_again, 2)
@@ -833,6 +836,7 @@ class BuildInfoScreen(Screen):
             else: 
                 self.smartbench_location_label.width = dp(max_width)
                 self.smartbench_location_buffer.width = dp(0)
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 return
 
@@ -846,6 +850,7 @@ class BuildInfoScreen(Screen):
 
                 self.smartbench_location_label.width = dp(label_width)
                 self.smartbench_location_buffer.width = max_width - label_width
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 print("*14, " + str(self.smartbench_location_label.is_shortened))
                 Clock.schedule_once(self.check_shortened_again, 2)
@@ -853,6 +858,7 @@ class BuildInfoScreen(Screen):
             else: 
                 self.smartbench_location_label.width = dp(max_width)
                 self.smartbench_location_buffer.width = dp(0)
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 return
 
@@ -866,6 +872,7 @@ class BuildInfoScreen(Screen):
 
                 self.smartbench_location_label.width = dp(label_width)
                 self.smartbench_location_buffer.width = max_width - label_width
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 print("*16, " + str(self.smartbench_location_label.is_shortened))
                 Clock.schedule_once(self.check_shortened_again, 2)
@@ -873,6 +880,7 @@ class BuildInfoScreen(Screen):
             else: 
                 self.smartbench_location_label.width = dp(max_width)
                 self.smartbench_location_buffer.width = dp(0)
+                self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
                 return
 
