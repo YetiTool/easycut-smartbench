@@ -133,6 +133,7 @@ Builder.load_string("""
                             size: self.parent.size
                             orientation: 'horizontal'
                             spacing: dp(20)
+                            padding: [dp(0), dp(3)]
 
                             BoxLayout:
                                 size_hint_y: None
@@ -208,6 +209,7 @@ Builder.load_string("""
                             size: self.parent.size
                             orientation: 'horizontal'
                             spacing: dp(20)
+                            padding: [dp(0), dp(1)]
 
                             BoxLayout:
                                 size_hint_y: None
