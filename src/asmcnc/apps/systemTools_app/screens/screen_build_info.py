@@ -131,35 +131,42 @@ Builder.load_string("""
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
-                            orientation: 'vertical'
+                            orientation: 'horizontal'
                             padding: [dp(0), dp(0), dp(0), dp(6)]
+                            spacing: dp(10)
+                            canvas:
+                                Color:
+                                    rgba: hex('#f9f9f9ff')
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
 
-                            BoxLayout:
-                                size_hint_y: None
-                                height: dp(34)
-                                orientation: 'horizontal'
-                                spacing: dp(10)
+                            # BoxLayout:
+                            #     size_hint_y: None
+                            #     height: dp(34)
+                            #     orientation: 'horizontal'
+                            #     spacing: dp(10)
 
-                                Label:
-                                    id: smartbench_name_label
-                                    text: "The text"
-                                    text_size: self.size
-                                    halign: "left"
-                                    valign: "middle"
-                                    markup: True
-                                    font_size: 30
-                                    color: hex('#333333ff')
-                                    background_color: hex('#f9f9f9ff')
-                                    shorten_from: 'right'
-                                    shorten: True
 
-                                BoxLayout: 
-                                    size_hint_x: None
-                                    width: dp(30)
-                                    padding: [dp(0), dp(4), dp(0), dp(0)]
-                                    Image:
-                                        source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
-                                        allow_stretch: True
+                            Label:
+                                id: smartbench_name_label
+                                text: "The text"
+                                text_size: self.size
+                                halign: "left"
+                                valign: "middle"
+                                markup: True
+                                font_size: 30
+                                color: hex('#333333ff')
+                                shorten_from: 'right'
+                                shorten: True
+
+                            BoxLayout: 
+                                size_hint_x: None
+                                width: dp(30)
+                                padding: [dp(0), dp(4), dp(0), dp(0)]
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                    allow_stretch: True
 
                             # BoxLayout:
                             #     size_hint: (None, None)
@@ -208,36 +215,42 @@ Builder.load_string("""
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
-                            orientation: 'vertical'
+                            orientation: 'horizontal'
                             padding: [dp(0), dp(0), dp(0), dp(2)]
+                            spacing: dp(10)
+                            canvas:
+                                Color:
+                                    rgba: hex('#f9f9f9ff')
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
 
-                            BoxLayout:
-                                size_hint_y: None
-                                height: dp(28)
-                                orientation: 'horizontal'
-                                spacing: dp(10)
+                            # BoxLayout:
+                            #     size_hint_y: None
+                            #     height: dp(28)
+                            #     orientation: 'horizontal'
+                            #     spacing: dp(10)
 
-                                Label:
-                                    id: smartbench_location_label
-                                    size_hint_x: None
-                                    width: dp(466)
-                                    color: hex('#333333ff')
-                                    background_color: hex('#f9f9f9ff')
-                                    text_size: self.size
-                                    halign: "left"
-                                    valign: "bottom"
-                                    markup: True
-                                    font_size: 24
-                                    shorten_from: 'right'
-                                    shorten: True
+                            Label:
+                                id: smartbench_location_label
+                                size_hint_x: None
+                                width: dp(466)
+                                color: hex('#333333ff')
+                                text_size: self.size
+                                halign: "left"
+                                valign: "bottom"
+                                markup: True
+                                font_size: 24
+                                shorten_from: 'right'
+                                shorten: True
 
-                                BoxLayout: 
-                                    size_hint_x: None
-                                    width: dp(24)
-                                    padding: [dp(0), dp(4), dp(0), dp(0)]
-                                    Image:
-                                        source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
-                                        allow_stretch: True
+                            BoxLayout: 
+                                size_hint_x: None
+                                width: dp(24)
+                                padding: [dp(0), dp(4), dp(0), dp(0)]
+                                Image:
+                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                    allow_stretch: True
 
                             # BoxLayout:
                             #     size_hint: (None, None)
