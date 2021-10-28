@@ -394,9 +394,9 @@ class GoScreen(Screen):
     lift_z_on_job_pause = False
     overload_peak = 0
 
-    spindle_speed_max_percentage = 100
+    spindle_speed_max_percentage = 0
     spindle_speed_max_absolute = 0
-    feed_rate_max_percentage = 100
+    feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
 
     def __init__(self, **kwargs):
@@ -729,12 +729,12 @@ class GoScreen(Screen):
         self.feedOverride.update_feed_rate_label()
         # self.update_voltage_label()
 
-        if self.speedOverride.speed_override_percentage > self.spindle_speed_max_percentage:
+        if abs(self.speedOverride.speed_override_percentage - 100) > abs(self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage
         if self.speedOverride.spindle_rpm.text > self.spindle_speed_max_absolute:
             self.spindle_speed_max_absolute = self.speedOverride.spindle_rpm.text
 
-        if self.feedOverride.feed_override_percentage > self.feed_rate_max_percentage:
+        if abs(self.feedOverride.feed_override_percentage - 100) > abs(self.feed_rate_max_percentage - 100):
             self.feed_rate_max_percentage = self.feedOverride.feed_override_percentage
         if self.feedOverride.feed_absolute.text > self.feed_rate_max_absolute:
             self.feed_rate_max_absolute = self.feedOverride.feed_absolute.text
