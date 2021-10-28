@@ -821,7 +821,7 @@ class BuildInfoScreen(Screen):
                 self.smartbench_location_buffer.width = self.max_location_width - label_width
                 self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
-                Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2, self.smartbench_location_label.is_shortened), 1)
+                Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2, self.smartbench_location_label.is_shortened), 2)
 
             else: 
                 self.smartbench_location_label.width = self.max_location_width
