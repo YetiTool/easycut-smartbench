@@ -55,7 +55,6 @@ Builder.load_string("""
     smartbench_name_input : smartbench_name_input
     smartbench_location: smartbench_location
     smartbench_location_label : smartbench_location_label
-    smartbench_location_buffer : smartbench_location_buffer
     smartbench_location_input: smartbench_location_input
     smartbench_model_header : smartbench_model_header
     smartbench_model: smartbench_model
@@ -184,34 +183,47 @@ Builder.load_string("""
                         on_press: root.open_rename_location()
                         focus_next: smartbench_location_input
 
+
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
-                            orientation: 'horizontal'
-                            spacing: dp(5)
+                            orientation: 'vertical'
 
-                            Label:
-                                id: smartbench_location_label
-                                size_hint_x: None
-                                color: hex('#333333ff')
-                                text_size: self.size
-                                halign: "left"
-                                valign: "middle"
-                                markup: True
-                                font_size: 24
-                                shorten_from: 'right'
-                                shorten: True
+                            BoxLayout:
+                                size_hint_y: None
+                                height: dp(28)
+                                orientation: 'horizontal'
+                                spacing: dp(5)
 
-                            BoxLayout: 
-                                size_hint_x: None
-                                width: dp(24)
-                                Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
-                                    allow_stretch: True
+                                Label:
+                                    id: smartbench_location_label
+                                    size_hint_x: None
+                                    width: dp(466)
+                                    color: hex('#333333ff')
+                                    text_size: self.size
+                                    halign: "left"
+                                    valign: "middle"
+                                    markup: True
+                                    font_size: 24
+                                    shorten_from: 'right'
+                                    shorten: True
 
-                            Label: 
-                                id: smartbench_location_buffer
-                                size_hint_x: None
+                                BoxLayout: 
+                                    size_hint_x: None
+                                    width: dp(24)
+                                    Image:
+                                        source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                        allow_stretch: True
+
+                            BoxLayout:
+                                size_hint_y: None
+                                height: dp(2)
+                                canvas:
+                                    Color:
+                                        rgba: hex('#333333ff')
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
 
 
 
@@ -804,30 +816,30 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
-        self.adjust_location_label_width(12)
+    #     self.adjust_location_label_width(12)
 
 
-    def adjust_location_label_width(self, space_multiplier):
+    # def adjust_location_label_width(self, space_multiplier):
 
-        print("*" + str(space_multiplier - 2) + " " + str(self.smartbench_location_label.is_shortened))
+    #     print("*" + str(space_multiplier - 2) + " " + str(self.smartbench_location_label.is_shortened))
 
-        if space_multiplier == 12 or self.smartbench_location_label.is_shortened:
+    #     if space_multiplier == 12 or self.smartbench_location_label.is_shortened:
 
-            label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
+    #         label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
 
-            if label_width < self.max_location_width:
+    #         if label_width < self.max_location_width:
 
-                self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_buffer.width = self.max_location_width - label_width
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location_label.texture_update()
-                Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2), 4)
+    #             self.smartbench_location_label.width = dp(label_width)
+    #             self.smartbench_location_buffer.width = self.max_location_width - label_width
+    #             self.smartbench_location_label.text_size = self.smartbench_location_label.size
+    #             self.smartbench_location_label.texture_update()
+    #             Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2), 4)
 
-            else: 
-                self.smartbench_location_label.width = self.max_location_width
-                self.smartbench_location_buffer.width = dp(0)
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location_label.texture_update()
+    #         else: 
+    #             self.smartbench_location_label.width = self.max_location_width
+    #             self.smartbench_location_buffer.width = dp(0)
+    #             self.smartbench_location_label.text_size = self.smartbench_location_label.size
+    #             self.smartbench_location_label.texture_update()
 
 
     def write_location_to_file(self):
