@@ -587,8 +587,6 @@ class BuildInfoScreen(Screen):
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
-    max_location_width = dp(466)
-
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
