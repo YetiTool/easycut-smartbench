@@ -193,12 +193,12 @@ Builder.load_string("""
                                 size_hint_y: None
                                 height: dp(28)
                                 orientation: 'horizontal'
-                                spacing: dp(5)
+                                spacing: dp(10)
 
                                 Label:
                                     id: smartbench_location_label
                                     size_hint_x: None
-                                    width: dp(462)
+                                    width: dp(466)
                                     color: hex('#333333ff')
                                     text_size: self.size
                                     halign: "left"
@@ -219,7 +219,7 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None, None)
                                 height: dp(2)
-                                width: dp(480)
+                                width: dp(492)
                                 canvas:
                                     Color:
                                         rgba: hex('#333333ff')
