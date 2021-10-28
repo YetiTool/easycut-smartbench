@@ -126,13 +126,12 @@ Builder.load_string("""
                         on_press: root.open_rename()
                         focus_next: smartbench_name_input
                         size_hint_y: None
-                        height: dp(40)
+                        height: dp(34)
 
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            padding: [dp(0), dp(0), dp(0), dp(6)]
                             spacing: dp(10)
                             canvas:
                                 Color:
@@ -197,6 +196,16 @@ Builder.load_string("""
                         # unfocus_on_touch: True
                         disabled: True
                         multiline: False
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: dp(6)
+                        canvas:
+                            Color:
+                                rgba: hex('#e5e5e5ff')
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
 
                     Button:
                         id: smartbench_location
