@@ -804,14 +804,14 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
-        self.adjust_location_label_width(10)
+        self.adjust_location_label_width(12)
 
 
     def adjust_location_label_width(self, space_multiplier):
 
         print("*" + str(space_multiplier - 2) + " " + str(self.smartbench_location_label.is_shortened))
 
-        if space_multiplier == 10 or self.smartbench_location_label.is_shortened:
+        if space_multiplier == 12 or self.smartbench_location_label.is_shortened:
 
             label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
 
@@ -820,14 +820,14 @@ class BuildInfoScreen(Screen):
                 self.smartbench_location_label.width = dp(label_width)
                 self.smartbench_location_buffer.width = self.max_location_width - label_width
                 self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
                 Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2), 4)
 
             else: 
                 self.smartbench_location_label.width = self.max_location_width
                 self.smartbench_location_buffer.width = dp(0)
                 self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
+                self.smartbench_location_label.texture_update()
 
 
     def write_location_to_file(self):
