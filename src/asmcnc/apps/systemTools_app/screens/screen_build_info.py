@@ -575,6 +575,8 @@ class BuildInfoScreen(Screen):
     smartbench_name_unformatted = 'My SmartBench'
     smartbench_name_formatted = 'My SmartBench'
 
+    max_location_width = dp(466)
+
     def __init__(self, **kwargs):
         super(BuildInfoScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -802,103 +804,30 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
-        max_width = dp(self.smartbench_location.width) - dp(34)
+        self.adjust_location_label_width(10, 'True')
 
 
-        label_width = dp(len(self.smartbench_location_label.text)*10)
+    def adjust_location_label_width(self, space_multiplier, is_shortened):
 
-        if label_width < max_width:
+        print("*" + str(space_multiplier - 2) + " " + str(is_shortened))
 
-            self.smartbench_location_label.width = dp(label_width)
-            self.smartbench_location_buffer.width = max_width - label_width
-            self.smartbench_location_label.text_size = self.smartbench_location_label.size
-            self.smartbench_location.texture_update()
-            print("*10, " + str(self.smartbench_location_label.is_shortened))
-            Clock.schedule_once(self.check_shortened_again, 2)
-            Clock.schedule_once(lambda dt: self.test_width_func(self.smartbench_location_label.is_shortened), 5)
+        if is_shortened:
 
-        else: 
-            self.smartbench_location_label.width = dp(max_width)
-            self.smartbench_location_buffer.width = dp(0)
-            self.smartbench_location_label.text_size = self.smartbench_location_label.size
-            self.smartbench_location.texture_update()
-            return
+            label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
 
-        if self.smartbench_location_label.is_shortened: 
-
-            label_width = dp(len(self.smartbench_location_label.text)*12)
-            if label_width < max_width:
+            if label_width < self.max_location_width:
 
                 self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_buffer.width = max_width - label_width
+                self.smartbench_location_buffer.width = self.max_location_width - label_width
                 self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
-                print("*12, " + str(self.smartbench_location_label.is_shortened))
-                Clock.schedule_once(self.check_shortened_again, 2)
+                Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2, self.smartbench_location_label.is_shortened), 1)
 
             else: 
-                self.smartbench_location_label.width = dp(max_width)
+                self.smartbench_location_label.width = self.max_location_width
                 self.smartbench_location_buffer.width = dp(0)
                 self.smartbench_location_label.text_size = self.smartbench_location_label.size
                 self.smartbench_location.texture_update()
-                return
-
-        else: 
-            return
-
-        if self.smartbench_location_label.is_shortened: 
-
-            label_width = dp(len(self.smartbench_location_label.text)*14)
-            if label_width < max_width:
-
-                self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_buffer.width = max_width - label_width
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
-                print("*14, " + str(self.smartbench_location_label.is_shortened))
-                Clock.schedule_once(self.check_shortened_again, 2)
-
-            else: 
-                self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location_buffer.width = dp(0)
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
-                return
-
-        else: 
-            return
-
-        if self.smartbench_location_label.is_shortened: 
-
-            label_width = dp(len(self.smartbench_location_label.text)*16)
-            if label_width < max_width:
-
-                self.smartbench_location_label.width = dp(label_width)
-                self.smartbench_location_buffer.width = max_width - label_width
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
-                print("*16, " + str(self.smartbench_location_label.is_shortened))
-                Clock.schedule_once(self.check_shortened_again, 2)
-
-            else: 
-                self.smartbench_location_label.width = dp(max_width)
-                self.smartbench_location_buffer.width = dp(0)
-                self.smartbench_location_label.text_size = self.smartbench_location_label.size
-                self.smartbench_location.texture_update()
-                return
-
-        else: 
-            return
-
-
-    def test_width_func(self, is_shortened):
-
-        print("test width func " + str(is_shortened))
-
-
-
-    def check_shortened_again(self, dt):
-        print("after delay, " + str(self.smartbench_location_label.is_shortened))
 
 
     def write_location_to_file(self):
