@@ -219,7 +219,7 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None, None)
                                 height: dp(2)
-                                width: dp(484)
+                                width: dp(488)
                                 canvas:
                                     Color:
                                         rgba: hex('#333333ff')
