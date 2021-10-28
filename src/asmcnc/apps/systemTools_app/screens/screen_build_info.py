@@ -119,7 +119,7 @@ Builder.load_string("""
 
                     Button:
                         id: smartbench_name
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
                         opacity: 1
@@ -132,7 +132,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'vertical'
-                            padding: [dp(0), dp(0), dp(0), dp(4)]
+                            padding: [dp(0), dp(0), dp(0), dp(6)]
 
                             BoxLayout:
                                 size_hint_y: None
@@ -149,6 +149,7 @@ Builder.load_string("""
                                     markup: True
                                     font_size: 30
                                     color: hex('#333333ff')
+                                    background_color: hex('#f9f9f9ff')
                                     shorten_from: 'right'
                                     shorten: True
 
@@ -160,16 +161,16 @@ Builder.load_string("""
                                         source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                         allow_stretch: True
 
-                            BoxLayout:
-                                size_hint: (None, None)
-                                height: dp(2)
-                                width: dp(538)
-                                canvas:
-                                    Color:
-                                        rgba: hex('#f9f9f9ff')
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
+                            # BoxLayout:
+                            #     size_hint: (None, None)
+                            #     height: dp(2)
+                            #     width: dp(538)
+                            #     canvas:
+                            #         Color:
+                            #             rgba: hex('#f9f9f9ff')
+                            #         Rectangle:
+                            #             pos: self.pos
+                            #             size: self.size
                     TextInput:
                         padding: [4, 2]
                         id: smartbench_name_input
@@ -194,7 +195,7 @@ Builder.load_string("""
                         id: smartbench_location
                         size_hint_x: None
                         width: dp(500)
-                        background_color: hex('#f9f9f9ff')
+                        background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
                         size_hint_y: None
@@ -208,7 +209,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'vertical'
-                            padding: [dp(0), dp(0), dp(0), dp(0.5)]
+                            padding: [dp(0), dp(0), dp(0), dp(2)]
 
                             BoxLayout:
                                 size_hint_y: None
@@ -221,6 +222,7 @@ Builder.load_string("""
                                     size_hint_x: None
                                     width: dp(466)
                                     color: hex('#333333ff')
+                                    background_color: hex('#f9f9f9ff')
                                     text_size: self.size
                                     halign: "left"
                                     valign: "bottom"
@@ -237,16 +239,16 @@ Builder.load_string("""
                                         source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                         allow_stretch: True
 
-                            BoxLayout:
-                                size_hint: (None, None)
-                                height: dp(1.5)
-                                width: dp(488)
-                                canvas:
-                                    Color:
-                                        rgba: hex('#f9f9f9ff')
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
+                            # BoxLayout:
+                            #     size_hint: (None, None)
+                            #     height: dp(1.5)
+                            #     width: dp(488)
+                            #     canvas:
+                            #         Color:
+                            #             rgba: hex('#f9f9f9ff')
+                            #         Rectangle:
+                            #             pos: self.pos
+                            #             size: self.size
 
 
 
