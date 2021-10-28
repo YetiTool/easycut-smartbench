@@ -198,11 +198,11 @@ Builder.load_string("""
                                 Label:
                                     id: smartbench_location_label
                                     size_hint_x: None
-                                    width: dp(466)
+                                    width: dp(462)
                                     color: hex('#333333ff')
                                     text_size: self.size
                                     halign: "left"
-                                    valign: "middle"
+                                    valign: "bottom"
                                     markup: True
                                     font_size: 24
                                     shorten_from: 'right'
@@ -210,14 +210,15 @@ Builder.load_string("""
 
                                 BoxLayout: 
                                     size_hint_x: None
-                                    width: dp(24)
+                                    width: dp(28)
                                     Image:
                                         source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                         allow_stretch: True
 
                             BoxLayout:
-                                size_hint_y: None
+                                size_hint: (None, None)
                                 height: dp(2)
+                                width: dp(472)
                                 canvas:
                                     Color:
                                         rgba: hex('#333333ff')
