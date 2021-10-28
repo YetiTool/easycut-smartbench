@@ -146,17 +146,17 @@ Builder.load_string("""
                                         pos: self.pos
                                         size: self.size
 
-                                    Label:
-                                        id: smartbench_name_label
-                                        text: "The text"
-                                        text_size: self.size
-                                        halign: "left"
-                                        valign: "middle"
-                                        markup: True
-                                        font_size: 30
-                                        color: hex('#333333ff')
-                                        shorten_from: 'right'
-                                        shorten: True
+                                Label:
+                                    id: smartbench_name_label
+                                    text: "The text"
+                                    text_size: self.size
+                                    halign: "left"
+                                    valign: "middle"
+                                    markup: True
+                                    font_size: 30
+                                    color: hex('#333333ff')
+                                    shorten_from: 'right'
+                                    shorten: True
 
                             BoxLayout: 
                                 size_hint_x: None
