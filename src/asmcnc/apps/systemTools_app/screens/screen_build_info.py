@@ -119,7 +119,7 @@ Builder.load_string("""
 
                     Button:
                         id: smartbench_name
-                        background_color: hex('#e5e5e5ff')
+                        background_color: hex('#f9f9f9ff')
                         background_normal: ""
                         background_down: ""
                         opacity: 1
@@ -166,7 +166,7 @@ Builder.load_string("""
                                 width: dp(538)
                                 canvas:
                                     Color:
-                                        rgba: hex('#333333ff')
+                                        rgba: hex('#f9f9f9ff')
                                     Rectangle:
                                         pos: self.pos
                                         size: self.size
@@ -194,7 +194,7 @@ Builder.load_string("""
                         id: smartbench_location
                         size_hint_x: None
                         width: dp(500)
-                        background_color: hex('#e5e5e5ff')
+                        background_color: hex('#f9f9f9ff')
                         background_normal: ""
                         background_down: ""
                         size_hint_y: None
@@ -243,7 +243,7 @@ Builder.load_string("""
                                 width: dp(488)
                                 canvas:
                                     Color:
-                                        rgba: hex('#333333ff')
+                                        rgba: hex('#f9f9f9ff')
                                     Rectangle:
                                         pos: self.pos
                                         size: self.size
