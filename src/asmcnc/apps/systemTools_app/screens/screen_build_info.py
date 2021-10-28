@@ -127,29 +127,48 @@ Builder.load_string("""
                         focus_next: smartbench_name_input
                         size_hint_y: None
                         height: dp(40)
+
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
-                            orientation: 'horizontal'
-                            spacing: dp(5)
+                            orientation: 'vertical'
 
-                            BoxLayout: 
-                                size_hint_x: None
-                                width: dp(30)
-                                Image:
-                                    source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
-                                    allow_stretch: True
-                            Label:
-                                id: smartbench_name_label
-                                text: "The text"
-                                text_size: self.size
-                                halign: "left"
-                                valign: "middle"
-                                markup: True
-                                font_size: 30
-                                color: hex('#333333ff')
-                                multiline: False
-                                shorten: True
+                            BoxLayout:
+                                size_hint_y: None
+                                height: dp(38)
+                                orientation: 'horizontal'
+                                spacing: dp(10)
+
+                                Label:
+                                    id: smartbench_name_label
+                                    text: "The text"
+                                    text_size: self.size
+                                    halign: "left"
+                                    valign: "middle"
+                                    markup: True
+                                    font_size: 30
+                                    color: hex('#333333ff')
+                                    shorten_from: 'right'
+                                    shorten: True
+
+                                BoxLayout: 
+                                    size_hint_x: None
+                                    width: dp(30)
+                                    padding: [dp(0), dp(4), dp(0), dp(0)]
+                                    Image:
+                                        source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
+                                        allow_stretch: True
+
+                            BoxLayout:
+                                size_hint: (None, None)
+                                height: dp(2)
+                                width: dp(488)
+                                canvas:
+                                    Color:
+                                        rgba: hex('#333333ff')
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
                     TextInput:
                         padding: [4, 2]
                         id: smartbench_name_input
