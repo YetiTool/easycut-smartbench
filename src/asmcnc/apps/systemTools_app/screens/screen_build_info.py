@@ -210,7 +210,7 @@ Builder.load_string("""
 
                                 BoxLayout: 
                                     size_hint_x: None
-                                    width: dp(28)
+                                    width: dp(24)
                                     Image:
                                         source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                         allow_stretch: True
