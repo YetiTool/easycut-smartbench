@@ -132,7 +132,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'vertical'
-                            padding: [dp(0), dp(0), dp(0), dp(5)]
+                            padding: [dp(0), dp(0), dp(0), dp(4)]
 
                             BoxLayout:
                                 size_hint_y: None
@@ -162,7 +162,7 @@ Builder.load_string("""
 
                             BoxLayout:
                                 size_hint: (None, None)
-                                height: dp(1)
+                                height: dp(2)
                                 width: dp(538)
                                 canvas:
                                     Color:
