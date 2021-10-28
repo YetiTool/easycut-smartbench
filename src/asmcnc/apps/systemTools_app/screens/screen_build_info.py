@@ -811,7 +811,7 @@ class BuildInfoScreen(Screen):
 
         print("*" + str(space_multiplier - 2) + " " + str(self.smartbench_location_label.is_shortened))
 
-        if space_multiplier == 10 or self.smartbench_location_label.is_shortened
+        if space_multiplier == 10 or self.smartbench_location_label.is_shortened:
 
             label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
 
