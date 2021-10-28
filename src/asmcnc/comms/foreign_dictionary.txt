@@ -660,9 +660,9 @@ Are you sure?	Sind Sie sicher?	Êtes-vous sûr ?	Sei sicuro?	Oletko varma?	Weet 
 Yes, disable Wi-Fi	Ja, Wi-Fi deaktivieren	Oui, désactivez le Wi-Fi	Sì, disabilita il Wi-Fi	Kyllä, poista Wi-Fi käytöstä	Ja, schakel Wi-Fi uit	Tak, wyłącz Wi-Fi.	Ja, deaktivere Wi-Fi
 SmartTransfer data	SmartTransfer-Daten	Données SmartTransfer	Dati SmartTransfer	SmartTransfer-tiedot	SmartTransfer gegevens	Dane SmartTransfer	SmartTransfer-data
 Feeds and Speeds	Vorschübe und Geschwindigkeiten	Avances et vitesses 	Avanzamenti e velocità	Syötöt ja nopeudet	Voedingen en snelheden	Posuwy i prędkości	Feeds og hastigheder
-Feed rate range:	Bereich der Vorschubgeschwindigkeit:	Plage de vitesse d'avance :	Range Avanzamento	Syöttönopeusalue:	Aanzetbereik:	Zakres prędkości posuwu:	Fremføringshastighedsområde:
+Feed rate range:	Bereich der Vorschubgeschwindigkeit:	Plage de vitesse d'avance :	Range Avanzamento:	Syöttönopeusalue:	Aanzetbereik:	Zakres prędkości posuwu:	Fremføringshastighedsområde:
 Undefined	Undefiniert	Indéfinie	Non definito	Määrittelemätön	Ongedefinieerd	Nieokreślony	Udefineret
-Spindle speed range:	Spindeldrehzahlbereich:	Plage de vitesse de broche :	Range Giri Mandrino	Karan nopeusalue:	Bereik spiltoerental:	Zakres prędkości obrotowej wrzeciona:	Spindelhastighedsområde:
+Spindle speed range:	Spindeldrehzahlbereich:	Plage de vitesse de broche :	Range Giri Mandrino:	Karan nopeusalue:	Bereik spiltoerental:	Zakres prędkości obrotowej wrzeciona:	Spindelhastighedsområde:
 Working volume	Arbeitsvolumen	Volume de travail 	Volume di lavoro	Työstötilavuus	Werkvolume	Objętość robocza	Arbejdsvolumen
 X range:	X Bereich:	Gamme X :	X range:	X-alue:	X bereik:	X zakres:	X-område: X-område:
 X min:	X min:	X min :	X min:	X min:	X min:	X min:	X min:
