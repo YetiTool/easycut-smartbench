@@ -158,15 +158,10 @@ Builder.load_string("""
                                     shorten_from: 'right'
                                     shorten: True
 
+
                             BoxLayout: 
                                 size_hint_x: None
                                 width: dp(30)
-                                canvas:
-                                    Color:
-                                        rgba: hex('#e5e5e5ff')
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
@@ -223,7 +218,6 @@ Builder.load_string("""
                                         size: self.size
                                 Label:
                                     id: smartbench_location_label
-                                    size_hint_x: None
                                     color: hex('#333333ff')
                                     text_size: self.size
                                     halign: "left"
