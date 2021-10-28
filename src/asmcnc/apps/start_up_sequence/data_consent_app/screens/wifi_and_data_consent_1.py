@@ -185,18 +185,18 @@ Builder.load_string("""
 					size_hint: (None, None)
 					height: dp(30)
 					width: dp(740)
-					padding: [dp(0), dp(10), dp(0), dp(0)]
+					padding: [dp(0), dp(0), dp(0), dp(0)]
 
 					Label: 
 						id: we_wont_collect
 						size_hint: (None, None)
-						height: dp(20)
+						height: dp(30)
 						width: dp(740)
 						# color: hex('#f9f9f9ff') # white
 						color: hex('#333333ff') #grey
 						font_size: dp(18)
 						halign: "left"
-						valign: "top"
+						valign: "bottom"
 						markup: True
 						text_size: self.size
 
