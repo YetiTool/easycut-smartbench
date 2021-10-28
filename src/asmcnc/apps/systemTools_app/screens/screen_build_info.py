@@ -211,6 +211,7 @@ Builder.load_string("""
                                 BoxLayout: 
                                     size_hint_x: None
                                     width: dp(24)
+                                    padding: [dp(0), dp(4), dp(0), dp(0)]
                                     Image:
                                         source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                         allow_stretch: True
@@ -218,7 +219,7 @@ Builder.load_string("""
                             BoxLayout:
                                 size_hint: (None, None)
                                 height: dp(2)
-                                width: dp(466)
+                                width: dp(490)
                                 canvas:
                                     Color:
                                         rgba: hex('#333333ff')
