@@ -163,6 +163,12 @@ Builder.load_string("""
                                 size_hint_x: None
                                 width: dp(30)
                                 padding: [dp(0), dp(4), dp(0), dp(0)]
+                                canvas:
+                                    Color:
+                                        rgba: hex('#e5e5e5ff')
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
@@ -257,6 +263,12 @@ Builder.load_string("""
                                 size_hint_x: None
                                 width: dp(24)
                                 padding: [dp(0), dp(4), dp(0), dp(0)]
+                                canvas:
+                                    Color:
+                                        rgba: hex('#e5e5e5ff')
+                                    Rectangle:
+                                        pos: self.pos
+                                        size: self.size
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
