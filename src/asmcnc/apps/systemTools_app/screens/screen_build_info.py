@@ -302,14 +302,6 @@ Builder.load_string("""
                             markup: True
                             font_size: 20
 
-                        # Label:
-                        #     text: ''
-                        #     color: hex('#333333ff')
-                        #     text_size: self.size
-                        #     halign: "left"
-                        #     valign: "middle"
-                        #     markup: True
-                        #     font_size: 20
                         Label:
                             id: serial_number_header
                             text: '[b]Serial number[/b]'
@@ -450,13 +442,6 @@ Builder.load_string("""
                     spacing: 20
                     orientation: 'vertical'
 
-                    # canvas:
-                    #     Color:
-                    #         rgba: [1,1,1,1]
-                    #     Rectangle:
-                    #         pos: self.pos
-                    #         size: self.size
-
                     Spinner:
                         id: language_button
                         size_hint: (None,None)
@@ -512,14 +497,6 @@ Builder.load_string("""
                             text: ''
                             opacity: 0
                             color: hex('#333333ff')
-
-
-
-
-                    # BoxLayout: 
-                    #     size_hint: (None, None)
-                    #     height: dp(10)
-                    #     width: dp(210)
 
             BoxLayout:
                 size_hint: (None,None)
@@ -838,31 +815,6 @@ class BuildInfoScreen(Screen):
 
         self.smartbench_location_label.text = '[b]' + self.smartbench_location_formatted + '[/b]'
         self.smartbench_location_input.text = self.smartbench_location_formatted
-
-    #     self.adjust_location_label_width(12)
-
-
-    # def adjust_location_label_width(self, space_multiplier):
-
-    #     print("*" + str(space_multiplier - 2) + " " + str(self.smartbench_location_label.is_shortened))
-
-    #     if space_multiplier == 12 or self.smartbench_location_label.is_shortened:
-
-    #         label_width = dp(len(self.smartbench_location_label.text)*space_multiplier)
-
-    #         if label_width < self.max_location_width:
-
-    #             self.smartbench_location_label.width = dp(label_width)
-    #             self.smartbench_location_buffer.width = self.max_location_width - label_width
-    #             self.smartbench_location_label.text_size = self.smartbench_location_label.size
-    #             self.smartbench_location_label.texture_update()
-    #             Clock.schedule_once(lambda dt: self.adjust_location_label_width(space_multiplier + 2), 4)
-
-    #         else: 
-    #             self.smartbench_location_label.width = self.max_location_width
-    #             self.smartbench_location_buffer.width = dp(0)
-    #             self.smartbench_location_label.text_size = self.smartbench_location_label.size
-    #             self.smartbench_location_label.texture_update()
 
 
     def write_location_to_file(self):
