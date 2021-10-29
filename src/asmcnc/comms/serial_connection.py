@@ -53,6 +53,7 @@ class SerialConnection(object):
     
     monitor_text_buffer = ""
     overload_state = 0
+    prev_overload_state = 0
     is_ready_to_assess_spindle_for_shutdown = True
 
     power_loss_detected = False
@@ -821,10 +822,16 @@ class SerialConnection(object):
                     if overload_mV_equivalent_state != self.overload_state:  
                         self.overload_state = overload_mV_equivalent_state
                         log("Overload state change: " + str(self.overload_state))
+                        log("Load voltage: " + str(self.spindle_load_voltage))
                     
                         try:
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
-                            self.sm.get_screen('go').update_overload_peak(self.overload_state)
+
+                            # Only report as a peak if state stays elevated for longer than 1 second
+                            if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                                self.prev_overload_state = self.overload_state
+                                Clock.schedule_once(self.check_for_sustained_peak, 1)
+
                         except:
                             log('Unable to update overload state on go screen')
                     
@@ -974,10 +981,26 @@ class SerialConnection(object):
             self.sm.get_screen('spindle_shutdown').return_screen = str(self.sm.current)
             self.sm.current = 'spindle_shutdown'
 
+            try:
+                self.sm.get_screen('go').update_overload_peak(self.overload_state)
+
+            except:
+                log('Unable to update overload peak on go screen')
+
         else: # must have just been a noisy blip
             
             self.is_ready_to_assess_spindle_for_shutdown = True  # allow spindle overload assessment to resume
         
+    def check_for_sustained_peak(self, dt):
+
+        if self.overload_state >= self.prev_overload_state and self.overload_state != 100:
+
+            try:
+                self.sm.get_screen('go').update_overload_peak(self.prev_overload_state)
+
+            except:
+                log('Unable to update overload peak on go screen')
+
 
 
 ## SEQUENTIAL STREAMING
