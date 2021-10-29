@@ -14,10 +14,15 @@
     command: /usr/local/bin/set-hostname.sh
     become: yes
     become_user: root
+  - name: Get apt-update
+    apt:
+      update_cache: yes
+    ignore_errors: yes
   - name: Install packages
     package:
       name: "{{ item }}"
       state: present
+      use: apt
     with_items: "{{ pkgs }}"
     ignore_errors: yes
   - name: Define glbal export for current tag
