@@ -3,6 +3,7 @@ import json, socket, datetime, time
 from requests import get
 import threading, Queue
 from time import sleep
+import traceback
 
 def log(message):
 	timestamp = datetime.datetime.now()
@@ -72,7 +73,7 @@ class DatabaseEventManager():
 
 		while True:
 
-			if self.set.ip_address:
+			if self.set.ip_address and self.set.wifi_available:
 
 				try:
 					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
@@ -91,6 +92,7 @@ class DatabaseEventManager():
 
 				except Exception as e:
 					log("Pika connection exception: " + str(e))
+					log(traceback.format_exc())
 					sleep(10)
 
 			else:
