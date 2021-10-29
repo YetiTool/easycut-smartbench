@@ -79,7 +79,13 @@ class DatabaseEventManager():
 					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
 																						pika.credentials.PlainCredentials(
 																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
+																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
+																						# heartbeat=600,
+                      #                  													blocked_connection_timeout=300,
+																						))
+
+					log("Connection established")
+
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
 
