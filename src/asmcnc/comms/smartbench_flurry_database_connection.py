@@ -80,8 +80,8 @@ class DatabaseEventManager():
 																						pika.credentials.PlainCredentials(
 																							'console',
 																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
-																						heartbeat=600,
-                                       													blocked_connection_timeout=300,
+																						# heartbeat=600,
+                      #                  													blocked_connection_timeout=300,
 																						))
 
 					log("Connection established")
