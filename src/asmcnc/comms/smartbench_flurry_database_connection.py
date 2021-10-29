@@ -84,6 +84,8 @@ class DatabaseEventManager():
                                        													blocked_connection_timeout=300,
 																						))
 
+					log("Connection established")
+
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
 
