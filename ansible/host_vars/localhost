@@ -4,7 +4,6 @@ pkgs:
 - avrdude
 - pigpio
 - python-pigpio
-- python-pika=1.2.0
 - git-repair
 
 exim_dc_eximconfig_configtype: internet
