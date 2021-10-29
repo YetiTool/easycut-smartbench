@@ -414,10 +414,10 @@ class Settings(object):
         if self.latest_platform_version != self.platform_version:
             os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
             os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
-            self.ansible_service_run()
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
 
         else:
-            self.ansible_service_run()
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
 
 
     def ansible_service_run(self):
