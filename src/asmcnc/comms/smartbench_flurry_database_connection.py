@@ -73,7 +73,7 @@ class DatabaseEventManager():
 
 		while True:
 
-			if self.set.ip_address:
+			if self.set.ip_address and self.set.wifi_available:
 
 				try:
 					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
