@@ -27,7 +27,7 @@
     ignore_errors: yes
   - name: Install pika python package on version 1.2.0
     pip:
-      name: pika=1.2.0
+      name: pika==1.2.0
     ignore_errors: yes
   - name: Define glbal export for current tag
     template:
