@@ -80,6 +80,7 @@ class DatabaseEventManager():
 																						pika.credentials.PlainCredentials(
 																							'console',
 																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')))
+
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
 
