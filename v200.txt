@@ -5,13 +5,13 @@ SmartManager Console update
 
 This Console update is part of the new SmartManager package. 
 
-SmartManager is a Manufacturing Execution System (MES) that provides essential real-time data to the whole production team to streamline workflow and maximise productivity. 
+SmartManager is a Manufacturing Execution System (MES) that provides essential real-time data to the whole production team, to streamline workflow and maximise productivity. 
 
 **If you purchased SmartBench before 1st November 2021, you will automatically have access to the SmartManager package!**
 
 Visit:
 
-https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager 
+**https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager**
 
 to learn more about the whole SmartManager package.
 
@@ -23,9 +23,9 @@ From the Console, the operator is now able to:
 
 * Send feedback to SmartManager after a job, including batch numbers, production notes, and details of any critical events that occurred during a job. 
 
-* Update a customer SmartBench location, as well as SmartBench name, for easy identification from either SmartTransfer or SmartManager. 
+* Enter a custom SmartBench location, as well as SmartBench name, for easy identification from both SmartTransfer and SmartManager. 
 
-If you are not using SmartManager, this update still comes with some new features, including G-Code preview and summary in the PRO app, which allows you to see details about your file before you run it. 
+If you are not using SmartManager, this update still comes with some new features, including G-Code preview and summary, which allows you to see details about your file before you run it. 
 
 In order to work with SmartManager, your Console will now send anonymous machine data to Yeti Tool. The next few screens will tell you more about this, and you will be able to choose whether to accept the data policy and allow the Console to send data to Yeti Tool.
 
