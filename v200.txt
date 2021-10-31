@@ -17,7 +17,7 @@ to learn more about the whole SmartManager package.
 
 From the Console, the operator is now able to:
 
-• See information about individual jobs from the filechooser screens, including SmartManager metadata.
+**•** See information about individual jobs from the filechooser screens, including SmartManager metadata.
 
 * When a job has been loaded, see further information that has been gathered from the G-Code file, including feeds, speeds, and comments in the file. 
 
