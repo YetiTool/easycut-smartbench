@@ -1,7 +1,7 @@
 .. _top:
 
 SmartManager Console update
-========================
+============================
 
 This Console update is part of the new SmartManager package. 
 
@@ -9,17 +9,21 @@ SmartManager is a Manufacturing Execution System (MES) that provides essential r
 
 **If you purchased SmartBench before 1st November 2021, you will automatically have access to the SmartManager package!**
 
-Visit https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager to learn about the whole SmartManager package.
+Visit:
+
+https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager 
+
+to learn more about the whole SmartManager package.
 
 From the Console, the operator is now able to:
 
-* See information about individual jobs from the filechooser screens, including SmartManager metadata.
+* **•** See information about individual jobs from the filechooser screens, including SmartManager metadata.
 
-* When a job has been loaded, see further information that has been gathered from the G-Code file, including feeds, speeds, and comments in the file. 
+* - When a job has been loaded, see further information that has been gathered from the G-Code file, including feeds, speeds, and comments in the file. 
 
-* Send feedback to SmartManager after a job, including batch numbers, production notes, and details of any critical events that occurred during a job. 
+* - Send feedback to SmartManager after a job, including batch numbers, production notes, and details of any critical events that occurred during a job. 
 
-* Update a customer SmartBench location, as well as SmartBench name, for easy identification from either SmartTransfer or SmartManager. 
+* - Update a customer SmartBench location, as well as SmartBench name, for easy identification from either SmartTransfer or SmartManager. 
 
 If you are not using SmartManager, this update still comes with some new features, including G-Code preview and summary in the PRO app, which allows you to see details about your file before you run it. 
 
