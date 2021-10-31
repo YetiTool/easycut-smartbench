@@ -11,7 +11,7 @@ SmartManager is a Manufacturing Execution System (MES) that provides essential r
 
 Visit:
 
-**https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager**
+https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager
 
 to learn more about the whole SmartManager package.
 
