@@ -131,7 +131,7 @@ class ScrollReleaseNotes(ScrollView):
                     'link': '1976d2ff',
                     'paragraph': '333333ff',
                     'title': '333333ff',
-                    'bullet': 'e5e5e5ff'})
+                    'bullet': '333333ff'})
 
 class ReleaseNotesScreen(Screen):
 
