@@ -591,8 +591,13 @@ class DatabaseEventManager():
 
 	def poll_threads(self):
 
-		if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-		if not self.thread_for_send_event.is_alive(): self.send_events_to_database()
+		try:
+			if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+			if not self.thread_for_send_event.is_alive(): self.send_events_to_database()
+
+		except:
+			self.send_routine_updates_to_database()
+			self.send_events_to_database()
 
 
 
