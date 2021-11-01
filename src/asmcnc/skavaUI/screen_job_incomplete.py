@@ -303,7 +303,7 @@ class JobIncompleteScreen(Screen):
     def press_ok(self):
 
         if self.db.set.ip_address:
-            self.next_button.text = self.l.get_str("Sending")
+            self.next_button.text = self.l.get_str("Processing")
             self.next_button.disabled = True
             self.set_post_production_notes()
             Clock.schedule_once(self.send_end_of_job_updates, 0.1)

@@ -280,7 +280,7 @@ class JobFeedbackScreen(Screen):
 
     def confirm_job_successful(self):
         if self.db.set.ip_address:
-            self.sending_label.text = self.l.get_str("Sending")
+            self.sending_label.text = self.l.get_str("Processing")
             self.set_post_production_notes()
             Clock.schedule_once(self.send_end_of_job_updates, 0.1)
 
