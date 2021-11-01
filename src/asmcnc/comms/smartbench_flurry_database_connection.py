@@ -35,6 +35,8 @@ class DatabaseEventManager():
 
 	event_send_timeout = 5*60
 
+	connection_established = False
+
 	def __init__(self, screen_manager, machine, settings_manager):
 
 		self.queue = 'machine_data'
@@ -64,8 +66,6 @@ class DatabaseEventManager():
 			initial_connection_thread.daemon = True
 			initial_connection_thread.start()
 
-			self.send_events_to_database()
-
 
 	def set_up_pika_connection(self):
 
@@ -83,15 +83,9 @@ class DatabaseEventManager():
 																						))
 
 					log("Connection established")
-
+					self.connection_established = True
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
-
-
-					try: 
-						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-					except: 
-						self.send_routine_updates_to_database()
 					break
 
 				except Exception as e:
@@ -149,7 +143,7 @@ class DatabaseEventManager():
 
 			while True:
 
-				if self.set.ip_address:
+				if self.set.ip_address and self.connection_established:
 
 					try:
 						if self.m.s.m_state == "Idle":
@@ -204,6 +198,7 @@ class DatabaseEventManager():
 			except Exception as e:
 				log(exception_type + " send exception: " + str(e))
 				self.reinstate_channel_or_connection_if_missing()
+
 
 
 	def publish_event_with_temp_channel(self, data, exception_type, timeout):
@@ -584,14 +579,20 @@ class DatabaseEventManager():
 				except:
 					self.public_ip_address = "Unavailable"
 
+				if self.public_ip_address:
+					self.poll_threads()
 
-				sleep(600)
+				sleep(300)
 
 		ip_address_thread = threading.Thread(target=do_ip_address_loop)
 		ip_address_thread.daemon = True
 		ip_address_thread.start()
 
 
+	def poll_threads(self):
+
+		if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+		if not self.thread_for_send_event.is_alive(): self.send_events_to_database()
 
 
 
