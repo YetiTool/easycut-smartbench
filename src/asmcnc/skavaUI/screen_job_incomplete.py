@@ -255,6 +255,8 @@ Builder.load_string("""
                                 id: next_button
                                 background_normal: "./asmcnc/skavaUI/img/next.png"
                                 background_down: "./asmcnc/skavaUI/img/next.png"
+                                background_disabled_down: "./asmcnc/skavaUI/img/next.png"
+                                background_disabled_normal: "./asmcnc/skavaUI/img/next.png"
                                 border: [dp(14.5)]*4
                                 size_hint: (None,None)
                                 width: dp(291)
