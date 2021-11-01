@@ -301,9 +301,18 @@ class JobIncompleteScreen(Screen):
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
  
     def press_ok(self):
-        self.next_button.text = self.l.get_str("Sending data")
-        self.next_button.disabled = True
-        self.set_post_production_notes()
+
+        if self.db.set.ip_address:
+            self.next_button.text = self.l.get_str("Sending")
+            self.next_button.disabled = True
+            self.set_post_production_notes()
+            Clock.schedule_once(self.send_end_of_job_updates, 0.1)
+
+        else: 
+            self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
+            self.quit_to_return_screen()
+
+    def send_end_of_job_updates(self, dt):
         self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
         self.db.send_job_summary(False)
         self.quit_to_return_screen()
