@@ -81,6 +81,7 @@ class DatabaseEventManager():
 																							'console',
 																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
 																						stack_timeout = 1.0,
+																						socket_timeout = 1.0,
 																						heartbeat=600,
 	                                       												blocked_connection_timeout=300,
 																						))
