@@ -100,10 +100,10 @@ class DatabaseEventManager():
 				except Exception as e:
 					log("Pika connection exception: " + str(e))
 					log(traceback.format_exc())
-					self.connection.sleep(10)
+					sleep(10)
 
 			else:
-				self.connection.sleep(10)
+				sleep(10)
 
 	def reinstate_channel_or_connection_if_missing(self):
 
@@ -129,7 +129,7 @@ class DatabaseEventManager():
 
 				except:
 					log("sleep and try reinstating connection again in a minute") 
-					self.connection.sleep(10)
+					sleep(10)
 					self.reinstate_channel_or_connection_if_missing()
 
 		except:
@@ -165,7 +165,7 @@ class DatabaseEventManager():
 						log(str(e))
 
 
-				self.connection.sleep(10)
+				sleep(10)
 
 		self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
 		self.routine_update_thread.daemon = True
@@ -235,7 +235,7 @@ class DatabaseEventManager():
 				break
 
 			except: 
-				self.connection.sleep(10)
+				sleep(10)
 
 		self.event_queue.task_done()
 
