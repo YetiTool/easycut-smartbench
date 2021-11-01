@@ -83,9 +83,9 @@ class DatabaseEventManager():
 																						))
 
 					log("Connection established")
-					self.connection_established = True
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
+					self.connection_established = True
 					break
 
 				except Exception as e:
