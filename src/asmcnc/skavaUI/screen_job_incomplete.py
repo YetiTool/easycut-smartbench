@@ -30,6 +30,7 @@ Builder.load_string("""
     # event_details_container : event_details_container
     event_details_label : event_details_label
     # event_details_input : event_details_input
+    next_button : next_button
 
     BoxLayout:
         height: dp(800)
@@ -254,6 +255,8 @@ Builder.load_string("""
                                 id: next_button
                                 background_normal: "./asmcnc/skavaUI/img/next.png"
                                 background_down: "./asmcnc/skavaUI/img/next.png"
+                                background_disabled_down: "./asmcnc/skavaUI/img/next.png"
+                                background_disabled_normal: "./asmcnc/skavaUI/img/next.png"
                                 border: [dp(14.5)]*4
                                 size_hint: (None,None)
                                 width: dp(291)
@@ -300,10 +303,25 @@ class JobIncompleteScreen(Screen):
         self.return_to_screen = self.jd.screen_to_return_to_after_cancel
  
     def press_ok(self):
-        self.set_post_production_notes()
+
+        if self.db.set.ip_address:
+            self.next_button.text = self.l.get_str("Processing")
+            self.next_button.disabled = True
+            self.set_post_production_notes()
+            Clock.schedule_once(self.send_end_of_job_updates, 0.1)
+
+        else: 
+            self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
+            self.quit_to_return_screen()
+
+    def send_end_of_job_updates(self, dt):
         self.jd.post_job_data_update_pre_send(False, extra_parts_completed=int(self.parts_completed_input.text))
         self.db.send_job_summary(False)
         self.quit_to_return_screen()
+
+    def on_leave(self):
+        self.next_button.text = self.l.get_str("Ok")
+        self.next_button.disabled = False
 
     def quit_to_return_screen(self):
         self.sm.current = self.jd.screen_to_return_to_after_job
@@ -329,8 +347,8 @@ class JobIncompleteScreen(Screen):
     # UPDATE TEXT WITH LANGUAGE AND VARIABLES
     def update_strings(self):
 
-
-        # Get these strings properly translated
+        self.next_button.text = self.l.get_str("Ok")
+        self.next_button.disabled = False
 
         if "unsuccessful" in self.event_type:
             self.job_incomplete_label.text = self.l.get_str("Job unsuccessful").replace(self.l.get_str("Job"), self.jd.job_name) + "!"

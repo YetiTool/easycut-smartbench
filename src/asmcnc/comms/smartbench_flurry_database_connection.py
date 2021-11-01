@@ -79,9 +79,7 @@ class DatabaseEventManager():
 					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
 																						pika.credentials.PlainCredentials(
 																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
-																						# heartbeat=600,
-                      #                  													blocked_connection_timeout=300,
+																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
 																						))
 
 					log("Connection established")
@@ -197,7 +195,7 @@ class DatabaseEventManager():
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
-		if self.set.ip_address:
+		if self.set.wifi_available:
 
 			try: 
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
@@ -214,26 +212,30 @@ class DatabaseEventManager():
 
 		while time.time() < timeout and self.set.ip_address:
 
-			try: 
-				temp_event_channel = self.connection.channel()
-				temp_event_channel.queue_declare(queue=self.queue)
+			if self.set.wifi_available:
 
 				try: 
-					temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-					if self.VERBOSE: log(data)
+					temp_event_channel = self.connection.channel()
+					temp_event_channel.queue_declare(queue=self.queue)
 
-					if "Job End" in exception_type:
-						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+					try: 
+						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 						if self.VERBOSE: log(data)
 
-				
-				except Exception as e:
-					log(exception_type + " send exception: " + str(e))
+						if "Job End" in exception_type:
+							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+							if self.VERBOSE: log(data)
 
-				temp_event_channel.close()
-				break
+					
+					except Exception as e:
+						log(exception_type + " send exception: " + str(e))
 
-			except: 
+					temp_event_channel.close()
+					break
+
+				except: 
+					sleep(10)
+			else:
 				sleep(10)
 
 		self.event_queue.task_done()

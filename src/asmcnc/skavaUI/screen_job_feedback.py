@@ -24,6 +24,7 @@ Builder.load_string("""
     post_production_notes_label : post_production_notes_label
     post_production_notes : post_production_notes
     success_question : success_question
+    sending_label : sending_label
 
     BoxLayout:
         height: dp(800)
@@ -189,44 +190,61 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(240)
                     width: dp(800)
-                    orientation: 'horizontal'
-                    spacing: dp(96)
-                    padding: [dp(150), dp(20)]
+                    orientation: 'vertical'
+                    padding: [dp(0), dp(20), dp(0), dp(0)]
 
-                    # Thumbs down button
-                    Button:
+                    BoxLayout:
                         size_hint: (None,None)
                         height: dp(200)
-                        width: dp(202)
-                        background_color: hex('#e5e5e5ff')
-                        background_normal: ""
-                        on_press: root.confirm_job_unsuccessful()
-                        BoxLayout:
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/skavaUI/img/thumbs_down.png"
-                                # center_x: self.parent.center_x
-                                # y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True
-                    # Thumbs up button
-                    Button:
-                        size_hint: (None,None)
-                        height: dp(200)
-                        width: dp(202)
-                        background_color: hex('#e5e5e5ff')
-                        background_normal: ""
-                        on_press: root.confirm_job_successful()
-                        BoxLayout:
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                source: "./asmcnc/skavaUI/img/thumbs_up.png"
-                                # center_x: self.parent.center_x
-                                # y: self.parent.y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True  
+                        width: dp(800)
+                        orientation: 'horizontal'
+                        spacing: dp(96)
+                        padding: [dp(150), dp(0)]
+
+                        # Thumbs down button
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(200)
+                            width: dp(202)
+                            background_color: hex('#e5e5e5ff')
+                            background_normal: ""
+                            on_press: root.confirm_job_unsuccessful()
+                            BoxLayout:
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/skavaUI/img/thumbs_down.png"
+                                    # center_x: self.parent.center_x
+                                    # y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+                        # Thumbs up button
+                        Button:
+                            size_hint: (None,None)
+                            height: dp(200)
+                            width: dp(202)
+                            background_color: hex('#e5e5e5ff')
+                            background_normal: ""
+                            on_press: root.confirm_job_successful()
+                            BoxLayout:
+                                size: self.parent.size
+                                pos: self.parent.pos
+                                Image:
+                                    source: "./asmcnc/skavaUI/img/thumbs_up.png"
+                                    # center_x: self.parent.center_x
+                                    # y: self.parent.y
+                                    size: self.parent.width, self.parent.height
+                                    allow_stretch: True
+
+                    Label: 
+                        id: sending_label
+                        text_size: self.size
+                        markup: True
+                        halign: 'center'
+                        vallign: 'middle'
+                        color: hex('#333333ff')
+                        font_size: dp(18)
+
 """)
 
 class JobFeedbackScreen(Screen):
@@ -250,14 +268,27 @@ class JobFeedbackScreen(Screen):
 
     def on_pre_enter(self):
         self.update_strings()
+        self.sending_label.text = ""
         self.return_to_screen = self.jd.screen_to_return_to_after_job
 
     def on_enter(self):
         self.sm.get_screen('go').is_job_started_already = False
         self.db.send_job_end(True)
 
+    def on_leave(self):
+        self.sending_label.text = ""
+
     def confirm_job_successful(self):
-        self.set_post_production_notes()
+        if self.db.set.ip_address:
+            self.sending_label.text = self.l.get_str("Processing")
+            self.set_post_production_notes()
+            Clock.schedule_once(self.send_end_of_job_updates, 0.1)
+
+        else: 
+            self.jd.post_job_data_update_pre_send(True)
+            self.quit_to_return_screen()
+
+    def send_end_of_job_updates(self, dt):
         self.jd.post_job_data_update_pre_send(True)
         self.db.send_job_summary(True)
         self.quit_to_return_screen()
