@@ -80,8 +80,9 @@ class DatabaseEventManager():
 																						pika.credentials.PlainCredentials(
 																							'console',
 																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
-																						# heartbeat=600,
-                      #                  													blocked_connection_timeout=300,
+																						stack_timeout = 1.0,
+																						heartbeat=600,
+	                                       												blocked_connection_timeout=300,
 																						))
 
 					log("Connection established")
@@ -99,10 +100,10 @@ class DatabaseEventManager():
 				except Exception as e:
 					log("Pika connection exception: " + str(e))
 					log(traceback.format_exc())
-					sleep(10)
+					self.connection.sleep(10)
 
 			else:
-				sleep(10)
+				self.connection.sleep(10)
 
 	def reinstate_channel_or_connection_if_missing(self):
 
@@ -128,7 +129,7 @@ class DatabaseEventManager():
 
 				except:
 					log("sleep and try reinstating connection again in a minute") 
-					sleep(10)
+					self.connection.sleep(10)
 					self.reinstate_channel_or_connection_if_missing()
 
 		except:
@@ -164,7 +165,7 @@ class DatabaseEventManager():
 						log(str(e))
 
 
-				sleep(10)
+				self.connection.sleep(10)
 
 		self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
 		self.routine_update_thread.daemon = True
@@ -234,7 +235,7 @@ class DatabaseEventManager():
 				break
 
 			except: 
-				sleep(10)
+				self.connection.sleep(10)
 
 		self.event_queue.task_done()
 
