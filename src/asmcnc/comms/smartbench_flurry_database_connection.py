@@ -196,7 +196,8 @@ class DatabaseEventManager():
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
-		if self.set.wifi_available:
+		# if self.set.wifi_available:
+		if True:
 
 			try: 
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
@@ -213,7 +214,8 @@ class DatabaseEventManager():
 
 		while time.time() < timeout and self.set.ip_address:
 
-			if self.set.wifi_available:
+			# if self.set.wifi_available:
+			if True:
 
 				try: 
 					temp_event_channel = self.connection.channel()
