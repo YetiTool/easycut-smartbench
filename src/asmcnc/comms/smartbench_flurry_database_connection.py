@@ -79,8 +79,7 @@ class DatabaseEventManager():
 					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
 																						pika.credentials.PlainCredentials(
 																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb'),
-																						socket_timeout = 1.0
+																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
 																						))
 
 					log("Connection established")
@@ -196,8 +195,7 @@ class DatabaseEventManager():
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
-		# if self.set.wifi_available:
-		if True:
+		if self.set.wifi_available:
 
 			try: 
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
@@ -214,8 +212,7 @@ class DatabaseEventManager():
 
 		while time.time() < timeout and self.set.ip_address:
 
-			# if self.set.wifi_available:
-			if True:
+			if self.set.wifi_available:
 
 				try: 
 					temp_event_channel = self.connection.channel()
