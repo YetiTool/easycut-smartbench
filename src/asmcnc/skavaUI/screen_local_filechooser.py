@@ -21,7 +21,8 @@ import sys, os
 from os.path import expanduser
 from shutil import copy
 from itertools import takewhile
-import codecs
+from chardet import detect
+
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
@@ -319,6 +320,8 @@ def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
 
+decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
+
 class LocalFileChooser(Screen):
 
     filename_selected_label_text = StringProperty()
@@ -525,25 +528,29 @@ class LocalFileChooser(Screen):
         def format_metadata(y):
             mini_list = y.split(': ')
             return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
-            # return y
 
-        # try:
+        try:
 
-        with codecs.open(self.filechooser.selection[0], encoding='utf-8') as previewed_file:
+            # with codecs.open(self.filechooser.selection[0], encoding='utf-8') as previewed_file:
+            with open(self.filechooser.selection[0]) as previewed_file:
 
-            try:
+                try:
 
-                if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                    metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (i.split(':', 1)[1]).strip('\n\r() ') ])
+                    if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
-                else: 
-                    # just get GCode preview if no metadata
-                    metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+                    else: 
+                        # just get GCode preview if no metadata
+                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, '')).strip('\n\r')) for x in xrange(20)]
 
-                self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
-            except:
-                self.metadata_preview.text = self.l.get_bold("Could not preview file.")
+                    self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
+
+                except:
+                    self.metadata_preview.text = self.l.get_bold("Could not preview file.")
+
+        except: 
+            self.metadata_preview.text = self.l.get_bold("Could not open file.")
 
     
     def get_FTP_files(self):

@@ -20,6 +20,7 @@ from shutil import copy
 from asmcnc.comms import usb_storage
 from os import path
 from itertools import takewhile
+from chardet import detect
 
 Builder.load_string("""
 
@@ -234,6 +235,8 @@ def name_order_sort_reverse(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +
             sorted((f for f in files if not filesystem.is_dir(f)), reverse = True))
 
+decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
+
 class USBFileChooser(Screen):
 
 
@@ -409,6 +412,7 @@ class USBFileChooser(Screen):
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
+     
 
     def get_metadata(self):
 
@@ -420,18 +424,28 @@ class USBFileChooser(Screen):
             mini_list = y.split(': ')
             return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
 
-        with open(self.filechooser_usb.selection[0]) as previewed_file:
+        try:
+            with open(self.filechooser_usb.selection[0]) as previewed_file:
 
-            if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (i.split(':', 1)[1]).strip('\n\r() ') ])
+                try:
 
-            else: 
-                # just get GCode preview if no metadata
-                metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+                    if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+                        metadata_or_gcode_preview = map(format_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
-        self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
+                    else: 
+                        # just get GCode preview if no metadata
+                        metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [(decode_and_encode(next(previewed_file, '')).strip('\n\r')) for x in xrange(20)]
 
-     
+
+                    self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
+
+                except:
+                    self.metadata_preview.text = self.l.get_bold("Could not preview file.")
+
+        except: 
+            self.metadata_preview.text = self.l.get_bold("Could not open file.")
+
+
     def import_usb_file(self):
 
         file_selection = self.filechooser_usb.selection[0]
