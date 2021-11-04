@@ -21,6 +21,7 @@ import sys, os
 from os.path import expanduser
 from shutil import copy
 from itertools import takewhile
+import codecs
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
@@ -526,16 +527,23 @@ class LocalFileChooser(Screen):
             return str(self.l.get_bold(mini_list[0]) + '[b]: [/b]' + mini_list[1])
             # return y
 
-        with open(self.filechooser.selection[0]) as previewed_file:
+        # try:
 
-            if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (i.split(':', 1)[1]).strip('\n\r() ') ])
+        with codecs.open(self.filechooser.selection[0], encoding='utf-8') as previewed_file:
 
-            else: 
-                # just get GCode preview if no metadata
-                metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+            try:
 
-        self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
+                if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+                    metadata_or_gcode_preview = map(format_metadata, [i.strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (i.split(':', 1)[1]).strip('\n\r() ') ])
+
+                else: 
+                    # just get GCode preview if no metadata
+                    metadata_or_gcode_preview = [self.l.get_bold("G-Code Preview (first 20 lines)"), ""] + [next(previewed_file, '').strip('\n\r') for x in xrange(20)]
+
+                self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
+
+            except:
+                self.metadata_preview.text = self.l.get_bold("Could not preview file.")
 
     
     def get_FTP_files(self):
