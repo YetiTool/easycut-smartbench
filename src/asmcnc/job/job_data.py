@@ -6,18 +6,15 @@ Module used to keep track of information about the current job
 import sys, os, re
 from datetime import datetime, timedelta
 from pipes import quote
+from chardet import detect
+
+decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 
 def remove_newlines(gcode_line):
     if gcode_line in ['\n', '\r', '\r\n']:
         return ' '
-    gcode_line = gcode_line.strip('\n')
-    gcode_line = gcode_line.strip('\r')
+    gcode_line = decode_and_encode(gcode_line).strip('\n\r')
     return gcode_line
-
-# def filter_out_brackets(character):
-#     if character in ['(',')']:
-#         return False
-#     return True
 
 class JobData(object):
 
