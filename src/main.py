@@ -10,11 +10,13 @@ www.yetitool.com
 #config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
+
 import time
 import sys, os
 from datetime import datetime
 import os.path
 from os import path
+print(os.environ) 
 
 from kivy.config import Config
 from kivy.clock import Clock

@@ -24,6 +24,10 @@
     pip:
       name: pika==1.2.0
     ignore_errors: yes
+  - name: Install amqpstorm python package on version 2.10.3
+    pip:
+      name: amqpstorm==2.10.3
+    ignore_errors: yes
   - name: Define glbal export for current tag
     template:
       src=profile-platform-v-var.sh
