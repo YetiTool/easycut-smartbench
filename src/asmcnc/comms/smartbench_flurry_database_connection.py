@@ -159,7 +159,7 @@ class DatabaseEventManager():
 						log(str(e))
 
 
-				sleep(10)
+				sleep(1)
 
 		self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
 		self.routine_update_thread.daemon = True
