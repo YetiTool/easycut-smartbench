@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
@@ -11,12 +10,11 @@ def log(message):
 	print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 try:
-	import amqpstorm
+	import pika
 
-except Exception as e:
-	print(str(e))
-	amqpstorm = None
-	log("Couldn't import amqpstorm lib")
+except:
+	pika = None
+	log("Couldn't import pika lib")
 
 
 class DatabaseEventManager():
@@ -26,7 +24,7 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = True
+	VERBOSE = False
 
 	public_ip_address = ''
 
@@ -58,32 +56,37 @@ class DatabaseEventManager():
 
 	def start_connection_to_database_thread(self):
 
-		if amqpstorm:
+		if pika:
 
 			self.start_get_public_ip_address_thread()        
 
-			initial_connection_thread = threading.Thread(target=self.set_up_amqpstorm_connection)
+			initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
 			initial_connection_thread.daemon = True
 			initial_connection_thread.start()
 
 			self.send_events_to_database()
 
 
-	def set_up_amqpstorm_connection(self):
+	def set_up_pika_connection(self):
 
-		log("Try to set up amqpstorm connection")
+		log("Try to set up pika connection")
 
 		while True:
 
 			if self.set.ip_address and self.set.wifi_available:
 
 				try:
+					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
+																						pika.credentials.PlainCredentials(
+																							'console',
+																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+																						))
 
-					self.connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672, timeout=60)
 					log("Connection established")
 
 					self.routine_updates_channel = self.connection.channel()
-					self.routine_updates_channel.queue.declare(queue=self.queue)
+					self.routine_updates_channel.queue_declare(queue=self.queue)
+
 
 					try: 
 						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
@@ -92,7 +95,7 @@ class DatabaseEventManager():
 					break
 
 				except Exception as e:
-					log("AMPQ storm connection exception: " + str(e))
+					log("Pika connection exception: " + str(e))
 					log(traceback.format_exc())
 					sleep(10)
 
@@ -107,19 +110,19 @@ class DatabaseEventManager():
 			if self.connection.is_closed:
 
 				log("Connection is closed, set up new connection")
-				self.set_up_amqpstorm_connection()
+				self.set_up_pika_connection()
 
 			elif self.routine_updates_channel.is_closed:
 				if self.VERBOSE: log("Channel is closed, set up new channel")
 				self.routine_updates_channel = self.connection.channel()
-				self.routine_updates_channel.queue.declare(queue=self.queue)
+				self.routine_updates_channel.queue_declare(queue=self.queue)
 
 			else: 
 
 				try:
 					log("Close connection and start again") 
 					self.connection.close()
-					self.set_up_amqpstorm_connection()
+					self.set_up_pika_connection()
 
 				except:
 					log("sleep and try reinstating connection again in a minute") 
@@ -136,7 +139,7 @@ class DatabaseEventManager():
 			except: pass
 
 			self.connection = None
-			self.set_up_amqpstorm_connection()
+			self.set_up_pika_connection()
 
 	## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
 	##------------------------------------------------------------------------
@@ -195,7 +198,7 @@ class DatabaseEventManager():
 		if self.set.wifi_available:
 
 			try: 
-				self.routine_updates_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 				if self.VERBOSE: log(data)
 			
 			except Exception as e:
@@ -213,14 +216,14 @@ class DatabaseEventManager():
 
 				try: 
 					temp_event_channel = self.connection.channel()
-					temp_event_channel.queue.declare(queue=self.queue)
+					temp_event_channel.queue_declare(queue=self.queue)
 
 					try: 
-						temp_event_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 						if self.VERBOSE: log(data)
 
 						if "Job End" in exception_type:
-							temp_event_channel.basic.publish(json.dumps(self.generate_full_payload_data()), self.queue, exchange='')
+							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
 							if self.VERBOSE: log(data)
 
 					
@@ -396,7 +399,7 @@ class DatabaseEventManager():
 	### BEGINNING AND END OF JOB
 	def send_job_end(self, successful):
 
-		if amqpstorm:
+		if pika:
 
 			data =  {
 					"payload_type": "job_end",
@@ -421,7 +424,7 @@ class DatabaseEventManager():
 
 	def send_job_summary(self, successful):
 
-		if amqpstorm:
+		if pika:
 
 			data =  {
 					"payload_type": "job_summary",
@@ -448,7 +451,7 @@ class DatabaseEventManager():
 
 	def send_job_start(self):
 
-		if amqpstorm:
+		if pika:
 
 			data = {
 					"payload_type": "job_start",
@@ -479,7 +482,7 @@ class DatabaseEventManager():
 	### FEEDS AND SPEEDS
 	def send_spindle_speed_info(self):
 
-		if amqpstorm:
+		if pika:
 
 			data = {
 				"payload_type": "spindle_speed",
@@ -503,7 +506,7 @@ class DatabaseEventManager():
 
 	def send_feed_rate_info(self):
 
-		if amqpstorm:
+		if pika:
 
 			data = {
 				"payload_type": "feed_rate",
@@ -545,7 +548,7 @@ class DatabaseEventManager():
 
 	def send_event(self, event_severity, event_description, event_name, event_type):
 
-		if amqpstorm:
+		if pika:
 
 			data = {
 					"payload_type": "event",
