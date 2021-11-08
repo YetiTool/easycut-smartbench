@@ -5,7 +5,6 @@ from requests import get
 import threading, Queue
 from time import sleep
 import traceback
-import amqpstorm
 
 def log(message):
 	timestamp = datetime.datetime.now()
