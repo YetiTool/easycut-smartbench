@@ -30,7 +30,7 @@ class DatabaseEventManager():
 
 	public_ip_address = ''
 
-	routine_updates_channel = None
+	updates_and_events_channel = None
 	routine_update_thread = None
 
 	thread_for_send_event = None
@@ -60,59 +60,103 @@ class DatabaseEventManager():
 
 		if amqpstorm:
 
-			self.start_get_public_ip_address_thread()        
-
-			initial_connection_thread = threading.Thread(target=self.set_up_amqpstorm_connection)
+			initial_connection_thread = threading.Thread(target=self.do_updates_and_events_loop)
 			initial_connection_thread.daemon = True
 			initial_connection_thread.start()
 
-			self.send_events_to_database()
+	def do_updates_and_events_loop(self):
+
+		self.event_queue.put( (self.set_up_amqpstorm_connection, []) )
+		last_send = time.time()
+		event_sent = True
+
+		while True: 
+
+			try:
+
+				if time.time() > last_send + 10:
+
+					if self.m.s.m_state == "Idle":
+						log("Send 'alive'")
+						self.publish_event(self.alive_data(), "Alive", False)
+
+					else:
+						log("Send routine update")
+						self.publish_event(self.generate_full_payload_data(), "Routine Full Payload", False)
+
+					last_send = time.time()
+
+				if event_sent or (time.time() > event_get_time + self.event_send_timeout):
+					try: 
+						event_task, args = self.event_queue.get(block=True, timeout=10)
+						event_get_time = time.time()
+						event_sent = False
+
+					except:
+						pass
+
+				if event_task and not event_sent:
+					try:
+						event_task(*args)
+						event_sent = True
+
+					except Exception as event_exception:
+						print(str(event_exception))
+						raise event_exception
+					
+
+			except amqpstorm.AMQPConnectionError as e: 
+
+				if 'connection timed out' in e: 
+					pass
+
+				else:
+					print(str(e))
+					log(traceback.format_exc())
+					self.event_queue.put( (self.reinstate_channel_or_connection_if_missing, []) )
+
+			except Exception as E: 
+
+				print(str(E))
+				log(traceback.format_exc())
+				self.event_queue.put( (self.reinstate_channel_or_connection_if_missing, []) )
 
 
 	def set_up_amqpstorm_connection(self):
 
 		log("Try to set up amqpstorm connection")
 
-		while True:
+		if self.set.ip_address and self.set.wifi_available:
 
-			if self.set.ip_address and self.set.wifi_available:
+			try:
 
-				try:
+				self.connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672, timeout=60)
+				log("Connection established")
 
-					self.connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672, timeout=60)
-					log("Connection established")
+				self.updates_and_events_channel = self.connection.channel()
+				self.updates_and_events_channel.queue.declare(queue=self.queue)
 
-					self.routine_updates_channel = self.connection.channel()
-					self.routine_updates_channel.queue.declare(queue=self.queue)
+				self.event_queue.task_done()
 
-					try: 
-						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-					except: 
-						self.send_routine_updates_to_database()
-					break
+			except Exception as e:
+				log("AMPQ storm connection exception: " + str(e))
+				log(traceback.format_exc())
 
-				except Exception as e:
-					log("AMPQ storm connection exception: " + str(e))
-					log(traceback.format_exc())
-					sleep(10)
-
-			else:
-				sleep(10)
 
 	def reinstate_channel_or_connection_if_missing(self):
 
 		log("Attempt to reinstate channel or connection")
 
 		try:
-			if self.connection.is_closed:
 
+			if self.connection.is_closed:
 				log("Connection is closed, set up new connection")
 				self.set_up_amqpstorm_connection()
 
-			elif self.routine_updates_channel.is_closed:
+			elif self.updates_and_events_channel.is_closed:
 				if self.VERBOSE: log("Channel is closed, set up new channel")
-				self.routine_updates_channel = self.connection.channel()
-				self.routine_updates_channel.queue.declare(queue=self.queue)
+				self.updates_and_events_channel = self.connection.channel()
+				self.updates_and_events_channel.queue.declare(queue=self.queue)
 
 			else: 
 
@@ -129,7 +173,7 @@ class DatabaseEventManager():
 		except:
 
 			# Try closing both, just in case something weird has happened
-			try: self.routine_updates_channel.close()
+			try: self.updates_and_events_channel.close()
 			except: pass
 
 			try: self.connection.close()
@@ -138,104 +182,21 @@ class DatabaseEventManager():
 			self.connection = None
 			self.set_up_amqpstorm_connection()
 
-	## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
-	##------------------------------------------------------------------------
-	def send_routine_updates_to_database(self):
-
-		def do_routine_update_loop():
-
-			while True:
-
-				if self.set.ip_address:
-
-					try:
-						if self.m.s.m_state == "Idle":
-							self.send_alive()
-						else:
-							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
-
-					except Exception as e:
-						log("Could not send routine update:")
-						log(str(e))
-
-
-				sleep(1)
-
-		self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
-		self.routine_update_thread.daemon = True
-		self.routine_update_thread.start()
-
-
-	## QUEUE LOOP THAT SENDS EVENTS TO DATABASE IN ORDER
-	## --------------------------------------------------
-
-	def send_events_to_database(self):
-
-		def do_event_sending_loop():
-
-			while True:
-
-				event_task, args = self.event_queue.get()
-				event_task(*args)
-
-
-		self.thread_for_send_event = threading.Thread(target=do_event_sending_loop) #, args=(data, exception_type))
-		self.thread_for_send_event.daemon = True
-		self.thread_for_send_event.start()
-
-
 
 
 	## PUBLISH EVENT TO DATABASE
 	##------------------------------------------------------------------------
-	def publish_event_with_routine_updates_channel(self, data, exception_type):
+	def publish_event(self, data, exception_type, is_event):
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
 		if self.set.wifi_available:
 
-			try: 
-				self.routine_updates_channel.basic.publish(json.dumps(data), self.queue, exchange='')
-				if self.VERBOSE: log(data)
-			
-			except Exception as e:
-				log(exception_type + " send exception: " + str(e))
-				self.reinstate_channel_or_connection_if_missing()
-
-
-	def publish_event_with_temp_channel(self, data, exception_type, timeout):
-
-		log("Publishing data: " + exception_type)
-
-		while time.time() < timeout and self.set.ip_address:
-
-			if self.set.wifi_available:
-
-				try: 
-					temp_event_channel = self.connection.channel()
-					temp_event_channel.queue.declare(queue=self.queue)
-
-					try: 
-						temp_event_channel.basic.publish(json.dumps(data), self.queue, exchange='')
-						if self.VERBOSE: log(data)
-
-						if "Job End" in exception_type:
-							temp_event_channel.basic.publish(json.dumps(self.generate_full_payload_data()), self.queue, exchange='')
-							if self.VERBOSE: log(data)
-
-					
-					except Exception as e:
-						log(exception_type + " send exception: " + str(e))
-
-					temp_event_channel.close()
-					break
-
-				except: 
-					sleep(10)
-			else:
-				sleep(10)
-
-		self.event_queue.task_done()
+			self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+			if is_event: 
+				print("Task done! " + data)
+				self.event_queue.task_done()
+			if self.VERBOSE: log(data)
 
 
 
@@ -243,7 +204,8 @@ class DatabaseEventManager():
 	##------------------------------------------------------------------------
 
 	# send alive 'ping' to server when SmartBench is Idle
-	def send_alive(self):
+	def alive_data(self):
+
 		data = {
 				"payload_type": "alive",
 				"machine_info": {
@@ -251,12 +213,12 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			}
 
-		self.publish_event_with_routine_updates_channel(data, "Alive")
+		return data
 
 
 	### FUNCTIONS FOR SENDING FULL PAYLOAD
@@ -308,7 +270,7 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"statuses": {
 					"status": status,
@@ -405,7 +367,7 @@ class DatabaseEventManager():
 						"location": self.m.device_location,
 						"hostname": self.set.console_hostname,
 						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
+						"public_ip_address": self.set.public_ip_address
 					},
 					"job_data": {
 						"job_name": self.jd.job_name or '',
@@ -416,7 +378,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event, [data, "Job End", time.time() + self.event_send_timeout, True]) )
 
 
 	def send_job_summary(self, successful):
@@ -430,7 +392,7 @@ class DatabaseEventManager():
 						"location": self.m.device_location,
 						"hostname": self.set.console_hostname,
 						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
+						"public_ip_address": self.set.public_ip_address
 					},
 					"job_data": {
 						"job_name": self.jd.job_name or '',
@@ -442,7 +404,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Summary", time.time() + self.event_send_timeout, True]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -457,7 +419,7 @@ class DatabaseEventManager():
 						"location": self.m.device_location,
 						"hostname": self.set.console_hostname,
 						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
+						"public_ip_address": self.set.public_ip_address
 					},
 					"job_data": {
 						"job_name": self.jd.job_name or '',
@@ -473,7 +435,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Start", time.time() + self.event_send_timeout, True]) )
 
 
 	### FEEDS AND SPEEDS
@@ -488,7 +450,7 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"speeds": {
 					"spindle_speed": self.m.spindle_speed(),
@@ -498,7 +460,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event, [data, "Spindle speed", time.time() + self.event_send_timeout, True]) )
 
 
 	def send_feed_rate_info(self):
@@ -512,7 +474,7 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"feeds": {
 					"feed_rate": self.m.feed_rate(),
@@ -522,7 +484,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
+			self.event_queue.put( (self.publish_event, [data, "Feed rate", time.time() + self.event_send_timeout, True]) )
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -554,7 +516,7 @@ class DatabaseEventManager():
 						"location": self.m.device_location,
 						"hostname": self.set.console_hostname,
 						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
+						"public_ip_address": self.set.public_ip_address
 					},
 					"event": {
 						"severity": event_severity,
@@ -565,28 +527,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
-
-	## LOOP TO ROUTINELY CHECK IP ADDRESS
-
-	def start_get_public_ip_address_thread(self):
-
-		def do_ip_address_loop():
-
-			while True:
-
-				try: 
-					self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
-
-				except:
-					self.public_ip_address = "Unavailable"
-
-
-				sleep(600)
-
-		ip_address_thread = threading.Thread(target=do_ip_address_loop)
-		ip_address_thread.daemon = True
-		ip_address_thread.start()
+			self.event_queue.put( (self.publish_event, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout, True]) )
 
 
 
