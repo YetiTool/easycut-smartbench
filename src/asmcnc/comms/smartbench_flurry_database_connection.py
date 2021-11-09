@@ -108,7 +108,9 @@ class DatabaseEventManager():
 			except amqpstorm.AMQPConnectionError as e: 
 
 				if 'connection timed out' in e: 
-					pass
+					print("connection time out")
+					print(str(e))
+					log(traceback.format_exc())
 
 				else:
 					print(str(e))
@@ -191,8 +193,9 @@ class DatabaseEventManager():
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
 		if self.set.wifi_available:
-
+			print("Wifi wifi_available, attempt to publish")
 			self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+			print("Did publish")
 			if is_event: 
 				self.event_queue.task_done()
 			if self.VERBOSE: log(data)
