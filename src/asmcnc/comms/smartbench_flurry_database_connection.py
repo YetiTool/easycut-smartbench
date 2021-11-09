@@ -89,7 +89,10 @@ class DatabaseEventManager():
 				if clear_event: 
 					event_task = None
 					self.event_queue.task_done()
-				sleep(1)
+					sleep(1)
+
+				else:
+					sleep(10)
 
 			else:
 				try: 
@@ -183,34 +186,35 @@ class DatabaseEventManager():
 		if self.set.wifi_available:
 
 			try:
-				# self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+				self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
 				if self.VERBOSE: log(data)
 				return True
 
 			except amqpstorm.AMQPConnectionError as e: 
 
-				if 'connection timed out' in e: 
-					print("connection time out")
-					print(str(e))
-					log(traceback.format_exc())
-					return False
+				return False
 
-				else:
-					print(str(e))
-					log(traceback.format_exc())
-					self.reinstate_channel_or_connection_if_missing()
-					return False
+				# if 'connection timed out' in e: 
+				# 	print("connection time out")
+				# 	print(str(e))
+				# 	log(traceback.format_exc())
+				# 	return False
+
+				# else:
+				# 	print(str(e))
+				# 	log(traceback.format_exc())
+				# 	self.reinstate_channel_or_connection_if_missing()
+				# 	return False
 
 			except Exception as E: 
 
-				print(str(E))
-				log(traceback.format_exc())
-				self.reinstate_channel_or_connection_if_missing()
+				# print(str(E))
+				# log(traceback.format_exc())
+				# self.reinstate_channel_or_connection_if_missing()
 				return False
 
 		else: 
 			print("No WiFi available")
-			sleep(10)
 			return False
 
 
