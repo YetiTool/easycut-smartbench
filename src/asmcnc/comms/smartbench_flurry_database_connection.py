@@ -200,6 +200,9 @@ class DatabaseEventManager():
 				self.event_queue.task_done()
 			if self.VERBOSE: log(data)
 
+		else: 
+			print("No WiFi available")
+
 
 
 	## ROUTINE EVENTS
