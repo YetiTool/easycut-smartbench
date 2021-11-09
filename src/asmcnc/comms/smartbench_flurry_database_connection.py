@@ -89,7 +89,7 @@ class DatabaseEventManager():
 				if clear_event: 
 					event_task = None
 					self.event_queue.task_done()
-				sleep(0.1)
+				sleep(1)
 
 			else:
 				try: 
@@ -210,6 +210,7 @@ class DatabaseEventManager():
 
 		else: 
 			print("No WiFi available")
+			sleep(10)
 			return False
 
 
