@@ -183,7 +183,7 @@ class DatabaseEventManager():
 		if self.set.wifi_available:
 
 			try:
-				self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+				# self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
 				if self.VERBOSE: log(data)
 				return True
 
