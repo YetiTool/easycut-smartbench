@@ -378,7 +378,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Job End", time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job End", True]) )
 
 
 	def send_job_summary(self, successful):
@@ -404,7 +404,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Job Summary", time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Summary", True]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -435,7 +435,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.event_queue.put( (self.publish_event, [data, "Job Start", time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Start", True]) )
 
 
 	### FEEDS AND SPEEDS
@@ -460,7 +460,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event, [data, "Spindle speed", time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Spindle speed", True]) )
 
 
 	def send_feed_rate_info(self):
@@ -484,7 +484,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event, [data, "Feed rate", time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Feed rate", True]) )
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -527,7 +527,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout, True]) )
+			self.event_queue.put( (self.publish_event, [data, "Event: " + str(event_name), True]) )
 
 
 
