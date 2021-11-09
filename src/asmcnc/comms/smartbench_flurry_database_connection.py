@@ -194,7 +194,6 @@ class DatabaseEventManager():
 
 			self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
 			if is_event: 
-				print("Task done! " + data)
 				self.event_queue.task_done()
 			if self.VERBOSE: log(data)
 
