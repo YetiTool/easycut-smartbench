@@ -35,8 +35,6 @@ class DatabaseEventManager():
 
 	thread_for_send_event = None
 
-	event_send_timeout = 5*60
-
 	def __init__(self, screen_manager, machine, settings_manager):
 
 		self.queue = 'machine_data'
@@ -66,83 +64,70 @@ class DatabaseEventManager():
 
 	def do_updates_and_events_loop(self):
 
-		self.event_queue.put( (self.set_up_amqpstorm_connection, []) )
+		self.set_up_amqpstorm_connection()
+
 		last_send = time.time()
 		event_sent = True
+		event_task = None
 
 		while True: 
 
-			try:
+			if time.time() > last_send + 10:
 
-				if time.time() > last_send + 10:
-
-					if self.m.s.m_state == "Idle":
-						log("Send 'alive'")
-						self.publish_event(self.alive_data(), "Alive", False)
-
-					else:
-						log("Send routine update")
-						self.publish_event(self.generate_full_payload_data(), "Routine Full Payload", False)
-
-					last_send = time.time()
-
-				if event_sent or (time.time() > event_get_time + self.event_send_timeout):
-					try: 
-						event_task, args = self.event_queue.get(block=True, timeout=10)
-						event_get_time = time.time()
-						event_sent = False
-
-					except:
-						pass
-
-				if event_task and not event_sent:
-					try:
-						event_task(*args)
-						event_sent = True
-
-					except Exception as event_exception:
-						print(str(event_exception))
-						raise event_exception
-					
-
-			except amqpstorm.AMQPConnectionError as e: 
-
-				if 'connection timed out' in e: 
-					print("connection time out")
-					print(str(e))
-					log(traceback.format_exc())
+				if self.m.s.m_state == "Idle":
+					log("Send 'alive'")
+					self.publish_event(self.alive_data(), "Alive", 0)
 
 				else:
-					print(str(e))
-					log(traceback.format_exc())
-					self.event_queue.put( (self.reinstate_channel_or_connection_if_missing, []) )
+					log("Send routine update")
+					self.publish_event(self.generate_full_payload_data(), "Routine Full Payload", 0)
 
-			except Exception as E: 
+				last_send = time.time()
 
-				print(str(E))
-				log(traceback.format_exc())
-				self.event_queue.put( (self.reinstate_channel_or_connection_if_missing, []) )
+			if event_task:
+				clear_event = event_task(*args)
+				if clear_event: 
+					event_task = None
+					self.event_queue.task_done()
+				sleep(0.1)
+
+			else:
+				try: 
+					event_task, args = self.event_queue.get(block=True, timeout=10)
+					event_get_time = time.time()
+					event_sent = False
+
+				except:
+					# block on the queue has timed out
+					pass
 
 
 	def set_up_amqpstorm_connection(self):
 
 		log("Try to set up amqpstorm connection")
 
-		if self.set.ip_address and self.set.wifi_available:
+		while True:
 
-			try:
+			if self.set.ip_address and self.set.wifi_available:
 
-				self.connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672, timeout=60)
-				log("Connection established")
+				try:
 
-				self.updates_and_events_channel = self.connection.channel()
-				self.updates_and_events_channel.queue.declare(queue=self.queue)
+					self.connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672, timeout=60)
+					log("Connection established")
 
-				self.event_queue.task_done()
+					self.updates_and_events_channel = self.connection.channel()
+					self.updates_and_events_channel.queue.declare(queue=self.queue)
+					break
 
-			except Exception as e:
-				log("AMPQ storm connection exception: " + str(e))
-				log(traceback.format_exc())
+				except Exception as e:
+					log("AMPQ storm connection exception: " + str(e))
+					log(traceback.format_exc())
+					sleep(10)
+
+			else:
+
+				log("No WiFi available - connection not set up")
+				sleep(10)
 
 
 	def reinstate_channel_or_connection_if_missing(self):
@@ -188,21 +173,48 @@ class DatabaseEventManager():
 
 	## PUBLISH EVENT TO DATABASE
 	##------------------------------------------------------------------------
-	def publish_event(self, data, exception_type, is_event):
+	def publish_event(self, data, exception_type, timeout):
 
 		if self.VERBOSE: log("Publishing data: " + exception_type)
 
+		if timeout and (timeout < time.time()):
+			return True
+
 		if self.set.wifi_available:
-			print("Wifi wifi_available, attempt to publish")
-			self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
-			print("Did publish")
-			if is_event: 
-				self.event_queue.task_done()
-			if self.VERBOSE: log(data)
+
+			try:
+				self.updates_and_events_channel.basic.publish(json.dumps(data), self.queue, exchange='')
+				if self.VERBOSE: log(data)
+				return True
+
+			except amqpstorm.AMQPConnectionError as e: 
+
+				if 'connection timed out' in e: 
+					print("connection time out")
+					print(str(e))
+					log(traceback.format_exc())
+					return False
+
+				else:
+					print(str(e))
+					log(traceback.format_exc())
+					self.reinstate_channel_or_connection_if_missing()
+					return False
+
+			except Exception as E: 
+
+				print(str(E))
+				log(traceback.format_exc())
+				self.reinstate_channel_or_connection_if_missing()
+				return False
 
 		else: 
 			print("No WiFi available")
+			return False
 
+
+	def event_timeout(self):
+		return time.time() + 5*60
 
 
 	## ROUTINE EVENTS
@@ -383,7 +395,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Job End", True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job End", self.event_timeout()]) )
 
 
 	def send_job_summary(self, successful):
@@ -409,7 +421,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Job Summary", True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Summary", self.event_timeout()]) )
 
 		self.jd.post_job_data_update_post_send()
 
@@ -440,7 +452,7 @@ class DatabaseEventManager():
 
 			data["metadata"] = metadata_in_json_format
 
-			self.event_queue.put( (self.publish_event, [data, "Job Start", True]) )
+			self.event_queue.put( (self.publish_event, [data, "Job Start", self.event_timeout()]) )
 
 
 	### FEEDS AND SPEEDS
@@ -465,7 +477,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event, [data, "Spindle speed", True]) )
+			self.event_queue.put( (self.publish_event, [data, "Spindle speed", self.event_timeout()]) )
 
 
 	def send_feed_rate_info(self):
@@ -489,7 +501,7 @@ class DatabaseEventManager():
 				}
 			}
 
-			self.event_queue.put( (self.publish_event, [data, "Feed rate", True]) )
+			self.event_queue.put( (self.publish_event, [data, "Feed rate", self.event_timeout()]) )
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
@@ -532,7 +544,7 @@ class DatabaseEventManager():
 					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 				}
 
-			self.event_queue.put( (self.publish_event, [data, "Event: " + str(event_name), True]) )
+			self.event_queue.put( (self.publish_event, [data, "Event: " + str(event_name), self.event_timeout()]) )
 
 
 
