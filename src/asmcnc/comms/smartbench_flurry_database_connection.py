@@ -202,7 +202,7 @@ class DatabaseEventManager():
 			
 			except Exception as e:
 				log(exception_type + " send exception: " + str(e))
-				# self.reinstate_channel_or_connection_if_missing()
+				self.reinstate_channel_or_connection_if_missing()
 
 
 	def publish_event_with_temp_channel(self, data, exception_type, timeout):
@@ -213,19 +213,18 @@ class DatabaseEventManager():
 
 			if self.set.wifi_available:
 
+				try: 
+					self.events_channel.basic.publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+					if self.VERBOSE: log(data)
 
-					try: 
-						self.events_channel.basic.publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+					if "Job End" in exception_type:
+						self.events_channel.basic.publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
 						if self.VERBOSE: log(data)
 
-						if "Job End" in exception_type:
-							self.events_channel.basic.publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
-							if self.VERBOSE: log(data)
-
-						break
-					
-					except Exception as e:
-						log(exception_type + " send exception: " + str(e))
+					break
+				
+				except Exception as e:
+					log(exception_type + " send exception: " + str(e))
 			else:
 				sleep(10)
 
