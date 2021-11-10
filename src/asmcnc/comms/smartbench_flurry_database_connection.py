@@ -25,7 +25,7 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = False
+	VERBOSE = True
 
 	public_ip_address = ''
 
@@ -178,7 +178,7 @@ class DatabaseEventManager():
 
 			while True:
 
-				event_task, args = self.event_queue.get(block=True)
+				event_task, args = self.event_queue.get()
 				event_task(*args)
 				# sleep(1)
 
