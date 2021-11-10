@@ -90,7 +90,7 @@ class PowerCycleScreen(Screen):
     def on_enter(self):
         # self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
         # self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
-        Clock.schedule_once(lambda dt: self.update_label(1), 5)
+        Clock.schedule_once(lambda dt: self.update_label(1), 0.5)
 
     def update_label(self, dt):
         self.db.send_event(0, 'Job cancelled', 'Cancelled job (Test): ' + "Test", 5)

@@ -68,11 +68,11 @@ class ScreenTest(App):
 
 		db.start_connection_to_database_thread()
 
-		def send_an_event(db):
-			db.send_event(0, 'Job cancelled', 'Cancelled job (Test): ' + "Test", 5)
-			Clock.schedule_once(lambda dt: send_an_event(db), uniform(0,5))
+		# def send_an_event(db):
+		# 	db.send_event(0, 'Job cancelled', 'Cancelled job (Test): ' + "Test", 5)
+		# 	Clock.schedule_once(lambda dt: send_an_event(db), uniform(0,5))
 
-		Clock.schedule_once(lambda dt: send_an_event(db), 0.1)
+		# Clock.schedule_once(lambda dt: send_an_event(db), 0.1)
 
 		return sm
 
