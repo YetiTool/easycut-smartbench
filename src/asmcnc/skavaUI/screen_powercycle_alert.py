@@ -12,6 +12,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
 
+from random import random
+
 
 # Kivy UI builder:
 Builder.load_string("""
@@ -80,17 +82,24 @@ class PowerCycleScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
 
+        self.db=kwargs['database']
+
         self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
         self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
 
     def on_enter(self):
-        self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
-        self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
+        # self.wait_for_install = Clock.schedule_once(self.finished_installing, 30)
+        # self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
+        Clock.schedule_once(lambda dt: self.update_label(1), 10)
 
     def update_label(self, dt):
+        self.db.send_event(0, 'Job cancelled', 'Cancelled job (Test): ' + "Test", 5)
         self.dots_label.text = self.dots_label.text + '.'
         if len(self.dots_label.text) == 4:
             self.dots_label.text = ''
+        Clock.schedule_once(lambda dt: self.update_label(1), 0.5)
+  
+        
 
     def finished_installing(self, *args):
         Clock.unschedule(self.update_dots)
@@ -100,3 +109,4 @@ class PowerCycleScreen(Screen):
         if sys.platform == 'win32':
             Clock.unschedule(self.wait_for_install)
             self.finished_installing()
+
