@@ -180,7 +180,7 @@ class DatabaseEventManager():
 
 				event_task, args = self.event_queue.get()
 				event_task(*args)
-				# sleep(1)
+				sleep(1)
 
 
 		self.thread_for_send_event = threading.Thread(target=do_event_sending_loop) #, args=(data, exception_type))
