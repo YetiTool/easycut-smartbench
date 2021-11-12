@@ -90,21 +90,25 @@ class DatabaseEventManager():
 		return channel
 
 
-	def check_connection_and_channel(self, channel_object, connection_object):
+	def check_connection_and_channel(self, connection_object, channel_object):
 
 		try:
 			channel_object.check_for_errors()
 			problem_with_channel = False
 
-		except: 
+		except Exception as e:
+			if self.VERBOSE: log("Channel checked for errors: " + str(e))
+			if self.VERBOSE: log(traceback.format_exc())
 			problem_with_channel = True
 
 		try: 
 			connection_object.check_for_errors()
-			problem_with_connection = True
-
-		except:
 			problem_with_connection = False
+
+		except Exception as e:
+			if self.VERBOSE: log("Connection checked for errors: " + str(e))
+			if self.VERBOSE: log(traceback.format_exc())
+			problem_with_connection = True
 
 		if problem_with_channel and not problem_with_connection: 
 
@@ -126,6 +130,9 @@ class DatabaseEventManager():
 
 			connection_object, channel_object = self.set_up_amqpstorm_connection_and_channel()
 
+		else: 
+			if self.VERBOSE: log("No issues with connection_object or channel_object")
+
 		return connection_object, channel_object
 
 
@@ -138,6 +145,7 @@ class DatabaseEventManager():
 
 		except Exception as e:
 			log(exception_type + " send exception: " + str(e))
+			if self.VERBOSE: log(traceback.format_exc())
 			return False
 
 	def stage_event(self, data, event_name):
