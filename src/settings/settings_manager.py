@@ -8,6 +8,7 @@ import sys,os, subprocess, time, threading #, pigpio ## until production machine
 from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
+from requests import get
 
 import socket
 from kivy.clock import Clock
@@ -23,6 +24,7 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
+    public_ip_address = ''
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname()
     console_hostname = full_hostname.split('.')[0]
@@ -62,6 +64,7 @@ class Settings(object):
                     IPAddr=socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
                     self.wifi_available = True
+                    self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -76,6 +79,7 @@ class Settings(object):
                     # ping to check connection
                     # NB, if this comes out false but there's an IP it indicates connection in local network
                     self.wifi_available = self.do_ping_check()
+                    self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -92,6 +96,7 @@ class Settings(object):
 
                         # ping to check connection
                         self.wifi_available = self.do_ping_check()
+                        self.get_public_ip_address()
 
                     else:
                         self.ip_address = ''
@@ -123,6 +128,13 @@ class Settings(object):
         else:
             return False
 
+    def get_public_ip_address(self):
+
+        try: 
+            self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+        except:
+            self.public_ip_address = ''
 
 
 ## REFRESH EVERYTHING AT START UP    

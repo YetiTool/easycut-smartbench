@@ -10,11 +10,11 @@ def log(message):
 	print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 try:
-	import pika
+	import amqpstorm
 
 except:
-	pika = None
-	log("Couldn't import pika lib")
+	amqpstorm = None
+	log("Couldn't import amqpstorm lib")
 
 
 class DatabaseEventManager():
@@ -24,20 +24,15 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = False
+	VERBOSE = True
 
 	public_ip_address = ''
-
-	routine_updates_channel = None
-	routine_update_thread = None
-
-	thread_for_send_event = None
 
 	event_send_timeout = 5*60
 
 	def __init__(self, screen_manager, machine, settings_manager):
 
-		self.queue = 'machine_data'
+		self.key = 'machine_data'
 		self.m = machine
 		self.sm = screen_manager
 		self.jd = self.m.jd
@@ -49,197 +44,149 @@ class DatabaseEventManager():
 
 		log("Database Event Manager closed - garbage collected!")
 
-	
-	## SET UP CONNECTION TO DATABASE
-	# This is called from screen_welcome, when all connections are set up
-	##------------------------------------------------------------------------
 
-	def start_connection_to_database_thread(self):
+	def start_connection_to_database(self):
 
-		if pika:
+		routine_updates_thread = threading.Thread(target=self.routine_updates_loop)
+		routine_updates_thread.daemon = True
+		routine_updates_thread.start()
 
-			self.start_get_public_ip_address_thread()        
+		events_thread = threading.Thread(target=self.event_loop)
+		events_thread.daemon = True
+		events_thread.start()
 
-			initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
-			initial_connection_thread.daemon = True
-			initial_connection_thread.start()
+	## Refactor the whole module into two connections and channels, one on each thread. 
+	## Currently this doesn't have any checks on Wi-Fi/IP address
 
-			self.send_events_to_database()
-
-
-	def set_up_pika_connection(self):
-
-		log("Try to set up pika connection")
-
-		while True:
-
-			if self.set.ip_address and self.set.wifi_available:
-
-				try:
-					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
-																						pika.credentials.PlainCredentials(
-																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
-																						))
-
-					log("Connection established")
-
-					self.routine_updates_channel = self.connection.channel()
-					self.routine_updates_channel.queue_declare(queue=self.queue)
+	# This is also (currently) likely to run into same GC issues as before - need to do some getrefcount testing. 
 
 
-					try: 
-						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-					except: 
-						self.send_routine_updates_to_database()
-					break
+	def set_up_amqpstorm_connection_and_channel(self):
 
-				except Exception as e:
-					log("Pika connection exception: " + str(e))
-					log(traceback.format_exc())
-					sleep(10)
+		try: 
+			connection = amqpstorm.Connection('sm-receiver.yetitool.com', 'console', '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb', port=5672)
+			log("Connection established")
 
-			else:
-				sleep(10)
+		except Exception as e:
+			log("Connection exception: " + str(e))
+			log(traceback.format_exc())
 
-	def reinstate_channel_or_connection_if_missing(self):
+			connection = None
 
-		log("Attempt to reinstate channel or connection")
+		return connection, self.set_up_channel(connection)
+
+
+	def set_up_channel(self, connection_object):
+		
+		try: 
+			channel = connection_object.channel()
+			channel.queue.declare(queue=self.key)
+
+		except Exception as e:
+			log("Channel exception: " + str(e))
+			log(traceback.format_exc())
+			channel = None
+
+		return channel
+
+
+	def check_connection_and_channel(self, channel_object, connection_object):
 
 		try:
-			if self.connection.is_closed:
+			channel_object.check_for_errors()
+			problem_with_channel = False
 
-				log("Connection is closed, set up new connection")
-				self.set_up_pika_connection()
+		except: 
+			problem_with_channel = True
 
-			elif self.routine_updates_channel.is_closed:
-				if self.VERBOSE: log("Channel is closed, set up new channel")
-				self.routine_updates_channel = self.connection.channel()
-				self.routine_updates_channel.queue_declare(queue=self.queue)
-
-			else: 
-
-				try:
-					log("Close connection and start again") 
-					self.connection.close()
-					self.set_up_pika_connection()
-
-				except:
-					log("sleep and try reinstating connection again in a minute") 
-					sleep(10)
-					self.reinstate_channel_or_connection_if_missing()
+		try: 
+			connection_object.check_for_errors()
+			problem_with_connection = True
 
 		except:
+			problem_with_connection = False
 
-			# Try closing both, just in case something weird has happened
-			try: self.routine_updates_channel.close()
-			except: pass
-
-			try: self.connection.close()
-			except: pass
-
-			self.connection = None
-			self.set_up_pika_connection()
-
-	## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
-	##------------------------------------------------------------------------
-	def send_routine_updates_to_database(self):
-
-		def do_routine_update_loop():
-
-			while True:
-
-				if self.set.ip_address:
-
-					try:
-						if self.m.s.m_state == "Idle":
-							self.send_alive()
-						else:
-							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
-
-					except Exception as e:
-						log("Could not send routine update:")
-						log(str(e))
-
-
-				sleep(10)
-
-		self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
-		self.routine_update_thread.daemon = True
-		self.routine_update_thread.start()
-
-
-	## QUEUE LOOP THAT SENDS EVENTS TO DATABASE IN ORDER
-	## --------------------------------------------------
-
-	def send_events_to_database(self):
-
-		def do_event_sending_loop():
-
-			while True:
-
-				event_task, args = self.event_queue.get()
-				event_task(*args)
-
-
-		self.thread_for_send_event = threading.Thread(target=do_event_sending_loop) #, args=(data, exception_type))
-		self.thread_for_send_event.daemon = True
-		self.thread_for_send_event.start()
-
-
-
-
-	## PUBLISH EVENT TO DATABASE
-	##------------------------------------------------------------------------
-	def publish_event_with_routine_updates_channel(self, data, exception_type):
-
-		if self.VERBOSE: log("Publishing data: " + exception_type)
-
-		if self.set.wifi_available:
+		if problem_with_channel and not problem_with_connection: 
 
 			try: 
-				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-				if self.VERBOSE: log(data)
-			
-			except Exception as e:
-				log(exception_type + " send exception: " + str(e))
-				self.reinstate_channel_or_connection_if_missing()
+				channel_object.close()
+
+			except:
+				pass
+
+			channel_object = set_up_channel()
+
+		elif problem_with_connection: 
+
+			try: 
+				connection_object.close()
+
+			except:
+				pass
+
+			connection_object, channel_object = self.set_up_amqpstorm_connection_and_channel()
+
+		return connection_object, channel_object
 
 
-	def publish_event_with_temp_channel(self, data, exception_type, timeout):
+	def do_publish(self, channel_object, data, exception_type):
 
-		log("Publishing data: " + exception_type)
+		try: 
+			channel_object.basic.publish(exchange='', routing_key=self.key, body=json.dumps(data))
+			if self.VERBOSE: log(data)
+			return True
 
-		while time.time() < timeout and self.set.ip_address:
+		except Exception as e:
+			log(exception_type + " send exception: " + str(e))
+			return False
 
-			if self.set.wifi_available:
+	def stage_event(self, data, event_name):
 
+		self.event_queue.put( (self.do_publish, [data, event_name], time.time() + self.event_send_timeout) )
+
+
+	def routine_updates_loop(self):
+
+		connection, channel = self.set_up_amqpstorm_connection_and_channel()
+
+		while True: 
+
+			connection, channel = self.check_connection_and_channel(connection, channel)
+
+			if connection and channel:
+
+				if "Idle" in self.m.state():
+
+					self.do_publish(channel, self.send_alive(), "Alive")
+
+				else:
+
+					self.do_publish(channel, self.generate_full_payload_data(), "Routine Full Payload")
+
+			sleep(10)
+
+
+	def event_loop(self):
+
+		connection, channel = self.set_up_amqpstorm_connection_and_channel()
+		prev_event_cleared = True
+		timeout = 0
+		event_task = None
+
+		while True: 
+
+			if prev_event_cleared or timeout < time.time():
 				try: 
-					temp_event_channel = self.connection.channel()
-					temp_event_channel.queue_declare(queue=self.queue)
-
-					try: 
-						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-						if self.VERBOSE: log(data)
-
-						if "Job End" in exception_type:
-							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
-							if self.VERBOSE: log(data)
-
-					
-					except Exception as e:
-						log(exception_type + " send exception: " + str(e))
-
-					temp_event_channel.close()
-					break
-
+					self.event_queue.task_done()
 				except: 
-					sleep(10)
-			else:
-				sleep(10)
+					if self.VERBOSE:print("Task done exception")
+				event_task, args, timeout = self.event_queue.get(block=True)
 
-		self.event_queue.task_done()
+			connection, channel = self.check_connection_and_channel(connection, channel)
 
+			if connection and channel:
+				prev_event_cleared = event_task(*args)
+				sleep(1)
 
 
 	## ROUTINE EVENTS
@@ -247,6 +194,7 @@ class DatabaseEventManager():
 
 	# send alive 'ping' to server when SmartBench is Idle
 	def send_alive(self):
+
 		data = {
 				"payload_type": "alive",
 				"machine_info": {
@@ -254,13 +202,12 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			}
 
-		self.publish_event_with_routine_updates_channel(data, "Alive")
-
+		return data
 
 	### FUNCTIONS FOR SENDING FULL PAYLOAD
 
@@ -311,7 +258,7 @@ class DatabaseEventManager():
 					"location": self.m.device_location,
 					"hostname": self.set.console_hostname,
 					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
+					"public_ip_address": self.set.public_ip_address
 				},
 				"statuses": {
 					"status": status,
@@ -338,6 +285,186 @@ class DatabaseEventManager():
 		return data
 
 
+## UNIQUE EVENTS
+	##------------------------------------------------------------------------
+
+	### BEGINNING AND END OF JOB
+	def send_job_end(self, successful):
+
+		if amqpstorm:
+
+			data =  {
+					"payload_type": "job_end",
+					"machine_info": {
+						"name": self.m.device_label,
+						"location": self.m.device_location,
+						"hostname": self.set.console_hostname,
+						"ec_version": self.m.sett.sw_version,
+						"public_ip_address": self.set.public_ip_address
+					},
+					"job_data": {
+						"job_name": self.jd.job_name or '',
+						"successful": successful,
+						"actual_job_duration": self.jd.actual_runtime,
+						"actual_pause_duration": self.jd.pause_duration
+					},
+					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				}
+
+			self.stage_event(data, "Job End")
+
+
+	def send_job_summary(self, successful):
+
+		if amqpstorm:
+
+			data =  {
+					"payload_type": "job_summary",
+					"machine_info": {
+						"name": self.m.device_label,
+						"location": self.m.device_location,
+						"hostname": self.set.console_hostname,
+						"ec_version": self.m.sett.sw_version,
+						"public_ip_address": self.set.public_ip_address
+					},
+					"job_data": {
+						"job_name": self.jd.job_name or '',
+						"successful": successful,
+						"post_production_notes": self.jd.post_production_notes,
+						"batch_number": self.jd.batch_number,
+						"parts_made_so_far": self.jd.metadata_dict.get('Parts Made So Far', 0)
+					},
+					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				}
+
+			self.stage_event(data, "Job Summary")
+
+		self.jd.post_job_data_update_post_send()
+
+	def send_job_start(self):
+
+		if amqpstorm:
+
+			data = {
+					"payload_type": "job_start",
+					"machine_info": {
+						"name": self.m.device_label,
+						"location": self.m.device_location,
+						"hostname": self.set.console_hostname,
+						"ec_version": self.m.sett.sw_version,
+						"public_ip_address": self.set.public_ip_address
+					},
+					"job_data": {
+						"job_name": self.jd.job_name or '',
+						"job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					},
+					"metadata": {
+
+					},
+					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+			}
+
+			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
+			data["metadata"] = metadata_in_json_format
+
+			self.stage_event(data, "Job Start")
+
+
+	### FEEDS AND SPEEDS
+	def send_spindle_speed_info(self):
+
+		if amqpstorm:
+
+			data = {
+				"payload_type": "spindle_speed",
+				"machine_info": {
+					"name": self.m.device_label,
+					"location": self.m.device_location,
+					"hostname": self.set.console_hostname,
+					"ec_version": self.m.sett.sw_version,
+					"public_ip_address": self.set.public_ip_address
+				},
+				"speeds": {
+					"spindle_speed": self.m.spindle_speed(),
+					"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text,
+					"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
+					"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
+				}
+			}
+
+			self.stage_event(data, "Spindle speed")
+
+
+	def send_feed_rate_info(self):
+
+		if amqpstorm:
+
+			data = {
+				"payload_type": "feed_rate",
+				"machine_info": {
+					"name": self.m.device_label,
+					"location": self.m.device_location,
+					"hostname": self.set.console_hostname,
+					"ec_version": self.m.sett.sw_version,
+					"public_ip_address": self.set.public_ip_address
+				},
+				"feeds": {
+					"feed_rate": self.m.feed_rate(),
+					"feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+					"max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
+					"max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or ''
+				}
+			}
+
+			self.stage_event(data, "Feed rate")
+
+
+	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
+
+	# Severity
+	# 0 - info
+	# 1 - warning
+	# 2 - critical
+
+	# Type
+	# 0 - errors
+	# 1 - alarms
+	# 2 - maintenance
+	# 3 - job pause
+	# 4 - job resume
+	# 5 - job cancel
+	# 6 - job start
+	# 7 - job end
+	# 8 - job unsuccessful
+
+	def send_event(self, event_severity, event_description, event_name, event_type):
+
+		if amqpstorm:
+
+			data = {
+					"payload_type": "event",
+					"machine_info": {
+						"name": self.m.device_label,
+						"location": self.m.device_location,
+						"hostname": self.set.console_hostname,
+						"ec_version": self.m.sett.sw_version,
+						"public_ip_address": self.set.public_ip_address
+					},
+					"event": {
+						"severity": event_severity,
+						"type": event_type,
+						"name": event_name,
+						"description": event_description
+					},
+					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				}
+
+			self.stage_event(data, "Event: " + str(event_name))
+
+
+## FOR REPORTING MAINTENANCE STATS:
+##---------------------------------
+
 	def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 
 		def find_current_interval(value):
@@ -361,6 +488,7 @@ class DatabaseEventManager():
 		self.calibration_percent_left_next = find_current_interval(calibration_percent)
 
 		self.initial_consumable_intervals_found = True
+
 
 	def check_consumable_percentages(self, z_lube_percent, spindle_brush_percent, calibration_percent):
 		# The next percentage to set the threshold to once one has been passed
@@ -393,203 +521,444 @@ class DatabaseEventManager():
 			self.find_initial_consumable_intervals(z_lube_percent, spindle_brush_percent, calibration_percent)
 
 
-	## UNIQUE EVENTS
-	##------------------------------------------------------------------------
-
-	### BEGINNING AND END OF JOB
-	def send_job_end(self, successful):
-
-		if pika:
-
-			data =  {
-					"payload_type": "job_end",
-					"machine_info": {
-						"name": self.m.device_label,
-						"location": self.m.device_location,
-						"hostname": self.set.console_hostname,
-						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
-					},
-					"job_data": {
-						"job_name": self.jd.job_name or '',
-						"successful": successful,
-						"actual_job_duration": self.jd.actual_runtime,
-						"actual_pause_duration": self.jd.pause_duration
-					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-				}
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
 
 
-	def send_job_summary(self, successful):
-
-		if pika:
-
-			data =  {
-					"payload_type": "job_summary",
-					"machine_info": {
-						"name": self.m.device_label,
-						"location": self.m.device_location,
-						"hostname": self.set.console_hostname,
-						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
-					},
-					"job_data": {
-						"job_name": self.jd.job_name or '',
-						"successful": successful,
-						"post_production_notes": self.jd.post_production_notes,
-						"batch_number": self.jd.batch_number,
-						"parts_made_so_far": self.jd.metadata_dict.get('Parts Made So Far', 0)
-					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-				}
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
-
-		self.jd.post_job_data_update_post_send()
-
-	def send_job_start(self):
-
-		if pika:
-
-			data = {
-					"payload_type": "job_start",
-					"machine_info": {
-						"name": self.m.device_label,
-						"location": self.m.device_location,
-						"hostname": self.set.console_hostname,
-						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
-					},
-					"job_data": {
-						"job_name": self.jd.job_name or '',
-						"job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-					},
-					"metadata": {
-
-					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-			}
-
-			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
-
-			data["metadata"] = metadata_in_json_format
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
 
 
-	### FEEDS AND SPEEDS
-	def send_spindle_speed_info(self):
-
-		if pika:
-
-			data = {
-				"payload_type": "spindle_speed",
-				"machine_info": {
-					"name": self.m.device_label,
-					"location": self.m.device_location,
-					"hostname": self.set.console_hostname,
-					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
-				},
-				"speeds": {
-					"spindle_speed": self.m.spindle_speed(),
-					"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text,
-					"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
-					"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
-				}
-			}
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout]) )
 
 
-	def send_feed_rate_info(self):
-
-		if pika:
-
-			data = {
-				"payload_type": "feed_rate",
-				"machine_info": {
-					"name": self.m.device_label,
-					"location": self.m.device_location,
-					"hostname": self.set.console_hostname,
-					"ec_version": self.m.sett.sw_version,
-					"public_ip_address": self.public_ip_address
-				},
-				"feeds": {
-					"feed_rate": self.m.feed_rate(),
-					"feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
-					"max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
-					"max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or ''
-				}
-			}
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
 
 
-	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
-
-	# Severity
-	# 0 - info
-	# 1 - warning
-	# 2 - critical
-
-	# Type
-	# 0 - errors
-	# 1 - alarms
-	# 2 - maintenance
-	# 3 - job pause
-	# 4 - job resume
-	# 5 - job cancel
-	# 6 - job start
-	# 7 - job end
-	# 8 - job unsuccessful
-
-	def send_event(self, event_severity, event_description, event_name, event_type):
-
-		if pika:
-
-			data = {
-					"payload_type": "event",
-					"machine_info": {
-						"name": self.m.device_label,
-						"location": self.m.device_location,
-						"hostname": self.set.console_hostname,
-						"ec_version": self.m.sett.sw_version,
-						"public_ip_address": self.public_ip_address
-					},
-					"event": {
-						"severity": event_severity,
-						"type": event_type,
-						"name": event_name,
-						"description": event_description
-					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-				}
-
-			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
-
-	## LOOP TO ROUTINELY CHECK IP ADDRESS
-
-	def start_get_public_ip_address_thread(self):
-
-		def do_ip_address_loop():
-
-			while True:
-
-				try: 
-					self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
-
-				except:
-					self.public_ip_address = "Unavailable"
 
 
-				sleep(600)
 
-		ip_address_thread = threading.Thread(target=do_ip_address_loop)
-		ip_address_thread.daemon = True
-		ip_address_thread.start()
+
+
+
+
+
+
+
+
+
+
+	# ## SET UP CONNECTION TO DATABASE
+	# # This is called from screen_welcome, when all connections are set up
+	# ##------------------------------------------------------------------------
+
+	# def start_connection_to_database_thread(self):
+
+	# 	if pika:
+
+	# 		self.start_get_public_ip_address_thread()        
+
+	# 		initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
+	# 		initial_connection_thread.daemon = True
+	# 		initial_connection_thread.start()
+
+	# 		self.send_events_to_database()
+
+
+	# def set_up_pika_connection(self):
+
+	# 	log("Try to set up pika connection")
+
+	# 	while True:
+
+	# 		if self.set.ip_address and self.set.wifi_available:
+
+	# 			try:
+	# 				self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
+	# 																					pika.credentials.PlainCredentials(
+	# 																						'console',
+	# 																						'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+	# 																					))
+
+	# 				log("Connection established")
+
+
+
+
+	# 				self.routine_updates_channel = self.connection.channel()
+	# 				self.routine_updates_channel.queue_declare(queue=self.queue)
+
+
+	# 				try: 
+	# 					if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+	# 				except: 
+	# 					self.send_routine_updates_to_database()
+	# 				break
+
+	# 			except Exception as e:
+	# 				log("Pika connection exception: " + str(e))
+	# 				log(traceback.format_exc())
+	# 				sleep(10)
+
+	# 		else:
+	# 			sleep(10)
+
+	# def reinstate_channel_or_connection_if_missing(self):
+
+	# 	log("Attempt to reinstate channel or connection")
+
+	# 	try:
+	# 		if self.connection.is_closed:
+
+	# 			log("Connection is closed, set up new connection")
+	# 			self.set_up_pika_connection()
+
+	# 		elif self.routine_updates_channel.is_closed:
+	# 			if self.VERBOSE: log("Channel is closed, set up new channel")
+	# 			self.routine_updates_channel = self.connection.channel()
+	# 			self.routine_updates_channel.queue_declare(queue=self.queue)
+
+	# 		else: 
+
+	# 			try:
+	# 				log("Close connection and start again") 
+	# 				self.connection.close()
+	# 				self.set_up_pika_connection()
+
+	# 			except:
+	# 				log("sleep and try reinstating connection again in a minute") 
+	# 				sleep(10)
+	# 				self.reinstate_channel_or_connection_if_missing()
+
+	# 	except:
+
+	# 		# Try closing both, just in case something weird has happened
+	# 		try: self.routine_updates_channel.close()
+	# 		except: pass
+
+	# 		try: self.connection.close()
+	# 		except: pass
+
+	# 		self.connection = None
+	# 		self.set_up_pika_connection()
+
+	# ## MAIN LOOP THAT SENDS ROUTINE UPDATES TO DATABASE
+	# ##------------------------------------------------------------------------
+	# def send_routine_updates_to_database(self):
+
+	# 	def do_routine_update_loop():
+
+	# 		while True:
+
+	# 			if self.set.ip_address:
+
+	# 				try:
+	# 					if self.m.s.m_state == "Idle":
+	# 						self.send_alive()
+	# 					else:
+	# 						self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
+
+	# 				except Exception as e:
+	# 					log("Could not send routine update:")
+	# 					log(str(e))
+
+
+	# 			sleep(10)
+
+	# 	self.routine_update_thread = threading.Thread(target=do_routine_update_loop)
+	# 	self.routine_update_thread.daemon = True
+	# 	self.routine_update_thread.start()
+
+
+	# ## QUEUE LOOP THAT SENDS EVENTS TO DATABASE IN ORDER
+	# ## --------------------------------------------------
+
+	# def send_events_to_database(self):
+
+	# 	def do_event_sending_loop():
+
+	# 		while True:
+
+	# 			event_task, args = self.event_queue.get()
+	# 			event_task(*args)
+
+
+	# 	self.thread_for_send_event = threading.Thread(target=do_event_sending_loop) #, args=(data, exception_type))
+	# 	self.thread_for_send_event.daemon = True
+	# 	self.thread_for_send_event.start()
+
+
+
+
+	# ## PUBLISH EVENT TO DATABASE
+	# ##------------------------------------------------------------------------
+	# def publish_event_with_routine_updates_channel(self, data, exception_type):
+
+	# 	if self.VERBOSE: log("Publishing data: " + exception_type)
+
+	# 	if self.set.wifi_available:
+
+	# 		try: 
+	# 			self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+	# 			if self.VERBOSE: log(data)
+			
+	# 		except Exception as e:
+	# 			log(exception_type + " send exception: " + str(e))
+	# 			self.reinstate_channel_or_connection_if_missing()
+
+
+	# def publish_event_with_temp_channel(self, data, exception_type, timeout):
+
+	# 	log("Publishing data: " + exception_type)
+
+	# 	while time.time() < timeout and self.set.ip_address:
+
+	# 		if self.set.wifi_available:
+
+	# 			try: 
+	# 				temp_event_channel = self.connection.channel()
+	# 				temp_event_channel.queue_declare(queue=self.queue)
+
+	# 				try: 
+	# 					temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+	# 					if self.VERBOSE: log(data)
+
+	# 					if "Job End" in exception_type:
+	# 						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+	# 						if self.VERBOSE: log(data)
+
+					
+	# 				except Exception as e:
+	# 					log(exception_type + " send exception: " + str(e))
+
+	# 				temp_event_channel.close()
+	# 				break
+
+	# 			except: 
+	# 				sleep(10)
+	# 		else:
+	# 			sleep(10)
+
+	# 	self.event_queue.task_done()
+
+
+
+	# ## ROUTINE EVENTS
+	# ##------------------------------------------------------------------------
+
+	# # send alive 'ping' to server when SmartBench is Idle
+	# def send_alive(self):
+	# 	data = {
+	# 			"payload_type": "alive",
+	# 			"machine_info": {
+	# 				"name": self.m.device_label,
+	# 				"location": self.m.device_location,
+	# 				"hostname": self.set.console_hostname,
+	# 				"ec_version": self.m.sett.sw_version,
+	# 				"public_ip_address": self.set.public_ip_address
+	# 			},
+	# 			"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 		}
+
+	# 	self.publish_event_with_routine_updates_channel(data, "Alive")
+
+
+
+
+
+
+
+	# ## UNIQUE EVENTS
+	# ##------------------------------------------------------------------------
+
+	# ### BEGINNING AND END OF JOB
+	# def send_job_end(self, successful):
+
+	# 	if pika:
+
+	# 		data =  {
+	# 				"payload_type": "job_end",
+	# 				"machine_info": {
+	# 					"name": self.m.device_label,
+	# 					"location": self.m.device_location,
+	# 					"hostname": self.set.console_hostname,
+	# 					"ec_version": self.m.sett.sw_version,
+	# 					"public_ip_address": self.public_ip_address
+	# 				},
+	# 				"job_data": {
+	# 					"job_name": self.jd.job_name or '',
+	# 					"successful": successful,
+	# 					"actual_job_duration": self.jd.actual_runtime,
+	# 					"actual_pause_duration": self.jd.pause_duration
+	# 				},
+	# 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 			}
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
+
+
+	# def send_job_summary(self, successful):
+
+	# 	if pika:
+
+	# 		data =  {
+	# 				"payload_type": "job_summary",
+	# 				"machine_info": {
+	# 					"name": self.m.device_label,
+	# 					"location": self.m.device_location,
+	# 					"hostname": self.set.console_hostname,
+	# 					"ec_version": self.m.sett.sw_version,
+	# 					"public_ip_address": self.public_ip_address
+	# 				},
+	# 				"job_data": {
+	# 					"job_name": self.jd.job_name or '',
+	# 					"successful": successful,
+	# 					"post_production_notes": self.jd.post_production_notes,
+	# 					"batch_number": self.jd.batch_number,
+	# 					"parts_made_so_far": self.jd.metadata_dict.get('Parts Made So Far', 0)
+	# 				},
+	# 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 			}
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
+
+	# 	self.jd.post_job_data_update_post_send()
+
+	# def send_job_start(self):
+
+	# 	if pika:
+
+	# 		data = {
+	# 				"payload_type": "job_start",
+	# 				"machine_info": {
+	# 					"name": self.m.device_label,
+	# 					"location": self.m.device_location,
+	# 					"hostname": self.set.console_hostname,
+	# 					"ec_version": self.m.sett.sw_version,
+	# 					"public_ip_address": self.public_ip_address
+	# 				},
+	# 				"job_data": {
+	# 					"job_name": self.jd.job_name or '',
+	# 					"job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 				},
+	# 				"metadata": {
+
+	# 				},
+	# 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 		}
+
+	# 		metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
+
+	# 		data["metadata"] = metadata_in_json_format
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Start", time.time() + self.event_send_timeout]) )
+
+
+	# ### FEEDS AND SPEEDS
+	# def send_spindle_speed_info(self):
+
+	# 	if pika:
+
+	# 		data = {
+	# 			"payload_type": "spindle_speed",
+	# 			"machine_info": {
+	# 				"name": self.m.device_label,
+	# 				"location": self.m.device_location,
+	# 				"hostname": self.set.console_hostname,
+	# 				"ec_version": self.m.sett.sw_version,
+	# 				"public_ip_address": self.public_ip_address
+	# 			},
+	# 			"speeds": {
+	# 				"spindle_speed": self.m.spindle_speed(),
+	# 				"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text,
+	# 				"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
+	# 				"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
+	# 			}
+	# 		}
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Spindle speed", time.time() + self.event_send_timeout]) )
+
+
+	# def send_feed_rate_info(self):
+
+	# 	if pika:
+
+	# 		data = {
+	# 			"payload_type": "feed_rate",
+	# 			"machine_info": {
+	# 				"name": self.m.device_label,
+	# 				"location": self.m.device_location,
+	# 				"hostname": self.set.console_hostname,
+	# 				"ec_version": self.m.sett.sw_version,
+	# 				"public_ip_address": self.public_ip_address
+	# 			},
+	# 			"feeds": {
+	# 				"feed_rate": self.m.feed_rate(),
+	# 				"feed_percentage": self.sm.get_screen('go').feedOverride.feed_rate_label.text,
+	# 				"max_feed_rate_absolute": self.sm.get_screen('go').feed_rate_max_absolute or '',
+	# 				"max_feed_rate_percentage": self.sm.get_screen('go').feed_rate_max_percentage or ''
+	# 			}
+	# 		}
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
+
+
+	# ### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS
+
+	# # Severity
+	# # 0 - info
+	# # 1 - warning
+	# # 2 - critical
+
+	# # Type
+	# # 0 - errors
+	# # 1 - alarms
+	# # 2 - maintenance
+	# # 3 - job pause
+	# # 4 - job resume
+	# # 5 - job cancel
+	# # 6 - job start
+	# # 7 - job end
+	# # 8 - job unsuccessful
+
+	# def send_event(self, event_severity, event_description, event_name, event_type):
+
+	# 	if pika:
+
+	# 		data = {
+	# 				"payload_type": "event",
+	# 				"machine_info": {
+	# 					"name": self.m.device_label,
+	# 					"location": self.m.device_location,
+	# 					"hostname": self.set.console_hostname,
+	# 					"ec_version": self.m.sett.sw_version,
+	# 					"public_ip_address": self.public_ip_address
+	# 				},
+	# 				"event": {
+	# 					"severity": event_severity,
+	# 					"type": event_type,
+	# 					"name": event_name,
+	# 					"description": event_description
+	# 				},
+	# 				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+	# 			}
+
+	# 		self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
+
+	# ## LOOP TO ROUTINELY CHECK IP ADDRESS
+
+	# def start_get_public_ip_address_thread(self):
+
+	# 	def do_ip_address_loop():
+
+	# 		while True:
+
+	# 			try: 
+	# 				self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+	# 			except:
+	# 				self.public_ip_address = "Unavailable"
+
+
+	# 			sleep(600)
+
+	# 	ip_address_thread = threading.Thread(target=do_ip_address_loop)
+	# 	ip_address_thread.daemon = True
+	# 	ip_address_thread.start()
 
 
 
