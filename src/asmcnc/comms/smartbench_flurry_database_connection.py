@@ -51,9 +51,9 @@ class DatabaseEventManager():
 		routine_updates_thread.daemon = True
 		routine_updates_thread.start()
 
-		events_thread = threading.Thread(target=self.event_loop)
-		events_thread.daemon = True
-		events_thread.start()
+		# events_thread = threading.Thread(target=self.event_loop)
+		# events_thread.daemon = True
+		# events_thread.start()
 
 	## Refactor the whole module into two connections and channels, one on each thread. 
 	## Currently this doesn't have any checks on Wi-Fi/IP address
