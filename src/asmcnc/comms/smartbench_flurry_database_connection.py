@@ -321,6 +321,7 @@ class DatabaseEventManager():
 				}
 
 			self.stage_event(data, "Job End")
+			self.stage_event(self.generate_full_payload_data(), "Routine Full Payload")
 
 
 	def send_job_summary(self, successful):
@@ -375,6 +376,8 @@ class DatabaseEventManager():
 
 			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
 			data["metadata"] = metadata_in_json_format
+
+			print(data["metadata"])
 
 			self.stage_event(data, "Job Start")
 
