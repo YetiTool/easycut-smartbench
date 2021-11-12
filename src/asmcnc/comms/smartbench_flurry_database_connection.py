@@ -47,9 +47,11 @@ class DatabaseEventManager():
 
 	def start_connection_to_database(self):
 
-		routine_updates_thread = threading.Thread(target=self.routine_updates_loop)
-		routine_updates_thread.daemon = True
-		routine_updates_thread.start()
+		pass
+
+		# routine_updates_thread = threading.Thread(target=self.routine_updates_loop)
+		# routine_updates_thread.daemon = True
+		# routine_updates_thread.start()
 
 		# events_thread = threading.Thread(target=self.event_loop)
 		# events_thread.daemon = True
