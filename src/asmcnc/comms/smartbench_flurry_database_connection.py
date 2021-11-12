@@ -188,12 +188,13 @@ class DatabaseEventManager():
 					self.event_queue.task_done()
 				except: 
 					if self.VERBOSE:print("Task done exception")
+
 				event_task, args, timeout = self.event_queue.get(block=True)
 
 			connection, channel = self.check_connection_and_channel(connection, channel)
 
 			if connection and channel:
-				prev_event_cleared = event_task(*args)
+				prev_event_cleared = event_task(channel, *args)
 				sleep(1)
 
 
