@@ -26,7 +26,7 @@ class Settings(object):
     ip_address = ''
     public_ip_address = ''
     WIFI_REPORT_INTERVAL = 2
-    # full_hostname = socket.gethostname()
+    full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
 
     sw_version = ''
