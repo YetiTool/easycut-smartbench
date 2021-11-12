@@ -38,7 +38,7 @@ class DatabaseEventManager():
 		self.jd = self.m.jd
 		self.set = settings_manager
 
-		self.event_queue = Queue.Queue()
+		# self.event_queue = Queue.Queue()
 
 	def __del__(self):
 
@@ -152,7 +152,8 @@ class DatabaseEventManager():
 
 	def stage_event(self, data, event_name):
 
-		self.event_queue.put( (self.do_publish, [data, event_name], time.time() + self.event_send_timeout) )
+		# self.event_queue.put( (self.do_publish, [data, event_name], time.time() + self.event_send_timeout) )
+		pass
 
 
 	def routine_updates_loop(self):
