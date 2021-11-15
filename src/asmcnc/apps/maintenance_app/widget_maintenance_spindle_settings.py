@@ -77,6 +77,7 @@ Builder.load_string("""
                 markup: True
                 halign: "left"
                 input_filter: 'int'
+                multiline: False
 
             Label:
                 color: 0,0,0,1
@@ -220,23 +221,36 @@ class SpindleSettingsWidget(Widget):
         self.m=kwargs['machine']
         self.l=kwargs['localization']
 
+        self.rpm_override = self.m.spindle_cooldown_rpm_override
+        self.spindle_cooldown_speed.bind(focus=self.on_focus)
+
         self.update_strings()
+
+    def on_focus(self, instance, value):
+        if not value:
+            self.rpm_override = True
+
+            print("Triggered override: " + str(self.rpm_override))
 
     def autofill_rpm_time(self):
 
         if 'AMB' in self.spindle_brand.text:
             self.spindle_cooldown_time.text = str(30)
-            self.spindle_cooldown_speed.text = str(10000)
+            self.spindle_cooldown_speed.text = str(self.m.amb_cooldown_rpm_default)
 
         if 'YETI' in self.spindle_brand.text:
             self.spindle_cooldown_time.text = str(10)
-            self.spindle_cooldown_speed.text = str(20000)
+            self.spindle_cooldown_speed.text = str(self.m.yeti_cooldown_rpm_default)
 
         if 'manual' in self.spindle_brand.text:
             self.spindle_cooldown_speed.disabled = True
 
         if 'digital' in self.spindle_brand.text:
             self.spindle_cooldown_speed.disabled = False
+
+        self.rpm_override = False
+
+        print("Reset override: " + str(self.rpm_override))    
 
     def update_strings(self):
         self.seconds_label.text = self.l.get_str("seconds")
