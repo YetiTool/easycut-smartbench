@@ -55,7 +55,6 @@ class Settings(object):
 
     def check_wifi_and_refresh_ip_address(self):
 
-
         while True:
 
             if sys.platform == "win32":
@@ -64,7 +63,7 @@ class Settings(object):
                     IPAddr=socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
                     self.wifi_available = True
-                    # self.get_public_ip_address()
+                    self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -79,7 +78,7 @@ class Settings(object):
                     # ping to check connection
                     # NB, if this comes out false but there's an IP it indicates connection in local network
                     self.wifi_available = self.do_ping_check()
-                    # self.get_public_ip_address()
+                    self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -96,7 +95,7 @@ class Settings(object):
 
                         # ping to check connection
                         self.wifi_available = self.do_ping_check()
-                        # self.get_public_ip_address()
+                        self.get_public_ip_address()
 
                     else:
                         self.ip_address = ''
@@ -111,24 +110,22 @@ class Settings(object):
 
     def do_ping_check(self):
 
-        return True
+        ping_delay = 0.1
+        ping_timeout = 1
 
-        # ping_delay = 0.1
-        # ping_timeout = 1
+        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
 
-        # proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        while proc.poll() is None and ping_timeout > 0:
+            time.sleep(ping_delay)
+            ping_timeout -= ping_delay
 
-        # while proc.poll() is None and ping_timeout > 0:
-        #     time.sleep(ping_delay)
-        #     ping_timeout -= ping_delay
+        if proc.poll() is not None:
 
-        # if proc.poll() is not None:
+            if proc.returncode == 0: return True
+            else: return False
 
-        #     if proc.returncode == 0: return True
-        #     else: return False
-
-        # else:
-        #     return False
+        else:
+            return False
 
     def get_public_ip_address(self):
 
@@ -141,10 +138,17 @@ class Settings(object):
 
 ## REFRESH EVERYTHING AT START UP    
     def refresh_all(self):
-        self.refresh_latest_platform_version()
-        self.refresh_platform_version()
-        self.refresh_latest_sw_version()
-        self.refresh_sw_version()
+
+        def do_refresh_all():
+
+            self.refresh_latest_platform_version()
+            self.refresh_platform_version()
+            self.refresh_latest_sw_version()
+            self.refresh_sw_version()
+
+        do_refresh_all_thread = threading.Thread(target=do_refresh_all)
+        do_refresh_all_thread.daemon = True
+        do_refresh_all_thread.start()
 
 ## VERSION REFRESH
         
