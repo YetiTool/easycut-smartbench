@@ -230,8 +230,6 @@ class SpindleSettingsWidget(Widget):
         if not value:
             self.rpm_override = True
 
-            print("Triggered override: " + str(self.rpm_override))
-
     def autofill_rpm_time(self):
 
         if 'AMB' in self.spindle_brand.text:
@@ -248,9 +246,7 @@ class SpindleSettingsWidget(Widget):
         if 'digital' in self.spindle_brand.text:
             self.spindle_cooldown_speed.disabled = False
 
-        self.rpm_override = False
-
-        print("Reset override: " + str(self.rpm_override))    
+        self.rpm_override = False  
 
     def update_strings(self):
         self.seconds_label.text = self.l.get_str("seconds")

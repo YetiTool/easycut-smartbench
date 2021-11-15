@@ -203,10 +203,6 @@ class SpindleSaveWidget(Widget):
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
 
-            # DEBUGGING
-
-            print("Saved override: " + str(self.m.spindle_cooldown_rpm_override))
-
         else:
             warning_message = (
                     self.l.get_str("There was a problem saving your settings.") + \

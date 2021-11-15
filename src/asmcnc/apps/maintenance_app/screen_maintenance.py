@@ -576,9 +576,6 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
         self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
 
-        # DEBUGGING
-        print("Override on enter: " + str(self.spindle_settings_widget.rpm_override))
-
         # Z MISC
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
         self.z_lubrication_reminder_widget.update_time_left()
