@@ -59,6 +59,7 @@ class RouterMachine(object):
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    spindle_cooldown_rpm_override_file_path = smartbench_values_dir + 'spindle_cooldown_rpm_override.txt'
     stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
     device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
     device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
@@ -99,7 +100,13 @@ class RouterMachine(object):
     spindle_voltage = 230 # Options are 230V or 110V
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
-    spindle_cooldown_rpm = 20000 # YETI value is 20k 
+    spindle_cooldown_rpm = 12000 # YETI default value was 20k, but has been lowered to 12k
+    
+    amb_cooldown_rpm_default = 10000
+    yeti_cooldown_rpm_default = 12000
+    spindle_cooldown_rpm_override = False
+
+
 
     ## DEVICE LABEL
     device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
@@ -159,6 +166,12 @@ class RouterMachine(object):
             file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
             file.close()
 
+        if not path.exists(self.spindle_cooldown_rpm_override_file_path):
+            log("Creating spindle cooldown_rpm override settings file...")
+            file = open(self.spindle_cooldown_rpm_override_file_path, "w+")
+            file.write(str(self.spindle_cooldown_rpm_override))
+            file.close()
+
         if not path.exists(self.spindle_cooldown_settings_file_path):
             log("Creating spindle cooldown settings file...")
             file = open(self.spindle_cooldown_settings_file_path, "w+")
@@ -213,6 +226,7 @@ class RouterMachine(object):
         self.read_z_head_maintenance_settings()
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
+        self.read_spindle_cooldown_rpm_override_settings()
         self.read_spindle_cooldown_settings()
         self.read_stylus_settings()
         self.read_device_label()
@@ -424,13 +438,50 @@ class RouterMachine(object):
             log("Unable to write spindle brush use and lifetime values")
             return False
 
+    ## SPINDLE COOLDOWN RPM OVERRIDE
+    def read_spindle_cooldown_rpm_override_settings(self):
+
+        try:
+            file = open(self.spindle_cooldown_rpm_override_file_path, 'r')
+            read_rpm_override = file.read()
+            file.close()
+
+            if read_rpm_override == 'True':
+                self.spindle_cooldown_rpm_override = True
+            else:
+                self.spindle_cooldown_rpm_override = False
+
+            log("Read in spindle cooldown override settings")
+            return True
+
+        except: 
+            log("Unable to read spindle cooldown override settings")
+            return False
+
+    def write_spindle_cooldown_rpm_override_settings(self, rpm_override):
+        try:
+
+            file = open(self.spindle_cooldown_rpm_override_file_path, "w")
+            file.write(str(rpm_override))
+            file.close()
+
+            if rpm_override == 'True' or rpm_override == True:
+                self.spindle_cooldown_rpm_override = True
+            else:
+                self.spindle_cooldown_rpm_override = False
+
+            log("Spindle cooldown override settings written to file")
+            return True
+
+        except: 
+            log("Unable to write spindle cooldown override settings")
+            return False
 
     ## SPINDLE COOLDOWN OPTIONS
     def read_spindle_cooldown_settings(self):
 
         try:
             file = open(self.spindle_cooldown_settings_file_path, 'r')
-            # this might throw errors, not sure? might need to define list first and then read but let's try
             read_spindle = file.read().splitlines()
             file.close()
 
@@ -439,7 +490,20 @@ class RouterMachine(object):
             if read_spindle[2] == 'True': self.spindle_digital = True
             else: self.spindle_digital = False
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
-            self.spindle_cooldown_rpm = int(read_spindle[4])
+
+            # only use spindle cooldown rpm from file if the default has been overridden,
+            # otherwise use default values
+            if self.spindle_cooldown_rpm_override:
+                self.spindle_cooldown_rpm = int(read_spindle[4])
+            
+            elif "YETI" in self.spindle_brand:
+                self.spindle_cooldown_rpm = self.yeti_cooldown_rpm_default
+
+            elif "AMB" in self.spindle_brand:
+                self.spindle_cooldown_rpm = self.amb_cooldown_rpm_default
+
+            else:
+                self.spindle_cooldown_rpm = self.amb_cooldown_rpm_default
 
             log("Read in spindle cooldown settings")
             return True

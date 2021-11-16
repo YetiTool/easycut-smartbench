@@ -196,7 +196,10 @@ class SpindleSaveWidget(Widget):
             popup_info.PopupError(self.sm, self.l, speed_validation_error)
             return
 
-        if self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
+        if self.m.write_spindle_cooldown_rpm_override_settings(self.sm.current_screen.spindle_settings_widget.rpm_override) and \
+            self.m.write_spindle_cooldown_settings(brand, voltage, digital, time, speed) and \
+            self.m.write_stylus_settings(self.sm.current_screen.spindle_settings_widget.stylus_switch.active):
+
             saved_success = self.l.get_str("Settings saved!")
             popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
 
@@ -231,7 +234,7 @@ class SpindleSaveWidget(Widget):
     # spindle_voltage = 230 # Options are 230V or 110V
     # spindle_digital = False #spindle can be manual or digital
     # spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
-    # spindle_cooldown_rpm = 20000 # YETI value is 20k 
+    # spindle_cooldown_rpm = 12000 # YETI value was 20k, but has been lowered to 12k
 
 
 # Mafell (YETI) - digital or manual; each one of those 110 or 230V - 4 variants total.

@@ -574,6 +574,7 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_brand.text = ' ' + str(self.m.spindle_brand) + ' ' + string_digital + ' ' + str(self.m.spindle_voltage) + 'V'
         self.spindle_settings_widget.spindle_cooldown_time.text = str(self.m.spindle_cooldown_time_seconds)
         self.spindle_settings_widget.spindle_cooldown_speed.text = str(self.m.spindle_cooldown_rpm)
+        self.spindle_settings_widget.rpm_override = self.m.spindle_cooldown_rpm_override
 
         # Z MISC
         self.touchplate_offset_widget.touchplate_offset.text = str(self.m.z_touch_plate_thickness)
