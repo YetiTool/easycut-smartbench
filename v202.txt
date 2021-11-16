@@ -1,0 +1,23 @@
+.. _top:
+
+Lowered default spindle cooldown RPM, and added override functionality
+======================================================================
+
+The default spindle cooldown RPM has been lowered to 12,000 RPM for YETI spindles, and 10,000 RPM for AMB spindles. 
+
+If you previously set a custom value for the spindle cooldown RPM, you will need to set it again to override the new default settings. You can go to the Maintenance app to do this. 
+
+
+Updating from a version earlier than v2.0.0? 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This Console update is part of the new SmartManager package!
+
+SmartManager is a Manufacturing Execution System (MES) that provides essential real-time data to the whole production team, to streamline workflow and maximise productivity. 
+
+Visit:
+https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
