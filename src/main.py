@@ -10,6 +10,13 @@ www.yetitool.com
 #config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
+
+try:
+	from hanging_threads import start_monitoring
+	monitoring_thread = start_monitoring(seconds_frozen=2, test_interval=100)
+except:
+	print("Could not import hanging_threads")
+
 import time
 import sys, os
 from datetime import datetime
