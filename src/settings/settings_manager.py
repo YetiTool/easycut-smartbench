@@ -50,8 +50,6 @@ class Settings(object):
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
         self.wifi_check_thread.start()
-
-        self.refresh_all()
     
 
 ## WIFI AND CONNECTIONS
@@ -143,16 +141,11 @@ class Settings(object):
 ## REFRESH EVERYTHING AT START UP    
     def refresh_all(self):
 
-        def do_refresh_all():
+        self.refresh_latest_platform_version()
+        self.refresh_platform_version()
+        self.refresh_latest_sw_version()
+        self.refresh_sw_version()
 
-            self.refresh_latest_platform_version()
-            self.refresh_platform_version()
-            self.refresh_latest_sw_version()
-            self.refresh_sw_version()
-
-        do_refresh_all_thread = threading.Thread(target=do_refresh_all)
-        do_refresh_all_thread.daemon = True
-        do_refresh_all_thread.start()
 
 ## VERSION REFRESH
         

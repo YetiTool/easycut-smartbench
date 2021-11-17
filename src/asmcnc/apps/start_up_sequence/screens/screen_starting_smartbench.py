@@ -80,6 +80,7 @@ class StartingSmartBenchScreen(Screen):
             try: self.start_seq.update_check_config_flag()
             except: pass
 
+            self.refresh_all()
     
             # RasPi boot timings
             if sys.platform != 'win32':
@@ -103,7 +104,6 @@ class StartingSmartBenchScreen(Screen):
                 # Allow time for machine reset sequence
                 self.db.start_connection_to_database()
                 Clock.schedule_once(self.next_screen, 2)
-
 
 
         elif sys.platform == 'win32' or sys.platform == 'darwin':
