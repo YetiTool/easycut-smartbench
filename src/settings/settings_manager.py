@@ -51,7 +51,7 @@ class Settings(object):
         self.wifi_check_thread.daemon = True
         # self.wifi_check_thread.start()
 
-        self.refresh_all()
+        # self.refresh_all()
     
 
 ## WIFI AND CONNECTIONS
