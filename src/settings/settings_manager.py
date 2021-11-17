@@ -46,9 +46,12 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
+
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
-        self.wifi_check_thread.start()
+        # self.wifi_check_thread.start()
+
+        self.refresh_all()
     
 
 ## WIFI AND CONNECTIONS
@@ -148,7 +151,7 @@ class Settings(object):
 
         do_refresh_all_thread = threading.Thread(target=do_refresh_all)
         do_refresh_all_thread.daemon = True
-        do_refresh_all_thread.start()
+        # do_refresh_all_thread.start()
 
 ## VERSION REFRESH
         
