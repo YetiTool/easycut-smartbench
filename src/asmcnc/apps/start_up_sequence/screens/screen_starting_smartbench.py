@@ -80,7 +80,7 @@ class StartingSmartBenchScreen(Screen):
             try: self.start_seq.update_check_config_flag()
             except: pass
 
-            self.refresh_all()
+            self.set.refresh_all()
     
             # RasPi boot timings
             if sys.platform != 'win32':
