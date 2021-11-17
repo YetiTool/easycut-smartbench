@@ -151,7 +151,7 @@ class Settings(object):
 
         do_refresh_all_thread = threading.Thread(target=do_refresh_all)
         do_refresh_all_thread.daemon = True
-        # do_refresh_all_thread.start()
+        do_refresh_all_thread.start()
 
 ## VERSION REFRESH
         
