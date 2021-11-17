@@ -13,7 +13,7 @@ www.yetitool.com
 
 try:
 	from hanging_threads import start_monitoring
-	monitoring_thread = start_monitoring(seconds_frozen=2, test_interval=100)
+	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
 except:
 	print("Could not import hanging_threads")
 
