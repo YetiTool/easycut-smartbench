@@ -132,13 +132,11 @@ class Settings(object):
 
     def get_public_ip_address(self):
 
-        pass
+        try: 
+            self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
 
-        # try: 
-        #     self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
-
-        # except:
-        #     self.public_ip_address = ''
+        except:
+            self.public_ip_address = ''
 
 
 ## REFRESH EVERYTHING AT START UP    
@@ -146,9 +144,9 @@ class Settings(object):
 
         def do_refresh_all():
 
-            self.refresh_latest_platform_version()
+            # self.refresh_latest_platform_version()
             self.refresh_platform_version()
-            self.refresh_latest_sw_version()
+            # self.refresh_latest_sw_version()
             self.refresh_sw_version()
 
         do_refresh_all_thread = threading.Thread(target=do_refresh_all)
