@@ -49,9 +49,9 @@ class Settings(object):
 
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
-        self.wifi_check_thread.start()
+        # self.wifi_check_thread.start()
 
-        # self.refresh_all()
+        self.refresh_all()
     
 
 ## WIFI AND CONNECTIONS
@@ -132,11 +132,13 @@ class Settings(object):
 
     def get_public_ip_address(self):
 
-        try: 
-            self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+        pass
 
-        except:
-            self.public_ip_address = ''
+        # try: 
+        #     self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+        # except:
+        #     self.public_ip_address = ''
 
 
 ## REFRESH EVERYTHING AT START UP    
