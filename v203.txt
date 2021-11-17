@@ -1,7 +1,7 @@
 .. _top:
 
-Patch to STOP button in PRO app
-===============================
+Patch to STOP button pop-up in PRO app
+======================================
 
 Wording error from localization has been corrected.
 
