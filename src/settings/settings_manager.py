@@ -98,7 +98,7 @@ class Settings(object):
 
                         # ping to check connection
                         self.wifi_available = self.do_ping_check()
-                        self.get_public_ip_address()
+                        # self.get_public_ip_address()
 
                     else:
                         self.ip_address = ''
