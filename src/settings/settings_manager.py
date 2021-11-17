@@ -98,7 +98,7 @@ class Settings(object):
 
                         # ping to check connection
                         self.wifi_available = self.do_ping_check()
-                        # self.get_public_ip_address()
+                        self.get_public_ip_address()
 
                     else:
                         self.ip_address = ''
@@ -130,7 +130,6 @@ class Settings(object):
         else:
             return False
 
-        # return True
 
     def get_public_ip_address(self):
 
@@ -281,16 +280,7 @@ class Settings(object):
             os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')
             # copy EC into a backup directory
             os.system('mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
-    
-            # GET ANSIBLE TO HANDLE THIS NOW INSTEAD:
-            # # Update starteasycut shell script to look for backup/other folders if required
-            # # We really need to work on platform updates
-            # case = (os.popen('grep "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
-            # if not case.startswith('[ ! -d'):
-            #     backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-            #     sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
-            #     os.system(sed_cmd)
-            
+                
             # compare backup and current directory just in case, and return true if all is well    
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
             if directory_diff == '': return True

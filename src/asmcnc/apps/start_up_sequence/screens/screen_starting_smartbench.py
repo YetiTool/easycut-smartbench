@@ -76,6 +76,10 @@ class StartingSmartBenchScreen(Screen):
     def on_enter(self):
 
         if self.m.s.is_connected():
+
+            try: self.start_seq.update_check_config_flag()
+            except: pass
+
     
             # RasPi boot timings
             if sys.platform != 'win32':
