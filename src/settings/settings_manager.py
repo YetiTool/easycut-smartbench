@@ -49,7 +49,7 @@ class Settings(object):
 
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
-        # self.wifi_check_thread.start()
+        self.wifi_check_thread.start()
 
         self.refresh_all()
     
@@ -113,22 +113,24 @@ class Settings(object):
 
     def do_ping_check(self):
 
-        ping_delay = 0.1
-        ping_timeout = 1
+        # ping_delay = 0.1
+        # ping_timeout = 1
 
-        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        # proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
 
-        while proc.poll() is None and ping_timeout > 0:
-            time.sleep(ping_delay)
-            ping_timeout -= ping_delay
+        # while proc.poll() is None and ping_timeout > 0:
+        #     time.sleep(ping_delay)
+        #     ping_timeout -= ping_delay
 
-        if proc.poll() is not None:
+        # if proc.poll() is not None:
 
-            if proc.returncode == 0: return True
-            else: return False
+        #     if proc.returncode == 0: return True
+        #     else: return False
 
-        else:
-            return False
+        # else:
+        #     return False
+
+        return True
 
     def get_public_ip_address(self):
 
