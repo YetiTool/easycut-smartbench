@@ -553,6 +553,7 @@ class FactorySettingsScreen(Screen):
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)
                 self.m.write_calibration_settings(0, float(320*3600))
+                self.m.write_spindle_cooldown_rpm_override_settings(False)
                 self.m.reminders_enabled = True
                 self.m.trigger_setup = True
                 self.m.write_set_up_options(True)
