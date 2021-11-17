@@ -420,8 +420,8 @@ class WifiScreen(Screen):
         self.l = kwargs['localization']
         Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            self.network_name.values = self.get_available_networks()
+        # if sys.platform != 'win32' and sys.platform != 'darwin':
+        #     self.network_name.values = self.get_available_networks()
  
         self.update_strings()
         self.update_font_size(self.country_label)
