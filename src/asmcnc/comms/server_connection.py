@@ -83,6 +83,9 @@ class ServerConnection(object):
 			else:
 				log("No IP address available to open socket with.")
 
+		else:
+			self.set.get_public_ip_address()
+
 		self.doing_reconnect = False
 
 	def do_connection_loop(self):
@@ -93,6 +96,9 @@ class ServerConnection(object):
 			try: 
 				"Waiting for connection..."
 				if self.is_socket_available:
+					
+					self.set.get_public_ip_address() # messy and hopefully temporary, to prevent thread conflicts
+
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 

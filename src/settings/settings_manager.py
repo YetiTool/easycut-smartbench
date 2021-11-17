@@ -66,7 +66,7 @@ class Settings(object):
                     IPAddr=socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
                     self.wifi_available = True
-                    self.get_public_ip_address()
+                    # self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -81,7 +81,7 @@ class Settings(object):
                     # ping to check connection
                     # NB, if this comes out false but there's an IP it indicates connection in local network
                     self.wifi_available = self.do_ping_check()
-                    self.get_public_ip_address()
+                    # self.get_public_ip_address()
 
                 except:
                     self.ip_address = ''
@@ -98,7 +98,7 @@ class Settings(object):
 
                         # ping to check connection
                         self.wifi_available = self.do_ping_check()
-                        self.get_public_ip_address()
+                        # self.get_public_ip_address()
 
                     else:
                         self.ip_address = ''
