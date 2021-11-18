@@ -24,7 +24,7 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = True
+	VERBOSE = False
 
 	public_ip_address = ''
 
