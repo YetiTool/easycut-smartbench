@@ -364,7 +364,7 @@ class JobData(object):
         line_to_replace = (os.popen(grep_command).read()).strip()
         new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
         sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-        os.system(sed_command)
+        os.popen(sed_command)
 
 
     def post_job_data_update_post_send(self):

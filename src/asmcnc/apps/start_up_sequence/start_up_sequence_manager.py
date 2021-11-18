@@ -172,8 +172,10 @@ class StartUpSequence(object):
 
 	def update_check_config_flag(self):
 
-		if self.cc:
-			os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
+		# if self.cc:
+			# os.system('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
+
+		os.popen('sudo sed -i "s/check_config=True/check_config=False/" config.txt')
 
 
 	def destroy_screen(self, screen_name):
