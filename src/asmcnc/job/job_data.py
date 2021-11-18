@@ -7,6 +7,7 @@ import sys, os, re
 from datetime import datetime, timedelta
 from pipes import quote
 from chardet import detect
+from itertools import takewhile
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 
@@ -323,6 +324,7 @@ class JobData(object):
 
         self.update_parts_completed(successful, extra_parts_completed)
         self.update_update_info_in_metadata()
+        update_metadata_in_original_file()
         self.update_changeables_in_gcode_summary_string()
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
@@ -335,14 +337,8 @@ class JobData(object):
                 if successful:
                     self.metadata_dict["Parts Made So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Made Per Job', 1)))
 
-                    # # Update parts completed in job file
-                    self.update_metadata_in_original_file("Parts Made So Far")
-
                 elif extra_parts_completed > prev_parts_completed_so_far:
                     self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
-
-                    # # Update parts completed in job file
-                    self.update_metadata_in_original_file("Parts Made So Far")
 
             except:
                 print("Parts Made So Far couldn't be updated.")
@@ -354,17 +350,34 @@ class JobData(object):
             timestamp = datetime.now()
             self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-            self.update_metadata_in_original_file("Last Updated Time")
-            self.update_metadata_in_original_file("Last Updated By")
+    def update_metadata_in_original_file(self):
 
-    def update_metadata_in_original_file(self, key_to_update):
+        def not_end_of_metadata(x):
+            if "(End of YetiTool SmartBench MES-Data)" in x: return False
+            else: return True
 
-        # Update in job file
-        grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
-        line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
-        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-        os.system(sed_command)
+        def replace_metadata(old_line):
+            key_to_update = old_line.split(': ')[0]
+            print(key_to_update)
+            print(str(self.metadata_dict.get(key_to_update)))
+            return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
+
+        with open(self.filename, "r+") as previewed_file:
+
+            # try:
+
+            if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+                metadata_or_gcode_preview = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+
+                print(metadata_or_gcode_preview)
+
+                previewed_file.seek(0)
+                previewed_file.writelines(['(YetiTool SmartBench MES-Data)\n'] + metadata_or_gcode_preview + ['(End of YetiTool SmartBench MES-Data)\n'])
+
+
+
+            # except:
+            #     print("")
 
 
     def post_job_data_update_post_send(self):

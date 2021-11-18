@@ -312,6 +312,10 @@ class HomeScreen(Screen):
 
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
             self.gcode_summary_widget.display_summary()
+
+            # TEST
+            self.jd.metadata_dict['End Effector'] = 'TEST'
+            self.jd.update_metadata_in_original_file()
                 
             # Preview file as drawing
             try: 
