@@ -37,7 +37,7 @@ class DatabaseEventManager():
 		self.jd = self.m.jd
 		self.set = settings_manager
 
-		# self.event_queue = Queue.Queue()
+		self.event_queue = Queue.Queue()
 
 	def __del__(self):
 
@@ -48,13 +48,13 @@ class DatabaseEventManager():
 
 		pass
 
-		# routine_updates_thread = threading.Thread(target=self.routine_updates_loop)
-		# routine_updates_thread.daemon = True
-		# routine_updates_thread.start()
+		routine_updates_thread = threading.Thread(target=self.routine_updates_loop)
+		routine_updates_thread.daemon = True
+		routine_updates_thread.start()
 
-		# events_thread = threading.Thread(target=self.event_loop)
-		# events_thread.daemon = True
-		# events_thread.start()
+		events_thread = threading.Thread(target=self.event_loop)
+		events_thread.daemon = True
+		events_thread.start()
 
 	## Refactor the whole module into two connections and channels, one on each thread. 
 	## Currently this doesn't have any checks on Wi-Fi/IP address
