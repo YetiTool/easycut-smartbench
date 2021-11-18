@@ -22,8 +22,8 @@ class Settings(object):
     wifi_check_thread = None
 
     ping_command = 'ping -c1 one.one.one.one'
-    wifi_available = True
-    ip_address = '192.168.148.206'
+    wifi_available = False
+    ip_address = ''
     public_ip_address = ''
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
