@@ -165,7 +165,7 @@ class SkavaUI(App):
 		m.s.alarm.db = db
 
 		# Server connection object
-		sc = server_connection.ServerConnection(sett)
+		# sc = server_connection.ServerConnection(sett)
 		
 		# initialise the screens (legacy)
 		lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
