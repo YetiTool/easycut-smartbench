@@ -151,8 +151,7 @@ class DatabaseEventManager():
 
 	def stage_event(self, data, event_name):
 
-		# self.event_queue.put( (self.do_publish, [data, event_name], time.time() + self.event_send_timeout) )
-		pass
+		self.event_queue.put( (self.do_publish, [data, event_name], time.time() + self.event_send_timeout) )
 
 
 	def routine_updates_loop(self):
