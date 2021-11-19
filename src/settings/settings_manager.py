@@ -29,14 +29,13 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
-    public_ip_address = '95.181.237.39' # get("https://api.ipify.org", timeout=2).content.decode("utf8")
+    public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
 
     if pytz:
         timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
-        print(timezone)
     else:
         timezone = 'Europe/London'
 
