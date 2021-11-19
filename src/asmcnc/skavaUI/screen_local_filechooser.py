@@ -595,7 +595,7 @@ class LocalFileChooser(Screen):
         #         print "attempt to delete folder, or undeletable file"
 
         #     self.refresh_filechooser()    
-
+        self.jd.set_job_filename(filename)
         self.jd.update_metadata_in_original_file()
 
     def delete_all(self):
