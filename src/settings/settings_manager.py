@@ -4,11 +4,16 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, time, threading, pytz #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time, threading
 from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
 from requests import get
+
+try: 
+    import pytz #, pigpio ## until production machines are running latest img
+except:
+    pass
 
 import socket
 from kivy.clock import Clock
@@ -28,7 +33,11 @@ class Settings(object):
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
-    timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+
+    if pytz:
+        timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+    else:
+        timezone = 'Europe/London'
 
     sw_version = ''
     sw_hash = ''
