@@ -315,7 +315,7 @@ class HomeScreen(Screen):
 
             # # TEST
             # self.jd.metadata_dict['End Effector'] = 'TESTTESTTESTTESTTESTVERYLONGLONGLONG'
-            # self.jd.update_metadata_in_original_file()
+            self.jd.update_metadata_in_original_file()
                 
             # Preview file as drawing
             try: 
