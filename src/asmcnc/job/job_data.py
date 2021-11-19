@@ -364,10 +364,11 @@ class JobData(object):
 
         with open(self.filename, "r+") as previewed_file:
 
-            if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
+            all_lines = previewed_file.readline()
 
-                all_lines = previewed_file.readlines()
-                print(all_lines)
+            if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
+
+                all_lines.append(previewed_file.readlines())
 
                 metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
@@ -375,7 +376,7 @@ class JobData(object):
 
                 all_lines[1: metadata_end_index] = metadata
 
-                previewed_file.seek(1)
+                previewed_file.seek(0)
                 previewed_file.writelines(all_lines)
 
 
