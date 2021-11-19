@@ -323,7 +323,6 @@ class JobData(object):
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
         self.update_parts_completed(successful, extra_parts_completed)
-        self.update_update_info_in_metadata()
         self.update_metadata_in_original_file()
         self.update_changeables_in_gcode_summary_string()
 
@@ -351,6 +350,8 @@ class JobData(object):
             self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
     def update_metadata_in_original_file(self):
+
+        self.update_update_info_in_metadata()
 
         def not_end_of_metadata(x):
             if "(End of YetiTool SmartBench MES-Data)" in x: return False
