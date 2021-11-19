@@ -345,6 +345,7 @@ class JobData(object):
 
 
     def update_update_info_in_metadata(self):
+
         if self.metadata_dict:
             self.metadata_dict['Last Updated By'] = 'SmartBench'
             timestamp = datetime.now()
@@ -354,13 +355,7 @@ class JobData(object):
 
         try:
 
-            print("Set edit info")
-
-            # self.update_update_info_in_metadata()
-
-            self.metadata_dict['Last Updated By'] = 'SmartBench'
-            timestamp = datetime.now()
-            self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.update_update_info_in_metadata()
 
             def not_end_of_metadata(x):
                 if "(End of YetiTool SmartBench MES-Data)" in x: return False
@@ -372,36 +367,21 @@ class JobData(object):
                 print(str(self.metadata_dict.get(key_to_update)))
                 return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
 
-            print(self.filename)
-
             with open(self.filename, "r+") as previewed_file:
-
-                print("open file")
 
                 first_line = previewed_file.readline()
 
-                # if '(YetiTool SmartBench MES-Data)' in first_line:
-
-
-                try:
+                if '(YetiTool SmartBench MES-Data)' in first_line:
 
                     all_lines = [first_line] + previewed_file.readlines()
-
-                    # metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
-
-                    # metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
-
-                    # all_lines[1: metadata_end_index] = metadata
-
+                    metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
+                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in all_lines[1:metadata_end_index] if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                    all_lines[1: metadata_end_index] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)
 
-                    print("File written")
-
-                except:
-                    print(str(traceback.format_exc()))
-
         except:
+            print("Could not update file")
             print(str(traceback.format_exc()))
 
 

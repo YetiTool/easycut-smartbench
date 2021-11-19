@@ -584,20 +584,17 @@ class LocalFileChooser(Screen):
             popup_info.PopupDeleteFile(screen_manager = self.sm, localization = self.l, function = self.delete_selected, file_selection = kwargs['file_selection'])
 
     def delete_selected(self, filename):        
-        # self.refresh_filechooser()
+        self.refresh_filechooser()
 
-        # if os.path.isfile(filename):
-        #     try: 
-        #         os.remove(filename)
-        #         self.filechooser.selection = []
+        if os.path.isfile(filename):
+            try: 
+                os.remove(filename)
+                self.filechooser.selection = []
                 
-        #     except: 
-        #         print "attempt to delete folder, or undeletable file"
+            except: 
+                print "attempt to delete folder, or undeletable file"
 
-        #     self.refresh_filechooser()    
-        self.jd.set_job_filename(self.filechooser.selection[0])
-        self.sm.get_screen('job_incomplete').db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' + self.jd.job_name, 8)
-        self.jd.update_metadata_in_original_file()
+            self.refresh_filechooser()    
 
     def delete_all(self):
         files_in_cache = os.listdir(job_cache_dir) # clean cache
