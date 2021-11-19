@@ -378,17 +378,17 @@ class JobData(object):
 
                 print("open file")
 
-                all_lines = previewed_file.readline()
+                first_line = previewed_file.readline()
 
-                print(all_lines)
+                print(first_line)
 
-                if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
+                if '(YetiTool SmartBench MES-Data)' in first_line:
 
                     print('line in list')
 
                     try:
 
-                        all_lines.append(previewed_file.readlines())
+                        all_lines = [first_line] + previewed_file.readlines()
 
                         metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
