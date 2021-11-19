@@ -386,6 +386,8 @@ class JobData(object):
                 previewed_file.seek(0)
                 previewed_file.writelines(all_lines)
 
+                print("File written")
+
 
 
     def post_job_data_update_post_send(self):
