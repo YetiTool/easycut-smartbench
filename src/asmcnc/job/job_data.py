@@ -372,7 +372,7 @@ class JobData(object):
                 print(metadata_or_gcode_preview)
 
                 previewed_file.seek(0)
-                previewed_file.writelines(['(YetiTool SmartBench MES-Data)\n'] + metadata_or_gcode_preview + ['(End of YetiTool SmartBench MES-Data)\n'])
+                previewed_file.writelines(['(YetiTool SmartBench MES-Data)\n'] + metadata_or_gcode_preview + ['(End of YetiTool SmartBench MES-Data)'])
 
 
 
