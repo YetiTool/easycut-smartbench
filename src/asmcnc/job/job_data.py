@@ -372,6 +372,8 @@ class JobData(object):
                 print(str(self.metadata_dict.get(key_to_update)))
                 return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
 
+            print(self.filename)
+
             with open(self.filename, "r+") as previewed_file:
 
                 print("open file")
