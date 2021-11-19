@@ -364,20 +364,20 @@ class JobData(object):
 
         with open(self.filename, "r+") as previewed_file:
 
-            # try:
-
             if '(YetiTool SmartBench MES-Data)' in previewed_file.readline():
-                metadata_or_gcode_preview = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, previewed_file) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
-                print(metadata_or_gcode_preview)
+                all_lines = previewed_file.readlines()
+                print(all_lines)
+
+                metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+
+                metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
+
+                all_lines[1: metadata_end_index] = metadata
 
                 previewed_file.seek(0)
-                previewed_file.writelines(['(YetiTool SmartBench MES-Data)\n'] + metadata_or_gcode_preview + ['(End of YetiTool SmartBench MES-Data)'])
+                previewed_file.writelines(all_lines)
 
-
-
-            # except:
-            #     print("")
 
 
     def post_job_data_update_post_send(self):
