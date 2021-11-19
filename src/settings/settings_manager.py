@@ -13,7 +13,7 @@ from requests import get
 try: 
     import pytz #, pigpio ## until production machines are running latest img
 except:
-    pass
+    pytz = None
 
 import socket
 from kivy.clock import Clock
