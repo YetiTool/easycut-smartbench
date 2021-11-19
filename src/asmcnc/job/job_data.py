@@ -380,6 +380,8 @@ class JobData(object):
 
                 all_lines = previewed_file.readline()
 
+                print(all_lines)
+
                 if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
 
                     all_lines.append(previewed_file.readlines())
