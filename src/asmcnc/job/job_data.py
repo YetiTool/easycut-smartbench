@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from pipes import quote
 from chardet import detect
 from itertools import takewhile
+import traceback
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 
@@ -351,43 +352,49 @@ class JobData(object):
 
     def update_metadata_in_original_file(self):
 
+        try:
 
+            print("Set edit info")
 
-        # self.update_update_info_in_metadata()
+            # self.update_update_info_in_metadata()
 
-        self.metadata_dict['Last Updated By'] = 'SmartBench'
-        timestamp = datetime.now()
-        self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated By'] = 'SmartBench'
+            timestamp = datetime.now()
+            self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
-        def not_end_of_metadata(x):
-            if "(End of YetiTool SmartBench MES-Data)" in x: return False
-            else: return True
+            def not_end_of_metadata(x):
+                if "(End of YetiTool SmartBench MES-Data)" in x: return False
+                else: return True
 
-        def replace_metadata(old_line):
-            key_to_update = old_line.split(': ')[0]
-            print(key_to_update)
-            print(str(self.metadata_dict.get(key_to_update)))
-            return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
+            def replace_metadata(old_line):
+                key_to_update = old_line.split(': ')[0]
+                print(key_to_update)
+                print(str(self.metadata_dict.get(key_to_update)))
+                return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
 
-        with open(self.filename, "r+") as previewed_file:
+            with open(self.filename, "r+") as previewed_file:
 
-            all_lines = previewed_file.readline()
+                print("open file")
 
-            if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
+                all_lines = previewed_file.readline()
 
-                all_lines.append(previewed_file.readlines())
+                if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
 
-                metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                    all_lines.append(previewed_file.readlines())
 
-                metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
+                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
-                all_lines[1: metadata_end_index] = metadata
+                    metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
 
-                previewed_file.seek(0)
-                previewed_file.writelines(all_lines)
+                    all_lines[1: metadata_end_index] = metadata
 
-                print("File written")
+                    previewed_file.seek(0)
+                    previewed_file.writelines(all_lines)
 
+                    print("File written")
+
+        except:
+            print(str(traceback.format_exc()))
 
 
     def post_job_data_update_post_send(self):
