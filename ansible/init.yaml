@@ -24,6 +24,10 @@
     pip:
       name: pika==1.2.0
     ignore_errors: yes
+  - name: Install pytz for timezone info
+    pip:
+      name: pytz
+    ignore_errors: yes
   - name: Define glbal export for current tag
     template:
       src=profile-platform-v-var.sh
