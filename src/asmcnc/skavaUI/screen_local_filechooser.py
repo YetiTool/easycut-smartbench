@@ -595,6 +595,7 @@ class LocalFileChooser(Screen):
         #         print "attempt to delete folder, or undeletable file"
 
         #     self.refresh_filechooser()    
+        self.sm.get_screen('job_incomplete').db.send_event(1, 'Job unsuccessful', 'Unsuccessful job: ' + self.jd.job_name, 8)
         self.jd.set_job_filename(filename)
         self.jd.update_metadata_in_original_file()
 

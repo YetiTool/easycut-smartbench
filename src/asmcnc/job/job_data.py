@@ -375,7 +375,7 @@ class JobData(object):
 
                 all_lines[1: metadata_end_index] = metadata
 
-                previewed_file.seek(0)
+                previewed_file.seek(1)
                 previewed_file.writelines(all_lines)
 
 
