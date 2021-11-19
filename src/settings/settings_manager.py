@@ -4,7 +4,7 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, time, threading #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time, threading, pytz #, pigpio ## until production machines are running latest img
 from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
@@ -24,10 +24,11 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
-    public_ip_address = ''
+    public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
+    timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
 
     sw_version = ''
     sw_hash = ''

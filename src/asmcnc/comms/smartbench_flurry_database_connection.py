@@ -24,7 +24,7 @@ class DatabaseEventManager():
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = False
+	VERBOSE = True
 
 	public_ip_address = ''
 
@@ -45,6 +45,8 @@ class DatabaseEventManager():
 
 		self.event_queue = Queue.Queue()
 
+
+
 	def __del__(self):
 
 		log("Database Event Manager closed - garbage collected!")
@@ -53,6 +55,9 @@ class DatabaseEventManager():
 	## SET UP CONNECTION TO DATABASE
 	# This is called from screen_welcome, when all connections are set up
 	##------------------------------------------------------------------------
+	def get_local_time(self):
+		return datetime.datetime.now(self.set.timezone).strftime('%Y-%m-%d %H:%M:%S')
+
 
 	def start_connection_to_database_thread(self):
 
@@ -255,7 +260,7 @@ class DatabaseEventManager():
 					"ec_version": self.m.sett.sw_version,
 					"public_ip_address": self.set.public_ip_address
 				},
-				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				"time": self.get_local_time()
 			}
 
 		self.publish_event_with_routine_updates_channel(data, "Alive")
@@ -331,7 +336,7 @@ class DatabaseEventManager():
 					"overload_peak": float(self.sm.get_screen('go').overload_peak) or 0.0
 
 				},
-				"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+				"time": self.get_local_time()
 			}
 
 		return data
@@ -415,7 +420,7 @@ class DatabaseEventManager():
 						"actual_job_duration": self.jd.actual_runtime,
 						"actual_pause_duration": self.jd.pause_duration
 					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					"time": self.get_local_time()
 				}
 
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job End", time.time() + self.event_send_timeout]) )
@@ -441,7 +446,7 @@ class DatabaseEventManager():
 						"batch_number": self.jd.batch_number,
 						"parts_made_so_far": self.jd.metadata_dict.get('Parts Made So Far', 0)
 					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					"time": self.get_local_time()
 				}
 
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Job Summary", time.time() + self.event_send_timeout]) )
@@ -463,12 +468,12 @@ class DatabaseEventManager():
 					},
 					"job_data": {
 						"job_name": self.jd.job_name or '',
-						"job_start": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+						"job_start": self.get_local_time()
 					},
 					"metadata": {
 
 					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					"time": self.get_local_time()
 			}
 
 			metadata_in_json_format = {k.translate(None, ' '): v for k, v in self.jd.metadata_dict.iteritems()}
@@ -564,7 +569,7 @@ class DatabaseEventManager():
 						"name": event_name,
 						"description": event_description
 					},
-					"time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+					"time": self.get_local_time()
 				}
 
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Event: " + str(event_name), time.time() + self.event_send_timeout]) )
