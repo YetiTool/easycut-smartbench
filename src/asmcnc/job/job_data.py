@@ -351,7 +351,13 @@ class JobData(object):
 
     def update_metadata_in_original_file(self):
 
-        self.update_update_info_in_metadata()
+
+
+        # self.update_update_info_in_metadata()
+
+        self.metadata_dict['Last Updated By'] = 'SmartBench'
+        timestamp = datetime.now()
+        self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
 
         def not_end_of_metadata(x):
             if "(End of YetiTool SmartBench MES-Data)" in x: return False
