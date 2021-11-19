@@ -36,6 +36,8 @@ class AppManagerClass(object):
         # initialise app screen_manager classes     
         self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
+        self.sm.add_widget(wifi_screen)
 
         # Start start up sequence
         self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
@@ -63,9 +65,6 @@ class AppManagerClass(object):
         self.current_app = 'pro'
     
     def start_wifi_app(self):
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
-        self.sm.add_widget(wifi_screen)
-
         self.current_app = 'wifi'
         self.sm.current = 'wifi'
         
