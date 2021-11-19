@@ -37,7 +37,7 @@ class Settings(object):
     if pytz:
         timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
     else:
-        timezone = 'Europe/London'
+        timezone = None
 
     sw_version = ''
     sw_hash = ''
