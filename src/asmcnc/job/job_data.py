@@ -380,11 +380,8 @@ class JobData(object):
 
                 first_line = previewed_file.readline()
 
-                print(first_line)
-
                 # if '(YetiTool SmartBench MES-Data)' in first_line:
 
-                    print('line in list')
 
                 try:
 
