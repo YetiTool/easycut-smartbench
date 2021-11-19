@@ -381,21 +381,29 @@ class JobData(object):
                 all_lines = previewed_file.readline()
 
                 print(all_lines)
+                print(all_lines[0])
 
                 if '(YetiTool SmartBench MES-Data)' in all_lines[0]:
 
-                    all_lines.append(previewed_file.readlines())
+                    print('line in list')
 
-                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                    try:
 
-                    metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
+                        all_lines.append(previewed_file.readlines())
 
-                    all_lines[1: metadata_end_index] = metadata
+                        metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
 
-                    previewed_file.seek(0)
-                    previewed_file.writelines(all_lines)
+                        metadata_end_index = all_lines.index('(End of YetiTool SmartBench MES-Data)\n')
 
-                    print("File written")
+                        all_lines[1: metadata_end_index] = metadata
+
+                        previewed_file.seek(0)
+                        previewed_file.writelines(all_lines)
+
+                        print("File written")
+
+                    except:
+                        print(str(traceback.format_exc()))
 
         except:
             print(str(traceback.format_exc()))
