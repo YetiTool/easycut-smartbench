@@ -27,7 +27,9 @@ class ServerConnection(object):
 
 	poll_connection = None
 
-	def __init__(self):
+	def __init__(self, settings_manager):
+
+		self.set = settings_manager
 
 		self.get_smartbench_name()
 		server_thread = threading.Thread(target=self.initialise_server_connection)
@@ -41,7 +43,7 @@ class ServerConnection(object):
 
 		log("Initialising server connection...")
 
-		self.HOST = self.get_ip_address()
+		self.HOST = self.set.ip_address
 		log("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
 		self.doing_reconnect = True
@@ -81,6 +83,9 @@ class ServerConnection(object):
 			else:
 				log("No IP address available to open socket with.")
 
+		else:
+			self.set.get_public_ip_address()
+
 		self.doing_reconnect = False
 
 	def do_connection_loop(self):
@@ -91,6 +96,9 @@ class ServerConnection(object):
 			try: 
 				"Waiting for connection..."
 				if self.is_socket_available:
+					
+					self.set.get_public_ip_address() # messy and hopefully temporary, to prevent thread conflicts
+
 					conn, addr = self.sock.accept()
 					log("Accepted connection with IP address " + str(self.HOST))
 
@@ -144,39 +152,12 @@ class ServerConnection(object):
 
 	def check_connection(self):
 
-		self.HOST = self.get_ip_address()
+		self.HOST = self.set.ip_address
 
 		if self.HOST != self.prev_host and not self.doing_reconnect:
 			self.prev_host = self.HOST
 			self.close_and_reconnect_socket()
 
-	def get_ip_address(self):
-
-		ip_address = ''
-
-		if sys.platform == "win32":
-			try:
-				hostname=socket.gethostname()
-				IPAddr=socket.gethostbyname(hostname)
-				ip_address = str(IPAddr)
-
-			except:
-				ip_address = ''
-		elif sys.platform != "darwin":
-			try:
-				f = os.popen('hostname -I')
-				first_info = f.read().strip().split(' ')[0]
-
-				if len(first_info.split('.')) == 4:
-					ip_address = first_info
-
-				else:
-					ip_address = ''
-
-			except Exception as e:
-				ip_address = ''
-
-		return ip_address
 
 	def get_smartbench_name(self):
 		try:
