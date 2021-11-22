@@ -312,7 +312,7 @@ class HomeScreen(Screen):
 
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"    
             self.gcode_summary_widget.display_summary()
-                
+
             # Preview file as drawing
             try: 
                 Clock.schedule_once(self.preview_job_file, 0.05)
