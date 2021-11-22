@@ -29,7 +29,7 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
-    public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+    public_ip_address = '191.96.185.220' # get("https://api.ipify.org", timeout=2).content.decode("utf8")
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
