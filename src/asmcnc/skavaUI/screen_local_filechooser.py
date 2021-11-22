@@ -22,7 +22,6 @@ from os.path import expanduser
 from shutil import copy
 from itertools import takewhile
 from chardet import detect
-import traceback
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import screen_file_loading
@@ -547,7 +546,6 @@ class LocalFileChooser(Screen):
                     self.metadata_preview.text = '\n'.join(metadata_or_gcode_preview)
 
                 except:
-                    print(traceback.format_exc())
                     self.metadata_preview.text = self.l.get_bold("Could not preview file.")
 
         except: 
