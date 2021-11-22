@@ -150,7 +150,7 @@ class SkavaUI(App):
 		sett = settings_manager.Settings(sm)
 
 		# Initialise 'j'ob 'd'ata object
-		jd = job_data.JobData(localization = l)
+		jd = job_data.JobData(localization = l, settings_manager = sett)
 
 		# Initialise 'm'achine object
 		m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)

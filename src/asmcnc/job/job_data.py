@@ -79,6 +79,8 @@ class JobData(object):
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
+        self.set = kwargs['settings_manager']
+
         self.metadata_order = {
 
             self.l.get_bold("Last Updated Time"): 0,
@@ -348,8 +350,7 @@ class JobData(object):
 
         if self.metadata_dict:
             self.metadata_dict['Last Updated By'] = 'SmartBench'
-            timestamp = datetime.now()
-            self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated Time'] = datetime.now(self.set.timezone).strftime('%Y-%m-%d %H:%M:%S')
 
     def update_metadata_in_original_file(self):
 
