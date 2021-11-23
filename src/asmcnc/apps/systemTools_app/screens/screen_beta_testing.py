@@ -9,15 +9,30 @@ from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.comms import usb_storage
+from asmcnc.apps.systemTools_app.screens import popup_system
 
 import os, sys
 
 Builder.load_string("""
 
+#:import Factory kivy.factory.Factory
+
+
+<SystemToolsLanguageSpinner@SpinnerOption>
+
+    background_normal: ''
+    background_color: [1,1,1,1]
+    height: dp(40)
+    color: 0,0,0,1
+    halign: 'left'
+    markup: 'True'
+    font_size: 18
+
 <BetaTestingScreen>
 
     user_branch: user_branch
     beta_version: beta_version
+    language_button : language_button
     usb_toggle: usb_toggle
     wifi_toggle: wifi_toggle
 
@@ -130,6 +145,22 @@ Builder.load_string("""
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
+
+                    Spinner:
+                        id: language_button
+                        size_hint: (None,None)
+                        height: dp(35)
+                        width: dp(180)
+                        background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
+                        background_down: ""
+                        border: [dp(7.5)]*4
+                        center: self.parent.center
+                        pos: self.parent.pos
+                        text: 'Choose language...'
+                        color: hex('#f9f9f9ff')
+                        markup: True
+                        option_cls: Factory.get("SystemToolsLanguageSpinner")
+                        on_text: root.choose_language()
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -255,6 +286,8 @@ Builder.load_string("""
 
 class BetaTestingScreen(Screen):
 
+    reset_language = False
+
     def __init__(self, **kwargs):
         super(BetaTestingScreen, self).__init__(**kwargs)
         self.systemtools_sm = kwargs['system_tools']
@@ -266,6 +299,9 @@ class BetaTestingScreen(Screen):
 
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
 
+        self.language_button.values = self.l.supported_languages
+        self.language_button.text = self.l.lang
+
     def go_back(self):
         self.systemtools_sm.open_system_tools()
 
@@ -273,6 +309,7 @@ class BetaTestingScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def on_enter(self):
+        self.language_button.text = self.l.lang
         self.usb_stick.enable()
 
     def checkout_branch(self):
@@ -300,3 +337,15 @@ class BetaTestingScreen(Screen):
         self.set.refresh_latest_sw_version()
         self.user_branch.text = (self.set.sw_branch).strip('*')
         self.beta_version.text = self.set.latest_sw_beta
+
+    ## LOCALIZATION TESTING
+
+    def choose_language(self):
+        chosen_lang = self.language_button.text
+        self.l.load_in_new_language(chosen_lang)
+        self.restart_app()
+        self.reset_language = True
+
+    def restart_app(self):
+        if self.reset_language == True: 
+            popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
