@@ -356,15 +356,15 @@ class LanguageSelectScreen(Screen):
 		self.sm=kwargs['screen_manager']
 		self.l=kwargs['localization']
 
-		self.row_1_col_1.text = self.l.supported_languages[0]
-		self.row_1_col_2.text = self.l.supported_languages[1]
-		self.row_1_col_3.text = self.l.supported_languages[2]
-		# self.row_2_col_1.text = self.l.supported_languages[3]
-		# self.row_2_col_2.text = self.l.supported_languages[4]
-		# self.row_2_col_3.text = self.l.supported_languages[5]
-		# self.row_3_col_1.text = self.l.supported_languages[6]
-		# self.row_3_col_2.text = self.l.supported_languages[7]
-		# self.row_3_col_3.text = self.l.supported_languages[8]
+		self.row_1_col_1.text = self.l.approved_languages[0]
+		self.row_1_col_2.text = self.l.approved_languages[1]
+		self.row_1_col_3.text = self.l.approved_languages[2]
+		# self.row_2_col_1.text = self.l.approved_languages[3]
+		# self.row_2_col_2.text = self.l.approved_languages[4]
+		# self.row_2_col_3.text = self.l.approved_languages[5]
+		# self.row_3_col_1.text = self.l.approved_languages[6]
+		# self.row_3_col_2.text = self.l.approved_languages[7]
+		# self.row_3_col_3.text = self.l.approved_languages[8]
 
 		self.row_1_col_1_image.source = self.flag_img_path + self.row_1_col_1.text + ".png"
 		self.row_1_col_2_image.source = self.flag_img_path + self.row_1_col_2.text + ".png"
