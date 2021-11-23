@@ -300,6 +300,7 @@ class BetaTestingScreen(Screen):
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
 
         self.language_button.values = self.l.supported_languages
+        self.language_button.text = self.l.lang
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -308,6 +309,7 @@ class BetaTestingScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def on_enter(self):
+        self.language_button.text = self.l.lang
         self.usb_stick.enable()
 
     def checkout_branch(self):
