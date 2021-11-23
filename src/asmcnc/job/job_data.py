@@ -377,6 +377,7 @@ class JobData(object):
                     all_lines[1: len(metadata) + 1] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)
+                    previewed_file.truncate()
 
         except:
             print("Could not update file")
