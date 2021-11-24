@@ -127,6 +127,7 @@ class SupportMenuScreen(Screen):
 
     def get_pika(self):
         os.system("./asmcnc/apps/systemTools_app/shell_scripts/reinstall_pika.sh")
+        sys.exit()
 
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
