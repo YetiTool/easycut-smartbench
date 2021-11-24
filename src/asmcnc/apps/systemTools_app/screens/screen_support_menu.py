@@ -9,7 +9,7 @@ Menu screen for system tools app
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
-import sys
+import sys, os
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
@@ -59,7 +59,7 @@ Builder.load_string("""
         Button:
             id: button_reinstall_pika
             text: 'Get pika'
-            # on_press: root.reboot()
+            on_press: root.get_pika()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -126,7 +126,7 @@ class SupportMenuScreen(Screen):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
 
     def get_pika(self):
-        pass
+        os.system("./asmcnc/apps/systemTools_app/shell_scripts/reinstall_pika.sh")
 
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
@@ -136,7 +136,7 @@ class SupportMenuScreen(Screen):
 
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str('Download Logs')
-        self.button_download_logs.text = self.l.get_str('Get Pika')
+        self.button_reinstall_pika.text = self.l.get_str('Get Pika')
         self.button_go_back.text = self.l.get_str('Go Back')
 
         for id_object in self.id_list:
