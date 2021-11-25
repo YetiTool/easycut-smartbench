@@ -684,5 +684,5 @@ Processing	wird bearbeitet	Traitement	Elaborazione	Jalostus	Verwerken	Przetwarza
 Could not preview file.	Vorschau der Datei nicht möglich.	Impossible de prévisualiser le fichier.	Impossibile visualizzare l'anteprima del file.	Tiedostoa ei voitu esikatsella.	Kon geen voorbeeld van bestand bekijken.	Nie można wyświetlić podglądu pliku.	Kunne ikke få vist filen.
 Could not open file.	Die Datei konnte nicht geöffnet werden.	Impossible d'ouvrir le fichier.	Impossibile aprire il file.	Tiedostoa ei voitu avata.	Kon het bestand niet openen.	Nie można otworzyć pliku.	Kunne ikke åbne filen.
 Get Pika	Pika kaufen	Obtenir Pika	Ottenere Pika	Hanki Pika	Pika aanschaffen	Pobierz Pika	Få Pika
-Support	Unterstützung	Support	Supporto	Tue	Ondersteuning	Wsparcie	Støtte
-Issue trying to reinstall pika!	Problem bei der Neuinstallation von pika!	Problème lors de la réinstallation de pika!	Problema cercando di reinstallare pika!	Ongelma, kun yrität asentaa Pika!	Probleem bij het opnieuw installeren van pika!	Problem z ponowną instalacją pika!	Problemer med at forsøge at geninstallere pika!
+Support	Unterstützung	Support	Supporto	Tuki	Ondersteuning	Wsparcie	Støtte
+Issue trying to reinstall pika!	Problem bei der Neuinstallation von pika!	Problème lors de la réinstallation de pika!	Problema cercando di reinstallare pika!	Ongelma Pikan uudelleenasennuksessa!	Probleem bij het opnieuw installeren van pika!	Problem z ponowną instalacją pika!	Problemer med at forsøge at geninstallere pika!
