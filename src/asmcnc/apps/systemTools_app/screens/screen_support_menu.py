@@ -13,9 +13,7 @@ import sys, os
 from kivy.clock import Clock
 import traceback
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
-from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 
@@ -128,20 +126,7 @@ class SupportMenuScreen(Screen):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
 
     def get_pika(self):
-
-        message = self.l.get_str('Please wait') + '...'
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
-
-        try: 
-            os.system('python -m pip uninstall pika -y')
-            os.system('python -m pip install pika==1.2.0')
-            os.system('sudo reboot')
-            wait_popup.popup.dismiss()
-
-        except:
-            message = self.l.get_str('Issue trying to reinstall pika!')
-            popup_info.PopupMiniInfo(self.sm, self.l, description = message)
-            wait_popup.popup.dismiss()
+        self.systemtools_sm.reinstall_pika()
 
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
