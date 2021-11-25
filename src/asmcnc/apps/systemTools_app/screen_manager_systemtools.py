@@ -70,16 +70,20 @@ class ScreenManagerSystemTools(object):
         message = self.l.get_str('Please wait') + '...'
         wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
 
-        try: 
-            os.system('python -m pip uninstall pika -y')
-            os.system('python -m pip install pika==1.2.0')
-            os.system('sudo reboot')
-            wait_popup.popup.dismiss()
+        def do_reinstall():
 
-        except:
-            message = self.l.get_str('Issue trying to reinstall pika!')
-            popup_info.PopupMiniInfo(self.sm, self.l, description = message)
-            wait_popup.popup.dismiss()
+            try: 
+                os.system('python -m pip uninstall pika -y')
+                os.system('python -m pip install pika==1.2.0')
+                os.system('sudo reboot')
+                wait_popup.popup.dismiss()
+
+            except:
+                message = self.l.get_str('Issue trying to reinstall pika!')
+                popup_info.PopupMiniInfo(self.sm, self.l, description = message)
+                wait_popup.popup.dismiss()
+
+        Clock.schedule_once(lambda dt: do_reinstall(), 0.2)
 
     def open_beta_testing_screen(self):
        if not self.sm.has_screen('beta_testing'):
