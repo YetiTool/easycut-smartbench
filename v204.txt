@@ -1,0 +1,23 @@
+.. _top:
+
+New support features
+====================
+
+New “Support” menu in System Tools. Support menu contains buttons for “Download Logs” and “Get Pika”.
+
+“Get Pika” button allows users to reinstall pika software package if it failed to install properly during a software update. This may solve the issue a few users have had with SmartManager not being able to find their machine hostname. 
+
+
+Updating from a version earlier than v2.0.0? 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This Console update is part of the new SmartManager package!
+
+SmartManager is a Manufacturing Execution System (MES) that provides essential real-time data to the whole production team, to streamline workflow and maximise productivity. 
+
+Visit:
+https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
