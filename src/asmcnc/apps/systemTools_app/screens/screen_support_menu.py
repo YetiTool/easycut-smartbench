@@ -11,6 +11,7 @@ from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+import traceback
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
@@ -126,8 +127,21 @@ class SupportMenuScreen(Screen):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
 
     def get_pika(self):
-        os.system("./asmcnc/apps/systemTools_app/shell_scripts/reinstall_pika.sh")
-        sys.exit()
+
+        try: 
+            import pip
+            pip uninstall pika
+            pip install pika
+
+        except:
+            print("Could not install")
+            print(traceback.format_exc())
+
+
+
+
+        # os.system("./asmcnc/apps/systemTools_app/shell_scripts/reinstall_pika.sh")
+        # sys.exit()
 
     def quit_to_console(self):
         popup_system.QuitToConsole(self.systemtools_sm, self.l)
