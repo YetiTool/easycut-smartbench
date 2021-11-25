@@ -20,7 +20,7 @@ Builder.load_string("""
 <SystemMenuScreen>
 
     button_system_info: button_system_info 
-    button_download_logs: button_download_logs
+    button_support_menu: button_support_menu
     button_reboot: button_reboot
     button_exit_software: button_exit_software
     button_usb_first_aid: button_usb_first_aid
@@ -61,16 +61,16 @@ Builder.load_string("""
             padding_y: 5
 
         Button:
-            id: button_download_logs
-            text: 'Download Logs'
-            on_press: root.download_logs()
+            id: button_support_menu
+            text: 'Support'
+            on_press: root.go_to_support()
             valign: "bottom"
             halign: "center"
             markup: True
             font_size: root.default_font_size
             text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
+            background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/support.png"
             border: [dp(25)]*4
             padding_y: 5
 
@@ -215,7 +215,7 @@ class SystemMenuScreen(Screen):
 
         self.id_list = [
         self.button_system_info,
-        self.button_download_logs,
+        self.button_support_menu,
         self.button_reboot,
         self.button_exit_software,
         self.button_usb_first_aid,
@@ -235,8 +235,8 @@ class SystemMenuScreen(Screen):
     def go_to_build_info(self):
         self.systemtools_sm.open_build_info_screen()
 
-    def download_logs(self):
-        popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
+    def go_to_support(self):
+        self.systemtools_sm.open_support_menu_screen()
 
     def reboot(self):
         popup_system.RebootConsole(self.systemtools_sm, self.l)
@@ -264,7 +264,7 @@ class SystemMenuScreen(Screen):
 
     def update_strings(self):
         self.button_system_info.text = self.l.get_str('System Info')
-        self.button_download_logs.text = self.l.get_str('Download Logs')
+        self.button_support_menu.text = self.l.get_str('Support')
         self.button_reboot.text = self.l.get_str('Reboot')
         self.button_exit_software.text = self.l.get_str('Exit Software')
         self.button_usb_first_aid.text = self.l.get_str('USB First Aid')

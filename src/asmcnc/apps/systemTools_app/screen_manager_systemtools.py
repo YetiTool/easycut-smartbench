@@ -5,7 +5,7 @@ import sys, os
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
-screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test
+screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
 
 class ScreenManagerSystemTools(object):
 
@@ -29,6 +29,12 @@ class ScreenManagerSystemTools(object):
            build_info_screen = screen_build_info.BuildInfoScreen(name = 'build_info', machine = self.m, system_tools = self, settings = self.set, localization = self.l)
            self.sm.add_widget(build_info_screen)
        self.sm.current = 'build_info'
+
+    def open_support_menu_screen(self):
+       if not self.sm.has_screen('support_menu'):
+           support_menu_screen = screen_support_menu.SupportMenuScreen(name = 'support_menu', machine = self.m, system_tools = self, settings = self.set, localization = self.l)
+           self.sm.add_widget(support_menu_screen)
+       self.sm.current = 'support_menu'
 
     def download_logs_to_usb(self):
         self.usb_stick.enable()
@@ -58,6 +64,26 @@ class ScreenManagerSystemTools(object):
 
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)
+
+    def reinstall_pika(self):
+
+        message = self.l.get_str('Please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description = message)
+
+        def do_reinstall():
+
+            try: 
+                os.system('python -m pip uninstall pika -y')
+                os.system('python -m pip install pika==1.2.0')
+                os.system('sudo reboot')
+                wait_popup.popup.dismiss()
+
+            except:
+                message = self.l.get_str('Issue trying to reinstall pika!')
+                popup_info.PopupMiniInfo(self.sm, self.l, description = message)
+                wait_popup.popup.dismiss()
+
+        Clock.schedule_once(lambda dt: do_reinstall(), 0.2)
 
     def open_beta_testing_screen(self):
        if not self.sm.has_screen('beta_testing'):
@@ -164,6 +190,7 @@ class ScreenManagerSystemTools(object):
     def exit_app(self):
         self.sm.current = 'lobby'
         self.destroy_screen('build_info')
+        self.destroy_screen('support_menu')
         self.destroy_screen('system_menu')
         self.destroy_screen('beta_testing')
         self.destroy_screen('grbl_settings')
