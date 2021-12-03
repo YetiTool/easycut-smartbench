@@ -7,6 +7,8 @@ import sys, os, re
 from datetime import datetime, timedelta
 from pipes import quote
 from chardet import detect
+from itertools import takewhile
+import traceback
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 
@@ -77,6 +79,8 @@ class JobData(object):
 
     def __init__(self, **kwargs):
         self.l = kwargs['localization']
+        self.set = kwargs['settings_manager']
+
         self.metadata_order = {
 
             self.l.get_bold("Last Updated Time"): 0,
@@ -322,7 +326,7 @@ class JobData(object):
     def post_job_data_update_pre_send(self, successful, extra_parts_completed = 0):
 
         self.update_parts_completed(successful, extra_parts_completed)
-        self.update_update_info_in_metadata()
+        self.update_metadata_in_original_file()
         self.update_changeables_in_gcode_summary_string()
 
     def update_parts_completed(self, successful, extra_parts_completed = 0):
@@ -335,36 +339,49 @@ class JobData(object):
                 if successful:
                     self.metadata_dict["Parts Made So Far"] = str(prev_parts_completed_so_far + int(self.metadata_dict.get('Parts Made Per Job', 1)))
 
-                    # # Update parts completed in job file
-                    self.update_metadata_in_original_file("Parts Made So Far")
-
                 elif extra_parts_completed > prev_parts_completed_so_far:
                     self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
-
-                    # # Update parts completed in job file
-                    self.update_metadata_in_original_file("Parts Made So Far")
 
             except:
                 print("Parts Made So Far couldn't be updated.")
 
 
     def update_update_info_in_metadata(self):
+
         if self.metadata_dict:
             self.metadata_dict['Last Updated By'] = 'SmartBench'
-            timestamp = datetime.now()
-            self.metadata_dict['Last Updated Time'] = timestamp.strftime('%d-%b-%y %H:%M:%S')
+            self.metadata_dict['Last Updated Time'] = datetime.now(self.set.timezone).strftime('%Y-%m-%d %H:%M:%S')
 
-            self.update_metadata_in_original_file("Last Updated Time")
-            self.update_metadata_in_original_file("Last Updated By")
+    def update_metadata_in_original_file(self):
 
-    def update_metadata_in_original_file(self, key_to_update):
+        try:
 
-        # Update in job file
-        grep_command = 'grep "' + key_to_update + '" ' + quote(self.filename)
-        line_to_replace = (os.popen(grep_command).read()).strip()
-        new_line = '(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')'
-        sed_command = 'sudo sed -i "s/' + line_to_replace + '/' + new_line + '/" ' + quote(self.filename)
-        os.system(sed_command)
+            self.update_update_info_in_metadata()
+
+            def not_end_of_metadata(x):
+                if "(End of YetiTool SmartBench MES-Data)" in x: return False
+                else: return True
+
+            def replace_metadata(old_line):
+                key_to_update = old_line.split(':')[0]
+                return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update, "")) + ')\n')
+
+            with open(self.filename, "r+") as previewed_file:
+
+                first_line = previewed_file.readline()
+
+                if '(YetiTool SmartBench MES-Data)' in first_line:
+
+                    all_lines = [first_line] + previewed_file.readlines()                    
+                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) ])
+                    all_lines[1: len(metadata) + 1] = metadata
+                    previewed_file.seek(0)
+                    previewed_file.writelines(all_lines)
+                    previewed_file.truncate()
+
+        except:
+            print("Could not update file")
+            print(str(traceback.format_exc()))
 
 
     def post_job_data_update_post_send(self):

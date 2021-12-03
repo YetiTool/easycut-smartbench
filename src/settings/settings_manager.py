@@ -4,10 +4,16 @@ Created 5 March 2020
 Module to get and store settings info
 '''
 
-import sys,os, subprocess, time, threading #, pigpio ## until production machines are running latest img
+import sys,os, subprocess, time, threading
 from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
+from requests import get
+
+try: 
+    import pytz #, pigpio ## until production machines are running latest img
+except:
+    pytz = None
 
 import socket
 from kivy.clock import Clock
@@ -23,9 +29,19 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
+    public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
     WIFI_REPORT_INTERVAL = 2
-    full_hostname = socket.gethostname()
+    full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
+
+    try:
+        if pytz:
+            timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+        else:
+            timezone = None
+
+    except:
+        timezone = None
 
     sw_version = ''
     sw_hash = ''
@@ -44,6 +60,7 @@ class Settings(object):
     def __init__(self, screen_manager):
         
         self.sm = screen_manager
+
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
         self.wifi_check_thread.start()
@@ -52,7 +69,6 @@ class Settings(object):
 ## WIFI AND CONNECTIONS
 
     def check_wifi_and_refresh_ip_address(self):
-
 
         while True:
 
@@ -124,13 +140,23 @@ class Settings(object):
             return False
 
 
+    def get_public_ip_address(self):
+
+        try: 
+            self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
+
+        except:
+            self.public_ip_address = ''
+
 
 ## REFRESH EVERYTHING AT START UP    
     def refresh_all(self):
+
         self.refresh_latest_platform_version()
         self.refresh_platform_version()
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
+
 
 ## VERSION REFRESH
         
@@ -258,16 +284,7 @@ class Settings(object):
             os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')
             # copy EC into a backup directory
             os.system('mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
-    
-            # GET ANSIBLE TO HANDLE THIS NOW INSTEAD:
-            # # Update starteasycut shell script to look for backup/other folders if required
-            # # We really need to work on platform updates
-            # case = (os.popen('grep "\[ ! -d" /home/pi/starteasycut.sh').read()) #current/old directory command
-            # if not case.startswith('[ ! -d'):
-            #     backup_command = '\[ ! -d \"/home/pi/easycut-smartbench/\" \] && mkdir \/home\/pi\/easycut-smartbench && cp -RT \/home\/pi\/easycut-smartbench-backup \/home\/pi\/easycut-smartbench'
-            #     sed_cmd = ('sudo sed -i \'/echo \\"start easycut\\"/ a ' + backup_command + '\' /home/pi/starteasycut.sh') 
-            #     os.system(sed_cmd)
-            
+                
             # compare backup and current directory just in case, and return true if all is well    
             directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
             if directory_diff == '': return True

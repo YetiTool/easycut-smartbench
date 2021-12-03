@@ -10,6 +10,13 @@ www.yetitool.com
 #config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
+
+# try:
+# 	from hanging_threads import start_monitoring
+# 	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
+# except:
+# 	print("Could not import hanging_threads")
+
 import time
 import sys, os
 from datetime import datetime
@@ -143,7 +150,7 @@ class SkavaUI(App):
 		sett = settings_manager.Settings(sm)
 
 		# Initialise 'j'ob 'd'ata object
-		jd = job_data.JobData(localization = l)
+		jd = job_data.JobData(localization = l, settings_manager = sett)
 
 		# Initialise 'm'achine object
 		m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
@@ -158,7 +165,7 @@ class SkavaUI(App):
 		m.s.alarm.db = db
 
 		# Server connection object
-		sc = server_connection.ServerConnection()
+		sc = server_connection.ServerConnection(sett)
 		
 		# initialise the screens (legacy)
 		lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
