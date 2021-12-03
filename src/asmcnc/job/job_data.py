@@ -364,7 +364,7 @@ class JobData(object):
 
             def replace_metadata(old_line):
                 key_to_update = old_line.split(': ')[0]
-                return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update)) + ')\n')
+                return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update, "")) + ')\n')
 
             with open(self.filename, "r+") as previewed_file:
 
@@ -373,7 +373,7 @@ class JobData(object):
                 if '(YetiTool SmartBench MES-Data)' in first_line:
 
                     all_lines = [first_line] + previewed_file.readlines()                    
-                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) if (decode_and_encode(i).split(':', 1)[1]).strip('\n\r() ') ])
+                    metadata = map(replace_metadata, [decode_and_encode(i).strip('\n\r()') for i in takewhile(not_end_of_metadata, all_lines[1:]) ])
                     all_lines[1: len(metadata) + 1] = metadata
                     previewed_file.seek(0)
                     previewed_file.writelines(all_lines)
