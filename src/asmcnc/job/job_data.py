@@ -363,7 +363,7 @@ class JobData(object):
                 else: return True
 
             def replace_metadata(old_line):
-                key_to_update = old_line.split(': ')[0]
+                key_to_update = old_line.split(':')[0]
                 return ('(' + key_to_update + ': ' + str(self.metadata_dict.get(key_to_update, "")) + ')\n')
 
             with open(self.filename, "r+") as previewed_file:
