@@ -34,9 +34,13 @@ class Settings(object):
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
 
-    if pytz:
-        timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
-    else:
+    try:
+        if pytz:
+            timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+        else:
+            timezone = None
+
+    except:
         timezone = None
 
     sw_version = ''
