@@ -1,0 +1,21 @@
+.. _top:
+
+Patch
+====================
+
+Users with no Wi-Fi connection may have experienced issues at Console start-up after updating to v2.0.5. This has now been patched. 
+
+
+Updating from a version earlier than v2.0.0? 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This Console update is part of the new SmartManager package!
+
+SmartManager is a Manufacturing Execution System (MES) that provides essential real-time data to the whole production team, to streamline workflow and maximise productivity. 
+
+Visit:
+https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-smartmanager
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
