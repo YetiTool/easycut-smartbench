@@ -56,7 +56,6 @@ class Settings(object):
 
         self.get_public_ip_address()
         self.get_timezone()
-        print('TIMEZONE: ' + str(self.timezone))
 
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
@@ -157,6 +156,8 @@ class Settings(object):
 
         except:
             self.timezone = None
+
+        log('TIMEZONE: ' + str(self.timezone))
 
 
 ## REFRESH EVERYTHING AT START UP    
