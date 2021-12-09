@@ -29,19 +29,11 @@ class Settings(object):
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
-    public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
-
-    try:
-        if pytz:
-            timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
-        else:
-            timezone = None
-
-    except:
-        timezone = None
+    public_ip_address = ''
+    timezone = None
 
     sw_version = ''
     sw_hash = ''
@@ -61,10 +53,13 @@ class Settings(object):
         
         self.sm = screen_manager
 
+        self.public_ip_address = self.get_public_ip_address()
+        self.timezone = self.get_timezone()
+
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
         self.wifi_check_thread.start()
-    
+
 
 ## WIFI AND CONNECTIONS
 
@@ -147,6 +142,18 @@ class Settings(object):
 
         except:
             self.public_ip_address = ''
+
+    def get_timezone(self):
+
+        try:
+
+            if pytz:
+                timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+            else:
+                timezone = None
+
+        except:
+            timezone = None
 
 
 ## REFRESH EVERYTHING AT START UP    
