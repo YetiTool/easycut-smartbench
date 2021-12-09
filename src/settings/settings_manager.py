@@ -9,6 +9,7 @@ from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
 from requests import get
+import traceback
 
 try: 
     import pytz #, pigpio ## until production machines are running latest img
@@ -53,8 +54,9 @@ class Settings(object):
         
         self.sm = screen_manager
 
-        self.public_ip_address = self.get_public_ip_address()
-        self.timezone = self.get_timezone()
+        self.get_public_ip_address()
+        self.get_timezone()
+        print('TIMEZONE: ' + str(self.timezone))
 
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
@@ -148,12 +150,13 @@ class Settings(object):
         try:
 
             if pytz:
-                timezone = pytz.timezone(get('http://ip-api.com/json/' + public_ip_address).json()['timezone'])
+                self.timezone = pytz.timezone(get('http://ip-api.com/json/' + str(self.public_ip_address)).json()['timezone'])
+
             else:
-                timezone = None
+                self.timezone = None
 
         except:
-            timezone = None
+            self.timezone = None
 
 
 ## REFRESH EVERYTHING AT START UP    
