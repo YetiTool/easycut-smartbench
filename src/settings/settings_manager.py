@@ -9,7 +9,6 @@ from time import sleep
 from __builtin__ import True, False
 from datetime import datetime
 from requests import get
-import traceback
 
 try: 
     import pytz #, pigpio ## until production machines are running latest img
