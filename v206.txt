@@ -1,13 +1,10 @@
 .. _top:
 
-Improvements
+Patch
 ====================
 
-SmartManager and SmartTransfer metadata timestamps will now be local to your region. 
+Users with no Wi-Fi connection may have experienced issues at Console start-up after updating to v2.0.5. This has now been patched. 
 
-Some users with slow or unstable internet connections may have experienced Console slowness immediately after sending job feedback, and at start-up. This has now been patched. 
-
-There are changes to how job file metadata is updated. If SmartBench loses power while file metadata is being updated after a job, you should transfer a new copy of that file and check it. Check the online release notes to learn more about this. 
 
 Updating from a version earlier than v2.0.0? 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
