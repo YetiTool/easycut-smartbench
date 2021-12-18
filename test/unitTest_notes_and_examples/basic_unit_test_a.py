@@ -11,7 +11,7 @@ import unittest
 class BasicUnitTestA(unittest.TestCase):
     def testAdd(self):  ## test method names begin 'test*'
         assert (1 + 2) == 3
-        self.assertEqual(0 + 1, 7)
+        self.assertEqual(0 + 5, 7)
     def testMultiply(self):
         self.assertEqual((0 * 10), 0)
         self.assertEqual((5 * 8), 40)

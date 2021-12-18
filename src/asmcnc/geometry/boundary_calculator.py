@@ -30,11 +30,28 @@ class BoundaryCalculator():
     '''
     Purpose: undertake geometry and return array of gcode coordinates that represent a boundary
     '''
-    detailsToConsole = 0
+    details_to_console = 11
     
-    gcode_file_path = ""
-    gcodefile = []
     envelope_of_work = object
+
+    gcode_file_path = ""
+    
+    gcodefile = []
+    
+    boundary_xy = []
+        # boundary_xy will later be: 
+            # [0] = x coord
+            # [1] = y coord
+            # [2] = angle (from "north")
+            # [3] = distance between x,y and datum
+    
+    boundary_calc_by_segment = [] # i.e. the boundary but in a 'nearest to a circle'
+        # boundary_calc_by_segment will later be: 
+            # [0] = x coord
+            # [1] = y coord
+            # [2] = distance between datum and x,y
+
+    angle_sorted_boundary_xy = []
 
     datum_x = 0.0
     datum_y = 0.0
@@ -45,10 +62,7 @@ class BoundaryCalculator():
     temp_dist_to_boundary = 0.0
     temp_angle = 0.0
     
-    boundary_xy = []
-    angle_sorted_boundary_xy = []
-    boundary_calc_by_segment = [] # i.e. the boundary but in a 'nearest to a circle'
-    
+
     # approximations (to speed up processing etc)
     # ANGLE to check for max distance from datum against
     # N.B. in radians (proportions of PI, so 2*pi for a full circle)
@@ -67,10 +81,20 @@ class BoundaryCalculator():
     #
     ########### (see notes above on what this is for)
     
-    def __init__(self, input_file_path_to_gcode = ""):
+    def __init__(self):
         # re-set lists:
         self.boundary_xy = 0
         
+        self.sort_gcode_input("")
+        # instead of UnitTestsBoundaryWalk.test_boundary_datum_is_not_blank:
+        #      self.b_setter.sort_gcode_input(self.gcode_file_path)
+
+        # sort boundary by angle:
+        self.sort_boundary_data_by_angle()
+        # sort through, establishing boundary:
+        self.run_via_angle_checking_max_dist_n_range()
+    
+    def sort_gcode_input(self, input_file_path_to_gcode = ""):
         # test gcode_file_path...
         self.gcode_file_path = "../../test/gcode_test_files/jobCache_copy/Circle.nc"
         # THE BELOW DOESN'T WORK - MUST PICK A FILE WITH .NC EXTENSION
@@ -79,33 +103,20 @@ class BoundaryCalculator():
         if (input_file_path_to_gcode != ""): 
             self.gcode_file_path = input_file_path_to_gcode
 
-
         self.gcodefile = self.set_gcode_as_list(self.gcode_file_path)
 
-        # CHECKING OUT WHY SORT NOT OPERATIONAL BELOW
-        ##### print("self.boundary_xy: " + str(self.boundary_xy))
-        # z = 167
-        # print("self.boundary_xy[" + str(z) + "][2]: " + str(self.boundary_xy[z][2]))
-
-        for x in range(len(self.boundary_xy)):
-            # print("self.boundary_xy[" + str(x) + "]")
-            # print("__init__ self.boundary_xy[" + str(x) + "]: " + str(self.boundary_xy[x][2]))
-            pass
-
-        # still accumulating list items!!!!!!!!
-        self.sort_boundary_data_by_angle()
-        
-        self.run_via_angle_checking_max_dist_n_range()
-        self.b_envelope = self.get_job_envelope_xy_list()
-        self.bound_range_x = self.b_envelope[0]
-        self.bound_range_y = self.b_envelope[1]
-        
-    
-
-    def get_job_envelope_from_gcode(self):
         # get job range
         self.envelope_of_work = job_envelope.BoundingBox()
         self.envelope_of_work.set_job_envelope(self.gcode_file_path)
+
+        ## this is a GETTER: so call from test: self.get_job_envelope_from_gcode()
+        ## self.set_boundary_datum_point()
+        
+
+    def get_job_envelope_from_gcode(self):
+        
+        if self.details_to_console == 11: 
+            print(">>>> get_job_envelope_from_gcode ____________ ") # + self.gcode_file_path)
 
         found_envelope = (self.envelope_of_work.range_x, 
                           self.envelope_of_work.range_y) 
@@ -130,6 +141,7 @@ class BoundaryCalculator():
         return found_envelope
 
     def set_boundary_datum_point(self):
+
         # set single x,y datum at job_envelop mid point
         self.datum_x = abs((self.envelope_of_work.range_x[0] 
                             - 
@@ -140,7 +152,7 @@ class BoundaryCalculator():
                             self.envelope_of_work.range_y[1])
                             /2)
  
-        if self.detailsToConsole == 1: 
+        if self.details_to_console == 1: 
             print("datum_x = " + str(self.datum_x))
             print("datum_y = " + str(self.datum_y))
             
@@ -148,6 +160,8 @@ class BoundaryCalculator():
 #        sampleArray = [5,10,15,5] # providing a double fails the unit test, e.g. 5.5 
 #        return sampleArray
 #'''
+    def newMethod(self):
+        pass
 
     def check_point(self, in_x, in_y, datum):
         # use? math.angle_counterclockwise(a,b)
@@ -180,7 +194,7 @@ class BoundaryCalculator():
         # calculate absolute distance:
         self.temp_dist_to_boundary = math.sqrt(abs(dx**2 + dy**2))
 
-        if self.detailsToConsole == 1: 
+        if self.details_to_console == 1: 
             print("dx, dy: " + str(dx) + "," + str(dy) + ", and " + str(dx**2 + dy**2))
             print("self.temp_dist_to_boundary = " + str(self.temp_dist_to_boundary))
     
@@ -200,7 +214,7 @@ class BoundaryCalculator():
                 float(self.temp_dist_to_boundary)
                 ])
 
-        if self.detailsToConsole == 1: 
+        if self.details_to_console == 1: 
             print(" add coord: \n" + str(tp_x) + " and " + str(tp_x))
             print(" add coord: \n" + str(self.boundary_xy))
     
@@ -218,7 +232,7 @@ class BoundaryCalculator():
     # check file provided is there
         if os.path.isfile(incoming_gcode_file_path) == True:
             self.gcode_file_path = incoming_gcode_file_path
-            if self.detailsToConsole == 1:
+            if self.details_to_console == 1:
                 print("gcode supplied: " + self.gcode_file_path)
         elif os.path.isfile(self.gcode_file_path) == False:
             print("gcode supplied path/file isn't working...  " + self.gcode_file_path)
@@ -254,7 +268,7 @@ class BoundaryCalculator():
                     
         file_in_use.close()
         
-        if self.detailsToConsole == 1: 
+        if self.details_to_console == 1: 
             print("closed file, been through")
             print("boundary_xy: \n" + str(self.boundary_xy))
             print("boundary_xy length = " + str(len(self.boundary_xy)))
@@ -285,6 +299,9 @@ class BoundaryCalculator():
         temp_max_dist_at_in_segment = 0
         start_segment = 99 # to indicate not-started
         # reset output list:
+            # [0] = x coord
+            # [1] = y coord
+            # [2] = distance between datum and x,y
         self.boundary_calc_by_segment = [[0.0,0.0,0.0]]
         #####  loop logic (for boundary):
             # in each segment:
@@ -296,11 +313,9 @@ class BoundaryCalculator():
             #        check_if_latest_dist_is_greater
         
         ##### NOTE: also, as we go through, 
-        #           capturing bound_range x & y
-        ########
-        #    ranges x,y, min max all set to 0
-        #### also setting object range values after loop end
-        
+        #        capturing bound_range x & y
+        #        ranges x,y, min max all set to 0
+        ####     also setting object range values after loop end
         #    ranges x,y, min max all set to 0
         x_min = self.datum_x
         x_max = self.datum_x
@@ -312,20 +327,15 @@ class BoundaryCalculator():
             x_value = self.angle_sorted_boundary_xy[x][0]
             y_value = self.angle_sorted_boundary_xy[x][1]
         #####
-        #
         ## @@@@@@@@@@@@@@ establishing x & y bound_range
-        #####
         ## @@@ NOTE: this boundary range can be / will be APPROXIMATE
-            ## @@@       based on angle_max_check's impact
             # x values min and max
             if x_value > x_max: x_max = x_value
             if x_value < x_min: x_min = x_value
             # y values min and max
             if y_value > y_max: y_max = y_value
             if y_value < y_min: y_min = y_value
-            
         #####
-        #
         ## @@@@@@@@@@@@@@ FIND DISTANCE FROM DATUM @ ANGLE
         #####   
             #### checking dist from datum
@@ -359,15 +369,15 @@ class BoundaryCalculator():
                     temp_max_dist_at_in_segment = self.angle_sorted_boundary_xy[x][2]
         # artificially close the polygon of the boundary
         # @@@@ HACK HACK HACK! a fix to close the polygon
-        self.boundary_calc_by_segment.append(
-                    self.boundary_calc_by_segment[0]
-                    )
+        #######
+        self.boundary_calc_by_segment.append(self.boundary_calc_by_segment[0])
+        ####### 
         # put the found range values into object.range_etc
         self.bound_range_x = [x_min, x_max]
         self.bound_range_y = [y_min, y_max]
 
         # debug print lines:        
-        if self.detailsToConsole == 1:
+        if self.details_to_console == 1:
             print("run_via_angle_checking_max_dist_n_range:") 
             print("  >> angle_max_check = " + str(self.angle_max_check) + 
                   " ___ i.e. PI / segment_divisor, where segment_divisor = " + 
@@ -381,5 +391,10 @@ class BoundaryCalculator():
         
         return self.boundary_calc_by_segment
     
-    
+    def output_gcode_file(self, pathForOutput = ""):
+        print("boundary_calculator.output_gcode:") 
+        if pathForOutput != "":
+            # actually run output
+            
+            pass
     

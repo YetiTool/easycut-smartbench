@@ -8,15 +8,15 @@ import unittest
 
 class Test(unittest.TestCase):
 
-    def setUp(self):
-        # If the setUp method raises an exception while the test is running, 
+    def set_up(self):
+        # If the set_up method raises an exception while the test is running, 
         # the framework will consider the test to have suffered an error, 
         # and the runTest (or test_X_Name) method will not be executed.
         pass
 
 
-    def tearDown(self):
-        # If setUp succeeded, the tearDown method will be 
+    def tear_down(self):
+        # If set_up succeeded, the tear_down method will be 
         # run regardless of whether or not runTest (or test_X_Name) succeeded.
         pass
 
