@@ -71,18 +71,26 @@ class BoundingBox():
                      
             for part in blocks:
                 try:
-                    if part.startswith(('X')): x_values.append(float(part[1:]))
-                    if part.startswith(('Y')): y_values.append(float(part[1:]))
-                    if part.startswith(('Z')): z_values.append(float(part[1:]))
-                
-                    ### IDENTIFY ARCS OR CIRCLES with G2 or G3
-                    if part.startswith('G2') or part.startswith('G3'): 
-                        
-                        includes_arcs = self.check_circle_mode(line)
-                        print("includes_arcs: {}".format(includes_arcs))
-                    
+                    if "X0.000Y0.000" in part:
+                        # skip any line at this point (bit risky)
+                        # as assuming datum is actual datum
+                        # and not part of cut workflow
+                        # FOR DEBUG ### print("DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM ")
+                        continue
                     else:
-                        includes_arcs = 0
+                        if part.startswith(('X')): x_values.append(float(part[1:]))
+                        if part.startswith(('Y')): y_values.append(float(part[1:]))
+                        if part.startswith(('Z')): z_values.append(float(part[1:]))
+                    
+                        ### IDENTIFY ARCS OR CIRCLES with G2 or G3
+                        if part.startswith('G2') or part.startswith('G3'): 
+                            
+                            includes_arcs = self.check_circle_mode(line)
+                            print("includes_arcs: {}".format(includes_arcs))
+                        
+                        else:
+                            includes_arcs = 0
+                            
 
 
                 except TypeError:
@@ -91,9 +99,20 @@ class BoundingBox():
                     print( "Envelope calculator: skipped '" + part + "'")
 
         try:  
-            self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
-            self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
-            self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+            
+            # the range CANNOT be set by the simple MIN()
+            # as the 0,0,0 datum will therefore always be one corner...
+            if "X0.000Y0.000" in part:
+                # don't do anything here, 
+                # just don't add to range_x and range_y
+                print("DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM ")
+                # pass # knowingly, trying to do nothing here
+            else:
+            
+                self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
+                self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
+                self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+
         except ValueError:
             print("Error found, likely empty: {}".format(ValueError))
 

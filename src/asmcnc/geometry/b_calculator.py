@@ -153,7 +153,16 @@ class BCalculator():
         return found_envelope
 
     def set_boundary_datum_point(self):
+        # ### FOCUS POINT <<>>
+        if len(self.envelope_of_work.range_x) < 3 and \
+            len(self.envelope_of_work.range_y) < 3:
+            
+            print("HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP HELP ")
 
+        if self.datum_x == 0 and self.datum_y == 0:
+            print("CHECKED AND WAS A A A A A BLANNNNNNNKKKKKKKEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER")
+        
+            
         # set single x,y datum at job_envelop mid point
         self.datum_x = abs((self.envelope_of_work.range_x[0] 
                             - 
@@ -163,15 +172,12 @@ class BCalculator():
                             - 
                             self.envelope_of_work.range_y[1])
                             /2)
+        
  
         if self.details_to_console == 1: 
             print("datum_x = " + str(self.datum_x))
             print("datum_y = " + str(self.datum_y))
             
-#'''    def dev_initial_get_sample_boundary_as_gcode_list(self):
-#        sampleArray = [5,10,15,5] # providing a double fails the unit test, e.g. 5.5 
-#        return sampleArray
-#'''
 
     def check_point(self, in_x, in_y, datum):
         # use? math.angle_counterclockwise(a,b)

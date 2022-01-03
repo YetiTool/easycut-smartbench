@@ -10,7 +10,7 @@ NOTES:
     First coding done in a TDD manner. TDD = test driven development
     I.e. write the test first, then code to make the test pass
 
-    WORK IN PROGRESS!!!
+    WORK IN PROGRESS!
     
     TODO
         refactor naming to Python conventions
@@ -84,7 +84,15 @@ class BWalker(unittest.TestCase):
         self.b_setter.set_boundary_datum_point()
         
         neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
-        self.assertTrue(neither_are_zero > 0, "the datum doesn't exist? ")
+        print("{}".format(self.b_setter.datum_x))
+        
+        self.assertFalse(neither_are_zero == 0, "missing datum data? or hopefully only DATUM FOUND")
+        # ### FOCUS POINT <<>>
+        # if this fails, then the user-set datum is being found
+        # which, in many cases, should be avoided.
+        # but not all cases. hmmm
+        
+        
         if self.details_to_console == 1: 
             print("datums: " + str(self.b_setter.datum_x) + "," + str(self.b_setter.datum_y))
 
