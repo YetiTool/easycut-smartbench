@@ -3,6 +3,7 @@ Created on 13 Sep 2021
 
 @author: hsth
 @author hugh.harford@yetitool.com
+@author hugh.harford@poscoconsulting.com
 
 Purpose: undertake geometry and return array of gcode coordinates that represent a boundary
 
@@ -20,17 +21,21 @@ TODO:         ##########
 
 import os.path
 import math
-import numpy
-import job_envelope
-# import screen_test # from apps.shapeCutter_app import screen_manager_shapecutter
-# from kivy.app import App
+
+# this is almost manual dependency injection:
+import job_envelope_inc_circles as job_envelope 
 
 
-class BoundaryCalculator():
+class BCalculator():
     '''
-    Purpose: undertake geometry and return array of gcode coordinates that represent a boundary
+    Purpose: undertake geometry and return array of gcode 
+    coordinates that represent a boundary
+    
+    Considerable parts of this are superfluous given simplicity of 
+    correctly datumed rectangle of job envelope
     '''
-    details_to_console = 11
+    # for debugging levels / details
+    details_to_console = 11  
     
     envelope_of_work = object
 
@@ -86,7 +91,9 @@ class BoundaryCalculator():
         self.boundary_xy = 0
         
         self.sort_gcode_input("")
-        # instead of UnitTestsBoundaryWalk.test_boundary_datum_is_not_blank:
+        # instead of 
+        # UnitTestsBoundaryWalk.test_boundary_datum_is_not_blank
+        # use / see:
         #      self.b_setter.sort_gcode_input(self.gcode_file_path)
 
         # sort boundary by angle:
@@ -96,9 +103,14 @@ class BoundaryCalculator():
     
     def sort_gcode_input(self, input_file_path_to_gcode = ""):
         # test gcode_file_path...
-        self.gcode_file_path = "../../test/gcode_test_files/jobCache_copy/Circle.nc"
+        self.gcode_file_path = "../../test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"
+        # self.gcode_file_path = "../../test/gcode_test_files/jobCache_copy/Circle.nc"
+
+        # this worked fine: "../../test/gcode_test_files/jobCache_copy/Circle.nc"
         # THE BELOW DOESN'T WORK - MUST PICK A FILE WITH .NC EXTENSION
         #    ../../test/gcode_test_files/jobCache_copy/Write Fineliner.gcode"
+        # WORK FINE:
+        #    ../../test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode
         # set path to file, if provided
         if (input_file_path_to_gcode != ""): 
             self.gcode_file_path = input_file_path_to_gcode
@@ -160,8 +172,6 @@ class BoundaryCalculator():
 #        sampleArray = [5,10,15,5] # providing a double fails the unit test, e.g. 5.5 
 #        return sampleArray
 #'''
-    def newMethod(self):
-        pass
 
     def check_point(self, in_x, in_y, datum):
         # use? math.angle_counterclockwise(a,b)
@@ -262,7 +272,7 @@ class BoundaryCalculator():
                     self.distance_from_datum(temp_x, temp_y)
                 # add data to boundary (datatype: self.boundary_xy): 
                     self.add_coord_to_boundary(temp_x, temp_y)
-                except:
+                except ZeroDivisionError:
                     pass
                     # print "Boundary calculator: skipped '" + part + "'"
                     
@@ -369,8 +379,9 @@ class BoundaryCalculator():
                     temp_max_dist_at_in_segment = self.angle_sorted_boundary_xy[x][2]
         # artificially close the polygon of the boundary
         # @@@@ HACK HACK HACK! a fix to close the polygon
-        #######
-        self.boundary_calc_by_segment.append(self.boundary_calc_by_segment[0])
+        # @@@@ HACK HACK HACK! CLOSED OFF
+        # self.boundary_calc_by_segment.append(self.boundary_calc_by_segment[0])
+        
         ####### 
         # put the found range values into object.range_etc
         self.bound_range_x = [x_min, x_max]

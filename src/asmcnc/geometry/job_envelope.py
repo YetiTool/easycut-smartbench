@@ -8,7 +8,6 @@ Reintegrate back with the other UI widgets e.g. widget_virtual_bed?
 class BoundingBox(object):
 
     def __init__(self):
-        
         pass
     
 
@@ -30,8 +29,8 @@ class BoundingBox(object):
                     if part.startswith(('X')): x_values.append(float(part[1:]))
                     if part.startswith(('Y')): y_values.append(float(part[1:]))
                     if part.startswith(('Z')): z_values.append(float(part[1:]))
-                except:
-                    print "Envelope calculator: skipped '" + part + "'"
+                except TypeError:
+                    print("Envelope calculator: skipped '" + part + "'")
           
         self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
         self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
