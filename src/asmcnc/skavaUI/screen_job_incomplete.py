@@ -422,3 +422,20 @@ class JobIncompleteScreen(Screen):
             if 'Error' in self.event_type:
                 self.event_details_label.text = self.event_details_label.text + " " + self.l.get_str("Check your GCode file before re-running it.")
 
+    from kivy.clock import Clock
+
+    def change_event(self, i):
+        if self.event_type == 'cancelled':
+            self.event_type = 'unsuccessful'
+        elif self.event_type == 'unsuccessful':
+            self.event_type = ''
+        elif self.event_type == '':
+            self.event_type = 'cancelled'
+            
+        self.update_strings()
+
+    def run_test_suite(self):
+        Clock.schedule_interval(self.change_event, 5)
+
+
+
