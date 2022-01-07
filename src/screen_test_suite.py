@@ -28,6 +28,9 @@ from asmcnc.skavaUI import screen_error
 
 from mock import Mock, MagicMock
 
+import Queue as queue
+import threading
+
 
 class TestSuite(App):
     def build(self):
@@ -37,43 +40,35 @@ class TestSuite(App):
         self.sett = settings_manager.Settings(self.sm)
         self.jd = job_data.JobData(localization = self.l, settings_manager = self.sett)
 
+        go_screen = Screen(name='go')
+        home_screen = Screen(name='home')
+
+        self.sm.add_widget(home_screen)
+        self.sm.add_widget(go_screen)
+
         #required?
         self.m = None
         self.db = Mock()
 
-        go_screen = Screen(name='go')
-
-        #two test screens:
-        #file load
-        #alarm screen?
-
-        alarm_screen = screen_job_incomplete.JobIncompleteScreen(name='wifi', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd, database = self.db)
-        self.sm.add_widget(alarm_screen)
-        self.sm.add_widget(go_screen)
-        self.sm.current = 'wifi'
-
-        # alarm_screen.run_test_suite()
-
-        def change_job_incomplete_event_type():
-
-            # self.error_dict = screen_error.ERROR_CODES
-            self.event_number = 1
-
-            def next_event_number(dt):
-
-                self.sm.get_screen('wifi').prep_this_screen("Error", "error:" + str(self.event_number))
-                self.sm.get_screen('wifi').update_strings()
-
-                if self.event_number < 49:
-                    self.event_number += 1
-
-
-            Clock.schedule_interval(next_event_number, 1)
-
-        change_job_incomplete_event_type()
-
+        self.start_test_procedure()
 
         return self.sm
+
+    def start_test_procedure(self):
+        self.start_screen_job_incomplete_test()
+        self.start_file_loading_test()
+
+    def start_screen_job_incomplete_test(self):
+        alarm_screen = screen_job_incomplete.JobIncompleteScreen(name='wifi', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd, database = self.db)
+        self.sm.add_widget(alarm_screen)
+        self.sm.current = 'wifi'
+
+        alarm_screen.run_test_suite()
+
+    def start_file_loading_test(self):
+        file_loading_screen = screen_file_loading.LoadingScreen(name = 'loading', screen_manager = self.sm, machine =self.m, job = self.jd, localization = self.l)
+        self.sm.add_widget(file_loading_screen)
+        self.sm.current = 'loading'
 
 TestSuite().run()
 

@@ -239,6 +239,8 @@ class LoadingScreen(Screen):
 
         log('> LOADING:')
 
+        print(job_file_path)
+
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
 
