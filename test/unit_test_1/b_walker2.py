@@ -25,6 +25,8 @@ NOTES:
 import unittest
 from geometry import b_calculator
 
+# minor changes to test commit!
+
 ##########################################################
 
 #  PLAN THE TEST:
