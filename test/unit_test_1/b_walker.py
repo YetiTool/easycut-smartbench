@@ -23,7 +23,7 @@ NOTES:
 
 '''
 import unittest
-from geometry import b_calculator
+from asmcnc.geometry import b_calculator
 
 ##########################################################
 
