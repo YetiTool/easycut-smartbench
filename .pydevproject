@@ -12,6 +12,7 @@
         <path>/${PROJECT_DIR_NAME}/src</path>
         <path>/${PROJECT_DIR_NAME}/src/asmcnc</path>
         <path>/${PROJECT_DIR_NAME}/src/asmcnc/skavaUI</path>
+        <path>/${PROJECT_DIR_NAME}/src/asmcnc/geometry</path>
         <path>/${PROJECT_DIR_NAME}/src/asmcnc/apps/shapeCutter_app/screens</path>
         <path>/${PROJECT_DIR_NAME}</path>
         <path>/${PROJECT_DIR_NAME}/test</path>

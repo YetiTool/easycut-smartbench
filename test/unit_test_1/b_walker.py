@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 '''
 Created on 8 Sep 2021
 
@@ -23,7 +25,20 @@ NOTES:
 
 '''
 import unittest
-from asmcnc.geometry import b_calculator
+import sys
+
+sys.path.append('/home/hsth/git/easycut-smartbench/')
+# sys.path.append('/home/hsth/git/easycut-smartbench/src/asmcnc')
+
+print("sys.path:", sys.path)
+
+from geometry import b_calculator
+# b_calculator
+
+# # this worked... 
+# from src import screen_test
+
+
 
 ##########################################################
 
@@ -45,11 +60,12 @@ from asmcnc.geometry import b_calculator
 
 ##########################################################
 
+
 class BWalker(unittest.TestCase):
     # -1 to print method testNames, 1 to print other detail
-    details_to_console = 1 # zero for quiet, 1 for basics
+    details_to_console = 1  # zero for quiet, 1 for basics
 
-    gcodefile = [0,0]
+    gcodefile = [0, 0]
     gcode_file_path = ""
     b_setter = object
     # accepted accuracy of boundary v gcode_file actual:
@@ -64,22 +80,21 @@ class BWalker(unittest.TestCase):
         
         #    2    GIVEN a working SB & console with software loaded
         #    load screen_test
-        #screen test manager: # stm = b_setter.stm # stm.screen_shapeCutter_1
+        # screen test manager: # stm = b_setter.stm # stm.screen_shapeCutter_1
         
         #    3    GIVEN a b_calculator feature
-        ##         c.f. geometry.b_calculator
+        # #         c.f. geometry.b_calculator
         
         if self.details_to_console == 1: 
             print("UnitTestsBoundaryWalk().set_up() ____ gcodefile = " + 
                   str(type(self.b_setter.get_gcode_path())))
-
 
     def test_boundary_datum_is_not_blank(self):
         if self.details_to_console == 11: 
             print(">> ____ test_boundary_datum_is_not_blank ____ ")
         # set the boundary_datum (mid-mid of job envelope)
         
-        ## moved these two into boundary_calculator.
+        # # moved these two into boundary_calculator.
         self.b_setter.get_job_envelope_from_gcode()
         self.b_setter.set_boundary_datum_point()
         
@@ -92,21 +107,19 @@ class BWalker(unittest.TestCase):
         # which, in many cases, should be avoided.
         # but not all cases. hmmm
         
-        
         if self.details_to_console == 1: 
             print("datums: " + str(self.b_setter.datum_x) + "," + str(self.b_setter.datum_y))
 
             
 if __name__ == "__main__":
     unittest.main()
-    
 
     def unit_test_b_walk_suite():
         suite = unittest.TestSuite()
         suite.addTest(BWalker("test_boundary_datum_is_not_blank"))
         return suite
         # or could use: suite = unittest.makeSuite(WidgetTestCase,'test')
-###
+# ##
 # CAN define suite as follows, but looks complex
 #
 # class BoundaryWalkTestSuite(unittest.TestSuite):
