@@ -5,6 +5,9 @@ Created on 16 Nov 2017
 @author: Ed
 YetiTool's UI for SmartBench
 www.yetitool.com
+
+py2 to py3 spike
+
 '''
 
 #config
