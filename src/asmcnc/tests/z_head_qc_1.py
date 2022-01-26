@@ -2,25 +2,25 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import widget_status_bar
+from functools import partial
 
 Builder.load_string("""
 <ZHeadQC1>:
-    canvas:
-        Color:
-            rgba: hex('#E5E5E5FF')
-        Rectangle:
-            size: self.size
-            pos: self.pos
+    status_container:status_container
 
     BoxLayout:
         orientation: 'vertical'
+        size_hint_y: 0.92
 
         GridLayout:
             size: self.parent.size
             pos: self.parent.pos
             cols: 3
             rows: 5
-            spacing: dp(2)
+            spacing: dp(1)
 
             Label:
                 text: 'FW Version: ...'
@@ -41,7 +41,8 @@ Builder.load_string("""
                         text: 'Down'
 
             Button:
-                text: 'Stop'
+                text: 'STOP'
+                background_color: [1,0,0,1]
 
             Button:
                 text: '2. Bake GRBL Settings'
@@ -58,8 +59,19 @@ Builder.load_string("""
                 Button:
                     text: '10. Vac'
 
-            Label:
-                text: '14. X Home'
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '14. X Home'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             GridLayout:
                 cols: 2
@@ -88,23 +100,61 @@ Builder.load_string("""
                     Button:
                         text: 'B'
 
-            Label:
-                text: '15. X Max'
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '15. X Max'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             GridLayout:
                 cols: 2
 
                 Button:
                     text: '5. Test motor chips'
-                #need image of cross
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+            GridLayout:
+                cols: 2
+
                 Label:
-                    text: '' 
+                    text: '12. Temp/power'
 
-            Label:
-                text: '12. Temp/power'
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+            
+            GridLayout:
+                cols: 2
 
-            Label:
-                text: '16. Probe'
+                Label:
+                    text: '16. Probe'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             GridLayout:
                 cols: 2
@@ -126,9 +176,35 @@ Builder.load_string("""
 
             Button:
                 text: '17. >>> Next screen'
+                on_press: root.enter_next_screen()
+    
+    BoxLayout:
+        size_hint_y: 0.08
+        id: status_container 
+        pos: self.pos
 
 """)
 
 class ZHeadQC1(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQC1, self).__init__(**kwargs)
+
+        self.sm = kwargs['sm']
+        self.m = kwargs['m']
+
+        self.MINUTE = 60
+
+        self.start_calibration_timer(0.1)
+        # self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        # self.status_container.add_widget(self.status_bar_widget)
+
+    def enter_next_screen(self):
+        self.sm.current = 'qc2'
+
+    def start_calibration_timer(self, minutes):
+        Clock.schedule_once(self.sm.get_screen('qc2').enable_button, minutes*60)
+
+        self.sm.get_screen('qc2').update_time(minutes*60)
+
+    def set_test_status(self, checkbox_id, pass_fail):
+        pass

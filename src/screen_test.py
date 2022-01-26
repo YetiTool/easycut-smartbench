@@ -22,6 +22,7 @@ from kivy.core.window import Window
 
 from asmcnc.tests.z_head_qc_home import ZHeadQCHome
 from asmcnc.tests.z_head_qc_1 import ZHeadQC1
+from asmcnc.tests.z_head_qc_2 import ZHeadQC2
 
 class ScreenTest(App):
 
@@ -36,8 +37,12 @@ class ScreenTest(App):
 		z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
 		sm.add_widget(z_head_qc_home)
 
-		z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm)
+		z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
+		sm.add_widget(z_head_qc_2)
+
+		z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
 		sm.add_widget(z_head_qc_1)
+
 
 		sm.current = 'qchome'
 
