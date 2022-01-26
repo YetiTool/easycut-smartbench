@@ -7,10 +7,15 @@ Created on 25 Jan 2022
 # os.environ["KIVY_NO_CONSOLELOG"] = "1"
 # import kivy
 
-import unittest
-from mock import Mock, MagicMock
-from serial_mock.mock import MockSerial, DummySerial
-from serial_mock.decorators import serial_query
+try: 
+    import unittest
+    from mock import Mock, MagicMock
+    from serial_mock.mock import MockSerial, DummySerial
+    from serial_mock.decorators import serial_query
+
+except: 
+    print("Can't import mocking packages, are you on a dev machine?")
+
 from time import sleep
 
 import sys
@@ -87,13 +92,13 @@ class TempsVoltagesTest(unittest.TestCase):
     case_136_140 = 2
     case_228_NOW = 3
 
-    t_pcb_temp = 33
-    t_motor_driver_temp = 35
-    t_transistor_heatsink_temp = 40
+    t_pcb_temp = 20
+    t_motor_driver_temp = 38
+    t_transistor_heatsink_temp = 32
     t_microcontroller_mV = 5068
-    t_LED_mV = 5078
-    t_PSU_mV = 23993
-    t_spindle_speed_monitor_mV = 1000
+    t_LED_mV = 3000
+    t_PSU_mV = 20242
+    t_spindle_speed_monitor_mV = 1050
 
     def give_me_a_PCB(outerSelf):
 
