@@ -659,6 +659,16 @@ class SerialConnection(object):
     fw_version = ''
     hw_version = ''
 
+    # TEMPERATURES
+    pcb_temp = None
+    motor_driver_temp = None
+    transistor_heatsink_temp = None
+
+    # VOLTAGES
+    microcontroller_mV = None
+    LED_mV = None
+    PSU_mV = None
+    spindle_speed_monitor_mV = None
 
     def process_grbl_push(self, message):
 
