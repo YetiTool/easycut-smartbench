@@ -24,40 +24,83 @@ Builder.load_string("""
 
             Label:
                 text: 'FW Version: ...'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             GridLayout:
                 cols: 3
 
                 Button: 
                     text: '5. Spindle'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Button:
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
                     text: '6. Laser'
 
                 Button:
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
                     text: '7. Vac'
 
             Button:
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
                 text: 'STOP'
                 background_color: [1,0,0,1]
 
             Button:
-                text: '2. Bake GRBL Settings'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
+                text: '1. Bake GRBL Settings'
 
             GridLayout:
                 cols: 2
 
                 Label:
                     text: '8. Dust shoe'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 GridLayout:
                     cols: 3
 
                     Button: 
                         text: 'R'
+                        text_size: self.size
+                        markup: 'True'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
                     Button:
                         text: 'G'
+                        text_size: self.size
+                        markup: 'True'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
                     Button:
                         text: 'B'
@@ -67,6 +110,11 @@ Builder.load_string("""
 
                 Label:
                     text: '12. X Max'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -81,6 +129,11 @@ Builder.load_string("""
 
                 Button:
                     text: '2. Test motor chips'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -95,6 +148,11 @@ Builder.load_string("""
 
                 Label:
                     text: '9. Temp/power'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -109,6 +167,11 @@ Builder.load_string("""
 
                 Label:
                     text: '13. Probe'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -123,24 +186,49 @@ Builder.load_string("""
 
                 Label:
                     text: '3. X Motors'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 GridLayout:
                     cols: 2
 
                     Button:
                         text: 'Up'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
                     
                     Button: 
                         text: 'Down'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
             Button:
                 text: '10. Disable alarms'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             GridLayout:
                 cols: 2
 
                 Label:
                     text: '14. Z Home'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -155,21 +243,41 @@ Builder.load_string("""
 
                 Label:
                     text: '4. Z Motors'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 GridLayout:
                     cols: 2
 
                     Button:
                         text: 'Up'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
                     Button: 
                         text: 'Down'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
             GridLayout:
                 cols: 2
 
                 Label:
                     text: '11. X Home'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -182,6 +290,11 @@ Builder.load_string("""
             Button:
                 text: '15. >>> Next screen'
                 on_press: root.enter_next_screen()
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
         ScrollableLabelStatus:
             size_hint_y: 0.2        

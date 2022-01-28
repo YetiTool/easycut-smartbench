@@ -12,6 +12,9 @@ Builder.load_string("""
     calibrate_button:calibrate_button
     console_status_text:console_status_text
     status_container:status_container
+    cycle_z_head_button:cycle_z_head_button
+    home_button:home_button
+    reset_button:reset_button
 
     BoxLayout:
         orientation: 'vertical'
@@ -25,35 +28,73 @@ Builder.load_string("""
 
             Button:
                 text: '16. Enable alarms'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Label: 
                 text: '21. Plug in USB "spindle"'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Button:
                 text: 'STOP'
                 background_color: [1,0,0,1]
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Button:
                 text: '17. Set spindle to digital'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Button:
                 text: '22. Set spindle to analogue'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Button:
                 id: calibrate_button
                 disabled: 'True'
                 text: '26. Wait for '
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Label:
                 text: '18. Plug in digital spindle'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             GridLayout:
                 cols: 2
 
                 Button:
                     text: '23. Test USB "spindle"'
-                    text_size: self.width, None
-                    halign: 'center'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -65,14 +106,22 @@ Builder.load_string("""
 
             Label:
                 text: '27. PUT BELT ON Z MOTOR'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             GridLayout:
                 cols: 2
 
                 Button:
                     text: '19. Test digital spindle'
-                    text_size: self.width, None
-                    halign: 'center'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
                 Image:
                     id: x_home_check
@@ -84,24 +133,60 @@ Builder.load_string("""
 
             Label:
                 text: '24. Remove USB "spindle"'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             GridLayout:
                 cols: 2
 
-                Button: 
-                    text: '28. Home'
+                Button:
+                    id: home_button
+                    text: '28. HOME'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    disabled: 'True'
 
                 Button: 
+                    id: reset_button
                     text: '29. RESET'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    disabled: 'True'
 
             Label: 
                 text: '20. Remove digital spindle'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Label: 
                 text: '25. TAKE BELT OFF Z MOTOR'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
 
             Button:
+                id: cycle_z_head_button
                 text: '30. Cycle Z Head'
+                text_size: self.size
+                markup: 'True'
+                halign: 'left'
+                valign: 'middle'
+                padding: [dp(10),0]
+                disabled: 'True'
 
         ScrollableLabelStatus:
             size_hint_y: 0.2        
@@ -130,6 +215,9 @@ class ZHeadQC2(Screen):
 
     def enable_button(self, dt):
         self.calibrate_button.disabled = False
+        self.cycle_z_head_button.disabled = False
+        self.home_button.disabled = False
+        self.reset_button.disabled = False
 
     def update_time(self, time_left):
         seconds = time_left
@@ -141,7 +229,7 @@ class ZHeadQC2(Screen):
             
             seconds -= 1
 
-            self.calibrate_button.text = '26. Wait ' + str(datetime.timedelta(seconds=seconds)) + ' to calibrate'
+            self.calibrate_button.text = '26. WAIT ' + str(datetime.timedelta(seconds=seconds)) + ' TO CALIBRATE'
 
             Clock.schedule_once(lambda dt: count_down(seconds), 1)
 

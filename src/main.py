@@ -80,10 +80,6 @@ from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
 from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 
-from asmcnc.tests.z_head_qc_home import ZHeadQCHome
-from asmcnc.tests.z_head_qc_1 import ZHeadQC1
-from asmcnc.tests.z_head_qc_2 import ZHeadQC2
-
 # developer testing
 Cmport = 'COM3'
 
@@ -266,32 +262,7 @@ class SkavaUI(App):
 
 		# Clock.schedule_once(start_loop, 10)
 
-		self.get_diagnostics_mode(sm, m)
-
 		return sm
-
-	def get_diagnostics_mode(self, sm, m):
-		try:
-			with open('../diagnostics_mode.txt', 'r') as f:
-				line = f.readline()
-				if line == 'zhead':
-					self.open_z_head_diagnostics(sm, m)
-				elif line == 'lowerbeam':
-					pass
-		except Exception as e:
-			log(e)
-
-	def open_z_head_diagnostics(self, sm, m):
-		z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
-		sm.add_widget(z_head_qc_home)
-
-		z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
-		sm.add_widget(z_head_qc_2)
-
-		z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
-		sm.add_widget(z_head_qc_1)
-
-		sm.current = 'qchome'
 
 if __name__ == '__main__':
 
