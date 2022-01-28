@@ -10,6 +10,7 @@ from functools import partial
 Builder.load_string("""
 <ZHeadQC1>:
     status_container:status_container
+    console_status_text:console_status_text
 
     BoxLayout:
         orientation: 'vertical'
@@ -20,25 +21,21 @@ Builder.load_string("""
             pos: self.parent.pos
             cols: 3
             rows: 5
-            spacing: dp(1)
 
             Label:
                 text: 'FW Version: ...'
 
             GridLayout:
-                cols: 2
+                cols: 3
 
-                Label:
-                    text: '7. Z Motors'
+                Button: 
+                    text: '5. Spindle'
 
-                GridLayout:
-                    cols: 2
+                Button:
+                    text: '6. Laser'
 
-                    Button:
-                        text: 'Up'
-                    
-                    Button: 
-                        text: 'Down'
+                Button:
+                    text: '7. Vac'
 
             Button:
                 text: 'STOP'
@@ -48,45 +45,10 @@ Builder.load_string("""
                 text: '2. Bake GRBL Settings'
 
             GridLayout:
-                cols: 3
-
-                Button: 
-                    text: '8. Spindle'
-
-                Button:
-                    text: '9. Laser'
-
-                Button:
-                    text: '10. Vac'
-
-            GridLayout:
                 cols: 2
 
                 Label:
-                    text: '14. X Home'
-
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button: 
-                    text: '3. Home'
-
-                Button: 
-                    text: '4. RESET'
-
-            GridLayout:
-                cols: 2
-
-                Label:
-                    text: '11. Dust shoe'
+                    text: '8. Dust shoe'
 
                 GridLayout:
                     cols: 3
@@ -104,7 +66,7 @@ Builder.load_string("""
                 cols: 2
 
                 Label:
-                    text: '15. X Max'
+                    text: '12. X Max'
 
                 Image:
                     id: x_home_check
@@ -118,7 +80,7 @@ Builder.load_string("""
                 cols: 2
 
                 Button:
-                    text: '5. Test motor chips'
+                    text: '2. Test motor chips'
 
                 Image:
                     id: x_home_check
@@ -132,21 +94,7 @@ Builder.load_string("""
                 cols: 2
 
                 Label:
-                    text: '12. Temp/power'
-
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-            
-            GridLayout:
-                cols: 2
-
-                Label:
-                    text: '16. Probe'
+                    text: '9. Temp/power'
 
                 Image:
                     id: x_home_check
@@ -160,7 +108,53 @@ Builder.load_string("""
                 cols: 2
 
                 Label:
-                    text: '6. X Motors'
+                    text: '13. Probe'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '3. X Motors'
+
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        text: 'Up'
+                    
+                    Button: 
+                        text: 'Down'
+
+            Button:
+                text: '10. Disable alarms'
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '14. Z Home'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
+
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '4. Z Motors'
 
                 GridLayout:
                     cols: 2
@@ -171,12 +165,28 @@ Builder.load_string("""
                     Button: 
                         text: 'Down'
 
-            Button:
-                text: '13. Disable alarms'
+            GridLayout:
+                cols: 2
+
+                Label:
+                    text: '11. X Home'
+
+                Image:
+                    id: x_home_check
+                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                    center_x: self.parent.center_x
+                    y: self.parent.y
+                    size: self.parent.width, self.parent.height
+                    allow_stretch: True
 
             Button:
-                text: '17. >>> Next screen'
+                text: '15. >>> Next screen'
                 on_press: root.enter_next_screen()
+
+        ScrollableLabelStatus:
+            size_hint_y: 0.2        
+            id: console_status_text
+            text: "status update" 
     
     BoxLayout:
         size_hint_y: 0.08
@@ -184,7 +194,6 @@ Builder.load_string("""
         pos: self.pos
 
 """)
-
 class ZHeadQC1(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQC1, self).__init__(**kwargs)
@@ -192,11 +201,10 @@ class ZHeadQC1(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        self.MINUTE = 60
-
-        self.start_calibration_timer(0.1)
-        # self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        # self.status_container.add_widget(self.status_bar_widget)
+        self.start_calibration_timer(30)
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4) 
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_container.add_widget(self.status_bar_widget)
 
     def enter_next_screen(self):
         self.sm.current = 'qc2'
@@ -206,5 +214,8 @@ class ZHeadQC1(Screen):
 
         self.sm.get_screen('qc2').update_time(minutes*60)
 
-    def set_test_status(self, checkbox_id, pass_fail):
-        pass
+    def update_status_text(self, dt):
+        try:
+            self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText
+        except: 
+            pass
