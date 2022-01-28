@@ -16,7 +16,7 @@ then
         echo "running z head diagnostics"
 
         cd /home/pi/easycut-smartbench/src/
-        exec python 
+        exec python diagnostics.py
 else
         cd /home/pi/easycut-smartbench/src/
         # execute python
