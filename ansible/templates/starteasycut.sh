@@ -11,7 +11,7 @@ then
         mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
 fi
 
-if [ -f ZHEADTESTJIG.txt ]
+if [ -f /home/pi/ZHEADTESTJIG.txt ]
 then
         echo "running z head diagnostics"
 
