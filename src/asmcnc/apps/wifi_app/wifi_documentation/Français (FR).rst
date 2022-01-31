@@ -9,11 +9,11 @@ Si vous rencontrez des problèmes pour vous connecter la console à votre résea
 Le nom du réseau et le mot de passe
 -----------------------------------
 
-* **Mot de passe doit être comprise entre 8 et 63 caractères.**
+* **Le  mot de passe doit être compris entre 8 et 63 caractères.**
 
-* Les deux seront sensibles à la casse, assurez-vous qu'ils sont exacts.
+* Les deux sont sensibles à la casse, assurez-vous qu'ils sont exacts.
 
-* Évitez le besoin de caractères spéciaux.
+* Évitez les caractères spéciaux.
 
 * Assurez-vous qu'il n'y a pas d'espaces supplémentaires.
 
@@ -21,11 +21,11 @@ Le nom du réseau et le mot de passe
 Code postal
 -----------
 
-Assurez-vous que les matchs de code de pays. Par défaut est GB qui est assez universel, mais peut ne pas convenir à certaines régions. Voir la section Codes pays ci-dessous pour le bon code pour votre région.
+Assurez-vous que la correspondance du code pays. Par défaut, c’est GB qui est assez universel, mais qui peut ne pas convenir à certaines régions. Voir la section Codes pays ci-dessous pour celui qui correspond à votre région.
 
 
-En appuyant sur le bouton Connecter
------------------------------------
+Avant d’appuyer sur « Connecter »
+---------------------------------
 
 * Vérifiez tous les détails sont exacts.
 
@@ -45,30 +45,30 @@ Connexion via un routeur wifi
 
 * Assurez-vous que la console est à portée - vous pouvez utiliser une application du scanner wifi pour vérifier le signal.
 
-* Certains routeurs offrent un choix entre 2,4 GHz et 5 GHz canaux. 5 canaux GHz peuvent être moins fiables, donc nous vous conseillons de connecter sur le canal 2,4 GHz lorsque cela est possible.
+* Certains routeurs offrent un choix entre des canaux 2,4 GHz et 5 GHz. Le canal 5 GHz peut être moins fiables, donc nous vous conseillons de vous connecter sur le canal 2,4 GHz lorsque cela est possible.
 
 
 Connexion via un point d'accès mobile
 -------------------------------------
 
-Nous avons vu des problèmes en essayant de se connecter sur les appareils Apple. Nous vous conseillons connecter sur Android lorsque cela est possible.
+Nous avons noté des problèmes de connexions sur les appareils Apple. Nous vous conseillons de vous connecter sur Android lorsque cela est possible.
 
 
 Appareils Apple
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
-Pour vous connecter à un appareil Apple, essayez les étapes suivantes:
+Pour vous connecter à un appareil Apple, essayez les étapes suivantes :
 
 * Mise hors tension SmartBench
 
 * Redémarrer iPhone
 
-* Au redémarrage de l'iPhone, le câble de connexion USB de l'iPhone dans le port USB de la console SmartBench
+* Au redémarrage de l'iPhone, connectez USB le câble de l'iPhone dans le port USB de la console SmartBench
 
 * Allumez votre iPhone hotspot (Paramètres > hotspot personnel)
 
-* Puissance sur SmartBench
+* Allumez votre SmartBench
 
-* Entrez vos informations à l'écran des paramètres du réseau
+* Entrez vos informations de paramètres réseau à l'écran 
 
 .. _bottom:
