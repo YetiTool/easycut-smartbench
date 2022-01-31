@@ -228,9 +228,11 @@ class SkavaUI(App):
 		log('Screen manager activated: ' + str(sm.current))
 
 
+		test_languages = ["English (GB)", "Deutsche (DE)",  "Français (FR)", "Polskie (PL)", "Dansk (DK)"]
+
 		def test_cycle(dt):
-		    if self.test_no < len(l.supported_languages):
-		        lang = l.supported_languages[self.test_no]
+		    if self.test_no < len(test_languages):
+		        lang = test_languages[self.test_no]
 		        l.load_in_new_language(lang)
 		        print("New lang: " + str(lang))
 		        try:
