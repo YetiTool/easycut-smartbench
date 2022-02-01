@@ -25,30 +25,23 @@ Circles:
 from distutils.errors import UnknownFileError
 
 class BoundingBox():
-
     circle_lines = [""]
-    range_x = [0,0] 
-    range_y = [0,0] 
-    range_z = [0,0]
-
+    range_x = [99,99] 
+    range_y = [99,99] 
+    range_z = [99,99]
 
     def __init__(self):
         pass
 
     def check_circle_mode(self, input_line):
         isacircle = 0
-        
-        line_start = ['G2X', 'G3X', 
+        line_start = ['G2X', 'G3X',  # many assumptions built in here...
                       'G2 X', 'G3 X',
                       'G2Y', 'G3Y',
                       'G2 Y', 'G3 Y',
                       'G2Z', 'G3Z',
                       'G2 Z', 'G3 Z']
-        
-            # many assumptions built in here...
-        
-        if input_line.startswith(tuple(line_start)):
-            # then basic X-axis described circle
+        if input_line.startswith(tuple(line_start)): # then basic X-axis arc
             isacircle = 1
             print(input_line)
         return isacircle
@@ -57,67 +50,62 @@ class BoundingBox():
         self.circle_lines.append(circle_line)
  
     def set_job_envelope(self, gcode_file_path):
-        
         x_values = []
         y_values = []
         z_values = []
-        
+        g_values = []
+
         includes_arcs = 0
         
-        
-        file_in_use = open(gcode_file_path,'r')
-        for line in file_in_use:
+        gcode_file = open(gcode_file_path,'r')
+        for line in gcode_file:
             blocks = line.strip().split(" ")
-                     
             for part in blocks:
                 try:
-                    if "X0.000Y0.000" in part:
-                        # skip any line at this point (bit risky)
-                        # as assuming datum is actual datum
-                        # and not part of cut workflow
-                        # FOR DEBUG ### print("DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM ")
+                    if "X0.000Y0.000" in part: #skip if 'datum' RISKY
+                        # assuming datum is actual datum and not part of cut workflow
+                        # FOR DEBUG ### 
+                        print("DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM ")
                         continue
                     else:
-                        if part.startswith(('X')): x_values.append(float(part[1:]))
-                        if part.startswith(('Y')): y_values.append(float(part[1:]))
-                        if part.startswith(('Z')): z_values.append(float(part[1:]))
-                    
+                        if part.startswith(('X')): 
+                            x_values.append(float(part[1:]))
+                            print('APPENDING to x')
+                        if part.startswith(('Y')): 
+                            y_values.append(float(part[1:]))
+                            print('APPENDING to y')
+                        if part.startswith(('Z')): 
+                            z_values.append(float(part[1:]))
+                            print('APPENDING to z')
+                        if part.startswith(('G')):
+                            g_values.append(float(part[1:]))
+                            print('APPENDING to g')
                         ### IDENTIFY ARCS OR CIRCLES with G2 or G3
                         if part.startswith('G2') or part.startswith('G3'): 
-                            
                             includes_arcs = self.check_circle_mode(line)
                             print("includes_arcs: {}".format(includes_arcs))
-                        
-                        else:
-                            includes_arcs = 0
-                            
-
-
-                except TypeError:
-                    print( "TypeError TypeError HERE HERE HERE HERE HERE HERE HERE ")
-                except ValueError:
-                    print( "Envelope calculator: skipped '" + part + "'")
-
+                except TypeError as e:
+                    print(
+                        'TypeError: {} TypeError HERE HERE HERE'.format(e))
+                except ValueError as e:
+                    print( ' ValueError: {} Envelope calculator: skipped {}'.format(e, part))
+        # HERE IS THE (or at least one) BROKEN BIT, BROKEN BIT, BROKEN BIT
+            # there should be no instances of "X0.000Y0.000" included
         try:  
-            
-            # the range CANNOT be set by the simple MIN()
-            # as the 0,0,0 datum will therefore always be one corner...
-            if "X0.000Y0.000" in part:
-                # don't do anything here, 
-                # just don't add to range_x and range_y
-                print("DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM DATUM ")
-                # pass # knowingly, trying to do nothing here
-            else:
-            
-                self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
-                self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
-                self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
-
-        except ValueError:
-            print("Error found, likely empty: {}".format(ValueError))
+            self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
+        except ValueError as e:
+            print('xxx HERE ERROR, ERROR!! ValueError: {}'.format(e))
+        try:
+            self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
+        except ValueError as e:
+            print('yyy HERE ERROR, ERROR!! ValueError: {}'.format(e))
+        try:
+            self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
+        except ValueError as e:
+            print('zzz HERE ERROR, ERROR!! ValueError: {}'.format(e))
 
         try:
-            file_in_use.close()
+            gcode_file.close()
         except UnknownFileError:
             print(">>>>  Error: " + UnknownFileError)
         
