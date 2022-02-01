@@ -670,6 +670,13 @@ class SerialConnection(object):
     PSU_mV = None
     spindle_speed_monitor_mV = None
 
+    # STALL GUARD
+    z_motor_axis = None
+    x_motor_axis = None
+    y_axis = None
+    y1_motor = None
+    y2_motor = None
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -897,6 +904,28 @@ class SerialConnection(object):
                     self.LED_mV = float(voltages[1])
                     self.PSU_mV = float(voltages[2])
                     self.spindle_speed_monitor_mV = float(voltages[3])
+
+
+                # SG VALUES
+                elif part.startswith('SG:'):
+                    sg_values = part[3:].split(',')
+
+                    try:
+                        int(sg_values[0])
+                        int(sg_values[1])
+                        int(sg_values[2])
+                        int(sg_values[3])
+                        int(sg_values[4])
+
+                    except:
+                        log("ERROR status parse: SG values invalid: " + message)
+                        return
+
+                    self.z_motor_axis = int(sg_values[0])
+                    self.x_motor_axis = int(sg_values[1])
+                    self.y_axis = int(sg_values[2])
+                    self.y1_motor = int(sg_values[3])
+                    self.y2_motor = int(sg_values[4])
 
                 # end of for loop
 
