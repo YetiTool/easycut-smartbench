@@ -34,14 +34,14 @@ from asmcnc.comms.localization import Localization
 from kivy.clock import Clock
 
 from asmcnc.skavaUI.screen_home import HomeScreen
-from asmcnc.tests.z_head_qc_home import ZHeadQCHome
-from asmcnc.tests.z_head_qc_1 import ZHeadQC1
-from asmcnc.tests.z_head_qc_2 import ZHeadQC2
-from asmcnc.tests.z_head_qc_3 import ZHeadQC3
-from asmcnc.tests.z_head_qc_4 import ZHeadQC4
-from asmcnc.tests.z_head_qc_5 import ZHeadQC5
-from asmcnc.tests.z_head_qc_6 import ZHeadQC6
-from asmcnc.tests.z_head_qc_7 import ZHeadQC7
+from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
+from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
+from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
+from asmcnc.production.z_head_qc_jig.z_head_qc_3 import ZHeadQC3
+from asmcnc.production.z_head_qc_jig.z_head_qc_4 import ZHeadQC4
+from asmcnc.production.z_head_qc_jig.z_head_qc_5 import ZHeadQC5
+from asmcnc.production.z_head_qc_jig.z_head_qc_6 import ZHeadQC6
+from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
 
 from datetime import datetime
 
