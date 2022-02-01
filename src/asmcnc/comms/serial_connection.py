@@ -659,6 +659,16 @@ class SerialConnection(object):
     fw_version = ''
     hw_version = ''
 
+    # TEMPERATURES
+    pcb_temp = None
+    motor_driver_temp = None
+    transistor_heatsink_temp = None
+
+    # VOLTAGES
+    microcontroller_mV = None
+    LED_mV = None
+    PSU_mV = None
+    spindle_speed_monitor_mV = None
 
     def process_grbl_push(self, message):
 
@@ -845,8 +855,50 @@ class SerialConnection(object):
                     self.feed_rate = feed_speed[0]
                     self.spindle_speed = feed_speed[1]
 
-                else:
-                    continue
+                # TEMPERATURES
+                elif part.startswith('TC:'):
+                    temps = part[3:].split(',')
+
+                    try: 
+                        float(temps[0])
+                        float(temps[1])
+                    except:
+                        log("ERROR status parse: Temperature invalid: " + message)
+                        return
+
+                    self.pcb_temp = float(temps[0])
+                    self.motor_driver_temp = float(temps[1])
+
+                    try:
+                        float(temps[2])
+                        self.transistor_heatsink_temp = float(temps[2])
+
+                    except IndexError:
+                        pass
+
+                    except:
+                        log("ERROR status parse: Temperature invalid: " + message)
+                        return
+
+                # VOLTAGES
+                elif part.startswith('V:'):
+                    voltages = part[2:].split(',')
+                    try: 
+                        float(voltages[0])
+                        float(voltages[1])
+                        float(voltages[2])
+                        float(voltages[3])
+
+                    except:
+                        log("ERROR status parse: Voltage invalid: " + message)
+                        return
+
+                    self.microcontroller_mV = float(voltages[0])
+                    self.LED_mV = float(voltages[1])
+                    self.PSU_mV = float(voltages[2])
+                    self.spindle_speed_monitor_mV = float(voltages[3])
+
+                # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
