@@ -3,6 +3,23 @@ Created on 28 Jan 2022
 @author: Archie
 YetiTool's UI for SmartBench
 www.yetitool.com
+
+
+This app needs following platform changes to run: 
+
+sudo systemctl disable ansible.service
+
+touch /home/pi/ZHEADTESTJIG.txt
+
+sudo nano /boot/config.txt
+
+# Copy and paste to end of file: 
+
+        dtoverlay=pi3-disable-bt
+
+# Exit and save file
+
+sudo reboot
 '''
 
 from kivy.app import App
@@ -29,6 +46,7 @@ from asmcnc.tests.z_head_qc_7 import ZHeadQC7
 from datetime import datetime
 
 Cmport = 'COM3'
+
 
 def log(message):
     timestamp = datetime.now()
