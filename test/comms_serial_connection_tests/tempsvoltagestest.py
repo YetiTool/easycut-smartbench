@@ -3,10 +3,6 @@ Created on 25 Jan 2022
 @author: Letty
 '''
 
-# import os
-# os.environ["KIVY_NO_CONSOLELOG"] = "1"
-# import kivy
-
 try: 
     import unittest
     from mock import Mock, MagicMock
