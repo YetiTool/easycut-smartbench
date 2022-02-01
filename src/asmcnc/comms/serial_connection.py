@@ -876,7 +876,7 @@ class SerialConnection(object):
                     except IndexError:
                         pass
 
-                    except Exception as E:
+                    except:
                         log("ERROR status parse: Temperature invalid: " + message)
                         return
 
@@ -898,8 +898,7 @@ class SerialConnection(object):
                     self.PSU_mV = float(voltages[2])
                     self.spindle_speed_monitor_mV = float(voltages[3])
 
-                else:
-                    continue
+                # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
                                            self.serial_blocks_available, self.serial_chars_available)
