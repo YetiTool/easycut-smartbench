@@ -1,0 +1,17 @@
+# unit_test_check_text_is_visible_in_box
+
+# this unit test is 'due' on a list of potential tests
+# there is no priority system for this unit test yet.
+
+
+# this is due to be a unit test for whenever text is put into a user-visible box
+# GIVEN
+#	1	the text box on the current form
+#	2
+
+# WHEN
+#		the text required to go into that box 
+
+# THEN
+#		the text will fit into the box 
+#			(or is given a scalable box to ensure it can be made visible?)
