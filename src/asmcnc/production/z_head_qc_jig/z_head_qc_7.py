@@ -32,11 +32,12 @@ Builder.load_string("""
             Button:
                 text_size: self.size
                 markup: 'True'
-                halign: 'left'
+                halign: 'center'
                 valign: 'middle'
                 padding: [dp(10),0]
                 text: 'STOP'
                 background_color: [1,0,0,1]
+                background_normal: ''
 
         Button:
             text: 'CYCLE Z HEAD'

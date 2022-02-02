@@ -39,13 +39,14 @@ Builder.load_string("""
                     padding: [dp(10),0]
 
                 Button:
-                    text: 'STOP'
-                    background_color: [1,0,0,1]
                     text_size: self.size
                     markup: 'True'
-                    halign: 'left'
+                    halign: 'center'
                     valign: 'middle'
                     padding: [dp(10),0]
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    background_normal: ''
 
                 GridLayout:
                     cols: 2
