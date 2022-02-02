@@ -56,6 +56,9 @@ class ZHeadQC6(Screen):
     def enable_button(self, dt):
         self.ok_button.disabled = False
 
+    def on_leave(self):
+        self.ok_button.disabled = True
+
     def enter_next_screen(self):
         self.sm.current = 'qc7'
 

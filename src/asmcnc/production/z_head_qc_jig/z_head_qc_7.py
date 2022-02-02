@@ -68,7 +68,7 @@ class ZHeadQC7(Screen):
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
-            os.system('sudo shutdown -h')
+            os.system('sudo shutdown -h now')
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
