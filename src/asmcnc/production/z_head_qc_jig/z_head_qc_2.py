@@ -11,190 +11,192 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        size_hint_y: 0.92
 
-        GridLayout:
-            size: self.parent.size
-            pos: self.parent.pos
-            cols: 3
-            rows: 5
-
-            Button:
-                text: '<<< Back'
-                on_press: root.enter_prev_screen()
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
-
-            Label:
-                text: '20. Plug in digital spindle'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
-
-            Button:
-                text: 'STOP'
-                background_color: [1,0,0,1]
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.92
 
             GridLayout:
-                cols: 2
-
-                Label:
-                    text: '16. Probe'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
+                size_hint_y: 0.85
+                cols: 3
+                rows: 5
 
                 Button:
-                    text: '21. Test digital spindle'
+                    text: '<<< Back'
+                    on_press: root.enter_prev_screen()
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
                     padding: [dp(10),0]
-
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
-
-                Button:
-                    text: '25. Test USB "spindle"'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
-
-            GridLayout:
-                cols: 2
 
                 Label:
-                    text: '17. Z Home'
+                    text: '20. Plug in digital spindle'
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
                     padding: [dp(10),0]
 
-                Image:
-                    id: x_home_check
-                    source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                Button:
+                    text: 'STOP'
+                    background_color: [1,0,0,1]
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
 
-            Label: 
-                text: '22. Remove digital spindle'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                GridLayout:
+                    cols: 2
 
-            Label:
-                text: '26. Remove USB "spindle"'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                    Label:
+                        text: '16. Probe'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
-            Button:
-                text: '18. Enable alarms'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                    Image:
+                        id: x_home_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-            Label: 
-                text: '23. Plug in USB "spindle"'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                GridLayout:
+                    cols: 2
 
-            Label: 
-                text: '27. TAKE BELT OFF Z MOTOR'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                    Button:
+                        text: '21. Test digital spindle'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
-            Button:
-                text: '19. Set spindle to digital'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                    Image:
+                        id: x_home_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
-            Button:
-                text: '24. Set spindle to analogue'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
+                GridLayout:
+                    cols: 2
 
-            Button:
-                text: '28. CONFIRM BELT OFF: START AUTO-CALIBRATE'
-                text_size: self.size
-                markup: 'True'
-                halign: 'left'
-                valign: 'middle'
-                padding: [dp(10),0]
-                on_press: root.enter_next_screen()
+                    Button:
+                        text: '25. Test USB "spindle"'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
 
-        ScrollableLabelStatus:
-            size_hint_y: 0.2        
-            id: console_status_text
-            text: "status update" 
-    
-    BoxLayout:
-        size_hint_y: 0.08
-        id: status_container 
-        pos: self.pos
+                    Image:
+                        id: x_home_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                GridLayout:
+                    cols: 2
+
+                    Label:
+                        text: '17. Z Home'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+
+                    Image:
+                        id: x_home_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
+
+                Label: 
+                    text: '22. Remove digital spindle'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Label:
+                    text: '26. Remove USB "spindle"'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '18. Enable alarms'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Label: 
+                    text: '23. Plug in USB "spindle"'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Label: 
+                    text: '27. TAKE BELT OFF Z MOTOR'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '19. Set spindle to digital'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '24. Set spindle to analogue'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+
+                Button:
+                    text: '28. CONFIRM BELT OFF: START AUTO-CALIBRATE'
+                    text_size: self.size
+                    markup: 'True'
+                    halign: 'left'
+                    valign: 'middle'
+                    padding: [dp(10),0]
+                    on_press: root.enter_next_screen()
+
+            ScrollableLabelStatus:
+                size_hint_y: 0.15 
+                id: console_status_text
+                text: "status update" 
+        
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container 
+            pos: self.pos
 """)
 
 class ZHeadQC2(Screen):

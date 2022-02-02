@@ -21,7 +21,7 @@ Builder.load_string("""
             GridLayout:
                 cols: 3
                 rows: 5
-                size_hint_y: 0.8
+                size_hint_y: 0.85
 
                 Button:
                     text: '<<< Back'
@@ -292,7 +292,7 @@ Builder.load_string("""
                     padding: [dp(10),0]
 
             ScrollableLabelStatus:
-                size_hint_y: 0.2
+                size_hint_y: 0.15
                 id: console_status_text
                 text: "status update" 
         

@@ -50,7 +50,7 @@ class ZHeadQC6(Screen):
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        Clock.schedule_once(self.enable_button, 1)
+        Clock.schedule_once(self.enable_button, 2)
 
     def enable_button(self, dt):
         self.ok_button.disabled = False

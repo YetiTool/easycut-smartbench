@@ -4,8 +4,17 @@ Created on 28 Jan 2022
 YetiTool's UI for SmartBench
 www.yetitool.com
 
+#######################################################
+Z HEAD QC APPLICATION
 
-This app needs following platform changes to run: 
+Used in production to carry out quality control checks. 
+#######################################################
+
+#######################################################
+PLATFORM
+
+This app needs following platform changes to run
+as default application at startup: 
 
 sudo systemctl disable ansible.service
 
@@ -20,6 +29,8 @@ sudo nano /boot/config.txt
 # Exit and save file
 
 sudo reboot
+
+#######################################################
 '''
 
 from kivy.app import App
@@ -72,6 +83,12 @@ class ZHeadQC(App):
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
 
+        z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
+        sm.add_widget(z_head_qc_1)
+
+        z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
+        sm.add_widget(z_head_qc_2)
+
         z_head_qc_3 = ZHeadQC3(name='qc3', sm = sm, m = m)
         sm.add_widget(z_head_qc_3)
 
@@ -90,11 +107,6 @@ class ZHeadQC(App):
         z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
         sm.add_widget(z_head_qc_home)
 
-        z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
-        sm.add_widget(z_head_qc_2)
-        
-        z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
-        sm.add_widget(z_head_qc_1)
 
         sm.current = 'qchome'
         return sm
