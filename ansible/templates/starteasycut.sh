@@ -11,27 +11,33 @@ then
         mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
 fi
 
-cd /home/pi/easycut-smartbench/src/
-
-# execute python
-exec python main.py
-sleep 5
-
-# check if running
-echo "check main.py running"
-if ! ps ax | grep "[p]ython main.py"
+if [ -f /home/pi/ZHEADTESTJIG.txt ]
 then
-        echo "no main instance found - trying git reset"
-        git reset --hard
+        echo "running z head diagnostics"
+
+        cd /home/pi/easycut-smartbench/src/
+        exec python z_head_qc_app.py
+else
+        cd /home/pi/easycut-smartbench/src/
+        # execute python
         exec python main.py
+        sleep 5
+
+        # check if running
+        echo "check main.py running"
         if ! ps ax | grep "[p]ython main.py"
         then
-                if [ -d  "/home/pi/easycut-smartbench-backup" ]
+                echo "no main instance found - trying git reset"
+                git reset --hard
+                exec python main.py
+                if ! ps ax | grep "[p]ython main.py"
                 then
-                        echo "force copy of easycut-smartbench-backup back into easycut-smartbench"
-                        cp -RTf /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
-                        exec python main.py
+                        if [ -d  "/home/pi/easycut-smartbench-backup" ]
+                        then
+                                echo "force copy of easycut-smartbench-backup back into easycut-smartbench"
+                                cp -RTf /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
+                                exec python main.py
+                        fi
                 fi
         fi
-
 fi
