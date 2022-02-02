@@ -251,7 +251,6 @@ Builder.load_string("""
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
-                        disabled: 'True'
 
                     Button: 
                         id: reset_button
@@ -261,7 +260,6 @@ Builder.load_string("""
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
-                        disabled: 'True'
 
                 GridLayout:
                     cols: 2

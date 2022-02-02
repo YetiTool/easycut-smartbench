@@ -3,11 +3,15 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 import datetime
+import os, sys
 
 Builder.load_string("""
 <ZHeadQC7>:
+    shutdown_button : shutdown_button
+
     BoxLayout:
         orientation: 'vertical'
+        spacing: dp(15)
 
         GridLayout:
             cols: 2
@@ -37,8 +41,15 @@ Builder.load_string("""
         Button:
             text: 'CYCLE Z HEAD'
             font_size: dp(30)
-            size_hint_y: 0.3
-            size_hint_z: 0.3
+            size_hint_y: 0.35
+
+        Button:
+            id: shutdown_button
+            text: 'FINISHED! - SHUT DOWN NOW'
+            font_size: dp(30)
+            size_hint_y: 0.2
+            disabled: True
+            on_press: root.shutdown_console()
 
 """)
 
@@ -48,6 +59,16 @@ class ZHeadQC7(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+
+    def on_enter(self):
+        Clock.schedule_once(self.enable_button, 5)
+
+    def enable_button(self, dt):
+        self.shutdown_button.disabled = False
+
+    def shutdown_console(self):
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            os.system('sudo shutdown -h')
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'

@@ -48,7 +48,7 @@ class ZHeadQCHome(Screen):
 
         self.sm = kwargs['sm']
 
-        self.start_calibration_timer(1)
+        self.start_calibration_timer(0.5)
 
     def start_calibration_timer(self, minutes):
         self.sm.get_screen('qc3').update_time(minutes*30)

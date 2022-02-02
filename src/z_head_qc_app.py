@@ -107,7 +107,6 @@ class ZHeadQC(App):
         z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
         sm.add_widget(z_head_qc_home)
 
-
         sm.current = 'qchome'
         return sm
 
