@@ -5,6 +5,8 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 '''
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
+from asmcnc.comms.yeti_grbl_protocol import protocol
+
 from kivy.clock import Clock
 import sys, os, time
 from datetime import datetime
@@ -129,6 +131,9 @@ class RouterMachine(object):
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
         self.s.establish_connection(win_serial_port)
+
+        # Object to construct and send custom YETI GRBL commands
+        self.p = protocol.protocol_v2()
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
@@ -906,6 +911,29 @@ class RouterMachine(object):
             return float(rpm_green)
         else: return 0
 
+# START UP SEQUENCES
+
+    # BOOT UP SEQUENCE
+    def bootup_sequence(self):
+        self._stop_all_streaming()  # In case alarm happened during boot, stop that
+        self._grbl_soft_reset()     # Reset to get out of Alarm mode.
+        # Now grbl won't allow anything until machine is rehomed or unlocked, so...
+        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
+        # Set lights
+        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
+        # Get grbl firmware version loaded into serial comms
+        Clock.schedule_once(lambda dt: self.send_any_gcode_command('$I'), 1.5)
+        # Turn laser off (if it is on)
+        Clock.schedule_once(lambda dt: self.laser_off(bootup=True), 1.7)
+        # Get grbl settings loaded into serial comms
+        Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
+        # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
+
+    # TMC MOTOR CONTROLLER HANDSHAKE
+    def tmc_handshake():
+        pass
+
 # CRITICAL START/STOP
 
     '''
@@ -955,21 +983,7 @@ class RouterMachine(object):
     
     '''
 
-    # REFACTORED START/STOP COMMANDS
-
-    def bootup_sequence(self):
-        self._stop_all_streaming()  # In case alarm happened during boot, stop that
-        self._grbl_soft_reset()     # Reset to get out of Alarm mode.
-        # Now grbl won't allow anything until machine is rehomed or unlocked, so...
-        Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        # Set lights
-        Clock.schedule_once(lambda dt: self.set_led_colour('YELLOW'),0.31)
-        # Get grbl firmware version loaded into serial comms
-        Clock.schedule_once(lambda dt: self.send_any_gcode_command('$I'), 1.5)
-        # Turn laser off (if it is on)
-        Clock.schedule_once(lambda dt: self.laser_off(bootup=True), 1.7)
-        # Get grbl settings loaded into serial comms
-        Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
+    # START/STOP COMMANDS
 
     def reset_from_alarm(self):
         # Machine has stopped without warning and probably lost position
