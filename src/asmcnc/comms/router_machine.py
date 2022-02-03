@@ -931,7 +931,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
-    def tmc_handshake():
+    def tmc_handshake(self):
         pass
 
 # CRITICAL START/STOP
