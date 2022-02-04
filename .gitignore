@@ -3,3 +3,10 @@ sb_values/
 *.DS_Store
 .DS_Store
 .vscode/
+.idea/.gitignore
+.idea/easycut-smartbench.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.gitignore

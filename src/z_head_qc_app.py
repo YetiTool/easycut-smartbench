@@ -86,7 +86,7 @@ class ZHeadQC(App):
         z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
         sm.add_widget(z_head_qc_1)
 
-        z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
+        z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_2)
 
         z_head_qc_3 = ZHeadQC3(name='qc3', sm = sm, m = m)
