@@ -221,6 +221,7 @@ class ZHeadQC2(Screen):
         self.l = kwargs['l']
 
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4) 
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
         self.test_successful_image = "./asmcnc/skavaUI/img/file_select_select.png"
