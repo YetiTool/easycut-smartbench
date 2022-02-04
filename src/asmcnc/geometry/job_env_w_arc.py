@@ -45,10 +45,10 @@ class BoundingBox():
                        'G0 Z', 'G1 Z']
 
     circle_lines = [""]
-    range_x = [99, 99] 
-    range_y = [99, 99] 
-    range_z = [99, 99]
-    range_g = [99, 99]
+    range_x = [109, 1099] 
+    range_y = [109, 1099] 
+    range_z = [109, 1099]
+    range_g = [109, 1099]
 
     def __init__(self):
         pass

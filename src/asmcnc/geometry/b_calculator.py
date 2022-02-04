@@ -26,16 +26,15 @@ class BCalculator():
     gcodefile = []
     datum_x = 0.999
     datum_y = 0.999
-    bound_range_x = [0,0]
-    bound_range_y = [0,0]
+    # bound_range_x = [0,0]
+    # bound_range_y = [0,0]
     
     def __init__(self):
         '''
         Resets boundary for security
         '''
-        self.boundary_xy = [[0.0, 0.0]]  # re-set lists
-        self.sort_gcode_input("")  # get list of x,y gcode from gcode file
-    
+        self.job_env = job_env.BoundingBox()
+
     def set_gcode_file(self, to_set_file_path_to_gcode):
         self.gcode_file_path = to_set_file_path_to_gcode
     
@@ -57,22 +56,25 @@ class BCalculator():
             # set if not already
             self.set_gcode_file(to_sort_file_path_to_gcode)
         
-        # get job range
-        self.job_env = job_env.BoundingBox()
+        # get job envelope, range etc
         self.job_env.set_job_envelope(self.gcode_file_path)
 
     def get_job_env(self):
+        print('job_env.range_x: {}, job_env.range_y: {}'.format(
+            self.job_env.range_x, self.job_env.range_y))
         return (self.job_env.range_x,
                           self.job_env.range_y) 
 
     def get_gcode_path(self):
         return self.gcode_file_path
-    
-    def get_job_env_bound(self):
-        return ((self.bound_range_x[0],
-                self.bound_range_x[1]),
-                (self.bound_range_y[0],
-                self.bound_range_y[1]))
+
+    # THINK THESE ARE IRRELEVANT FOR NOW
+    #    
+    # def get_job_env_bound(self):
+    #     return ((self.bound_range_x[0],
+    #             self.bound_range_x[1]),
+    #             (self.bound_range_y[0],
+    #             self.bound_range_y[1]))
 
     def set_boundary_datum_point(self):
         # ### FOCUS POINT <<>>

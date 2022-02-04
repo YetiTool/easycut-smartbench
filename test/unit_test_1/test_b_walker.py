@@ -46,12 +46,9 @@ from src.asmcnc.geometry import b_calculator
 ##########################################################
 
 class BWalkerTest(unittest.TestCase):
-    # -1 to print method testNames, 1 to print other detail
-    details_to_console = 11  # zero for quiet, 1 for basics, 11 for specifics
+    details_to_console = 1  # zero for quiet, 1 for basics, 11 for specifics
 
-    gcodefile = [0, 0]
     gcode_file_path = ""
-    ### b_setter = object
     
     def setUp(self):
         self.b_setter = b_calculator.BCalculator()
@@ -59,20 +56,20 @@ class BWalkerTest(unittest.TestCase):
         # blank gcode file for now
         self.gcode_file_path = "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"        
         self.b_setter.set_gcode_file(self.gcode_file_path)
-        
-    def test_boundary_datum_is_not_blank(self):
-        if self.details_to_console == 11: print(">> ____ test_boundary_datum_is_not_blank ____ ")
-        self.b_setter.get_job_env()
         # set the boundary_datum (mid-mid of job envelope)
         self.b_setter.set_boundary_datum_point()
-        neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
-        print("b_setter.datum_x {}".format(self.b_setter.datum_x))
+
+        if self.details_to_console == 1: 
+            # what does this do exactly?
+            # SHOULD at least print range_x and range_y
+            self.b_setter.get_job_env()
+            # print datums:
+            print("datums x: {} and y: {}".format(self.b_setter.datum_x, self.b_setter.datum_y))
         
+    def test_boundary_datum_is_not_blank(self):
+        neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
         self.assertFalse(neither_are_zero == 0, "missing datum data? or hopefully only DATUM FOUND")
         # ### FOCUS POINT <<>> !!! any datum point is already being excluded
-        
-        if self.details_to_console == 1: 
-            print("datums: " + str(self.b_setter.datum_x) + "," + str(self.b_setter.datum_y))
 
             
 if __name__ == "__main__": unittest.main()
