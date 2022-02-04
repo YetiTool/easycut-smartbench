@@ -45,6 +45,10 @@ from asmcnc.comms.localization import Localization
 from kivy.clock import Clock
 
 from asmcnc.skavaUI.screen_home import HomeScreen
+from asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
+from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
+from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
+from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
 from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
 from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
 from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
@@ -82,6 +86,18 @@ class ZHeadQC(App):
 
         home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
         sm.add_widget(home_screen)
+
+        squaring_decision_screen = SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_decision_screen)
+
+        prepare_to_home_screen = HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(prepare_to_home_screen)
+
+        homing_active_screen = HomingScreenActive(name = 'homing_active', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(homing_active_screen)
+
+        squaring_active_screen = SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
+        sm.add_widget(squaring_active_screen)
 
         z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
         sm.add_widget(z_head_qc_1)
