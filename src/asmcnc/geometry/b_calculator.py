@@ -15,7 +15,7 @@ TODO:         ##########
 import os.path
 import math
 # this is almost manual dependency injection:
-import src.asmcnc.geometry.job_envelope_inc_circles as job_envelope 
+import asmcnc.geometry.job_env_w_arc as job_env 
 
 class BCalculator():
     '''
@@ -24,8 +24,8 @@ class BCalculator():
     '''
     gcode_file_path = ""
     gcodefile = []
-    datum_x = 0.0
-    datum_y = 0.0
+    datum_x = 0.999
+    datum_y = 0.999
     bound_range_x = [0,0]
     bound_range_y = [0,0]
     
@@ -36,45 +36,53 @@ class BCalculator():
         self.boundary_xy = [[0.0, 0.0]]  # re-set lists
         self.sort_gcode_input("")  # get list of x,y gcode from gcode file
     
-    def sort_gcode_input(self, input_file_path_to_gcode = ""):
+    def set_gcode_file(self, to_set_file_path_to_gcode):
+        self.gcode_file_path = to_set_file_path_to_gcode
+    
+    def sort_gcode_input(self, to_sort_file_path_to_gcode = ""):
         '''
         sort_gcode_input: get list of x,y gcode from gcode file
         blank string parameter defaults to path set inside this function:
-        # "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"
+        "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"
+        "test/gcode_test_files/paired_gCode/Square_1.gcode"
+        "test/gcode_test_files/paired_gCode/Square 1 - maximum job dimensions.gcode"
+
         '''
         # default test gcode_file_path...
-        self.gcode_file_path = "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"
-        if (input_file_path_to_gcode != ""): # set path to file, if provided
-            self.gcode_file_path = input_file_path_to_gcode
+        workable_gcode_file_path = "test/gcode_test_files/paired_gCode/Square 1 - maximum job dimensions.gcode"
+        if to_sort_file_path_to_gcode == "" and self.gcode_file_path == "":  
+            # set path to file, if provided
+            self.gcode_file_path = workable_gcode_file_path
+        elif self.gcode_file_path != to_sort_file_path_to_gcode:
+            # set if not already
+            self.set_gcode_file(to_sort_file_path_to_gcode)
+        
         # get job range
-        self.envelope_of_work = job_envelope.BoundingBox()
-        self.envelope_of_work.set_job_envelope(self.gcode_file_path)
+        self.job_env = job_env.BoundingBox()
+        self.job_env.set_job_envelope(self.gcode_file_path)
 
-    def get_job_envelope_from_gcode(self):
-        found_envelope = (self.envelope_of_work.range_x, 
-                          self.envelope_of_work.range_y) 
-        return found_envelope
+    def get_job_env(self):
+        return (self.job_env.range_x,
+                          self.job_env.range_y) 
 
     def get_gcode_path(self):
-        ## print("gcode_file_path = " + gcode_file_path)
         return self.gcode_file_path
     
-    def get_job_envelope_xy_list(self):
-        found_envelope = ((self.bound_range_x[0],
-                           self.bound_range_x[1]),
-                           (self.bound_range_y[0],
-                            self.bound_range_y[1]))
-        return found_envelope
+    def get_job_env_bound(self):
+        return ((self.bound_range_x[0],
+                self.bound_range_x[1]),
+                (self.bound_range_y[0],
+                self.bound_range_y[1]))
 
     def set_boundary_datum_point(self):
         # ### FOCUS POINT <<>>
         # set single x,y datum at job_envelop mid point
-        self.datum_x = abs((self.envelope_of_work.range_x[0] 
+        self.datum_x = abs((self.job_env.range_x[0] 
                             - 
-                            self.envelope_of_work.range_x[1])
+                            self.job_env.range_x[1])
                             /2)
-        self.datum_y = abs((self.envelope_of_work.range_y[0] 
+        self.datum_y = abs((self.job_env.range_y[0] 
                             - 
-                            self.envelope_of_work.range_y[1])
+                            self.job_env.range_y[1])
                             /2)
         

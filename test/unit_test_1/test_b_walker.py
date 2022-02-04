@@ -51,24 +51,18 @@ class BWalkerTest(unittest.TestCase):
 
     gcodefile = [0, 0]
     gcode_file_path = ""
-    b_setter = object
-    # accepted accuracy of boundary v gcode_file actual:
-    # accuracy_percent = 0.0001
+    ### b_setter = object
     
     def setUp(self):
-        if self.details_to_console == -1: 
-            print(">> ____ setUp ____ ")
-        self.gcode_file_path = ""
-        #    G1    GIVEN a gcode file
         self.b_setter = b_calculator.BCalculator()
+        # optional - but in use for now:
+        # blank gcode file for now
+        self.gcode_file_path = "test/gcode_test_files/paired_gCode/Circles_and_star_1.gcode"        
+        self.b_setter.set_gcode_file(self.gcode_file_path)
         
-        if self.details_to_console == 1: 
-            print("UnitTestsBoundaryWalk().set_up() ____ gcodefile = " + 
-                  str(type(self.b_setter.get_gcode_path())))
-
     def test_boundary_datum_is_not_blank(self):
         if self.details_to_console == 11: print(">> ____ test_boundary_datum_is_not_blank ____ ")
-        self.b_setter.get_job_envelope_from_gcode()
+        self.b_setter.get_job_env()
         # set the boundary_datum (mid-mid of job envelope)
         self.b_setter.set_boundary_datum_point()
         neither_are_zero = abs(self.b_setter.datum_x) + abs(self.b_setter.datum_y)
