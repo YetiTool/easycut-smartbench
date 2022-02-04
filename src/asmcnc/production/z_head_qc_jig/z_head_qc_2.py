@@ -10,6 +10,8 @@ Builder.load_string("""
 <ZHeadQC2>:
     console_status_text:console_status_text
     status_container:status_container
+    probe_check:probe_check
+    z_home_check:z_home_check
 
     BoxLayout:
         orientation: 'vertical'
