@@ -44,6 +44,7 @@ from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
 from kivy.clock import Clock
 
+from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.skavaUI.screen_home import HomeScreen
 from asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
 from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
@@ -82,9 +83,11 @@ class ZHeadQC(App):
 
         m = RouterMachine(Cmport, sm, sett, l, jd)
 
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
-            
+
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(door_screen)
 
