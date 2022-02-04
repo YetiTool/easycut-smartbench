@@ -685,6 +685,15 @@ class SerialConnection(object):
     y1_motor = None
     y2_motor = None
 
+    # SPINDLE STATISTICS
+    spindle_serial_number = None
+    spindle_production_year = None
+    spindle_production_week = None
+    spindle_firmware_version = None
+    spindle_total_run_time_seconds = None
+    spindle_brush_run_time_seconds = None
+    spindle_mains_frequency_hertz = None
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -967,6 +976,31 @@ class SerialConnection(object):
                     self.y_axis = int(sg_values[2])
                     self.y1_motor = int(sg_values[3])
                     self.y2_motor = int(sg_values[4])
+
+                elif part.startswith('Sp:'):
+
+                    spindle_statistics = part[3:].split(',')
+
+                    try: 
+                        int(spindle_statistics[0])
+                        int(spindle_statistics[1])
+                        int(spindle_statistics[2])
+                        int(spindle_statistics[3])
+                        int(spindle_statistics[4])
+                        int(spindle_statistics[5])
+                        int(spindle_statistics[6])
+
+                    except:
+                        log("ERROR status parse: Sp values invalid: " + message)
+                        return
+
+                    self.spindle_serial_number = int(spindle_statistics[0])
+                    self.spindle_production_year = int(spindle_statistics[1])
+                    self.spindle_production_week = int(spindle_statistics[2])
+                    self.spindle_firmware_version = int(spindle_statistics[3])
+                    self.spindle_total_run_time_seconds = int(spindle_statistics[4])
+                    self.spindle_brush_run_time_seconds = int(spindle_statistics[5])
+                    self.spindle_mains_frequency_hertz = int(spindle_statistics[6])
 
                 # end of for loop
 

@@ -55,10 +55,6 @@ class SpindleFeedbackTest(unittest.TestCase):
 
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
-    case_no_feedback = 1
-    case_analogue_feedback = 2
-    case_digital_feedback = 2
-
     test_spindle_load_voltage = 1789
     test_digital_spindle_ld_qdA = 100
     test_digital_spindle_temperature = 45
@@ -193,8 +189,6 @@ class SpindleFeedbackTest(unittest.TestCase):
         self.status_and_PCB_constructor(case=3, digital_spindle_mains_voltage = self.test_digital_spindle_mains_voltage)
         self.assertEqual(self.serial_module.digital_spindle_mains_voltage, self.test_digital_spindle_mains_voltage), 'Digital spindle mains voltage wrong'
 
-
-# READ IN AND OVERLOAD TESTS
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
