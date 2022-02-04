@@ -102,7 +102,7 @@ Builder.load_string("""
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
-                        on_press: root.run_spindle_check()
+                        on_press: root.run_analogue_spindle_check()
 
                     Image:
                         id: spindle_speed_check
