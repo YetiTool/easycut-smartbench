@@ -6,6 +6,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 from kivy.clock import Clock
 import sys, os, time
@@ -932,7 +933,7 @@ class RouterMachine(object):
 
     # TMC MOTOR CONTROLLER HANDSHAKE
     def tmc_handshake(self):
-        pass
+        self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
 
 # CRITICAL START/STOP
 
