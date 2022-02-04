@@ -637,7 +637,15 @@ class SerialConnection(object):
     # Feeds and speeds
     spindle_speed = '0.0'
     feed_rate = '0.0'
-    spindle_load_voltage = 0.0
+
+    # Analogue spindle feedback
+    spindle_load_voltage = None
+
+    # Digital spindle feedback
+    digital_spindle_ld_qdA = None
+    digital_spindle_temperature = None
+    digital_spindle_kill_time = None
+    digital_spindle_mains_voltage = None
 
     # IO Pins for switches etc
     limit_x = False # convention: min is lower_case
@@ -825,37 +833,70 @@ class SerialConnection(object):
                             self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
-                    self.spindle_load_voltage = int(part.split(':')[1])  # gather spindle overload analogue voltage, and evaluate to general state
 
-                    if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
-                    elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
-                    elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
-                    elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
-                    elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
-                    elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
-                    else: log("Overload value not recognised")
+                    spindle_feedback = part.split(':')[1]
 
-                    # update stuff if there's a change
-                    if overload_mV_equivalent_state != self.overload_state:  
-                        self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
-                        log("Load voltage: " + str(self.spindle_load_voltage))
-                    
-                        try:
-                            self.sm.get_screen('go').update_overload_label(self.overload_state)
+                    if ',' in spindle_feedback:
 
-                            # Only report as a peak if state stays elevated for longer than 1 second
-                            if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                                self.prev_overload_state = self.overload_state
-                                Clock.schedule_once(self.check_for_sustained_peak, 1)
+                        digital_spindle_feedback = spindle_feedback.split(',')
+
+                        try: 
+                            int(digital_spindle_feedback[0])
+                            int(digital_spindle_feedback[1])
+                            int(digital_spindle_feedback[2])
+                            int(digital_spindle_feedback[3])
 
                         except:
-                            log('Unable to update overload state on go screen')
-                    
-                    # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
-                    if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
-                        self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
-                        Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
+                            log("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            return
+
+                        self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
+                        self.digital_spindle_temperature = int(digital_spindle_feedback[1])
+                        self.digital_spindle_kill_time = int(digital_spindle_feedback[2])
+                        self.digital_spindle_mains_voltage = int(digital_spindle_feedback[3])
+
+                    else: 
+
+                        try:
+                            int(spindle_feedback)
+
+                        except:
+                            log("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            return
+
+                        self.spindle_load_voltage = int(spindle_feedback)
+
+                        # gather spindle overload analogue voltage, and evaluate to general state
+
+                        if self.spindle_load_voltage < 400 : overload_mV_equivalent_state = 0
+                        elif self.spindle_load_voltage < 1000 : overload_mV_equivalent_state = 20
+                        elif self.spindle_load_voltage < 1500 : overload_mV_equivalent_state = 40
+                        elif self.spindle_load_voltage < 2000 : overload_mV_equivalent_state = 60
+                        elif self.spindle_load_voltage < 2500 : overload_mV_equivalent_state = 80
+                        elif self.spindle_load_voltage >= 2500 : overload_mV_equivalent_state = 100
+                        else: log("Overload value not recognised")
+
+                        # update stuff if there's a change
+                        if overload_mV_equivalent_state != self.overload_state:  
+                            self.overload_state = overload_mV_equivalent_state
+                            log("Overload state change: " + str(self.overload_state))
+                            log("Load voltage: " + str(self.spindle_load_voltage))
+                        
+                            try:
+                                self.sm.get_screen('go').update_overload_label(self.overload_state)
+
+                                # Only report as a peak if state stays elevated for longer than 1 second
+                                if 20 <= self.overload_state < 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                                    self.prev_overload_state = self.overload_state
+                                    Clock.schedule_once(self.check_for_sustained_peak, 1)
+
+                            except:
+                                log('Unable to update overload state on go screen')
+                        
+                        # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
+                        if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
+                            self.is_ready_to_assess_spindle_for_shutdown = False  # flag prevents further shutdowns until this one has been cleared
+                            Clock.schedule_once(self.check_for_sustained_max_overload, 0.5)
 
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')

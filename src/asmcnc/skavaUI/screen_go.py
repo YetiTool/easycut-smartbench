@@ -727,7 +727,6 @@ class GoScreen(Screen):
         # Spindle speed and feed rate
         self.speedOverride.update_spindle_speed_label()
         self.feedOverride.update_feed_rate_label()
-        # self.update_voltage_label()
 
         if abs(self.speedOverride.speed_override_percentage - 100) > abs(self.spindle_speed_max_percentage - 100):
             self.spindle_speed_max_percentage = self.speedOverride.speed_override_percentage
@@ -758,9 +757,6 @@ class GoScreen(Screen):
             self.overload_status_label.text = "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
         else:
             log('Overload state not recognised: ' + str(state))
-
-    def update_voltage_label(self):
-        self.spindle_voltage.text = str(self.m.spindle_load()) + " mV"
 
     def update_overload_peak(self, state):
         if state > self.overload_peak:

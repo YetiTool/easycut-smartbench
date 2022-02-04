@@ -1204,6 +1204,7 @@ class RouterMachine(object):
 
 # SPEED AND FEED GETTERS
     def feed_rate(self): return int(self.s.feed_rate)
+
     def spindle_speed(self): 
         if self.spindle_voltage == 110: 
             # if not self.spindle_digital or not self.fw_can_operate_digital_spindle(): # this is only relevant much later on
@@ -1211,7 +1212,12 @@ class RouterMachine(object):
             return int(converted_speed)
         else: 
             return int(self.s.spindle_speed)
-    def spindle_load(self): return int(self.s.spindle_load_voltage)
+
+    def spindle_load(self): 
+        try:
+            return int(self.s.spindle_load_voltage)
+        except:
+            return ''
 
 # POSITIONAL SETTERS
 
