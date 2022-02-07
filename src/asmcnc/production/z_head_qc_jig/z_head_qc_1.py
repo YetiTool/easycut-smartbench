@@ -443,15 +443,41 @@ class ZHeadQC1(Screen):
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
     def test_motor_chips(self):
-        self.m.jog_relative('X', 30000, 6000)
-        test = Clock.schedule_once(self.check_sg_values, 3)
+
+        # I think its fine to run both at the same time, but check on HW
+        self.m.jog_relative('X', 700, 8000) # move for 5 seconds at 8000 mm/min
+        self.m.jog_relative('Z', 63, 750) # move for 5 seconds at 750 mm/min
+        Clock.schedule_once(self.check_sg_values, 3)
 
     def check_sg_values(self, dt):
+
+        pass_fail = True
+        fail_report = []
+
         if 200 <= self.m.s.x_motor_axis <= 800:
-            self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            pass_fail = pass_fail*(True)
+
         else:
-            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, "SG value: " + str(self.m.s.x_motor_axis) + "\nShould be between 200 and 800.")
+            pass_fail = pass_fail*(False)
+            fail_report.append("X motor/axis SG value: " + str(self.m.s.x_motor_axis))
+            fail_report.append("Should be between 200 and 800.")
+
+        if 200 <= self.m.s.z_motor_axis <= 800:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("Z motor/axis SG value: " + str(self.m.s.z_motor_axis))
+            fail_report.append("Should be between 200 and 800.")
+
+        if not pass_fail:
+            fail_report_string = "\n".join(fail_report)
+            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+
+        else:
+            self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
@@ -578,7 +604,7 @@ class ZHeadQC1(Screen):
             fail_report.append("AC Loss: " + str(self.m.s.power_loss_detected))
             fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
 
-        if pass_fail == 0:
+        if not pass_fail:
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = "\n".join(fail_report)
             popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
@@ -586,7 +612,6 @@ class ZHeadQC1(Screen):
 
         else:
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-
 
     def disable_alarms(self):
         self.m.s.write_command('$21 = 0')
