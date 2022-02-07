@@ -694,6 +694,19 @@ class SerialConnection(object):
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
+    # TMC REGISTERS
+    motor_id = None
+    register_DRVCTRL = None
+    register_CHOPCONF = None
+    register_SMARTEN = None
+    register_SGCSCONF = None
+    register_DRVCONF = None
+    active_current_scale = None
+    stand_still_current_scale = None
+    stall_guard_alarm_threshold = None
+    step_period_us_to_read_SG = None
+    gradient_per_celsius = None
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -1001,6 +1014,39 @@ class SerialConnection(object):
                     self.spindle_total_run_time_seconds = int(spindle_statistics[4])
                     self.spindle_brush_run_time_seconds = int(spindle_statistics[5])
                     self.spindle_mains_frequency_hertz = int(spindle_statistics[6])
+
+                elif part.startswith('TREG:'):
+
+                    tmc_registers = part[5:].split(',')
+
+                    try: 
+                        int(tmc_registers[0])
+                        int(tmc_registers[1])
+                        int(tmc_registers[2])
+                        int(tmc_registers[3])
+                        int(tmc_registers[4])
+                        int(tmc_registers[5])
+                        int(tmc_registers[6])
+                        int(tmc_registers[7])
+                        int(tmc_registers[8])
+                        int(tmc_registers[9])
+                        int(tmc_registers[10])
+
+                    except:
+                        log("ERROR status parse: TMC registers invalid: " + message)
+                        return
+
+                    self.motor_id = int(tmc_registers[0])
+                    self.register_DRVCTRL = int(tmc_registers[1])
+                    self.register_CHOPCONF = int(tmc_registers[2])
+                    self.register_SMARTEN = int(tmc_registers[3])
+                    self.register_SGCSCONF = int(tmc_registers[4])
+                    self.register_DRVCONF = int(tmc_registers[5])
+                    self.active_current_scale = int(tmc_registers[6])
+                    self.stand_still_current_scale = int(tmc_registers[7])
+                    self.stall_guard_alarm_threshold = int(tmc_registers[8])
+                    self.step_period_us_to_read_SG = int(tmc_registers[9])
+                    self.gradient_per_celsius = int(tmc_registers[10])
 
                 # end of for loop
 

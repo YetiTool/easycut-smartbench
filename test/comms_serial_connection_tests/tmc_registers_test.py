@@ -21,8 +21,9 @@ try:
     from asmcnc.comms import serial_connection
     from asmcnc.comms import localization
 
-except: 
+except:
     pass
+
 
 ########################################################
 # IMPORTANT!!
