@@ -7,17 +7,24 @@ from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <ZHeadQC1>:
-    status_container:status_container
-    console_status_text:console_status_text
-    home_button:home_button
-    reset_button:reset_button
-    spindle_toggle:spindle_toggle
-    laser_toggle:laser_toggle
-    vac_toggle:vac_toggle
-    temp_voltage_power_check:temp_voltage_power_check
-    motor_chips_check:motor_chips_check
-    x_home_check:x_home_check
-    x_max_check:x_max_check
+
+    fw_version_label : fw_version_label
+
+    motor_chips_check : motor_chips_check
+    home_button : home_button
+    reset_button : reset_button
+
+    spindle_toggle : spindle_toggle
+    laser_toggle : laser_toggle
+    vac_toggle : vac_toggle
+
+    temp_voltage_power_check : temp_voltage_power_check
+
+    x_home_check : x_home_check
+    x_max_check : x_max_check
+    
+    console_status_text : console_status_text
+    status_container : status_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -30,6 +37,8 @@ Builder.load_string("""
                 cols: 3
                 rows: 5
                 size_hint_y: 0.85
+
+                # ROW 1
 
                 Button:
                     text: '<<< Back'
@@ -84,7 +93,10 @@ Builder.load_string("""
                     background_color: [1,0,0,1]
                     background_normal: ''
 
+                # ROW 2
+
                 Label:
+                    id: fw_version_label
                     text: 'FW Version: ...'
                     text_size: self.size
                     markup: 'True'
@@ -134,6 +146,8 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
                     on_press: root.disable_alarms()
+
+                # ROW 3
 
                 Button:
                     text_size: self.size
@@ -195,6 +209,8 @@ Builder.load_string("""
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+
+                # ROW 4
 
                 GridLayout:
                     cols: 2
@@ -269,6 +285,8 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 
+                # ROW 5
+
                 GridLayout:
                     cols: 2
 
@@ -320,11 +338,15 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
+            # RECIEVED STATUS MONITOR
+
             ScrollableLabelStatus:
                 size_hint_y: 0.15
                 id: console_status_text
                 text: "status update" 
         
+        # GREEN STATUS BAR
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
@@ -334,21 +356,33 @@ Builder.load_string("""
 
 
 class ZHeadQC1(Screen):
+
     def __init__(self, **kwargs):
         super(ZHeadQC1, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        self.m.is_laser_enabled = True
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4) 
-        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
-        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5) 
+        # Green status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
+        # Status monitor widget
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+
+
+    # Old version had these on enter, which may be sensible to copy
+    def on_enter(self): 
+        
         # Placeholder
         self.m.s.ac_loss = False
+
+        self.m.is_laser_enabled = True
+        self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
+        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5)
+
+    # NAVIGATION FUNCTIONS
 
     def enter_next_screen(self):
         self.sm.current = 'qc2'
@@ -356,10 +390,21 @@ class ZHeadQC1(Screen):
     def back_to_home(self):
         self.sm.current = 'qchome'
 
+    # SCREEN AUTO-UPDATE
+
     def update_status_text(self, dt):
         try:
             self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+
         except: 
+            pass
+
+    def scrape_fw_version(self, dt):
+        try:
+            self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
+            if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
+        
+        except:
             pass
 
     def bake_grbl_settings(self):
