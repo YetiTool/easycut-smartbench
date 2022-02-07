@@ -92,6 +92,7 @@ Builder.load_string("""
                     text: 'STOP'
                     background_color: [1,0,0,1]
                     background_normal: ''
+                    on_press: root.stop()
 
                 # ROW 2
 
@@ -612,6 +613,9 @@ class ZHeadQC1(Screen):
 
         else:
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def disable_alarms(self):
         self.m.s.write_command('$21 = 0')
