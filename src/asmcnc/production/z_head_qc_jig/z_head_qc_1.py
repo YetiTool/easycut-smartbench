@@ -371,26 +371,14 @@ class ZHeadQC1(Screen):
         self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
 
 
-    # Old version had these on enter, which may be sensible to copy
-    def on_enter(self): 
-        
-        # Placeholder
-        self.m.s.ac_loss = False
+    # If polling starts while screens are being initialised, risks causing an instant fail! 
+    # (as machine comms won't have started properly, causing nonsense value reads!)
+    def on_enter(self):
 
         self.m.is_laser_enabled = True
         self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
         self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
         self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5)
-
-    # NAVIGATION FUNCTIONS
-
-    def enter_next_screen(self):
-        self.sm.current = 'qc2'
-
-    def back_to_home(self):
-        self.sm.current = 'qchome'
-
-    # SCREEN AUTO-UPDATE
 
     def update_status_text(self, dt):
         try:
@@ -398,6 +386,11 @@ class ZHeadQC1(Screen):
 
         except: 
             pass
+
+    # SCREEN GRID FUNCTIONS: 
+
+    def back_to_home(self):
+        self.sm.current = 'qchome'
 
     def scrape_fw_version(self, dt):
         try:
@@ -510,10 +503,11 @@ class ZHeadQC1(Screen):
     def dust_shoe_blue(self):
         self.m.set_led_colour('BLUE')
 
-    def disable_alarms(self):
-        self.m.s.write_command('$21 = 0')
-
     def temp_power_check(self, dt):
+
+        # Poll for all the temperatures, voltages, and power loss pin reported from the FW 
+        # If one of them fails, polling will stop and report will be triggered.
+
         # pcb_temp
         # motor_driver_temp
         # transistor_heatsink_temp
@@ -522,21 +516,21 @@ class ZHeadQC1(Screen):
         # PSU_mV
         # ac_loss
 
+        # note: spindle voltage monitor is tested with analogue spindle, 
+        # despite being reported with these temps & voltages 
+
         pass_fail = True
         fail_report = []
 
-        # Poll for all the temperatures, voltages, and power loss pin reported from the FW 
-        # If one of them fails, polling will stop and report will be triggered.
-
-        if (self.m.s.pcb_temp > 10) and (self.m.s.pcb_temp < 70):
+        if 10 < self.m.s.pcb_temp < 70:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
             fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
-            fail_report.append("Should be greater than 10 and less than 50 deg C.")
+            fail_report.append("Should be greater than 10 and less than 70 deg C.")
 
-        if (self.m.s.motor_driver_temp > 10) and (self.m.s.motor_driver_temp < 50):
+        if 10 < self.m.s.motor_driver_temp < 50:
             pass_fail = pass_fail*(True)
 
         else:
@@ -549,10 +543,10 @@ class ZHeadQC1(Screen):
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + "degrees C")
+            fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
-        if (self.m.s.microcontroller_mV > 4800) and (self.m.s.microcontroller_mV < 5200):
+        if 4800 < self.m.s.microcontroller_mV < 5200:
             pass_fail = pass_fail*(True)
 
         else:
@@ -560,7 +554,7 @@ class ZHeadQC1(Screen):
             fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
-        if (self.m.s.LED_mV > 4800) and (self.m.s.LED_mV < 5200):
+        if 4800 < self.m.s.LED_mV < 5200:
             pass_fail = pass_fail*(True)
 
         else:
@@ -568,7 +562,7 @@ class ZHeadQC1(Screen):
             fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
             fail_report.append("Should be greater than 4800 and less than 5200 mV.")
 
-        if (self.m.s.PSU_mV > 22000) and (self.m.s.PSU_mV < 26000):
+        if 22000 < self.m.s.PSU_mV < 26000:
             pass_fail = pass_fail*(True)
 
         else:
@@ -576,12 +570,12 @@ class ZHeadQC1(Screen):
             fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
             fail_report.append("Should be greater than 22000 and less than 26000 mV.")
 
-        if self.m.s.ac_loss == True:
+        if self.m.s.power_loss_detected == True:
             pass_fail = pass_fail*(True)
 
         else:
             pass_fail = pass_fail*(False)
-            fail_report.append("AC Loss: " + str(self.m.s.ac_loss))
+            fail_report.append("AC Loss: " + str(self.m.s.power_loss_detected))
             fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
 
         if pass_fail == 0:
@@ -593,8 +587,11 @@ class ZHeadQC1(Screen):
         else:
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
+
+    def disable_alarms(self):
+        self.m.s.write_command('$21 = 0')
+
     def update_checkboxes(self, dt):
-        # self.dust_shoe_switch()
         self.x_home_switch()
         self.x_max_switch()
 
@@ -609,3 +606,6 @@ class ZHeadQC1(Screen):
             self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
             self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
+    def enter_next_screen(self):
+        self.sm.current = 'qc2'
