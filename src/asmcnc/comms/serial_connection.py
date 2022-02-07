@@ -1048,6 +1048,28 @@ class SerialConnection(object):
                     self.step_period_us_to_read_SG = int(tmc_registers[9])
                     self.gradient_per_celsius = int(tmc_registers[10])
 
+                    try: 
+
+                        TMC_registers_report_string = (
+                        "[Motor ID: " + str(self.motor_id) + "]\n" + \
+                        "[Driver Control Reg: " + str(self.register_DRVCTRL) + "]\n" + \
+                        "[Chopper Config Reg: " + str(self.register_CHOPCONF) + "]\n" + \
+                        "[CoolStep Config Reg: " + str(self.register_SMARTEN) + "]\n" + \
+                        "[Stall Guard Config Reg: " + str(self.register_SGCSCONF) + "]\n" + \
+                        "[Driver Config Reg: " + str(self.register_DRVCONF) + "]\n" + \
+                        "[Active Current Scale: " + str(self.active_current_scale) + "]\n" + \
+                        "[Idle Current Scale: " + str(self.stand_still_current_scale) + "]\n" + \
+                        "[Stall Guard Threshold: " + str(self.stall_guard_alarm_threshold) + "]\n" + \
+                        "[Max Stall Guard Step: " + str(self.step_period_us_to_read_SG) + "]\n" + \
+                        "[Thermal Coefficient: " + str(self.gradient_per_celsius)
+                        )
+
+                        map(log, TMC_registers_report_string.split("\n"))
+                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('debug', TMC_registers_report_string)
+
+                    except:
+                        log("Could not print TMC registers")
+
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,

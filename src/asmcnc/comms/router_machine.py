@@ -932,8 +932,22 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
+    ## NEEDS TESTING
     def tmc_handshake(self):
-        self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
+
+        if self.s.fw_version:
+
+            if self.handshake_event: Clock.unschedule(self.handshake_event)
+
+            if is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
+
+                get_registers_cmd = self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
+                # TEMP!! CHECK WRITE TYPE, i.e. realtime or not
+                write_command(get_registers_cmd, show_in_sys = True, show_in_console = True, altDisplayText = "GET_REGISTERS")
+
+        else: 
+            # In case handshake is too soon, it keeps trying until it can read a FW version
+            self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
 
 # CRITICAL START/STOP
 
