@@ -51,6 +51,7 @@ from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
 from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
 from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
 from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
+from asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
 from asmcnc.skavaUI import screen_door
 from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
 from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
@@ -59,6 +60,8 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_4 import ZHeadQC4
 from asmcnc.production.z_head_qc_jig.z_head_qc_5 import ZHeadQC5
 from asmcnc.production.z_head_qc_jig.z_head_qc_6 import ZHeadQC6
 from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
+from asmcnc.production.z_head_qc_jig.z_head_qc_aftr_apr_21 import ZHeadQCWarrantyAfterApr21
+from asmcnc.production.z_head_qc_jig.z_head_qc_b4_apr_21 import ZHeadQCWarrantyBeforeApr21
 
 from datetime import datetime
 
@@ -129,6 +132,15 @@ class ZHeadQC(App):
 
         z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
         sm.add_widget(z_head_qc_home)
+
+        z_head_qc_warranty_choice = ZHeadWarrantyChoice(name='qcWC', sm = sm, m = m)
+        sm.add_widget(z_head_qc_warranty_choice)
+
+        z_head_qc_warranty_after_apr_21 = ZHeadQCWarrantyAfterApr21(name='qcW136', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_qc_warranty_after_apr_21)
+
+        z_head_qc_warranty_before_apr_21 = ZHeadQCWarrantyBeforeApr21(name='qcW112', sm = sm, m = m, l = l)
+        sm.add_widget(z_head_qc_warranty_before_apr_21)
 
         sm.current = 'qchome'
         return sm

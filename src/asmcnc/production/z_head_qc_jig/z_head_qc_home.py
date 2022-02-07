@@ -39,6 +39,7 @@ Builder.load_string("""
             Button: 
                 text: 'Secret option C - take me to WARRANTY QC!'
                 font_size: dp(20)
+                on_press: root.secret_option_c()
 """)
 
 
@@ -56,5 +57,7 @@ class ZHeadQCHome(Screen):
     def enter_qc(self):
         self.sm.current = 'qc1'
 
+    def secret_option_c(self):
+        self.sm.current = 'qcWC'
 
 
