@@ -8,10 +8,12 @@ from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
 <ZHeadQC2>:
-    console_status_text:console_status_text
-    status_container:status_container
-    probe_check:probe_check
-    z_home_check:z_home_check
+    
+    probe_check : probe_check
+    z_home_check : z_home_check
+
+    console_status_text : console_status_text
+    status_container : status_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -222,15 +224,22 @@ class ZHeadQC2(Screen):
         self.m = kwargs['m']
         self.l = kwargs['l']
 
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4) 
-        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        self.status_container.add_widget(self.status_bar_widget)
         self.test_successful_image = "./asmcnc/skavaUI/img/file_select_select.png"
         self.test_unsuccessful_image = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
         self.string_overload_summary = ''
         self.spindle_pass_fail = True
         self.digital_spindle_pass_fail = True
+
+        # Green status bar
+        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_container.add_widget(self.status_bar_widget)
+
+        # Status monitor widget
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
+
+    def on_enter(self):
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
 
     def enter_prev_screen(self):
         self.sm.current = 'qc1'

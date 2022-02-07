@@ -3,16 +3,28 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <ZHeadQC1>:
-    status_container:status_container
-    console_status_text:console_status_text
-    home_button:home_button
-    reset_button:reset_button
-    spindle_toggle:spindle_toggle
-    laser_toggle:laser_toggle
-    vac_toggle:vac_toggle
+
+    fw_version_label : fw_version_label
+
+    motor_chips_check : motor_chips_check
+    home_button : home_button
+    reset_button : reset_button
+
+    spindle_toggle : spindle_toggle
+    laser_toggle : laser_toggle
+    vac_toggle : vac_toggle
+
+    temp_voltage_power_check : temp_voltage_power_check
+
+    x_home_check : x_home_check
+    x_max_check : x_max_check
+    
+    console_status_text : console_status_text
+    status_container : status_container
 
     BoxLayout:
         orientation: 'vertical'
@@ -25,6 +37,8 @@ Builder.load_string("""
                 cols: 3
                 rows: 5
                 size_hint_y: 0.85
+
+                # ROW 1
 
                 Button:
                     text: '<<< Back'
@@ -78,8 +92,12 @@ Builder.load_string("""
                     text: 'STOP'
                     background_color: [1,0,0,1]
                     background_normal: ''
+                    on_press: root.stop()
+
+                # ROW 2
 
                 Label:
+                    id: fw_version_label
                     text: 'FW Version: ...'
                     text_size: self.size
                     markup: 'True'
@@ -129,6 +147,8 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
                     on_press: root.disable_alarms()
+
+                # ROW 3
 
                 Button:
                     text_size: self.size
@@ -191,6 +211,8 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
 
+                # ROW 4
+
                 GridLayout:
                     cols: 2
 
@@ -201,9 +223,10 @@ Builder.load_string("""
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
+                        on_press: root.test_motor_chips()
 
                     Image:
-                        id: x_home_check
+                        id: motor_chips_check
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -256,12 +279,14 @@ Builder.load_string("""
                         padding: [dp(10),0]
 
                     Image:
-                        id: x_home_check
+                        id: x_max_check
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
+
+                # ROW 5
 
                 GridLayout:
                     cols: 2
@@ -298,7 +323,7 @@ Builder.load_string("""
                         padding: [dp(10),0]
 
                     Image:
-                        id: x_home_check
+                        id: temp_voltage_power_check
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -314,11 +339,15 @@ Builder.load_string("""
                     valign: 'middle'
                     padding: [dp(10),0]
 
+            # RECIEVED STATUS MONITOR
+
             ScrollableLabelStatus:
                 size_hint_y: 0.15
                 id: console_status_text
                 text: "status update" 
         
+        # GREEN STATUS BAR
+
         BoxLayout:
             size_hint_y: 0.08
             id: status_container 
@@ -328,27 +357,48 @@ Builder.load_string("""
 
 
 class ZHeadQC1(Screen):
+
     def __init__(self, **kwargs):
         super(ZHeadQC1, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
 
-        self.m.is_laser_enabled = True
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4) 
+        # Green status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)
 
-    def enter_next_screen(self):
-        self.sm.current = 'qc2'
+        # Status monitor widget
+        self.poll_for_status = Clock.schedule_interval(self.update_status_text, 0.4)
 
-    def back_to_home(self):
-        self.sm.current = 'qchome'
+
+    # If polling starts while screens are being initialised, risks causing an instant fail! 
+    # (as machine comms won't have started properly, causing nonsense value reads!)
+    def on_enter(self):
+
+        self.m.is_laser_enabled = True
+        self.poll_for_fw = Clock.schedule_once(self.scrape_fw_version, 1)
+        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, 0.4)
+        self.poll_for_temps_power = Clock.schedule_interval(self.temp_power_check, 5)
 
     def update_status_text(self, dt):
         try:
             self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+
         except: 
+            pass
+
+    # SCREEN GRID FUNCTIONS: 
+
+    def back_to_home(self):
+        self.sm.current = 'qchome'
+
+    def scrape_fw_version(self, dt):
+        try:
+            self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
+            if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
+        
+        except:
             pass
 
     def bake_grbl_settings(self):
@@ -392,6 +442,43 @@ class ZHeadQC1(Screen):
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+    def test_motor_chips(self):
+
+        # I think its fine to run both at the same time, but check on HW
+        self.m.jog_relative('X', 700, 8000) # move for 5 seconds at 8000 mm/min
+        self.m.jog_relative('Z', 63, 750) # move for 5 seconds at 750 mm/min
+        Clock.schedule_once(self.check_sg_values, 3)
+
+    def check_sg_values(self, dt):
+
+        pass_fail = True
+        fail_report = []
+
+        if 200 <= self.m.s.x_motor_axis <= 800:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("X motor/axis SG value: " + str(self.m.s.x_motor_axis))
+            fail_report.append("Should be between 200 and 800.")
+
+        if 200 <= self.m.s.z_motor_axis <= 800:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("Z motor/axis SG value: " + str(self.m.s.z_motor_axis))
+            fail_report.append("Should be between 200 and 800.")
+
+        if not pass_fail:
+            fail_report_string = "\n".join(fail_report)
+            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+
+        else:
+            self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
@@ -443,5 +530,111 @@ class ZHeadQC1(Screen):
     def dust_shoe_blue(self):
         self.m.set_led_colour('BLUE')
 
+    def temp_power_check(self, dt):
+
+        # Poll for all the temperatures, voltages, and power loss pin reported from the FW 
+        # If one of them fails, polling will stop and report will be triggered.
+
+        # pcb_temp
+        # motor_driver_temp
+        # transistor_heatsink_temp
+        # microcontroller_mV 
+        # LED_mV 
+        # PSU_mV
+        # ac_loss
+
+        # note: spindle voltage monitor is tested with analogue spindle, 
+        # despite being reported with these temps & voltages 
+
+        pass_fail = True
+        fail_report = []
+
+        if 10 < self.m.s.pcb_temp < 70:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("PCB Temperature: " + str(self.m.s.pcb_temp) + " degrees C")
+            fail_report.append("Should be greater than 10 and less than 70 deg C.")
+
+        if 10 < self.m.s.motor_driver_temp < 50:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("Motor Driver Temperature: " + str(self.m.s.motor_driver_temp) + " degrees C")
+            fail_report.append("Should be greater than 10 and less than 50 deg C.")
+
+        if 0 < self.m.s.transistor_heatsink_temp < 100:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
+            fail_report.append("Should be greater than 0 and less than 100 deg C.")
+
+        if 4800 < self.m.s.microcontroller_mV < 5200:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("Microcontroller voltage: " + str(self.m.s.microcontroller_mV) + " mV")
+            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+
+        if 4800 < self.m.s.LED_mV < 5200:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("LED (dust shoe) voltage: " + str(self.m.s.LED_mV) + " mV")
+            fail_report.append("Should be greater than 4800 and less than 5200 mV.")
+
+        if 22000 < self.m.s.PSU_mV < 26000:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("24V PSU Voltage: " + str(self.m.s.PSU_mV) + " mV")
+            fail_report.append("Should be greater than 22000 and less than 26000 mV.")
+
+        if self.m.s.power_loss_detected == True:
+            pass_fail = pass_fail*(True)
+
+        else:
+            pass_fail = pass_fail*(False)
+            fail_report.append("AC Loss: " + str(self.m.s.power_loss_detected))
+            fail_report.append("AC should be reported as lost (True) on diagnostics jig.")
+
+        if not pass_fail:
+            Clock.unschedule(self.poll_for_temps_power)
+            fail_report_string = "\n".join(fail_report)
+            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
+
+        else:
+            self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)
+
     def disable_alarms(self):
         self.m.s.write_command('$21 = 0')
+
+    def update_checkboxes(self, dt):
+        self.x_home_switch()
+        self.x_max_switch()
+
+    def x_home_switch(self):
+        if self.m.s.limit_x:
+            self.x_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
+    def x_max_switch(self):
+        if self.m.s.limit_X:
+            self.x_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.x_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
+    def enter_next_screen(self):
+        self.sm.current = 'qc2'
