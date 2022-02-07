@@ -290,25 +290,40 @@ class ZHeadQC2(Screen):
         def test_temperature():
             temperature = self.m.s.digital_spindle_temperature
 
+            log('Digital Spindle Temperature: %s' % temperature)
+
             return temperature >= 0 and temperature <= 50
 
         def test_load():
             load = self.m.s.digital_spindle_ld_qdA
+
+            log('Digital Spindle Load: %s' % load)
 
             return load >= 100 or load <= 10000
 
         def test_killtime():
             killtime = self.m.s.digital_spindle_kill_time
             
+            log('Digital Spindle KillTime: %s' % killtime)
+
             return killtime == 255
 
         def test_voltage():
             voltage = self.m.s.digital_spindle_mains_voltage
 
+            log('Digital Spindle Voltage: %s' % voltage)
+
             return voltage >= 100 and voltage <= 255
 
-        if test_temperature() and test_load() and test_killtime() and test_voltage() and self.digital_spindle_pass_fail:
+        temperature_pass = test_temperature()
+        load_pass = test_load()
+        killtime_pass = test_killtime()
+        voltage_pass = test_voltage()
+
+        if temperature_pass and load_pass and killtime_pass and voltage_pass and self.digital_spindle_pass_fail:
             log('Test passed')
+        else:
+            log('Test failed')
 
     def run_analogue_spindle_check(self):
         

@@ -43,6 +43,7 @@ Builder.load_string("""
             text: 'CYCLE Z HEAD'
             font_size: dp(30)
             size_hint_y: 0.35
+            on_press: root.do_cycle()
 
         Button:
             id: shutdown_button
@@ -73,3 +74,25 @@ class ZHeadQC7(Screen):
 
     def enter_prev_screen(self):
         self.sm.current = 'qc2'
+
+    def do_cycle(self):
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')
+        self.m.s.write_command('G53 G0 Z-150')
+        self.m.s.write_command('G53 G0 Z-1')

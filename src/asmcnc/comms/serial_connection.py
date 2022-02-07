@@ -1130,7 +1130,10 @@ class SerialConnection(object):
 
 
     def check_for_sustained_max_overload(self, dt):
-        
+        if self.sm.get_screen('qchome') != None:
+            log('Skipping overload - on diagnostics mode')
+            return
+
         if self.overload_state == 100:  # if still at max overload, begin the spindle pause procedure
             
             self.sm.get_screen('spindle_shutdown').reason_for_pause = "spindle_overload"
