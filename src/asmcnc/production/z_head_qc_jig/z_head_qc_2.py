@@ -270,7 +270,7 @@ class ZHeadQC2(Screen):
             self.z_home_check.source = self.test_unsuccessful_image
 
     def enable_alarms(self):
-        self.m.s.write_command('$20 = 0')
+        self.m.s.write_command('$20 = 1')
         self.m.s.write_command('$21 = 1')
 
     def run_digital_spindle_test(self):
