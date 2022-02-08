@@ -34,3 +34,6 @@ WDT_TMC_TEST          = 107  # value = 0x10: disable WD feed; other value: repor
 REPORT_STALLS         = 108  # report list of last stalls with associated freeze frame
 UPLOAD_CALIBR_VALUE   = 109  # upload calibration from host. Must be preceded by TMC_CALIBRATION_INIT_xxx 
 REPORT_RAW_SG         = 110  # 1: report raw stall guard values for calibration purposes. default: 0; non-persistent
+
+TMC_REG_CMD_LENGTH      = 4  #/* value */
+TMC_GBL_CMD_LENGTH      = 1  #/* 1 byte command */
