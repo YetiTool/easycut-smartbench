@@ -937,7 +937,7 @@ class RouterMachine(object):
 
         if self.s.fw_version:
 
-            if self.handshake_event: Clock.unschedule(self.handshake_event)
+            if self.handshake_event != None: Clock.unschedule(self.handshake_event)
 
             if is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
 
