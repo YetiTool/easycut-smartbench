@@ -695,17 +695,11 @@ class SerialConnection(object):
     spindle_mains_frequency_hertz = None
 
     # TMC REGISTERS
-    motor_id = None
-    register_DRVCTRL = None
-    register_CHOPCONF = None
-    register_SMARTEN = None
-    register_SGCSCONF = None
-    register_DRVCONF = None
-    active_current_scale = None
-    stand_still_current_scale = None
-    stall_guard_alarm_threshold = None
-    step_period_us_to_read_SG = None
-    gradient_per_celsius = None
+    x1_motor_registers = {}
+    x2_motor_registers = {}
+    y1_motor_registers = {}
+    y2_motor_registers = {}
+    z_motor_registers = {}
 
     def process_grbl_push(self, message):
 
@@ -1036,17 +1030,36 @@ class SerialConnection(object):
                         log("ERROR status parse: TMC registers invalid: " + message)
                         return
 
-                    self.motor_id = int(tmc_registers[0])
-                    self.register_DRVCTRL = int(tmc_registers[1])
-                    self.register_CHOPCONF = int(tmc_registers[2])
-                    self.register_SMARTEN = int(tmc_registers[3])
-                    self.register_SGCSCONF = int(tmc_registers[4])
-                    self.register_DRVCONF = int(tmc_registers[5])
-                    self.active_current_scale = int(tmc_registers[6])
-                    self.stand_still_current_scale = int(tmc_registers[7])
-                    self.stall_guard_alarm_threshold = int(tmc_registers[8])
-                    self.step_period_us_to_read_SG = int(tmc_registers[9])
-                    self.gradient_per_celsius = int(tmc_registers[10])
+                    if int(tmc_registers[0]) == 0:
+                        motor_dict = self.x1_motor_registers
+
+                    elif int(tmc_registers[0]) == 1:
+                        motor_dict = self.x2_motor_registers
+
+                    elif int(tmc_registers[0]) == 2:
+                        motor_dict = self.y1_motor_registers
+
+                    elif int(tmc_registers[0]) == 3:
+                        motor_dict = self.y2_motor_registers
+
+                    elif int(tmc_registers[0]) == 4:
+                        motor_dict = self.z_motor_registers
+
+                    else: 
+                        log("ERROR status parse: TMC registers - motor id invalid: " + message)
+                        return
+
+                    motor_dict['motor_id'] = int(tmc_registers[0])
+                    motor_dict['register_DRVCTRL'] = int(tmc_registers[1])
+                    motor_dict['register_CHOPCONF'] = int(tmc_registers[2])
+                    motor_dict['register_SMARTEN'] = int(tmc_registers[3])
+                    motor_dict['register_SGCSCONF'] = int(tmc_registers[4])
+                    motor_dict['register_DRVCONF'] = int(tmc_registers[5])
+                    motor_dict['active_current_scale'] = int(tmc_registers[6])
+                    motor_dict['stand_still_current_scale'] = int(tmc_registers[7])
+                    motor_dict['stall_guard_alarm_threshold'] = int(tmc_registers[8])
+                    motor_dict['step_period_us_to_read_SG'] = int(tmc_registers[9])
+                    motor_dict['gradient_per_celsius'] = int(tmc_registers[10])
 
                     try: 
 

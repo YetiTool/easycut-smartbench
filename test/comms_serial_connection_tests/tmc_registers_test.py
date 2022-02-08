@@ -34,7 +34,6 @@ class TMCRegisters(unittest.TestCase):
 
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
-    test_motor_id = 4
     test_register_DRVCTRL = 516
     test_register_CHOPCONF = 602832
     test_register_SMARTEN = 688384
@@ -58,17 +57,17 @@ class TMCRegisters(unittest.TestCase):
 
 
     def status_and_PCB_constructor(self, case=None, 
-                        motor_id = 0,
-                        register_DRVCTRL = 0,
-                        register_CHOPCONF = 0,
-                        register_SMARTEN = 0,
-                        register_SGCSCONF = 0,
-                        register_DRVCONF = 0,
-                        active_current_scale = 0,
-                        stand_still_current_scale = 0,
-                        stall_guard_alarm_threshold = 0,
-                        step_period_us_to_read_SG = 0,
-                        gradient_per_celsius = 0):
+                        motor_id = None,
+                        register_DRVCTRL = test_register_DRVCTRL,
+                        register_CHOPCONF = test_register_CHOPCONF,
+                        register_SMARTEN = test_register_SMARTEN,
+                        register_SGCSCONF = test_register_SGCSCONF,
+                        register_DRVCONF = test_register_DRVCONF,
+                        active_current_scale = test_active_current_scale,
+                        stand_still_current_scale = test_stand_still_current_scale,
+                        stall_guard_alarm_threshold = test_stall_guard_alarm_threshold,
+                        step_period_us_to_read_SG = test_step_period_us_to_read_SG,
+                        gradient_per_celsius = test_gradient_per_celsius):
 
         # Use this to construct the test status passed out by mock serial object
 
@@ -126,107 +125,193 @@ class TMCRegisters(unittest.TestCase):
         self.status_and_PCB_constructor(1)
         assert self.serial_module.m_state == "Idle", 'not idle'
 
-    def test_motor_id_read_in(self):
+    def test_motor_x1(self):
         """ 
-        Test that motor id is expected value, and that serial continues to work
+        Test that motor registers are expected value for x1, and that serial continues to work
         This is relevant to FW between v228 onwards
         """
-        self.status_and_PCB_constructor(2, motor_id = self.test_motor_id)
-        self.assertEqual(self.serial_module.motor_id, self.test_motor_id), 'motor id error'
+        self.status_and_PCB_constructor(case=2, motor_id = 0)
+        self.assertEqual(self.serial_module.x1_motor_registers.get('motor_id'), 0), 'x1 motor id error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('register_DRVCTRL'), self.test_register_DRVCTRL), 'x1 test_register_DRVCTRL error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('register_CHOPCONF'), self.test_register_CHOPCONF), 'x1 test_register_CHOPCONF error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('register_SMARTEN'), self.test_register_SMARTEN), 'x1 test_register_SMARTEN error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('register_SGCSCONF'), self.test_register_SGCSCONF), 'x1 test_register_SGCSCONF error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('register_DRVCONF'), self.test_register_DRVCONF), 'x1 test_register_DRVCONF error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('active_current_scale'), self.test_active_current_scale), 'x1 test_active_current_scale error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('stand_still_current_scale'), self.test_stand_still_current_scale), 'x1 test_stand_still_current_scale error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('stall_guard_alarm_threshold'), self.test_stall_guard_alarm_threshold), 'x1 test_stall_guard_alarm_threshold error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('step_period_us_to_read_SG'), self.test_step_period_us_to_read_SG), 'x1 test_step_period_us_to_read_SG error'
+        self.assertEqual(self.serial_module.x1_motor_registers.get('gradient_per_celsius'), self.test_gradient_per_celsius), 'x1 test_gradient_per_celsius error'
         assert self.serial_module.is_connected(), 'not connected'
 
-    def test_register_DRVCTRL_read_in(self):
+    def test_motor_x2(self):
         """ 
-        Test that register_DRVCTRL is expected value, and that serial continues to work
+        Test that motor registers are expected value for x2, and that serial continues to work
         This is relevant to FW between v228 onwards
         """
-        self.status_and_PCB_constructor(2, register_DRVCTRL = self.test_register_DRVCTRL)
-        self.assertEqual(self.serial_module.register_DRVCTRL, self.test_register_DRVCTRL), 'register_DRVCTRL error'
+        self.status_and_PCB_constructor(case=2, motor_id = 1)
+        self.assertEqual(self.serial_module.x2_motor_registers.get('motor_id'), 1), 'x2 motor id error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('register_DRVCTRL'), self.test_register_DRVCTRL), 'x2 test_register_DRVCTRL error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('register_CHOPCONF'), self.test_register_CHOPCONF), 'x2 test_register_CHOPCONF error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('register_SMARTEN'), self.test_register_SMARTEN), 'x2 test_register_SMARTEN error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('register_SGCSCONF'), self.test_register_SGCSCONF), 'x2 test_register_SGCSCONF error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('register_DRVCONF'), self.test_register_DRVCONF), 'x2 test_register_DRVCONF error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('active_current_scale'), self.test_active_current_scale), 'x2 test_active_current_scale error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('stand_still_current_scale'), self.test_stand_still_current_scale), 'x2 test_stand_still_current_scale error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('stall_guard_alarm_threshold'), self.test_stall_guard_alarm_threshold), 'x2 test_stall_guard_alarm_threshold error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('step_period_us_to_read_SG'), self.test_step_period_us_to_read_SG), 'x2 test_step_period_us_to_read_SG error'
+        self.assertEqual(self.serial_module.x2_motor_registers.get('gradient_per_celsius'), self.test_gradient_per_celsius), 'x2 test_gradient_per_celsius error'
         assert self.serial_module.is_connected(), 'not connected'
 
-    def test_register_CHOPCONF_read_in(self):
+    def test_motor_y1(self):
         """ 
-        Test that register_CHOPCONF is expected value, and that serial continues to work
+        Test that motor id is expected value for y1, and that serial continues to work
         This is relevant to FW between v228 onwards
         """
-        self.status_and_PCB_constructor(2, register_CHOPCONF = self.test_register_CHOPCONF)
-        self.assertEqual(self.serial_module.register_CHOPCONF, self.test_register_CHOPCONF), 'register_CHOPCONF error'
+        self.status_and_PCB_constructor(case=2, motor_id = 2)
+        self.assertEqual(self.serial_module.y1_motor_registers.get('motor_id'), 2), 'y1 motor id error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('register_DRVCTRL'), self.test_register_DRVCTRL), 'y1 test_register_DRVCTRL error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('register_CHOPCONF'), self.test_register_CHOPCONF), 'y1 test_register_CHOPCONF error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('register_SMARTEN'), self.test_register_SMARTEN), 'y1 test_register_SMARTEN error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('register_SGCSCONF'), self.test_register_SGCSCONF), 'y1 test_register_SGCSCONF error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('register_DRVCONF'), self.test_register_DRVCONF), 'y1 test_register_DRVCONF error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('active_current_scale'), self.test_active_current_scale), 'y1 test_active_current_scale error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('stand_still_current_scale'), self.test_stand_still_current_scale), 'y1 test_stand_still_current_scale error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('stall_guard_alarm_threshold'), self.test_stall_guard_alarm_threshold), 'y1 test_stall_guard_alarm_threshold error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('step_period_us_to_read_SG'), self.test_step_period_us_to_read_SG), 'y1 test_step_period_us_to_read_SG error'
+        self.assertEqual(self.serial_module.y1_motor_registers.get('gradient_per_celsius'), self.test_gradient_per_celsius), 'y1 test_gradient_per_celsius error'
         assert self.serial_module.is_connected(), 'not connected'
 
-    def test_register_SMARTEN_read_in(self):
+    def test_motor_y2(self):
         """ 
-        Test that register_SMARTEN is expected value, and that serial continues to work
+        Test that motor id is expected value for y2, and that serial continues to work
         This is relevant to FW between v228 onwards
         """
-        self.status_and_PCB_constructor(2, register_SMARTEN = self.test_register_SMARTEN)
-        self.assertEqual(self.serial_module.register_SMARTEN, self.test_register_SMARTEN), 'register_SMARTEN error'
+        self.status_and_PCB_constructor(case=2, motor_id = 3)
+        self.assertEqual(self.serial_module.y2_motor_registers.get('motor_id'), 3), 'y2 motor id error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('register_DRVCTRL'), self.test_register_DRVCTRL), 'y2 test_register_DRVCTRL error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('register_CHOPCONF'), self.test_register_CHOPCONF), 'y2 test_register_CHOPCONF error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('register_SMARTEN'), self.test_register_SMARTEN), 'y2 test_register_SMARTEN error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('register_SGCSCONF'), self.test_register_SGCSCONF), 'y2 test_register_SGCSCONF error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('register_DRVCONF'), self.test_register_DRVCONF), 'y2 test_register_DRVCONF error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('active_current_scale'), self.test_active_current_scale), 'y2 test_active_current_scale error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('stand_still_current_scale'), self.test_stand_still_current_scale), 'y2 test_stand_still_current_scale error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('stall_guard_alarm_threshold'), self.test_stall_guard_alarm_threshold), 'y2 test_stall_guard_alarm_threshold error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('step_period_us_to_read_SG'), self.test_step_period_us_to_read_SG), 'y2 test_step_period_us_to_read_SG error'
+        self.assertEqual(self.serial_module.y2_motor_registers.get('gradient_per_celsius'), self.test_gradient_per_celsius), 'y2 test_gradient_per_celsius error'
         assert self.serial_module.is_connected(), 'not connected'
 
-    def test_register_SGCSCONF_read_in(self):
+    def test_motor_z(self):
         """ 
-        Test that register_SGCSCONF is expected value, and that serial continues to work
+        Test that motor id is expected value for z, and that serial continues to work
         This is relevant to FW between v228 onwards
         """
-        self.status_and_PCB_constructor(2, register_SGCSCONF = self.test_register_SGCSCONF)
-        self.assertEqual(self.serial_module.register_SGCSCONF, self.test_register_SGCSCONF), 'register_SGCSCONF error'
+        self.status_and_PCB_constructor(case=2, motor_id = 4)
+        self.assertEqual(self.serial_module.z_motor_registers.get('motor_id'), 4), 'z motor id error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('register_DRVCTRL'), self.test_register_DRVCTRL), 'z test_register_DRVCTRL error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('register_CHOPCONF'), self.test_register_CHOPCONF), 'z test_register_CHOPCONF error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('register_SMARTEN'), self.test_register_SMARTEN), 'z test_register_SMARTEN error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('register_SGCSCONF'), self.test_register_SGCSCONF), 'z test_register_SGCSCONF error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('register_DRVCONF'), self.test_register_DRVCONF), 'z test_register_DRVCONF error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('active_current_scale'), self.test_active_current_scale), 'z test_active_current_scale error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('stand_still_current_scale'), self.test_stand_still_current_scale), 'z test_stand_still_current_scale error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('stall_guard_alarm_threshold'), self.test_stall_guard_alarm_threshold), 'z test_stall_guard_alarm_threshold error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('step_period_us_to_read_SG'), self.test_step_period_us_to_read_SG), 'z test_step_period_us_to_read_SG error'
+        self.assertEqual(self.serial_module.z_motor_registers.get('gradient_per_celsius'), self.test_gradient_per_celsius), 'z test_gradient_per_celsius error'
         assert self.serial_module.is_connected(), 'not connected'
 
-    def test_register_DRVCONF_read_in(self):
-        """ 
-        Test that register_DRVCONF is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, register_DRVCONF = self.test_register_DRVCONF)
-        self.assertEqual(self.serial_module.register_DRVCONF, self.test_register_DRVCONF), 'register_DRVCONF error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_register_DRVCTRL_read_in(self):
+    #     """ 
+    #     Test that register_DRVCTRL is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, register_DRVCTRL = self.test_register_DRVCTRL)
+    #     self.assertEqual(self.serial_module.register_DRVCTRL, self.test_register_DRVCTRL), 'register_DRVCTRL error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
-    def test_active_current_scale_read_in(self):
-        """ 
-        Test that active_current_scale is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, active_current_scale = self.test_active_current_scale)
-        self.assertEqual(self.serial_module.active_current_scale, self.test_active_current_scale), 'active_current_scale error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_register_CHOPCONF_read_in(self):
+    #     """ 
+    #     Test that register_CHOPCONF is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, register_CHOPCONF = self.test_register_CHOPCONF)
+    #     self.assertEqual(self.serial_module.register_CHOPCONF, self.test_register_CHOPCONF), 'register_CHOPCONF error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
-    def test_stand_still_current_scale_read_in(self):
-        """ 
-        Test that stand_still_current_scale is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, stand_still_current_scale = self.test_stand_still_current_scale)
-        self.assertEqual(self.serial_module.stand_still_current_scale, self.test_stand_still_current_scale), 'stand_still_current_scale error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_register_SMARTEN_read_in(self):
+    #     """ 
+    #     Test that register_SMARTEN is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, register_SMARTEN = self.test_register_SMARTEN)
+    #     self.assertEqual(self.serial_module.register_SMARTEN, self.test_register_SMARTEN), 'register_SMARTEN error'
+    #     assert self.serial_module.is_connected(), 'not connected'
+
+    # def test_register_SGCSCONF_read_in(self):
+    #     """ 
+    #     Test that register_SGCSCONF is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, register_SGCSCONF = self.test_register_SGCSCONF)
+    #     self.assertEqual(self.serial_module.register_SGCSCONF, self.test_register_SGCSCONF), 'register_SGCSCONF error'
+    #     assert self.serial_module.is_connected(), 'not connected'
+
+    # def test_register_DRVCONF_read_in(self):
+    #     """ 
+    #     Test that register_DRVCONF is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, register_DRVCONF = self.test_register_DRVCONF)
+    #     self.assertEqual(self.serial_module.register_DRVCONF, self.test_register_DRVCONF), 'register_DRVCONF error'
+    #     assert self.serial_module.is_connected(), 'not connected'
+
+    # def test_active_current_scale_read_in(self):
+    #     """ 
+    #     Test that active_current_scale is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, active_current_scale = self.test_active_current_scale)
+    #     self.assertEqual(self.serial_module.active_current_scale, self.test_active_current_scale), 'active_current_scale error'
+    #     assert self.serial_module.is_connected(), 'not connected'
+
+    # def test_stand_still_current_scale_read_in(self):
+    #     """ 
+    #     Test that stand_still_current_scale is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, stand_still_current_scale = self.test_stand_still_current_scale)
+    #     self.assertEqual(self.serial_module.stand_still_current_scale, self.test_stand_still_current_scale), 'stand_still_current_scale error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
 
-    def test_stall_guard_alarm_threshold_read_in(self):
-        """ 
-        Test that stall_guard_alarm_threshold is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, stall_guard_alarm_threshold = self.test_stall_guard_alarm_threshold)
-        self.assertEqual(self.serial_module.stall_guard_alarm_threshold, self.test_stall_guard_alarm_threshold), 'stall_guard_alarm_threshold error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_stall_guard_alarm_threshold_read_in(self):
+    #     """ 
+    #     Test that stall_guard_alarm_threshold is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, stall_guard_alarm_threshold = self.test_stall_guard_alarm_threshold)
+    #     self.assertEqual(self.serial_module.stall_guard_alarm_threshold, self.test_stall_guard_alarm_threshold), 'stall_guard_alarm_threshold error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
-    def test_step_period_us_to_read_SG_read_in(self):
-        """ 
-        Test that step_period_us_to_read_SG is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, step_period_us_to_read_SG = self.test_step_period_us_to_read_SG)
-        self.assertEqual(self.serial_module.step_period_us_to_read_SG, self.test_step_period_us_to_read_SG), 'step_period_us_to_read_SG error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_step_period_us_to_read_SG_read_in(self):
+    #     """ 
+    #     Test that step_period_us_to_read_SG is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, step_period_us_to_read_SG = self.test_step_period_us_to_read_SG)
+    #     self.assertEqual(self.serial_module.step_period_us_to_read_SG, self.test_step_period_us_to_read_SG), 'step_period_us_to_read_SG error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
-    def test_gradient_per_celsius_read_in(self):
-        """ 
-        Test that gradient_per_celsius is expected value, and that serial continues to work
-        This is relevant to FW between v228 onwards
-        """
-        self.status_and_PCB_constructor(2, gradient_per_celsius = self.test_gradient_per_celsius)
-        self.assertEqual(self.serial_module.gradient_per_celsius, self.test_gradient_per_celsius), 'gradient_per_celsius error'
-        assert self.serial_module.is_connected(), 'not connected'
+    # def test_gradient_per_celsius_read_in(self):
+    #     """ 
+    #     Test that gradient_per_celsius is expected value, and that serial continues to work
+    #     This is relevant to FW between v228 onwards
+    #     """
+    #     self.status_and_PCB_constructor(2, gradient_per_celsius = self.test_gradient_per_celsius)
+    #     self.assertEqual(self.serial_module.gradient_per_celsius, self.test_gradient_per_celsius), 'gradient_per_celsius error'
+    #     assert self.serial_module.is_connected(), 'not connected'
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+    #import sys;sys.argv = get('', 'Test.)estName']
     unittest.main()
