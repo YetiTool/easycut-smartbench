@@ -577,8 +577,6 @@ class ZHeadQC1(Screen):
         else:
             pass_fail = pass_fail*(False)
 
-            log(self.m.s.m_state)
-
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
