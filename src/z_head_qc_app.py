@@ -54,6 +54,7 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
 from asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_spindle_shutdown 
+from asmcnc.skavaUI import screen_error
 from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
 from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
 from asmcnc.production.z_head_qc_jig.z_head_qc_3 import ZHeadQC3
@@ -92,6 +93,9 @@ class ZHeadQC(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
+        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)
+        sm.add_widget(error_screen)
+
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         sm.add_widget(door_screen)
 
@@ -113,7 +117,7 @@ class ZHeadQC(App):
         squaring_active_screen = SquaringScreenActive(name = 'squaring_active', screen_manager = sm, machine =m, localization = l)
         sm.add_widget(squaring_active_screen)
 
-        z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
+        z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_1)
 
         z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m, l = l)

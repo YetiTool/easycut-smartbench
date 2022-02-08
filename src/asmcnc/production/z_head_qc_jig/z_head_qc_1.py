@@ -368,6 +368,7 @@ class ZHeadQC1(Screen):
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
+        self.l = kwargs['l']
 
         # Green status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
