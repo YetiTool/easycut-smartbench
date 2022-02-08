@@ -941,7 +941,7 @@ class RouterMachine(object):
 
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
-            if is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
+            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
 
                 get_registers_cmd = self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
                 # TEMP!! CHECK WRITE TYPE, i.e. realtime or not
