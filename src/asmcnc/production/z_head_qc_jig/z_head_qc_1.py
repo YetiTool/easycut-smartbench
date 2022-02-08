@@ -414,7 +414,7 @@ class ZHeadQC1(Screen):
                     '$11=0.010',      #Junction deviation, mm
                     '$12=0.002',      #Arc tolerance, mm
                     '$13=0',          #Report inches, boolean
-                    '$20=1',          #Soft limits, boolean <-------------------
+                    # '$20=1',          #Soft limits, boolean <-------------------
                     # '$21=1',          #Hard limits, boolean <------------------
                     '$22=1',          #Homing cycle, boolean <------------------------
                     '$23=3',          #Homing dir invert, mask
@@ -446,8 +446,9 @@ class ZHeadQC1(Screen):
     def test_motor_chips(self):
 
         # I think its fine to run both at the same time, but check on HW
-        self.m.jog_relative('X', 700, 8000) # move for 5 seconds at 8000 mm/min
-        self.m.jog_relative('Z', 63, 750) # move for 5 seconds at 750 mm/min
+        # self.m.jog_relative('X', 700, 8000) # move for 5 seconds at 8000 mm/min
+        # self.m.jog_relative('Z', 63, 750) # move for 5 seconds at 750 mm/min
+        self.m.s.write_command('$J=G91 X700 Z63 F8035') # move for 5 seconds in x and z directions at max speed
         Clock.schedule_once(self.check_sg_values, 3)
 
     def check_sg_values(self, dt):
@@ -618,6 +619,7 @@ class ZHeadQC1(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def disable_alarms(self):
+        self.m.s.write_command('$20 = 0') # disable soft limit, to allow jog for motor chips test
         self.m.s.write_command('$21 = 0')
 
     def update_checkboxes(self, dt):
