@@ -274,15 +274,16 @@ class ZHeadQC2(Screen):
         self.m.s.write_command('$21 = 1')
 
     def run_digital_spindle_test(self):
-
         log('testing')
 
         def test_rpm():
             def read_rpm(): 
-                if self.m.s.spindle_speed > 9500 and self.m.s.spindle_speed < 10500:
+                if self.m.s.spindle_speed > 9000 and self.m.s.spindle_speed < 11000:
                     self.digital_spindle_pass_fail = True
                 else: 
                     self.digital_spindle_pass_fail = False
+
+                self.m.s.write_command('M5')
 
             self.m.s.write_command('M3 10000')
 
@@ -320,6 +321,7 @@ class ZHeadQC2(Screen):
         load_pass = test_load()
         killtime_pass = test_killtime()
         voltage_pass = test_voltage()
+        test_rpm()
 
         if temperature_pass and load_pass and killtime_pass and voltage_pass and self.digital_spindle_pass_fail:
             log('Test passed')
