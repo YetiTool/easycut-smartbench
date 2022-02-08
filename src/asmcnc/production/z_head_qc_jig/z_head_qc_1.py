@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
+from datetime import datetime
 
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import popup_info
@@ -355,6 +356,10 @@ Builder.load_string("""
 
 """)
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+
 
 class ZHeadQC1(Screen):
 
@@ -571,6 +576,9 @@ class ZHeadQC1(Screen):
 
         else:
             pass_fail = pass_fail*(False)
+
+            log(self.m.s.m_state)
+
             fail_report.append("Transistor Heatsink Temperature: " + str(self.m.s.transistor_heatsink_temp) + " degrees C")
             fail_report.append("Should be greater than 0 and less than 100 deg C.")
 
