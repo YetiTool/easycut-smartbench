@@ -94,7 +94,7 @@ class protocol_v2(object):
         u16_data = SpindleSpeed
         byte_array = b''
         for idx in range(data_length):
-            byte_array = byte_array + ((u16_data >> idx*8) & self.custom_int_to_bytes(0xff))
+            byte_array = byte_array + self.custom_int_to_bytes(((u16_data >> idx*8) & 0xff))
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -192,6 +192,6 @@ class protocol_v2(object):
         data_length = len
         byte_array = self.custom_int_to_bytes(cmd) # first byte of data is TMC command
         for idx in range(data_length):
-            byte_array = byte_array + ((data >> idx*8) & self.custom_int_to_bytes(0xff))
+            byte_array = byte_array + self.custom_int_to_bytes(((data >> idx*8) & 0xff))
 
         return self.construct_rtl_v2_packet(command, byte_array)
