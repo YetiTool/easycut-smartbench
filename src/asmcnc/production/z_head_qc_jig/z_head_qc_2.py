@@ -278,7 +278,7 @@ class ZHeadQC2(Screen):
         log('testing')
 
         def test_rpm():
-            def read_rpm(): 
+            def read_rpm(dt): 
                 if self.m.s.spindle_speed > 9000 and self.m.s.spindle_speed < 11000:
                     self.digital_spindle_pass_fail = True
                 else: 
