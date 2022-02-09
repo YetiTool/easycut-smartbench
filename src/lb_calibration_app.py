@@ -92,7 +92,7 @@ class LBCalibration(App):
         lb_calibration_6 = LBCalibrationFail(name = 'lbc6', sm = sm, m = m)
         sm.add_widget(lb_calibration_6)
 
-        sm.current = 'lbc1'
+        sm.current = 'lbc6'
 
         return sm
 

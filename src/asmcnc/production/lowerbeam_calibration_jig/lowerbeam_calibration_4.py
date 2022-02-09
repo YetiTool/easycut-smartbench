@@ -57,7 +57,7 @@ class LBCalibration4(Screen):
         self.m = kwargs['m']
 
     def enter_prev_screen(self):
-        self.sm.current = 'lbc3'
+        self.sm.current = 'lbc2'
 
     def enter_next_screen(self):
         self.sm.get_screen('lbc5').set_serial_no(self.serial_no_input.text)
