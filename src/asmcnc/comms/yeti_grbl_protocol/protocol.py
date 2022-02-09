@@ -18,7 +18,7 @@ class protocol_v2(object):
     # Python 2.7 int type doesn't have to_bytes function in built, so have to make one. 
     # This will convert into "big" endian size 1 bytes.
     def custom_int_to_bytes(self, thing_to_convert):
-        return struct.pack('>b', thing_to_convert)
+        return struct.pack('>B', thing_to_convert)
 
     def construct_rtl_v2_packet(self, command = 255, data = [], printlog=False):     
         # function returns byte string to be sent to GRBL as is. 
