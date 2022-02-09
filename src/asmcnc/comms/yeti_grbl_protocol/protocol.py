@@ -37,7 +37,7 @@ class protocol_v2(object):
             
             hash = crc8.crc8() # init crc8
             
-            byte_array = custom_int_to_bytes(packet_length) + self.custom_int_to_bytes(sequence_number) + custom_int_to_bytes(command) + data            
+            byte_array = self.custom_int_to_bytes(packet_length) + self.custom_int_to_bytes(self.sequence_number) + self.custom_int_to_bytes(command) + data            
 
             hash.update(byte_array)# compute crc8 : update crc8 hash
             
@@ -72,7 +72,7 @@ class protocol_v2(object):
     # Set the dust show light color in RGB 3 bytes format, Green would be “^\x01\x00\xFF\x00“
     def RGB_LED(self, R, G, B):
         command = SET_RGB_LED_STATE
-        byte_array = custom_int_to_bytes(R) + custom_int_to_bytes(G) + custom_int_to_bytes(B)
+        byte_array = self.custom_int_to_bytes(R) + self.custom_int_to_bytes(G) + self.custom_int_to_bytes(B)
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -81,7 +81,7 @@ class protocol_v2(object):
         command = SET_EXTRACTION_STATE
         if (ExtractorState>1):
             ExtractorState = 1
-        byte_array = custom_int_to_bytes(ExtractorState) 
+        byte_array = self.custom_int_to_bytes(ExtractorState) 
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -94,7 +94,7 @@ class protocol_v2(object):
         u16_data = SpindleSpeed
         byte_array = b''
         for idx in range(data_length):
-            byte_array = byte_array + ((u16_data >> idx*8) & custom_int_to_bytes(0xff))
+            byte_array = byte_array + ((u16_data >> idx*8) & self.custom_int_to_bytes(0xff))
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -103,7 +103,7 @@ class protocol_v2(object):
         command = SET_LASER_DATUM_STATE
         if (LaserDatumState>1):
             LaserDatumState = 1
-        byte_array = custom_int_to_bytes(LaserDatumState) 
+        byte_array = self.custom_int_to_bytes(LaserDatumState) 
         return self.construct_rtl_v2_packet(command, byte_array)
 
     
@@ -190,8 +190,8 @@ class protocol_v2(object):
     def constructTMCcommand(self, cmd, data, len):
         command = TMC_COMMAND
         data_length = len
-        byte_array = custom_int_to_bytes(cmd) # first byte of data is TMC command
+        byte_array = self.custom_int_to_bytes(cmd) # first byte of data is TMC command
         for idx in range(data_length):
-            byte_array = byte_array + ((data >> idx*8) & custom_int_to_bytes(0xff))
+            byte_array = byte_array + ((data >> idx*8) & self.custom_int_to_bytes(0xff))
 
         return self.construct_rtl_v2_packet(command, byte_array)
