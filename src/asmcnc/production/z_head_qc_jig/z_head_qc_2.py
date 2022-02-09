@@ -3,7 +3,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from datetime import datetime
 from asmcnc.skavaUI import popup_info
-from asmcnc.production import popup_z_head_qc
+from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
 

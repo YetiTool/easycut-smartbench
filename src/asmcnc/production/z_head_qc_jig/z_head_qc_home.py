@@ -3,7 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
 
-from asmcnc.production import popup_z_head_qc
+from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 Builder.load_string("""
 <ZHeadQCHome>:
