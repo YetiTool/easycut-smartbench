@@ -61,6 +61,7 @@ class ZHeadQCHome(Screen):
         super(ZHeadQCHome, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
+        self.m = kwargs['m']
 
         self.start_calibration_timer(0.5)
 
