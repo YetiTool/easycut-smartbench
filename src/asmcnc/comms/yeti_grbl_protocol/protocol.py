@@ -5,9 +5,8 @@
 
 
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *  # definitions common between FW and console SW
-import logging
 from asmcnc.comms.yeti_grbl_protocol import crc8
-import struct
+import logging, struct
 
 
 class protocol_v2(object):
@@ -16,9 +15,10 @@ class protocol_v2(object):
         self.sequence_number = 0        # Sequence number. 1 byte incremental number. This number is increased at a rate of one for each new packet. Wraps to 0 after 255. Purpose of this field is to catch lost packets. This is one of the simple ways to handle errors in communications systems without acknowledgement.
         self.first_seq_after_boot = 1   # handshake flag, used to reset sequence number at host boot to avoid ASMCNC_RTL_SEQ_ERROR for the first packet
 
+    # Python 2.7 int type doesn't have to_bytes function in built, so have to make one. 
+    # This will convert into "big" endian size 1 bytes.
     def custom_int_to_bytes(self, thing_to_convert):
         return struct.pack('>b', thing_to_convert)
-
 
     def construct_rtl_v2_packet(self, command = 255, data = [], printlog=False):     
         # function returns byte string to be sent to GRBL as is. 
@@ -37,7 +37,7 @@ class protocol_v2(object):
             
             hash = crc8.crc8() # init crc8
             
-            byte_array = self.custom_int_to_bytes(packet_length) + self.custom_int_to_bytes(self.sequence_number) + self.custom_int_to_bytes(command) + data            
+            byte_array = custom_int_to_bytes(packet_length) + self.custom_int_to_bytes(sequence_number) + custom_int_to_bytes(command) + data            
 
             hash.update(byte_array)# compute crc8 : update crc8 hash
             
@@ -69,10 +69,10 @@ class protocol_v2(object):
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
-    # Set the dust show light color in RGB 3 bytes format, Green would be “^\x01\x00\xFF\x00“
+    # Set the dust show light color in RGB 3 bytes format, Green would be “^\x01\x00\xFF\x00“
     def RGB_LED(self, R, G, B):
         command = SET_RGB_LED_STATE
-        byte_array = self.custom_int_to_bytes(R) + self.custom_int_to_bytes(G) + self.custom_int_to_bytes(B)
+        byte_array = custom_int_to_bytes(R) + custom_int_to_bytes(G) + custom_int_to_bytes(B)
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -81,7 +81,7 @@ class protocol_v2(object):
         command = SET_EXTRACTION_STATE
         if (ExtractorState>1):
             ExtractorState = 1
-        byte_array = self.custom_int_to_bytes(ExtractorState)
+        byte_array = custom_int_to_bytes(ExtractorState) 
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -94,7 +94,7 @@ class protocol_v2(object):
         u16_data = SpindleSpeed
         byte_array = b''
         for idx in range(data_length):
-            byte_array = byte_array + self.custom_int_to_bytes(((u16_data >> idx*8) & 0xff))
+            byte_array = byte_array + ((u16_data >> idx*8) & custom_int_to_bytes(0xff))
         return self.construct_rtl_v2_packet(command, byte_array)
 
 
@@ -103,7 +103,7 @@ class protocol_v2(object):
         command = SET_LASER_DATUM_STATE
         if (LaserDatumState>1):
             LaserDatumState = 1
-        byte_array = self.custom_int_to_bytes(LaserDatumState)
+        byte_array = custom_int_to_bytes(LaserDatumState) 
         return self.construct_rtl_v2_packet(command, byte_array)
 
     
@@ -179,15 +179,19 @@ class protocol_v2(object):
         byte_array = b'' # empty data
         return self.construct_rtl_v2_packet(command, byte_array)
 
+    # Report full GRBL run-time statistics: resets, uptime, travel time, stalls
+    def GetStatistics(self):
+        command = GET_STATISTICS
+        byte_array = b'' # empty data
+        return self.construct_rtl_v2_packet(command, byte_array)
+
 
     # TMC command, see table xx
     def constructTMCcommand(self, cmd, data, len):
         command = TMC_COMMAND
         data_length = len
-        byte_array = self.custom_int_to_bytes(cmd) # first byte of data is TMC command
+        byte_array = custom_int_to_bytes(cmd) # first byte of data is TMC command
         for idx in range(data_length):
-            byte_array = byte_array + self.custom_int_to_bytes(((data >> idx*8) & 0xff))
+            byte_array = byte_array + ((data >> idx*8) & custom_int_to_bytes(0xff))
 
         return self.construct_rtl_v2_packet(command, byte_array)
-
-
