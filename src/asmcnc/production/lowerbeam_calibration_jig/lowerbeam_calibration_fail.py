@@ -40,7 +40,7 @@ Builder.load_string("""
                 font_size: dp(50)
             
             Button:
-                on_press: root.shutdown_console()
+                on_press: root.retry_send()
                 text: 'RETRY DATA SEND'
                 font_size: dp(30)
                 size_hint_y: 0.2
@@ -58,6 +58,5 @@ class LBCalibrationFail(Screen):
     def enter_prev_screen(self):
         self.sm.current = 'lbc4'
 
-    def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            os.system('sudo shutdown -h now')
+    def retry_send(self):
+        self.sm.current = 'qc4'
