@@ -93,7 +93,7 @@ class ZHeadQC(App):
 
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
-        usb_stick = usb_storage.USB_storage(self.sm, self.l)
+        usb_stick = usb_storage.USB_storage(sm, l)
         usb_stick.enable()
 
         if m.s.is_connected():
