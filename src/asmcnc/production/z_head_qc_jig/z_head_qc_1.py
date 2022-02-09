@@ -65,16 +65,6 @@ Builder.load_string("""
                     GridLayout:
                         cols: 2
 
-                        Button:
-                            text: 'Up'
-                            text_size: self.size
-                            markup: 'True'
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.x_motor_up()
-                            on_release: root.quit_jog()
-                        
                         Button: 
                             text: 'Down'
                             text_size: self.size
@@ -83,6 +73,16 @@ Builder.load_string("""
                             valign: 'middle'
                             padding: [dp(10),0]
                             on_press: root.x_motor_down()
+                            on_release: root.quit_jog()
+
+                        Button:
+                            text: 'Up'
+                            text_size: self.size
+                            markup: 'True'
+                            halign: 'left'
+                            valign: 'middle'
+                            padding: [dp(10),0]
+                            on_press: root.x_motor_up()
                             on_release: root.quit_jog()
 
                 Button:
@@ -121,16 +121,6 @@ Builder.load_string("""
                     GridLayout:
                         cols: 2
 
-                        Button:
-                            text: 'Up'
-                            text_size: self.size
-                            markup: 'True'
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.z_motor_up()
-                            on_release: root.quit_jog()
-
                         Button: 
                             text: 'Down'
                             text_size: self.size
@@ -139,6 +129,16 @@ Builder.load_string("""
                             valign: 'middle'
                             padding: [dp(10),0]
                             on_press: root.z_motor_down()
+                            on_release: root.quit_jog()
+
+                        Button:
+                            text: 'Up'
+                            text_size: self.size
+                            markup: 'True'
+                            halign: 'left'
+                            valign: 'middle'
+                            padding: [dp(10),0]
+                            on_press: root.z_motor_up()
                             on_release: root.quit_jog()
 
                 Button:
@@ -152,14 +152,25 @@ Builder.load_string("""
 
                 # ROW 3
 
-                Button:
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    padding: [dp(10),0]
-                    text: '1. Bake GRBL Settings'
-                    on_press: root.bake_grbl_settings()
+                GridLayout:
+                    cols: 2
+
+                    Button:
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        text: '1. Bake GRBL Settings'
+                        on_press: root.bake_grbl_settings()
+
+                    Image:
+                        id: bake_grbl_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 GridLayout:
                     cols: 3
@@ -219,21 +230,24 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '2. Test motor chips'
+                        id: home_button
+                        text: '3. HOME'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
-                        on_press: root.test_motor_chips()
+                        on_press: root.home()
 
-                    Image:
-                        id: motor_chips_check
-                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True
+                    Button: 
+                        id: reset_button
+                        text: '4. RESET'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        padding: [dp(10),0]
+                        on_press: root.resume_from_alarm()
 
                 GridLayout:
                     cols: 2
@@ -289,29 +303,26 @@ Builder.load_string("""
                         allow_stretch: True
 
                 # ROW 5
-
+                
                 GridLayout:
                     cols: 2
 
                     Button:
-                        id: home_button
-                        text: '3. HOME'
+                        text: '2. Test motor chips'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
                         padding: [dp(10),0]
-                        on_press: root.home()
+                        on_press: root.test_motor_chips()
 
-                    Button: 
-                        id: reset_button
-                        text: '4. RESET'
-                        text_size: self.size
-                        markup: 'True'
-                        halign: 'left'
-                        valign: 'middle'
-                        padding: [dp(10),0]
-                        on_press: root.resume_from_alarm()
+                    Image:
+                        id: motor_chips_check
+                        source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
                 GridLayout:
                     cols: 2
@@ -449,6 +460,8 @@ class ZHeadQC1(Screen):
             ]
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+
+        self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def test_motor_chips(self):
 

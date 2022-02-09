@@ -13,10 +13,16 @@ fi
 
 if [ -f /home/pi/ZHEADTESTJIG.txt ]
 then
-        echo "running z head diagnostics"
+        echo "Running z head diagnostics"
 
         cd /home/pi/easycut-smartbench/src/
         exec python z_head_qc_app.py
+elif [ -f /home/pi/LBCALIBRATIONJIG.txt ]
+then
+        echo "Running lb calibration"
+
+        cd /home/pi/easycut-smartbench/src/
+        exec python lb_calibration_app.py
 else
         cd /home/pi/easycut-smartbench/src/
         # execute python
