@@ -5,8 +5,14 @@ Created on 03 August 2020
 
 ## Renumber all items after vac
 
-import pigpio, os, sys, subprocess
+import os, sys, subprocess
 from datetime import datetime
+
+try: 
+    import pigpio
+
+except:
+    pass
 
 import kivy
 from kivy.lang import Builder
