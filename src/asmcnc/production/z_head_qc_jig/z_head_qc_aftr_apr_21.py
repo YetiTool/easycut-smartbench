@@ -17,6 +17,7 @@ from kivy.properties import StringProperty
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+from asmcnc.production import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -52,6 +53,7 @@ Builder.load_string("""
                 GridLayout:
                     cols: 2
                     Button: 
+                        size_hint_x: 0.3
                         text: '  <<< Back'
                         on_press: root.back_to_choice()
                         color: 1,1,1,1
@@ -61,6 +63,7 @@ Builder.load_string("""
                         valign: 'middle'
                     Label:
                         id: fw_version_label
+                        size_hint_x: 0.6
                         text: 'fw version 1.etc.'
                         color: 1,1,1,1
                 GridLayout:
@@ -561,7 +564,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         if pass_fail == 0:
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = "\n".join(fail_report)
-            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
         else:
@@ -573,9 +576,6 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             self.z_limit_set = True
         else:
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
-
-    def stop(self):
-        popup_info.PopupStop(self.m, self.sm)
 
     def quit_jog(self):
         self.m.quit_jog()
@@ -636,7 +636,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 if self.spindle_pass_fail == 0:
                     self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
                     test = self.string_overload_summary.split("**")
-                    popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
+                    popup_z_head_qc.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
 
                 else: 
                     self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
@@ -732,13 +732,11 @@ class ZHeadQCWarrantyAfterApr21(Screen):
             else: 
                 did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
 
-            popup_info.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
             self.test_fw_update_button.text = "  19. Test FW Update"
 
         Clock.schedule_once(nested_do_fw_update, 1)
 
-    def exit(self):
-        self.sm.current = 'lobby'
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
@@ -749,3 +747,6 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def back_to_choice(self):
         self.sm.current = 'qcWC'
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)

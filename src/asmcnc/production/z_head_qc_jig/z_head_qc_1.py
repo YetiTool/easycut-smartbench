@@ -5,6 +5,7 @@ from datetime import datetime
 
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import popup_info
+from asmcnc.production import popup_z_head_qc
 
 Builder.load_string("""
 <ZHeadQC1>:
@@ -480,7 +481,7 @@ class ZHeadQC1(Screen):
 
         if not pass_fail:
             fail_report_string = "\n".join(fail_report)
-            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
             self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
         else:
@@ -616,7 +617,7 @@ class ZHeadQC1(Screen):
         if not pass_fail:
             Clock.unschedule(self.poll_for_temps_power)
             fail_report_string = "\n".join(fail_report)
-            popup_info.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
         else:

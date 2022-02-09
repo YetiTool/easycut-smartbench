@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from datetime import datetime
 from asmcnc.skavaUI import popup_info
+from asmcnc.production import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -358,7 +359,7 @@ class ZHeadQC2(Screen):
                 if self.spindle_pass_fail == 0:
                     self.spindle_speed_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
                     test = self.string_overload_summary.split("**")
-                    popup_info.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
+                    popup_z_head_qc.PopupSpindleDiagnosticsInfo(self.sm, test[1], test[2], test[3], test[4],test[5])
 
                 else: 
                     self.spindle_speed_check.source = "./asmcnc/skavaUI/img/file_select_select.png"

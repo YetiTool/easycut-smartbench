@@ -17,6 +17,7 @@ from kivy.properties import StringProperty
 
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+from asmcnc.production import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
 
@@ -478,7 +479,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm)
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_jog(self):
         self.m.quit_jog()
@@ -531,13 +532,11 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             else: 
                 did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
 
-            popup_info.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
             self.test_fw_update_button.text = "  19. Test FW Update"
 
         Clock.schedule_once(nested_do_fw_update, 1)
 
-    def exit(self):
-        self.sm.current = 'lobby'
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text

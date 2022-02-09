@@ -3,9 +3,13 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.lang import Builder
 
+from asmcnc.production import popup_z_head_qc
 
 Builder.load_string("""
 <ZHeadQCHome>:
+    
+    test_fw_update_button : test_fw_update_button
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -33,6 +37,7 @@ Builder.load_string("""
                     on_press: root.enter_qc()
 
                 Button:
+                    id: test_fw_update_button 
                     text: 'NO - Update FW now!'
                     font_size: dp(20)
 
@@ -56,6 +61,33 @@ class ZHeadQCHome(Screen):
 
     def enter_qc(self):
         self.sm.current = 'qc1'
+
+    def test_fw_update(self):
+
+        self.test_fw_update_button.text = "  Updating..."
+
+        def nested_do_fw_update(dt):
+            pi = pigpio.pi()
+            pi.set_mode(17, pigpio.ALT3)
+            print(pi.get_mode(17))
+            pi.stop()
+            self.m.s.s.close()
+
+            cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            stdout, stderr = proc.communicate()
+            exit_code = int(proc.returncode)
+
+            if exit_code == 0: 
+                did_fw_update_succeed = "Success! Disconnect or reboot to reconnect to Z head."
+
+            else: 
+                did_fw_update_succeed = "Update failed. Reboot to reconnect to Z head."
+
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(stdout))
+
+        Clock.schedule_once(nested_do_fw_update, 1)
+
 
     def secret_option_c(self):
         self.sm.current = 'qcWC'
