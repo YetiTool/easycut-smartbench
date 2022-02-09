@@ -59,4 +59,4 @@ class LBCalibrationFail(Screen):
         self.sm.current = 'lbc4'
 
     def retry_send(self):
-        self.sm.current = 'qc4'
+        self.sm.current = 'lbc4'
