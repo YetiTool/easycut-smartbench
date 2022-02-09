@@ -48,9 +48,9 @@ Builder.load_string("""
 
 """)
 
-class LBCalibrationSuccess(Screen):
+class LBCalibrationFail(Screen):
     def __init__(self, **kwargs):
-        super(LBCalibrationSuccess, self).__init__(**kwargs)
+        super(LBCalibrationFail, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
