@@ -28,7 +28,6 @@ Builder.load_string("""
             spacing: 50
 
             Label:
-                id: serial_no_input
                 text: 'Enter LB serial number:'
                 font_size: dp(50)
             
@@ -39,6 +38,7 @@ Builder.load_string("""
                 padding: [200, 0]
 
                 TextInput:
+                    id: serial_no_input
                     font_size: dp(50)
 
             Button:

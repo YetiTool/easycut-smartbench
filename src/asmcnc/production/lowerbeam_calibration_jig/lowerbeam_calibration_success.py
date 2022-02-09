@@ -59,7 +59,7 @@ class LBCalibrationSuccess(Screen):
         self.m = kwargs['m']
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc4'
+        self.sm.current = 'lbc4'
 
     def shutdown_console(self):
         if sys.platform != 'win32' and sys.platform != 'darwin': 
