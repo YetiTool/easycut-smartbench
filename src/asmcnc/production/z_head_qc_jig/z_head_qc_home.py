@@ -6,6 +6,8 @@ from kivy.clock import Clock
 
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
+import subprocess
+
 try: 
     import pigpio
 
