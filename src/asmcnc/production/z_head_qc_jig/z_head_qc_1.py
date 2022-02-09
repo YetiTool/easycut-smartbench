@@ -28,6 +28,8 @@ Builder.load_string("""
     console_status_text : console_status_text
     status_container : status_container
 
+    bake_grbl_check: bake_grbl_check
+
     BoxLayout:
         orientation: 'vertical'
 
