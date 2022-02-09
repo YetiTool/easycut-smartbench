@@ -341,9 +341,6 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.string_overload_summary = ''
         self.spindle_test_counter = 0
 
-        self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
-        self.usb_stick.enable()
-
         # Status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         self.status_container.add_widget(self.status_bar_widget)

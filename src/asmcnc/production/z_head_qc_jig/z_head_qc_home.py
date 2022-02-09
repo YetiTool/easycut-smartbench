@@ -40,6 +40,7 @@ Builder.load_string("""
                     id: test_fw_update_button 
                     text: 'NO - Update FW now!'
                     font_size: dp(20)
+                    on_press: root.test_fw_update()
 
             Button: 
                 text: 'Secret option C - take me to WARRANTY QC!'

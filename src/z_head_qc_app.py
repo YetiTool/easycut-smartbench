@@ -35,6 +35,7 @@ sudo reboot
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import RouterMachine 
 from asmcnc.comms import server_connection
@@ -42,19 +43,21 @@ from asmcnc.apps.app_manager import AppManagerClass
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
-from kivy.clock import Clock
-
+from asmcnc.comms import usb_storage
 from asmcnc.comms import smartbench_flurry_database_connection
+
 from asmcnc.skavaUI.screen_home import HomeScreen
 from asmcnc.skavaUI.screen_squaring_manual_vs_square import SquaringScreenDecisionManualVsSquare
 from asmcnc.skavaUI.screen_homing_prepare import HomingScreenPrepare
 from asmcnc.skavaUI.screen_homing_active import HomingScreenActive
 from asmcnc.skavaUI.screen_squaring_active import SquaringScreenActive
-from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
-from asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
 from asmcnc.skavaUI import screen_door
 from asmcnc.skavaUI import screen_spindle_shutdown 
 from asmcnc.skavaUI import screen_error
+
+
+from asmcnc.production.z_head_qc_jig.z_head_qc_home import ZHeadQCHome
+from asmcnc.production.z_head_qc_jig.z_head_qc_warranty_choice import ZHeadWarrantyChoice
 from asmcnc.production.z_head_qc_jig.z_head_qc_1 import ZHeadQC1
 from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
 from asmcnc.production.z_head_qc_jig.z_head_qc_3 import ZHeadQC3
@@ -89,6 +92,9 @@ class ZHeadQC(App):
         m = RouterMachine(Cmport, sm, sett, l, jd)
 
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+
+        usb_stick = usb_storage.USB_storage(self.sm, self.l)
+        usb_stick.enable()
 
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
