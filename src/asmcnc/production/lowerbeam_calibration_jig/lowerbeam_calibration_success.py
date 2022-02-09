@@ -7,7 +7,7 @@ import os, sys
 import datetime
 
 Builder.load_string("""
-<LBCalibration5>:
+<LBCalibrationSuccess>:
     success_label:success_label
 
     canvas:
@@ -51,9 +51,9 @@ Builder.load_string("""
 
 """)
 
-class LBCalibration5(Screen):
+class LBCalibrationSuccess(Screen):
     def __init__(self, **kwargs):
-        super(LBCalibration5, self).__init__(**kwargs)
+        super(LBCalibrationSuccess, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']

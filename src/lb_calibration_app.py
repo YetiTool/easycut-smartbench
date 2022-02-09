@@ -46,6 +46,8 @@ from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_1 import 
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_2 import LBCalibration2
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_3 import LBCalibration3
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_4 import LBCalibration4
+from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_success import LBCalibrationSuccess
+from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_fail import LBCalibrationFail
 
 from datetime import datetime
 
@@ -83,6 +85,12 @@ class LBCalibration(App):
 
         lb_calibration_4 = LBCalibration4(name = 'lbc4', sm = sm, m = m)
         sm.add_widget(lb_calibration_4)
+
+        lb_calibration_5 = LBCalibrationSuccess(name = 'lbc5', sm = sm, m = m)
+        sm.add_widget(lb_calibration_5)
+
+        lb_calibration_6 = LBCalibrationFail(name = 'lbc6', sm = sm, m = m)
+        sm.add_widget(lb_calibration_6)
 
         sm.current = 'lbc1'
 
