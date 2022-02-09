@@ -36,11 +36,10 @@ Builder.load_string("""
                 cols: 1
                 rows: 1
 
-                padding: [400, 0]
+                padding: [200, 0]
 
                 TextInput:
                     font_size: dp(50)
-                    size_hint_y: 0.3
 
             Button:
                 on_press: root.enter_next_screen()

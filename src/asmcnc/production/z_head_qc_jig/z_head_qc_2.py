@@ -99,7 +99,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '25. Test USB "spindle"'
+                        text: '25. Test USB "spindle" (wait 45s)'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
