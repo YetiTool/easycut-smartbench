@@ -50,6 +50,9 @@ class SerialConnection(object):
     
     write_command_buffer = []
     write_realtime_buffer = []
+    write_protocol_buffer = []
+
+    last_protocol_send_time = 0
     
     monitor_text_buffer = ""
     overload_state = 0
@@ -311,6 +314,13 @@ class SerialConnection(object):
                 realtime_counter += 1
 
             del self.write_realtime_buffer[0:(realtime_counter)]
+
+            protocol_counter = 0
+            for protocol_command in self.write_protocol_buffer:
+                self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
+                protocol_counter += 1
+
+            del self.write_protocol_buffer[0:(protocol_counter)]
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
@@ -1285,7 +1295,7 @@ class SerialConnection(object):
 ## WRITE-----------------------------------------------------------------------------
 
 
-    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
+    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
@@ -1315,13 +1325,24 @@ class SerialConnection(object):
         if self.s:
             try:
 
-                if realtime == False:
-                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-                    self.s.write(serialCommand + '\n')
-                
-                elif realtime == True:
+                if realtime == True:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
                     self.s.write(serialCommand)
+
+                elif realtime == False and protocol == False:
+                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+                    self.s.write(serialCommand + '\n')
+
+                elif protocol == True:
+
+                    if self.last_protocol_send_time + 0.05 > time.time():
+
+                        self.s.write(serialCommand)
+                        self.last_protocol_send_time = time.time()
+
+                    else: 
+                        self.write_protocol(serialCommand, altDisplayText)
+
 
                 # SmartBench maintenance monitoring 
 #                 self.maintenance_value_logging(serialCommand)
@@ -1374,6 +1395,10 @@ class SerialConnection(object):
     def write_realtime(self, serialCommand, altDisplayText = None):
         
         self.write_realtime_buffer.append([serialCommand, altDisplayText])
+
+    def write_protocol(self, serialCommand, altDisplayText):
+        
+        self.write_protocol_buffer.append([serialCommand, altDisplayText])
 
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
