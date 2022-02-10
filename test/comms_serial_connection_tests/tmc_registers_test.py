@@ -79,18 +79,20 @@ class TMCRegisters(unittest.TestCase):
 
             # <Run|MPos:-692.704,-2142.446,-39.392|Bf:0,121|FS:6060,0|Pn:G|SG:-12,-20,15,46,-2>
 
-            self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|TREG:" + \
-                    str(motor_id) + "," + \
-                    str(register_DRVCTRL) + "," + \
-                    str(register_CHOPCONF) + "," + \
-                    str(register_SMARTEN) + "," + \
-                    str(register_SGCSCONF) + "," + \
-                    str(register_DRVCONF) + "," + \
-                    str(active_current_scale) + "," + \
-                    str(stand_still_current_scale) + "," + \
-                    str(stall_guard_alarm_threshold) + "," + \
-                    str(step_period_us_to_read_SG) + "," + \
-                    str(gradient_per_celsius) + ">"
+            # self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|TREG:" + \
+            #         str(motor_id) + "," + \
+            #         str(register_DRVCTRL) + "," + \
+            #         str(register_CHOPCONF) + "," + \
+            #         str(register_SMARTEN) + "," + \
+            #         str(register_SGCSCONF) + "," + \
+            #         str(register_DRVCONF) + "," + \
+            #         str(active_current_scale) + "," + \
+            #         str(stand_still_current_scale) + "," + \
+            #         str(stall_guard_alarm_threshold) + "," + \
+            #         str(step_period_us_to_read_SG) + "," + \
+            #         str(gradient_per_celsius) + ">"
+
+            self.status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:Gry|Ld:0|TREG:4,516,602840,688384,853781,978961,21,21,150,800,1000>"
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:
         self.serial_module.s = DummySerial(self.give_me_a_PCB())

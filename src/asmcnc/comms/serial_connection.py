@@ -1306,10 +1306,10 @@ class SerialConnection(object):
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-                print("IT WAS SHOW IN CONSOLE: ") + str(serialCommand)
+                print("IT WAS SHOW SERIAL: ") + str(serialCommand)
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
-                print("IT WAS SHOW IN CONSOLE: ") + str(altDisplayText)
+                print("IT WAS SHOW ALT: ") + str(altDisplayText)
 
         except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
