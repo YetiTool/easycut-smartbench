@@ -1080,7 +1080,6 @@ class SerialConnection(object):
                         )
 
                         map(log, TMC_registers_report_string.split("\n"))
-                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('debug', TMC_registers_report_string)
 
                     except:
                         log("Could not print TMC registers")
