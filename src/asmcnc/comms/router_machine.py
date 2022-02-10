@@ -945,7 +945,7 @@ class RouterMachine(object):
 
                 get_registers_cmd = self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
                 # Need a new buffer for these guys
-                self.s.write_realtime(get_registers_cmd, altDisplayText = "GET_REGISTERS")
+                self.s.write_protocol(get_registers_cmd, "GET_REGISTERS")
 
         else: 
             # In case handshake is too soon, it keeps trying until it can read a FW version
