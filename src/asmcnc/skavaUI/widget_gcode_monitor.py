@@ -249,9 +249,14 @@ class GCodeMonitor(Widget):
     
     def update_display_text(self, dt):   
         
-        self.consoleScrollText.text = '\n'.join(self.monitor_text_buffer)
-        if len(self.monitor_text_buffer) > 61:
-            del self.monitor_text_buffer[0:len(self.monitor_text_buffer)-60]
+        try: 
+            self.consoleScrollText.text = '\n'.join(self.monitor_text_buffer)
+            if len(self.monitor_text_buffer) > 61:
+                del self.monitor_text_buffer[0:len(self.monitor_text_buffer)-60]
+
+        else: 
+            print("PROBLEM LINE: ")
+            print(self.monitor_text_buffer)
         
     def update_status_text(self, dt):
         # this needs fixing
