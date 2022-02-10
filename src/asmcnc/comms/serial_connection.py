@@ -1013,9 +1013,6 @@ class SerialConnection(object):
 
                     tmc_registers = part[5:].split(',')
 
-                    print(part)
-                    print(message)
-
                     try: 
                         int(tmc_registers[0])
                         int(tmc_registers[1])
@@ -1067,17 +1064,19 @@ class SerialConnection(object):
                     try: 
 
                         TMC_registers_report_string = (
-                        "[Motor ID: " + str(motor_dict['motor_id']) + "]\n" + \
-                        "[Driver Control Reg: " + str(motor_dict['register_DRVCTRL']) + "]\n" + \
-                        "[Chopper Config Reg: " + str(motor_dict['register_CHOPCONF']) + "]\n" + \
-                        "[CoolStep Config Reg: " + str(motor_dict['register_SMARTEN']) + "]\n" + \
-                        "[Stall Guard Config Reg: " + str(motor_dict['register_SGCSCONF']) + "]\n" + \
-                        "[Driver Config Reg: " + str(motor_dict['register_DRVCONF']) + "]\n" + \
-                        "[Active Current Scale: " + str(motor_dict['active_current_scale']) + "]\n" + \
-                        "[Idle Current Scale: " + str(motor_dict['stand_still_current_scale']) + "]\n" + \
-                        "[Stall Guard Threshold: " + str(motor_dict['stall_guard_alarm_threshold']) + "]\n" + \
-                        "[Max Stall Guard Step: " + str(motor_dict['step_period_us_to_read_SG']) + "]\n" + \
-                        "[Thermal Coefficient: " + str(motor_dict['gradient_per_celsius'])
+                        "-------------------------------------" + "\n" + \
+                        "MOTOR ID: " + str(motor_dict['motor_id']) + "\n" + \
+                        "Driver Control Reg: " + str(motor_dict['register_DRVCTRL']) + "\n" + \
+                        "Chopper Config Reg: " + str(motor_dict['register_CHOPCONF']) + "\n" + \
+                        "CoolStep Config Reg: " + str(motor_dict['register_SMARTEN']) + "\n" + \
+                        "Stall Guard Config Reg: " + str(motor_dict['register_SGCSCONF']) + "\n" + \
+                        "Driver Config Reg: " + str(motor_dict['register_DRVCONF']) + "\n" + \
+                        "Active Current Scale: " + str(motor_dict['active_current_scale']) + "\n" + \
+                        "Idle Current Scale: " + str(motor_dict['stand_still_current_scale']) + "\n" + \
+                        "Stall Guard Threshold: " + str(motor_dict['stall_guard_alarm_threshold']) + "\n" + \
+                        "Max Stall Guard Step: " + str(motor_dict['step_period_us_to_read_SG']) + "\n" + \
+                        "Thermal Coefficient: " + str(motor_dict['gradient_per_celsius']) + "\n" + \
+                        "-------------------------------------"
                         )
 
                         map(log, TMC_registers_report_string.split("\n"))
