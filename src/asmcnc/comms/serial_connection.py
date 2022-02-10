@@ -1307,6 +1307,8 @@ class SerialConnection(object):
             if show_in_console == True and altDisplayText == None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
                 print("IT WAS SHOW SERIAL: ") + str(serialCommand)
+                print("show_in_console was: " + str(show_in_console))
+                print("alt display text was: " + str(altDisplayText))
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
                 print("IT WAS SHOW ALT: ") + str(altDisplayText)
