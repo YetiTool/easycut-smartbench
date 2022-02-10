@@ -1014,6 +1014,7 @@ class SerialConnection(object):
                     tmc_registers = part[5:].split(',')
 
                     print(part)
+                    print(message)
 
                     try: 
                         int(tmc_registers[0])
