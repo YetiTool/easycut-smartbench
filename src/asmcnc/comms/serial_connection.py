@@ -1013,6 +1013,8 @@ class SerialConnection(object):
 
                     tmc_registers = part[5:].split(',')
 
+                    print(part)
+
                     try: 
                         int(tmc_registers[0])
                         int(tmc_registers[1])
@@ -1078,7 +1080,7 @@ class SerialConnection(object):
                         )
 
                         map(log, TMC_registers_report_string.split("\n"))
-                        self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('debug', TMC_registers_report_string)
+                        # self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('debug', TMC_registers_report_string)
 
                     except:
                         log("Could not print TMC registers")
