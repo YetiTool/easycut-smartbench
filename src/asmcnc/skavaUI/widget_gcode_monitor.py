@@ -257,6 +257,7 @@ class GCodeMonitor(Widget):
         except: 
             print("PROBLEM LINE: ")
             print(self.monitor_text_buffer)
+            del(self.monitor_text_buffer)
         
     def update_status_text(self, dt):
         # this needs fixing

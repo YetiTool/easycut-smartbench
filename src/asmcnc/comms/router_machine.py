@@ -929,7 +929,7 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
-        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 4)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
     ## NEEDS TESTING
@@ -945,7 +945,7 @@ class RouterMachine(object):
 
                 get_registers_cmd = self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
                 # TEMP!! CHECK WRITE TYPE, i.e. realtime or not
-                # self.s.write_command(get_registers_cmd, show_in_sys = False, show_in_console = False, altDisplayText = "Get dem registers")
+                self.s.write_command(get_registers_cmd, show_in_sys = False, show_in_console = False, realtime=True)
 
         else: 
             # In case handshake is too soon, it keeps trying until it can read a FW version
