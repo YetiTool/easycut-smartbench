@@ -1301,11 +1301,11 @@ class SerialConnection(object):
                 log('> ' + serialCommand)
             if altDisplayText != None: print altDisplayText
 
-            # Print to console in the UI
-            if show_in_console == True and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
-            if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+            # # Print to console in the UI
+            # if show_in_console == True and altDisplayText == None:
+            #     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+            # if altDisplayText != None:
+            #     self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
         except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
