@@ -1079,7 +1079,7 @@ class SerialConnection(object):
                         "[Thermal Coefficient: " + str(self.gradient_per_celsius)
                         )
 
-                        map(log, TMC_registers_report_string.split("\n"))
+                        # map(log, TMC_registers_report_string.split("\n"))
                         # self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('debug', TMC_registers_report_string)
 
                     except:
