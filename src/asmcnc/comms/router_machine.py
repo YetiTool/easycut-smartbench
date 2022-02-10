@@ -929,7 +929,7 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
-        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2.2)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
     ## NEEDS TESTING
