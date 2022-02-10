@@ -254,7 +254,7 @@ class GCodeMonitor(Widget):
             if len(self.monitor_text_buffer) > 61:
                 del self.monitor_text_buffer[0:len(self.monitor_text_buffer)-60]
 
-        else: 
+        except: 
             print("PROBLEM LINE: ")
             print(self.monitor_text_buffer)
         
