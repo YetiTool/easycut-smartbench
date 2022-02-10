@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 Feb 2022
 @author: Letty
@@ -38,13 +39,26 @@ class ConstructTMCCommandTest(unittest.TestCase):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print self.p.constructTMCcommand(101+16*4,128, 1)
+        print(list(self.p.constructTMCcommand(101,128, 1)))
 
     def testconstructTMCcommand2(self):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print self.p.constructTMCcommand(109+16*4,67109336, 1)
+        print(list(self.p.constructTMCcommand(109,67109336, 1)))
+
+
+    def testconstructTMCcommand1(self):
+
+        """sending command to motor:4, cmd:101, val:128"""
+        # assert self.constructTMCcommand(101,128, 1), 'not connected'
+        self.assertEqual(self.p.constructTMCcommand(101,128, 1), b'^\x04\x00\x0c\x8f^\x06\x012e\x80W')
+
+    def testconstructTMCcommand2(self):
+
+        """sending command to motor:4, cmd:101, val:128"""
+        # assert self.constructTMCcommand(101,128, 1), 'not connected'
+        self.assertEqual(self.p.constructTMCcommand(109,67109336, 1), b'^\x04\x00\x0c\x8f^\x06\x012m\xd8p')
 
 
 if __name__ == "__main__":

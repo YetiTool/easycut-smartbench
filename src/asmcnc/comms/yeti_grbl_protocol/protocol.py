@@ -42,7 +42,7 @@ class protocol_v2(object):
             hash.update(byte_array)# compute crc8 : update crc8 hash
             
             # construct command as a byte array
-            byte_command += bytes([CMD_RTL_V2]) + byte_array + hash.digest()
+            byte_command += bytearray([CMD_RTL_V2]) + byte_array + hash.digest()
 
             if printlog: 
                 logging.info("sending command :" + str(command) + ", val:" + str(data)) #implement as a queue to fix this error
@@ -195,3 +195,11 @@ class protocol_v2(object):
             byte_array = byte_array + self.custom_int_to_bytes(((data >> idx*8) & 0xff))
 
         return self.construct_rtl_v2_packet(command, byte_array)
+
+
+
+
+
+
+
+
