@@ -1293,6 +1293,8 @@ class SerialConnection(object):
         if not serialCommand and not isinstance(serialCommand, str):
             serialCommand = str(serialCommand)
 
+
+
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
             # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
@@ -1304,8 +1306,10 @@ class SerialConnection(object):
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+                print("IT WAS SHOW IN CONSOLE: ") + str(serialCommand)
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+                print("IT WAS SHOW IN CONSOLE: ") + str(altDisplayText)
 
         except:
             print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
