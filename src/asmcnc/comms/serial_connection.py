@@ -1335,7 +1335,7 @@ class SerialConnection(object):
 
                 elif protocol == True:
 
-                    if self.last_protocol_send_time + 0.05 > time.time():
+                    if self.last_protocol_send_time + 0.05 < time.time():
 
                         self.s.write(serialCommand)
                         self.last_protocol_send_time = time.time()
