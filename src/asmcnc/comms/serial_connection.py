@@ -1304,11 +1304,11 @@ class SerialConnection(object):
 
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
-            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-            #if show_in_sys and altDisplayText==None: print serialCommand
-            if not serialCommand.startswith('?'):
+
+            if not serialCommand.startswith('?') and not protocol:
                 log('> ' + serialCommand)
-            if altDisplayText != None: print altDisplayText
+
+            if altDisplayText != None: log('> ' + str(altDisplayText))
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
