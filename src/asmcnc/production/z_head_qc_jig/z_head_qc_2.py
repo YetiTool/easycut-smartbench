@@ -232,6 +232,7 @@ class ZHeadQC2(Screen):
         self.string_overload_summary = ''
         self.spindle_pass_fail = True
         self.digital_spindle_pass_fail = True
+        self.reset_pass = True
 
         # Green status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
@@ -276,59 +277,88 @@ class ZHeadQC2(Screen):
         self.m.s.write_command('$21 = 1')
 
     def run_digital_spindle_test(self):
-        log('testing')
 
-        def test_rpm():
-            def read_rpm(dt): 
-                if self.m.s.spindle_speed > 9000 and self.m.s.spindle_speed < 11000:
-                    self.digital_spindle_pass_fail = True
-                else: 
-                    self.digital_spindle_pass_fail = False
+        if self.m.s.m_state == "Idle":
 
-                self.m.s.write_command('M5')
+            log('testing')
 
-            self.m.s.write_command('M3 10000')
+            def spindle_brush_reset():
+                def read_info(dt):
+                    def compare_info(dt):
+                        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                        if self.m.s.spindle_brush_run_time_seconds == 0:
+                            self.reset_pass = True
+                        else:
+                            self.reset_pass = False
 
-            Clock.schedule_once(read_rpm, 3)
+                    self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                    initial_run_time = self.m.s.spindle_brush_run_time_seconds
+                    self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
 
-        def test_temperature():
-            temperature = self.m.s.digital_spindle_temperature
+                    Clock.schedule_once(compare_info, 3)
 
-            log('Digital Spindle Temperature: %s' % temperature)
+                self.m.s.write_command('M3 S0')
 
-            return temperature >= 0 and temperature <= 50
+                Clock.schedule_once(read_info, 0.1)
 
-        def test_load():
-            load = self.m.s.digital_spindle_ld_qdA
+            def test_rpm():
+                def read_rpm(dt): 
+                    if self.m.s.spindle_speed > 9000 and self.m.s.spindle_speed < 11000:
+                        self.digital_spindle_pass_fail = True
+                    else: 
+                        self.digital_spindle_pass_fail = False
 
-            log('Digital Spindle Load: %s' % load)
+                    self.m.s.write_command('M5')
 
-            return load >= 100 or load <= 10000
+                self.m.s.write_command('M3 10000')
 
-        def test_killtime():
-            killtime = self.m.s.digital_spindle_kill_time
-            
-            log('Digital Spindle KillTime: %s' % killtime)
+                Clock.schedule_once(read_rpm, 3)
 
-            return killtime == 255
+            def test_temperature():
+                temperature = self.m.s.digital_spindle_temperature
 
-        def test_voltage():
-            voltage = self.m.s.digital_spindle_mains_voltage
+                log('Digital Spindle Temperature: %s' % temperature)
 
-            log('Digital Spindle Voltage: %s' % voltage)
+                return temperature >= 0 and temperature <= 50
 
-            return voltage >= 100 and voltage <= 255
+            def test_load():
+                load = self.m.s.digital_spindle_ld_qdA
 
-        temperature_pass = test_temperature()
-        load_pass = test_load()
-        killtime_pass = test_killtime()
-        voltage_pass = test_voltage()
-        test_rpm()
+                log('Digital Spindle Load: %s' % load)
 
-        if temperature_pass and load_pass and killtime_pass and voltage_pass and self.digital_spindle_pass_fail:
-            log('Test passed')
+                return load >= 100 or load <= 10000
+
+            def test_killtime():
+                killtime = self.m.s.digital_spindle_kill_time
+                
+                log('Digital Spindle KillTime: %s' % killtime)
+
+                return killtime == 255
+
+            def test_voltage():
+                voltage = self.m.s.digital_spindle_mains_voltage
+
+                log('Digital Spindle Voltage: %s' % voltage)
+
+                return voltage >= 100 and voltage <= 255
+
+            for _ in range(5):
+                spindle_brush_reset()
+                if self.reset_pass: break
+
+            temperature_pass = test_temperature()
+            load_pass = test_load()
+            killtime_pass = test_killtime()
+            voltage_pass = test_voltage()
+            test_rpm()
+
+            if temperature_pass and load_pass and killtime_pass and voltage_pass and self.digital_spindle_pass_fail and self.reset_pass:
+                log('Test passed')
+            else:
+                log('Test failed')
+
         else:
-            log('Test failed')
+            popup_info.PopupError(self.sm, self.l, "Machine should be in idle state for this test")
 
     def run_analogue_spindle_check(self):
         
