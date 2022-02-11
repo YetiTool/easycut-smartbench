@@ -50,6 +50,9 @@ class SerialConnection(object):
     
     write_command_buffer = []
     write_realtime_buffer = []
+    write_protocol_buffer = []
+
+    last_protocol_send_time = 0
     
     monitor_text_buffer = ""
     overload_state = 0
@@ -311,6 +314,13 @@ class SerialConnection(object):
                 realtime_counter += 1
 
             del self.write_realtime_buffer[0:(realtime_counter)]
+
+            protocol_counter = 0
+            for protocol_command in self.write_protocol_buffer:
+                self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
+                protocol_counter += 1
+
+            del self.write_protocol_buffer[0:(protocol_counter)]
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
@@ -694,6 +704,13 @@ class SerialConnection(object):
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
+    # TMC REGISTERS
+    x1_motor_registers = {}
+    x2_motor_registers = {}
+    y1_motor_registers = {}
+    y2_motor_registers = {}
+    z_motor_registers = {}
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: print message
@@ -1002,6 +1019,81 @@ class SerialConnection(object):
                     self.spindle_brush_run_time_seconds = int(spindle_statistics[5])
                     self.spindle_mains_frequency_hertz = int(spindle_statistics[6])
 
+                elif part.startswith('TREG:'):
+
+                    tmc_registers = part[5:].split(',')
+
+                    try: 
+                        int(tmc_registers[0])
+                        int(tmc_registers[1])
+                        int(tmc_registers[2])
+                        int(tmc_registers[3])
+                        int(tmc_registers[4])
+                        int(tmc_registers[5])
+                        int(tmc_registers[6])
+                        int(tmc_registers[7])
+                        int(tmc_registers[8])
+                        int(tmc_registers[9])
+                        int(tmc_registers[10])
+
+                    except:
+                        log("ERROR status parse: TMC registers invalid: " + message)
+                        return
+
+                    if int(tmc_registers[0]) == 0:
+                        motor_dict = self.x1_motor_registers
+
+                    elif int(tmc_registers[0]) == 1:
+                        motor_dict = self.x2_motor_registers
+
+                    elif int(tmc_registers[0]) == 2:
+                        motor_dict = self.y1_motor_registers
+
+                    elif int(tmc_registers[0]) == 3:
+                        motor_dict = self.y2_motor_registers
+
+                    elif int(tmc_registers[0]) == 4:
+                        motor_dict = self.z_motor_registers
+
+                    else: 
+                        log("ERROR status parse: TMC registers - motor id invalid: " + message)
+                        return
+
+                    motor_dict['motor_id'] = int(tmc_registers[0])
+                    motor_dict['register_DRVCTRL'] = int(tmc_registers[1])
+                    motor_dict['register_CHOPCONF'] = int(tmc_registers[2])
+                    motor_dict['register_SMARTEN'] = int(tmc_registers[3])
+                    motor_dict['register_SGCSCONF'] = int(tmc_registers[4])
+                    motor_dict['register_DRVCONF'] = int(tmc_registers[5])
+                    motor_dict['active_current_scale'] = int(tmc_registers[6])
+                    motor_dict['stand_still_current_scale'] = int(tmc_registers[7])
+                    motor_dict['stall_guard_alarm_threshold'] = int(tmc_registers[8])
+                    motor_dict['step_period_us_to_read_SG'] = int(tmc_registers[9])
+                    motor_dict['gradient_per_celsius'] = int(tmc_registers[10])
+
+                    try: 
+
+                        TMC_registers_report_string = (
+                        "-------------------------------------" + "\n" + \
+                        "MOTOR ID: " + str(motor_dict['motor_id']) + "\n" + \
+                        "Driver Control Reg: " + str(motor_dict['register_DRVCTRL']) + "\n" + \
+                        "Chopper Config Reg: " + str(motor_dict['register_CHOPCONF']) + "\n" + \
+                        "CoolStep Config Reg: " + str(motor_dict['register_SMARTEN']) + "\n" + \
+                        "Stall Guard Config Reg: " + str(motor_dict['register_SGCSCONF']) + "\n" + \
+                        "Driver Config Reg: " + str(motor_dict['register_DRVCONF']) + "\n" + \
+                        "Active Current Scale: " + str(motor_dict['active_current_scale']) + "\n" + \
+                        "Idle Current Scale: " + str(motor_dict['stand_still_current_scale']) + "\n" + \
+                        "Stall Guard Threshold: " + str(motor_dict['stall_guard_alarm_threshold']) + "\n" + \
+                        "Max Stall Guard Step: " + str(motor_dict['step_period_us_to_read_SG']) + "\n" + \
+                        "Thermal Coefficient: " + str(motor_dict['gradient_per_celsius']) + "\n" + \
+                        "-------------------------------------"
+                        )
+
+                        map(log, TMC_registers_report_string.split("\n"))
+
+                    except:
+                        log("Could not print TMC registers")
+
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
@@ -1206,23 +1298,25 @@ class SerialConnection(object):
 ## WRITE-----------------------------------------------------------------------------
 
 
-    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False):
+    def write_direct(self, serialCommand, show_in_sys = True, show_in_console = True, altDisplayText = None, realtime = False, protocol = False):
 
         # sometimes shapecutter likes to generate empty unicode characters, which serial cannae handle. 
         if not serialCommand and not isinstance(serialCommand, str):
             serialCommand = str(serialCommand)
 
+
         # Issue to logging outputs first (so the command is logged before any errors/alarms get reported back)
         try:
-            # Print to sys (external command interface e.g. console in Eclipse, or at the prompt on the Pi)
-            #if show_in_sys and altDisplayText==None: print serialCommand
-            if not serialCommand.startswith('?'):
+
+            if not serialCommand.startswith('?') and not protocol:
                 log('> ' + serialCommand)
-            if altDisplayText != None: print altDisplayText
+
+            if altDisplayText != None: log('> ' + str(altDisplayText))
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+
             if altDisplayText != None:
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
@@ -1234,13 +1328,24 @@ class SerialConnection(object):
         if self.s:
             try:
 
-                if realtime == False:
-                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
-                    self.s.write(serialCommand + '\n')
-                
-                elif realtime == True:
+                if realtime == True:
                     # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)
                     self.s.write(serialCommand)
+
+                elif realtime == False and protocol == False:
+                    # INLCUDES end of line command (which returns an 'ok' from grbl - used in algorithms)
+                    self.s.write(serialCommand + '\n')
+
+                elif protocol == True:
+
+                    if self.last_protocol_send_time + 0.05 < time.time():
+
+                        self.s.write(serialCommand)
+                        self.last_protocol_send_time = time.time()
+
+                    else: 
+                        self.write_protocol(serialCommand, altDisplayText)
+
 
                 # SmartBench maintenance monitoring 
 #                 self.maintenance_value_logging(serialCommand)
@@ -1293,6 +1398,10 @@ class SerialConnection(object):
     def write_realtime(self, serialCommand, altDisplayText = None):
         
         self.write_realtime_buffer.append([serialCommand, altDisplayText])
+
+    def write_protocol(self, serialCommand, altDisplayText):
+        
+        self.write_protocol_buffer.append([serialCommand, altDisplayText])
 
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)

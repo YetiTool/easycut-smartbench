@@ -6,6 +6,7 @@ This module defines the machine's properties (e.g. travel), services (e.g. seria
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 from kivy.clock import Clock
 import sys, os, time
@@ -928,11 +929,27 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
-        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 3)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
+    ## NEEDS TESTING
+    handshake_event = None
+
     def tmc_handshake(self):
-        pass
+
+        if self.s.fw_version:
+
+            if self.handshake_event: Clock.unschedule(self.handshake_event)
+
+            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
+
+                get_registers_cmd = self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
+                # Need a new buffer for these guys
+                self.s.write_protocol(get_registers_cmd, "GET_REGISTERS")
+
+        else: 
+            # In case handshake is too soon, it keeps trying until it can read a FW version
+            self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
 
 # CRITICAL START/STOP
 
