@@ -33,6 +33,8 @@ then
                 echo "Running LB QC app"
                 # exec python lb_qc_app.py
 
+        fi
+
 else
         
         # execute python
