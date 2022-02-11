@@ -12,6 +12,7 @@ Builder.load_string("""
     
     probe_check : probe_check
     z_home_check : z_home_check
+    spindle_speed_check:spindle_speed_check
 
     console_status_text : console_status_text
     status_container : status_container
