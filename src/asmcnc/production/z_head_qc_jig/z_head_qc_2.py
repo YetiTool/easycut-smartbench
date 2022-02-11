@@ -13,6 +13,7 @@ Builder.load_string("""
     probe_check : probe_check
     z_home_check : z_home_check
     spindle_speed_check:spindle_speed_check
+    digital_spindle_check:digital_spindle_check
 
     console_status_text : console_status_text
     status_container : status_container
@@ -80,7 +81,7 @@ Builder.load_string("""
                     cols: 2
 
                     Button:
-                        text: '21. Test digital spindle'
+                        text: '21. Test digital spindle (up to 15s)'
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -89,7 +90,7 @@ Builder.load_string("""
                         on_press: root.run_digital_spindle_test()
 
                     Image:
-                        id: x_home_check
+                        id: digital_spindle_check
                         source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -232,7 +233,6 @@ class ZHeadQC2(Screen):
         self.string_overload_summary = ''
         self.spindle_pass_fail = True
         self.digital_spindle_pass_fail = True
-        self.reset_pass = True
 
         # Green status bar
         self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
@@ -282,83 +282,88 @@ class ZHeadQC2(Screen):
 
             log('testing')
 
+            self.brush_reset_test_count = 0
+            fail_report = []
+
             def spindle_brush_reset():
                 def read_info(dt):
-                    def compare_info(dt):
-                        self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
-                        if self.m.s.spindle_brush_run_time_seconds == 0:
-                            self.reset_pass = True
-                        else:
-                            self.reset_pass = False
-
                     self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                    Clock.schedule_once(get_info, 0.1)
+
+                def get_info(dt):
                     initial_run_time = self.m.s.spindle_brush_run_time_seconds
+                    if initial_run_time == 0 and not fail_report:
+                        fail_report.append("Spindle brush run time was 0 before reset.")
                     self.m.s.write_protocol(self.m.p.ResetDigitalSpindleBrushTime(), "RESET DIGITAL SPINDLE BRUSH TIME")
+                    Clock.schedule_once(read_info_again, 3)
 
-                    Clock.schedule_once(compare_info, 3)
+                def read_info_again(dt):
+                    self.m.s.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+                    Clock.schedule_once(compare_info, 0.1)
 
+                def compare_info(dt):
+                    if self.m.s.spindle_brush_run_time_seconds == 0:
+                        self.m.s.write_command('M5')
+                        self.test_rpm(fail_report)
+                    elif self.brush_reset_test_count == 5:
+                        fail_report.append("Spindle brush reset test failed.")
+                        self.m.s.write_command('M5')
+                        self.test_rpm(fail_report)
+                    else:
+                        spindle_brush_reset()
+
+                self.brush_reset_test_count += 1
                 self.m.s.write_command('M3 S0')
 
                 Clock.schedule_once(read_info, 0.1)
 
-            def test_rpm():
-                def read_rpm(dt): 
-                    if self.m.s.spindle_speed > 9000 and self.m.s.spindle_speed < 11000:
-                        self.digital_spindle_pass_fail = True
-                    else: 
-                        self.digital_spindle_pass_fail = False
-
-                    self.m.s.write_command('M5')
-
-                self.m.s.write_command('M3 10000')
-
-                Clock.schedule_once(read_rpm, 3)
-
-            def test_temperature():
-                temperature = self.m.s.digital_spindle_temperature
-
-                log('Digital Spindle Temperature: %s' % temperature)
-
-                return temperature >= 0 and temperature <= 50
-
-            def test_load():
-                load = self.m.s.digital_spindle_ld_qdA
-
-                log('Digital Spindle Load: %s' % load)
-
-                return load >= 100 or load <= 10000
-
-            def test_killtime():
-                killtime = self.m.s.digital_spindle_kill_time
-                
-                log('Digital Spindle KillTime: %s' % killtime)
-
-                return killtime == 255
-
-            def test_voltage():
-                voltage = self.m.s.digital_spindle_mains_voltage
-
-                log('Digital Spindle Voltage: %s' % voltage)
-
-                return voltage >= 100 and voltage <= 255
-
-            for _ in range(5):
-                spindle_brush_reset()
-                if self.reset_pass: break
-
-            temperature_pass = test_temperature()
-            load_pass = test_load()
-            killtime_pass = test_killtime()
-            voltage_pass = test_voltage()
-            test_rpm()
-
-            if temperature_pass and load_pass and killtime_pass and voltage_pass and self.digital_spindle_pass_fail and self.reset_pass:
-                log('Test passed')
-            else:
-                log('Test failed')
+            spindle_brush_reset()
 
         else:
             popup_info.PopupError(self.sm, self.l, "Machine should be in idle state for this test")
+
+    def test_rpm(self, fail_report):
+        def read_rpm(dt): 
+            if self.m.s.spindle_speed < 9000 or self.m.s.spindle_speed > 11000:
+                fail_report.append("Spindle RPM test failed.")
+
+            self.m.s.write_command('M5')
+            self.continue_digital_spindle_test(fail_report)
+
+        self.m.s.write_command('M3 10000')
+
+        Clock.schedule_once(read_rpm, 3)
+
+    def continue_digital_spindle_test(self, fail_report):
+
+        temperature = self.m.s.digital_spindle_temperature
+        log('Digital Spindle Temperature: %s' % temperature)
+        if temperature < 0 or temperature > 50:
+            fail_report.append("Temperature test failed.")
+
+        load = self.m.s.digital_spindle_ld_qdA
+        log('Digital Spindle Load: %s' % load)
+        if load < 100 or load > 10000:
+            fail_report.append("Load test failed.")
+
+        killtime = self.m.s.digital_spindle_kill_time
+        log('Digital Spindle KillTime: %s' % killtime)
+        if killtime != 255:
+            fail_report.append("KillTime test failed.")
+
+        voltage = self.m.s.digital_spindle_mains_voltage
+        log('Digital Spindle Voltage: %s' % voltage)
+        if voltage < 100 or voltage > 255:
+            fail_report.append("Voltage test failed.")
+
+        if not fail_report:
+            log('Test passed')
+            self.digital_spindle_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            log('Test failed')
+            fail_report_string = "\n".join(fail_report)
+            popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
+            self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
 
     def run_analogue_spindle_check(self):
         
