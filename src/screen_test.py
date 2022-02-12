@@ -13,40 +13,53 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
-# from asmcnc.comms import localization
+from asmcnc.comms import localization
 
-# JOB DATA IMPORT
-# from asmcnc.job import job_data
-# from asmcnc.skavaUI import screen_job_incomplete
-# from asmcnc.skavaUI import screen_job_feedback
+from mock import Mock, MagicMock
+from asmcnc.comms import router_machine
 
-from asmcnc.tests.z_head_qc_home import ZHeadQCHome
-from asmcnc.tests.z_head_qc_1 import ZHeadQC1
-from asmcnc.tests.z_head_qc_2 import ZHeadQC2
+from asmcnc.tests.screen_test import TestScreen
+
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
+Cmport = 'COM3'
 
 class ScreenTest(App):
 
-	def build(self):
+    def build(self):
 
-		sm = ScreenManager(transition=NoTransition())
-		m = None
-		# l = localization.Localization()
-		# jd = job_data.JobData()
-		db = None
+        # Establish screens
+        sm = Mock()
 
-		z_head_qc_home = ZHeadQCHome(name='qchome', sm = sm)
-		sm.add_widget(z_head_qc_home)
+        # Localization/language object
+        l = localization.Localization()
 
-		z_head_qc_2 = ZHeadQC2(name='qc2', sm = sm, m = m)
-		sm.add_widget(z_head_qc_2)
+        # Initialise settings object
+        sett = Mock()
+        sett.ip_address = ''
 
-		z_head_qc_1 = ZHeadQC1(name='qc1', sm = sm, m = m)
-		sm.add_widget(z_head_qc_1)
+        # Initialise 'j'ob 'd'ata object
+        jd = Mock()
+
+        # Initialise 'm'achine object
+        m = Mock()
+        m.state.return_value = 'Idle'
+
+        test_sm = ScreenManager(transition=NoTransition())
+
+        test_screen = TestScreen(name='st', screen_manager = test_sm)
+        test_sm.add_widget(test_screen)
+
+        test_sm.current = 'st'
+
+        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+
+        m.send_command_to_motor(motor=TMC_X1, command=SET_SGT, value=5)
 
 
-		sm.current = 'qchome'
 
-		return sm
+
+        return test_sm
 
 ScreenTest().run()
 
