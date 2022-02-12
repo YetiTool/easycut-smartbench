@@ -69,6 +69,7 @@ class TestScreen(Screen):
         self.m=kwargs['machine']
 
         self.get_registers_cmd = self.m.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
+        
 
     def do_test(self):
         self.m.jog_relative('Z', 5, 750)
