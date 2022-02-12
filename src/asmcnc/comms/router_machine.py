@@ -1625,6 +1625,8 @@ class RouterMachine(object):
         # var bytes: '^', len, command, value, crc        
         len = 999;
 
+        log("VALUE:" + hex(value))
+
         # global commands:
         if command == SET_SG_ALARM          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_CALIBR_MODE       :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
@@ -1688,7 +1690,8 @@ class RouterMachine(object):
 
         
 
-        
+        log("VALUE:" + hex(val))
+
         if len < 999: 
             if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
                 cmd = cmd + motor * MOTOR_OFFSET # if individual command shift it by the motor index
