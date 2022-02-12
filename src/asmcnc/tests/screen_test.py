@@ -71,7 +71,7 @@ class TestScreen(Screen):
         get_registers_cmd = self.m.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
 
     def do_test(self):
-        self.m.jog_relative(self, 'Z', 5, 750)
+        self.m.jog_relative('Z', 5, 750)
         Clock.schedule_once(self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=0),3)
         Clock.schedule_once(self.m.s.write_protocol(get_registers_cmd, "GET_REGISTERS"),6)
 
