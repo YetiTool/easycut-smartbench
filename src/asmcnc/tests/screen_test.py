@@ -34,8 +34,8 @@ Builder.load_string("""
 
 <TestScreen>:
 
-    GridLayout:
-    
+    BoxLayout:
+        orientation: 'vertical'
                     
         Label:
             id: warning_body_label
@@ -52,6 +52,7 @@ Builder.load_string("""
 
         Button:
             on_press: root.do_test()
+            size_hint_y: 1
     
 
 """)
