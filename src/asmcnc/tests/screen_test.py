@@ -53,6 +53,10 @@ Builder.load_string("""
         Button:
             on_press: root.do_test()
             size_hint_y: 1
+
+        Button:
+            on_press: root.do_next_test()
+            size_hint_y: 1
     
 
 """)
@@ -75,6 +79,10 @@ class TestScreen(Screen):
         Clock.schedule_once(lambda dt: self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=0),3)
         Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH), "GET REGISTERS"),6)
 
+    def do_next_test(self):
+        self.m.jog_relative('Z', 5, 750)
+        Clock.schedule_once(lambda dt: self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=5),3)
+        Clock.schedule_once(lambda dt: self.m.s.write_protocol(self.m.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH), "GET REGISTERS"),6)
 
 
 

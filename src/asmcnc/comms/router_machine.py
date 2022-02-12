@@ -1627,6 +1627,7 @@ class RouterMachine(object):
 
         log("VALUE:" + hex(value))
 
+
         # global commands:
         if command == SET_SG_ALARM          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_CALIBR_MODE       :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
@@ -1690,7 +1691,7 @@ class RouterMachine(object):
 
         
 
-        log("VALUE:" + hex(val))
+        log("VAL:" + hex(val))
 
         if len < 999: 
             if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
