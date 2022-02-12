@@ -279,7 +279,7 @@ class SerialConnection(object):
 
     VERBOSE_ALL_PUSH_MESSAGES = False
     VERBOSE_ALL_RESPONSE = False
-    VERBOSE_STATUS = False
+    VERBOSE_STATUS = True
 
 
     def grbl_scanner(self):
