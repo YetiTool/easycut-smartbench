@@ -33,26 +33,25 @@ import re
 Builder.load_string("""
 
 <TestScreen>:
+
+    GridLayout:
     
-    # canvas:
-    #     Color: 
-    #         rgba: hex('#E5E5E5FF')
-    #     Rectangle: 
-    #         size: self.size
-    #         pos: self.pos
-                
-    Label:
-        id: warning_body_label
-        font_size: '60sp'
-        halign: 'center'
-        valign: 'bottom'
-        size_hint_y: 1
-        markup: True
-        valign: 'center'
-        halign: 'center'
-        size:self.texture_size
-        text_size: self.size
-        text: root.test_label
+                    
+        Label:
+            id: warning_body_label
+            font_size: '60sp'
+            halign: 'center'
+            valign: 'bottom'
+            size_hint_y: 1
+            markup: True
+            valign: 'center'
+            halign: 'center'
+            size:self.texture_size
+            text_size: self.size
+            text: root.test_label
+
+        Button:
+            on_press: root.do_test()
     
 
 """)
@@ -69,12 +68,14 @@ class TestScreen(Screen):
         self.sm=kwargs['screen_manager']
         self.m=kwargs['machine']
 
+        get_registers_cmd = self.m.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH)
 
-    def on_enter(self):
+    def do_test(self):
+        self.m.jog_relative(self, 'Z', 5, 750)
+        Clock.schedule_once(self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=0),3)
+        Clock.schedule_once(self.m.s.write_protocol(get_registers_cmd, "GET_REGISTERS"),6)
 
 
-        Clock.schedule_once(self.m.s.start_services, 4)
 
-        Clock.schedule_once(lambda dt: self.m.send_command_to_motor(motor=TMC_X1, command=SET_TOFF, value=0), 30)
 
         
