@@ -71,4 +71,10 @@ class TestScreen(Screen):
 
 
     def on_enter(self):
-        self.m.send_command_to_motor(motor=TMC_X1, command=SET_SGT, value=5)
+
+
+        Clock.schedule_once(self.m.s.start_services, 4)
+
+        Clock.schedule_once(lambda dt: self.m.send_command_to_motor(motor=TMC_X1, command=SET_TOFF, value=0), 6)
+
+        

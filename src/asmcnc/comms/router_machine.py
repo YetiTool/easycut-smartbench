@@ -1695,7 +1695,7 @@ class RouterMachine(object):
             if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
                 cmd = cmd + motor * MOTOR_OFFSET # if individual command shift it by the motor index
                 
-            out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), 'SET SGT')
+            out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), 'SET TOFF')
 
             if printlog: 
                 logging.info("sending command to motor:" + str(motor) + ", cmd:" + str(cmd) + ", val:" + str(val)) #implement as a queue to fix this error
