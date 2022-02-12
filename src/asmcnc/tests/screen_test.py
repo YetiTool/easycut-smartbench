@@ -72,8 +72,8 @@ class TestScreen(Screen):
 
     def do_test(self):
         self.m.jog_relative('Z', 5, 750)
-        Clock.schedule_once(self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=0),3)
-        Clock.schedule_once(self.m.s.write_protocol(get_registers_cmd, "GET_REGISTERS"),6)
+        Clock.schedule_once(lambda dt: self.m.send_command_to_motor(motor=TMC_Z, command=SET_TOFF, value=0),3)
+        Clock.schedule_once(lambda dt: self.m.s.write_protocol(get_registers_cmd, "GET_REGISTERS"),6)
 
 
 
