@@ -22,6 +22,8 @@ from kivy.clock import Clock
 from functools import partial
 from kivy.graphics import Color, Rectangle
 
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+
 
 import sys, os, time
 from datetime import datetime
@@ -65,3 +67,8 @@ class TestScreen(Screen):
     def __init__(self, **kwargs):
         super(TestScreen, self).__init__(**kwargs)
         self.sm=kwargs['screen_manager']
+        self.m=kwargs['machine']
+
+
+    def on_enter(self):
+        self.m.send_command_to_motor(motor=TMC_X1, command=SET_SGT, value=5)

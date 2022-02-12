@@ -42,22 +42,14 @@ class ScreenTest(App):
         jd = Mock()
 
         # Initialise 'm'achine object
-        m = Mock()
-        m.state.return_value = 'Idle'
+        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
         test_sm = ScreenManager(transition=NoTransition())
 
-        test_screen = TestScreen(name='st', screen_manager = test_sm)
+        test_screen = TestScreen(name='st', screen_manager = test_sm, machine = m)
         test_sm.add_widget(test_screen)
 
         test_sm.current = 'st'
-
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
-
-        m.send_command_to_motor(motor=TMC_X1, command=SET_SGT, value=5)
-
-
-
 
         return test_sm
 
