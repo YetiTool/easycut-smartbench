@@ -147,11 +147,11 @@ class RouterMachine(object):
         self.get_persistent_values()
 
         # initialise all motors
-        self.TMC_motor[TMC_X1] = motors.motor_class()
-        self.TMC_motor[TMC_X2] = motors.motor_class()
-        self.TMC_motor[TMC_Y1] = motors.motor_class()
-        self.TMC_motor[TMC_Y2] = motors.motor_class()
-        self.TMC_motor[TMC_Z] = motors.motor_class()
+        self.TMC_motor[TMC_X1] = motors.motor_class(TMC_X1)
+        self.TMC_motor[TMC_X2] = motors.motor_class(TMC_X2)
+        self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
+        self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
+        self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -929,6 +929,7 @@ class RouterMachine(object):
 
     # BOOT UP SEQUENCE
     def bootup_sequence(self):
+        log("Boot up machine, and get settings...")
         self._stop_all_streaming()  # In case alarm happened during boot, stop that
         self._grbl_soft_reset()     # Reset to get out of Alarm mode.
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
@@ -955,8 +956,7 @@ class RouterMachine(object):
             if self.handshake_event: Clock.unschedule(self.handshake_event)
 
             if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
-
-                self.s.write_protocol(self.p.constructTMCcommand(GET_REGISTERS, 0, TMC_GBL_CMD_LENGTH), "GET_REGISTERS")
+                self.send_command_to_motor(altDisplayText="GET REGISTERS", command=GET_REGISTERS)
 
         else: 
             # In case handshake is too soon, it keeps trying until it can read a FW version
@@ -1621,12 +1621,9 @@ class RouterMachine(object):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
 
 
-    def send_command_to_motor(self, motor=TMC_X1, command=SET_ACTIVE_CURRENT, value=0, printlog=True):
-        # var bytes: '^', len, command, value, crc        
+    def send_command_to_motor(self, altDisplayText, motor=TMC_X1, command=SET_ACTIVE_CURRENT, value=0, printlog=True):
+
         len = 999;
-
-        log("VALUE:" + hex(value))
-
 
         # global commands:
         if command == SET_SG_ALARM          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
@@ -1654,7 +1651,7 @@ class RouterMachine(object):
         if command == SET_MRES      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, MRES_MASK     , MRES_SHIFT        )
         if command == SET_DEDGE     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, DEDGE_MASK    , DEDGE_SHIFT       )
         if command == SET_INTERPOL  : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, INTERPOL_MASK , INTERPOL_SHIFT    )
-        if command == SET_CACB      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = value                                                                        #val = self.setShadowReg(motor, DRVCTRL, value, 0             , 0                 )
+        if command == SET_CACB      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = value
 
         # CHOPCONF register
         if command == SET_TOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, TOFF_MASK   , TOFF_SHIFT        )
@@ -1689,23 +1686,21 @@ class RouterMachine(object):
         if command == SET_TST        : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, TST_MASK     , TST_SHIFT         )
         if command == SET_SDOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SDOFF_MASK   , SDOFF_SHIFT       )
 
-        
-
-        log("VAL:" + hex(val))
 
         if len < 999: 
             if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
                 cmd = cmd + motor * MOTOR_OFFSET # if individual command shift it by the motor index
                 
-            out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), 'SET TOFF')
+            out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), altDisplayText)
 
             if printlog: 
-                logging.info("sending command to motor:" + str(motor) + ", cmd:" + str(cmd) + ", val:" + str(val)) #implement as a queue to fix this error
-            #    logging.info(str([hex(b) for b in byte_command]))
+                log("Sending command to motor: " + str(motor) + ", cmd: " + str(cmd) + ", val: " + hex(val))
 
         else:
             # throw an error, command is not valid
-            logging.info("ERROR: unknown command in send_command_to_motor:" + str(motor) + ", cmd:" + str(command) + ", val:" + str(value)) #implement as a queue to fix this error
+            log("ERROR: unknown command in send_command_to_motor: " + str(motor) + ", cmd: " + str(command) + ", val: " + hex(value))
+
+        return out
 
     def setShadowReg(self, motor, register, value, mask, shift):
         self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] & ~ (           mask   << shift) #clear

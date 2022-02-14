@@ -278,7 +278,7 @@ class SerialConnection(object):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
 
@@ -315,12 +315,10 @@ class SerialConnection(object):
 
             del self.write_realtime_buffer[0:(realtime_counter)]
 
-            protocol_counter = 0
-            for protocol_command in self.write_protocol_buffer:
+            if self.write_protocol_buffer and self.last_protocol_send_time + 0.05 < time.time():
+                protocol_command = self.write_protocol_buffer[0]
                 self.write_direct(protocol_command[0], altDisplayText = protocol_command[1], protocol = True)
-                protocol_counter += 1
-
-            del self.write_protocol_buffer[0:(protocol_counter)]
+                del self.write_protocol_buffer[0]
 
             # If there's a message received, deal with it depending on type:
             if self.s.inWaiting():
@@ -704,12 +702,7 @@ class SerialConnection(object):
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
-    # TMC REGISTERS
-    x1_motor_registers = {}
-    x2_motor_registers = {}
-    y1_motor_registers = {}
-    y2_motor_registers = {}
-    z_motor_registers = {}
+    # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
     def process_grbl_push(self, message):
 
@@ -1050,6 +1043,7 @@ class SerialConnection(object):
                     self.m.TMC_motor[int(tmc_registers[0])].stallGuardAlarmThreshold = int(tmc_registers[8])
                     self.m.TMC_motor[int(tmc_registers[0])].max_step_period_us_SG = int(tmc_registers[9])
                     self.m.TMC_motor[int(tmc_registers[0])].temperatureCoefficient = int(tmc_registers[10])
+                    self.m.TMC_motor[int(tmc_registers[0])].got_registers = True
 
                     try: 
 
@@ -1298,8 +1292,7 @@ class SerialConnection(object):
                 self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
 
         except:
-            print "FAILED to display on CONSOLE: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-            # log('Console display error: ' + str(consoleDisplayError))
+            log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Finally issue the command        
         if self.s:
@@ -1314,28 +1307,40 @@ class SerialConnection(object):
                     self.s.write(serialCommand + '\n')
 
                 elif protocol == True:
-
-                    if self.last_protocol_send_time + 0.05 < time.time():
-
                         self.s.write(serialCommand)
                         self.last_protocol_send_time = time.time()
 
-                    else: 
-                        self.write_protocol(serialCommand, altDisplayText)
-
-
-                # SmartBench maintenance monitoring 
-#                 self.maintenance_value_logging(serialCommand)
-
             except:
-             # SerialException as serialError:
-                print "FAILED to write to SERIAL: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")"
-                self.get_serial_screen('Could not write last command to serial buffer.')
-                # log('Serial Error: ' + str(serialError))
+
+                try:
+
+                    if not protocol:
+                        log("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
+
+                    else:
+                        log("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                        self.get_serial_screen('Could not write last command to serial buffer.')
+
+                except:
+                    log("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+
 
         else:
-            log("No serial! Command lost!: " + serialCommand + " (Alt text: " + str(altDisplayText) + ")")
-            self.get_serial_screen('Could not write last command to serial buffer.')
+
+            try:
+                if not protocol:
+                    log("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+
+                else:
+                    log("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    self.get_serial_screen('Could not write last command to serial buffer.')
+            except:
+
+                log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                self.get_serial_screen('Could not write last command to serial buffer.')
 
     # TODO: Are kwargs getting pulled successully by write_direct from here?
     def write_command(self, serialCommand, **kwargs):
@@ -1379,6 +1384,7 @@ class SerialConnection(object):
     def write_protocol(self, serialCommand, altDisplayText):
         
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
+        return serialCommand
 
 ## OLD -------------------------------------------------------------------------------------------------
 #         # OMITS end of line command (which returns an 'ok' from grbl - used in counting/streaming algorithms)

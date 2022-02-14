@@ -6,6 +6,8 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 class motor_class(object):
 
+    got_registers              = False # this will update the first time that registers are read in
+
     index                      = 0 # index of this motor in "all_units" dictionary
 
     currentScale               = 0 #/* 0 - 31 where 31 is max */
@@ -57,5 +59,5 @@ class motor_class(object):
 
     shadowRegisters         = [0,0,0,0,0]
 
-    def __init__(self):
-        pass
+    def __init__(self, given_index):
+        self.index = given_index

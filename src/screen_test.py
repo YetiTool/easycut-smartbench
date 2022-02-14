@@ -15,7 +15,12 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from asmcnc.comms import localization
 
-from mock import Mock, MagicMock
+try: 
+    from mock import Mock, MagicMock
+
+except: 
+    pass
+
 from asmcnc.comms import router_machine
 
 from asmcnc.tests.screen_test import TestScreen
