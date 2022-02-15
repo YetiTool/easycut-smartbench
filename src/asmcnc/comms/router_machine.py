@@ -823,7 +823,7 @@ class RouterMachine(object):
     
         # Z 
         self.z_max_jog_abs_limit = -self.limit_switch_safety_distance
-        self.z_min_jog_abs_limit = -self.grbl_z_max_travel       
+        self.z_min_jog_abs_limit = -self.grbl_z_max_travel
 
 
 # HW/FW VERSION CAPABILITY
@@ -1706,3 +1706,88 @@ class RouterMachine(object):
         self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] & ~ (           mask   << shift) #clear
         self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] |   ( ( value & mask ) << shift) #set
         return self.TMC_motor[motor].shadowRegisters[register]
+
+
+    # CALIBRATION AND TUNNING PROCEDURES
+
+    temp_sg_array = []
+
+    def sweep_toff_and_sgt(self, X = False, Y = False, Z = False):
+
+        temp_toff = 2
+
+        # having empty initial values, so that running through indices with 
+        # temp_toff and temp_sgt is easy and readable :) 
+        tuning_array = [[[]]*21]*11
+
+        while temp_toff <= 10:
+
+            temp_sgt = 0
+
+
+            if X: 
+                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
+            if Y: 
+                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
+            if Z: 
+                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
+
+            while temp_sgt <= 20:
+
+                if X: 
+                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
+                if Y: 
+                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
+                if Z: 
+                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
+
+                while len(self.temp_sg_array) <= 15:
+
+                    self.s.tuning_flag = True
+
+                self.s.tuning_flag = False
+                tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
+
+                temp_sgt = temp_sgt + 1
+
+            temp_toff = temp_toff + 1
+
+        return tuning_array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

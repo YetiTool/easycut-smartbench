@@ -687,11 +687,14 @@ class SerialConnection(object):
     spindle_speed_monitor_mV = None
 
     # STALL GUARD
-    z_motor_axis = None
-    x_motor_axis = None
-    y_axis = None
-    y1_motor = None
-    y2_motor = None
+    sg_z_motor_axis = None
+    sg_x_motor_axis = None
+    sg_y_axis = None
+    sg_y1_motor = None
+    sg_y2_motor = None
+
+    # FOR CALIBRATION TUNING
+    tuning_flag = False
 
     # SPINDLE STATISTICS
     spindle_serial_number = None
@@ -981,11 +984,21 @@ class SerialConnection(object):
                         log("ERROR status parse: SG values invalid: " + message)
                         return
 
-                    self.z_motor_axis = int(sg_values[0])
-                    self.x_motor_axis = int(sg_values[1])
-                    self.y_axis = int(sg_values[2])
-                    self.y1_motor = int(sg_values[3])
-                    self.y2_motor = int(sg_values[4])
+                    self.sg_z_motor_axis = int(sg_values[0])
+                    self.sg_x_motor_axis = int(sg_values[1])
+                    self.sg_y_axis = int(sg_values[2])
+                    self.sg_y1_motor = int(sg_values[3])
+                    self.sg_y2_motor = int(sg_values[4])
+
+                    if self.tuning_flag:
+
+                        self.m.temp_sg_array.append([
+                                                    self.sg_z_motor_axis,
+                                                    self.sg_x_motor_axis,
+                                                    self.sg_y_axis,
+                                                    self.sg_y1_motor,
+                                                    self.sg_y2_motor
+                                                ])
 
                 elif part.startswith('Sp:'):
 
