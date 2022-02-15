@@ -4,8 +4,12 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
+import logging
+
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.comms import motors
 
 from kivy.clock import Clock
 import sys, os, time
@@ -45,6 +49,9 @@ class RouterMachine(object):
     is_squaring_XY_needed_after_homing = True # starts True, therefore squares on powerup. Switched to false after initial home, so as not to repeat on next home.
 
     is_machine_paused = False
+
+    # empty dictionary to hold TMC motors
+    TMC_motor = {}
 
 
     # PERSISTENT MACHINE VALUES
@@ -138,6 +145,13 @@ class RouterMachine(object):
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
         self.get_persistent_values()
+
+        # initialise all motors
+        self.TMC_motor[TMC_X1] = motors.motor_class(TMC_X1)
+        self.TMC_motor[TMC_X2] = motors.motor_class(TMC_X2)
+        self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
+        self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
+        self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
 # PERSISTENT MACHINE VALUES
     def check_presence_of_sb_values_files(self):
@@ -915,6 +929,7 @@ class RouterMachine(object):
 
     # BOOT UP SEQUENCE
     def bootup_sequence(self):
+        log("Boot up machine, and get settings...")
         self._stop_all_streaming()  # In case alarm happened during boot, stop that
         self._grbl_soft_reset()     # Reset to get out of Alarm mode.
         # Now grbl won't allow anything until machine is rehomed or unlocked, so...
@@ -928,11 +943,24 @@ class RouterMachine(object):
         # Get grbl settings loaded into serial comms
         Clock.schedule_once(lambda dt: self.get_grbl_settings(), 1.9)
         # do TMC motor controller handshake (if FW > 2.2.8), load params into serial comms
-        Clock.schedule_once(lambda dt: self.tmc_handshake(), 2)
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 3)
 
     # TMC MOTOR CONTROLLER HANDSHAKE
+    ## NEEDS TESTING
+    handshake_event = None
+
     def tmc_handshake(self):
-        pass
+
+        if self.s.fw_version:
+
+            if self.handshake_event: Clock.unschedule(self.handshake_event)
+
+            if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
+                self.send_command_to_motor(altDisplayText="GET REGISTERS", command=GET_REGISTERS)
+
+        else: 
+            # In case handshake is too soon, it keeps trying until it can read a FW version
+            self.handshake_event = Clock.schedule_interval(lambda dt: self.tmc_handshake(), 1)
 
 # CRITICAL START/STOP
 
@@ -1591,3 +1619,90 @@ class RouterMachine(object):
 
     def set_rainbow_cycle_led(self, command):
         self.s.write_command('AL' + command, show_in_sys=False, show_in_console=False)
+
+
+    def send_command_to_motor(self, altDisplayText, motor=TMC_X1, command=SET_ACTIVE_CURRENT, value=0, printlog=True):
+
+        len = 999;
+
+        # global commands:
+        if command == SET_SG_ALARM          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
+        if command == SET_CALIBR_MODE       :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
+        if command == RESTORE_TMC_DEFAULTS  :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0    
+        if command == STORE_TMC_PARAMS      :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
+        if command == GET_REGISTERS         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
+        if command == WDT_TMC_TEST          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
+        if command == REPORT_STALLS         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
+        if command == UPLOAD_CALIBR_VALUE   :   cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value
+        if command == REPORT_RAW_SG         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
+        
+        
+
+        # individual motor commands 
+        if command == SET_IDLE_CURRENT:         cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
+        if command == SET_ACTIVE_CURRENT:       cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
+        if command == SET_MOTOR_ENERGIZED:      cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value        
+        if command == SET_SG_ALARM_TRSHLD:      cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].stallGuardAlarmThreshold   = value # 4 bytes value
+        if command == SET_THERMAL_COEFF:        cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].temperatureCoefficient     = value # 4 bytes value
+        if command == SET_MAX_SG_STEP_US:       cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].max_step_period_us_SG      = value # 4 bytes value
+        
+
+        # DRVCTRL register
+        if command == SET_MRES      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, MRES_MASK     , MRES_SHIFT        )
+        if command == SET_DEDGE     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, DEDGE_MASK    , DEDGE_SHIFT       )
+        if command == SET_INTERPOL  : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, INTERPOL_MASK , INTERPOL_SHIFT    )
+        if command == SET_CACB      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = value
+
+        # CHOPCONF register
+        if command == SET_TOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, TOFF_MASK   , TOFF_SHIFT        )
+        if command == SET_HSTRT     : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, HSTRT_MASK  , HSTRT_SHIFT       )
+        if command == SET_HEND      : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, HEND_MASK   , HEND_SHIFT        )
+        if command == SET_HDEC      : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, HDEC_MASK   , HDEC_SHIFT        )
+        if command == SET_RNDTF     : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, RNDTF_MASK  , RNDTF_SHIFT       )
+        if command == SET_CHM       : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, CHM_MASK    , CHM_SHIFT         )
+        if command == SET_TBL       : len = TMC_REG_CMD_LENGTH; cmd = SET_CHOPCONF; val = self.setShadowReg(motor, CHOPCONF, value, TBL_MASK    , TBL_SHIFT         )
+
+        # SMARTEN register
+        if command == SET_SEMIN     : len = TMC_REG_CMD_LENGTH; cmd = SET_SMARTEN; val = self.setShadowReg(motor, SMARTEN, value, SEMIN_MASK    , SEMIN_SHIFT       )
+        if command == SET_SEUP      : len = TMC_REG_CMD_LENGTH; cmd = SET_SMARTEN; val = self.setShadowReg(motor, SMARTEN, value, SEUP_MASK     , SEUP_SHIFT        )
+        if command == SET_SEMAX     : len = TMC_REG_CMD_LENGTH; cmd = SET_SMARTEN; val = self.setShadowReg(motor, SMARTEN, value, SEMAX_MASK    , SEMAX_SHIFT       )
+        if command == SET_SEDN      : len = TMC_REG_CMD_LENGTH; cmd = SET_SMARTEN; val = self.setShadowReg(motor, SMARTEN, value, SEDN_MASK     , SEDN_SHIFT        )
+        if command == SET_SEIMIN    : len = TMC_REG_CMD_LENGTH; cmd = SET_SMARTEN; val = self.setShadowReg(motor, SMARTEN, value, SEIMIN_MASK   , SEIMIN_SHIFT      )
+
+        # SGCSCONF register
+        #if command == SET_CS        : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
+        if command == SET_SGT       : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, SGT_MASK    , SGT_SHIFT         )
+        if command == SET_SFILT     : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, SFILT_MASK  , SFILT_SHIFT       )
+                                                                                                                                                                    
+        # DRVCONF register                                                                                                                                          
+        if command == SET_RDSEL      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, RDSEL_MASK   , RDSEL_SHIFT       )
+        if command == SET_VSENSE     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, VSENSE_MASK  , VSENSE_SHIFT      )
+        if command == SET_SDOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SDOFF_MASK   , SDOFF_SHIFT       )
+        if command == SET_TS2G       : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, TS2G_MASK    , TS2G_SHIFT        )
+        if command == SET_DISS2G     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, DISS2G_MASK  , DISS2G_SHIFT      )
+        if command == SET_SLPL       : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SLPL_MASK    , SLPL_SHIFT        )
+        if command == SET_SLPH       : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SLPH_MASK    , SLPH_SHIFT        )
+        if (command == SET_SLPL or command == SET_SLPH):                            val = self.setShadowReg(motor, DRVCONF, value > 3, SLP2_MASK, SLP2_SHIFT        ) # hadle slope control MSB:
+        if command == SET_TST        : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, TST_MASK     , TST_SHIFT         )
+        if command == SET_SDOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SDOFF_MASK   , SDOFF_SHIFT       )
+
+
+        if len < 999: 
+            if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
+                cmd = cmd + motor * MOTOR_OFFSET # if individual command shift it by the motor index
+                
+            out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), altDisplayText)
+
+            if printlog: 
+                log("Sending command to motor: " + str(motor) + ", cmd: " + str(cmd) + ", val: " + hex(val))
+
+        else:
+            # throw an error, command is not valid
+            log("ERROR: unknown command in send_command_to_motor: " + str(motor) + ", cmd: " + str(command) + ", val: " + hex(value))
+
+        return out
+
+    def setShadowReg(self, motor, register, value, mask, shift):
+        self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] & ~ (           mask   << shift) #clear
+        self.TMC_motor[motor].shadowRegisters[register] = self.TMC_motor[motor].shadowRegisters[register] |   ( ( value & mask ) << shift) #set
+        return self.TMC_motor[motor].shadowRegisters[register]
