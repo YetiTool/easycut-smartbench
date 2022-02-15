@@ -6,16 +6,20 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 class motor_class(object):
 
-    got_registers              = False # this will update the first time that registers are read in
-
     index                      = 0 # index of this motor in "all_units" dictionary
 
+    got_registers              = False # this will update the first time that registers are read in
+
+    # REGISTERS
+    shadowRegisters         = [0,0,0,0,0]    
     currentScale               = 0 #/* 0 - 31 where 31 is max */
     ActiveCurrentScale         = 0 #//set 1/4 of full scale
     standStillCurrentScale     = 0 #//set 1/4 of full scale
     stallGuardAlarmThreshold   = 0 # SG alarm threshold: when current SG reading is lower than calibrated by this value corresponded axis alarm will be triggered
     temperatureCoefficient     = 0 # correction for temperatures other than calibration
     max_step_period_us_SG      = 0 # maximum motor step size to read Stall guard. Higher step would lead to too low RPM and SG redings above that step size will be ignored
+
+
     SGdelta                    = -999 # distance from the current SG readins to calibrated SG value
     SGdeltaEMA                 = 0 # distance from the current SG readins to calibrated SG value
 
@@ -57,7 +61,17 @@ class motor_class(object):
     MotorOFF                   = 0
     IdleCurrent                = 0
 
-    shadowRegisters         = [0,0,0,0,0]
+
+    # CALIBRATION PARAMS
+    calibration_dataset_SG_values   = []
+    calibrated_at_current_setting   = 0
+    calibrated_at_sgt_setting       = 0
+    calibrated_at_toff_setting      = 0
+    calibrated_at_temperature       = 0
+    
+
+
+
 
     def __init__(self, given_index):
         self.index = given_index

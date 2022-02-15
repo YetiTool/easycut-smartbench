@@ -18,11 +18,14 @@ import sys
 sys.path.append('./src')
 
 try:
-    from asmcnc.comms import serial_connection
+    from asmcnc.comms import router_machine
     from asmcnc.comms import localization
 
 except: 
     pass
+
+Cmport = 'COM3'
+from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 ########################################################
 # IMPORTANT!!
@@ -40,12 +43,13 @@ class SGTest(unittest.TestCase):
 
 
     tcal_id = 0
-    test_SG_dataset = [ 
+    test_SG_dataset = [
             405,405,405,405,405,405,405,405,405,410,417,430,434,440,449,451,462,465,472,479,483,484,490,497,503,508,514,517,522,526,533,
             538,541,545,549,555,556,562,560,566,567,575,575,581,581,583,584,583,583,589,579,580,575,577,571,570,571,573,580,588,595,596,597,
             592,589,588,590,591,598,597,595,590,588,589,587,587,591,585,592,586,589,584,583,587,581,583,582,580,577,575,574,570,572,565,567,566,557,
             559,555,555,555,553,550,549,542,538,538,540,541,537,541,541,541,541,541,541,541,541,541,541,541,541,541,541,541,541,541,541
             ]
+
     test_current_setting = 26
     test_sgt_setting = 9
     test_toff_setting = 8
@@ -56,20 +60,15 @@ class SGTest(unittest.TestCase):
 
         class YETIPCB(MockSerial):
 
-            @serial_query("?")
-            def do_something(self):
-                return outerSelf.status
+            simple_queries = {
+                "?": outerSelf.status,
+                "\x18": ""
 
+            }
         return YETIPCB
 
 
-    def status_and_PCB_constructor( self, case=None, 
-                                    motor_id=0,
-                                    calibration_coeffs=0,
-                                    current_setting=0,
-                                    sgt_setting=0,
-                                    toff_setting=0,
-                                    temp_cal=0):
+    def status_and_PCB_constructor( self, case=None, motor_id=0):
 
         # Use this to construct the test status passed out by mock serial object
 
@@ -80,17 +79,21 @@ class SGTest(unittest.TestCase):
 
         elif case == 2:
 
+            string_ints = [str(j) for j in self.test_SG_dataset]
+            dataset_str = ",".join(string_ints)
 
             self.status =   "<Idle|TCAL:" + \
-                            "M" + str(motor_id) + ":," + str(calibration_coeffs) + "," + \
-                            str(current_setting) + "," + str(sgt_setting) + "," \
-                            + str(toff_setting) + "," + str(temp_cal) + ">"
+                            "M" + str(motor_id) + ":," + dataset_str + "," + \
+                            str(self.test_current_setting) + "," + str(self.test_sgt_setting) + "," \
+                            + str(self.test_toff_setting) + "," + str(self.test_temp_at_cal) + ">"
+
+            print(self.status)
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:
-        self.serial_module.s = DummySerial(self.give_me_a_PCB())
-        self.serial_module.s.fd = 1 # this is needed to force it to run
-        self.serial_module.start_services(1)
+        self.m.s.s = DummySerial(self.give_me_a_PCB())
+        self.m.s.s.fd = 1 # this is needed to force it to run
+        self.m.s.start_services(1)
         sleep(0.01)
 
     def setUp(self):
@@ -104,23 +107,22 @@ class SGTest(unittest.TestCase):
         self.l = localization.Localization()
         self.jd = Mock()
 
-        self.serial_module = serial_connection.SerialConnection(self.m, self.sm, self.sett, self.l, self.jd)
-        # self.serial_module.VERBOSE_ALL_RESPONSE = True
+        self.m = router_machine.RouterMachine(Cmport, self.sm, self.sett, self.l, self.jd)
 
 
     def tearDown(self):
-      self.serial_module.__del__()
+      self.m.s.__del__()
 
 
     def test_does_serial_think_its_connected(self):
         """Test that serial module thinks it is connected"""
         self.status_and_PCB_constructor()
-        assert self.serial_module.is_connected(), 'not connected'
+        assert self.m.s.is_connected(), 'not connected'
 
     def test_the_mock_interface(self):
         """Test that we're getting statuses back"""
         self.status_and_PCB_constructor(1)
-        assert self.serial_module.m_state == "Idle", 'not idle'
+        assert self.m.s.m_state == "Idle", 'not idle'
 
 
     def test_motor_x1(self):
@@ -129,13 +131,14 @@ class SGTest(unittest.TestCase):
         This is relevant to FW between v228 onwards
         """
         self.status_and_PCB_constructor(case=2, motor_id = 0)
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('motor_id'), 0), 'x1 motor id error'
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('SG_dataset'), self.test_SG_dataset), 'x1 test_SG_dataset error'
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('current_setting'), self.test_current_setting), 'x1 test_current_setting error'
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('sgt_setting'), self.test_sgt_setting), 'x1 test_sgt_setting error'
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('toff_setting'), self.test_toff_setting), 'x1 test_toff_setting error'
-        self.assertEqual(self.serial_module.x1_motor_calibration.get('temp_at_cal'), self.test_temp_at_cal), 'x1 test_temp_at_cal error'
-        assert self.serial_module.is_connected(), 'not connected'
+        self.assertEqual(self.m.TMC_motor[TMC_X1].calibration_dataset_SG_values, self.test_SG_dataset), 'x1 test_SG_dataset error'
+        self.assertEqual(len(self.test_SG_dataset), 128), 'x1 test_SG_dataset length error'
+        self.assertEqual(len(self.m.TMC_motor[TMC_X1].calibration_dataset_SG_values), 128), 'x1 test_SG_dataset length error'
+        self.assertEqual(self.m.TMC_motor[TMC_X1].calibrated_at_current_setting, self.test_current_setting), 'x1 test_current_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_X1].calibrated_at_sgt_setting, self.test_sgt_setting), 'x1 test_sgt_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_X1].calibrated_at_toff_setting, self.test_toff_setting), 'x1 test_toff_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_X1].calibrated_at_temperature, self.test_temp_at_cal), 'x1 test_temp_at_cal error'
+        assert self.m.s.is_connected(), 'not connected'
 
     def test_motor_x2(self):
         """ 
@@ -143,13 +146,13 @@ class SGTest(unittest.TestCase):
         This is relevant to FW between v228 onwards
         """
         self.status_and_PCB_constructor(case=2, motor_id = 1)
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('motor_id'), 1), 'x2 motor id error'
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('SG_dataset'), self.test_SG_dataset), 'x2 test_SG_dataset error'
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('current_setting'), self.test_current_setting), 'x2 test_current_setting error'
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('sgt_setting'), self.test_sgt_setting), 'x2 test_sgt_setting error'
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('toff_setting'), self.test_toff_setting), 'x2 test_toff_setting error'
-        self.assertEqual(self.serial_module.x2_motor_calibration.get('temp_at_cal'), self.test_temp_at_cal), 'x2 test_temp_at_cal error'
-        assert self.serial_module.is_connected(), 'not connected'
+        self.assertEqual(self.m.TMC_motor[TMC_X2].calibration_dataset_SG_values, self.test_SG_dataset), 'x2 test_SG_dataset error'
+        self.assertEqual(len(self.m.TMC_motor[TMC_X2].calibration_dataset_SG_values), 128), 'x2 test_SG_dataset length error'
+        self.assertEqual(self.m.TMC_motor[TMC_X2].calibrated_at_current_setting, self.test_current_setting), 'x2 test_current_setting error' 
+        self.assertEqual(self.m.TMC_motor[TMC_X2].calibrated_at_sgt_setting, self.test_sgt_setting), 'x2 test_sgt_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_X2].calibrated_at_toff_setting, self.test_toff_setting),'x2 test_toff_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_X2].calibrated_at_temperature, self.test_temp_at_cal), 'x2 test_temp_at_cal error'
+        assert self.m.s.is_connected(), 'not connected'
 
     def test_motor_y1(self):
         """ 
@@ -157,13 +160,13 @@ class SGTest(unittest.TestCase):
         This is relevant to FW between v228 onwards
         """
         self.status_and_PCB_constructor(case=2, motor_id = 2)
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('motor_id'), 2), 'y1 motor id error'
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('SG_dataset'), self.test_SG_dataset), 'y1 test_SG_dataset error'
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('current_setting'), self.test_current_setting), 'y1 test_current_setting error'
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('sgt_setting'), self.test_sgt_setting), 'y1 test_sgt_setting error'
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('toff_setting'), self.test_toff_setting), 'y1 test_toff_setting error'
-        self.assertEqual(self.serial_module.y1_motor_calibration.get('temp_at_cal'), self.test_temp_at_cal), 'y1 test_temp_at_cal error'
-        assert self.serial_module.is_connected(), 'not connected'
+        self.assertEqual(self.m.TMC_motor[TMC_Y1].calibration_dataset_SG_values, self.test_SG_dataset), 'y1 test_SG_dataset error'
+        self.assertEqual(len(self.m.TMC_motor[TMC_Y1].calibration_dataset_SG_values), 128), 'y1 test_SG_dataset length error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y1].calibrated_at_current_setting, self.test_current_setting), 'y1 test_current_setting error' 
+        self.assertEqual(self.m.TMC_motor[TMC_Y1].calibrated_at_sgt_setting, self.test_sgt_setting), 'y1 test_sgt_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y1].calibrated_at_toff_setting, self.test_toff_setting),'y1 test_toff_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y1].calibrated_at_temperature, self.test_temp_at_cal), 'y1 test_temp_at_cal error'
+        assert self.m.s.is_connected(), 'not connected'
 
     def test_motor_y2(self):
         """ 
@@ -171,13 +174,13 @@ class SGTest(unittest.TestCase):
         This is relevant to FW between v228 onwards
         """
         self.status_and_PCB_constructor(case=2, motor_id = 3)
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('motor_id'), 3), 'y2 motor id error'
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('SG_dataset'), self.test_SG_dataset), 'y2 test_SG_dataset error'
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('current_setting'), self.test_current_setting), 'y2 test_current_setting error'
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('sgt_setting'), self.test_sgt_setting), 'y2 test_sgt_setting error'
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('toff_setting'), self.test_toff_setting), 'y2 test_toff_setting error'
-        self.assertEqual(self.serial_module.y2_motor_calibration.get('temp_at_cal'), self.test_temp_at_cal), 'y2 test_temp_at_cal error'
-        assert self.serial_module.is_connected(), 'not connected'
+        self.assertEqual(self.m.TMC_motor[TMC_Y2].calibration_dataset_SG_values, self.test_SG_dataset), 'y2 test_SG_dataset error'
+        self.assertEqual(len(self.m.TMC_motor[TMC_Y2].calibration_dataset_SG_values), 128), 'y2 test_SG_dataset length error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y2].calibrated_at_current_setting, self.test_current_setting), 'y2 test_current_setting error' 
+        self.assertEqual(self.m.TMC_motor[TMC_Y2].calibrated_at_sgt_setting, self.test_sgt_setting), 'y2 test_sgt_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y2].calibrated_at_toff_setting, self.test_toff_setting),'y2 test_toff_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Y2].calibrated_at_temperature, self.test_temp_at_cal), 'y2 test_temp_at_cal error'
+        assert self.m.s.is_connected(), 'not connected'
 
     def test_motor_z(self):
         """ 
@@ -185,13 +188,13 @@ class SGTest(unittest.TestCase):
         This is relevant to FW between v228 onwards
         """
         self.status_and_PCB_constructor(case=2, motor_id = 4)
-        self.assertEqual(self.serial_module.z_motor_calibration.get('motor_id'), 4), 'z motor id error'
-        self.assertEqual(self.serial_module.z_motor_calibration.get('SG_dataset'), self.test_SG_dataset), 'z test_SG_dataset error'
-        self.assertEqual(self.serial_module.z_motor_calibration.get('current_setting'), self.test_current_setting), 'z test_current_setting error'
-        self.assertEqual(self.serial_module.z_motor_calibration.get('sgt_setting'), self.test_sgt_setting), 'z test_sgt_setting error'
-        self.assertEqual(self.serial_module.z_motor_calibration.get('toff_setting'), self.test_toff_setting), 'z test_toff_setting error'
-        self.assertEqual(self.serial_module.z_motor_calibration.get('temp_at_cal'), self.test_temp_at_cal), 'z test_temp_at_cal error'
-        assert self.serial_module.is_connected(), 'not connected'
+        self.assertEqual(self.m.TMC_motor[TMC_Z].calibration_dataset_SG_values, self.test_SG_dataset), 'z test_SG_dataset error'
+        self.assertEqual(len(self.m.TMC_motor[TMC_Z].calibration_dataset_SG_values), 128), 'z test_SG_dataset length error'
+        self.assertEqual(self.m.TMC_motor[TMC_Z].calibrated_at_current_setting, self.test_current_setting), 'z test_current_setting error' 
+        self.assertEqual(self.m.TMC_motor[TMC_Z].calibrated_at_sgt_setting, self.test_sgt_setting), 'z test_sgt_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Z].calibrated_at_toff_setting, self.test_toff_setting),'z test_toff_setting error'
+        self.assertEqual(self.m.TMC_motor[TMC_Z].calibrated_at_temperature, self.test_temp_at_cal), 'z test_temp_at_cal error'
+        assert self.m.s.is_connected(), 'not connected'
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
