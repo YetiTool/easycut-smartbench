@@ -1710,9 +1710,39 @@ class RouterMachine(object):
 
     # CALIBRATION AND TUNNING PROCEDURES
 
+    def prepare_for_tuning(self):
+
+        # 1. Zero position
+        # 2. Enable raw SG reporting: command REPORT_RAW_SG
+
+        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+
+
+    def start_slow_calibration_jog(self, X = False, Y = False, Z = False):
+
+        # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
+
+        if X and Y:
+            self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 300)
+
+        elif X: 
+            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+
+        elif Y: 
+            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
+
+        if Z: 
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
+
+
     temp_sg_array = []
 
     def sweep_toff_and_sgt(self, X = False, Y = False, Z = False):
+
+        # Sweep TOFF in the range 2-10
+        # Sweep SGT in the range 0-20
+        # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid.
 
         temp_toff = 2
 
@@ -1756,7 +1786,19 @@ class RouterMachine(object):
 
         return tuning_array
 
+        # ORDER IS: 
+        # self.sg_z_motor_axis = int(sg_values[0])
+        # self.sg_x_motor_axis = int(sg_values[1])
+        # self.sg_y_axis = int(sg_values[2])
+        # self.sg_y1_motor = int(sg_values[3])
+        # self.sg_y2_motor = int(sg_values[4])
 
+
+
+    def average_points_in_sub_array(self, sub_array, index):
+        # Average the remaining 8 points. 
+        just_idx_sgs = [sg_arr[index] for sg_arr in sub_array]
+        avg_idx = sum(just_idx_sgs) / len(just_idx_sgs)
 
 
 
