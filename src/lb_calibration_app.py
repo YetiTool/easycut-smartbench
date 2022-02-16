@@ -18,7 +18,7 @@ as default application at startup:
 
 sudo systemctl disable ansible.service
 
-touch /home/pi/LBCALIBRATIONJIG.txt
+touch /home/pi/YETI_LBCAL_PROD_JIG.txt
 
 sudo nano /boot/config.txt
 

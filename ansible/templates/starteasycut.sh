@@ -14,8 +14,7 @@ fi
 # Run all apps from src folder
 cd /home/pi/easycut-smartbench/src/
 
-if [ -f /home/pi/YETI_*_PROD_JIG.txt ]
-then
+if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
 
         if [ -f /home/pi/YETI_ZHEADQC_PROD_JIG.txt ]
         then
@@ -23,15 +22,16 @@ then
                 exec python z_head_qc_app.py
 
 
+        elif [ -f /home/pi/YETI_LBQC_PROD_JIG.txt ]
+        then
+                echo "Running LB QC app"
+                exec python lower_beam_qc_app.py
+
+
         elif [ -f /home/pi/YETI_LBCAL_PROD_JIG.txt ]
         then
                 echo "Running LB Calibration app"
                 exec python lb_calibration_app.py
-
-        elif [ -f /home/pi/YETI_LBQC_PROD_JIG.txt ]
-        then
-                echo "Running LB QC app"
-                # exec python lb_qc_app.py
 
         fi
 
