@@ -1,6 +1,27 @@
 '''
 Created on 8 Feb 2022
 @author: Dennis
+
+
+#######################################################
+LOWER BEAM QC APPLICATION
+
+Used in production to carry out quality control checks. 
+#######################################################
+
+#######################################################
+PLATFORM
+
+This app needs following platform changes to run
+as default application at startup: 
+
+/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh
+
+touch /home/pi/YETI_LBQC_PROD_JIG.txt
+
+sudo reboot
+
+########
 '''
 
 from kivy.app import App
