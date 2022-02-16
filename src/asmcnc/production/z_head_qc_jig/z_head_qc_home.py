@@ -8,6 +8,8 @@ from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 import subprocess
 
+import sys, os
+
 try: 
     import pigpio
 
@@ -51,10 +53,20 @@ Builder.load_string("""
                     font_size: dp(20)
                     on_press: root.enter_qc()
 
-            Button: 
-                text: 'Secret option C - take me to WARRANTY QC!'
-                font_size: dp(20)
-                on_press: root.secret_option_c()
+            GridLayout:
+                cols: 2
+
+                Button: 
+                    text: 'Secret option C - take me to WARRANTY QC!'
+                    font_size: dp(20)
+                    on_press: root.secret_option_c()
+
+                Button:
+                    text: 'Shut down'
+                    font_size: dp(20)
+                    background_color: [1,0,0,1]
+                    background_normal: ''
+                    on_press: root.shutdown_console()
 """)
 
 
@@ -103,4 +115,7 @@ class ZHeadQCHome(Screen):
     def secret_option_c(self):
         self.sm.current = 'qcWC'
 
+    def shutdown_console(self):
+        if sys.platform != 'win32' and sys.platform != 'darwin': 
+            os.system('sudo shutdown -h now')
 
