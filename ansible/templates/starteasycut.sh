@@ -15,7 +15,6 @@ fi
 cd /home/pi/easycut-smartbench/src/
 
 if compgen -G "/home/pi/YETI_*_PROD_JIG.txt" > /dev/null; then
-then
 
         if [ -f /home/pi/YETI_ZHEADQC_PROD_JIG.txt ]
         then
