@@ -11,14 +11,33 @@ then
         mkdir /home/pi/easycut-smartbench && cp -RT /home/pi/easycut-smartbench-backup /home/pi/easycut-smartbench
 fi
 
-if [ -f /home/pi/ZHEADTESTJIG.txt ]
-then
-        echo "running z head diagnostics"
+# Run all apps from src folder
+cd /home/pi/easycut-smartbench/src/
 
-        cd /home/pi/easycut-smartbench/src/
-        exec python z_head_qc_app.py
+if [ -f /home/pi/YETI_*_PROD_JIG.txt ]
+then
+
+        if [ -f /home/pi/YETI_ZHEADQC_PROD_JIG.txt ]
+        then
+                echo "Running Z Head QC app"
+                exec python z_head_qc_app.py
+
+
+        elif [ -f /home/pi/YETI_LBQC_PROD_JIG.txt ]
+        then
+                echo "Running LB QC app"
+                exec python lower_beam_qc_app.py
+
+
+        elif [ -f /home/pi/YETI_LBCAL_PROD_JIG.txt ]
+        then
+                echo "Running LB Calibration app"
+                exec python lb_calibration_app.py
+
+        fi
+
 else
-        cd /home/pi/easycut-smartbench/src/
+        
         # execute python
         exec python main.py
         sleep 5
