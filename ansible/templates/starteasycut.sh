@@ -14,7 +14,7 @@ fi
 # Run all apps from src folder
 cd /home/pi/easycut-smartbench/src/
 
-if [ -f /home/pi/YETI_*_PROD_JIG.txt ]
+if [[ -f /home/pi/YETI_*_PROD_JIG.txt ]]
 then
 
         if [ -f /home/pi/YETI_ZHEADQC_PROD_JIG.txt ]
