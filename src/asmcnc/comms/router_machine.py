@@ -1716,7 +1716,28 @@ class RouterMachine(object):
         # 2. Enable raw SG reporting: command REPORT_RAW_SG
 
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1)
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
+
+    time_to_check_for_tuning_prep = 0
+
+    def is_machine_idle_for_tuning(self, X = False, Y = False, Z = False):
+
+        if self.m_state == "Idle" and (self.time_to_check_for_tuning_prep + 120) < time.time():
+            self.time_to_check_for_tuning_prep = time.time()
+            self.is_machine_getting_valid_temperatures(x=X, y=Y, z=Z)
+
+        else: 
+            Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 5)
+
+    def is_machine_getting_valid_temperatures(self, x = False, y = False, z = False):
+
+        if (0 < self.s.motor_driver_temp < 100)  and (self.time_to_check_for_tuning_prep + 15) < time.time():
+            self.time_to_check_for_tuning_prep = time.time()
+            self.start_slow_calibration_jog(X=x, Y=y, Z=z)
+            self.are_SGs_in_expected_range(X=x, Y=y, Z=z)
+
+        else: 
+            Clock.schedule_once(lambda dt: self.is_machine_getting_valid_temperatures(x=x, y=y, z=z), 3)
 
 
     def start_slow_calibration_jog(self, X = False, Y = False, Z = False):
@@ -1736,9 +1757,35 @@ class RouterMachine(object):
             self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
 
 
+    def are_SGs_in_expected_range(self, X = False, Y = False, Z = False):
+
+        SG_to_check = None
+
+        if Z: SG_to_check = self.sg_z_motor_axis
+        if X: SG_to_check = self.sg_x_motor_axis
+        if Y: SG_to_check = self.sg_y_axis
+
+
+        if SG_to_check > 99 and (self.time_to_check_for_tuning_prep + 10) < time.time():
+
+            # start thread
+            tune_thread = threading.Thread(target=self.do_tuning, args=(X, Y, Z))
+            tune_thread.daemon = True
+            tune_thread.start()
+
+            # start poll
+            self.tuning_poll = Clock.schedule_interval(lambda dt: self.apply_tuned_settings(X=X, Y=Y, Z=Z), 10)
+
+
+        else: 
+            Clock.schedule_once(lambda dt: self.are_SGs_in_expected_range(X=X, Y=Y, Z=Z), 2)
+
+
     temp_sg_array = []
 
-    def sweep_toff_and_sgt(self, X = False, Y = False, Z = False):
+    def sweep_toff_and_sgt_and_motor_driver_temp(self, X = False, Y = False, Z = False):
+
+        temperature_list = []
 
         # Sweep TOFF in the range 2-10
         # Sweep SGT in the range 0-20
@@ -1756,22 +1803,22 @@ class RouterMachine(object):
 
 
             if X: 
-                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF X " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
             if Y: 
-                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
-                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Y1 " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Y2 " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
             if Z: 
-                self.send_command_to_motor("SET TOFF " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Z " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
 
             while temp_sgt <= 20:
 
                 if X: 
-                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT X " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
                 if Y: 
-                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
-                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT Y1 " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT Y2 " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
                 if Z: 
-                    self.send_command_to_motor("SET SGT " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
+                    self.send_command_to_motor("SET SGT Z " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
 
                 while len(self.temp_sg_array) <= 15:
 
@@ -1780,19 +1827,34 @@ class RouterMachine(object):
                 self.s.tuning_flag = False
                 tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
 
+                temperature_list.append(self.s.motor_driver_temp)
+
                 temp_sgt = temp_sgt + 1
 
             temp_toff = temp_toff + 1
 
-        return tuning_array
+        avg_temperature = sum(temperature_list) / len(temperature_list)
+        return tuning_array, avg_temperature
 
-        # ORDER IS: 
-        # self.sg_z_motor_axis = int(sg_values[0])
-        # self.sg_x_motor_axis = int(sg_values[1])
-        # self.sg_y_axis = int(sg_values[2])
-        # self.sg_y1_motor = int(sg_values[3])
-        # self.sg_y2_motor = int(sg_values[4])
 
+    def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
+
+        # idx is motor/axis index
+
+        # toff, sgt, dsg
+        prev_best = [None, None, None]
+
+        for toff in range(2,11):
+            for sgt in range(0,21):
+                try_dsg = self.average_points_in_sub_array(tuning_array[toff][sgt], idx) - target_SG
+
+                # compare delta sg (between read in and target)
+                # if it's smaller than any values found previously, then it's better, so save it
+                if try_dsg < prev_best[2] or not prev_best[2]:
+                    prev_best = [toff, sgt, try_dsg]
+
+        # at end of loop, prev_best == best
+        return prev_best[0], prev_best[1]
 
 
     def average_points_in_sub_array(self, sub_array, index):
@@ -1801,6 +1863,114 @@ class RouterMachine(object):
         avg_idx = sum(just_idx_sgs) / len(just_idx_sgs)
 
 
+    def get_target_SG_from_current_temperature(self, motor, current_temperature):
+        # To start with lets stick to
+        # target temp = 45C
+        # gradient_per_Celsius values (4000 for X and Z, 1500 for Y)
+        # use "Motor Driver temperature"
+
+        reference_temp = 45
+        reference_SG = 500
+
+        if motor == 'X':
+            gradient_per_Celsius = 4000
+            rpm = 300/(3200/(170/3))
+
+        elif motor = 'Y':
+            gradient_per_Celsius = 1500
+            rpm = 300/(3200/(170/3))
+
+        elif motor == 'Z':
+            gradient_per_Celsius = 4000
+            rpm = 30/(3200/(1066.67))
+
+        delta_to_current_temperature = reference_temp - current_temperature
+        step_us = 60000000 / (rpm * 3200)
+        compensation_SG_offset = gradient_per_Celsius/1000000 * delta_to_current_temperature * step_us
+        target_SG = reference_SG + int(compensation_SG_offset)
+
+        return target_SG
+
+
+    def apply_tuned_settings(self, X = False, Y = False, Z = False):
+
+        if self.toff_and_sgt_found:
+
+            if not self.tuning_poll: Clock.unschedule(self.tuning_poll)
+
+            # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
+
+            if X: 
+                self.send_command_to_motor("SET TOFF X " + str(temp_toff), motor = TMC_X1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET SGT X " + str(temp_sgt), motor = TMC_X1, command = SET_SGT, value = temp_sgt)
+            if Y: 
+                self.send_command_to_motor("SET TOFF Y1 " + str(temp_toff), motor = TMC_Y1, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET TOFF Y2 " + str(temp_toff), motor = TMC_Y2, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET SGT Y1 " + str(temp_sgt), motor = TMC_Y1, command = SET_SGT, value = temp_sgt)
+                self.send_command_to_motor("SET SGT Y2 " + str(temp_sgt), motor = TMC_Y2, command = SET_SGT, value = temp_sgt)
+            if Z: 
+                self.send_command_to_motor("SET TOFF Z " + str(temp_toff), motor = TMC_Z, command = SET_TOFF, value = temp_toff)
+                self.send_command_to_motor("SET SGT Z " + str(temp_sgt), motor = TMC_Z, command = SET_SGT, value = temp_sgt)
+
+
+            # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS
+            self.send_command_to_motor("STORE TMC PARAMS IN EEPROM", command = STORE_TMC_PARAMS)
+
+            # Disable raw SG reporting: command REPORT_RAW_SG
+            self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=0) # is there a way to check this has sent?
+
+    toff_and_sgt_found = False
+    tuning_poll = None
+    x_toff_tuned = None
+    x_sgt_tuned = None
+    y1_toff_tuned = None
+    y1_sgt_tuned = None
+    y2_toff_tuned = None
+    y2_sgt_tuned = None
+    z_toff_tuned = None
+    z_sgt_tuned = None
+
+    def do_tuning(self, X, Y, Z):
+
+         tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
+
+         if X: 
+            X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
+            x_toff_tuned, x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
+
+         if Y: 
+            Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
+            y1_toff_tuned, y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
+            y2_toff_tuned, y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
+
+         if Z: 
+            Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
+            z_toff_tuned, z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
+
+
+        toff_and_sgt_found = True
+
+    # Zero position
+    # Enable raw SG reporting: command REPORT_RAW_SG
+    # Check that machine is reporting sensible temperatures
+    # Check that machine is Idle
+    # Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
+    # Sweep TOFF in the range 2-10
+    # Sweep SGT in the range 0-20
+    # For each TOFF/SGT combination read SG 15 times (every 100ms, usual status report rate), skip the first 7 points as they are settling points and not valid. Average the remaining 8 points. 
+    # Adjust target SG based on temperature (example)
+    # Find the TOFF/SGT combination which gives the SG reading nearest to target SG (500 in this case)
+    # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
+    # Store the motors settings in the EEPROM: command STORE_TMC_PARAMS 
+    # Disable raw SG reporting: command REPORT_RAW_SG
+
+
+    # ORDER IS: 
+    # self.sg_z_motor_axis = int(sg_values[0])
+    # self.sg_x_motor_axis = int(sg_values[1])
+    # self.sg_y_axis = int(sg_values[2])
+    # self.sg_y1_motor = int(sg_values[3])
+    # self.sg_y2_motor = int(sg_values[4])
 
 
 
