@@ -13,12 +13,12 @@ from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import Low
 import sys, os
 
 Builder.load_string("""
-<LowerBeamQC>:
+<LowerBeamQCWarranty>:
 
     vac_toggle:vac_toggle
     spindle_toggle:spindle_toggle
     y_home_check:y_home_check
-    motor_chips_check:motor_chips_check
+    y_max_check:y_max_check
     warranty_toggle:warranty_toggle
 
     xy_move_container: xy_move_container
@@ -40,25 +40,8 @@ Builder.load_string("""
                 BoxLayout:
                     orientation: 'vertical'
 
-                    GridLayout:
-                        cols: 2
-                        Button:
-                            text: '1. Check motor-chips'
-                            text_size: self.size
-                            halign: 'left'
-                            valign: 'middle'
-                            padding: [dp(10),0]
-                            on_press: root.test_motor_chips()
-                        Image:
-                            id: motor_chips_check
-                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
-
                     Button:
-                        text: '2. Disable alarms'
+                        text: '1. Disable alarms'
                         text_size: self.size
                         halign: 'left'
                         valign: 'middle'
@@ -68,7 +51,23 @@ Builder.load_string("""
                     GridLayout:
                         cols: 2
                         Label:
-                            text: '3. Y limits'
+                            text: '2. Y max'
+                            text_size: self.size
+                            halign: 'left'
+                            valign: 'middle'
+                            padding: [dp(10),0]
+                        Image:
+                            id: y_max_check
+                            source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True
+
+                    GridLayout:
+                        cols: 2
+                        Label:
+                            text: '3. Y home'
                             text_size: self.size
                             halign: 'left'
                             valign: 'middle'
@@ -223,9 +222,9 @@ class PopupMotorChipsTest(Widget):
         popup.open()
 
 
-class LowerBeamQC(Screen):
+class LowerBeamQCWarranty(Screen):
     def __init__(self, **kwargs):
-        super(LowerBeamQC, self).__init__(**kwargs)
+        super(LowerBeamQCWarranty, self).__init__(**kwargs)
 
         self.sm = kwargs['sm']
         self.m = kwargs['m']
@@ -243,7 +242,7 @@ class LowerBeamQC(Screen):
         self.poll_for_checks = Clock.schedule_interval(self.update_checkboxes, 0.4)      # Poll for status
 
     def on_enter(self):
-        self.warranty_toggle.state = 'normal'
+        self.warranty_toggle.state = 'down'
 
     def update_status_text(self, dt):
         try:
@@ -251,47 +250,6 @@ class LowerBeamQC(Screen):
 
         except: 
             pass
-
-    def test_motor_chips(self):
-        self.m.jog_relative('Y', 500, 6000) # move for 5 seconds at 6000 mm/min
-        Clock.schedule_once(self.check_sg_values, 3)
-
-    def check_sg_values(self, dt):
-
-        pass_fail = True
-        fail_report = []
-
-        if -300 <= self.m.s.y_axis <= 300:
-            pass_fail = pass_fail*(True)
-
-        else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("Y axis SG value: " + str(self.m.s.y_axis))
-            fail_report.append("Should be between -300 and 300.")
-
-        if -300 <= self.m.s.y1_motor <= 300:
-            pass_fail = pass_fail*(True)
-
-        else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("Y2 motor SG value: " + str(self.m.s.y1_motor))
-            fail_report.append("Should be between -300 and 300.")
-
-        if -300 <= self.m.s.y2_motor <= 300:
-            pass_fail = pass_fail*(True)
-
-        else:
-            pass_fail = pass_fail*(False)
-            fail_report.append("Y1 motor SG value: " + str(self.m.s.y2_motor))
-            fail_report.append("Should be between -300 and 300.")
-
-        if not pass_fail:
-            fail_report_string = "\n".join(fail_report)
-            PopupMotorChipsTest(self.sm, fail_report_string)
-            self.motor_chips_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
-
-        else:
-            self.motor_chips_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
@@ -307,12 +265,19 @@ class LowerBeamQC(Screen):
 
     def update_checkboxes(self, dt):
         self.y_home_switch()
+        self.y_max_switch()
 
     def y_home_switch(self):
         if self.m.s.limit_y:
             self.y_home_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
             self.y_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
+
+    def y_max_switch(self):
+        if self.m.s.limit_Y:
+            self.y_max_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+        else:
+            self.y_max_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def disable_alarms(self):
         self.m.s.write_command('$21 = 0')
@@ -325,7 +290,7 @@ class LowerBeamQC(Screen):
             os.system('sudo shutdown -h now')
 
     def switch_screen(self):
-        self.sm.current = 'qcWarranty'
+        self.sm.current = 'qc'
 
     def stop(self):
     	popup_info.PopupStop(self.m, self.sm, self.l)

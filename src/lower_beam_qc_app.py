@@ -37,6 +37,7 @@ from kivy.clock import Clock
 
 from asmcnc.skavaUI.screen_home import HomeScreen
 from asmcnc.production.lower_beam_qc_jig.lower_beam_qc import LowerBeamQC
+from asmcnc.production.lower_beam_qc_jig.lower_beam_qc_warranty import LowerBeamQCWarranty
 
 from datetime import datetime
 
@@ -69,6 +70,9 @@ class LowerBeamQCApp(App):
 
         lower_beam_qc = LowerBeamQC(name='qc', sm = sm, m = m, l=l)
         sm.add_widget(lower_beam_qc)
+
+        lower_beam_qc_warranty = LowerBeamQCWarranty(name='qcWarranty', sm = sm, m = m, l=l)
+        sm.add_widget(lower_beam_qc_warranty)
 
         sm.current = 'qc'
         return sm
