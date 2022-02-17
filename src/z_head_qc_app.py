@@ -67,6 +67,10 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_6 import ZHeadQC6
 from asmcnc.production.z_head_qc_jig.z_head_qc_7 import ZHeadQC7
 from asmcnc.production.z_head_qc_jig.z_head_qc_aftr_apr_21 import ZHeadQCWarrantyAfterApr21
 from asmcnc.production.z_head_qc_jig.z_head_qc_b4_apr_21 import ZHeadQCWarrantyBeforeApr21
+from asmcnc.production.z_head_qc_jig.z_head_qc_db1 import ZHeadQCDB1
+from asmcnc.production.z_head_qc_jig.z_head_qc_db2 import ZHeadQCDB2
+from asmcnc.production.z_head_qc_jig.z_head_qc_db_success import ZHeadQCDBSuccess
+from asmcnc.production.z_head_qc_jig.z_head_qc_db_fail import ZHeadQCDBFail
 
 from datetime import datetime
 
@@ -155,6 +159,18 @@ class ZHeadQC(App):
 
         z_head_qc_warranty_before_apr_21 = ZHeadQCWarrantyBeforeApr21(name='qcW112', sm = sm, m = m, l = l)
         sm.add_widget(z_head_qc_warranty_before_apr_21)
+
+        z_head_qc_db1 = ZHeadQCDB1(name='qcDB1', sm = sm, m = m)
+        sm.add_widget(z_head_qc_db1)
+
+        z_head_qc_db2 = ZHeadQCDB2(name='qcDB2', sm = sm, m = m)
+        sm.add_widget(z_head_qc_db2)
+
+        z_head_qc_db_success = ZHeadQCDBSuccess(name='qcDB3', sm = sm, m = m)
+        sm.add_widget(z_head_qc_db_success)
+
+        z_head_qc_db_fail = ZHeadQCDBFail(name='qcDB4', sm = sm, m = m)
+        sm.add_widget(z_head_qc_db_fail)
 
         sm.current = 'qchome'
         return sm
