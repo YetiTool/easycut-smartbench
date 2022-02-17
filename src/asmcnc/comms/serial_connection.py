@@ -1068,6 +1068,24 @@ class SerialConnection(object):
                     except:
                         log("Could not print TMC registers")
 
+                elif part.startswith('TCAL:M'):
+
+                    [index, all_cal_data] = part[6:].split(':')
+                    all_cal_data_list = all_cal_data.strip(',').split(',')
+
+                    try: 
+                        map(int, all_cal_data_list)
+
+                    except: 
+                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        return
+
+                    self.m.TMC_motor[int(index)].calibration_dataset_SG_values = [int(i) for i in all_cal_data_list[0:128]]
+                    self.m.TMC_motor[int(index)].calibrated_at_current_setting = int(all_cal_data_list[128])
+                    self.m.TMC_motor[int(index)].calibrated_at_sgt_setting = int(all_cal_data_list[129])
+                    self.m.TMC_motor[int(index)].calibrated_at_toff_setting = int(all_cal_data_list[130])
+                    self.m.TMC_motor[int(index)].calibrated_at_temperature = int(all_cal_data_list[131])
+
                 # end of for loop
 
             if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
