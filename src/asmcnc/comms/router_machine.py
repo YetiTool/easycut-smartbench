@@ -1896,7 +1896,7 @@ class RouterMachine(object):
 
         if Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
 
-        if Z: self.jog_absolute_single_axis('Z', -200, 30)
+        if Z: self.jog_absolute_single_axis('Z', -149, 30)
 
 
     def start_tuning(self, X, Y, Z):
