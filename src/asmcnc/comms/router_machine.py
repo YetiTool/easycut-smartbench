@@ -1733,6 +1733,19 @@ class RouterMachine(object):
         self.prepare_for_tuning()
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
 
+    # QUERY THIS FLAG AFTER CALLING CALIBRATION FUNCTIONS, TO SEE IF CALIBRATION HAS FINISHED
+    run_calibration = False
+
+    def calibrate_X_and_Z(self):
+
+        self.run_calibration = True
+        self.initialise_calibration(X = True, Y = False, Z = True)
+
+    def calibrate_Y(self):
+
+        self.run_calibration = True
+        self.initialise_calibration(X = False, Y = True, Z = False)
+
 
     # MEAT OF TUNING - DON'T CALL FROM MAIN APP
 
@@ -1784,7 +1797,7 @@ class RouterMachine(object):
 
         self.reset_tuning_flags()
 
-        # 1. Zero position - is this needed???? 
+        # 1. Zero position
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
@@ -1847,7 +1860,7 @@ class RouterMachine(object):
     # NEED TO ADD IN WHAT HAPPENS IF TIME RUNS OUT ELSES HERE ALSO
     def is_machine_idle_for_tuning(self, X = False, Y = False, Z = False):
 
-        if self.m_state == "Idle":
+        if self.state().startswith('Idle'):
 
             self.start_slow_calibration_jog(X=X, Y=Y, Z=Z)
             self.start_tuning(X,Y,Z)
@@ -2075,32 +2088,133 @@ class RouterMachine(object):
 
 
 
+    # MEAT OF CALIBRATION FUNCTIONS - DON'T CALL FROM MAIN APP
+
+    x_ready_to_calibrate = False
+    y_ready_to_calibrate = False
+    z_ready_to_calibrate = False
+
+    poll_for_x_ready = None
+    poll_for_y_ready = None
+    poll_for_z_ready = None
+
+    time_to_check_for_calibration_prep = 0
+
+    def initialise_calibration(self, X=False, Y=False, Z=False):
+
+            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+            self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+
+        if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
+        if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
+        if Z: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_z, 2)
 
 
+        # Only sets one ready to begin with
+        if X: self.x_ready_to_calibrate = True
+        elif Y: self.y_ready_to_calibrate = True
+        elif Z: self.z_ready_to_calibrate = True
 
 
+    def do_calibrate_x(self, dt):
+
+        if self.x_ready_to_calibrate:
+
+            Clock.unschedule(self.poll_for_x_ready)
+            self.x_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('X')
+
+    def do_calibrate_y(self, dt):
+
+        if self.y_ready_to_calibrate:
+
+            Clock.unschedule(self.poll_for_y_ready)
+            self.y_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('Y')
 
 
+    def do_calibrate_z(self, dt):
+
+        if self.z_ready_to_calibrate:
+
+            Clock.unschedule(self.poll_for_z_ready)
+            self.z_ready_to_calibrate = False
+            self.time_to_check_for_calibration_prep = time.time()
+            self.check_idle_and_buffer_then_start_calibration('Z')
+
+    def check_idle_and_buffer_then_start_calibration(self, axis): 
+
+        if axis == 'X': 
+            calibrate_mode = 32
+            calibration_file = '' # need to sest these up
+            altDisplayText = "CALIBRATE X AXIS"
+
+        if axis == 'Y': 
+            calibrate_mode = 64
+            calibration_file = '' # need to sest these up
+            altDisplayText = "CALIBRATE Y AXIS"
+
+        if axis == 'Z': 
+            calibrate_mode = 128
+            calibration_file = '' # need to sest these up
+            altDisplayText = "CALIBRATE Z AXIS"
 
 
+        if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
+
+            self.send_command_to_motor(altDisplayText, command=SET_CALIBR_MODE, value=calibrate_mode)
+            Clock.schedule_once(lambda dt: self.stream_calibration_file(calibration_file), 0.1)
+
+        elif (self.time_to_check_for_calibration_prep + 120) < time.time():
+
+            # gives error message to popup
+            log("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
+
+        else: 
+            Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration('X'), 2)
 
 
+    def stream_calibration_file(self, filename):
+
+        with open(filename) as f:
+            calibration_gcode = f.readlines()
+
+        self.m.s.start_sequential_stream(calibration_gcode)
+        self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
 
+    def post_calibration_file_stream(self, dt):
+
+        if not self.m.s.is_sequential_streaming: 
+            Clock.unschedule(self.poll_end_of_calibration_file_seq_stream)
+            self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
+            Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 0.1)
+
+    def do_next_axis_or_finish_calibration_sequence(self):
+
+            # X is always first, so check y and then z
+            if self.poll_for_y_ready: self.y_ready_to_calibrate = True
+            elif self.poll_for_z_ready: self.z_ready_to_calibrate = False
+            else: self.save_calibration_coefficients_to_motor_classes()
+
+    def save_calibration_coefficients_to_motor_classes(self):
+
+        self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
+        Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
+
+    def complete_calibration(self):
 
 
+        self.x_ready_to_calibrate = False
+        self.y_ready_to_calibrate = False
+        self.z_ready_to_calibrate = False
 
+        self.poll_for_x_ready = None
+        self.poll_for_y_ready = None
+        self.poll_for_z_ready = None
 
+        self.time_to_check_for_calibration_prep = 0
 
-
-
-
-
-
-
-
-
-
-
-
-
+        self.run_calibration = False
