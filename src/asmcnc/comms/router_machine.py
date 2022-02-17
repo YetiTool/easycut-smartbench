@@ -1806,7 +1806,7 @@ class RouterMachine(object):
         # 1. Zero position
         log("Zero position")
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         # 2. Enable raw SG reporting: command REPORT_RAW_SG
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
@@ -1814,7 +1814,7 @@ class RouterMachine(object):
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
         self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
+        self.jog_absolute_single_axis('Z', -150, 750)
 
     time_to_check_for_tuning_prep = 0
 
@@ -1835,7 +1835,7 @@ class RouterMachine(object):
             log("SG values in range - re-zero")
 
             self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-            self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
             self.time_to_check_for_tuning_prep = time.time()
             self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z)
@@ -1895,7 +1895,7 @@ class RouterMachine(object):
 
         if Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
 
-        if Z: self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
+        if Z: self.jog_absolute_single_axis('Z', -200, 30)
 
 
     def start_tuning(self, X, Y, Z):
@@ -2117,7 +2117,7 @@ class RouterMachine(object):
         log("Initialise Calibration")
 
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+        self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
