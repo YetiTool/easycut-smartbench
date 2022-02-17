@@ -1866,7 +1866,7 @@ class RouterMachine(object):
 
 
         else: 
-            Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(x=x, y=y, z=z), 3)
+            Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z), 3)
 
 
     # NEED TO ADD IN WHAT HAPPENS IF TIME RUNS OUT ELSES HERE ALSO
