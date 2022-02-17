@@ -330,7 +330,7 @@ class ZHeadQC2(Screen):
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
 
-        self.m.s.write_command('M3 10000')
+        self.m.s.write_command('M3 S10000')
 
         Clock.schedule_once(read_rpm, 3)
 
