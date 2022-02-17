@@ -1989,6 +1989,7 @@ class RouterMachine(object):
 
                 self.s.tuning_flag = False
                 tuning_array[temp_toff][temp_sgt] = self.temp_sg_array[8:16]
+                self.temp_sg_array = []
 
                 temperature_list.append(self.s.motor_driver_temp)
 
