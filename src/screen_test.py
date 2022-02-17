@@ -56,6 +56,7 @@ class ScreenTest(App):
 
         test_sm.current = 'st'
 
+        
         Clock.schedule_once(m.s.start_services, 4)
         Clock.schedule_once(lambda dt: m.s.write_command('$20=0'), 5)
 
