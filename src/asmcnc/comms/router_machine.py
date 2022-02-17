@@ -1814,7 +1814,7 @@ class RouterMachine(object):
         # THEN JOG AWAY AT MAX SPEED
         log("Jog to check SG values")
         self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 6000)
-        self.jog_absolute_single_axis('Z', -150, 750)
+        self.jog_absolute_single_axis('Z', -149, 750)
 
     time_to_check_for_tuning_prep = 0
 
