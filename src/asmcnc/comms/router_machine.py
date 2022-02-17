@@ -1779,6 +1779,8 @@ class RouterMachine(object):
 
     temp_sg_array = []
 
+    time_to_check_for_tuning_prep = 0
+
     def reset_tuning_flags(self):
 
         log("Reset tuning flags")
@@ -1815,8 +1817,7 @@ class RouterMachine(object):
         log("Jog to check SG values")
         self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', -149, 750)
-
-    time_to_check_for_tuning_prep = 0
+        self.time_to_check_for_tuning_prep = time.time()
 
     # CHECK SG VALUES FIRST (TO MAKE SURE THEY'RE RAW)
     def check_SGs_rezero_and_go_to_next_checks_then_tune(self, X = False, Y = False, Z = False):
