@@ -2148,17 +2148,17 @@ class RouterMachine(object):
 
         if axis == 'X': 
             calibrate_mode = 32
-            calibration_file = '' # need to sest these up
+            calibration_file = './asmcnc/production/calibration_gcode_files/X_cal.gc' # need to sest these up
             altDisplayText = "CALIBRATE X AXIS"
 
         if axis == 'Y': 
             calibrate_mode = 64
-            calibration_file = '' # need to sest these up
+            calibration_file = './asmcnc/production/calibration_gcode_files/Y_cal.gc' # need to sest these up
             altDisplayText = "CALIBRATE Y AXIS"
 
         if axis == 'Z': 
             calibrate_mode = 128
-            calibration_file = '' # need to sest these up
+            calibration_file = './asmcnc/production/calibration_gcode_files/Z_cal.gc' # need to sest these up
             altDisplayText = "CALIBRATE Z AXIS"
 
 
