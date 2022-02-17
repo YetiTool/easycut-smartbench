@@ -4,7 +4,7 @@ Created on 31 Jan 2018
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
 
-import logging
+import logging, threading
 
 from asmcnc.comms import serial_connection  # @UnresolvedImport
 from asmcnc.comms.yeti_grbl_protocol import protocol
@@ -1722,14 +1722,14 @@ class RouterMachine(object):
     def tune_X_and_Z_for_calibration(self):
 
         self.tuning_in_progress = True
-
+        log("Tuning X and Z...")
         self.prepare_for_tuning()
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = True, Y = False, Z = True)
 
     def tune_Y_for_calibration(self):
 
         self.tuning_in_progress = True
-
+        log("Tuning Y...")
         self.prepare_for_tuning()
         self.check_SGs_rezero_and_go_to_next_checks_then_tune(X = False, Y = True, Z = False)
 
@@ -1739,11 +1739,13 @@ class RouterMachine(object):
     def calibrate_X_and_Z(self):
 
         self.run_calibration = True
+        log("Calibrating X and Z...")
         self.initialise_calibration(X = True, Y = False, Z = True)
 
     def calibrate_Y(self):
 
         self.run_calibration = True
+        log("Calibrating Y...")
         self.initialise_calibration(X = False, Y = True, Z = False)
 
 
@@ -1779,6 +1781,8 @@ class RouterMachine(object):
 
     def reset_tuning_flags(self):
 
+        log("Reset tuning flags")
+
         toff_and_sgt_found = False
         tuning_poll = None
         x_toff_tuned = None
@@ -1795,9 +1799,12 @@ class RouterMachine(object):
     # ALL MOTORS ARE FREE RUNNING
     def prepare_for_tuning(self):
 
+        log("Prepare for tuning")
+
         self.reset_tuning_flags()
 
         # 1. Zero position
+        log("Zero position")
         self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
@@ -1805,6 +1812,7 @@ class RouterMachine(object):
         self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
 
         # THEN JOG AWAY AT MAX SPEED
+        log("Jog to check SG values")
         self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 6000)
         self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
@@ -1820,30 +1828,33 @@ class RouterMachine(object):
         if Y: SG_to_check = self.sg_y_axis
 
 
-        if 200 < SG_to_check < 800 :
+        if 200 < SG_to_check < 800:
 
             self.quit_jog()
+
+            log("SG values in range - re-zero")
 
             self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
             self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
             self.time_to_check_for_tuning_prep = time.time()
-            self.check_temps_and_then_go_to_idle_check_then_tune(x=X, y=Y, z=Z)
+            self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z)
 
 
         elif (self.time_to_check_for_tuning_prep + 10) < time.time():
             # raise error popup
             log("RAW SG VALUES NOT ENABLED")
 
-
         else: 
             Clock.schedule_once(lambda dt: self.check_SGs_rezero_and_go_to_next_checks_then_tune(X=X, Y=Y, Z=Z), 2)
 
 
 
-    def check_temps_and_then_go_to_idle_check_then_tune(self, x = False, y = False, z = False):
+    def check_temps_and_then_go_to_idle_check_then_tune(self, X = False, Y = False, Z = False):
 
         if (0 < self.s.motor_driver_temp < 100)  and (self.time_to_check_for_tuning_prep + 15) < time.time():
+
+            log("Temperature reads valid, check machine is Idle...")
 
             self.time_to_check_for_tuning_prep = time.time()
             self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z)
@@ -1862,7 +1873,9 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle'):
 
+            log("Ready for tuning, start slow jog...")
             self.start_slow_calibration_jog(X=X, Y=Y, Z=Z)
+            log("Start tuning...")
             self.start_tuning(X,Y,Z)
 
         elif (self.time_to_check_for_tuning_prep + 120) < time.time():
@@ -1878,17 +1891,11 @@ class RouterMachine(object):
 
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
-        if X and Y:
-            self.jog_absolute_xy(self.x_max_jog_abs_limit, self.y_max_jog_abs_limit, 300)
+        if X: self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
 
-        elif X: 
-            self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 300)
+        if Y: self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
 
-        elif Y: 
-            self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 300)
-
-        if Z: 
-            self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
+        if Z: self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 30)
 
 
     def start_tuning(self, X, Y, Z):
@@ -1988,8 +1995,12 @@ class RouterMachine(object):
 
             temp_toff = temp_toff + 1
 
-        avg_temperature = sum(temperature_list) / len(temperature_list)
-        return tuning_array, avg_temperature
+        try:
+            avg_temperature = sum(temperature_list) / len(temperature_list)
+            return tuning_array, avg_temperature
+
+        except: 
+            log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
     def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
@@ -2005,7 +2016,7 @@ class RouterMachine(object):
 
                 # compare delta sg (between read in and target)
                 # if it's smaller than any values found previously, then it's better, so save it
-                if try_dsg < prev_best[2] or not prev_best[2]:
+                if try_dsg < prev_best[2] or prev_best[2]==None:
                     prev_best = [toff, sgt, try_dsg]
 
         # at end of loop, prev_best == best
@@ -2016,6 +2027,7 @@ class RouterMachine(object):
         # Average the remaining 8 points. 
         just_idx_sgs = [sg_arr[index] for sg_arr in sub_array]
         avg_idx = sum(just_idx_sgs) / len(just_idx_sgs)
+        return avg_idx
 
 
     def get_target_SG_from_current_temperature(self, motor, current_temperature):
@@ -2102,8 +2114,10 @@ class RouterMachine(object):
 
     def initialise_calibration(self, X=False, Y=False, Z=False):
 
-            self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
-            self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
+        log("Initialise Calibration")
+
+        self.jog_absolute_xy(self.x_min_jog_abs_limit, self.y_min_jog_abs_limit, 6000)
+        self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
         if X: self.poll_for_x_ready = Clock.schedule_interval(self.do_calibrate_x, 2)
         if Y: self.poll_for_y_ready = Clock.schedule_interval(self.do_calibrate_y, 2)
@@ -2120,6 +2134,8 @@ class RouterMachine(object):
 
         if self.x_ready_to_calibrate:
 
+            log("Calibrate X")
+
             Clock.unschedule(self.poll_for_x_ready)
             self.x_ready_to_calibrate = False
             self.time_to_check_for_calibration_prep = time.time()
@@ -2128,6 +2144,8 @@ class RouterMachine(object):
     def do_calibrate_y(self, dt):
 
         if self.y_ready_to_calibrate:
+
+            log("Calibrate Y")
 
             Clock.unschedule(self.poll_for_y_ready)
             self.y_ready_to_calibrate = False
@@ -2138,6 +2156,8 @@ class RouterMachine(object):
     def do_calibrate_z(self, dt):
 
         if self.z_ready_to_calibrate:
+
+            log("Calibrate Z")
 
             Clock.unschedule(self.poll_for_z_ready)
             self.z_ready_to_calibrate = False
@@ -2181,6 +2201,8 @@ class RouterMachine(object):
         with open(filename) as f:
             calibration_gcode = f.readlines()
 
+        log("Calibrating...")
+
         self.m.s.start_sequential_stream(calibration_gcode)
         self.poll_end_of_calibration_file_seq_stream = Clock.schedule_interval(self.post_calibration_file_stream, 5)
 
@@ -2192,6 +2214,7 @@ class RouterMachine(object):
             self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
             Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 0.1)
 
+
     def do_next_axis_or_finish_calibration_sequence(self):
 
             # X is always first, so check y and then z
@@ -2199,13 +2222,14 @@ class RouterMachine(object):
             elif self.poll_for_z_ready: self.z_ready_to_calibrate = False
             else: self.save_calibration_coefficients_to_motor_classes()
 
+
     def save_calibration_coefficients_to_motor_classes(self):
 
         self.send_command_to_motor("OUTPUT CALIBRATION COEFFICIENTS", command=SET_CALIBR_MODE, value=4)
         Clock.schedule_once(lambda dt: self.complete_calibration(), 1)
 
-    def complete_calibration(self):
 
+    def complete_calibration(self):
 
         self.x_ready_to_calibrate = False
         self.y_ready_to_calibrate = False
@@ -2218,3 +2242,5 @@ class RouterMachine(object):
         self.time_to_check_for_calibration_prep = 0
 
         self.run_calibration = False
+
+        log("Calibration complete")
