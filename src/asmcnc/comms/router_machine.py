@@ -2108,7 +2108,7 @@ class RouterMachine(object):
                     prev_best = [toff, sgt, try_dsg]
 
         # at end of loop, prev_best == best
-        log("FOUND FOR IDX: " + str(idx) + str(prev_best[0] +"," + str(prev_best[1]) + "," + str(prev_best[2])))
+        log("FOUND FOR IDX: " + str(idx) + str(prev_best[0]) + "," + str(prev_best[1]) + "," + str(prev_best[2]))
 
         return prev_best[0], prev_best[1]
 
