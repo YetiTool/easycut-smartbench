@@ -1989,16 +1989,16 @@ class RouterMachine(object):
 
         if X: 
             X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
-            x_toff_tuned, x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
+            self.x_toff_tuned, self.x_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
 
         if Y: 
             Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
-            y1_toff_tuned, y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
-            y2_toff_tuned, y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
+            self.y1_toff_tuned, self.y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
+            self.y2_toff_tuned, self.y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
 
         if Z: 
             Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
-            z_toff_tuned, z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
+            self.z_toff_tuned, self.z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
 
 
         self.toff_and_sgt_found = True
@@ -2164,7 +2164,7 @@ class RouterMachine(object):
 
         if self.toff_and_sgt_found:
 
-            log("TOFF and SGT foundd - applying settings")
+            log("TOFF and SGT found - applying settings")
 
             if not self.tuning_poll: Clock.unschedule(self.tuning_poll)
 
