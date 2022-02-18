@@ -48,6 +48,8 @@ class MotorCommandsTest(unittest.TestCase):
 
     status = normalized_SGs
 
+    test_arr = [[[832, 1023, -999, 1023, 1023], [838, 1023, -999, 1023, 1023], [841, 1023, -999, 1023, 1023], [847, 1023, -999, 1023, 1023], [846, 1023, -999, 1023, 1023], [843, 1023, -999, 1023, 1023], [829, 1023, -999, 1023, 1023], [830, 1023, -999, 1023, 1023]]*(11)]*(21)
+
     def give_me_a_PCB(outerSelf):
 
         class YETIPCB(MockSerial):
@@ -126,17 +128,26 @@ class MotorCommandsTest(unittest.TestCase):
     #     self.assertEqual(toff, 2)
     #     self.assertEqual(sgt, 0)
 
-    def test_get_target(self):
-        '''get_target_SG_from_current_temperature'''
-        target = self.m.get_target_SG_from_current_temperature('Y', -100)
-        # self.assertEqual(target, 500)
-        print("SG TARG: " + str(target))
+    # def test_get_target(self):
+    #     '''get_target_SG_from_current_temperature'''
+    #     target = self.m.get_target_SG_from_current_temperature('Y', -100)
+    #     # self.assertEqual(target, 500)
+    #     print("SG TARG: " + str(target))
 
-    def test_get_another_target(self):
-        '''get_target_SG_from_current_temperature'''
-        target = self.m.get_target_SG_from_current_temperature('Y', 100)
-        # self.assertEqual(target, 500)
-        print("SG TARG: " + str(target))
+    # def test_get_another_target(self):
+    #     '''get_target_SG_from_current_temperature'''
+    #     target = self.m.get_target_SG_from_current_temperature('Y', 100)
+    #     # self.assertEqual(target, 500)
+    #     print("SG TARG: " + str(target))
+
+    def test_find_combo(self):
+
+        out = self.m.find_best_combo_per_motor_or_axis(self.test_arr, 800, 0)
+
+        print out
+
+
+
 
 
 if __name__ == "__main__":
